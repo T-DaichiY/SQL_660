@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2 Data types Part 3 — TIMESTAMP・DATE・TIME・INTERVAL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M1·M2 📅 日付型 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Data types Part 3 Dates</div>
+  <h1>📅 日付・時刻データ型 — TIMESTAMP・DATE・TIME・INTERVAL</h1>
+  <p>4つの日付/時刻データ型の違いと、INTERVALを使った日付の計算方法、そしてどの場面でどの型を選ぶべきかを学ぶ。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 4つのデータ型</a><a href="#unit2">② INTERVALで日付を計算する</a><a href="#unit3">③ どの型をいつ使うか</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>4つの日付・時刻データ型</h2><div class="unit-sub">TIMESTAMP・DATE・TIME・INTERVAL</div></div>
+  </div>
+  <table class="compare-table">
+    <thead><tr><th>型</th><th>サイズ</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><code>timestamp</code></td><td>8バイト</td><td>日付＋時刻の両方。最もよく使われる。フォームの送信記録や取引記録など、精密な記録が必要な場面で多用される</td></tr>
+      <tr><td><code>date</code></td><td>4バイト</td><td>日付のみ（時刻を含まない）</td></tr>
+      <tr><td><code>time</code></td><td>8バイト</td><td>時刻のみ（日付を含まない）。<code>00:00:00</code>〜<code>24:00:00</code>の24時間制（軍隊式時間）で、AM/PMの概念はない</td></tr>
+      <tr><td><code>interval</code></td><td>—</td><td>「長さ」を表す時間の値（日数・月数・年数など）。特定の日時ではなく期間を表す</td></tr>
+    </tbody>
+  </table>
+  <h3>タイムゾーンを扱う — timestamptz</h3>
+  <p>データを異なる地域・国から収集する場合、タイムゾーンの違いを考慮する必要があります。例えば東海岸標準時（EST）で入力されたフォームと、別のタイムゾーンで入力されたフォームでは、同じ「送信時刻」でも実際には数時間のズレが生じます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> form_submissions (</span>
+<span class="cl">    submitted_at <span class="kw">timestamp with time zone</span></span>
+<span class="cl">);</span>
+</pre>
+  <p><code>timestamp</code>には<code>timestamp with time zone</code>（略して<code>timestamptz</code>）という拡張があり、タイムゾーン情報を保持・調整できます。複数の地域からデータを集める場合はこちらを検討しましょう。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>timestamp＝日付＋時刻、date＝日付だけ、time＝時刻だけ、interval＝期間の長さ。複数タイムゾーンのデータを扱うならtimestamptzを使いましょう。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>INTERVALで日付を計算する</h2><div class="unit-sub">「30日後」のような期日をタイムスタンプに足し引きする</div></div>
+  </div>
+  <p>INTERVALは、開始点・終了点ではなく<strong>「長さ」だけを表す値</strong>です。「90日」「1週間」「7時間」のように指定でき、他の日付・時刻型と組み合わせて計算に使うのが一般的な使い方です。</p>
+  <h3>実例：請求書の支払期日を30日後に設定する</h3>
+  <p>2022年12月1日に発生した取引について、そこから30日後の期日を自動で求めたいとします。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> invoice_date,</span>
+<span class="cl">       invoice_date + <span class="kw">interval</span> <span class="st">'30 days'</span> <span class="kw">AS</span> due_date</span>
+<span class="cl"><span class="kw">FROM</span> invoices</span>
+<span class="cl"><span class="kw">WHERE</span> invoice_date = <span class="st">'2022-12-01'</span>;</span>
+</pre><div class="output-reveal">invoice_date | due_date
+-------------+------------
+2022-12-01   | 2022-12-31</div>
+  <p>タイムスタンプに<code>interval '30 days'</code>を足すだけで、30日後の日付が自動的に計算されます。60日後・90日後の期日を同様に計算すれば、期日ごとに未払いの請求書を抽出してリマインダーを送るような処理も組み立てられます。過去の日付を求めたい場合は、足し算(+)を引き算(−)に変えるだけです。</p>
+  <h3>もう1つの例：24時間の変更猶予</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> order_time,</span>
+<span class="cl">       order_time + <span class="kw">interval</span> <span class="st">'24 hours'</span> <span class="kw">AS</span> can_cancel_until</span>
+<span class="cl"><span class="kw">FROM</span> orders;</span>
+</pre>
+  <p>注文が確定してから24時間はキャンセル可能、という業務ルールも、<code>order_time</code>（timestamp）に<code>interval '24 hours'</code>を足した値と現在時刻を比較することで実装できます。24時間が経過した時点で処理を確定させる、といったトリガーの発想にもつながります。</p>
+  <div class="teal-box">📌 INTERVALは日数・時間・分などを表す「変数のような値」と考えると分かりやすいです。timestampなど別の日付型と組み合わせて、未来・過去のある地点を計算するのが主な使い方です。エイリアス（AS）を使った計算方法は、別のレッスンでさらに詳しく扱います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INTERVALは「期間の長さ」を表す値。timestampに足せば未来の日付、引けば過去の日付が求められます。期日管理やキャンセル猶予の実装によく使われます。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>どの型をいつ使うか</h2><div class="unit-sub">用途に応じた使い分け</div></div>
+  </div>
+  <table class="compare-table">
+    <thead><tr><th>場面</th><th>おすすめの型</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>フォーム送信・オンライン注文・金銭取引</td><td><code>timestamp</code>（複数地域なら<code>timestamptz</code>）</td><td>正確な日時が必要。キャンセル猶予期間の計算や後からの追跡照会に日時両方が必須</td></tr>
+      <tr><td>過去の出来事・歴史的な記録</td><td><code>date</code></td><td>古いデータには時刻情報が記録されていない、または重要でないことが多い</td></tr>
+      <tr><td>イベントへの出席記録</td><td><code>date</code></td><td>「その日に来場したか」が重要で、正確な時刻までは必要ないケースが多い</td></tr>
+      <tr><td>繰り返し発生する特定の時刻のパターン（例：交通事故が多発する時間帯）</td><td><code>time</code></td><td>日付は無関係で、時刻のパターンだけを分析したい場合</td></tr>
+    </tbody>
+  </table>
+  <div class="note-box">💡 車の購入のように「その日に契約した」ことが重要な取引はdateで十分ですが、ローンの申し込みや決済のように正確な日時の記録が必要な取引はtimestampを使うべきです。用途によって同じ「取引」でも適した型が変わります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「正確な時刻まで必要か？」を自問しましょう。必要ならtimestamp、日付だけで十分ならdate、時刻のパターンだけを見たいならtimeを選びます。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which data type stores both a date and a time together, and is the most commonly used of the four?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>date</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>time</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>timestamp</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>interval</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why would you use "timestamp with time zone" (timestamptz) instead of a plain timestamp?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It stores only dates, dropping any time component entirely</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It tracks and adjusts times collected from different time zones</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It always uses noticeably less storage than a plain timestamp</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is required for every single timestamp column in PostgreSQL</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does the "time" data type represent, and in what format?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Date only, formatted as YYYY-MM-DD, with no time at all</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Time only, on a 24-hour clock from 00:00:00 to 24:00:00</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Date and time together, shown in 12-hour AM/PM format</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A length of elapsed time, such as thirty days</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does the interval data type represent?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A specific calendar date, such as 2022-12-01</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A specific point in time, accurate down to the second</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A length or span of time, like 30 days or 7 hours</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A time zone offset value only, nothing else</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Given "invoice_date + interval '30 days' AS due_date", what does this expression compute?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A date exactly 30 days after invoice_date</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A date exactly 30 days before invoice_date</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of days since invoice_date</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An error, since dates and intervals cannot be added</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which data type would best fit a table logging historical events where only the day matters, not a specific time?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>timestamp</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>time</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>interval</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>date</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why is timestamp typically preferred over date for online orders and financial transactions?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>timestamp columns always take up less storage than date columns</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>date columns cannot store any values after the year 2000</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is no real practical difference between the two</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Precise time matters, e.g. for cancellation windows and exact lookups</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">To find a point 24 hours before an event's timestamp, what would you do?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Subtract interval '24 hours' from the timestamp column</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Cast the timestamp to a date first, since intervals cannot be subtracted</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Divide the timestamp by 24</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>This calculation is not possible in SQL</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 1, 1, 2, 0, 3, 3, 0];
+var FEEDBACKS=["timestamp combines both date and time in one 8-byte value, and is the most frequently used of the four date/time types.", "timestamptz adjusts stored values for time zone differences, which matters when data is submitted from multiple regions.", "time stores only a time value, using a 24-hour military-style clock ranging from 00:00:00 to 24:00:00, with no date component.", "interval represents a span or length of time (like 30 days or 7 hours), not a specific point in time.", "Adding an interval to a date/timestamp moves forward by that amount, so invoice_date + interval '30 days' gives a date 30 days later.", "Since only the day matters for historical records (time is often unavailable or irrelevant for old data), date is the appropriate, more compact choice.", "Transactions often need the precise time for things like cancellation windows or being able to look up exactly when an order occurred.", "Subtracting an interval from a timestamp moves the value backward in time by that amount, e.g. timestamp - interval '24 hours'."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">timestamp</div>
+      <div class="term-en">タイムスタンプ</div>
+      <div class="term-def">日付と時刻の両方を保持する8バイトのデータ型。最も一般的に使われる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">date</div>
+      <div class="term-en">日付</div>
+      <div class="term-def">日付のみを保持する4バイトのデータ型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">time</div>
+      <div class="term-en">時刻</div>
+      <div class="term-def">時刻のみを24時間制で保持するデータ型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">interval</div>
+      <div class="term-en">インターバル</div>
+      <div class="term-def">日数・時間などで表す「期間の長さ」を表す値。日付の計算に使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">timestamptz</div>
+      <div class="term-en">タイムゾーン付きタイムスタンプ</div>
+      <div class="term-def">タイムゾーン情報を保持・調整できるtimestamp型。複数地域のデータ収集に有用。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>「正確な時刻まで必要か？」を基準に型を選びましょう。迷ったらtimestamp、複数タイムゾーンを扱うならtimestamptzが安全な選択です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📅 SQLレッスン：日付・時刻データ型 — TIMESTAMP・DATE・TIME・INTERVAL</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

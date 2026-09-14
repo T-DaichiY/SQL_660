@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 ERD — pgAdmin で ERD を描く</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M5 🗺️ ERD <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · ERD in pgAdmin</div>
+  <h1>🗺️ ERD — pgAdmin で描く</h1>
+  <p>テーブルがどう繋がっているかを、コードを1行も書かずに<strong>絵で見る</strong>。JOINを学ぶ直前に、データベース全体の地図を手に入れましょう。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ERDとは何か</a><a href="#unit2">② pgAdminで描く手順</a><a href="#unit3">③ 図の読み方</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ERDとは何か・なぜ見るのか</h2><div class="unit-sub">DBAだけのものではない</div></div>
+  </div>
+  <p><strong>ERD（Entity Relationship Diagram：実体関連図）</strong>とは、データベースの中にある<strong>テーブル（実体）</strong>と、それらの間の<strong>つながり（関連）</strong>を1枚の図にまとめたものです。各テーブルにどんな列があり、どのテーブルがどのテーブルを参照しているのかが、SQLを書かなくても一目で分かります。</p>
+  <p>ここまでのモジュールで、私たちは主キー・外部キー・制約を使って、テーブル同士を丁寧につなげてきました。しかし、テーブルの数が増えてくると、頭の中だけで全体の構造を把握するのはだんだん難しくなります。そこで役に立つのがERDです。</p>
+  <div class="teal-box">📌 <strong>ERDはデータベース管理者だけのものではありません。</strong>データサイエンティストがすでにあるデータベースを引き継いだとき、あるいは他の人が作ったテーブル群を分析に使うとき、まず最初にERDを開いて「このテーブルはどれと繋がっているか」を確認するのが近道です。特に、これから学ぶ<strong>JOIN</strong>は複数テーブルを繋げて1つの結果にする操作なので、その直前にERDで全体像を掴んでおくと理解がぐっと早くなります。</div>
+  <div class="viz">
+    <div class="viz-title">ERDを見ると分かること</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">📋</span><div class="step-text"><strong>テーブルの一覧</strong><span>データベースにどんなテーブルが存在するか</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔑</span><div class="step-text"><strong>各テーブルの主キー</strong><span>そのテーブルの1行を一意に決める列</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔗</span><div class="step-text"><strong>テーブル間のつながり</strong><span>どの外部キーがどの主キーを参照しているか</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🧭</span><div class="step-text"><strong>JOINの設計図</strong><span>どのテーブルとどのテーブルを繋げられるか</span></div></div>
+    </div>
+    <div class="viz-cap">SQLを1行も実行しなくても、構造だけを先に理解できるのがERDの強み。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ERDはデータベースの「地図」。どのテーブルがどのテーブルと繋がっているかを絵で見せてくれます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>pgAdminでERDを描く手順</h2><div class="unit-sub">クリックだけで生成できる</div></div>
+  </div>
+  <p>pgAdminには、既存のデータベースからERDを自動生成する機能が組み込まれています。SQLは一切書きません。</p>
+  <div class="viz">
+    <div class="viz-title">pgAdminでの操作手順</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>データベースを右クリック</strong><span>ツリーで対象のデータベースを選び、右クリックメニューから<strong>「ERD For Database」</strong>を選ぶ</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>テーブルをドラッグして整理する</strong><span>自動配置は重なることが多いので、見やすい位置までドラッグして散らす</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>Show/Hide details で詳細を切り替える</strong><span>テーブルをクリックし、列の表示・非表示、PK🔑・FKマークの表示を切り替える</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>プロジェクトファイル（.pgerd）として保存</strong><span>整理した配置を保存できる。ただし再度開くときは<strong>ERDツールの中から</strong>開く必要があり、ファイルをダブルクリックしても開けない</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">5️⃣</span><div class="step-text"><strong>ズーム・色分けで見やすくする</strong><span>拡大縮小、「Zoom to fit」で画面に全体を収める、テーブルごとの色分けも可能</span></div></div>
+    </div>
+    <div class="viz-cap">右クリック1回で自動生成 → あとは見やすく整えるだけ。</div>
+  </div>
+  <div class="warn-box">⚠️ <strong>.pgerdファイルはただの保存形式であって、開き方が特殊です。</strong>エクスプローラーやFinderから直接ダブルクリックしても開けません。必ずpgAdminのERDツールを開いてから、そこで対象のファイルを読み込む必要があります。</div>
+  <div class="note-box">💡 <strong>逆方向もできる：</strong>pgAdminは、まっさらな状態からERDを<strong>先に描いて</strong>、そこから実際のテーブル（<code>CREATE TABLE</code>文一式）を生成することもできます。これは設計を先に固めてから実装する「トップダウン設計」に相当しますが、本レッスンの範囲外です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>DBを右クリック→ERD For Databaseで一発生成。保存は.pgerdだが、開くときは必ずERDツールの中から。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>図の読み方</h2><div class="unit-sub">線の向きが外部キーの方向を示す</div></div>
+  </div>
+  <p>ERDの線は、テーブル同士の<strong>関係（relationship）</strong>を表します。多くのツールは<strong>crow's foot（カラスの足）記法</strong>と呼ばれる書き方を使い、線の片方の端が「一（1）」、もう片方の端が枝分かれした「多（many）」を表します。</p>
+  <div class="teal-box">📌 <strong>読み方のルールはひとつだけ：</strong>枝分かれした「多」側の端は、<strong>外部キー（FK）を持つテーブル</strong>を指します。線がシンプルな1本のまま終わる側が、<strong>参照される主キー（PK）側のテーブル</strong>です。矢印は「FKからPKへ向かう」と考えれば迷いません。</div>
+  <h3>大学データベースの関係を読む</h3>
+  <div class="viz">
+    <div class="viz-title">university データベースの矢印（FK →「多」から　PK →「一」へ）</div>
+    <div class="flow-diagram">
+      <div class="flow-box input">takes<br><small>student_id（FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">students<br><small>student_id（PK）</small></div>
+    </div>
+    <div class="flow-diagram">
+      <div class="flow-box input">advisor<br><small>student_id（FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">students<br><small>student_id（PK）</small></div>
+    </div>
+    <div class="flow-diagram">
+      <div class="flow-box input">teaches<br><small>instructor_id（FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">instructors<br><small>instructor_id（PK）</small></div>
+    </div>
+    <div class="flow-diagram">
+      <div class="flow-box input">advisor<br><small>instructor_id（FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">instructors<br><small>instructor_id（PK）</small></div>
+    </div>
+    <div class="flow-diagram">
+      <div class="flow-box input">section<br><small>room_number, building（複合FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">classroom<br><small>room_number, building（複合PK）</small></div>
+    </div>
+    <div class="flow-diagram">
+      <div class="flow-box input">section<br><small>course_id（FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">course<br><small>course_id（PK）</small></div>
+      <div class="flow-arrow">｜</div>
+      <div class="flow-box input">section<br><small>time_slot_id（FK）</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">time_slot<br><small>time_slot_id（PK）</small></div>
+    </div>
+    <div class="viz-cap">どの行も同じパターン：左（枝分かれ側／多）がFKを持つテーブル、右（一）がPKを持つ参照先。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>FKを持つテーブル（多）</th><th>参照先（一・PK）</th><th>関係の種類</th></tr>
+    <tr><td><code>takes</code></td><td><code>students (student_id)</code></td><td>1人の学生が複数の履修を持つ（一対多）</td></tr>
+    <tr><td><code>advisor</code></td><td><code>students (student_id)</code></td><td>1人の学生が指導教員レコードを持つ</td></tr>
+    <tr><td><code>teaches</code></td><td><code>instructors (instructor_id)</code></td><td>1人の教員が複数の担当授業を持つ（一対多）</td></tr>
+    <tr><td><code>advisor</code></td><td><code>instructors (instructor_id)</code></td><td>1人の教員が複数の学生を指導する（一対多）</td></tr>
+    <tr><td><code>section</code></td><td><code>classroom (room_number, building)</code></td><td>複合FK。2列セットでひとつの教室を参照する</td></tr>
+    <tr><td><code>section</code></td><td><code>course</code> / <code>time_slot</code></td><td>1つの科目・1つの時間帯が複数のsectionに使われる（一対多）</td></tr>
+  </table>
+  <p><code>section</code>テーブルは特に線が多いテーブルです。教室を表す<code>classroom (room_number, building)</code>という<strong>2列セット</strong>を1つの複合FKとして参照し、さらに<code>course</code>と<code>time_slot</code>にもそれぞれ別のFKで繋がっています。ERD上ではこの1つのテーブルから3方向に線が伸びる形になり、「sectionは他の多くのテーブルの情報を束ねる、いわば交差点のようなテーブルだ」ということが視覚的にすぐ分かります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ERDに現れる複合FKの例（section → classroom）</span></span>
+<span class="cl"><span class="kw">CREATE TABLE</span> section (</span>
+<span class="cl">    course_id <span class="kw">varchar</span>(<span class="nm">8</span>) <span class="kw">REFERENCES</span> course (course_id),</span>
+<span class="cl">    room_number <span class="kw">varchar</span>(<span class="nm">7</span>),</span>
+<span class="cl">    building <span class="kw">varchar</span>(<span class="nm">15</span>),</span>
+<span class="cl">    <span class="kw">FOREIGN KEY</span> (room_number, building)</span>
+<span class="cl">        <span class="kw">REFERENCES</span> classroom (room_number, building)</span>
+<span class="cl">);</span>
+</pre><div class="output-reveal">CREATE TABLE
+Query returned successfully.</div>
+  <div class="warn-box">⚠️ <strong>ERDを見て「線がおかしい」と感じたら、それは設計を見直すサインかもしれません。</strong>逆に、あるテーブルへ矢印が集中している場合は、そのテーブルが多くのテーブルから参照される中心的な存在だと分かります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>枝分かれした端＝FKを持つテーブル、シンプルな端＝PKを持つテーブル。矢印は「多」から「一」へ。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does an ERD mainly show?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Tables and how they relate to each other</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Query execution speed</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>User login history</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Disk space used by each row</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Who benefits from reading an ERD before working with a database?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only the database administrator</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Anyone inheriting or joining data, including data scientists</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Nobody — ERDs are decorative only</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only the person who first created the tables</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In pgAdmin, how do you start generating an ERD for a database?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Right-click the database and choose ERD For Database</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Type CREATE ERD in the query tool</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Export the database as CSV</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Restart pgAdmin</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does clicking a table's Show/Hide details toggle let you do?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Delete the table permanently</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Toggle which columns and key markers are visible</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rename the table</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Run a backup of the table</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">How should you reopen a saved .pgerd file?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Double-click it in the file explorer</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Open it from inside pgAdmin's ERD tool</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rename it to .sql first</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Email it to yourself and open the attachment</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In crow's foot notation, the branching (many) end of a line points at:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The table that holds the foreign key</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The table that holds the primary key</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Whichever table was created first</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The largest table by row count</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">In the university database, which tables have foreign keys pointing into students?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>takes and advisor</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>course and time_slot</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>classroom only</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>instructors and section</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What makes the foreign key from section to classroom unusual?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It references two columns together (room_number and building)</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It has no matching primary key</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It cannot be shown in an ERD</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It points to a table with no columns</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 1, 1, 0, 0, 0];
+var FEEDBACKS=["An ERD's whole purpose is to show the tables in a database and how they relate to one another.","Not just DBAs — anyone who inherits a database or needs to join tables benefits from seeing its structure first.","Right-clicking the database in pgAdmin's tree and choosing ERD For Database generates the diagram automatically.","Show/Hide details lets you toggle which columns, and which PK/FK markers, are visible on each table.","A .pgerd file is a project file for pgAdmin's ERD tool, so it must be opened from inside that tool, not double-clicked.","The branching, many-side end of a relationship line always points at the table that holds the foreign key.","takes and advisor both store a student_id column that references students, so their FK arrows point into students.","Instead of a single-column reference, this foreign key ties room_number and building together as one composite key."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">ERD</div>
+      <div class="term-en">実体関連図</div>
+      <div class="term-def">Entity Relationship Diagram。テーブルとその関係を図示したもの。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">entity</div>
+      <div class="term-en">実体</div>
+      <div class="term-def">ERD上ではテーブル1つに相当する箱。列（属性）の一覧を持つ。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">relationship</div>
+      <div class="term-en">関連</div>
+      <div class="term-def">2つのテーブルを結ぶ線。多くはPKとFKの参照関係を表す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">cardinality</div>
+      <div class="term-en">多重度</div>
+      <div class="term-def">1対1・1対多・多対多など、関係の「数」の性質。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">crow's foot</div>
+      <div class="term-en">カラスの足記法</div>
+      <div class="term-def">枝分かれした線で「多」側を表す記法。枝分かれ側＝FKを持つテーブル。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>ERDを開いたら、まず矢印が集中しているテーブルを探しましょう。それが多くの他テーブルから参照される「中心」であることが多く、JOINで頻繁に使うテーブルの目星がつきます。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🗺️ SQLレッスン：M5 ERD — pgAdmin で描く</p>
+  <p style="margin-top:.5rem;"><a href="constraints.html">← 制約</a> · <a href="index.html">🏠 概要に戻る</a> · <a href="indexes.html">Index →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2 Data types Part 4 — CASTによる型変換</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M1·M2 🔄 CAST <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Data types Part 4 Casting</div>
+  <h1>🔄 CASTによる型変換</h1>
+  <p>クエリ実行時に列のデータ型を一時的に変換するCASTの使い方と、変換が成功する条件を学ぶ。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① CASTとは何か</a><a href="#unit2">② 構文：CAST() と ::type</a><a href="#unit3">③ 変換のルール</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>CASTとは何か</h2><div class="unit-sub">クエリ時点だけの一時的な型変換——スキーマ設計の代わりではない</div></div>
+  </div>
+  <p><strong>CAST（キャスト）</strong>とは、列のデータ型を強制的に変換することです。ここで重要なのは、私たちが行っているのはあくまで<strong>クエリ（SELECT）</strong>であり、データベースやテーブルそのものを変更しているわけではないという点です。テーブルに保存されているデータ自体は変わらず、その場で取り出した結果だけを、目的に合わせて変換して表示・計算するのがCASTです。</p>
+  <p>CASTが役立つのは、すでに存在するテーブルやデータベースにアクセスしていて、そのデータ型が今やりたいことに合っていない場合です。例えば、本来は日付として扱いたいデータが文字型で保存されている、あるいは数値として計算したいデータが文字型で保存されている、といったケースです。</p>
+  <div class="warn-box">⚠️ <strong>CASTは応急処置であって、正しい設計の代わりではありません。</strong>最初から適切なデータ型を選んでおくべきで、CASTは頻繁に使うべきものではありません。すでにあるテーブルの型を作り直すのが難しい・避けたい場合の限定的な手段と考えましょう。何でもかんでもCASTするようになると、処理負荷が増えるだけでなく、他の人がそのデータを扱いにくくなります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CASTは「その場限りの型の付け替え」。テーブルの実データは変わりません。本来は最初から正しい型を選ぶべきで、CASTはやむを得ない場合の最終手段です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>CASTの構文 — 2通りの書き方</h2><div class="unit-sub">CAST(列 AS 型) と 列::型</div></div>
+  </div>
+  <h3>基本構文：CAST(column AS type)</h3>
+  <p>文字型で保存されている数値をinteger型に変換して計算に使いたい場合、次のように書きます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">CAST</span>(zip_code <span class="kw">AS</span> <span class="kw">integer</span>) - <span class="nm">10</span> <span class="kw">AS</span> adjusted</span>
+<span class="cl"><span class="kw">FROM</span> customers;</span>
+</pre><div class="output-reveal">adjusted
+--------
+   30290
+   30291</div>
+  <p><code>CAST(列名 AS 変換したい型)</code>という形で、対象の列を指定した型に変換します。変換後の値に対しては、引き算や掛け算などの計算をそのまま行えます。</p>
+  <h3>日付・タイムスタンプへの変換</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">CAST</span>(text_date <span class="kw">AS</span> <span class="kw">timestamp</span>) <span class="kw">AS</span> event_time</span>
+<span class="cl"><span class="kw">FROM</span> events;</span>
+</pre>
+  <p>文字型の日付を<code>timestamp</code>に変換すれば、日付の計算やINTERVALを使った演算が可能になります。</p>
+  <h3>短縮構文：column::type</h3>
+  <p>PostgreSQLには、<code>CAST() AS</code>を使わずに書ける、より短い専用構文もあります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> zip_code::<span class="kw">integer</span> - <span class="nm">10</span> <span class="kw">AS</span> adjusted</span>
+<span class="cl"><span class="kw">FROM</span> customers;</span>
+</pre>
+  <p><code>列名::型名</code>のようにコロン2つ（<code>::</code>）を挟むだけで、CASTと全く同じ動作をします。文字数はほぼ変わりませんが、スペースを省けるぶんやや短く書けます。可読性という点では<code>CAST() AS</code>のほうが分かりやすいという意見もあり、どちらを使うかは所属するチームや会社の規約に従うのが一般的です。</p>
+  <div class="teal-box">📌 どちらの構文も結果は同じです。<code>CAST(col AS type)</code>と<code>col::type</code>、2つの書き方があることを覚えておきましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CASTには2つの書き方があります：<code>CAST(列 AS 型)</code>という正式な書き方と、<code>列::型</code>という短縮形。どちらも同じ結果になります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>変換が成功するためのルール</h2><div class="unit-sub">「変換先の型に収まるデータ」であることが絶対条件</div></div>
+  </div>
+  <p>CASTの一番大切なルールはシンプルです。<strong>変換元のデータが、変換先の型として成立する内容でなければならない</strong>ということです。</p>
+  <h3>失敗する例：文字が混ざったテキストをintegerへ</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">CAST</span>(code <span class="kw">AS</span> <span class="kw">integer</span>) <span class="kw">FROM</span> demo;</span>
+<span class="cl"><span class="cm">-- codeの値が 'A105' の場合</span></span>
+</pre><div class="output-reveal">ERROR:  invalid input syntax for type integer: "A105"</div>
+  <p>'A105'のように数字以外の文字（特殊文字を含む）が混ざっている場合、integerへの変換はエラーになります。すべて数字だけで構成されている文字列——例えばZIPコードのような値——であれば、integerへの変換は成功します。</p>
+  <div class="teal-box">📌 <strong>覚え方：</strong>靴下に足を入れるのと同じイメージです。足に対して靴下が小さすぎたり、そもそも形が合わなければ、無理に押し込んでも入りません。データが変換先の型にきちんと「フィット」する内容でなければ、CASTは失敗します。</div>
+  <h3>失敗する例：フォーマットが合わない日付文字列</h3>
+  <p>text型の日付をtimestampに変換する場合も同様のルールが適用されます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">CAST</span>(text_date <span class="kw">AS</span> <span class="kw">timestamp</span>) <span class="kw">FROM</span> events;</span>
+</pre>
+  <p>この変換が成功するには、<code>text_date</code>列の値がSQLで認識される日付形式（例：<code>'2022-12-01'</code>）になっている必要があります。フォーマットが崩れている、あるいは日付として解釈できない文字列が混ざっている場合はエラーになります。</p>
+  <div class="warn-box">⚠️ <strong>事前チェックが重要：</strong>キャストする前に、<code>DISTINCT</code>などを使って対象列の値を確認し、フォーマットが揃っているか・変換先の型にきちんと収まるかを事前に調べておくことをおすすめします。データが揃っていない場合は、先にクリーニング（修正）してからキャストする必要があります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ルールはただ1つ——「変換先の型にそのデータが本当に収まるか」。数字以外の文字が混ざったテキストをintegerに、不正な形式の文字列をtimestampに変換しようとすると、必ずエラーになります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does CAST actually do to the underlying table's stored data?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It permanently changes the column's data type stored in the table</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Nothing — it only changes how the result is displayed</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It deletes the original column and recreates it from scratch</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It automatically renames the table without warning</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which is the correct basic CAST syntax?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CONVERT column TO type</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>CAST(column AS type)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ALTER column TYPE type</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>column TO type</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which of the following is equivalent to "CAST(zip_code AS integer)" in PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>zip_code::integer</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>zip_code->integer</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>zip_code=>integer</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>zip_code..integer</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What is the single most important rule that determines whether a CAST will succeed?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The column must always have a NOT NULL constraint already set</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The table must contain fewer than 1000 total rows of data</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The underlying value's content must actually be valid for that type</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The column must already be some kind of numeric type</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Casting the text value 'A105' to integer will:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Succeed and return 105, silently ignoring the letter</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Succeed and simply return the value 0 instead</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Silently convert the letter 'A' into some random number</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Fail with a syntax error, since it isn't purely numeric</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What must be true for CAST(text_date AS timestamp) to succeed?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>text_date's values must already be in a recognized date format</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>text_date is allowed to contain any arbitrary text at all</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>text_date must already be defined as a numeric column</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The table must already have a defined primary key</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why shouldn't CAST be used as a routine substitute for choosing the correct column data type up front?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CAST is completely illegal to use more than once per query</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>CAST results can never be used inside any WHERE clause</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Overusing it adds overhead and makes data harder to work with</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>CAST is officially deprecated and about to be removed</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What's a good practice before casting a text column to a stricter type like integer or timestamp?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Immediately run the CAST without checking the data at all first</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Delete all rows with unusual-looking values before checking anything</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rename the column so it matches the target type's own name</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Inspect the column's distinct values first to confirm they'll fit</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 0, 2, 3, 0, 2, 3];
+var FEEDBACKS=["CAST only affects how the query's result is presented/typed — the underlying data stored in the table is untouched.", "The standard syntax is CAST(column AS type), specifying the column and the target data type.", "The double-colon shorthand column::type is functionally identical to CAST(column AS type) in PostgreSQL.", "A CAST only succeeds if the actual content of the value is valid for the target type — the data has to genuinely 'fit'.", "Because 'A105' contains a non-numeric character, casting it to integer raises an invalid input syntax error rather than partially converting it.", "The text value must already match a date/time format SQL recognizes, or the cast to timestamp will fail.", "Relying on CAST routinely (instead of fixing the schema) adds unnecessary processing cost and makes the data less intuitive/harder to use for others.", "Checking distinct values beforehand (e.g. with SELECT DISTINCT) helps confirm the data is clean and will actually convert successfully before running the CAST."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">CAST</div>
+      <div class="term-en">キャスト</div>
+      <div class="term-def">クエリ結果の値を、その場だけ別のデータ型に変換すること。元のテーブルは変更されない。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">CAST(col AS type)</div>
+      <div class="term-en">標準構文</div>
+      <div class="term-def">列を指定した型に変換する基本の書き方。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">::type</div>
+      <div class="term-en">短縮構文</div>
+      <div class="term-def">PostgreSQL独自の、CASTと同じ結果を得られるコロン2つの短縮記法。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">invalid input syntax</div>
+      <div class="term-en">不正な入力エラー</div>
+      <div class="term-def">変換元の値の内容が変換先の型として成立しないときに出るエラー。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>キャストする前に、対象列の値をDISTINCTなどで確認しておくと、変換エラーを未然に防げます。「このデータは本当にこの型に収まるか？」を常に自問しましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔄 SQLレッスン：CASTによる型変換</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

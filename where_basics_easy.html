@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超やさしい版：M3 Filtering with Where Part 1</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🎯 Where① <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy active" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M3 · Filtering with Where Part 1 🍎</div>
+    <h1>🍎 超やさしい版：WHERE①</h1>
+    <p>条件が○（TRUE）の行だけが残る。それがWHEREのすべてです。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">比較演算子</a><a href="#u3">型の落とし穴</a><a href="where_basics.html" class="easy-toplink">🎯 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">○×クイズを1行ずつ</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">WHEREは1行ずつ条件をチェックして、<strong>TRUE（○）の行だけを結果に残します</strong>。FALSE（×）の行は飛ばされます。書く場所は<strong>FROMの後ろ、ORDER BYの前</strong>。</p></div>
+  <p class="code-label">▶ 第1四半期の売上だけを見る</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, product_line, sales</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span>;</span>
+</pre><div class="output-reveal">customer          | product_line | sales
+------------------+--------------+--------
+Land of Toys Inc. | Motorcycles  | 2871.00
+（665 rows）</div>
+  <div class="big-rule">
+    <div class="ru-arrow">🔍</div>
+    <div class="ru-text"><strong>絞り込みに使った列を表示する必要はありません。</strong>上の例では<code>qtr</code>で絞っているのに、<code>qtr</code>は表示していません（全部1になるので）。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>順番は <code>SELECT → FROM → WHERE → ORDER BY</code>。この並びは固定です。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>比較演算子</h2><div class="unit-sub">算数の記号がほぼそのまま</div></div></div>
+  <table class="compare-table">
+    <tr><th>記号</th><th>意味</th><th>メモ</th></tr>
+    <tr><td><code>=</code></td><td>等しい</td><td><code>==</code>ではない</td></tr>
+    <tr><td><code>&gt;</code> <code>&lt;</code></td><td>より大きい／小さい</td><td>算数と同じ</td></tr>
+    <tr><td><code>&gt;=</code> <code>&lt;=</code></td><td>以上／以下</td><td>比較記号が先、＝が後</td></tr>
+    <tr><td><code>&lt;&gt;</code> または <code>!=</code></td><td>等しくない</td><td>どちらでもOK（統一する）</td></tr>
+  </table>
+  <p class="code-label">▶ 文字列はシングルクォートで囲む</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> region = <span class="st">'SW'</span>;</span>
+</pre>
+  <p>日付も比較できます（<code>order_date &gt; '2020-01-01'</code>）。ただしフォーマットが合っていないとエラーになります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>数値はそのまま、文字と日付は<code>'</code>で囲む。これだけ覚えれば大丈夫です。</p></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>エラーが出たら「型」を疑う</h2><div class="unit-sub">money型の落とし穴</div></div></div>
+  <p class="code-label">▶ これはエラーになる</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> sales &gt; <span class="nm">3000</span>;</span>
+</pre><div class="output-reveal">ERROR:  operator does not exist: money > integer</div>
+  <div class="big-rule">
+    <div class="ru-arrow">💰</div>
+    <div class="ru-text"><strong><code>sales</code>はmoney型。</strong>money型は<code>$</code>という文字を含むので、<strong>比較する値もクォートで囲む</strong>必要があります。</div>
+  </div>
+  <p class="code-label">▶ 正しい書き方</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> sales &gt; <span class="st">'3000'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> sales;</span>
+</pre><div class="output-reveal">customer           | sales
+-------------------+-----------
+Muscle Machine Inc | $3,002.00</div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 条件がFALSEの行はどうなる？<span class="cp-a">A. 結果に含まれない（飛ばされる）。</span></div><div class="cp-q">Q2. 「以上」はどう書く？<span class="cp-a">A. <code>&gt;=</code>。<code>=&gt;</code>ではないので注意。</span></div><div class="cp-q">Q3. money型の列を3000と比べるには？<span class="cp-a">A. <code>&gt; '3000'</code> のようにクォートで囲む。</span></div></div>
+</div>
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="where_basics.html">🎯 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• TRUEの行だけが残る</p><p style="margin:.4rem 0">• 位置はFROMの後、ORDER BYの前</p><p style="margin:.4rem 0">• 文字・日付・moneyはクォートで囲む</p><p style="margin:.4rem 0">• エラーが出たらまず列の型を確認</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">1行ずつの評価のしくみや型エラーの直し方は <a href="where_basics.html">本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：WHERE① — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="where_basics.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

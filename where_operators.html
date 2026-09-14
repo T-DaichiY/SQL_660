@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Filtering with Where Part 2 — 論理演算子</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🔗 Where② <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Filtering with Where — Part 2</div>
+  <h1>🔗 WHERE② — 論理演算子</h1>
+  <p>複数の条件を組み合わせる AND / OR、範囲の BETWEEN、リストの IN、そして IS NULL と NOT。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① AND と OR</a><a href="#unit2">② BETWEEN</a><a href="#unit3">③ IN</a><a href="#unit4">④ IS NULL と NOT</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>AND と OR — 条件を組み合わせる</h2><div class="unit-sub">2つのTRUE/FALSEを1つにまとめる</div></div>
+  </div>
+  <p>前のレッスンで学んだ比較演算子は「1つの条件」を作るものでした。<strong>論理演算子（logical operators）</strong>は、その条件を<strong>複数組み合わせて1つの判定にまとめる</strong>ための道具です。</p>
+  <div class="note-box">🎬 <strong>身近な例で考えましょう。</strong>「部屋を片付けたら映画に行っていい」——これが条件1つの状態です。ここに「宿題も終わらせること」を加えると、条件は2つになります。<strong>両方やらないとダメ＝AND</strong>、<strong>どちらか一方でOK＝OR</strong>。SQLの論理演算子もまったく同じ発想です。</div>
+  <h3>AND の真理値表（truth table）</h3>
+  <table class="compare-table">
+    <tr><th>条件1</th><th>条件2</th><th>AND の結果</th></tr>
+    <tr><td>TRUE</td><td>TRUE</td><td><strong>TRUE ✅</strong></td></tr>
+    <tr><td>TRUE</td><td>FALSE</td><td>FALSE</td></tr>
+    <tr><td>FALSE</td><td>TRUE</td><td>FALSE</td></tr>
+    <tr><td>FALSE</td><td>FALSE</td><td>FALSE</td></tr>
+  </table>
+  <p><strong>ANDは両側がTRUEのときだけTRUE</strong>になります。条件が厳しくなるので、結果の行数は<strong>減ります</strong>。</p>
+  <h3>OR の真理値表</h3>
+  <table class="compare-table">
+    <tr><th>条件1</th><th>条件2</th><th>OR の結果</th></tr>
+    <tr><td>TRUE</td><td>TRUE</td><td><strong>TRUE ✅</strong></td></tr>
+    <tr><td>TRUE</td><td>FALSE</td><td><strong>TRUE ✅</strong></td></tr>
+    <tr><td>FALSE</td><td>TRUE</td><td><strong>TRUE ✅</strong></td></tr>
+    <tr><td>FALSE</td><td>FALSE</td><td>FALSE</td></tr>
+  </table>
+  <p><strong>ORは片方でもTRUEならTRUE</strong>。条件が緩くなるので、結果の行数は<strong>増えます</strong>。</p>
+  <div class="teal-box">📌 <strong>ANDは絞る、ORは広げる。</strong>「思ったより結果が少ない/多い」と感じたら、まずAND/ORの選択が意図どおりか確認しましょう。</div>
+  <h3>AND の例：バイクかつ15,000ドル未満</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> product_line, price <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> product_line = <span class="st">'Motorcycles'</span></span>
+<span class="cl">  <span class="kw">AND</span> price &lt; <span class="nm">15000</span>;</span>
+</pre><div class="output-reveal">product_line | price
+-------------+--------
+Motorcycles  |  95.70
+Motorcycles  | 118.94
+（バイク かつ 15000未満 の行だけ）</div>
+  <p>「バイクであること」と「15,000ドル未満であること」の<strong>両方</strong>を満たす行だけが残ります。</p>
+  <h3>OR の例：車、または20,000ドル超</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> product_line, price <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> price &gt; <span class="nm">20000</span></span>
+<span class="cl">   <span class="kw">OR</span> product_line = <span class="st">'Classic Cars'</span>;</span>
+</pre>
+  <p>20,000ドルを超えていれば車でなくても含まれ、車であれば20,000ドル以下でも含まれます。<strong>どちらか一方を満たせば十分</strong>だからです。</p>
+  <div class="note-box">🔍 <strong>XOR（排他的論理和）について：</strong>「どちらか<strong>一方だけ</strong>がTRUEのときにTRUE」という演算子も存在します（両方TRUEならFALSE）。プログラミング言語ではよく登場しますが、このコースでは深く扱いません。「そういうものがある」とだけ知っておけば十分です。</div>
+  <div class="warn-box">⚠️ <strong>キーワードは大文字で書きましょう。</strong><code>AND</code> <code>OR</code>も<code>SELECT</code>や<code>WHERE</code>と同じキーワードです。小文字でも動作しますが、大文字にするのが慣習であり、期待されるスタイルです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>AND＝「両方とも」（結果は減る）、OR＝「どちらかが」（結果は増える）。日本語の「かつ」「または」そのままです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>BETWEEN — 範囲を指定する</h2><div class="unit-sub">両端を含む（inclusive）ことに注意</div></div>
+  </div>
+  <p>「売上が20,000〜30,000ドルの範囲」を指定したいとき、ANDで書くこともできます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 書き方1：AND を使う</span></span>
+<span class="cl"><span class="kw">WHERE</span> sales &gt; <span class="nm">20000</span> <span class="kw">AND</span> sales &lt; <span class="nm">30000</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 書き方2：BETWEEN を使う</span></span>
+<span class="cl"><span class="kw">WHERE</span> sales <span class="kw">BETWEEN</span> <span class="nm">20000</span> <span class="kw">AND</span> <span class="nm">30000</span></span>
+</pre>
+  <div class="warn-box">⚠️ <strong>この2つは同じ結果になりません！</strong>上の書き方1は<code>&gt;</code>と<code>&lt;</code>なので<strong>両端を含みません</strong>（20,000ちょうどと30,000ちょうどは除外）。一方<code>BETWEEN</code>は<strong>両端を含みます</strong>（inclusive）。20,000も30,000も結果に入ります。</div>
+  <table class="compare-table">
+    <tr><th>書き方</th><th>20,000</th><th>25,000</th><th>30,000</th><th>用語</th></tr>
+    <tr><td><code>&gt; 20000 AND &lt; 30000</code></td><td>❌ 含まない</td><td>✅</td><td>❌ 含まない</td><td>exclusive（排他的）</td></tr>
+    <tr><td><code>BETWEEN 20000 AND 30000</code></td><td>✅ 含む</td><td>✅</td><td>✅ 含む</td><td>inclusive（包含的）</td></tr>
+    <tr><td><code>&gt;= 20000 AND &lt;= 30000</code></td><td>✅ 含む</td><td>✅</td><td>✅ 含む</td><td>BETWEENと同じ</td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>inclusive と exclusive：</strong>inclusive＝始点と終点を<strong>含む</strong>、exclusive＝<strong>含まない</strong>。BETWEENはinclusiveです。もし覚えにくければ、<code>&gt;=</code>と<code>&lt;=</code>を使って自分で書き下せば、迷いようがありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>BETWEEN A AND B は「A以上B以下」。両端が入ることを忘れずに。<code>&gt;</code><code>&lt;</code>で書くと両端は入りません。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>IN — 候補リストから選ぶ</h2><div class="unit-sub">OR の繰り返しをすっきりさせる</div></div>
+  </div>
+  <p>「ニューヨーク、シカゴ、アトランタの売上が見たい」——ORで書くとこうなります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 冗長な書き方</span></span>
+<span class="cl"><span class="kw">WHERE</span> city = <span class="st">'NYC'</span></span>
+<span class="cl">   <span class="kw">OR</span> city = <span class="st">'Chicago'</span></span>
+<span class="cl">   <span class="kw">OR</span> city = <span class="st">'Atlanta'</span></span>
+</pre>
+  <p>都市が増えるほど長くなり、読みにくくなります。そこで<code>IN</code>を使います。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> city, sales <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> city <span class="kw">IN</span> (<span class="st">'NYC'</span>, <span class="st">'Chicago'</span>, <span class="st">'Atlanta'</span>);</span>
+</pre><div class="output-reveal">city    | sales
+--------+---------
+NYC     | 5404.62
+Chicago | 3227.90
+Atlanta | 2333.12
+...</div>
+  <p><code>IN (…)</code>は「このリストのいずれかに一致するか？」を判定します。一致すればTRUE、その行が結果に含まれます。<strong>カッコの中はカンマ区切り</strong>、文字列は<strong>シングルクォート</strong>で囲みます。</p>
+  <div class="teal-box">📌 <strong>INを使うべきサイン：</strong>クエリの中に<strong>同じ列に対する<code>=</code>と<code>OR</code>が何度も繰り返されている</strong>のを見つけたら、INに書き換えられます。短くなるだけでなく、意図も伝わりやすくなります。</div>
+  <p>INは文字列専用ではありません。数値でも日付でも使えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">WHERE</span> qtr <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">4</span>)                <span class="cm">-- 第1・第4四半期</span></span>
+<span class="cl"><span class="kw">WHERE</span> product_line <span class="kw">IN</span> (<span class="st">'Planes'</span>, <span class="st">'Ships'</span>, <span class="st">'Trains'</span>)</span>
+</pre>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「AかBかCのどれか」を探すならIN。<code>列 IN ('A','B','C')</code>と書くだけで、ORを何本も並べる必要がなくなります。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>IS NULL と NOT</h2><div class="unit-sub">値がない行を探す／条件を反転させる</div></div>
+  </div>
+  <h3>IS NULL — 値が入っていない行を探す</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> shipping <span class="kw">IS NULL</span>;</span>
+</pre><div class="output-reveal">（shipping 列が空のレコードだけが返る）</div>
+  <p><code>IS NULL</code>は、その列にNULL（値なし）が入っている行だけを返します。データサイエンスでは<strong>データクリーニング（data cleaning）</strong>・<strong>データラングリング（data wrangling）</strong>の出発点として非常によく使われます。</p>
+  <div class="note-box">🧹 NULLを見つけたあとの選択肢はいくつかあります——別の値で埋める、0として扱う、その行ごと除外する、など。どれが正しいかはデータと目的次第です。まずは<strong>「NULLがどこにどれだけあるかを素早く把握できること」</strong>が重要です。</div>
+  <h3>NOT — 条件を反転させる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">NOT</span> status = <span class="st">'Shipped'</span>;</span>
+</pre>
+  <p><code>NOT</code>は条件の結果をひっくり返します。ステータスがShipped・Pending・Deliveredの3種類あるなら、この条件ではPendingとDeliveredの行が返ります。</p>
+  <div class="warn-box">⚠️ <strong>NOTは「それ以外すべて」です。</strong>NULLの行も「Shippedではない」ので結果に含まれます。「Shipped以外」を意図したつもりが、値の入っていない行まで拾ってしまう——これはよくある落とし穴です。</div>
+  <div class="teal-box">📌 <strong>NOTの後ろは必ずブール値（TRUE/FALSE）になる式でなければなりません。</strong>反転させる対象がTRUE/FALSEでなければエラーになります。<code>NOT</code>は前のレッスンで出てきた<code>!=</code>の<code>!</code>と同じ「否定」の考え方です。</div>
+  <h3>まとめ：このレッスンの演算子</h3>
+  <table class="compare-table">
+    <tr><th>演算子</th><th>意味</th><th>例</th></tr>
+    <tr><td><code>AND</code></td><td>両方TRUEのとき</td><td><code>qtr = 1 AND sales &gt; '3000'</code></td></tr>
+    <tr><td><code>OR</code></td><td>どちらかがTRUEのとき</td><td><code>city = 'NYC' OR city = 'Chicago'</code></td></tr>
+    <tr><td><code>BETWEEN</code></td><td>範囲内（両端を含む）</td><td><code>qtr BETWEEN 1 AND 3</code></td></tr>
+    <tr><td><code>IN</code></td><td>リストのいずれかに一致</td><td><code>qtr IN (1, 4)</code></td></tr>
+    <tr><td><code>IS NULL</code></td><td>値がない</td><td><code>shipping IS NULL</code></td></tr>
+    <tr><td><code>NOT</code></td><td>条件の反転</td><td><code>NOT status = 'Shipped'</code></td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>IS NULL＝「空っぽの行を探す」、NOT＝「それ以外を探す」。NOTはNULLの行も拾ってしまう点に注意。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">AND returns TRUE when:</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Both sides are TRUE</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>At least one side is TRUE</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Exactly one side is TRUE</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither side is TRUE</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Compared with AND, using OR on the same two conditions generally returns:</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Fewer rows, since OR is stricter</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>More rows, since OR is less restrictive</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Exactly the same rows every time</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>No rows at all unless both are TRUE</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Does "sales BETWEEN 20000 AND 30000" include the value 30000?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes — BETWEEN is inclusive</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No — BETWEEN excludes both endpoints</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only if you add the keyword INCLUSIVE</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only the lower endpoint is included</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which pair of comparisons is equivalent to BETWEEN 20000 AND 30000?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>&gt; 20000 AND &lt; 30000</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>&gt;= 20000 AND &lt;= 30000</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>&gt; 20000 OR &lt; 30000</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>&gt;= 20000 OR &lt;= 30000</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which is the correct IN syntax?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE city IN ('NYC', 'Chicago')</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE city IN ['NYC', 'Chicago']</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE city = IN 'NYC', 'Chicago'</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE IN city ('NYC', 'Chicago')</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What is the clearest sign that a query should be rewritten with IN?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The same column is compared with = again and again using OR</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The query contains an ORDER BY on two columns</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The WHERE clause compares a numeric column</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The SELECT list uses the asterisk wildcard</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why is IS NULL so useful in data science work?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It automatically fills the empty values with zero</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It quickly locates missing data during cleaning</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It permanently deletes the incomplete records</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It prevents NULL values from ever being inserted</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Statuses are Shipped, Pending and Delivered, and some rows are NULL. What does WHERE NOT status = 'Shipped' return?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only the Shipped rows</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Pending and Delivered rows only, never NULL ones</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Everything that is not Shipped, NULL rows included</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Nothing, because NOT cannot be used with equals</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 1, 0, 0, 1, 2];
+var FEEDBACKS=["AND is the strict one: both conditions have to evaluate TRUE for the row to be kept.","OR only needs one side to be TRUE, so it is less restrictive and lets more rows through.","BETWEEN is inclusive — both the start and the end value are part of the range.","BETWEEN matches >= on the lower bound and <= on the upper bound. Writing it out this way removes any doubt.","IN takes a comma-separated list inside parentheses, with text values in single quotes.","Repeated equality checks joined by OR on one column is exactly what IN replaces.","IS NULL finds the missing values fast, which is the first step of cleaning and wrangling data.","NOT flips the condition, so every row that is not Shipped comes back — and rows with no status at all are also 'not Shipped'."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">logical operator</div>
+      <div class="term-en">論理演算子</div>
+      <div class="term-def">複数の条件を組み合わせて1つのTRUE/FALSEにまとめる演算子。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">truth table</div>
+      <div class="term-en">真理値表</div>
+      <div class="term-def">入力の組み合わせごとに結果がどうなるかを一覧にした表。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">BETWEEN</div>
+      <div class="term-en">範囲指定</div>
+      <div class="term-def">開始値と終了値を<strong>含む</strong>範囲を指定する演算子（inclusive）。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">inclusive / exclusive</div>
+      <div class="term-en">包含的／排他的</div>
+      <div class="term-def">両端の値を含むか含まないか。BETWEENは包含的。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">IN</div>
+      <div class="term-en">リスト照合</div>
+      <div class="term-def">カッコ内のリストのいずれかに一致すればTRUE。ORの繰り返しを置き換える。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">IS NULL</div>
+      <div class="term-en">NULL判定</div>
+      <div class="term-def">値が入っていない行を抽出する。データクリーニングの必須ツール。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>複雑な条件は、日本語で「〜かつ〜」「〜または〜」と声に出してから書くと間違えません。ANDとORが混在するときは、意図をはっきりさせるためカッコを使いましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔗 SQLレッスン：WHERE② — 論理演算子</p>
+  <p style="margin-top:.5rem;"><a href="where_basics.html">← WHERE①</a> · <a href="index.html">🏠 概要</a> · <a href="where_like.html">次：LIKE・ILIKE →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

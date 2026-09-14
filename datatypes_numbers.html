@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2 Data types Part 2 — INTEGER・SERIAL・NUMERIC</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M1·M2 🔢 数値型 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Data types Part 2 Numbers</div>
+  <h1>🔢 数値データ型 — INTEGER・SERIAL・NUMERIC</h1>
+  <p>整数系（smallint/integer/bigint）、自動採番のserial系、そして小数を扱うnumericの精度(precision)とスケール(scale)を理解する。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 文字と数値の違い</a><a href="#unit2">② 整数系とserial系</a><a href="#unit3">③ 小数：precisionとscale</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>文字データ型と数値データ型の違い</h2><div class="unit-sub">「計算に使うかどうか」が最大の分かれ目</div></div>
+  </div>
+  <p>文字データ型と数値データ型の一番の違いは、<strong>その値に対して数学的な計算を行う意図があるかどうか</strong>です。ある列が数字だけで構成されていても、それが計算対象でないなら（郵便番号や商品コードのように）文字型を使うべきです。逆に、加減乗除やその他の計算をしたいなら数値型を選びます。</p>
+  <div class="note-box">💡 文字型として保存された数字（例：'123'という文字列）は、そのままでは計算に使えません。計算したい場合はCAST（型変換）が必要です。CASTについては別レッスンで扱います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「この値を足し算・掛け算などの計算に使いたいか？」——YESなら数値型、NOなら（数字に見えても）文字型を検討しましょう。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>整数系（integer）とserial系</h2><div class="unit-sub">バイト数・範囲、そして自動採番される主キー</div></div>
+  </div>
+  <h3>整数系：smallint・integer・bigint</h3>
+  <p>整数（小数を含まない、正負両方の値）を扱う代表的な3つの型です。</p>
+  <table class="compare-table">
+    <thead><tr><th>型</th><th>サイズ</th><th>用途の例</th></tr></thead>
+    <tbody>
+      <tr><td><code>smallint</code></td><td>2バイト（約±32,000の範囲）</td><td>社員ID・在籍年数など、比較的小さい値</td></tr>
+      <tr><td><code>integer</code></td><td>4バイト（最も一般的）</td><td>あらゆる場面で使われる標準的な整数型</td></tr>
+      <tr><td><code>bigint</code></td><td>8バイト（非常に広い範囲）</td><td>暗号化に関わる値など、20億を超える可能性がある値</td></tr>
+    </tbody>
+  </table>
+  <div class="warn-box">⚠️ <strong>「とりあえずbigint」は良くない：</strong>大は小を兼ねるからと何でもbigintにすると、レコード数が数百万〜数十億に達したときにストレージと処理速度の両方で無駄なコストがかかります。実際に必要な範囲を見積もって選びましょう。</div>
+  <h3>自動採番：smallserial・serial・bigserial</h3>
+  <p>整数系と非常によく似た型に<strong>serial系</strong>があります。範囲はほぼ同じですが、<strong>負の値を含まず、1から自動的にインクリメント（増分）していく</strong>という特徴があります。この性質から、レコードを一意に識別する<strong>主キー（primary key）</strong>として頻繁に使われます。</p>
+  <table class="compare-table">
+    <thead><tr><th>型</th><th>範囲の目安</th><th>用途の例</th></tr></thead>
+    <tbody>
+      <tr><td><code>smallserial</code></td><td>〜約32,000</td><td>社員IDや型番など、件数がそれほど多くならないもの</td></tr>
+      <tr><td><code>serial</code></td><td>〜約20億</td><td>社会保障番号や口座番号のような、ある程度永続的な一意識別子</td></tr>
+      <tr><td><code>bigserial</code></td><td>〜約922京</td><td>Amazonの注文番号・取引ID・領収書番号など、膨大な件数が発生するもの</td></tr>
+    </tbody>
+  </table>
+  <p>なぜ一意な識別子（ID）が必要なのでしょうか。世界には同姓同名の「John Smith」が何千人もいます。FacebookやInstagramのアカウント、銀行口座、社会保障番号のように、<strong>一意な値を割り当てることで特定のレコードを素早く正確に検索できる</strong>ようになります。</p>
+  <div class="teal-box">📌 主キーはメールアドレスのような値でも代用できますが、整数の一意な値のほうが検索・照合が高速で効率的なため、実務ではserial系がよく使われます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>整数はsmallint→integer→bigintの順で扱える範囲が広がります。serial系はそれに「自動採番」機能が付いたバージョンで、主キーの定番です。件数の見込みに応じてサイズを選びましょう。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>小数を扱う型：precisionとscale</h2><div class="unit-sub">固定小数点(numeric/decimal) vs 浮動小数点(real/double precision)</div></div>
+  </div>
+  <p>小数（フラクション）は、整数部分と小数部分を持つ値です。SQLには分数という概念はなく、すべて小数（decimal）として表現されます。小数には<strong>固定小数点（fixed point）</strong>と<strong>浮動小数点（floating point）</strong>の2種類があります。</p>
+  <h3>固定小数点：numeric（decimal） — precisionとscale</h3>
+  <p>最もよく使う固定小数点型が<code>numeric</code>です。<code>numeric(precision, scale)</code>という形で指定し、この2つの数値の意味を正しく理解することが重要です。</p>
+  <table class="compare-table">
+    <thead><tr><th>用語</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td><strong>precision</strong>（精度）</td><td>数値全体で使える桁数の合計（整数部分＋小数部分）</td></tr>
+      <tr><td><strong>scale</strong>（スケール）</td><td>小数点以下に使える桁数</td></tr>
+    </tbody>
+  </table>
+  <div class="warn-box">⚠️ <strong>よくある誤解：</strong>「precisionは小数点の左側の桁数」ではありません。precisionは<strong>全体の桁数</strong>、scaleが小数点以下の桁数です。precisionから scaleを引いた分が、小数点の左側（整数部分）の桁数になります。</div>
+  <h3>実例：住宅ローンの月々の支払額</h3>
+  <p>月々の住宅ローン返済額が、最大で$9,999.99まで想定されるとします。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> mortgage (</span>
+<span class="cl">    monthly_payment <span class="kw">numeric</span>(<span class="nm">6</span>, <span class="nm">2</span>)</span>
+<span class="cl">);</span>
+</pre>
+  <p>$9,999.99は「9999」＋「99」＝合計6桁なので precision = 6、小数点以下は2桁なので scale = 2。つまり<code>numeric(6, 2)</code>が正解です。もし上限を$999.99までに絞り込むなら、全体の桁数は5になるのでprecisionは5に変わります（scaleは2のまま）。逆にscaleを3に増やせば、小数点以下が1桁増える代わりに整数部分の桁が1つ減り、最大値は$99.999になります。</p>
+  <div class="teal-box">📌 <strong>覚え方：</strong>precision＝合計の桁数、scale＝小数点<u>以下</u>の桁数。「precision引くscale」が小数点より左側（整数部分）の桁数になります。</div>
+  <h3>浮動小数点：real・double precision</h3>
+  <p>固定小数点が「桁数を厳密に固定する」のに対し、浮動小数点は柔軟に桁数が変わる代わりに、精度がやや劣る（＝厳密な正確さが必要な金額計算には不向き）という特徴があります。その代わりストレージが小さく済むため、大量の小さな値を保存するような場面で有効です。</p>
+  <table class="compare-table">
+    <thead><tr><th>用途</th><th>おすすめの型</th></tr></thead>
+    <tbody>
+      <tr><td>金額計算など、厳密な正確さが必要</td><td>固定小数点（<code>numeric</code> / <code>decimal</code>）</td></tr>
+      <tr><td>厳密さより省スペースを優先したい大量データ</td><td>浮動小数点（<code>real</code> / <code>double precision</code>）</td></tr>
+    </tbody>
+  </table>
+  <div class="note-box">💡 <strong>迷ったら少し大きめに：</strong>データ型は後から縮小するのが難しく、面倒です。想定される最大値に確信が持てないときは、思っているよりも一段階大きいサイズを選んでおく方が安全です（例：社員IDの再利用がないと確信できないならsmallserialではなくserialを検討）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>numeric(precision, scale)は「全体の桁数」と「小数点以下の桁数」で決まります。金額のように正確さが命の値は固定小数点、大量の近似値でよいデータは浮動小数点が向いています。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 9</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What fundamentally distinguishes a number data type from a character data type?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Number types are always noticeably shorter to type out in SQL</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Number types are meant to have math operations performed on them</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Number types can never be allowed to contain a zero value</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>There is no real practical difference between the two categories</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What key property distinguishes the serial family (smallserial/serial/bigserial) from the plain integer family?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>serial types are able to store decimal values while integer types cannot</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>serial types auto-increment and only hold positive values, used for primary keys</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>serial types will always take up less storage than any integer type</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>serial types are only ever usable together with plain text columns</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why might a table use bigserial instead of serial for its primary key?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>bigserial is strictly required by SQL syntax for every primary key</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>bigserial allows negative ID values, while plain serial does not</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The table should grow into the billions of rows, like transaction records</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>bigserial is simply an alias for serial with no functional difference</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In numeric(precision, scale), what does "precision" refer to?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The number of digits allowed to the left of the decimal point only</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The number of digits allowed to the right of the decimal point only</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The total number of digits allowed in the entire value</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The maximum number of rows a table can have</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In numeric(precision, scale), what does "scale" refer to?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The total number of digits allowed in the entire value</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The byte size that the column occupies on disk</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of rows affected by running an UPDATE</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The number of digits allowed after the decimal point</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">To store a value up to $9,999.99 (two decimal places), what should numeric(precision, scale) be set to?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>numeric(4, 2)</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>numeric(2, 6)</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>numeric(6, 2)</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>numeric(9, 9)</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">When is a fixed-point type (numeric/decimal) strongly preferred over a floating-point type (real/double precision)?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>When exact precision matters, such as storing monetary values</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>When you want the smallest possible storage footprint at any cost</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>When you never need any decimal digits at all</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Fixed-point and floating-point are always fully interchangeable</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why is it good practice to choose a slightly larger numeric type than you think you currently need?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Larger types will always make every query run measurably faster</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Smaller types are always more expensive to store than larger ones</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SQL requires every single numeric column to default to bigint</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It's difficult to resize a data type once a table is in production</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">Why can't you directly do math on a numeric-looking value that's stored as a character type?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>You would first need to CAST it to a number type before doing math</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Character columns can never be allowed to contain digit characters</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SQL automatically performs the math regardless of the stored type</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is actually always possible to do this with no extra steps</button></div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 2, 2, 3, 2, 0, 3, 0];
+var FEEDBACKS=["Number types are meant for values you intend to perform mathematical computations on; character types are not, even if they contain digit-like text.", "The serial family auto-increments starting from 1 and only holds positive values, which is exactly the behavior needed for a unique, auto-generated primary key.", "bigserial is chosen when a table is expected to grow into the billions of rows, such as transaction or order records, exceeding what serial's range comfortably covers.", "Precision is the TOTAL number of digits allowed in the value (digits before AND after the decimal point combined).", "Scale is specifically the number of digits allowed after the decimal point.", "$9,999.99 has 6 total digits (9999 + 99) with 2 of them after the decimal point, so numeric(6, 2) is correct.", "Fixed-point types guarantee exact decimal representation, which is essential for money and other values where rounding errors are unacceptable.", "Data types are hard to resize once a table is live with data and dependent code/queries, so it's safer to slightly overestimate up front than to underestimate.", "A character-typed value must be cast (explicitly converted) into a numeric type before arithmetic operations can be performed on it."];
+var score=0,done=0,total=9;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">integer</div>
+      <div class="term-en">整数</div>
+      <div class="term-def">小数を含まない正負の数値。4バイトで最も一般的な整数型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">bigint</div>
+      <div class="term-en">大整数</div>
+      <div class="term-def">8バイトで非常に広い範囲を扱える整数型。大規模データや暗号関連の値に使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">serial</div>
+      <div class="term-en">自動採番</div>
+      <div class="term-def">1から自動的にインクリメントする正の整数型。主キーとしてよく使われる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">primary key</div>
+      <div class="term-en">主キー</div>
+      <div class="term-def">テーブル内でレコードを一意に識別する値。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">precision</div>
+      <div class="term-en">精度</div>
+      <div class="term-def">numeric型で許容される桁数の合計（整数部分＋小数部分）。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">scale</div>
+      <div class="term-en">スケール</div>
+      <div class="term-def">numeric型で小数点以下に許容される桁数。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">fixed-point / floating-point</div>
+      <div class="term-en">固定小数点／浮動小数点</div>
+      <div class="term-def">固定小数点(numeric)は桁数が厳密で正確、浮動小数点(real等)は柔軟だが精度がやや劣る。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>precisionは「全体の桁数」、scaleは「小数点以下の桁数」。混同しやすいので、numeric(precision, scale)と書くときは必ずこの順番を意識しましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔢 SQLレッスン：数値データ型 — INTEGER・SERIAL・NUMERIC</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

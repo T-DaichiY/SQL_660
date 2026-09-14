@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2 Data types Part 1 — CHAR・VARCHAR・TEXT</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M1·M2 🔤 文字型 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Data types Part 1 Characters</div>
+  <h1>🔤 文字データ型 — CHAR・VARCHAR・TEXT</h1>
+  <p>データ型を選ぶときに何を基準にすべきか、そして3つの文字データ型（CHAR・VARCHAR・TEXT）の違いを、実例を通して身につける。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① データ型選びの基準</a><a href="#unit2">② CHAR・VARCHAR・TEXTの違い</a><a href="#unit3">③ 実例で考える</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>データ型を選ぶときに考えること</h2><div class="unit-sub">ドキュメント化の重要性と、型選びの3つの基準</div></div>
+  </div>
+  <p>テーブルの列にどのデータ型を使うかを決める前提として、<strong>データディクショナリ（data dictionary）</strong>——列ごとにどんなデータ型を使い、それがどう使われるかをまとめた仕様書——の存在があります。これは地味に見えますが、実務では非常に重要です。</p>
+  <div class="note-box">💡 <strong>ドキュメント化の重要性：</strong>コードやデータベース設計は、変更・修正のたびに「何をしたか」「なぜそうしたか」を記録しておくべきです。列名やデータ型の選び方が直感的であれば、コメントを読まなくても意図が伝わります。機械学習やAI開発のように、複数人・複数チームで同じデータ構造を再利用する場面ではなおさら重要です。</div>
+  <h3>データ型を選ぶ3つの基準</h3>
+  <table class="compare-table">
+    <thead><tr><th>基準</th><th>考えること</th></tr></thead>
+    <tbody>
+      <tr><td>①データに最適か</td><td>数値だけか？負の数や小数を含むか？文字だけか？長さは？——列の中の最長値・最短値を確認する</td></tr>
+      <tr><td>②用途に合っているか</td><td>その値に対して足し算・掛け算などの計算を行うか？必要な精度（小数点以下の桁数）は？</td></tr>
+      <tr><td>③速度とストレージ</td><td>読み書きの速さ、そして保存に必要な容量。1レコードあたり数バイトの差でも、数百万〜数十億レコードになれば大きなコストになる</td></tr>
+    </tbody>
+  </table>
+  <div class="teal-box">📌 <strong>金額の丸め誤差に注意：</strong>小数点以下の桁数（precision）が足りないと、丸め誤差が積み重なって大きな損失につながることがあります。映画『オフィス・スペース』では、取引ごとに端数（1セント未満）を切り捨てて別口座に貯め込むプログラムが登場します——精度の設計ミスがどれほど実害を生むかの好例です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データ型選びは「そのデータの中身は何か」「計算に使うか」「どれくらいの量になるか」の3点で決まります。適当に大きい型を選べばいいわけではなく、無駄なストレージ・処理コストを避けることも大切です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>CHAR・VARCHAR・TEXTの違い</h2><div class="unit-sub">固定長パディング vs 可変長 vs 無制限</div></div>
+  </div>
+  <p>SQLには主に3つの文字データ型があります。<code>CHAR</code>と<code>VARCHAR</code>は丸括弧の中に数値（パラメータ）を指定しますが、<code>TEXT</code>にはそれがありません。</p>
+  <h3>CHAR(n) — 固定長、余りは空白で埋める</h3>
+  <p>丸括弧の中の数値は「必ずその長さになる」という意味です。指定より短い値は右側に空白でパディング（穴埋め）されます。指定より長い値は——もし超過分がすべて空白なら自動的に切り詰められますが、そうでなければ<strong>エラーになります</strong>（後述のCASTで明示的に変換した場合のみ、超過分は黙って切り捨てられます）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> demo_char (</span>
+<span class="cl">    code <span class="kw">char</span>(<span class="nm">4</span>)</span>
+<span class="cl">);</span>
+</pre>
+  <table class="compare-table">
+    <thead><tr><th>入力した値</th><th>char(4)への結果</th></tr></thead>
+    <tbody>
+      <tr><td><code>'AB'</code></td><td><code>'AB  '</code>（後ろに空白2つでパディング）</td></tr>
+      <tr><td><code>'ABCD'</code></td><td><code>'ABCD'</code>（ちょうど4文字）</td></tr>
+      <tr><td><code>'ABCDEFGH'</code></td><td>❌ エラー：<code>value too long for type character(4)</code></td></tr>
+    </tbody>
+  </table>
+  <p>すべてのレコードに常に同じバイト数を割り当てるため、値の長さがバラバラなデータに使うと無駄なストレージが発生します。そのためVARCHARほど頻繁には使われません。</p>
+  <h3>VARCHAR(n) — 可変長、最大値のみ制限</h3>
+  <p>VARCHARも丸括弧に最大長を指定しますが、実際に使うストレージは<strong>入力された値の長さぶんだけ</strong>です。短い値は短いまま保存されるので無駄がありません。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> demo_varchar (</span>
+<span class="cl">    email <span class="kw">varchar</span>(<span class="nm">255</span>)</span>
+<span class="cl">);</span>
+</pre>
+  <p>例えばメールアドレスの列に<code>varchar(255)</code>を使うのはよくあるパターンです。0文字〜255文字まで、実際の長さに応じたストレージしか使いません。3つの文字データ型の中で、VARCHARが最もよく使われます。</p>
+  <h3>TEXT — 上限なし、段落のような長文向け</h3>
+  <p>TEXTには長さの指定がありません。コメントや説明文など、想定される長さがVARCHARの範囲を超えるかもしれない、あるいは長さを一切制限したくない場合に使います。ストレージの使われ方はVARCHARと同様、実際の文字数ぶんだけです。</p>
+  <div class="warn-box">⚠️ <strong>TEXTは便利だが要注意：</strong>長さの上限がないため、悪意あるユーザーが極端に長い文字列を送り込んでくるようなセキュリティリスクにもつながります。何でもTEXTにすればいいわけではありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CHARは「常に同じ長さ」、VARCHARは「最大◯文字まで、実際の長さぶんだけ保存」、TEXTは「上限なしの長文向け」。実務で一番よく使われるのはVARCHARです。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>実例で考える — どの列にどの型を使う？</h2><div class="unit-sub">用途に応じた判断基準を身につける</div></div>
+  </div>
+  <table class="compare-table">
+    <thead><tr><th>データ</th><th>おすすめの型</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>メールアドレス</td><td><code>varchar(255)</code></td><td>比較的短い単一の値。長さにばらつきがあるのでVARCHARが適する</td></tr>
+      <tr><td>姓・名</td><td><code>varchar(短めの上限)</code></td><td>255文字も要らない。上限を短く絞ることで、SQLインジェクションのような攻撃を狙った過剰な長さの入力を防ぎ、データ整合性も保てる</td></tr>
+      <tr><td>説明文・コメント</td><td><code>text</code></td><td>単一の値ではなく複数の文で構成されうる。長さの上限を決めにくい</td></tr>
+      <tr><td>ツイート（旧140字制限）</td><td><code>varchar(140)</code></td><td>上限がはっきり決まっている用途にはVARCHARで長さを強制できる。（280字に拡張された後も、実際に140字を超える投稿は全体の約12%、190字を超えるのはわずか約5%だったという話もある）</td></tr>
+      <tr><td>州コード（例：GA, TN, NY）</td><td><code>char(2)</code></td><td>常にちょうど2文字と分かっているので、CHARを使うことでデータ検証（バリデーション）の役割も果たせる</td></tr>
+      <tr><td>ZIPコード</td><td><code>varchar(5)</code></td><td>数字だけに見えるが、足し算・引き算・掛け算をする対象ではなく地理的な「名前」に近い。数値型にすると先頭の0が消える問題も起きるため文字型が適切</td></tr>
+      <tr><td>商品コード</td><td>桁数が一定なら<code>char(n)</code>、バラバラなら<code>varchar(n)</code></td><td>識別子・ラベルであり計算対象ではないので数値型ではなく文字型。桁数が揃っているかどうかでCHARかVARCHARかを決める</td></tr>
+    </tbody>
+  </table>
+  <div class="teal-box">📌 <strong>ZIPコードが数値型でない理由：</strong>郵便番号同士を足したり引いたりすることはありません。郵便番号は「ある地域を指し示すラベル」であり、県名や市区町村名を数値にしないのと同じ理屈です。数字で構成されていても、計算に使わないデータは文字型で持つのが適切です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「その値で計算をするか？」「長さは一定か、ばらつくか？」の2つの問いに答えるだけで、CHAR・VARCHAR・TEXTのどれを選ぶべきかはほぼ決まります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 9</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">If you store 'AB' in a char(4) column, what is actually stored?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>'AB' — no padding is applied</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>'AB  ' — padded with trailing spaces to length 4</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An error, since 'AB' is shorter than 4</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'ABAB' — the value is repeated to fill the length</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the key difference between varchar(n) and char(n) in terms of storage?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>varchar always uses n bytes regardless of the value's length</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>varchar uses only as much space as the actual value needs, up to n</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>char and varchar use identical storage in every case</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>char can store more characters than varchar for the same n</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which data type would you use for a long free-form product description, with no clear maximum length?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>char(50)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>integer</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>text</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>boolean</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why is char(2) a good fit for a two-letter US state code column?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>State codes sometimes need to be mathematically added together</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>char is always faster to query than varchar, regardless of the data</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The fixed length gives built-in validation, since it's always 2 chars</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>State codes must always be stored internally as numeric values</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why should a ZIP code typically be stored as varchar rather than an integer type?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ZIP codes are never actually made up of digit characters at all</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ZIP codes label a place, not a quantity, and can lose leading zeros</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Integer columns in PostgreSQL cannot ever hold values over 100</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>varchar columns always take up less storage space than integer columns</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why keep a varchar length limit on a first_name/last_name column instead of making it unbounded text?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Names must always be exactly the same fixed length</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>text columns cannot ever be searched using a WHERE clause</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is no real reason at all; text is always strictly better</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It helps enforce data integrity and limits overly long malicious input</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which of the three main factors should guide choosing a data type for a column?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>What best fits the data, how it's used, and speed/storage tradeoffs</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the alphabetical order of the column's name in the table</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Whichever data type the previous column happened to use</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only how the DBA happens to be feeling that particular day</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Of the three character types, which is generally used most often in practice?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>char</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All three are used with exactly equal frequency</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>text</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>varchar</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">Why does documenting your data type choices (a data dictionary) matter for a team project?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>SQL requires a data dictionary file to be present to run any query</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It automatically fixes any data type mismatches it happens to find</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It helps other people understand and correctly reuse your tables and columns</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It completely replaces the need for choosing appropriate data types</button></div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 2, 2, 1, 3, 0, 3, 2];
+var FEEDBACKS=["char(n) pads shorter values with trailing spaces until they reach the fixed length n.", "varchar(n) only uses as much storage as the actual value requires, up to the maximum n — unlike char, which always reserves the full fixed length.", "text has no length limit and suits longer, paragraph-like content such as descriptions or comments.", "Because every value is guaranteed to be exactly 2 characters, char(2) gives you a lightweight built-in check that the data matches the expected shape.", "ZIP codes function as labels for geographic areas, not numbers you add/subtract/multiply — and storing them numerically risks losing meaningful leading zeros.", "Restricting length on name-like columns is a data-integrity and security measure against abnormally long or malicious input, like SQL injection attempts.", "Data type choice should be driven by what best fits the data itself, how the data will actually be used (e.g. math operations), and speed/storage tradeoffs.", "varchar is the most commonly used of the three character types because it balances flexibility with storage efficiency.", "A data dictionary documents column purposes and types so teammates (and future you) can correctly understand and reuse the database structure."];
+var score=0,done=0,total=9;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">data dictionary</div>
+      <div class="term-en">データディクショナリ</div>
+      <div class="term-def">各列のデータ型や用途をまとめたドキュメント。チーム開発での意思疎通に役立つ。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">CHAR(n)</div>
+      <div class="term-en">固定長文字列</div>
+      <div class="term-def">常にn文字になるよう空白でパディングされる文字データ型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">VARCHAR(n)</div>
+      <div class="term-en">可変長文字列</div>
+      <div class="term-def">最大n文字まで、実際の長さぶんのストレージだけを使う文字データ型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">TEXT</div>
+      <div class="term-en">無制限文字列</div>
+      <div class="term-def">長さの上限がない文字データ型。長文の説明・コメントなどに使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">padding</div>
+      <div class="term-en">パディング</div>
+      <div class="term-def">CHAR型で、指定長に満たない値の余白を空白で埋めること。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">SQL injection</div>
+      <div class="term-en">SQLインジェクション</div>
+      <div class="term-def">悪意あるSQL文を入力欄経由でデータベースに注入する攻撃。入力長の制限が対策の一つになる。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>「その列の値で計算をするか？」を自問するだけで、数値型にすべきか文字型にすべきかの判断の8割は決まります。ZIPコードや商品コードのように数字に見えても計算しない値は文字型が正解です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔤 SQLレッスン：文字データ型 — CHAR・VARCHAR・TEXT</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

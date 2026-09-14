@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQLレッスン — M1〜M5：データ型・クエリ・集計・テーブル設計</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html" class="active">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>SQL<span>レッスン</span><br>データ型 × クエリ × フィルタリング × テーブル設計</h1>
+    <p>M1・M2のINSERTと各種データ型から、M3のクエリとフィルタリング、M4の計算と集計関数、そしてM5の主キー・外部キー・制約によるテーブル設計まで。実例とクイズで学ぶ、PostgreSQL入門レッスン集。</p>
+    <div class="hero-badges">
+      <span class="badge">🐘 PostgreSQLで学ぶ</span>
+      <span class="badge">📚 全29レッスン</span>
+      <span class="badge">⌨️ タイプライター式コード再生</span>
+      <span class="badge">📝 英語MCQクイズ</span>
+      <span class="badge">🍎 やさしい版つき</span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="intro-section fade-in">
+    <div>
+      <h2>このレッスン集で学ぶこと 🤔</h2>
+      <p><strong>M1・M2</strong>では、テーブルにデータを追加する<span class="highlight">INSERT INTO文</span>と、列にどのデータ型（文字・数値・日付）を選ぶべきか、そして<span class="highlight">CAST</span>による型変換を学びます。</p>
+      <p><strong>M3</strong>のキーワードはただ一つ——<span class="highlight">フィルタリング</span>です。大量のデータから、どうやって欲しいものだけを取り出すか。まず<strong>列</strong>を絞り（SELECT）、並べ替え（ORDER BY）、そして<strong>行</strong>を絞り込む（DISTINCT・WHERE）。そして<strong>M4</strong>では、列に別名を付けて計算し、さらに集計関数（AVG・SUM・COUNT・MAX/MIN）とGROUP BY・HAVINGで、データをまとめて分析します。</p>
+      <p><strong>M5</strong>では視点が変わります——ここまでは「データをどう取り出すか」でしたが、M5は「テーブルをどう守るか」。命名規則から始まり、<span class="highlight">主キー</span>で一意性を保証し、<span class="highlight">外部キー</span>でテーブル同士のつながりを守り、CASCADEや各種<span class="highlight">制約</span>（NOT NULL・CHECK・UNIQUE・DEFAULT）でデータの整合性を保ちます。最後はpgAdminのERD図とインデックスで、設計を俯瞰し高速化する方法まで学びます。</p>
+      <p>各レッスンには「本編」と、図解中心でポイントだけをつかむ「🍎やさしい版」の2バージョンがあります。まず本編を読み、難しく感じたらやさしい版で全体像を確認しましょう。</p>
+      <p style="background:var(--yellow-light);padding:.85rem 1rem;border-radius:8px;border-left:3px solid var(--yellow);font-size:.9rem;">
+        🌟 <strong>このレッスン集の目標：</strong>正しいデータ型でデータを保存し、必要な行と列だけを自在に取り出し、計算して意味のある答えを導けるようになること。
+      </p>
+    </div>
+    <div>
+      <div class="llm-diagram">
+        <div class="diagram-title">絞り込みの流れ（M3 → M4）</div>
+        <div class="flow-steps">
+          <div class="flow-step"><span class="step-icon">🔍</span><div class="step-text"><strong>① 列を絞る</strong><span>SELECT・ワイルドカード</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">🔽</span><div class="step-text"><strong>② 並べ替える</strong><span>ORDER BY（ASC / DESC）</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">✨🎯</span><div class="step-text"><strong>③ 行を絞る</strong><span>DISTINCT・WHERE・LIKE</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">➗</span><div class="step-text"><strong>④ 新しい値を作る</strong><span>M4：別名（AS）と列の計算</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">📊</span><div class="step-text"><strong>⑤ まとめて分析する</strong><span>M4：集計関数・GROUP BY・HAVING</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">🔑</span><div class="step-text"><strong>⑥ テーブルを守る</strong><span>M5：キー・制約・インデックス</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header fade-in stagger-1">
+    <h2>📦 M1・M2 — データを入れる・型を選ぶ</h2>
+    <p>各カードは本編にリンクしています。🍎マークから、やさしい版に直接ジャンプできます。</p>
+  </div>
+
+  <div class="chapters-grid">
+    <div class="chapter-card c-blue fade-in stagger-1" style="position:relative;">
+      <a href="insert.html" style="position:absolute;inset:0;z-index:1;" aria-label="INSERT INTO文 本編を開く"></a>
+      <div class="card-num">M1 · INSERT INTO · 公開中</div><div class="card-icon">✏️</div>
+      <div class="card-title">INSERT INTO文 — レコードの追加</div>
+      <div class="card-desc">基本構文・複数行挿入・列の順番の落とし穴（型は合っているのにデータが違うケース）・列を指定した部分挿入。<a href="insert_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">INSERT INTO</span><span class="topic-tag">VALUES</span><span class="topic-tag">列リスト</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-purple fade-in stagger-2" style="position:relative;">
+      <a href="datatypes_char.html" style="position:absolute;inset:0;z-index:1;" aria-label="文字データ型 本編を開く"></a>
+      <div class="card-num">M2 · Data types Part 1 · 公開中</div><div class="card-icon">🔤</div>
+      <div class="card-title">文字データ型 — CHAR・VARCHAR・TEXT</div>
+      <div class="card-desc">データ型を選ぶ基準、固定長 vs 可変長 vs 無制限の違い、email・氏名・ZIPコードなど実例での判断。<a href="datatypes_char_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">CHAR</span><span class="topic-tag">VARCHAR</span><span class="topic-tag">TEXT</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-green fade-in stagger-1" style="position:relative;">
+      <a href="datatypes_numbers.html" style="position:absolute;inset:0;z-index:1;" aria-label="数値データ型 本編を開く"></a>
+      <div class="card-num">M2 · Data types Part 2 · 公開中</div><div class="card-icon">🔢</div>
+      <div class="card-title">数値データ型 — INTEGER・SERIAL・NUMERIC</div>
+      <div class="card-desc">整数系(smallint/integer/bigint)、自動採番のserial系、小数の精度(precision)とスケール(scale)。<a href="datatypes_numbers_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">integer</span><span class="topic-tag">serial</span><span class="topic-tag">numeric</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-teal fade-in stagger-2" style="position:relative;">
+      <a href="datatypes_dates.html" style="position:absolute;inset:0;z-index:1;" aria-label="日付・時刻データ型 本編を開く"></a>
+      <div class="card-num">M2 · Data types Part 3 · 公開中</div><div class="card-icon">📅</div>
+      <div class="card-title">日付・時刻データ型 — TIMESTAMP・DATE・TIME・INTERVAL</div>
+      <div class="card-desc">4つの日付/時刻型の違い、INTERVALによる期日計算、用途に応じた型の選び方。<a href="datatypes_dates_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">timestamp</span><span class="topic-tag">interval</span><span class="topic-tag">date</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-yellow fade-in stagger-1" style="position:relative;">
+      <a href="datatypes_casting.html" style="position:absolute;inset:0;z-index:1;" aria-label="CASTによる型変換 本編を開く"></a>
+      <div class="card-num">M2 · Data types Part 4 Casting · 公開中</div><div class="card-icon">🔄</div>
+      <div class="card-title">CASTによる型変換</div>
+      <div class="card-desc">CAST(列 AS 型)と列::型の2つの構文、変換が成功する条件、text→integer/timestampの実例。<a href="datatypes_casting_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">CAST</span><span class="topic-tag">::type</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  </div>
+
+  <div class="section-header fade-in stagger-1">
+    <h2>🔎 M3 — クエリとフィルタリング</h2>
+    <p>「すべてはフィルタである」——列を絞り、並べ替え、行を絞り込む。M3の全8レッスン。</p>
+  </div>
+
+  <div class="chapters-grid">
+    <div class="chapter-card c-yellow fade-in stagger-1" style="position:relative;">
+      <a href="m3_intro.html" style="position:absolute;inset:0;z-index:1;" aria-label="M3 概要とデータ取り込み 本編を開く"></a>
+      <div class="card-num">M3 · Module introduction / Importing a dataset · 公開中</div><div class="card-icon">📥</div>
+      <div class="card-title">モジュール概要とデータセットの取り込み</div>
+      <div class="card-desc">このモジュールの全体像（すべてはフィルタ）と、CSVから<code>sales</code>テーブル（2,823行）を作る3ステップ。<a href="m3_intro_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">フィルタ</span><span class="topic-tag">COPY</span><span class="topic-tag">CSV</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-blue fade-in stagger-1" style="position:relative;">
+      <a href="select.html" style="position:absolute;inset:0;z-index:1;" aria-label="SELECT文 本編を開く"></a>
+      <div class="card-num">M3 · Select statement · 公開中</div><div class="card-icon">🔍</div>
+      <div class="card-title">SELECT文 — クエリの基本</div>
+      <div class="card-desc">「select what from where」の語順、複数列の指定（カッコは付けない）、ワイルドカード<code>*</code>、publicスキーマ。<a href="select_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">SELECT</span><span class="topic-tag">FROM</span><span class="topic-tag">*</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-purple fade-in stagger-2" style="position:relative;">
+      <a href="order_by.html" style="position:absolute;inset:0;z-index:1;" aria-label="ORDER BY 本編を開く"></a>
+      <div class="card-num">M3 · Sorting data with Order By · 公開中</div><div class="card-icon">🔽</div>
+      <div class="card-title">ORDER BY — 結果を並べ替える</div>
+      <div class="card-desc">ASC（既定）とDESC、文の最後に置くルール、複合ソートで「列ごとにDESCを書く」という落とし穴。<a href="order_by_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">ORDER BY</span><span class="topic-tag">ASC/DESC</span><span class="topic-tag">複合ソート</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-green fade-in stagger-1" style="position:relative;">
+      <a href="distinct.html" style="position:absolute;inset:0;z-index:1;" aria-label="DISTINCT 本編を開く"></a>
+      <div class="card-num">M3 · Unique values with Distinct · 公開中</div><div class="card-icon">✨</div>
+      <div class="card-title">DISTINCT — 重複を消す</div>
+      <div class="card-desc">値の種類を一覧する。複数列を指定すると「組み合わせ」のユニークになる点、NULLの扱い、データ点検への活用。<a href="distinct_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">DISTINCT</span><span class="topic-tag">ユニーク</span><span class="topic-tag">NULL</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-teal fade-in stagger-2" style="position:relative;">
+      <a href="where_basics.html" style="position:absolute;inset:0;z-index:1;" aria-label="WHERE① 本編を開く"></a>
+      <div class="card-num">M3 · Filtering with Where Part 1 · 公開中</div><div class="card-icon">🎯</div>
+      <div class="card-title">WHERE① — 条件と比較演算子</div>
+      <div class="card-desc">TRUEの行だけが残るしくみ、7つの比較演算子、句の位置、そしてmoney型でつまずく型エラーの直し方。<a href="where_basics_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">WHERE</span><span class="topic-tag">比較演算子</span><span class="topic-tag">money型</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-yellow fade-in stagger-1" style="position:relative;">
+      <a href="where_operators.html" style="position:absolute;inset:0;z-index:1;" aria-label="WHERE② 本編を開く"></a>
+      <div class="card-num">M3 · Filtering with Where Part 2 · 公開中</div><div class="card-icon">🔗</div>
+      <div class="card-title">WHERE② — 論理演算子</div>
+      <div class="card-desc">AND/ORの真理値表、BETWEENが両端を含むこと（inclusive）、ORの繰り返しを置き換えるIN、IS NULLとNOT。<a href="where_operators_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">AND/OR</span><span class="topic-tag">BETWEEN</span><span class="topic-tag">IN</span><span class="topic-tag">IS NULL</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-blue fade-in stagger-2" style="position:relative;">
+      <a href="where_like.html" style="position:absolute;inset:0;z-index:1;" aria-label="LIKE・ILIKE 本編を開く"></a>
+      <div class="card-num">M3 · Filtering with Where Part 3 · 公開中</div><div class="card-icon">🃏</div>
+      <div class="card-title">LIKE と ILIKE — パターン検索</div>
+      <div class="card-desc">ワイルドカード<code>%</code>（何文字でも）と<code>_</code>（ちょうど1文字）、「〜で始まる／含む」の書き分け、大文字小文字を無視するILIKE。<a href="where_like_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">LIKE</span><span class="topic-tag">ILIKE</span><span class="topic-tag">% と _</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-purple fade-in stagger-1" style="position:relative;">
+      <a href="where_examples.html" style="position:absolute;inset:0;z-index:1;" aria-label="WHERE演習 本編を開く"></a>
+      <div class="card-num">M3 · Filtering with Where Examples · 公開中</div><div class="card-icon">🧪</div>
+      <div class="card-title">WHERE演習 — 依頼文をクエリに翻訳する</div>
+      <div class="card-desc">9問の実践演習。「第1と第3四半期」がANDでは0件になる罠、列名の確認、段階的にクエリを組み立てる手順。<a href="where_examples_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">演習</span><span class="topic-tag">トラブル対処</span><span class="topic-tag">実務</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    </div>
+
+  <div class="section-header fade-in stagger-1">
+    <h2>➗ M4 — 計算と集計</h2>
+    <p>列に名前を付けて計算し、集計関数で複数行をまとめる。GROUP BYで内訳に分け、HAVINGで絞り込む。さらに公式マニュアルを読んでパーセンタイル関数まで。M4の全8レッスン。</p>
+  </div>
+
+  <div class="chapters-grid">
+    <div class="chapter-card c-green fade-in stagger-2" style="position:relative;">
+      <a href="alias.html" style="position:absolute;inset:0;z-index:1;" aria-label="列の別名 本編を開く"></a>
+      <div class="card-num">M4 · Aliasing columns · 公開中</div><div class="card-icon">🏷️</div>
+      <div class="card-title">列の別名（AS）</div>
+      <div class="card-desc">計算で作った列に名前を付ける。ORDER BYでは別名が使えて、WHEREでは使えない理由。<a href="alias_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">AS</span><span class="topic-tag">エイリアス</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-teal fade-in stagger-1" style="position:relative;">
+      <a href="math_columns.html" style="position:absolute;inset:0;z-index:1;" aria-label="列の計算 本編を開く"></a>
+      <div class="card-num">M4 · Math and columns · 公開中</div><div class="card-icon">➗</div>
+      <div class="card-title">列の計算 — 四則演算とパーセント変化</div>
+      <div class="card-desc">列同士の計算、演算の順序とカッコ、パーセント変化 (新−旧)÷旧、CASTでの整形、NULLの除外。<a href="math_columns_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">四則演算</span><span class="topic-tag">percent change</span><span class="topic-tag">numeric(10,2)</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  <div class="chapter-card c-yellow fade-in stagger-1" style="position:relative;">
+      <a href="aggregate.html" style="position:absolute;inset:0;z-index:1;" aria-label="集計関数 本編を開く"></a>
+      <div class="card-num">M4 · Aggregate function · 公開中</div><div class="card-icon">📊</div>
+      <div class="card-title">集計関数 — AVG・SUM と GROUP BY</div>
+      <div class="card-desc">複数行を1つの値にまとめる関数。GROUP BYが必須になる理由、Excelとの比較、WHEREでは使えないという制約。<a href="aggregate_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">AVG</span><span class="topic-tag">SUM</span><span class="topic-tag">GROUP BY</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-blue fade-in stagger-2" style="position:relative;">
+      <a href="max_min.html" style="position:absolute;inset:0;z-index:1;" aria-label="MAXとMIN 本編を開く"></a>
+      <div class="card-num">M4 · Max and min · 公開中</div><div class="card-icon">📈</div>
+      <div class="card-title">MAX と MIN — 値の範囲を知る</div>
+      <div class="card-desc">最大値・最小値を求めるだけでなく、2つ合わせて「データが取りうる範囲」を把握し、外れ値を見つける。<a href="max_min_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">MAX</span><span class="topic-tag">MIN</span><span class="topic-tag">外れ値</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-purple fade-in stagger-1" style="position:relative;">
+      <a href="group_by.html" style="position:absolute;inset:0;z-index:1;" aria-label="GROUP BY 本編を開く"></a>
+      <div class="card-num">M4 · Group by · 公開中</div><div class="card-icon">🗂️</div>
+      <div class="card-title">GROUP BY — 集計を切り分ける</div>
+      <div class="card-desc">1つの集計値を列の値ごとの内訳に分解。非集計列は全部GROUP BYへ、というルールと、複数列の順番で変わる切り口。<a href="group_by_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">GROUP BY</span><span class="topic-tag">COUNT</span><span class="topic-tag">複数列</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-green fade-in stagger-2" style="position:relative;">
+      <a href="sum.html" style="position:absolute;inset:0;z-index:1;" aria-label="SUM 本編を開く"></a>
+      <div class="card-num">M4 · Sum · 公開中</div><div class="card-icon">➕</div>
+      <div class="card-title">SUM — 合計と集計関数の組み合わせ</div>
+      <div class="card-desc">GROUP BYが要らないケース、WHEREで条件付きの合計、SUMとCOUNTを並べて「1件あたりいくら」を読み取る。<a href="sum_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">SUM</span><span class="topic-tag">COUNT</span><span class="topic-tag">WHERE</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-teal fade-in stagger-1" style="position:relative;">
+      <a href="having.html" style="position:absolute;inset:0;z-index:1;" aria-label="HAVING 本編を開く"></a>
+      <div class="card-num">M4 · Having · 公開中</div><div class="card-icon">🚦</div>
+      <div class="card-title">HAVING — 集計後のフィルタ</div>
+      <div class="card-desc">WHEREは集計前、HAVINGは集計後。GROUP BYの後に書くルールと、リピーター／新規顧客を切り分ける実例。<a href="having_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">HAVING</span><span class="topic-tag">句の順番</span><span class="topic-tag">集計後</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-yellow fade-in stagger-2" style="position:relative;">
+      <a href="percentiles.html" style="position:absolute;inset:0;z-index:1;" aria-label="Percentile and mode 本編を開く"></a>
+      <div class="card-num">M4+ · Percentile and mode · 公開中</div><div class="card-icon">📐</div>
+      <div class="card-title">公式マニュアルを読む — パーセンタイルと最頻値</div>
+      <div class="card-desc">組み込みのMEDIAN()は存在しないという事実から、公式マニュアル§9.21を読み解く。mode・percentile_cont・percentile_discの違い。<a href="percentiles_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">percentile_cont</span><span class="topic-tag">percentile_disc</span><span class="topic-tag">mode</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  </div>
+
+  <div class="section-header fade-in stagger-1">
+    <h2>🔑 M5 — テーブル設計と制約</h2>
+    <p>命名規則から主キー・外部キー・CASCADE・制約・ERD、そして教科書のインデックスまで。M5の全8レッスン。</p>
+  </div>
+
+  <div class="chapters-grid">
+    <div class="chapter-card c-blue fade-in stagger-1" style="position:relative;">
+      <a href="naming.html" style="position:absolute;inset:0;z-index:1;" aria-label="命名規則 本編を開く"></a>
+      <div class="card-num">M5 · Naming conventions · 公開中</div><div class="card-icon">📝</div>
+      <div class="card-title">命名規則 — snake_caseと引用識別子</div>
+      <div class="card-desc">camelCase・PascalCase・snake_caseの使い分け、PostgreSQLが識別子を小文字に揃える仕組み、テーブル名は複数形にするなどの指針。<a href="naming_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">snake_case</span><span class="topic-tag">引用識別子</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-purple fade-in stagger-2" style="position:relative;">
+      <a href="primary_key.html" style="position:absolute;inset:0;z-index:1;" aria-label="主キー① 本編を開く"></a>
+      <div class="card-num">M5 · Primary keys Part 1 · 公開中</div><div class="card-icon">🔑</div>
+      <div class="card-title">主キー① — 制約とは・自然キー</div>
+      <div class="card-desc">制約とはデータ整合性のためのルールであること、主キーの2つのルール（一意・NULL不可）、自然キーによる列制約とテーブル制約の書き方。<a href="primary_key_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">PRIMARY KEY</span><span class="topic-tag">自然キー</span><span class="topic-tag">CONSTRAINT</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-green fade-in stagger-1" style="position:relative;">
+      <a href="composite_surrogate.html" style="position:absolute;inset:0;z-index:1;" aria-label="主キー② 本編を開く"></a>
+      <div class="card-num">M5 · Primary keys Part 2 · 公開中</div><div class="card-icon">🧩</div>
+      <div class="card-title">主キー② — 複合キーと代理キー</div>
+      <div class="card-desc">複数の列を組み合わせた複合キー、GENERATED ALWAYS AS IDENTITYによる自動採番の代理キー、それぞれの長所と弱点。<a href="composite_surrogate_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">複合キー</span><span class="topic-tag">IDENTITY</span><span class="topic-tag">bigint</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-teal fade-in stagger-2" style="position:relative;">
+      <a href="foreign_key.html" style="position:absolute;inset:0;z-index:1;" aria-label="外部キー 本編を開く"></a>
+      <div class="card-num">M5 · Foreign keys · 公開中</div><div class="card-icon">🔗</div>
+      <div class="card-title">外部キー — 参照整合性</div>
+      <div class="card-desc">他テーブルの主キーを参照するREFERENCES構文、孤児レコードを防ぐ参照整合性、INSERT・DELETEの正しい順序。<a href="foreign_key_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">REFERENCES</span><span class="topic-tag">参照整合性</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-yellow fade-in stagger-1" style="position:relative;">
+      <a href="cascade.html" style="position:absolute;inset:0;z-index:1;" aria-label="ON DELETE CASCADE 本編を開く"></a>
+      <div class="card-num">M5 · On Delete Cascade · 公開中</div><div class="card-icon">🌊</div>
+      <div class="card-title">ON DELETE CASCADE — 連鎖削除</div>
+      <div class="card-desc">親テーブルの行を削除すると子テーブルの関連行も自動的に消えるCASCADE、テーブルごとに削除の挙動を選べる考え方。<a href="cascade_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">ON DELETE CASCADE</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-blue fade-in stagger-2" style="position:relative;">
+      <a href="constraints.html" style="position:absolute;inset:0;z-index:1;" aria-label="制約 本編を開く"></a>
+      <div class="card-num">M5 · Constraints · 公開中</div><div class="card-icon">🛡️</div>
+      <div class="card-title">制約 — NOT NULL・CHECK・UNIQUE・DEFAULT</div>
+      <div class="card-desc">「属性名 型 制約」の形、CHECKによる論理テスト、UNIQUEと主キーの違い、DEFAULTと組み合わせるときの注意点。<a href="constraints_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">NOT NULL</span><span class="topic-tag">CHECK</span><span class="topic-tag">UNIQUE</span><span class="topic-tag">DEFAULT</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-purple fade-in stagger-1" style="position:relative;">
+      <a href="erd.html" style="position:absolute;inset:0;z-index:1;" aria-label="ERD 本編を開く"></a>
+      <div class="card-num">M5 · ERD in pgAdmin · 公開中</div><div class="card-icon">🗺️</div>
+      <div class="card-title">pgAdminでERDを描く</div>
+      <div class="card-desc">「DB右クリック → ERD For Database」から作る実体関連図、PK/FKの表示や1対多を示すcrow's foot記法の読み方。<a href="erd_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">ERD</span><span class="topic-tag">pgAdmin</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="chapter-card c-green fade-in stagger-2" style="position:relative;">
+      <a href="indexes.html" style="position:absolute;inset:0;z-index:1;" aria-label="インデックス 本編を開く"></a>
+      <div class="card-num">M5+ · Indexes (textbook Ch.8) · 公開中</div><div class="card-icon">📇</div>
+      <div class="card-title">インデックスで速くする（教科書8章）</div>
+      <div class="card-desc">本の索引にたとえたB-treeインデックスの仕組み、EXPLAIN ANALYZEで実行速度を測る、CREATE INDEXで数百倍速くする実例。<a href="indexes_easy.html" style="position:relative;z-index:2;">🍎 やさしい版</a></div>
+      <div class="card-topics"><span class="topic-tag">CREATE INDEX</span><span class="topic-tag">EXPLAIN ANALYZE</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  </div>
+
+  <div class="how-to fade-in">
+    <h3>📖 この教材の使い方</h3>
+    <div class="steps-row">
+      <div class="step-num-card"><div class="num-circle">1</div><h4>本文を読む</h4><p>3〜4つのUnitに分けて解説。SQLコード例も豊富。</p></div>
+      <div class="step-num-card"><div class="num-circle">2</div><h4>コードを再生</h4><p>▶ボタンでコードがタイプライター式に再生される。</p></div>
+      <div class="step-num-card"><div class="num-circle">3</div><h4>🍎やさしい版</h4><p>難しければまず「やさしい版」で全体像をつかむ。</p></div>
+      <div class="step-num-card"><div class="num-circle">4</div><h4>MCQに挑戦</h4><p>本編末に英語で確認クイズ。理解度をその場で確認。</p></div>
+      <div class="step-num-card"><div class="num-circle">5</div><h4>用語を確認</h4><p>右サイドバーに日英併記の重要用語集。</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>📚 SQLレッスン：M1〜M5 データ型・クエリ・集計・テーブル設計（全28レッスン）</p>
+  <p style="margin-top:.5rem;"><a href="insert.html">M1から学習スタート →</a> · <a href="m3_intro.html">M3（クエリ編）へ →</a> · <a href="naming.html">M5（テーブル設計編）へ →</a></p>
+</footer>
+</body>
+</html>

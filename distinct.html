@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Unique values with Distinct — 重複を取り除く</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 ✨ Distinct <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Unique values with Distinct</div>
+  <h1>✨ DISTINCT — 重複を消す</h1>
+  <p>列に含まれる「値の種類」を一覧する。複数列を指定すると<strong>組み合わせ</strong>のユニークになる——ここが最大のポイント。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① DISTINCTとは</a><a href="#unit2">② 複数列の落とし穴</a><a href="#unit3">③ 使いどころ</a><a href="#unit4">④ 実例</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>DISTINCTとは</h2><div class="unit-sub">重複を取り除き、値の「種類」だけを返す</div></div>
+  </div>
+  <p><code>DISTINCT</code>は、<strong>重複した値を取り除いて、その列に存在する値の一覧（ユニークな値の集合）を返す</strong>キーワードです。書き方は<code>SELECT</code>の直後に置くだけです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT DISTINCT</span> qtr</span>
+<span class="cl"><span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">qtr
+----
+  3
+  1
+  4
+  2
+(4 rows)</div>
+  <p><code>sales</code>テーブルには2,823行ありますが、四半期の値は1〜4しかありません。<code>DISTINCT</code>を付けると、その4種類だけが返ってきます。</p>
+  <div class="note-box">📌 <strong>DISTINCTの結果は並び順が保証されません。</strong>上の例でも1,2,3,4の順には出てきません。整った一覧が欲しいときは<code>ORDER BY</code>を組み合わせます：<code>SELECT DISTINCT qtr FROM sales ORDER BY qtr;</code></div>
+  <h3>「何回出てきたか」は分からない</h3>
+  <p>顧客の名前（first_name）で考えてみましょう。Johnという顧客が2人いても、<code>DISTINCT first_name</code>が返すのは<code>John</code>という1件だけです。<strong>「Johnという名前が存在する」ことだけを教えてくれ、何人いるかは教えてくれません。</strong>件数を知りたい場合は、後のレッスンで学ぶ集計関数（aggregate functions）を使います。</p>
+  <div class="warn-box">⚠️ <strong>NULLもユニークな値の1つとして扱われます。</strong>対象の列にNULLが含まれていれば、DISTINCTの結果に空欄が1行分現れます。「値が入っていない」ことも1つの種類としてカウントされる、と覚えておきましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>DISTINCTは「値の種類リスト」を作る道具。<code>SELECT DISTINCT 列名 FROM テーブル;</code>と書くだけです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>複数列を指定したときの落とし穴</h2><div class="unit-sub">列ごとではなく「行（組み合わせ）」がユニークになる</div></div>
+  </div>
+  <p>ここが<strong>DISTINCTで最も誤解されやすいポイント</strong>です。列を2つ以上書いたとき、DISTINCTは<strong>それぞれの列を個別にユニーク化するのではなく、その列の組み合わせ（レコード全体）がユニークかどうかで判定します。</strong></p>
+  <h3>例：first_name と last_name</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT DISTINCT</span> first_name, last_name</span>
+<span class="cl"><span class="kw">FROM</span> client;</span>
+</pre><div class="output-reveal">first_name | last_name
+-----------+----------
+John       | Smith
+John       | Jackson
+Mary       | Smith</div>
+  <p>John SmithとJohn Jacksonは<strong>別人</strong>なので、両方とも結果に残ります。「Johnが2回出てくるのは重複では？」と感じるかもしれませんが、そうではありません。<strong>組み合わせとしては違う</strong>ため、どちらもユニークな行なのです。</p>
+  <div class="viz">
+    <div class="viz-title">1列のDISTINCT vs 2列のDISTINCT</div>
+    <div class="flow-diagram">
+      <div class="flow-box">DISTINCT first_name<br><small>John</small><br><small>Mary</small><br><strong>2行</strong></div>
+      <div class="flow-arrow">≠</div>
+      <div class="flow-box">DISTINCT first_name, last_name<br><small>John Smith / John Jackson</small><br><small>Mary Smith</small><br><strong>3行</strong></div>
+    </div>
+    <div class="viz-cap">列を足すほど「組み合わせ（permutation）」が増え、結果の行数も増えていく。</div>
+  </div>
+  <h3>salesテーブルでの実例</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 製品ラインは7種類しかない</span></span>
+<span class="cl"><span class="kw">SELECT DISTINCT</span> product_line <span class="kw">FROM</span> sales;   <span class="cm">-- 7 rows</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 製品コードは109種類ある</span></span>
+<span class="cl"><span class="kw">SELECT DISTINCT</span> product_code <span class="kw">FROM</span> sales;   <span class="cm">-- 109 rows</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 両方を指定すると…？</span></span>
+<span class="cl"><span class="kw">SELECT DISTINCT</span> product_line, product_code <span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">product_line | product_code
+-------------+--------------
+Classic Cars | S18_4027
+Classic Cars | S24_3191
+Motorcycles  | S10_1678
+...
+(109 rows)</div>
+  <p>結果は<strong>109行</strong>——製品コードの種類数と同じです。「Classic Cars」が何度も繰り返し現れますが、これは重複ではありません。<code>S18_4027</code>と<code>S24_3191</code>は別の製品なので、組み合わせとしては別物だからです。</p>
+  <div class="teal-box">📌 <strong>覚え方：</strong>複数列を指定したとき、<strong>種類が多い列の数だけ行が出て、種類が少ない列は繰り返し表示される</strong>。「片方の列だけを見ると重複しているように見える」のは正常な動作です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>2列書いたら「2列セットで重複していないか」を見ます。片方だけ同じでも、もう片方が違えば残ります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>DISTINCTの使いどころ</h2><div class="unit-sub">一覧作成・エラー発見・データクリーニングの入口</div></div>
+  </div>
+  <h3>用途1：ユニークな一覧を作る</h3>
+  <p>顧客の一覧、取扱商品の一覧、顧客が所在する州の一覧、モデル番号の一覧——<strong>「うちには何があるのか」を素早く把握したい</strong>ときの定番です。同じ値が何度も繰り返される列ほど効果を発揮します。</p>
+  <h3>用途2：エラー・欠損の発見</h3>
+  <p>部品番号が1〜10まで存在するはずなのに、DISTINCTの結果に<strong>9番だけがない</strong>——これはデータが欠けているサインかもしれません。「あるべきものがない」ことに気付ける、非常に手軽な点検方法です。</p>
+  <h3>用途3：データクリーニングの下準備</h3>
+  <div class="note-box">🧹 <code>DISTINCT status</code>を実行して<code>Resolved</code>と<code>resolved</code>の両方が出てきたら、それは<strong>表記ゆれ</strong>です。同様に、顧客名で<code>Inc</code>と<code>Inc.</code>、<code>Ltd</code>と<code>Ltd.</code>が混在していないか——DISTINCTはこうした不統一を洗い出す最初の一歩になります。「Mini Gifts Inc の注文を全部取り出したい」というとき、表記が揃っていなければ取りこぼしが発生します。</div>
+  <h3>用途4：サブクエリや集計の前処理</h3>
+  <p>この先のコースでは、サブクエリの中でDISTINCTを使って対象を特定したり、集計関数（aggregate functions）の前後でデータを整理したりする使い方も出てきます。今は「重複を消す道具」として基本を固めておけば十分です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>DISTINCTは「どんな値が入っているのか？」を確認する調査ツール。データの品質チェックにもよく使われます。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>salesテーブルで確かめる</h2><div class="unit-sub">実際に手を動かす4つの例</div></div>
+  </div>
+  <h3>例1：四半期の確認</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT DISTINCT</span> qtr <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> qtr;</span>
+</pre><div class="output-reveal">qtr
+----
+  1
+  2
+  3
+  4</div>
+  <p>4つの四半期がすべて揃っていることを確認できます。ORDER BYを足せば順番も整います。</p>
+  <h3>例2：注文ステータスの種類</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT DISTINCT</span> status <span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">status
+-----------
+Shipped
+Resolved
+Cancelled
+On Hold
+Disputed
+In Process
+(6 rows)</div>
+  <p>注文が取りうる状態は6種類だと分かります。NULLが表示されなければ、この列にはNULLが存在しないという確認にもなります。</p>
+  <h3>例3：製品ラインの一覧</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT DISTINCT</span> product_line <span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">product_line
+------------------
+Classic Cars
+Motorcycles
+Trucks and Buses
+Vintage Cars
+Planes
+Ships
+Trains
+(7 rows)</div>
+  <h3>例4：顧客の一覧</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT DISTINCT</span> customer <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> customer;</span>
+</pre><div class="output-reveal">customer
+--------------------------
+AV Stores, Co.
+Alpha Cognac
+Amica Models &amp; Co.
+...
+(92 rows)</div>
+  <p>92社の顧客がいることが分かります。ORDER BYで並べれば、似た名前が隣り合うため、表記ゆれも見つけやすくなります。</p>
+  <div class="teal-box">📌 <strong>DISTINCT ＋ ORDER BY はセットで覚えましょう。</strong>一覧を作るのがDISTINCT、それを人間が読める形に整えるのがORDER BYです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>気になる列を見つけたら、まず<code>SELECT DISTINCT その列 FROM sales;</code>。テーブルの中身を知る一番手軽な方法です。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does DISTINCT do?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It sorts the returned values alphabetically</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It removes duplicates and returns the unique values</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It deletes duplicate rows from the stored table</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It counts how many times each value appears</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Where is DISTINCT written in the statement?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Immediately after SELECT</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Immediately after FROM</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>At the very end, after ORDER BY</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Before the SELECT keyword</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A table has two clients named John: John Smith and John Jackson. What does SELECT DISTINCT first_name return for John?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>One row</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Two rows</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Zero rows, because the name is ambiguous</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>One row per last name that exists in the table</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">With the same data, what does SELECT DISTINCT first_name, last_name return for those two clients?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>One row, since the first names match</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Two rows — the combinations differ</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An error, because DISTINCT takes only one column</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Three rows, one per column plus a combined row</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">How does DISTINCT treat NULL?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>NULL rows are silently dropped from the result</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>NULL counts as a unique value and appears once</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>NULL is converted to an empty string first</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>NULL causes the query to raise an error</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">sales has 7 product lines and 109 product codes. How many rows does SELECT DISTINCT product_line, product_code FROM sales return?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>7</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>116</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>109</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>763</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Seeing both "Resolved" and "resolved" in a DISTINCT status list tells you that:</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>DISTINCT is case-insensitive by default</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The status column should be converted to a numeric type</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The data is inconsistent and needs cleaning</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Those rows are duplicates that should be deleted</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why is DISTINCT often combined with ORDER BY?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>DISTINCT fails to run unless ORDER BY is present</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The unique values come back in no particular order</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ORDER BY is what actually removes the duplicate values</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It makes the query run faster on very large tables</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 0, 1, 1, 2, 2, 1];
+var FEEDBACKS=["DISTINCT strips duplicates and returns the set of unique values present in the column. It does not change the stored table.","DISTINCT sits right after SELECT: SELECT DISTINCT column FROM table;","One column means one set of unique values — John appears exactly once, no matter how many Johns exist.","With two columns, uniqueness is judged on the combination. John Smith and John Jackson are different combinations, so both rows stay.","NULL is treated as a unique value of its own and shows up once in the result.","Uniqueness is per combination, and each product code belongs to one product line — so the count matches the 109 product codes, with product lines repeating.","Different capitalisations are separate values to SQL. That is a data-consistency problem to fix, and DISTINCT is how you spot it.","DISTINCT gives no ordering guarantee, so ORDER BY is added to make the list readable."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">DISTINCT</div>
+      <div class="term-en">重複除去</div>
+      <div class="term-def">列に含まれる値の重複を取り除き、ユニークな値だけを返すキーワード。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">unique combination</div>
+      <div class="term-en">ユニークな組み合わせ</div>
+      <div class="term-def">複数列を指定したときの判定単位。列ごとではなく行全体で重複を見る。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">NULL</div>
+      <div class="term-en">値なし</div>
+      <div class="term-def">DISTINCTでは1つのユニークな値として扱われ、結果に1行現れる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">data cleaning</div>
+      <div class="term-en">データクリーニング</div>
+      <div class="term-def">表記ゆれや欠損を整える作業。DISTINCTはその発見に役立つ。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>新しいテーブルに出会ったら、気になる列に片っ端から<code>SELECT DISTINCT</code>をかけてみましょう。値の種類・表記ゆれ・NULLの有無が一気に見えてきます。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>✨ SQLレッスン：DISTINCT — 重複を消す</p>
+  <p style="margin-top:.5rem;"><a href="order_by.html">← ORDER BY</a> · <a href="index.html">🏠 概要</a> · <a href="where_basics.html">次：WHERE① →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Filtering with Where Part 1 — 条件式と比較演算子</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🎯 Where① <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Filtering with Where — Part 1</div>
+  <h1>🎯 WHERE① — 条件で行を絞る</h1>
+  <p>条件式は必ずTRUEかFALSEになる。TRUEの行だけが結果に残る——この一点さえ掴めば、WHEREは怖くない。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 条件式のしくみ</a><a href="#unit2">② 比較演算子</a><a href="#unit3">③ WHEREの構文</a><a href="#unit4">④ データ型の落とし穴</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>条件式のしくみ — TRUEなら残る、FALSEなら消える</h2><div class="unit-sub">1行ずつ判定していく</div></div>
+  </div>
+  <p>ここまでのレッスンで、全体を見る（<code>SELECT *</code>）→ 列を絞る → 並べ替える（<code>ORDER BY</code>）→ 重複を消す（<code>DISTINCT</code>）と進んできました。<code>WHERE</code>はさらに一歩進んで、<strong>条件に基づいて行（レコード）を絞り込む</strong>句です。</p>
+  <div class="teal-box">📌 <strong>WHEREの核心はこの1文です：</strong>条件式が<strong>TRUEと評価された行だけがクエリ結果に含まれ、FALSEの行は飛ばされる。</strong>ほかは全部この応用にすぎません。</div>
+  <h3>条件式（conditional）とは</h3>
+  <p>条件式は「A <em>演算子</em> B」という形をしていて、結果は必ず<strong>TRUEかFALSEのどちらか</strong>になります。数値そのものが返るわけではありません。</p>
+  <pre class="code-block">
+<span class="cl"><span class="nm">5</span> &lt; <span class="nm">8</span>   <span class="cm">-- TRUE</span></span>
+<span class="cl"><span class="nm">9</span> &lt; <span class="nm">8</span>   <span class="cm">-- FALSE</span></span>
+</pre>
+  <h3>SQLは1行ずつ評価している</h3>
+  <p>「注文金額が50,000ドルを超える売上を見たい」という条件を書いたとき、データベースは次のように動きます。</p>
+  <div class="viz">
+    <div class="viz-title">WHERE order_amount &gt; 50000 の評価</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>1行目：$45,000</strong><span>45000 &gt; 50000 → FALSE → 除外</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>2行目：$55,000</strong><span>55000 &gt; 50000 → TRUE → 結果に追加 ✅</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>3行目以降…</strong><span>テーブルの最後まで同じ判定を繰り返す</span></div></div>
+    </div>
+    <div class="viz-cap">1行ずつ条件を当てはめ、TRUEの行だけを積み上げていく。それがWHEREの動作。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>WHEREは「○×クイズ」。1行ずつ条件に当てはめて、○（TRUE）の行だけを残します。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>比較演算子（comparison operators）</h2><div class="unit-sub">算数で見慣れた記号＋SQL特有の3つ</div></div>
+  </div>
+  <table class="compare-table">
+    <tr><th>演算子</th><th>意味</th><th>例</th><th>メモ</th></tr>
+    <tr><td><code>=</code></td><td>等しい</td><td><code>qtr = 1</code></td><td>プログラミング言語と違い<code>==</code>ではない</td></tr>
+    <tr><td><code>&gt;</code></td><td>より大きい</td><td><code>sales &gt; 3000</code></td><td>算数と同じ</td></tr>
+    <tr><td><code>&lt;</code></td><td>より小さい</td><td><code>sales &lt; 100</code></td><td>算数と同じ</td></tr>
+    <tr><td><code>&gt;=</code></td><td>以上</td><td><code>qty &gt;= 10</code></td><td><strong>比較記号が先、＝が後</strong></td></tr>
+    <tr><td><code>&lt;=</code></td><td>以下</td><td><code>qty &lt;= 10</code></td><td>同上（<code>=&lt;</code>は誤り）</td></tr>
+    <tr><td><code>&lt;&gt;</code></td><td>等しくない</td><td><code>status &lt;&gt; 'Shipped'</code></td><td>データベース系の伝統的な書き方</td></tr>
+    <tr><td><code>!=</code></td><td>等しくない</td><td><code>status != 'Shipped'</code></td><td>プログラミング言語由来。<code>!</code>は「否定」</td></tr>
+  </table>
+  <h3>SQL特有の3つに注意</h3>
+  <p><strong>「以上・以下」</strong>：数学では<code>≦</code><code>≧</code>という1文字の記号がありますが、キーボードにはありません。SQLでは<strong>比較記号を先に、イコールを後に</strong>並べて<code>&lt;=</code> <code>&gt;=</code>と書きます。</p>
+  <p><strong>「等しくない」には2通りの書き方があります。</strong><code>&lt;&gt;</code>は「より小さい、または、より大きい」＝「その値そのものではない」という発想の記法で、データベース系の言語でよく使われます。<code>!=</code>はPythonなどのプログラミング言語由来で、<code>!</code>が否定（not）を表します。</p>
+  <div class="warn-box">⚠️ <strong>どちらを使っても構いませんが、一貫させること。</strong>同じクエリやプロジェクトの中で<code>&lt;&gt;</code>と<code>!=</code>が混ざっていると、読む人が混乱します。チームやコースの慣習に合わせて、どちらかに統一しましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>算数の記号がほぼそのまま使えます。特殊なのは「以上＝<code>&gt;=</code>」「以下＝<code>&lt;=</code>」「≠＝<code>&lt;&gt;</code>または<code>!=</code>」の3つだけ。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>WHEREの構文と位置</h2><div class="unit-sub">FROMの後、ORDER BYの前</div></div>
+  </div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> column1, column2, column3</span>
+<span class="cl"><span class="kw">FROM</span> table_name</span>
+<span class="cl"><span class="kw">WHERE</span> condition</span>
+<span class="cl"><span class="kw">ORDER BY</span> column1;</span>
+</pre>
+  <p>順番は<strong>SELECT → FROM → WHERE → ORDER BY</strong>で固定です。英語として読むと自然に理解できます——「これらの列を、このテーブルから、この条件で、この順に並べて」。</p>
+  <div class="note-box">🧠 <strong>豆知識：</strong>実はSQLの内部処理では、WHEREは列の選択より<strong>先に</strong>実行されています。ただし学習段階では「列を選んでから、行を絞る」と考えて構いません。書く順番と読む順番が一致しているほうが、クエリを組み立てやすいからです。</div>
+  <h3>例1：第1四半期の売上一覧</h3>
+  <p>「第1四半期の売上について、顧客名・製品ライン・売上額の一覧が欲しい」という依頼を受けたとします。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, product_line, sales</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span>;</span>
+</pre><div class="output-reveal">customer                | product_line | sales
+------------------------+--------------+---------
+Land of Toys Inc.       | Motorcycles  | 2871.00
+Cruz &amp; Sons Co.         | Classic Cars | 3884.34
+...
+(665 rows)</div>
+  <div class="teal-box">📌 <strong>絞り込みに使う列を、SELECTに含める必要はありません。</strong>上の例では<code>qtr</code>で絞っているのに、<code>qtr</code>列は表示していません。全行が「第1四半期」だと分かりきっているので、表示してもあまり意味がないからです。もちろん含めても正しく動きます——目的次第で決めましょう。</div>
+  <h3>例2：ORDER BYと組み合わせる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, product_line, sales</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> customer;</span>
+</pre>
+  <p>絞り込んだ結果を、さらに顧客名のアルファベット順に整理できます。<strong>SELECT・WHERE・ORDER BYを組み合わせることで、実務で使えるクエリになっていきます。</strong></p>
+  <h3>文字列を条件にする</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> region = <span class="st">'SW'</span>;</span>
+</pre>
+  <p>文字型の値は<strong>シングルクォート<code>'</code>で囲みます</strong>。文字列で意味を持つ比較は基本的に<code>=</code>（と<code>&lt;&gt;</code>）だけです。<code>region &lt; 'Southwest'</code>のような大小比較は、書けてもほとんど意味を持ちません。</p>
+  <div class="note-box">💡 「北西・南西・南東の3地域を対象にしたい」のように<strong>複数の候補から選びたい</strong>場合は、次のレッスンで学ぶ<code>IN</code>を使います。</div>
+  <h3>日付を条件にする</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> order_date &gt; <span class="st">'2020-01-01'</span>;</span>
+</pre>
+  <p>日付には比較演算子がそのまま使えます（「2020年1月1日より後」という意味になります）。ただし<strong>フォーマットが列の定義と一致していること</strong>が条件です。形式が違ったり日付として解釈できない文字列を書くと、エラーになります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>WHEREはFROMの後ろ。数値はそのまま、文字と日付はシングルクォートで囲む。並べ替えたいときはWHEREの後にORDER BYを足します。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>データ型の落とし穴 — money型でつまずく</h2><div class="unit-sub">左辺と右辺の型を必ず合わせる</div></div>
+  </div>
+  <p>「3,000ドルを超える売上の、顧客名・製品ライン・製品コード・売上額が欲しい」——素直に書くとこうなります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, product_line, product_code, sales</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> sales &gt; <span class="nm">3000</span>;</span>
+</pre><div class="output-reveal">ERROR:  operator does not exist: money > integer
+HINT:  No operator matches the given name and argument types.
+       You might need to add explicit type casts.</div>
+  <div class="warn-box">⚠️ <strong>エラーの意味：</strong>「<code>money型 &gt; integer型</code>という比較を行う演算子は存在しない」——つまり<strong>左辺と右辺のデータ型が食い違っている</strong>ということです。</div>
+  <h3>原因を突き止める</h3>
+  <p>pgAdminでテーブルを右クリック →「Properties」→「Definition」で列のデータ型を確認できます。この<code>sales</code>列は<strong>money型</strong>でした。money型は<code>$</code>という数字以外の文字を含むため、<strong>文字列と同じようにシングルクォートで囲む必要があります。</strong></p>
+  <h3>⭕ 正しい書き方</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, product_line, product_code, sales</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> sales &gt; <span class="st">'3000'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> sales;</span>
+</pre><div class="output-reveal">customer               | product_line | product_code | sales
+-----------------------+--------------+--------------+----------
+Muscle Machine Inc     | Classic Cars | S18_1749     | $3,002.00
+Land of Toys Inc.      | Vintage Cars | S24_3969     | $3,015.50
+...</div>
+  <div class="teal-box">📌 <strong>覚え方：</strong>数字以外の文字を含む型（money、date、text、varchar…）は<strong>クォートで囲む</strong>。純粋な数値型（integer、numeric）は<strong>そのまま書く</strong>。</div>
+  <h3>逆のパターン：integer列に小数を渡す</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- qtr は integer 型</span></span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span>      <span class="cm">-- ⭕ 正しい</span></span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1.0</span>    <span class="cm">-- ❌ 1.0 は整数ではない</span></span>
+</pre>
+  <div class="warn-box">⚠️ <strong>WHEREを書くときの鉄則：</strong>条件の<strong>左側（列）のデータ型と、右側（値）のデータ型を必ず一致させる</strong>こと。うまくいかないときは、まず列のデータ型を確認する習慣をつけましょう。「自分が扱っているデータが何型なのか」を意識することが、SQLでは決定的に重要です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>エラーが出たら型を疑う。money型は<code>'3000'</code>のようにクォートで囲む必要があります（<code>$</code>記号を含む型だから）。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A row is included in the result when its WHERE condition evaluates to:</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>TRUE</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>FALSE</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Any non-zero number</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>NULL</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">A conditional expression in SQL always evaluates to:</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A numeric result you can do arithmetic with</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Either TRUE or FALSE</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The name of the column being compared</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The number of rows that matched it</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which is the correct SQL for "quantity is greater than or equal to 10"?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>quantity => 10</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>quantity >= 10</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>quantity ≧ 10</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>quantity == 10 OR quantity > 10 only</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which two operators both mean "not equal to"?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>&lt;&gt; and !=</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>&gt;&lt; and =!</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>!! and ~=</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>NOT= and &lt;=&gt;</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Where does WHERE go relative to FROM and ORDER BY?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Before FROM</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>After ORDER BY</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>After FROM, before ORDER BY</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Inside the SELECT column list</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Must a column used in the WHERE clause also appear in the SELECT list?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No, it is optional</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Yes, always</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Yes, unless the column is numeric</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only when ORDER BY is also used</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">"WHERE sales > 3000" on a money column raises "operator does not exist: money > integer". Why?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The sales column contains too many NULL values</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The two sides of the comparison have different data types</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Money columns can never be used inside a WHERE clause</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The greater-than operator only works on dates</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">How do you fix that money comparison?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Write WHERE sales > '3000' with single quotes</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Write WHERE sales > 3000.00 as a decimal</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Remove the WHERE clause and filter by eye</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Rename the column so it no longer clashes</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 1, 0, 2, 0, 1, 0];
+var FEEDBACKS=["If the condition is TRUE the row is kept; if it is FALSE the row is skipped. That is the whole idea of WHERE.","Conditionals resolve to TRUE or FALSE only — even when the values involved are numbers.","SQL has no single-character ≥ symbol, so the comparison sign comes first and the equals sign second: >=.","Both <> (database tradition) and != (programming tradition) mean not equal. Pick one and use it consistently.","The clause order is SELECT, FROM, WHERE, ORDER BY.","You can filter on a column without displaying it — filtering by qtr = 1 without showing qtr is common, since every row would show the same value.","The column is money type while 3000 is an integer, so no matching operator exists. The hint suggests an explicit cast.","Money includes a non-numeric $ symbol, so the value is quoted like a string: WHERE sales > '3000'."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">WHERE</div>
+      <div class="term-en">条件句</div>
+      <div class="term-def">条件がTRUEになる行だけを結果に含める句。FROMの後、ORDER BYの前に置く。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">conditional</div>
+      <div class="term-en">条件式</div>
+      <div class="term-def">「A 演算子 B」の形の式。結果は必ずTRUEかFALSE。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">comparison operator</div>
+      <div class="term-en">比較演算子</div>
+      <div class="term-def"><code>=</code> <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>&lt;&gt;</code> <code>!=</code> の7種類。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">money type</div>
+      <div class="term-en">通貨型</div>
+      <div class="term-def"><code>$</code>を含むため、比較する値をシングルクォートで囲む必要がある型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">explicit type cast</div>
+      <div class="term-en">明示的な型変換</div>
+      <div class="term-def">型が合わないときのエラーメッセージに出るヒント。CASTのレッスンを参照。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>WHEREでエラーが出たら、まずpgAdminで列のデータ型を確認しましょう（右クリック → Properties → Definition）。原因の大半は型の不一致です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🎯 SQLレッスン：WHERE① — 条件と比較演算子</p>
+  <p style="margin-top:.5rem;"><a href="distinct.html">← DISTINCT</a> · <a href="index.html">🏠 概要</a> · <a href="where_operators.html">次：WHERE② 論理演算子 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

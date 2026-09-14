@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Module introduction / Importing a dataset — モジュール概要とデータ取り込み</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 📥 導入・取込 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main active" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Module introduction / Importing a dataset</div>
+  <h1>📥 モジュール概要とデータの取り込み</h1>
+  <p>このモジュールのキーワードはただ一つ——<strong>フィルタ</strong>。そして、これから使い続ける<code>sales</code>テーブルを準備します。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① このモジュールの全体像</a><a href="#unit2">② データセットの取り込み</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>このモジュールの全体像</h2><div class="unit-sub">「すべてはフィルタである」</div></div>
+  </div>
+  <p>前のモジュールでは、データを<strong>保管する入れ物</strong>を作りました——データベースを作り、テーブルを作り、各列にどのデータ型を使うかを決め、INSERTでデータを入れる。ここまでが「置き場所を用意する」段階です。</p>
+  <p>ここからは、その保管されたデータに対して<strong>質問を投げる</strong>段階に入ります。データサイエンティストがやりたいことを並べてみましょう。</p>
+  <ul style="margin:1rem 0 1rem 1.5rem;line-height:2;">
+    <li>データに対して<strong>数学的な演算</strong>を行いたい</li>
+    <li>特定の種類のデータだけを<strong>取り除いたり、選んだり</strong>したい</li>
+    <li>データから<strong>情報を集め、問いを立てたい</strong></li>
+  </ul>
+  <div class="teal-box">📌 <strong>このモジュールを貫くキーワードは「フィルタ（filter）」です。</strong>非常に大量のデータ（このモジュールで扱う<code>sales</code>テーブルは約2,823行）から、どうやって<strong>自分の条件に合うものだけ</strong>に絞り込むか。学ぶコマンドはどれも、その手段にすぎません。</div>
+  <h3>絞り込みの対象は「列」か「行」しかない</h3>
+  <div class="viz">
+    <div class="viz-title">フィルタの2方向</div>
+    <div class="flow-diagram">
+      <div class="flow-box">📊 テーブル全体<br><small>2,823行 × 全列</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">↔️ 列で絞る<br><small>SELECT</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">↕️ 行で絞る<br><small>DISTINCT・WHERE</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🎯 欲しいデータ<br><small>必要な部分だけ</small></div>
+    </div>
+    <div class="viz-cap">広い範囲から始めて、道具を1つずつ増やしながら narrow down していく。</div>
+  </div>
+  <p>まずは<strong>すべてを表示する単純なSELECT文</strong>から始めます。そこから、道具を1つずつ「ツールベルト」に加えていき、だんだん細かく絞り込めるようにしていきます。</p>
+  <div class="warn-box">⚠️ <strong>途中で迷子になったら、この一言に立ち返ってください。</strong>「WHEREとANDとORの使い分けが分からない」「どう組み合わせればいいのか混乱する」——そんなときは、<strong>全部フィルタなんだ</strong>と思い出しましょう。問いはいつも同じです：<strong>「どうやって絞るか」「どれくらい厳密に絞るか」「見たいデータだけを確実に手に入れるにはどうするか」</strong>。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>このモジュールは「フィルタ・フィルタ・フィルタ」。絞り込む対象は<strong>列</strong>か<strong>行</strong>のどちらかだけです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>データセットの取り込み</h2><div class="unit-sub">CSVから sales テーブルを作る</div></div>
+  </div>
+  <div class="note-box">📌 <strong>この講義はごく短いものです。</strong>取り込み（import）の詳細——インポート・エクスポート・データクリーニングなど——は後のモジュールで本格的に扱います。ここでの目的はただ一つ、<strong>クエリの練習に使える、そこそこ大きなデータを手元に用意すること</strong>です。</div>
+  <h3>必要なファイル</h3>
+  <table class="compare-table">
+    <tr><th>ファイル</th><th>役割</th></tr>
+    <tr><td>CSVファイル（sales data sample）</td><td>取り込む元データ本体</td></tr>
+    <tr><td>SQLファイル その1</td><td><code>sales</code>テーブルを作成する<code>CREATE TABLE</code>文</td></tr>
+    <tr><td>SQLファイル その2</td><td>CSVをテーブルに流し込む<code>COPY</code>文</td></tr>
+  </table>
+  <h3>手順</h3>
+  <div class="viz">
+    <div class="viz-title">取り込みの3ステップ</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>CSVをpublicフォルダに置く</strong><span>Windowsなら <code>C:\Users\Public</code>。ここに無いとPostgreSQLがエラーを出すことが多い</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>テーブル作成のSQLを実行</strong><span>空の<code>sales</code>テーブルができる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>COPY文を実行</strong><span>CSVの中身がテーブルに流し込まれる</span></div></div>
+    </div>
+    <div class="viz-cap">順番が大事。テーブルを先に作ってから、データを入れる。</div>
+  </div>
+  <h3>COPY文の中身</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">COPY</span> sales</span>
+<span class="cl"><span class="kw">FROM</span> <span class="st">'C:\Users\Public\sales_data_sample.csv'</span></span>
+<span class="cl"><span class="kw">DELIMITER</span> <span class="st">','</span></span>
+<span class="cl"><span class="kw">CSV HEADER</span>;</span>
+</pre>
+  <p>やっていることはシンプルで、<strong>「このCSVファイルから<code>sales</code>テーブルへコピーせよ。形式はCSVで、1行目はヘッダー（列名）である」</strong>という指示です。CSVは comma separated values——カンマ区切りの値、という意味です。</p>
+  <div class="warn-box">⚠️ <strong>CSVの置き場所に注意。</strong>publicフォルダ以外に置くと、PostgreSQLがファイルを読めずエラーになることがよくあります。うまくいかないときは、まずファイルの場所を確認してください。</div>
+  <h3>取り込みが成功したか確認する</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">order_num | quantity | price | order_date | status | qtr | ...
+----------+----------+-------+------------+--------+-----+----
+    10107 |       30 | $95.7 | 2003-02-24 | Shipped|   1 | ...
+（2,823 rows）</div>
+  <div class="teal-box">📌 <strong>2,823行</strong>のデータが入っていれば成功です。これだけあれば、この先のクエリ練習には十分すぎるほどのボリュームです。<strong>このモジュールの残りの講義は、すべてこの<code>sales</code>テーブルを使って進みます。</strong>先に進む前に、必ず取り込みを済ませておいてください。</div>
+  <div class="note-box">💡 <strong>テーブル定義は「完璧ではない」：</strong>用意されている<code>CREATE TABLE</code>文は、SELECT文の学習に入るための最短ルートとして作られたものです。なぜその型を選ぶのか、どう改善できるのかは後のモジュールで扱います。今は「動けばよい」と割り切って構いません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>①CSVをpublicフォルダへ ②テーブル作成SQLを実行 ③COPY文を実行。<code>SELECT * FROM sales;</code>で2,823行出れば準備完了です。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In one word, what is this module about?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Filtering</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Creating tables and choosing data types</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Backing up and restoring a database</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Granting user permissions</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What can a query filter on?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Columns only</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rows only</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Columns and rows</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither — filtering happens after export</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What was the previous module mainly about?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Building the storage units for the data</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Writing advanced subqueries</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Exporting results into Python</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Aggregating values with SUM and COUNT</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Where should the CSV file be placed before importing?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>In a public folder</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Anywhere at all — the path never matters</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Inside the PostgreSQL installation folder</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>On a network drive shared with other users</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is the correct order of the import steps?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Run COPY first, then create the table</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Create the table, then run COPY</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Either order works equally well</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Run both files at the same time</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does "CSV HEADER" tell PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The first row holds column names, not data</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the header row should be imported</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The file uses tabs instead of commas</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A header row should be added to the output</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 0, 0, 1, 0];
+var FEEDBACKS=["Filtering. Every command in this module is a different way of narrowing data down.","Both. You filter columns with SELECT and rows with DISTINCT and WHERE.","The previous module was about creating the storage: databases, tables, data types and inserting rows.","PostgreSQL commonly errors out when the file sits outside a public folder, so put the CSV there first.","The table has to exist before COPY can load anything into it.","CSV HEADER tells Postgres that the first line contains column names, so it is not loaded as data."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">filtering</div>
+      <div class="term-en">フィルタリング</div>
+      <div class="term-def">必要なデータだけを残す操作。このモジュール全体を貫く考え方。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">CSV</div>
+      <div class="term-en">カンマ区切り値</div>
+      <div class="term-def">comma separated values。表形式データをやり取りする最も基本的な形式。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">COPY</div>
+      <div class="term-en">一括取り込み</div>
+      <div class="term-def">ファイルの内容をテーブルへまとめて読み込むPostgreSQLのコマンド。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">HEADER</div>
+      <div class="term-en">見出し行</div>
+      <div class="term-def">CSVの1行目が列名であることを示す指定。データとしては取り込まれない。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">sales テーブル</div>
+      <div class="term-en">練習用データ</div>
+      <div class="term-def">約2,823行の売上データ。このモジュールの全講義で使用する。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>取り込みでエラーが出たら、①CSVの場所 ②テーブルを先に作ったか ③ファイルパスの綴り——の3点を順に確認しましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📥 SQLレッスン：M3 モジュール概要とデータの取り込み</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a> · <a href="select.html">次：Select statement →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

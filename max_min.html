@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Max and min — 最大値・最小値と値の範囲</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 📈 Max/Min <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Max and min</div>
+  <h1>📈 MAX と MIN</h1>
+  <p>列の最大値と最小値。単純な関数ですが、「データが取りうる範囲」を知る強力な調査ツールになります。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 構文と使い方</a><a href="#unit2">② 範囲を知る価値</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>MAX と MIN — 期待どおりの動き</h2><div class="unit-sub">列の最大値・最小値を返す</div></div>
+  </div>
+  <p><code>MAX()</code>は列の<strong>最大値</strong>、<code>MIN()</code>は<strong>最小値</strong>を返します。他の集計関数とまったく同じ形で使えます。</p>
+  <h3>例1：未払い金額が最も大きい顧客はいくらか</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">MAX</span>(outstanding_amt)</span>
+<span class="cl"><span class="kw">FROM</span> customers;</span>
+</pre><div class="output-reveal">max
+-------
+ 12000</div>
+  <p>「誰が一番お金を払っていないか」を調べる第一歩です。最大の未払い額は12,000だと分かりました。</p>
+  <h3>例2：最小値に変えるだけ</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">MIN</span>(outstanding_amt)</span>
+<span class="cl"><span class="kw">FROM</span> customers;</span>
+</pre><div class="output-reveal">min
+------
+ 3000</div>
+  <div class="teal-box">📌 <code>MAX</code>＝largest／biggest、<code>MIN</code>＝smallest。名前のとおりで、特別なルールはありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>MAX(列)</code>で一番大きい値、<code>MIN(列)</code>で一番小さい値。それだけです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>「値の範囲」が分かることの価値</h2><div class="unit-sub">外れ値と異常の検出</div></div>
+  </div>
+  <h3>例3：顧客の格付け（grade）の範囲</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">MAX</span>(grade) <span class="kw">FROM</span> customers;</span>
+</pre><div class="output-reveal">max
+-----
+   3</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">MIN</span>(grade) <span class="kw">FROM</span> customers;</span>
+</pre><div class="output-reveal">min
+-----
+   0</div>
+  <p>ここから分かることは、単なる「3」と「0」以上のものです——<strong>顧客の格付けは0から3の範囲で付けられている</strong>という、データの仕様そのものが読み取れます。同様に、未払い金額は3,000〜12,000の範囲に収まっていることも分かりました。</p>
+  <div class="viz">
+    <div class="viz-title">MAX / MIN から読み取れること</div>
+    <div class="flow-diagram">
+      <div class="flow-box">MIN = 0<br><small>下限</small></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box">値の範囲<br><small>0 〜 3</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">MAX = 3<br><small>上限</small></div>
+    </div>
+    <div class="viz-cap">範囲が分かれば、そこから外れた値は「おかしい」と判断できる。</div>
+  </div>
+  <div class="teal-box">📌 <strong>外れ値（outlier）の発見に使えます。</strong>格付けが0〜3の範囲だと分かっていれば、後の分析で<strong>7</strong>や<strong>-1</strong>といった値が出てきたときに「何かがおかしい」とすぐ気付けます。データの入力ミス、変換の失敗、想定外のケース——いずれも早く見つけるほど傷が浅くて済みます。</div>
+  <div class="note-box">📊 MAX・MINは<strong>ごく基本的な統計分析ツール</strong>です。しかし「このデータはどんな値を取るのか」を最短で把握できるという点で、新しいテーブルに触れたときの偵察手段として非常に有効です。<code>DISTINCT</code>が「値の種類」を教えてくれたのに対し、MAX/MINは「値の幅」を教えてくれます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>MAXとMINをセットで見ると「このデータは○○から○○まで」が分かります。範囲から外れた値は要注意サインです。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does MAX(outstanding_amt) return?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The largest value in that column</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The number of rows in that column</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The last row that was inserted</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The sum of all values in that column</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">MAX and MIN belong to which family of functions?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Aggregate functions</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>String functions</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Casting functions</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sorting functions</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">MAX(grade) is 3 and MIN(grade) is 0. What does that tell you?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Customers are graded on a scale from 0 to 3</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>There are exactly three customers in the table</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Every grade value appears three times</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The grade column contains no NULL values</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Knowing the range of a column mainly helps you to:</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Spot outliers and suspicious values later on</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Make queries against that column run faster</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Convert the column to a different data type</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Remove duplicate rows from the table</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Outstanding amounts run from 3,000 to 12,000. A later query returns 95,000. This most likely means:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Something is wrong and worth investigating</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>MAX and MIN were computed incorrectly</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The column must be cast to numeric</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The table needs a new primary key</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">DISTINCT tells you the kinds of values present. What do MAX and MIN add?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The spread between the smallest and largest</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>How often each value occurs</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Which rows contain NULL values</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The data type of the column</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 0, 0, 0, 0];
+var FEEDBACKS=["MAX simply returns the biggest value stored in that column.","They are aggregate functions: they look across many rows and return one value.","The highest grade is 3 and the lowest is 0, so the scale runs 0 to 3.","Once you know the normal range, anything outside it stands out as an outlier or an error.","A value far outside the known range is a signal to investigate rather than to trust.","MAX and MIN describe the range — how wide the values spread — while DISTINCT lists which values exist."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">MAX()</div>
+      <div class="term-en">最大値</div>
+      <div class="term-def">列に含まれる最も大きい値を返す集計関数。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">MIN()</div>
+      <div class="term-en">最小値</div>
+      <div class="term-def">列に含まれる最も小さい値を返す集計関数。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">range</div>
+      <div class="term-en">値の範囲</div>
+      <div class="term-def">MINからMAXまでの幅。データがどんな値を取りうるかを示す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">outlier</div>
+      <div class="term-en">外れ値</div>
+      <div class="term-def">想定される範囲から外れた値。入力ミスや異常のサインになる。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>新しい数値列に出会ったら、<code>MAX</code>と<code>MIN</code>を1回ずつ実行しておきましょう。30秒で「このデータの常識」が手に入ります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📈 SQLレッスン：M4 MAX と MIN</p>
+  <p style="margin-top:.5rem;"><a href="aggregate.html">← 集計関数</a> · <a href="index.html">🏠 概要</a> · <a href="group_by.html">次：Group by →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

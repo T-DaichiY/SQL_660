@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Group by — 集計を列の値ごとに分ける</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 🗂️ Group By <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Group by</div>
+  <h1>🗂️ GROUP BY — 集計を切り分ける</h1>
+  <p>1つの集計値を、列の値ごとに<strong>複数の集計値へ分解する</strong>。単一列と複数列、そして「並べる順番」で意味が変わる話。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① GROUP BYがすること</a><a href="#unit2">② ルールと構文</a><a href="#unit3">③ 単一列の実例</a><a href="#unit4">④ 複数列と順番</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>GROUP BYがすること</h2><div class="unit-sub">1つの数字を、意味のある内訳に分解する</div></div>
+  </div>
+  <p><code>GROUP BY</code>は、<strong>集計データを1つ以上の列の値ごとに整理する</strong>句です。単に件数を数えるだけなら「全部で35件」という1つの数字しか得られません。しかしGROUP BYを使えば、<strong>州ごと・都市ごと・担当者ごと</strong>といった内訳に分解できます。</p>
+  <div class="viz">
+    <div class="viz-title">集計 → GROUP BY で分解</div>
+    <div class="flow-diagram">
+      <div class="flow-box">COUNT(*)<br><small>35件</small><br><small>← 情報量が少ない</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">GROUP BY city<br><small>Bangalore 4</small><br><small>Brisbane 3</small><br><small>London 4 …</small></div>
+    </div>
+    <div class="viz-cap">1つの集計値を、指定した列の値ごとの複数の集計値に切り分ける。</div>
+  </div>
+  <div class="teal-box">📌 <strong>GROUP BYの真価は「分布が見えること」です。</strong>値が低いグループと高いグループがどこにあるのか、どこに偏りがあるのか——ヒストグラムや正規分布のような<strong>データの散らばり</strong>を、SQLだけで把握できます。「この顧客は15件の注文があるのに、あの顧客は3件だけ」といった重要度の差も見えてきます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>GROUP BYは「〜ごとに集計する」の“〜ごと”を決める句。全体の1つの数字を、内訳に分解してくれます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ルールと構文</h2><div class="unit-sub">集計していない列は必ずGROUP BYへ</div></div>
+  </div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> column1, <span class="kw">COUNT</span>(column2)</span>
+<span class="cl"><span class="kw">FROM</span> table_name</span>
+<span class="cl"><span class="kw">GROUP BY</span> column1;</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>絶対のルール：</strong>SELECTに書いた列のうち、<strong>集計関数で包まれていない列は、すべてGROUP BYに書かなければなりません。</strong>1つでも漏れるとエラーになります。<br><br>理屈を考えれば当然です——集計とは行をまとめる操作なので、まとめる基準になっていない列が混ざっていたら、SQLはその列にどの値を表示すべきか決められないのです。</div>
+  <h3>ラベルの列を入れ忘れると、意味不明な結果になる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ❌ 数字だけが並び、何の数字か分からない</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(grade)</span>
+<span class="cl"><span class="kw">FROM</span> customers</span>
+<span class="cl"><span class="kw">GROUP BY</span> grade;</span>
+</pre><div class="output-reveal">count
+-------
+     5
+     9
+    10
+     1
+（どのgradeが何件なのか不明）</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ⭕ グループの列も一緒に表示する</span></span>
+<span class="cl"><span class="kw">SELECT</span> grade, <span class="kw">COUNT</span>(grade)</span>
+<span class="cl"><span class="kw">FROM</span> customers</span>
+<span class="cl"><span class="kw">GROUP BY</span> grade</span>
+<span class="cl"><span class="kw">ORDER BY</span> grade;</span>
+</pre><div class="output-reveal">grade | count
+------+-------
+    0 |     1
+    1 |     9
+    2 |    10
+    3 |     5</div>
+  <div class="teal-box">📌 <strong>集計値だけを表示しても、何を指しているのか分かりません。</strong>必ず<strong>グループの見出しになる列を一緒にSELECTに書く</strong>——これがGROUP BYを使うときの基本作法です。</div>
+  <h3>集計する前に自問すること</h3>
+  <p><strong>「自分が知りたい答えは何か？」</strong>を先に決めましょう。顧客の格付けを例にすると：</p>
+  <ul style="margin:1rem 0 1rem 1.5rem;line-height:2;">
+    <li>格付け0が何件、1が何件…という<strong>内訳</strong>が知りたい → <code>grade</code>でGROUP BY</li>
+    <li>都市ごとの顧客数が知りたい → <code>city</code>でGROUP BY</li>
+    <li>都市ごと・格付けごとの内訳が知りたい → <strong>2列</strong>でGROUP BY（Unit④へ）</li>
+  </ul>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SELECTに書いた列で集計関数に包まれていないものは、全部GROUP BYに書く。そして見出しの列は必ず表示する。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>単一列の実例</h2><div class="unit-sub">「誰が何件」を数える</div></div>
+  </div>
+  <h3>例1：指導教員ごとの担当学生数</h3>
+  <p><code>advisors</code>テーブルには<code>instructor_id</code>と<code>student_id</code>の2列があります。「各教員が何人の学生を指導しているか」を知りたい場合：</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> instructor_id, <span class="kw">COUNT</span>(student_id)</span>
+<span class="cl"><span class="kw">FROM</span> advisors</span>
+<span class="cl"><span class="kw">GROUP BY</span> instructor_id;</span>
+</pre><div class="output-reveal">instructor_id | count
+--------------+-------
+            1 |     5
+            2 |    15
+            3 |     2</div>
+  <p>教員2番は15人も抱えている一方、教員3番は2人だけ——<strong>担当の偏りが一目で分かります</strong>。負荷を再配分すべきかどうかの判断材料になります。</p>
+  <div class="note-box">🔍 <strong>動作のイメージ：</strong>SQLは「教員1番について、学生IDが入っているレコードは何件あるか？→5件。次、教員2番は？→15件」と、グループごとに数え上げていきます。<code>instructor_id</code>は学生の数だけ繰り返し現れますが、数えているのは<strong>その教員に紐づくレコードの数</strong>です。</div>
+  <h3>例2：都市ごとの顧客数</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> city, <span class="kw">COUNT</span>(grade)</span>
+<span class="cl"><span class="kw">FROM</span> customers</span>
+<span class="cl"><span class="kw">GROUP BY</span> city</span>
+<span class="cl"><span class="kw">ORDER BY</span> city;</span>
+</pre><div class="output-reveal">city      | count
+----------+-------
+Bangalore |     4
+Brisbane  |     3
+Chennai   |     3
+London    |     4</div>
+  <div class="warn-box">⚠️ <strong>これはあまり有用ではありません。</strong>「Bangaloreに4人の顧客がいる」ことは分かりますが、<strong>その4人の格付けがどうなのかは分かりません</strong>。「Bangaloreに格付け0の顧客は何人いるのか」を知るには、列を2つ指定する必要があります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「誰が」「どこで」何件——グループの列と集計値を並べて表示するのが基本形です。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>複数列のGROUP BYと、書く順番</h2><div class="unit-sub">同じ情報でも「切り口」が変わる</div></div>
+  </div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> column2, column3, <span class="kw">COUNT</span>(column1)</span>
+<span class="cl"><span class="kw">FROM</span> table_name</span>
+<span class="cl"><span class="kw">GROUP BY</span> column2, column3;</span>
+</pre>
+  <p>ルールは変わりません——<strong>SELECTに並べた非集計列は、すべてGROUP BYに書く</strong>。そして<strong>書いた順番が、集計を切り分ける順番</strong>になります。</p>
+  <h3>切り口A：都市 → 格付け</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> city, grade, <span class="kw">COUNT</span>(grade)</span>
+<span class="cl"><span class="kw">FROM</span> customers</span>
+<span class="cl"><span class="kw">GROUP BY</span> city, grade</span>
+<span class="cl"><span class="kw">ORDER BY</span> city, grade;</span>
+</pre><div class="output-reveal">city      | grade | count
+----------+-------+-------
+Bangalore |     2 |     4
+Brisbane  |     1 |     2
+Brisbane  |     2 |     1
+Chennai   |     1 |     2
+Chennai   |     3 |     1
+London    |     0 |     1
+London    |     1 |     1
+London    |     2 |     2</div>
+  <p>読み方は<strong>「都市ごとに、その中の格付けの内訳」</strong>です。「Bangaloreには格付け2の顧客だけが4人」「Londonは0・1・2が混在」——<strong>その都市がどれくらい良い顧客を抱えているか</strong>が分かります。</p>
+  <h3>切り口B：格付け → 都市（順番を入れ替える）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> grade, city, <span class="kw">COUNT</span>(grade)</span>
+<span class="cl"><span class="kw">FROM</span> customers</span>
+<span class="cl"><span class="kw">GROUP BY</span> grade, city</span>
+<span class="cl"><span class="kw">ORDER BY</span> grade <span class="kw">DESC</span>, city;</span>
+</pre><div class="output-reveal">grade | city      | count
+------+-----------+-------
+    3 | Chennai   |     1
+    3 | Hampshire |     1
+    2 | Bangalore |     4
+    2 | Brisbane  |     1
+    ...
+    0 | London    |     1</div>
+  <p>読み方は<strong>「格付けごとに、それがどの都市に分布しているか」</strong>です。「格付け0の顧客はどの都市にいるのか？」——問題のある都市を洗い出したいときは、こちらの切り口が有効です。</p>
+  <table class="compare-table">
+    <tr><th></th><th>GROUP BY city, grade</th><th>GROUP BY grade, city</th></tr>
+    <tr><td>主役</td><td>都市</td><td>格付け</td></tr>
+    <tr><td>答える問い</td><td>この都市の顧客の質は？</td><td>この格付けはどこに集中している？</td></tr>
+    <tr><td>使いどころ</td><td>都市ごとの評価</td><td>問題のある地域の特定</td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>含まれる情報量は同じです。</strong>違うのは<strong>整理のされ方</strong>だけ。「知りたいことは何か」で並べる順番を決めましょう。細かく掘り下げるほど、この順番の選択が効いてきます。</div>
+  <div class="note-box">✍️ <strong>表示される列の順番はSELECTで決まります。</strong>GROUP BYの順番は集計の切り分け方を、SELECTの順番は結果の見た目を決めます。読みやすさのため、両者を揃えておくのが無難です。<code>ORDER BY</code>にも同じ列を書けば、並びも整います（<code>ORDER BY grade DESC, city</code>のように昇順・降順も指定できます）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>GROUP BYに2列書くと「A の中の B」という内訳になります。順番を入れ替えれば「B の中の A」。中身は同じで、見え方が変わります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does GROUP BY do?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It organises aggregated data by the values in one or more columns</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It sorts the result rows alphabetically</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes duplicate rows from the output</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It filters rows before they are aggregated</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which columns must appear in the GROUP BY clause?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Every selected column that is not inside an aggregate</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the columns wrapped in an aggregate function</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only text columns, never numeric ones</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Every column that exists in the table</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">"SELECT COUNT(grade) FROM customers GROUP BY grade;" runs fine. What is wrong with it?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>You get bare numbers with no label saying which grade they belong to</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>COUNT cannot be applied to a numeric column</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>GROUP BY may not name the column being counted</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The counts returned will be wrong</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In the advisors example, "SELECT instructor_id, COUNT(student_id) ... GROUP BY instructor_id" returns 15 for instructor 2. That means:</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Instructor 2 advises 15 students</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Student 15 is advised by instructor 2</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There are 15 instructors in the table</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Instructor 2 appears in row 15</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">You add "grade" to the SELECT list of a grouped query. What else must change?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>grade must be added to the GROUP BY clause</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>grade must be added to the WHERE clause</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>grade must be cast to text first</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Nothing — extra columns are always allowed</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">"GROUP BY city, grade" versus "GROUP BY grade, city" differ in what way?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>How the same information is organised</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>How many rows of source data are read</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only the second one is valid SQL</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The counts themselves come out different</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">You want to find which cities your worst-graded customers are in. Which grouping reads more naturally?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>GROUP BY grade, city</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>GROUP BY city, grade</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>GROUP BY city only</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>No grouping is needed here</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What decides the left-to-right order of the columns in the result?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The order of the SELECT list</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The order of the GROUP BY clause</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The order of the ORDER BY clause</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The order the columns were created in</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 0, 0, 0, 0, 0, 0];
+var FEEDBACKS=["GROUP BY splits one aggregate value into several, organised by the values found in the chosen column(s).","Any selected column not wrapped in an aggregate has to be listed in GROUP BY, or the query errors out.","Without the grade column in the SELECT list you just see 5, 9, 10, 1 with no way to tell which grade each belongs to.","The count is the number of student rows attached to that instructor — 15 students.","Adding a non-aggregated column to SELECT means adding it to GROUP BY as well.","Both return the same information; only the organisation — which column drives the breakdown — changes.","Leading with grade lists each grade and then the cities it appears in, which is what you want when hunting problem areas.","The SELECT list sets the column order of the output, just as it always has."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">GROUP BY</div>
+      <div class="term-en">グループ化</div>
+      <div class="term-def">集計データを、指定した列の値ごとに整理する句。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">COUNT()</div>
+      <div class="term-en">件数</div>
+      <div class="term-def">グループに含まれるレコード数を数える集計関数。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">単一列グループ化</div>
+      <div class="term-en">single column</div>
+      <div class="term-def">1列を基準に集計を分ける。最も基本的な形。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">複数列グループ化</div>
+      <div class="term-en">multiple columns</div>
+      <div class="term-def">「Aの中のB」という入れ子の内訳。書く順番で切り口が変わる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">distribution</div>
+      <div class="term-en">分布</div>
+      <div class="term-def">値がどこに偏っているか。GROUP BYで可視化できる。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>複数列でグループ化するときは、<strong>「◯◯ごとの、△△の内訳」</strong>と日本語で言ってみましょう。◯◯が先、△△が後——そのままGROUP BYに書く順番になります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🗂️ SQLレッスン：M4 GROUP BY</p>
+  <p style="margin-top:.5rem;"><a href="max_min.html">← MAX と MIN</a> · <a href="index.html">🏠 概要</a> · <a href="sum.html">次：Sum →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

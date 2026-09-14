@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Filtering with Where Part 3 — Like と ILike</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🃏 Where③ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Filtering with Where — Part 3</div>
+  <h1>🃏 LIKE と ILIKE — パターンで探す</h1>
+  <p>完全一致でも範囲でもなく「〜で始まる」「〜を含む」で探したいとき。<code>%</code>と<code>_</code>の2つのワイルドカードを使いこなす。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① LIKEとは</a><a href="#unit2">② % と _</a><a href="#unit3">③ 実用パターン</a><a href="#unit4">④ ILIKE</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>LIKEとは — パターンマッチング</h2><div class="unit-sub">「完全一致」でも「範囲」でもない第3の探し方</div></div>
+  </div>
+  <p>ここまで学んできた条件は、<strong>完全一致（<code>=</code>、<code>IN</code>）</strong>か<strong>範囲（<code>&gt;</code>、<code>BETWEEN</code>）</strong>のどちらかでした。しかし実務ではこんな要求がよくあります。</p>
+  <ul style="margin:1rem 0 1rem 1.5rem;line-height:2;">
+    <li>「Aで<strong>始まる</strong>都市名をすべて」</li>
+    <li>「社名に<strong>Inc</strong>が<strong>含まれる</strong>顧客を全部」</li>
+    <li>「<code>@</code>を含む＝メールアドレスらしき値を探したい」</li>
+  </ul>
+  <p>こうした<strong>パターンによる検索</strong>を行うのが<code>LIKE</code>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> city <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> city <span class="kw">LIKE</span> <span class="st">'A%'</span>;</span>
+</pre><div class="output-reveal">city
+-----------
+Allentown
+Aaarhus
+Auckland
+...</div>
+  <div class="teal-box">📌 <strong>ワイルドカード（wildcard）</strong>とは、具体的な文字の代わりに置く「なんでもいい」記号のことです。プログラミングの<strong>変数</strong>のようなもので、そこに何が入ってもよい、という意味の<strong>プレースホルダー</strong>だと考えてください。<code>SELECT *</code>の<code>*</code>も「全列」を表すワイルドカードでした。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>LIKEは「〜っぽい文字列」を探す道具。<code>WHERE 列 LIKE 'パターン'</code>と書きます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>2つのワイルドカード：<code>%</code> と <code>_</code></h2><div class="unit-sub">「何文字でもいい」と「ちょうど1文字」</div></div>
+  </div>
+  <table class="compare-table">
+    <tr><th>記号</th><th>意味</th><th>文字数</th></tr>
+    <tr><td><code>%</code>（パーセント）</td><td>任意の文字が任意の個数</td><td>0文字でもOK、何文字でもOK</td></tr>
+    <tr><td><code>_</code>（アンダースコア）</td><td>任意の文字が<strong>ちょうど1つ</strong></td><td>必ず1文字</td></tr>
+  </table>
+  <h3><code>%</code> の使い方 — 置く位置で意味が変わる</h3>
+  <table class="compare-table">
+    <tr><th>パターン</th><th>意味</th><th>マッチする例</th></tr>
+    <tr><td><code>'A%'</code></td><td>Aで<strong>始まる</strong></td><td>Apple, Atlanta, A</td></tr>
+    <tr><td><code>'%A'</code></td><td>Aで<strong>終わる</strong></td><td>Sofia, Sea, A</td></tr>
+    <tr><td><code>'%or%'</code></td><td>orを<strong>含む</strong></td><td>Oreo, sword, order, or</td></tr>
+  </table>
+  <div class="note-box">💡 <code>%</code>は<strong>0文字にもマッチします</strong>。<code>'%or%'</code>は「前に何文字あってもよく、後ろにも何文字あってもよい」＝「どこかにorがあればよい」という意味です。したがって<code>Oreo</code>（先頭がor）も、<code>or</code>という単語そのものもマッチします。</div>
+  <h3><code>_</code> の使い方 — 文字数をきっちり指定する</h3>
+  <table class="compare-table">
+    <tr><th>パターン</th><th>意味</th><th>マッチする例</th></tr>
+    <tr><td><code>'_R%'</code></td><td>1文字＋R＋何文字でも</td><td>aRt, tRee, bRown</td></tr>
+    <tr><td><code>'RTX____'</code></td><td>RTX＋ちょうど4文字</td><td>RTX4080, RTX3070</td></tr>
+    <tr><td><code>'RTX%'</code></td><td>RTXで始まる（後ろは自由）</td><td>RTX4080, RTX3070 Ti</td></tr>
+  </table>
+  <p><code>_</code>は<strong>必ず1文字</strong>を消費します。4つ並べれば「ちょうど4文字」という意味になり、文字数まで含めて厳密に指定できます。<code>%</code>と<code>_</code>は組み合わせて使えます。</p>
+  <div class="viz">
+    <div class="viz-title">% と _ の違い</div>
+    <div class="flow-diagram">
+      <div class="flow-box"><code>'RTX%'</code><br><small>RTX + 何文字でも</small><br><small>RTX4080 ⭕</small><br><small>RTX3070 Ti ⭕</small></div>
+      <div class="flow-arrow">vs</div>
+      <div class="flow-box"><code>'RTX____'</code><br><small>RTX + ちょうど4文字</small><br><small>RTX4080 ⭕</small><br><small>RTX3070 Ti ❌</small></div>
+    </div>
+    <div class="viz-cap">%は長さ自由、_は長さを固定する。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>%</code>＝「あと何文字でもOK」、<code>_</code>＝「ちょうど1文字」。パターンの前後どちらに置くかで「始まる/終わる/含む」が決まります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>実用パターン集</h2><div class="unit-sub">現場でよく使う書き方</div></div>
+  </div>
+  <h3>特殊記号を含むか調べる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- @ を含む＝メールアドレスらしき値</span></span>
+<span class="cl"><span class="kw">SELECT</span> contact <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> contact <span class="kw">LIKE</span> <span class="st">'%@%'</span>;</span>
+</pre>
+  <p><code>@</code>や<code>-</code>のような記号が含まれているかを調べるのにも使えます。データの中身を点検するときに便利です。</p>
+  <h3>製品カテゴリの型番で絞る</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- RTXシリーズのグラフィックボードを全部</span></span>
+<span class="cl"><span class="kw">SELECT</span> product_code <span class="kw">FROM</span> products</span>
+<span class="cl"><span class="kw">WHERE</span> product_code <span class="kw">LIKE</span> <span class="st">'RTX%'</span>;</span>
+</pre>
+  <p>型番や商品コードには「先頭がシリーズ名、後ろが番号」という規則があることが多く、LIKEと相性抜群です。<code>S18_</code>で始まる製品コードだけを取り出す、といった使い方ができます。</p>
+  <h3>WHEREの他の条件と組み合わせる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> customer <span class="kw">LIKE</span> <span class="st">'%Inc%'</span></span>
+<span class="cl">  <span class="kw">AND</span> qtr = <span class="nm">4</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> sales <span class="kw">DESC</span>;</span>
+</pre>
+  <p>LIKEも普通の条件式なので、<code>AND</code>／<code>OR</code>で他の条件と自由に組み合わせられます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「〜で始まる」なら<code>'ABC%'</code>、「〜を含む」なら<code>'%ABC%'</code>。この2つを覚えれば大半の場面に対応できます。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>ILIKE — 大文字・小文字を区別しない</h2><div class="unit-sub">LIKEとの唯一の違い</div></div>
+  </div>
+  <div class="warn-box">⚠️ <strong>LIKEは大文字と小文字を区別します（case-sensitive）。</strong><code>WHERE product_code LIKE 'RTX%'</code>と書いた場合、<code>rtx4080</code>のように小文字で登録されたデータは<strong>マッチしません</strong>。表記が揺れているデータでは、意図せず取りこぼしが発生します。</div>
+  <h3>ILIKE を使う</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 大文字小文字を無視してマッチ</span></span>
+<span class="cl"><span class="kw">SELECT</span> city <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> city <span class="kw">ILIKE</span> <span class="st">'a%'</span>;</span>
+</pre><div class="output-reveal">city
+-----------
+Allentown
+auckland
+AARHUS
+（Aでも a でも一致する）</div>
+  <table class="compare-table">
+    <tr><th></th><th>LIKE</th><th>ILIKE</th></tr>
+    <tr><td>大文字小文字</td><td>区別する</td><td>区別しない</td></tr>
+    <tr><td>ワイルドカード</td><td><code>%</code> <code>_</code></td><td><code>%</code> <code>_</code>（同じ）</td></tr>
+    <tr><td><code>'RTX%'</code>で<code>rtx4080</code>は</td><td>❌ マッチしない</td><td>⭕ マッチする</td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>違いはそれだけです。</strong>ワイルドカードの使い方も構文もLIKEと完全に同じで、大文字小文字を無視するかどうかだけが異なります。頭の<code>I</code>は<strong>insensitive（区別しない）</strong>の I だと覚えましょう。</div>
+  <div class="note-box">🧹 表記ゆれのあるデータでは、まず<code>ILIKE</code>で幅広く拾って全体像を掴み、その後<code>DISTINCT</code>で実際の表記パターンを確認し、必要ならデータを整える——という進め方が実践的です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ILIKE＝大文字小文字を気にしないLIKE。それ以外はまったく同じです。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">LIKE is used when you want to match:</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A pattern inside a text value</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An exact numeric range of values</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows whose values are missing</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Any value that appears in a given list</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does the % wildcard represent?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Exactly one character</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Any number of characters</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A literal percent sign only</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only digits, never letters</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does the _ wildcard represent?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Exactly one character</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Zero or more characters</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A space character only</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The end of the string</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which pattern finds values that contain "or" anywhere?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>'or%'</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>'%or%'</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>'_or_'</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'%or'</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which values match the pattern '_R%'?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Any value starting with R</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Exactly one character, then R, then anything</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Values that are exactly two characters long</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Values ending in R</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Does 'RTX3070 Ti' match the pattern 'RTX____' (four underscores)?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No — it has more than four characters after RTX</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Yes, but only when ILIKE is used instead</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only if the space is removed by the database</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Will "WHERE code LIKE 'RTX%'" match the stored value 'rtx4080'?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No — LIKE is case-sensitive</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Yes — LIKE ignores capitalisation</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Yes, but only for the first three characters</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It raises a case-mismatch error instead</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What is the only difference between LIKE and ILIKE?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ILIKE ignores case</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ILIKE supports a different set of wildcard symbols</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ILIKE works on numbers rather than on text</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>ILIKE can only be placed at the end of a query</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 1, 1, 1, 0, 0];
+var FEEDBACKS=["LIKE does pattern matching on text — 'starts with', 'ends with', 'contains' — rather than exact or range comparison.","% stands for any number of characters, including none at all.","The underscore stands for exactly one character, so it fixes the length at that position.","Wrapping the text in % on both sides means anything may come before and after it.","One underscore consumes exactly one character, then R must appear, and % allows anything afterwards.","Four underscores demand exactly four characters after RTX, and 'RTX3070 Ti' has more.","LIKE distinguishes upper- and lower-case, so lowercase rtx4080 is not matched. Use ILIKE for that.","ILIKE behaves exactly like LIKE but is case-insensitive — the I stands for insensitive."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">LIKE</div>
+      <div class="term-en">パターン一致</div>
+      <div class="term-def">ワイルドカードを使って文字列のパターンを検索する演算子。大文字小文字を区別する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">ILIKE</div>
+      <div class="term-en">大小文字を無視する一致</div>
+      <div class="term-def">LIKEと同じだが大文字小文字を区別しない。PostgreSQLの機能。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">%</div>
+      <div class="term-en">任意の文字列</div>
+      <div class="term-def">0文字以上の任意の文字にマッチするワイルドカード。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">_</div>
+      <div class="term-en">任意の1文字</div>
+      <div class="term-def">ちょうど1文字にマッチするワイルドカード。文字数を固定できる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">case-sensitive</div>
+      <div class="term-en">大文字小文字を区別する</div>
+      <div class="term-def">LIKEの性質。<code>RTX</code>と<code>rtx</code>は別物として扱われる。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>思ったより結果が少ないときは、まず<code>ILIKE</code>に変えて実行してみましょう。件数が増えるなら、原因は大文字小文字の表記ゆれです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🃏 SQLレッスン：LIKE と ILIKE — パターン検索</p>
+  <p style="margin-top:.5rem;"><a href="where_operators.html">← WHERE②</a> · <a href="index.html">🏠 概要</a> · <a href="where_examples.html">次：WHERE演習 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>
