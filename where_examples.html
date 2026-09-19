@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Filtering with Where Examples — 演習</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🧪 Where演習 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Filtering with Where Examples</div>
+  <h1>🧪 WHERE演習 — 依頼文をクエリに翻訳する</h1>
+  <p>9問の実践演習。問題文を読んだら、まず自分で書いてみてから「▶ コードを打つ」で解答を確認しましょう。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 比較演算子</a><a href="#unit2">② 論理演算子</a><a href="#unit3">③ LIKE・ILIKE</a><a href="#unit4">④ 解き方のコツ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>比較演算子の演習</h2><div class="unit-sub">まずは1条件から</div></div>
+  </div>
+  <div class="note-box">📝 <strong>使い方：</strong>問題文を読んだら、先にpgAdminで自分のクエリを書いてみてください。書き終わってから解答を見ると、学習効果が何倍にもなります。</div>
+
+  <h3>Q1. 50ドルを超える製品の一覧</h3>
+  <p><em>「価格が50ドルを超える製品の一覧を返してください。製品コード・製品ライン・価格を含め、高い順に並べてください。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> product_code, product_line, price</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> price &gt; <span class="st">'50'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> price <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">product_code | product_line  | price
+-------------+---------------+---------
+S10_1949     | Classic Cars  | $100.00
+S12_1108     | Classic Cars  |  $99.15
+...
+S24_2022     | Vintage Cars  |  $50.14</div>
+  <div class="warn-box">⚠️ <strong>ここが罠：</strong><code>price</code>は<strong>money型</strong>なので、比較する値を<code>'50'</code>とシングルクォートで囲む必要があります。integer型なら<code>50</code>と直接書けます。「型が違うとエラーになる」ことを思い出してください。</div>
+  <div class="teal-box">📌 <strong>「高い順」＝ソートの指示です。</strong>問題文に「sorted」「〜順に」という言葉が出てきたら、ORDER BYが必要というサインです。「最も高いものから最も安いものへ」＝<code>DESC</code>。</div>
+  <div class="note-box">✍️ <strong>セミコロンについて：</strong>1行のクエリなら省略できますが、複数行のクエリには必須です。行数にかかわらず必ず末尾に付けるのが良いスタイルです。またキーワードは大文字にするのが期待される書き方です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「〜より高い」→ <code>&gt;</code>、「高い順」→ <code>ORDER BY 列 DESC</code>。money型はクォートで囲む。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>論理演算子の演習</h2><div class="unit-sub">AND / OR / BETWEEN / IN</div></div>
+  </div>
+
+  <h3>Q2. 第1四半期かつ数量25超</h3>
+  <p><em>「第1四半期で、かつ数量が25を超える売上の一覧。製品コード・注文日・数量・四半期を含めてください。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> product_code, order_date, quantity, qtr</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span> <span class="kw">AND</span> quantity &gt; <span class="nm">25</span>;</span>
+</pre><div class="output-reveal">product_code | order_date | quantity | qtr
+-------------+------------+----------+-----
+S18_1749     | 2003-02-24 |       30 |   1
+S24_3969     | 2003-03-18 |       41 |   1
+...</div>
+  <p><code>quantity</code>はinteger型なので<code>25</code>をそのまま書けます。「AかつB」なので<code>AND</code>です。</p>
+
+  <h3>Q3. 第1四半期<strong>と</strong>第3四半期 ← 最大の罠</h3>
+  <p><em>「第1四半期と第3四半期の売上の一覧。製品ライン・価格・数量を含めてください。」</em></p>
+  <div class="warn-box">⚠️ <strong>日本語（英語）の「と」に引きずられないこと。</strong><code>WHERE qtr = 1 AND qtr = 3</code>と書きたくなりますが、これは<strong>結果が0件</strong>になります。1つの行の<code>qtr</code>が同時に1でも3でもある、というのは不可能だからです。欲しいのは「1<strong>または</strong>3」です。</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ❌ 0件になる</span></span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span> <span class="kw">AND</span> qtr = <span class="nm">3</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- ⭕ 正解</span></span>
+<span class="cl"><span class="kw">SELECT</span> product_line, price, quantity</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> qtr = <span class="nm">1</span> <span class="kw">OR</span> qtr = <span class="nm">3</span>;</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- ⭕ IN でも同じ</span></span>
+<span class="cl"><span class="kw">WHERE</span> qtr <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>)</span>
+</pre>
+  <div class="teal-box">📌 <strong>同じ列に対する複数の値なら、必ずOR（またはIN）。</strong>ANDが意味を持つのは「別々の列」を組み合わせるとき（Q2のように<code>qtr</code>と<code>quantity</code>）です。</div>
+  <div class="note-box">💡 この問題では<code>qtr</code>を<strong>表示する列に含めていません</strong>。問題文が求めているのは製品ライン・価格・数量の3つだけだからです。絞り込みに使った列を必ず表示する必要はありません。</div>
+
+  <h3>Q4. 注文明細番号が5〜10</h3>
+  <p><em>「order_line_num が5から10までの売上の一覧。注文番号・明細番号・数量を含め、注文番号順に並べてください。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 書き方1</span></span>
+<span class="cl"><span class="kw">WHERE</span> order_line_num &gt;= <span class="nm">5</span> <span class="kw">AND</span> order_line_num &lt;= <span class="nm">10</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 書き方2（こちらが簡潔）</span></span>
+<span class="cl"><span class="kw">SELECT</span> order_num, order_line_num, quantity</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> order_line_num <span class="kw">BETWEEN</span> <span class="nm">5</span> <span class="kw">AND</span> <span class="nm">10</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> order_num;</span>
+</pre>
+  <p>「5から10まで（5 through 10）」は<strong>両端を含む</strong>と解釈するのが自然なので、<code>BETWEEN</code>がぴったりです。<code>&gt;=</code>と<code>&lt;=</code>で書いても同じ結果になります。</p>
+  <div class="note-box">🔍 <strong>列名を忘れたら：</strong><code>SELECT * FROM sales;</code>を実行して列見出しを眺めるか、pgAdminの左ペインでテーブルの列一覧を確認しましょう。「思い出せないなら見に行く」で構いません。</div>
+
+  <h3>Q5. 特定の3社の売上</h3>
+  <p><em>「Land of Toys Inc.、Gift Depot Inc.、Auto Canal Petit への売上の一覧。会社名・注文番号・数量を含め、会社名順に並べてください。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, order_num, quantity</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> customer <span class="kw">IN</span> (<span class="st">'Land of Toys Inc.'</span>, <span class="st">'Gift Depot Inc.'</span>, <span class="st">'Auto Canal Petit'</span>)</span>
+<span class="cl"><span class="kw">ORDER BY</span> customer;</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>3つの落とし穴が同時に出てくる問題です。</strong></div>
+  <ol style="margin:1rem 0 1rem 1.5rem;line-height:2;">
+    <li><strong>列名は<code>company</code>ではなく<code>customer</code>。</strong>依頼者は「会社」と言いますが、テーブル上の列名は違うことがあります。<strong>必ず実際の列名を確認</strong>しましょう。</li>
+    <li><strong>綴りは完全一致でなければならない。</strong><code>Land of Toys Inc.</code>には末尾にピリオドがあり、<code>Gift Depot Inc.</code>にもあります。しかし他社では<code>Inc</code>にピリオドが無いこともあります——データの一貫性の問題です。</li>
+    <li><strong>大文字小文字も一致が必要。</strong><code>Auto Canal Petit</code>が引っかからないときは、実データが<code>Auto Canal+ Petit</code>のように微妙に違うか、大文字小文字が異なっている可能性があります。そんなときは<code>ILIKE</code>の出番です。</li>
+  </ol>
+  <div class="teal-box">📌 <strong>クエリは少しずつ組み立てて検証する。</strong>全部書いてから実行して変な結果が出ると、原因を探すのが大変です。「列だけ書いて実行 → WHEREを足して実行 → ORDER BYを足して実行」と<strong>段階的に確認</strong>するのが確実です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「AとB」＝同じ列なら<code>OR</code>／<code>IN</code>、別の列なら<code>AND</code>。「〜から〜まで」は<code>BETWEEN</code>。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>LIKE・ILIKEの演習</h2><div class="unit-sub">大文字小文字が結果を変える</div></div>
+  </div>
+
+  <h3>Q6. Aで始まる顧客</h3>
+  <p><em>「Aで始まる顧客の一覧を、アルファベット順に。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> customer <span class="kw">LIKE</span> <span class="st">'A%'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> customer;</span>
+</pre><div class="output-reveal">customer
+--------------------
+Alpha Cognac
+Amica Models &amp; Co.
+Anna's Decorations, Ltd
+AV Stores, Co.</div>
+  <p>「Aで始まる」なので<strong>左側にワイルドカードは置きません</strong>。後ろの長さは指定がないので<code>%</code>で自由にします。パターンは必ず<strong>シングルクォート</strong>で囲みます。</p>
+
+  <h3>Q7. 製品コードがS10で始まる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> product_code <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> product_code <span class="kw">LIKE</span> <span class="st">'S10%'</span>;</span>
+</pre><div class="output-reveal">product_code
+------------
+S10_1678
+S10_1949
+S10_2016
+S10_4698
+...</div>
+
+  <h3>Q8. 都市名がHで始まる顧客</h3>
+  <p><em>「都市名がHで始まる顧客の一覧。顧客名・都市・国を含め、都市名の降順で。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, city, country</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> city <span class="kw">LIKE</span> <span class="st">'H%'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> city <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer          | city     | country
+------------------+----------+---------
+Suominen Souveniers| Helsinki | Finland</div>
+
+  <h3>Q9. 都市名のどこかに「bri」を含む ← LIKEとILIKEの差が出る</h3>
+  <p><em>「都市名のどこかに bri を含む顧客の一覧。顧客名と都市を含め、都市名順に。」</em></p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- LIKE の場合</span></span>
+<span class="cl"><span class="kw">SELECT</span> customer, city <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> city <span class="kw">LIKE</span> <span class="st">'%bri%'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> city;</span>
+</pre><div class="output-reveal">customer            | city
+--------------------+------------
+（Cambridge は出るが Brisbane は出ない）</div>
+  <div class="warn-box">⚠️ <strong>なぜBrisbaneが出ないのか？</strong>データ上は<code>Brisbane</code>と<strong>大文字のB</strong>で始まっています。パターンの<code>bri</code>は小文字なので一致しません。一方<code>Cambridge</code>は語中に小文字の<code>bri</code>があるためマッチします。</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ILIKE なら大文字小文字を無視</span></span>
+<span class="cl"><span class="kw">SELECT</span> customer, city <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">WHERE</span> city <span class="kw">ILIKE</span> <span class="st">'%bri%'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> city;</span>
+</pre><div class="output-reveal">customer              | city
+----------------------+---------------
+...                   | Brickhaven
+...                   | Bridgewater
+...                   | Brisbane
+...                   | Cambridge
+...                   | South Brisbane</div>
+  <div class="teal-box">📌 <strong>判断基準：</strong>探している対象が<strong>固有名詞（都市名・会社名・人名）</strong>なら、先頭が大文字になっている可能性が高い。<strong>「どこかに含む」検索では、ほぼ常にILIKEを選ぶべき</strong>です。「自分が扱っているのはどんなデータか？」を毎回考えましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「〜で始まる」＝<code>'X%'</code>、「〜を含む」＝<code>'%X%'</code>。固有名詞を含む検索では<code>ILIKE</code>にしないと取りこぼします。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>依頼文をクエリに翻訳するコツ</h2><div class="unit-sub">文章題の解き方と同じ</div></div>
+  </div>
+  <div class="viz">
+    <div class="viz-title">クエリ組み立ての手順</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>「含めてください」の列を書く</strong><span>一番簡単な部分から。SELECT と FROM を先に固める</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>列名の実物を確認する</strong><span>company？customer？ 実際の列名を見に行く</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>絞り込み条件をWHEREにする</strong><span>同じ列の複数値ならOR/IN、別の列ならAND</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>データ型を確認する</strong><span>money・date・textはクォート、integerはそのまま</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">5️⃣</span><div class="step-text"><strong>「〜順に」があればORDER BY</strong><span>高い順・新しい順＝DESC、それ以外は既定のASC</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">6️⃣</span><div class="step-text"><strong>段階的に実行して検証</strong><span>一気に書かず、途中で何度も実行して確かめる</span></div></div>
+    </div>
+    <div class="viz-cap">文章題と同じ。分かるところから埋め、難しいところへ進む。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>依頼文の表現</th><th>使うSQL</th></tr>
+    <tr><td>「〜を超える」「〜以上」</td><td><code>&gt;</code> ／ <code>&gt;=</code></td></tr>
+    <tr><td>「AからBまで」</td><td><code>BETWEEN A AND B</code>（両端を含む）</td></tr>
+    <tr><td>「AとB（同じ列の複数の値）」</td><td><code>OR</code> ／ <code>IN (A, B)</code></td></tr>
+    <tr><td>「Aで、かつBの（別の列）」</td><td><code>AND</code></td></tr>
+    <tr><td>「〜で始まる」</td><td><code>LIKE 'X%'</code></td></tr>
+    <tr><td>「どこかに〜を含む」</td><td><code>ILIKE '%X%'</code></td></tr>
+    <tr><td>「〜順に」「高い順に」</td><td><code>ORDER BY</code> ／ <code>ORDER BY … DESC</code></td></tr>
+    <tr><td>「値が入っていない」</td><td><code>IS NULL</code></td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>練習量がすべてです。</strong>これから先、クエリはどんどん複雑になります。この段階の演習を確実にこなしておくことが、後のサブクエリや集計関数を無理なく理解する土台になります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>①列を書く → ②列名を確認 → ③条件を書く → ④型を確認 → ⑤並べ替え → ⑥途中で実行して確認。この順で進めれば迷いません。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">price is a money column. Which WHERE clause runs correctly?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE price > 50</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE price > '50'</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE price > $50</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE price > money(50)</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">"Sorted from most expensive to least expensive" translates to:</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ORDER BY price DESC</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ORDER BY price ASC</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE price = MAX</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>DISTINCT price</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How many rows does "WHERE qtr = 1 AND qtr = 3" return?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Zero</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All rows from quarters 1 and 3</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only the rows from quarter 1</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Every row in the whole table</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">"All sales from the first and third quarters" should be written as:</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE qtr = 1 OR qtr = 3</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE qtr = 1 AND qtr = 3</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE qtr BETWEEN 1 AND 3</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE qtr LIKE '1%3'</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A manager asks for "the company name", but the query errors on the column company. What should you do?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Check the table's real column names — it is customer</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Add a company column to the table first</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Put the word company in single quotes</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Use LIKE instead of the equals sign</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">"order_line_num is 5 through 10" is most simply written as:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>BETWEEN 5 AND 10</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>IN (5, 10)</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>> 5 AND < 10</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>LIKE '5%10'</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why does "WHERE city LIKE '%bri%'" miss Brisbane?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Brisbane is stored with a capital B, and LIKE is case-sensitive</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>% cannot appear at the start of a pattern</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Brisbane has too many characters after bri</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>City names must be searched with IN instead</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What is the recommended way to build a longer query?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Write the whole thing, then run it once at the very end</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Build it in pieces, running and checking as you go</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Always start from the ORDER BY clause</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Copy an old query and change the table name</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 0, 0, 0, 0, 0, 1];
+var FEEDBACKS=["money holds a $ symbol, so the comparison value is quoted like text: price > '50'.","Most expensive first means descending order on price.","No single row can have qtr equal to 1 and 3 at the same time, so the result is empty.","Multiple values for the same column need OR (or IN), never AND.","Business wording and column names often differ. Verify the actual names before writing the filter.","'5 through 10' is inclusive on both ends, which is exactly what BETWEEN gives you.","LIKE distinguishes case, so the lowercase pattern misses the capital B. ILIKE fixes it.","Running the query incrementally makes it far easier to spot where something went wrong."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 つまずきポイント集</h3>
+    <div class="term-item">
+      <div class="term-name">money型のクォート</div>
+      <div class="term-en">'50' と書く</div>
+      <div class="term-def">$記号を含む型なので、比較値をシングルクォートで囲む。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">「AとB」の罠</div>
+      <div class="term-en">AND ではなく OR</div>
+      <div class="term-def">同じ列に複数の値を指定するときはOR／IN。ANDでは0件になる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">列名の確認</div>
+      <div class="term-en">company ≠ customer</div>
+      <div class="term-def">依頼者の言葉と列名は一致しない。必ず実物を確認する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">綴りの完全一致</div>
+      <div class="term-en">Inc. のピリオド</div>
+      <div class="term-def">=やINは完全一致。ピリオドや空白の有無で結果が変わる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">LIKE の大文字小文字</div>
+      <div class="term-en">固有名詞に注意</div>
+      <div class="term-def">「どこかに含む」検索ではILIKEを使うのが安全。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>結果が0件だったときは、まず条件を1つずつ外して実行してみましょう。どの条件が犯人かがすぐに分かります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧪 SQLレッスン：WHERE演習</p>
+  <p style="margin-top:.5rem;"><a href="where_like.html">← LIKE・ILIKE</a> · <a href="index.html">🏠 概要</a> · <a href="alias.html">次：列の別名(AS) →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

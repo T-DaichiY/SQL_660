@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 サブクエリ① — スカラー・列・テーブルサブクエリ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 🎯 サブクエリ① <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Subqueries Part 1</div>
+  <h1>🎯 サブクエリ①：スカラー・列・テーブルサブクエリ</h1>
+  <p><strong>サブクエリ（subquery）</strong>とは、あるクエリの中にさらに別のクエリが入れ子になったものです。「まず先に値、または値のリストを計算しておかないと、外側のクエリでそれと比較・フィルタ・JOINできない」というときに使います。ロシアの入れ子人形（マトリョーシカ）のように、1つ開けるとまた中に別のクエリが入っているイメージです。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① サブクエリとは</a><a href="#unit2">② スカラー</a><a href="#unit3">③ 列サブクエリ</a><a href="#unit4">④ テーブルサブクエリ</a><a href="#unit5">⑤ 相関サブクエリ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>サブクエリとは何か</h2><div class="unit-sub">JOINとの使い分け</div></div>
+  </div>
+  <p>サブクエリは、欲しい結果を出すのに<strong>クエリが1本では足りない</strong>ときに使います。それぞれのサブクエリは、外側のクエリが使うテーブルの一部（値・値のリスト・行のかたまり）を先に用意する役割を持ちます。いわば「もう一段階、精密なフィルタリング」です。集計関数を別テーブルの基準として使ったり、あるテーブルの列がまるごと別テーブルに存在するかどうかを調べたり、複数テーブルの複雑なデータアクセスを1本のクエリにまとめたりできます。</p>
+  <p>ただし注意点があります。<strong>一般的に、サブクエリはJOINよりも計算コストが高くなりがちです。</strong>例外はありますが、JOINで書けるならJOINの方が好まれることが多いです。それでもサブクエリには独自の使いどころがあり、特に「スカラー値で絞り込みたい」「複数テーブルをまたいだ複雑なJOINを整理したい」ときに威力を発揮します。</p>
+  <table class="compare-table">
+    <tr><th>いつJOINを使うか</th><th>いつサブクエリを使うか</th></tr>
+    <tr><td>複数テーブルの列を<strong>横に並べて</strong>1つの結果セットとして表示したい</td><td>先に計算した<strong>1つの値・値のリスト</strong>で、外側のクエリを絞り込みたい</td></tr>
+    <tr><td>単純に「テーブルAとテーブルBを繋ぐ」だけで表現できる</td><td>集計関数（AVGなど）の結果を、ハードコードせずに条件として使いたい</td></tr>
+    <tr><td>パフォーマンスを優先したい（一般にJOINの方が効率的）</td><td>3つ以上のテーブルをまたぐ複雑なJOINを、論理的に整理したい</td></tr>
+    <tr><td>結果に複数テーブルの列をそのまま表示する必要がある</td><td>「このテーブルに存在するかどうか」だけを判定したい（表示は不要）</td></tr>
+  </table>
+  <p>サブクエリには4つの種類があります——<strong>スカラー（単一の値）</strong>、<strong>列（1列・複数行のリスト）</strong>、<strong>テーブル（複数列・複数行のかたまり）</strong>、そして<strong>相関（外側の各行ごとに再実行される）</strong>です。このページではスカラー・列・テーブルを扱い、相関サブクエリは⑤で扱います。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>サブクエリ＝クエリの中に入ったもう1つのクエリ。JOINで書ける単純な結合ならJOINの方が速い。でも「先に値を計算してから絞り込みたい」ときはサブクエリの出番です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>スカラーサブクエリ</h2><div class="unit-sub">1つの値を返す — WHEREでよく使う</div></div>
+  </div>
+  <p><strong>スカラーサブクエリ（scalar subquery）</strong>は、<strong>ただ1つの値</strong>を返すサブクエリです。<code>WHERE</code>句の中でよく使われ、片方の値と比較する場面で活躍します。<code>AVG</code>・<code>MAX</code>・<code>MIN</code>のような集計関数を使って、「あるテーブルの集計値を、別の比較の基準にする」というのが典型的な使い方です。</p>
+  <p>例えば「平均より単位数（tot_cred）が多い学生を知りたい」としましょう。平均値をあらかじめ計算して<strong>数字をハードコードしてしまう</strong>と、後でデータが増えて平均が変わったときにクエリを書き直す必要が出てきます。そこでスカラーサブクエリを使い、平均を毎回その場で計算させます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name, tot_cred</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">WHERE</span> tot_cred &gt; (<span class="kw">SELECT AVG</span>(tot_cred) <span class="kw">FROM</span> student);</span>
+</pre><div class="output-reveal">    name    | tot_cred
+------------+----------
+ Zhang      |      102
+ Shankar    |      105
+ Brandt     |       96
+ Bourikas   |       98
+(4 rows)</div>
+  <p>ポイントは、カッコの中の<code>(SELECT AVG(tot_cred) FROM student)</code>が<strong>完全に独立したもう1本のクエリ</strong>だということです。<code>SELECT</code>があり、<code>FROM</code>があり——最低限これだけあれば成立します。実行されると<strong>単一の数値</strong>（例えば平均が94.4だったとする）に置き換わり、結果として<code>WHERE tot_cred &gt; 94.4</code>のように動きます。返すのが単一の値なので、<strong>エイリアス（別名）を付ける必要はありません</strong>——列や表としてではなく、そのまま比較値として使われるからです。</p>
+  <div class="teal-box">📌 <strong>スカラーサブクエリは「変数のようなもの」</strong>——データが変わるたびに、比較の基準となる値も自動的に更新されます。数字を決め打ちしないことで、クエリが正しさを保ち続けます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>スカラーサブクエリはカッコの中で1つの数字を計算し、その数字をWHEREでの比較に使う。AVGなど集計関数と組み合わせるのが定番です。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>列サブクエリ</h2><div class="unit-sub">WHERE x IN (SELECT ...) — 値のリストと比較</div></div>
+  </div>
+  <p><strong>列サブクエリ（column subquery）</strong>は、<strong>1つの列・複数行</strong>——つまり値の<strong>リスト</strong>を返すサブクエリです。横に伸ばせば単なるリストと同じなので、<code>WHERE 列 IN (SELECT ...)</code>という形でよく使われます。「このテーブルの値が、あの別テーブルの列に存在するかどうか」を調べるのに向いています。これはINNER JOINとかなり似た働きをしますが、JOINで書くと問題が起きるケースでは列サブクエリが便利です。</p>
+  <p>例：「CS-101を履修したことのある学生の名前を知りたい」場合、まず<code>takes</code>テーブルからCS-101を履修した<code>student_id</code>のリストを作り、それを<code>student</code>テーブルの<code>student_id</code>と比較します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">WHERE</span> student_id <span class="kw">IN</span> (<span class="kw">SELECT</span> student_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> course_id = <span class="st">'CS-101'</span>);</span>
+</pre><div class="output-reveal">   name
+-----------
+ Zhang
+ Shankar
+ Levy
+(3 rows)</div>
+  <p>カッコの中の<code>SELECT student_id FROM takes WHERE course_id = 'CS-101'</code>は<strong>1列だけ</strong>を返します。だから<code>WHERE ... IN (...)</code>の形でそのまま「このリストに含まれるか」を判定できます。列は1つだけなので、こちらもテーブルとしてのエイリアスは不要です——結合するテーブルではなく、比較用の値リストとして扱われるからです。</p>
+  <div class="teal-box">📌 <strong>列サブクエリはINNER JOINに似ていますが、常に置き換えられるわけではありません。</strong>「存在するかどうかだけ知りたくて、相手のテーブルの列は表示に使わない」場合は、JOINよりも列サブクエリの方がシンプルに書けることがあります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>列サブクエリはリストを返す。<code>WHERE 列 IN (SELECT 列 FROM ... WHERE ...)</code>の形で、「このリストに入っているか」を調べるのに使います。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>テーブルサブクエリ</h2><div class="unit-sub">導出テーブル（derived table）としてJOINする</div></div>
+  </div>
+  <p><strong>テーブルサブクエリ（table subquery）</strong>は、<strong>複数列・複数行</strong>——つまり丸ごと1つの「テーブルのようなもの」を返すサブクエリです。実在しない一時的なテーブルをその場で組み立てて、それを<code>FROM</code>句や<code>JOIN</code>句で使う、というのが基本の使い方です。これは<strong>導出テーブル（derived table）</strong>と呼ばれます。列や値のリストとは違い、複数列を持つ「テーブル」として扱われるため、<strong>必ずテーブルエイリアスが必要</strong>です。</p>
+  <p>特に便利なのは、3つ以上のテーブルをまたいで複雑にJOINしなければならない場面です。「テーブルAとテーブルCを直接つなぐ共通列が無いが、テーブルBを経由すればつながる」というようなとき、先にテーブルB相当の導出テーブルを作ってから結合する、という使い方ができます。また、テーブルサブクエリの中では通常のクエリと同じように<code>WHERE</code>・集計関数・<code>GROUP BY</code>などを自由に使えます——これは単なるJOINにはできないことです。</p>
+  <p>例：学科ごとの平均単位数を先に導出テーブルとして作り、それに学生本人の単位数を比較したいとします。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s.name, s.dept_name, s.tot_cred, d.avg_credits</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="kw">AS</span> s</span>
+<span class="cl"><span class="kw">JOIN</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> dept_name, <span class="kw">AVG</span>(tot_cred) <span class="kw">AS</span> avg_credits</span>
+<span class="cl">    <span class="kw">FROM</span> student</span>
+<span class="cl">    <span class="kw">GROUP BY</span> dept_name</span>
+<span class="cl">) <span class="kw">AS</span> d</span>
+<span class="cl"><span class="kw">ON</span> s.dept_name = d.dept_name;</span>
+</pre><div class="output-reveal">   name   | dept_name  | tot_cred | avg_credits
+----------+------------+----------+-------------
+ Zhang    | Comp. Sci. |      102 |       92.50
+ Shankar  | Comp. Sci. |      105 |       92.50
+ Brandt   | History    |       96 |       88.00
+(3 rows)</div>
+  <p>カッコの中の<code>SELECT dept_name, AVG(tot_cred) AS avg_credits FROM student GROUP BY dept_name</code>は、それ自体が完結したクエリで、<strong>学科ごとの平均単位数という複数行のテーブル</strong>を作り出します。それに<code>AS d</code>というエイリアスを付けて、まるで実在のテーブルであるかのように<code>student</code>とJOINしています。</p>
+  <div class="teal-box">📌 <strong>テーブルサブクエリは「その場限りの一時テーブル」を作ってJOINするイメージです。</strong>普通のテーブルと同様に必ずエイリアスを付け、結合条件（<code>ON</code>）で共通の列を指定します。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>テーブルサブクエリは複数列・複数行を返す。<code>(SELECT ... ) AS 別名</code>の形でJOIN句の中に置き、あたかも本物のテーブルのように使います。</p></div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>相関サブクエリ</h2><div class="unit-sub">correlated subquery — 外側の行ごとに毎回実行される</div></div>
+  </div>
+  <p><strong>相関サブクエリ（correlated subquery）</strong>は、外側のクエリと内側のクエリの間に<strong>依存関係</strong>があるサブクエリです。これまで見た3種類は「サブクエリを1回だけ実行して、その結果を外側が使う」という流れでしたが、相関サブクエリは違います。<strong>内側のクエリが、外側のクエリの「今見ている行」を参照する</strong>ため、外側の行が変わるたびに内側が再計算されます。いわば、外側のクエリを完成させる前に必ず通らなければならない「内側の関所」です。</p>
+  <p>例：「各教員が何人の学生を指導しているか」を知りたいとします。<code>instructor</code>テーブルには学生数の列がないので、<code>advisor</code>テーブルから数える必要がありますが、それを別テーブルから直接<code>SELECT</code>することはできません。そこで相関サブクエリを使い、<code>instructor</code>の各行の<code>instructor_id</code>を<code>advisor</code>側の条件に埋め込みます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name, dept_name,</span>
+<span class="cl">    (<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> advisor <span class="kw">WHERE</span> advisor.instructor_id = instructor.instructor_id) <span class="kw">AS</span> num_advisees</span>
+<span class="cl"><span class="kw">FROM</span> instructor</span>
+<span class="cl"><span class="kw">ORDER BY</span> dept_name, name;</span>
+</pre><div class="output-reveal">   name    | dept_name  | num_advisees
+------------+------------+--------------
+ Brandt     | Comp. Sci. |            3
+ Katz       | Comp. Sci. |            1
+ Kim        | Elec. Eng. |            0
+ Srinivasan | Finance    |            2
+(4 rows)</div>
+  <p>ここでの<code>instructor.instructor_id</code>は<strong>外側のクエリの、今処理している行</strong>を指しています。<code>GROUP BY</code>を使わなくても、この書き方だけで「教員1人につき1つのカウント」が自動的に得られます。</p>
+  <div class="viz">
+    <div class="viz-title">通常のサブクエリ vs 相関サブクエリ：実行される回数の違い</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>通常のサブクエリ（スカラー・列・テーブル）</strong><span>内側のクエリは最初に<strong>1回だけ</strong>実行され、その結果を外側が使い回す</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔁</span><div class="step-text"><strong>相関サブクエリ</strong><span>外側の行が1件処理されるたびに、内側のクエリが<strong>その行の値を使って毎回再実行</strong>される</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">👨‍🏫</span><div class="step-text"><strong>例：instructorが4人いれば</strong><span>内側の<code>SELECT COUNT(*) FROM advisor WHERE ...</code>が<strong>4回</strong>——教員ごとに1回ずつ実行される</span></div></div>
+    </div>
+    <div class="viz-cap">外側の1行 → 内側を1回実行、を行数分くり返すのが相関サブクエリの動き方。</div>
+  </div>
+  <div class="warn-box">⚠️ <strong>複合主キー（composite primary key）を持つテーブルをJOINやサブクエリで経由すると、行が重複・増殖することがあります。</strong>例えば<code>takes</code>テーブルの主キーは<code>student_id, course_id, section_id, semester, year</code>の組み合わせ全体です。同じ<code>course_id</code>でも学期やセクションが違えば「別の行」として扱われるため、<code>DISTINCT</code>を付けたつもりでも意図した列だけで重複が消えないことがあります。相関サブクエリで外側の1行ごとに計算させる、あるいは<code>SELECT DISTINCT</code>で本当に消したい列を明示するなど、複合主キーの構造を理解した上で重複を防ぐ工夫が必要です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>相関サブクエリは、外側の行1つにつき内側のクエリを1回ずつ実行する「行ごとの再計算」です。GROUP BYなしで「行ごとの集計値」を1列として追加できます。複合主キーのテーブルを扱うときは、行の重複に注意しましょう。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is a subquery, in plain terms?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A query nested inside another query</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A saved view stored permanently in the database</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A shortcut for renaming a column</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A type of index used to speed up JOINs</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Generally speaking, when should you prefer a JOIN over a subquery?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Never — subqueries are always faster</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>When a JOIN can express the same logic, since subqueries are typically less computationally efficient</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only when there is a single table involved</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only inside a WHERE clause</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A scalar subquery returns what?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A single value</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A single column of many rows</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Multiple columns and multiple rows</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A new table permanently written to disk</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In "SELECT name, tot_cred FROM student WHERE tot_cred > (SELECT AVG(tot_cred) FROM student);", why is no alias needed for the subquery?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Aliases are never required in SQL</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It returns a single value, not a table or column to reference later</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It is inside a JOIN clause</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>AVG() automatically assigns an alias</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which pattern best describes a column subquery?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>SELECT ... FROM (SELECT ...) AS t</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE x IN (SELECT single_column FROM ...)</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE x = (SELECT AVG(col) FROM ...)</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>CREATE INDEX ON table (column)</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does a table subquery used inside a JOIN require a table alias?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because it returns multiple columns and rows, so it must be referenced like a table</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because PostgreSQL requires every column to have an alias</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because it only works with the DISTINCT keyword</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because aliases make queries run faster</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">What makes a correlated subquery different from a scalar, column, or table subquery?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It must always use DISTINCT</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It only works with dates</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It references the outer query's current row, so it re-executes once per outer row instead of running just once</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It cannot appear in a SELECT list</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why can joining through a table with a composite primary key sometimes produce duplicate or multiplied rows?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Composite keys disable DISTINCT entirely</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rows that share one column (like course_id) can still count as separate rows because the full key combination differs</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>PostgreSQL automatically duplicates rows when a table has more than one primary key column</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Composite keys can only be used with scalar subqueries</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 1, 1, 0, 2, 1];
+var FEEDBACKS=["A subquery is a query nested inside another query — you can also call it a nested query.","Subqueries are generally less computationally efficient than JOINs, so a JOIN is usually preferred when it can express the same logic.","A scalar subquery returns exactly one value, often from an aggregate function like AVG, MAX, or MIN.","Because it evaluates to a single number, there's nothing to name or reference later — it just substitutes directly into the comparison.","A column subquery returns one column with multiple rows, so it's compared with IN as a list of values.","A table subquery returns multiple columns and rows — a table-like result — so SQL needs an alias to refer to it, just like any other table in a JOIN.","A correlated subquery references a column from the outer query's current row, so it must be re-evaluated for every row the outer query processes.","Even if two rows share the same course_id, differences in the other key columns (like section_id or semester) make the full composite key different, so they remain separate rows."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">subquery</div>
+      <div class="term-en">サブクエリ（副問い合わせ）</div>
+      <div class="term-def">別のクエリの中に入れ子になったクエリ。必ずカッコで囲む。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">scalar subquery</div>
+      <div class="term-en">スカラーサブクエリ</div>
+      <div class="term-def">単一の値を返すサブクエリ。WHEREでの比較によく使われる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">correlated subquery</div>
+      <div class="term-en">相関サブクエリ</div>
+      <div class="term-def">外側クエリの現在の行を参照し、行ごとに再実行されるサブクエリ。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">derived table</div>
+      <div class="term-en">導出テーブル</div>
+      <div class="term-def">テーブルサブクエリの結果をその場限りのテーブルとして扱ったもの。エイリアスが必須。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">IN operator</div>
+      <div class="term-en">IN演算子</div>
+      <div class="term-def">値のリスト（列サブクエリなど）に含まれるかどうかを判定する演算子。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">nested query</div>
+      <div class="term-en">入れ子クエリ</div>
+      <div class="term-def">サブクエリの別名。クエリの中にクエリが入っていることを強調した呼び方。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>迷ったら「これはJOINで書けないか？」を先に考えましょう。JOINで書けるなら基本的にJOINが優先。書けない・書きにくいときにサブクエリの出番です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🎯 SQLレッスン：M6 サブクエリ①（スカラー・列・テーブル）</p>
+  <p style="margin-top:.5rem;"><a href="set_operators.html">← 集合演算子</a> · <a href="subqueries_sets.html">サブクエリ②へ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

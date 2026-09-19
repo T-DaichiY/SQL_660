@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 テーブルの関係とJOINの応用</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 🧬 テーブルの関係 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Table Relationships & Advanced Joins</div>
+  <h1>🧬 テーブルの関係とJOINの応用</h1>
+  <p>ここでは、テーブル同士がどんな<strong>「関係（relationship）」</strong>で結びついているかを整理し、それを踏まえて<strong>エイリアス</strong>や<strong>3つ以上のテーブルのJOIN</strong>、<strong>JOIN結果に対する計算</strong>まで一気に見ていきます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① テーブルの関係</a><a href="#unit2">② 多対多と中間テーブル</a><a href="#unit3">③ エイリアスで短く</a><a href="#unit4">④ 3つ以上のJOIN</a><a href="#unit5">⑤ ON句とWHERE句の違い</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>テーブルの関係（1対1・1対多・多対多）</h2><div class="unit-sub">JOINの結果を理解するための土台</div></div>
+  </div>
+  <p>2つのテーブルの間には、大きく分けて<strong>3種類の関係（relationship）</strong>があります。どの関係かによって、JOINしたときに何行返ってくるかがまったく変わるので、JOINを書く前に必ず意識しておきたいポイントです。</p>
+  <table class="compare-table">
+    <tr><th>関係の種類</th><th>意味</th><th>頻度</th></tr>
+    <tr><td>1対1（one-to-one）</td><td>片方のテーブルの1レコードが、もう片方のちょうど1レコードとだけ対応する</td><td>まれ</td></tr>
+    <tr><td>1対多（one-to-many）</td><td>片方の1レコードが、もう片方の複数レコードと対応する</td><td>最もよく見る</td></tr>
+    <tr><td>多対多（many-to-many）</td><td>両方のテーブルが、互いに複数レコードと対応し合う</td><td>よくある（中間テーブルが必要）</td></tr>
+  </table>
+  <p>例えば本と著者の関係を考えると、トルストイが書いた作品は『戦争と平和』だけ、シェイクスピアが書いたのは『マクベス』だけ、というような場合は1対1です。しかし実際には1人の著者が複数の本を書くことの方が多いので、<strong>「著者→本」は1対多になりやすい</strong>のです（1人の著者が複数の本を書くが、各本の著者は1人だけ、という設定の場合）。逆に共著が当たり前の教科書のように、1冊の本に複数の著者がいて、その著者たちも他の本を書いている場合は多対多になります。</p>
+  <p>University DBには、この3種類すべての例があります。</p>
+  <div class="viz">
+    <div class="viz-title">department ↔ instructor（1対多）</div>
+    <div class="card-diagram">
+      <div class="card-box">department</div>
+      <div class="card-link"><span class="card-mult">1</span><div class="card-line"></div><span class="card-mult">N</span></div>
+      <div class="card-box">instructor</div>
+    </div>
+    <div class="viz-cap">各instructorは<strong>1つのdept_name</strong>にしか所属できないが、1つの学部には複数のinstructorが所属できる。</div>
+  </div>
+  <div class="viz">
+    <div class="viz-title">instructor ↔ student（advisor経由・1対多）</div>
+    <div class="card-diagram">
+      <div class="card-box">instructor</div>
+      <div class="card-link"><span class="card-mult">1</span><div class="card-line"></div><span class="card-mult">N</span></div>
+      <div class="card-box">student</div>
+    </div>
+    <div class="viz-cap">1人のinstructorが複数のstudentを指導できるが、各studentの指導教員（advisor）は基本的に1人だけ。</div>
+  </div>
+  <div class="teal-box">📌 <strong>なぜ関係を意識するのか？</strong> 1対1なら結果件数は絞られ、1対多や多対多ではJOINした瞬間に行が増殖します。「なぜこんなに行数が増えたんだろう？」と思ったら、まず関係の種類を確認するクセをつけましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>テーブル同士の関係は1対1・1対多・多対多の3種類。University DBでは、department↔instructorとinstructor↔studentは1対多です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>多対多と中間テーブル（junction table）</h2><div class="unit-sub">student ↔ course は takes 経由の多対多</div></div>
+  </div>
+  <p>studentとcourseの関係を考えてみましょう。1人の学生は複数の科目を履修できるし、1つの科目（の複数セクション）は複数の学生に履修されます。つまり<strong>student ↔ course は多対多</strong>です。</p>
+  <p>しかし、多対多の関係はテーブル2つだけでは直接表現できません。そこで<strong>中間テーブル（junction table／連結テーブル）</strong>を間に挟みます。University DBでは、その役割を<code>takes</code>テーブルが担っています。<code>takes</code>は<code>student_id</code>と<code>course_id</code>（と<code>section_id</code>など）を両方持っていて、studentとcourseそれぞれに対しては1対多の関係になっています。</p>
+  <div class="viz">
+    <div class="viz-title">student ↔ takes ↔ course（多対多 ＝ 1対多が2本つながったもの）</div>
+    <div class="card-diagram">
+      <div class="card-box">student</div>
+      <div class="card-link"><span class="card-mult">1</span><div class="card-line"></div><span class="card-mult">N</span></div>
+      <div class="card-box">takes</div>
+      <div class="card-link"><span class="card-mult">N</span><div class="card-line"></div><span class="card-mult">1</span></div>
+      <div class="card-box">course</div>
+    </div>
+    <div class="viz-cap">1人のstudentは複数のtakes行を持てる（1対多）。1つのcourseも複数のtakes行から参照される（多対1）。この2つの1対多を合わせると、studentとcourseは実質「多対多」になる。</div>
+  </div>
+  <div class="teal-box">📌 <strong>中間テーブルは、多対多を2つの1対多に分解する仕組みです。</strong>studentとcourseを直接つなぐ列は存在しませんが、takesが両方の主キーを外部キーとして持つことで、間接的に多対多の関係を表現できます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>student↔courseは多対多。直接はつなげないので、両方のIDを持つtakesという中間テーブルを介して結びつけます。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>エイリアスでJOINを短く書く</h2><div class="unit-sub">student S, takes T のように短縮する</div></div>
+  </div>
+  <p>JOINするテーブルが増えてくると、テーブル名をそのまま書き続けるクエリはどんどん長くなります。そこで使うのが<strong>エイリアス（alias／別名）</strong>です。<code>FROM テーブル名 別名</code>のように、テーブル名の後にスペースで別名を書くだけで、以降はその短い名前で列を指定できます。</p>
+  <p class="code-label">▶ エイリアス無し（冗長）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> student.student_id, takes.course_id, takes.section_id</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">USING</span> (student_id);</span>
+</pre>
+  <p class="code-label">▶ エイリアス有り（S, T に短縮）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> S.student_id, T.course_id, T.section_id</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="nm">S</span></span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="nm">T</span> <span class="kw">USING</span> (student_id);</span>
+</pre>
+  <div class="teal-box">📌 <strong>エイリアスの書き方は「テーブル名 スペース 別名」。</strong><code>AS</code>を挟んで<code>student AS S</code>と書いても同じ意味になりますが、<code>AS</code>を省略してもエラーにはなりません。列名の前の<code>S.</code>や<code>T.</code>も省略可能な場合がありますが（列名が全テーブルの中で一意なとき）、どのテーブルの列か分かりやすくするために付けておくのがおすすめです。短いクエリでは1文字のエイリアス（S, T, Cなど）がよく使われます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>テーブル名の後にスペースと短い名前を書けば、それがエイリアスになります。student S, takes Tのように書けば、S.やT.でずっと短く書けます。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>3つ以上のテーブルをJOINする</h2><div class="unit-sub">student → takes → course の連鎖</div></div>
+  </div>
+  <p>studentの氏名、履修しているcourseの<strong>タイトル（title）</strong>、そしてsection_idを一度に見たいとします。しかし<code>title</code>列は<code>course</code>テーブルにしかなく、<code>student</code>にも<code>takes</code>にもありません。studentテーブルはcourse_idすら持っていないので、courseに直接JOINすることもできません。</p>
+  <p>そこで、<strong>間に立つテーブルを経由して連鎖的にJOIN</strong>します。studentは直接course_idを持っていませんが、takesはstudent_idとcourse_idの両方を持っています。まずstudentとtakesをstudent_idでJOINし、その結果にcourseをcourse_idでJOINすれば、titleにたどり着けます。</p>
+  <div class="flow-diagram">
+    <div class="flow-box input">student<br><small>student_id</small></div>
+    <div class="flow-arrow">USING(student_id) →</div>
+    <div class="flow-box output">takes<br><small>student_id, course_id</small></div>
+  </div>
+  <div class="flow-diagram">
+    <div class="flow-box input">takes<br><small>course_id</small></div>
+    <div class="flow-arrow">USING(course_id) →</div>
+    <div class="flow-box output">course<br><small>course_id, title</small></div>
+  </div>
+  <p class="code-label">▶ 3テーブルJOIN：student → takes → course</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> S.student_id, S.name, C.title, T.section_id</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="nm">S</span></span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="nm">T</span> <span class="kw">USING</span> (student_id)</span>
+<span class="cl"><span class="kw">JOIN</span> course <span class="nm">C</span> <span class="kw">USING</span> (course_id);</span>
+</pre>
+  <div class="teal-box">📌 <strong>JOINは上から順に処理されます。</strong>まずstudentとtakesがstudent_idで結合され、その中間結果に対して次にcourseがcourse_idで結合されます。すべてを一度にごちゃまぜに結合しているわけではありません。だからこそ、studentが直接持っていないcourse_idも、takesを経由すれば橋渡しできるのです。「欲しい列があるテーブルまで、共通の列を持つテーブルを辿ってつなぐ」というイメージで考えると分かりやすいです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>studentにない列（title）は、student→takes→courseと順番にJOINして辿り着きます。JOINは書いた順に処理され、前のJOIN結果に次のテーブルが結合されます。</p></div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>JOIN結果に対する計算（ON句とWHERE句の違い）</h2><div class="unit-sub">enrollment ÷ 平均クラスサイズ ＝ 必要セクション数</div></div>
+  </div>
+  <p>JOINした結果の列に対して、さらに<strong>集計や算術計算</strong>を行うこともよくあります。例えば「各courseの履修者数（enrollment）から、必要なセクション数を求めたい」というケースを見てみましょう。</p>
+  <p class="code-label">▶ 履修者数を数え、平均クラスサイズ45人で割って必要セクション数を出す</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> T.course_id, S.room_number,</span>
+<span class="cl">       <span class="kw">COUNT</span>(T.student_id) <span class="kw">AS</span> enrolled,</span>
+<span class="cl">       <span class="kw">COUNT</span>(T.student_id) / <span class="nm">45</span> <span class="kw">AS</span> sections_needed</span>
+<span class="cl"><span class="kw">FROM</span> takes <span class="nm">T</span></span>
+<span class="cl"><span class="kw">JOIN</span> section <span class="nm">S</span></span>
+<span class="cl">  <span class="kw">ON</span> T.course_id = S.course_id</span>
+<span class="cl"> <span class="kw">AND</span> T.semester = <span class="st">'Spring'</span> <span class="kw">AND</span> T.year = <span class="nm">2002</span></span>
+<span class="cl"><span class="kw">GROUP BY</span> T.course_id, S.room_number</span>
+<span class="cl"><span class="kw">ORDER BY</span> T.course_id, S.room_number;</span>
+</pre>
+  <p>ここでは<code>course_id</code>でJOINしています（<code>section_id</code>は科目をまたいで番号が重複するため、正確な集計にならない）。<code>COUNT(T.student_id)</code>で「その科目・その部屋に何人が履修しているか」を数え、それを平均クラスサイズ（45人）で割ることで、必要なセクション数を計算しています。<code>GROUP BY</code>があるからこそ<code>COUNT</code>という集計関数が使えることも覚えておきましょう。</p>
+  <p>注目してほしいのが、<strong>semesterとyearの条件をON句の中に書いている</strong>点です。これはWHERE句に書くのとは意味が違います。</p>
+  <div class="warn-box">⚠️ <strong>ON句の条件は「結合そのものが起きる前」にかかり、WHERE句の条件は「結合が終わった後」にかかります。</strong>INNER JOINでは結果的に同じ行が残ることが多いですが、<strong>LEFT JOINなど外部結合では結果が変わります。</strong></div>
+  <p class="code-label">▶ 条件をON句に入れる（LEFT JOIN・一致しないtakes側の行はNULLで残る）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> S.student_id, T.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="nm">S</span></span>
+<span class="cl"><span class="kw">LEFT JOIN</span> takes <span class="nm">T</span></span>
+<span class="cl">  <span class="kw">ON</span> S.student_id = T.student_id <span class="kw">AND</span> T.year = <span class="nm">2002</span>;</span>
+</pre>
+  <p class="code-label">▶ 条件をWHERE句に入れる（LEFT JOINが実質INNER JOINと同じ結果になる）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> S.student_id, T.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="nm">S</span></span>
+<span class="cl"><span class="kw">LEFT JOIN</span> takes <span class="nm">T</span></span>
+<span class="cl">  <span class="kw">ON</span> S.student_id = T.student_id</span>
+<span class="cl"><span class="kw">WHERE</span> T.year = <span class="nm">2002</span>;</span>
+</pre>
+  <p>ON句に入れた場合、2002年以外に履修していない学生でも<strong>studentの行自体はLEFT JOINで残り</strong>、takes側の列がNULLになるだけです。一方WHERE句に条件を入れると、結合の後で<code>T.year = 2002</code>を満たさない行（NULLも含む）がすべて削られてしまい、結果的にLEFT JOINなのにINNER JOINと同じような挙動になってしまいます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ON句の条件は結合中に効き、WHERE句の条件は結合後に効きます。INNER JOINなら差が出にくいですが、LEFT JOINなど外部結合では結果が変わるので要注意です。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In the University DB, what is the relationship between department and instructor?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>One-to-one</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>One department to many instructors (one-to-many)</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Many-to-many</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>No relationship at all</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why is the relationship between student and course considered many-to-many?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Each student takes exactly one course</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A student can take many courses, and a course can be taken by many students</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Courses never repeat across students</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only one course exists per department</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What role does the takes table play between student and course?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is a junction table that breaks the many-to-many relationship into two one-to-many relationships</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It duplicates the student table entirely</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes the need for a course_id column</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It stores only instructor data</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which is valid syntax for aliasing the student table as S?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>FROM S student</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>FROM student S</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ALIAS student = S</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>RENAME student TO S</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why does the query FROM student S JOIN takes T JOIN course C need to join student to takes before joining to course?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because student has no course_id column, but takes does, so takes is needed to bridge to course</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because SQL requires exactly three tables in every query</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because course must always be listed first</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because takes has no student_id column</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In a chained join like A JOIN B JOIN C, when does the join to C happen?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Before A and B are joined</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>At the same time as A and B, all at once</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>After A and B have already been joined, using that intermediate result</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only if C has a primary key</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why does the enrollment query join takes and section on course_id rather than section_id?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>section_id is not stored in the takes table at all</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>section_id values repeat across different courses, so joining on it would give inaccurate counts</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>course_id is required by SQL syntax</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>course_id is always shorter than section_id</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">With a LEFT JOIN, what is the key difference between putting a filter in the ON clause versus the WHERE clause?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>There is no difference; they always return the same rows</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ON filters apply during the join (keeping unmatched left rows with NULLs), while WHERE filters apply after the join and can remove those unmatched rows</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE clauses are not allowed after a LEFT JOIN</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>ON clauses can only reference the right-hand table</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 0, 1, 0, 2, 1, 1];
+var FEEDBACKS=["department to instructor is one-to-many: an instructor belongs to only one department, but a department has many instructors.","A student can take many courses and a course can have many students taking it, which makes it many-to-many.","takes is the junction table: it holds both student_id and course_id, turning the many-to-many relationship into two one-to-many relationships.","The correct syntax is FROM student S — the table name followed by the alias.","student has no course_id column; takes does, so joining student to takes first gives access to course_id, which can then be used to join to course.","SQL processes joins left to right: A and B are joined first, and that intermediate result is what gets joined to C.","section_id numbers can repeat across different courses, so joining on section_id alone would produce inaccurate, mismatched counts; course_id is unique per course.","Filtering in ON happens as rows are matched, so unmatched left-side rows still appear (with NULLs); filtering in WHERE happens after the join and strips out rows that don't match, which can turn a LEFT JOIN into something like an INNER JOIN."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">one-to-many</div>
+      <div class="term-en">1対多</div>
+      <div class="term-def">片方の1レコードが、もう片方の複数レコードと対応する関係。例：department↔instructor。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">many-to-many</div>
+      <div class="term-en">多対多</div>
+      <div class="term-def">両方のテーブルが互いに複数レコードと対応し合う関係。例：student↔course。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">junction table</div>
+      <div class="term-en">中間テーブル</div>
+      <div class="term-def">多対多の関係を2つの1対多に分解するために間に挟むテーブル。例：takes。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">alias</div>
+      <div class="term-en">エイリアス（別名）</div>
+      <div class="term-def">テーブル名の後にスペースを入れて付ける短い別名。クエリを短く書ける。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">USING clause</div>
+      <div class="term-en">USING句</div>
+      <div class="term-def">両テーブルで列名が一致するときに使えるJOIN条件の書き方。USING(列名)。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">cardinality</div>
+      <div class="term-en">カーディナリティ（多重度）</div>
+      <div class="term-def">関係における「いくつ対いくつ」を表す度合い。1・N（多）などで表される。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>JOINの結果がおかしいと感じたら、まず関係の種類（1対1・1対多・多対多）を確認しましょう。外部結合ではON句とWHERE句のどちらに条件を書いたかも要チェックです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧬 SQLレッスン：M6 テーブルの関係とJOINの応用</p>
+  <p style="margin-top:.5rem;"><a href="joins_types.html">← JOINの種類</a> · <a href="set_operators.html">集合演算子へ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

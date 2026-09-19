@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Sum — 合計と、集計関数の組み合わせ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 ➕ Sum <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Sum</div>
+  <h1>➕ SUM — 合計を求める</h1>
+  <p>単独で全体の合計、WHEREと組み合わせて条件付きの合計、COUNTと並べればもっと深い情報が見えてくる。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① SUM単独</a><a href="#unit2">② WHEREと組み合わせる</a><a href="#unit3">③ 集計関数を並べる</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>SUM単独 — GROUP BYが要らないケース</h2><div class="unit-sub">全体を1つの数字にまとめる</div></div>
+  </div>
+  <p><code>SUM()</code>は他の集計関数と同じくシンプルです。<code>orders</code>テーブルの注文金額の総額を求めてみます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">SUM</span>(ord_amount)</span>
+<span class="cl"><span class="kw">FROM</span> orders;</span>
+</pre><div class="output-reveal">sum
+-------
+ 72600</div>
+  <p>テーブルにある全注文の合計は72,600でした。</p>
+  <div class="teal-box">📌 <strong>ここではGROUP BYが不要です。</strong>集計関数と一緒に<strong>非集計の列を書いていない</strong>からです。「全体で1つの値」を求めるだけなら、GROUP BYは要りません。GROUP BYが必須になるのは、<code>SELECT customer_code, SUM(...)</code>のように<strong>グループの見出しになる列を並べたとき</strong>です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>SELECT SUM(列) FROM テーブル;</code>だけで全体の合計が出ます。内訳が欲しいときにGROUP BYを足します。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>WHEREと組み合わせる</h2><div class="unit-sub">条件を満たす行だけを合計する</div></div>
+  </div>
+  <p>「1,000ドル未満の注文だけの合計」を知りたい場合は、<code>WHERE</code>を足します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">SUM</span>(ord_amount)</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">WHERE</span> ord_amount &lt; <span class="nm">1000</span>;</span>
+</pre><div class="output-reveal">sum
+------
+ 4700</div>
+  <div class="viz">
+    <div class="viz-title">WHEREは集計の「前」に効く</div>
+    <div class="flow-diagram">
+      <div class="flow-box">全34件<br><small>合計 72,600</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">WHERE で絞る<br><small>1,000未満のみ</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">SUM で合計<br><small>4,700</small></div>
+    </div>
+    <div class="viz-cap">まず行を絞り、残った行だけを合計する。</div>
+  </div>
+  <p>全体の72,600に対して、小口注文の合計はわずか4,700。<strong>売上の大部分が大口注文から来ている</strong>ことが読み取れます。</p>
+  <div class="note-box">💡 <strong>WHEREは集計前のフィルタ</strong>です。<code>ord_amount</code>という<strong>普通の列</strong>で絞っているので、問題なく動きます。もし「合計が◯◯以上のグループだけ」のように<strong>集計結果</strong>で絞りたい場合は、WHEREではなく<code>HAVING</code>を使います（次のレッスン）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SUMにWHEREを足せば「条件付きの合計」。絞ってから足す、という順番です。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>集計関数は並べて書ける</h2><div class="unit-sub">合計と件数を同時に出す</div></div>
+  </div>
+  <p>「1,000ドル未満の注文は、<strong>合計いくら</strong>で、<strong>何件</strong>あるのか？」——両方知りたければ、集計関数を並べて書くだけです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">SUM</span>(ord_amount), <span class="kw">COUNT</span>(ord_amount)</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">WHERE</span> ord_amount &lt; <span class="nm">1000</span>;</span>
+</pre><div class="output-reveal">sum  | count
+-----+-------
+4700 |     8</div>
+  <div class="teal-box">📌 <strong>ここから読み取れること：</strong>全34件の注文のうち<strong>8件</strong>が1,000ドル未満で、その合計が<strong>4,700</strong>。つまり注文の約4分の1が小口で、金額ベースでは全体の6%程度にすぎない——<strong>複数の集計値を並べると、単独では見えない意味が出てきます。</strong></div>
+  <h3>さらに掘り下げるならGROUP BY</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 顧客ごとの小口注文の合計と件数</span></span>
+<span class="cl"><span class="kw">SELECT</span> customer_code,</span>
+<span class="cl">       <span class="kw">SUM</span>(ord_amount) <span class="kw">AS</span> total,</span>
+<span class="cl">       <span class="kw">COUNT</span>(ord_amount) <span class="kw">AS</span> orders</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">WHERE</span> ord_amount &lt; <span class="nm">1000</span></span>
+<span class="cl"><span class="kw">GROUP BY</span> customer_code</span>
+<span class="cl"><span class="kw">ORDER BY</span> total <span class="kw">DESC</span>;</span>
+</pre>
+  <p>顧客コード・担当者コード・日付など、<strong>どの列でもグループ化できます</strong>。組み合わせ次第で、いくらでも細かい分析ができます。</p>
+  <div class="note-box">✍️ <strong>ここでは<code>customer_code</code>という非集計列を書いたので、GROUP BYが必須</strong>になっている点に注目してください。Unit①でGROUP BYが不要だった理由と表裏一体です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SUMとCOUNTは同時に書けます。「いくらで、何件か」を並べると、データの意味がぐっと分かりやすくなります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why does "SELECT SUM(ord_amount) FROM orders;" work without a GROUP BY?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No non-aggregated column is selected alongside it</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SUM never requires GROUP BY under any circumstances</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The orders table happens to be small</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>GROUP BY is only needed for text columns</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Adding "WHERE ord_amount &lt; 1000" to a SUM query means:</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only matching rows are added up</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The total is computed and then reduced by 1000</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows over 1000 are deleted from the table</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The query returns one row per matching order</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Total orders sum to 72,600, and orders under 1,000 sum to 4,700. What does that suggest?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Most of the revenue comes from larger orders</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Most orders were placed under 1,000</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The WHERE clause filtered out nothing</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The two figures should have matched</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Can SUM and COUNT be used in the same SELECT list?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes, they simply appear as two result columns</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No, only one aggregate per query is allowed</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only if each has its own GROUP BY clause</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only when the query has no WHERE clause</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">SUM is 4,700 and COUNT is 8 for orders under 1,000. What is the average of those orders?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About 587.50</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 1,000.00</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 37,600.00</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It cannot be worked out from these two numbers</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">You add customer_code to the SELECT list next to SUM(ord_amount). What becomes necessary?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A GROUP BY customer_code clause</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A CAST on the sum</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A HAVING clause</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Nothing changes</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 0, 0, 0, 0];
+var FEEDBACKS=["GROUP BY is required only when a non-aggregated column sits beside the aggregate. Here there is none.","WHERE filters the rows first, and only the surviving rows are summed.","Only 4,700 out of 72,600 comes from small orders, so the bulk of the money sits in the larger ones.","Aggregates can be listed side by side and each becomes its own column in the result.","4,700 divided by 8 orders is 587.50 — combining aggregates reveals more than either alone.","Selecting a plain column beside an aggregate immediately makes GROUP BY mandatory."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">SUM()</div>
+      <div class="term-en">合計</div>
+      <div class="term-def">対象となる行の値をすべて足し合わせる集計関数。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">COUNT()</div>
+      <div class="term-en">件数</div>
+      <div class="term-def">対象となる行の数を数える集計関数。SUMと並べると解釈が深まる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">GROUP BYが不要な場合</div>
+      <div class="term-en">全体集計</div>
+      <div class="term-def">非集計の列を選んでいないとき。全体を1つの値にまとめる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">WHERE と集計</div>
+      <div class="term-en">集計前のフィルタ</div>
+      <div class="term-def">WHEREは集計の前に行を絞る。集計結果での絞り込みはHAVING。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>SUMだけでは「多いのか少ないのか」が判断できません。COUNTを並べて「1件あたりいくらか」を掴む癖をつけると、数字の解釈が一段深くなります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>➕ SQLレッスン：M4 SUM — 合計</p>
+  <p style="margin-top:.5rem;"><a href="group_by.html">← GROUP BY</a> · <a href="index.html">🏠 概要</a> · <a href="having.html">次：Having →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

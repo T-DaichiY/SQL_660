@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Aliasing columns — 列の別名（AS）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 🏷️ Aliasing <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main active" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Aliasing columns</div>
+  <h1>🏷️ 列の別名（AS）</h1>
+  <p>計算で作った新しい列に、意味の分かる名前を付ける。次のレッスン「列の計算」への必須の準備です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① なぜ別名が必要か</a><a href="#unit2">② AS の構文</a><a href="#unit3">③ 使えるところ・使えないところ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>なぜ別名（エイリアス）が必要になるのか</h2><div class="unit-sub">計算した列には、そもそも名前がない</div></div>
+  </div>
+  <p>ここからのレッスンでは、列に対して<strong>計算や集計</strong>を行うようになります。そうすると、元のテーブルには存在しなかった<strong>新しい値の列</strong>が生まれます。</p>
+  <div class="note-box">🤔 <strong>考えてみてください：</strong><code>sales</code>列を<code>price</code>列で割った結果は、いったい何という名前の列でしょうか？「sales」ではありません（もう売上額ではない）。「price」でもありません。実際には<strong>数量（quantity）</strong>を表しているはずです。<br><br>これが<strong>エイリアス（alias＝別名）</strong>が必要になる理由です。</div>
+  <p>別名を付けないと、結果の列見出しは空欄や<code>?column?</code>のような無意味な表示になります。それでは、あとから見ても他人が見ても、何の数字なのか分かりません。</p>
+  <div class="teal-box">📌 <strong>エイリアスの本質：</strong>「この列は何を表しているのか」を<strong>結果の中で宣言する</strong>ことです。列に計算を加えた瞬間、その列の正しい名前は自分で決めなければなりません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>計算して作った列には名前がありません。<code>AS</code>で自分が名前を付けてあげます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>AS の構文</h2><div class="unit-sub">列名 AS 新しい名前</div></div>
+  </div>
+  <h3>既存の列に別名を付ける</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 別名なし</span></span>
+<span class="cl"><span class="kw">SELECT</span> price, sales <span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">price | sales
+------+---------
+95.70 | 2871.00
+81.35 | 2765.90</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 別名あり</span></span>
+<span class="cl"><span class="kw">SELECT</span> price <span class="kw">AS</span> msrp, sales <span class="kw">AS</span> amount</span>
+<span class="cl"><span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">msrp  | amount
+------+---------
+95.70 | 2871.00
+81.35 | 2765.90</div>
+  <p>列見出しが<code>msrp</code>と<code>amount</code>に変わりました。<strong>テーブルの列名そのものは変わりません</strong>——この結果セットの中での表示名が変わるだけです（CASTと同じで、一時的なものです）。</p>
+  <h3>計算列に名前を付ける（本命の使い方）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer,</span>
+<span class="cl">       sales / price <span class="kw">AS</span> quantity</span>
+<span class="cl"><span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">customer          | quantity
+------------------+----------
+Land of Toys Inc. |       30
+Cruz &amp; Sons Co.   |       34</div>
+  <p><code>sales / price</code>という計算結果に<code>quantity</code>という名前を与えました。これで結果を見た人が、その数字が何を意味するのかすぐに理解できます。</p>
+  <h3>スペースを含む名前を付けたいとき</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_close - s_open <span class="kw">AS</span> <span class="st">"percent change"</span></span>
+<span class="cl"><span class="kw">FROM</span> stocks;</span>
+</pre>
+  <div class="warn-box">⚠️ 別名にスペースを含めたい場合は<strong>ダブルクォート<code>"</code></strong>で囲みます（文字列の値に使うシングルクォート<code>'</code>とは違うので注意）。ただし後で扱いにくくなるため、<code>percent_change</code>のように<strong>アンダースコアでつなぐ</strong>ほうが実用的です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>列や式 AS 名前</code>と書くだけ。結果の見出しがその名前になります。テーブル自体は変わりません。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>別名が使える場所・使えない場所</h2><div class="unit-sub">ORDER BYでは使える、WHEREでは使えない</div></div>
+  </div>
+  <h3>⭕ ORDER BY では別名を使える</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, s_close - s_open <span class="kw">AS</span> change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> change <span class="kw">DESC</span>;</span>
+</pre>
+  <p>これまでは既存の列名でしか並べ替えられませんでしたが、<strong>自分が作った計算列でも並べ替えられます</strong>。「値上がりが大きい順」「割引率が高い順」といった分析が可能になります。</p>
+  <h3>❌ WHERE では別名を使えない</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- これはエラーになる</span></span>
+<span class="cl"><span class="kw">SELECT</span> s_close - s_open <span class="kw">AS</span> change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">WHERE</span> change &gt; <span class="nm">0</span>;</span>
+</pre><div class="output-reveal">ERROR:  column "change" does not exist</div>
+  <div class="warn-box">⚠️ <strong>WHEREでは、SELECTで付けた別名を参照できません。</strong>SQLの内部処理の順序上、WHEREが評価される時点ではまだ別名が存在しないためです。<br><br><strong>回避策：</strong>WHEREでは、別名のもとになった元の列を使って条件を書きます。たとえば「計算結果がNULLの行を除きたい」なら、計算のもとの列に対して<code>WHERE s_close IS NOT NULL</code>と書きます。</div>
+  <table class="compare-table">
+    <tr><th>句</th><th>別名を使える？</th><th>メモ</th></tr>
+    <tr><td><code>SELECT</code></td><td>⭕ 定義する場所</td><td><code>式 AS 名前</code></td></tr>
+    <tr><td><code>WHERE</code></td><td>❌ 使えない</td><td>元の列名で書く</td></tr>
+    <tr><td><code>ORDER BY</code></td><td>⭕ 使える</td><td>計算列で並べ替えられる</td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>覚え方：</strong>WHEREはSELECTより<strong>先に</strong>処理され、ORDER BYは<strong>後に</strong>処理されます。だから「先に走るWHEREはまだ別名を知らない、後に走るORDER BYは知っている」となります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>別名は「並べ替え（ORDER BY）」では使えますが、「絞り込み（WHERE）」では使えません。WHEREでは元の列名を書きましょう。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the main reason aliasing becomes necessary?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Calculated columns have no meaningful name of their own</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SQL forbids reusing an original column name in output</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Aliases make queries run measurably faster</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Every SELECT statement is required to include one</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which is the correct alias syntax?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>SELECT price RENAME msrp</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SELECT price AS msrp</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SELECT msrp AS price FROM price</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>SELECT ALIAS(price, msrp)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Does an alias change the column name stored in the table?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No — it only affects this query's result</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Yes — the table column is renamed permanently</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Yes, but only until the database restarts</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only if the alias is written in double quotes</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">How do you write an alias that contains a space?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Wrap it in double quotes</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Wrap it in single quotes</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Spaces are simply not allowed anywhere</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Escape each space with a backslash</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Can you sort by an alias in ORDER BY?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No, never</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only for text columns</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only when DESC is specified</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">"SELECT s_close - s_open AS change FROM stocks WHERE change > 0" fails. Why?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE cannot reference an alias defined in SELECT</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Subtraction is not allowed inside a SELECT list</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>"change" is a reserved SQL keyword</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The comparison needs single quotes around 0</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 0, 0, 0];
+var FEEDBACKS=["Once you compute a value, it no longer belongs to any original column, so you have to name it yourself.","The syntax is expression AS alias.","Like CAST, an alias affects only the result of this query; the stored column keeps its own name.","Double quotes allow spaces in an identifier, though underscores are usually more practical.","ORDER BY runs after the SELECT list, so the alias already exists and can be sorted on.","WHERE is evaluated before the SELECT list, so the alias does not exist yet. Use the original expression or column instead."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">alias</div>
+      <div class="term-en">エイリアス／別名</div>
+      <div class="term-def">クエリ結果の中でだけ有効な、列の表示名。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">AS</div>
+      <div class="term-en">〜として</div>
+      <div class="term-def">別名を付けるキーワード。<code>式 AS 名前</code>と書く。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">計算列</div>
+      <div class="term-en">calculated column</div>
+      <div class="term-def">列同士の演算などで新たに生まれる列。名前がないので別名が必須。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">ダブルクォート</div>
+      <div class="term-en">"identifier"</div>
+      <div class="term-def">スペースを含む識別子（別名など）を囲む記号。値のクォートとは別物。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>別名は「未来の自分と同僚へのメモ」です。<code>?column?</code>のままにせず、その数字が何なのかが一目で分かる名前を付けましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🏷️ SQLレッスン：列の別名（AS）</p>
+  <p style="margin-top:.5rem;"><a href="where_examples.html">← WHERE演習</a> · <a href="index.html">🏠 概要</a> · <a href="math_columns.html">次：列の計算 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

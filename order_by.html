@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Sorting data with Order By — 並べ替えと複合ソート</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🔽 Order By <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Sorting data with Order By</div>
+  <h1>🔽 ORDER BY — 結果を並べ替える</h1>
+  <p>ASC（昇順）とDESC（降順）、文の最後に置くルール、そして複数列で並べ替える「複合ソート」の落とし穴まで。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ORDER BYとは</a><a href="#unit2">② ASC と DESC</a><a href="#unit3">③ 実例で練習</a><a href="#unit4">④ 複合ソート</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ORDER BYとは — 絞り込みの次のステップ</h2><div class="unit-sub">列を選んだら、次は「どう並べるか」</div></div>
+  </div>
+  <p>SELECT文で列を絞り込んだら、次のステップは<strong>並べ替え</strong>です。<code>ORDER BY</code>は、取り出した結果を指定した列の順に整列させる句で、<strong>SELECT文の最後に置きます</strong>。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> first_name, last_name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">ORDER BY</span> last_name;</span>
+</pre><div class="output-reveal">first_name | last_name
+-----------+----------
+Kenji      | Abe
+Mika       | Baba
+...        | ...
+Yuto       | Watanabe</div>
+  <p>読み方は英語の語順そのままです——<strong>「student テーブルから first_name と last_name を選び、last_name の順に並べよ」</strong>。SELECTで「何を」、FROMで「どこから」、ORDER BYで「どう並べるか」を答える、という構造になっています。</p>
+  <div class="viz">
+    <div class="viz-title">クエリの組み立ての流れ</div>
+    <div class="flow-diagram">
+      <div class="flow-box">SELECT<br><small>どの列？</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">FROM<br><small>どのテーブル？</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">ORDER BY<br><small>どう並べる？</small></div>
+    </div>
+    <div class="viz-cap">広く選び → 場所を決め → 整理する。ORDER BYは常に最後尾。</div>
+  </div>
+  <div class="note-box">📌 このレッスンでは<code>sales</code>テーブルを使います。まだインポートしていない場合は、M3 の最初のレッスン（<a href="m3_intro.html">データセットの取り込み</a>）に戻ってください。この先ずっと使い続けるテーブルです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ORDER BYは「並べ替えの命令」。クエリの一番最後に <code>ORDER BY 列名;</code> と書くだけです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ASC と DESC — 昇順と降順</h2><div class="unit-sub">ASCが既定値。DESCは必ず明示する</div></div>
+  </div>
+  <table class="compare-table">
+    <tr><th>キーワード</th><th>意味</th><th>並び順</th><th>指定</th></tr>
+    <tr><td><code>ASC</code></td><td>ascending（昇順）</td><td>A → Z ／ 小 → 大</td><td><strong>既定値</strong>。省略しても同じ</td></tr>
+    <tr><td><code>DESC</code></td><td>descending（降順）</td><td>Z → A ／ 大 → 小</td><td>使うときは<strong>必ず書く</strong></td></tr>
+  </table>
+  <p><strong>ascend</strong>は「上がる・増える」という意味です。リストを下にたどるほど値が大きくなっていく——それが昇順です。<strong>descend</strong>はその逆で、大きい値から小さい値へ下がっていきます。</p>
+  <h3>昇順（既定）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> customer <span class="kw">ASC</span>;</span>
+<span class="cl"><span class="cm">-- ASC は省略可。書いても意味は変わらない</span></span>
+</pre><div class="output-reveal">customer
+-------------------------
+Alpha Cognac
+Alpha Cognac
+Amica Models &amp; Co.
+...</div>
+  <p><code>ASC</code>は書いても書かなくても結果は同じです。ただし<strong>「意図して昇順にした」ことを読み手に伝えるドキュメント目的</strong>で、あえて書くことはよくあります。</p>
+  <h3>降順</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> customer <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer
+-------------------------
+Vitachrome Inc.
+UK Collectables, Ltd.
+Toys of Finland, Co.
+...</div>
+  <div class="teal-box">📌 <strong>日本語で考えてから訳す</strong>のがコツです。「アルファベット順に」＝ASC、「金額の高い順に」＝DESC、「item番号の大きいものから」＝DESC、「売れた個数の少ない順に」＝ASC。日本語の指示をASC/DESCに置き換える練習をしましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ASC＝小さい順（既定）、DESC＝大きい順。何も書かなければ必ずASCになります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>実例で練習する</h2><div class="unit-sub">salesテーブルで手を動かす</div></div>
+  </div>
+  <h3>例1：MSRPの高い順に並べる</h3>
+  <p>「顧客名・製品ライン・希望小売価格を、価格の高い順に表示せよ」</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, product_line, msrp</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> msrp <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer              | product_line | msrp
+----------------------+--------------+------
+Euro Shopping Channel | Classic Cars |  214
+Mini Gifts Distr.     | Classic Cars |  214
+...                   | ...          |  ...</div>
+  <p><code>DESC</code>を外して実行すれば、逆に安いものから並びます。既定が昇順であることを自分の目で確かめてみてください。</p>
+  <h3>例2：列の順番は「表示の順番」</h3>
+  <div class="warn-box">⚠️ <strong>SELECTに列を書いた順番が、そのまま結果の列の並びになります。</strong>顧客ごとの購入品と価格を見たいなら、<code>customer, product_line, msrp</code>の順に書くべきで、<code>product_line, customer, msrp</code>では顧客名が真ん中に埋もれて読みにくくなります。<strong>「欲しい情報が出ればいい」ではなく「論理的に読めるクエリ」を書く</strong>ことを意識しましょう。</div>
+  <h3>例3：<code>*</code> と ORDER BY は併用できる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> customer;</span>
+</pre>
+  <p>全列を取り出しながら並べ替えることもできます。ORDER BYで指定する列がSELECTのリストに含まれている必要は、必ずしもありません。</p>
+  <h3>例4：四半期を第4→第1の順に</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales, qtr</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> qtr <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer            | sales   | qtr
+--------------------+---------+----
+Technics Stores Inc |  5404.6 |   4
+Corporate Gift Ideas|  3227.9 |   4
+... (Q4 → Q3 → Q2 → Q1)</div>
+  <div class="note-box">✍️ <strong>スタイルの話：</strong>1行に続けて書いても動きますが、<code>SELECT</code>／<code>FROM</code>／<code>ORDER BY</code>はそれぞれ改行するのが一般的です。読みやすく、句の切れ目もはっきりします。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「〜順に」と言われたら、その基準になる列をORDER BYに書く。大きい順ならDESCを足す。それだけです。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>複合ソート（compound ordering）</h2><div class="unit-sub">複数列で並べる——ASC/DESCは列ごとに指定する</div></div>
+  </div>
+  <p>「まず四半期の新しい順、その中で売上の大きい順」のように、<strong>複数の列を優先順位を付けて並べる</strong>ことができます。ORDER BYに列をカンマ区切りで並べるだけです。<strong>左に書いた列ほど優先度が高くなります。</strong></p>
+  <div class="warn-box">⚠️ <strong>最大の落とし穴：</strong><code>ORDER BY qtr, sales DESC</code> と書くと、<code>DESC</code>が効くのは直前の<code>sales</code>だけです。<code>qtr</code>は指定がないので<strong>昇順</strong>になります。「最後にDESCと書いたから全部降順」ではありません。</div>
+  <h3>❌ 意図どおりに動かない書き方</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales, qtr <span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> qtr, sales <span class="kw">DESC</span>;</span>
+<span class="cl"><span class="cm">-- qtr は昇順（既定）、sales だけが降順になる</span></span>
+</pre>
+  <p>さらに、<code>ORDER BY DESC qtr, sales</code>のように<code>DESC</code>を前に置くのは<strong>構文エラー</strong>です。<code>DESC</code>は必ず対象の列名の<strong>直後</strong>に書きます。</p>
+  <h3>⭕ 正しい書き方：列ごとに指定する</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer, sales, qtr</span>
+<span class="cl"><span class="kw">FROM</span> sales</span>
+<span class="cl"><span class="kw">ORDER BY</span> qtr <span class="kw">DESC</span>, sales <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer               | sales    | qtr
+-----------------------+----------+----
+Euro Shopping Channel  | 14082.80 |   4
+Mini Gifts Distributors| 12001.00 |   4
+Technics Stores Inc    |  9064.50 |   4
+... Q4の中で売上が大きい順 → 次にQ3 ...</div>
+  <p>英語で読むと<strong>「salesテーブルから customer, sales, qtr を取り出し、四半期を大きい順に、その中で売上を大きい順に並べよ」</strong>。片方だけDESCにしたければ、その列にだけ書けばよいのです。</p>
+  <div class="viz">
+    <div class="viz-title">複合ソートの優先順位</div>
+    <div class="flow-diagram">
+      <div class="flow-box">qtr DESC<br><small>第1キー</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">同じ四半期の中で<br><small>並び順を決める</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">sales DESC<br><small>第2キー</small></div>
+    </div>
+    <div class="viz-cap">第1キーが同点のときだけ、第2キーが効く。</div>
+  </div>
+  <div class="teal-box">📌 <strong>やりすぎに注意：</strong>顧客・四半期・売上額…と3つ4つと重ねていくと、コードは長くなるのに得られる情報はほとんど増えません（diminishing returns＝収穫逓減）。データ量と目的に見合った範囲でとどめましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>複数列で並べるときは、<strong>列ごとにASC/DESCを書く</strong>のが鉄則。書かなかった列は自動的に昇順になります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Where does the ORDER BY clause go in a SELECT statement?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Before the SELECT keyword</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Between SELECT and FROM</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>At the end of the statement</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Anywhere, the position is ignored</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">If you write ORDER BY last_name with no ASC or DESC, what order do you get?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Ascending, A to Z</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Descending, Z to A</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The physical insertion order of the rows</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An error — one of ASC or DESC is required</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">You want item numbers listed largest to smallest. What do you write?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ORDER BY item ASC</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ORDER BY item DESC</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ORDER DESC BY item</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>SORT BY item DESC</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does "ascending" literally describe about the values as you read down the list?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>They get larger</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They get smaller</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They alternate between high and low values</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They stay in whatever order they were stored</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In "ORDER BY qtr, sales DESC", which column ends up sorted descending?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Both qtr and sales</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only sales</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only qtr</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither — this is a syntax error</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">To sort by quarter (high to low) and then by sales (high to low), you must:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Write DESC once, at the very end of the clause</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Write DESC after each of the two columns</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Put DESC before the list of columns</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Run two separate queries and merge the results</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">In a compound ORDER BY, which column has the highest sort priority?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The one listed first</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The one listed last</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Whichever column is marked DESC</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The numeric column, regardless of position</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why does the order of the columns listed after SELECT matter?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It decides which column the rows are sorted by</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It changes how many rows the query returns</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It sets the left-to-right order of the result columns</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It has no effect at all on the output</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 1, 0, 1, 1, 0, 2];
+var FEEDBACKS=["ORDER BY comes at the very end — you select columns, name the table, then say how to organise the result.","ASC is the default, so omitting it gives ascending (A to Z, smallest to largest) order.","Largest to smallest is descending, written as DESC directly after the column name.","Ascend means to increase: reading down the list, the values get larger.","DESC only applies to the column it immediately follows. qtr falls back to the default ascending order.","ASC/DESC must be stated per column: ORDER BY qtr DESC, sales DESC.","Sorting priority runs left to right; later columns only break ties in the earlier ones.","The SELECT list defines the left-to-right column order of the output, which is why a logical order (customer, product, price) reads better."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">ORDER BY</div>
+      <div class="term-en">並べ替え句</div>
+      <div class="term-def">結果を指定した列の順に整列させる句。SELECT文の最後に置く。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">ASC</div>
+      <div class="term-en">ascending／昇順</div>
+      <div class="term-def">A→Z、小→大。指定しなかった場合の既定の並び順。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">DESC</div>
+      <div class="term-en">descending／降順</div>
+      <div class="term-def">Z→A、大→小。使うときは列名の直後に必ず明記する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">compound ordering</div>
+      <div class="term-en">複合ソート</div>
+      <div class="term-def">複数列で優先順位を付けて並べること。左の列ほど優先される。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">diminishing returns</div>
+      <div class="term-en">収穫逓減</div>
+      <div class="term-def">ソート列を増やしすぎると、コードは長くなるのに得るものは増えない状態。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>複合ソートで結果が想定と違うときは、まず「どの列にASC/DESCが付いているか」を1列ずつ確認しましょう。指定のない列は必ず昇順です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔽 SQLレッスン：ORDER BY — 並べ替え</p>
+  <p style="margin-top:.5rem;"><a href="select.html">← SELECT文</a> · <a href="index.html">🏠 概要</a> · <a href="distinct.html">次：DISTINCT →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

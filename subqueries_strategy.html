@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 サブクエリ③ — 問題の解き方</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 🧭 サブクエリ③ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Subqueries Part 3 — Problem-Solving Strategy</div>
+  <h1>🧭 サブクエリ③：問題の解き方</h1>
+  <p>このページは新しい構文の話ではありません。<strong>どんな複雑なサブクエリの問題にも通用する「解き方の手順」</strong>を扱います。いきなり完成形を書こうとせず、まず欲しい値を仮の数字で決め打ちして動作を確認し、それをサブクエリに置き換えていく——この積み上げ方さえ身につければ、初見の問題でも詰まらずに進められます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 欲しい値を仮の数字で</a><a href="#unit2">② 仮の数字をサブクエリに</a><a href="#unit3">③ 同じ都市の顧客</a><a href="#unit4">④ 支店の最低残高</a><a href="#unit5">⑤ ある地域の全支店で融資</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>まず「欲しい値」を仮の数字で書いてみる</h2><div class="unit-sub">いきなり1本のクエリで完成させようとしない</div></div>
+  </div>
+  <p>複雑な問題を見たとき、多くの人はいきなり最終形のSQLを一発で書こうとして混乱します。うまくいく人は逆で、<strong>「結局どんな値でこの行を絞り込みたいのか」を先に日本語（英語）で言葉にし、その値を実際の数字や文字列に置き換えてから</strong>、外側のクエリを組み立てます。値が合っているかをその都度確認しながら進めるので、途中でどこが間違っているか必ず分かります。</p>
+  <p>例えば「支店の最小残高より多い口座を探したい」なら、最小残高そのものを先に計算して数字を確認します（<code>38656</code>のような具体的な値）。それを確認できたら、<strong>その数字をそのままWHERE句にハードコード（決め打ち）して</strong>、外側のクエリ全体が正しく動くかをテストします。</p>
+  <div class="viz">
+    <div class="viz-title">複雑なクエリを組み立てる4ステップ</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🗣️</span><div class="step-text"><strong>1. 欲しい結果を言葉にする</strong><span>「支店の最小残高より多い口座」のように、何を絞り込みたいかを明確にする</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔢</span><div class="step-text"><strong>2. 必要な値を仮の数字でハードコードして試す</strong><span>最小残高を別クエリで先に計算し、その数字（例：38656）をWHEREに直接書いて動かす</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔁</span><div class="step-text"><strong>3. その数字を計算するサブクエリに置き換える</strong><span>ハードコードした<code>38656</code>を、それを計算する<code>(SELECT ...)</code>に丸ごと入れ替える</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">✅</span><div class="step-text"><strong>4. 動作確認</strong><span>置き換え後も同じ件数・同じ結果になるかを確認する。件数が大きく変わったら要注意</span></div></div>
+    </div>
+    <div class="viz-cap">一気に書かず、1ステップごとに実行して確認する——これがサブクエリを崩さず組み立てるコツ。</div>
+  </div>
+  <div class="teal-box">📌 <strong>一度にすべてを書こうとすると、どこが間違っているか分からなくなります。</strong>ハードコードした状態で外側のクエリが正しく動くことを先に確認しておけば、あとはその数字をサブクエリに差し替えるだけの単純作業になります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>いきなり完成形を書かない。まず欲しい数字を計算して確認し、それを一旦手で書き込んで（ハードコードして）外側のクエリを動かしてみる。それが第一歩です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>仮の数字をサブクエリに置き換える</h2><div class="unit-sub">動作確認済みの値を(SELECT ...)に差し替えるだけ</div></div>
+  </div>
+  <p>ハードコードした状態で外側のクエリが正しく動くことを確認できたら、次はその数字を計算していた小さなクエリを、<strong>単独で実行して単一の値（スカラー値）を返すことを確認</strong>します。そのうえで、ハードコードしていた数字の位置に、その小さなクエリを丸ごと<strong>カッコで囲んで</strong>差し込みます。</p>
+  <p>下の2つを見比べてください。左は「値を先に調べて、数字を直接書いた」バージョン、右は「その数字を計算するサブクエリに置き換えた」最終バージョンです。<code>WHERE</code>句の形はほとんど変わっていません——数字だった部分が<code>(SELECT ...)</code>に変わっただけです。</p>
+  <p class="code-label">▶ ステップ2：まず仮の数字でハードコードして試す</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ① 先に単独で最小残高を調べる → 500だったとする</span></span>
+<span class="cl"><span class="kw">SELECT</span> account_number, branch_name, balance</span>
+<span class="cl"><span class="kw">FROM</span> account</span>
+<span class="cl"><span class="kw">WHERE</span> balance &gt; <span class="nm">500</span>;</span>
+</pre>
+  <p class="code-label">▶ ステップ3：仮の数字をサブクエリに置き換えた最終版</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> account_number, branch_name, balance</span>
+<span class="cl"><span class="kw">FROM</span> account</span>
+<span class="cl"><span class="kw">WHERE</span> balance &gt; (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">MIN</span>(balance) <span class="kw">FROM</span> account</span>
+<span class="cl">);</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>置き換えたら必ず件数を見比べましょう。</strong>サブクエリが1行1列（スカラー値）を返しているつもりでも、条件を間違えると複数行が返り、思わぬ掛け算（デカルト積）のような結果になってしまうことがあります。ハードコード版と同じ件数・同じ行が返ってくることを確認するまでは完成ではありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ハードコードした数字を消して、代わりにその数字を計算する<code>(SELECT ...)</code>を丸ごと入れる。それだけで「決め打ちのクエリ」が「データが変わっても自動で追従するクエリ」になります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>実例①：同じ都市に住む別の顧客を探す</h2><div class="unit-sub">customer_cityを自分自身のテーブルから引く</div></div>
+  </div>
+  <p>問題：「顧客<code>10001</code>と同じ都市に住んでいる、他の顧客を全員探したい（本人は除く）」。手順どおりに進めます。</p>
+  <p class="code-label">▶ ステップ1：まず欲しい値（この顧客の街）だけを単独で確認する</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer_city</span>
+<span class="cl"><span class="kw">FROM</span> customer</span>
+<span class="cl"><span class="kw">WHERE</span> customer_id = <span class="st">'10001'</span>;</span>
+<span class="cl"><span class="cm">-- → 'Bronx' が1件だけ返る（単一値なのでスカラーOK）</span></span>
+</pre>
+  <p class="code-label">▶ ステップ2〜3：'Bronx'でハードコードして確認 → サブクエリに置き換える</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer_id, customer_name, customer_street</span>
+<span class="cl"><span class="kw">FROM</span> customer</span>
+<span class="cl"><span class="kw">WHERE</span> customer_city = (</span>
+<span class="cl">    <span class="kw">SELECT</span> customer_city <span class="kw">FROM</span> customer <span class="kw">WHERE</span> customer_id = <span class="st">'10001'</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">AND</span> customer_id &lt;&gt; <span class="st">'10001'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> customer_name;</span>
+</pre><div class="output-reveal">customer_id | customer_name | customer_street
+------------+----------------+------------------
+10024       | Hank Irwin     | River Ave
+10039       | Maria Chen     | Grand Concourse
+10052       | ...            | ...</div>
+  <div class="teal-box">📌 <strong><code>AND customer_id &lt;&gt; '10001'</code>を忘れると本人も結果に混じります。</strong>「自分自身と同じ都市」を探す問題では、自分自身をどこかで除外する条件が必要になることが多いので、要件を読むときに意識しておきましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>まず対象の顧客が住んでいる街を1件だけ調べ、それを使って「同じ街に住んでいる人」を探す。本人を除くのを忘れないこと。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>実例②：支店の最低残高を超える預金を探す</h2><div class="unit-sub">JOINとサブクエリを組み合わせる</div></div>
+  </div>
+  <p>問題：「Brooklyn Bank支店に口座を持ち、その支店内の最小残高より多い残高を持つ顧客の、口座番号・顧客名・支店名を求めたい」。<code>account</code>・<code>depositor</code>・<code>customer</code>のJOINと、支店の最小残高を求めるスカラーサブクエリの両方が必要です。</p>
+  <p class="code-label">▶ ステップ1：欲しい値（Brooklyn Bankの最小残高）を単独で確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">MIN</span>(balance)</span>
+<span class="cl"><span class="kw">FROM</span> account</span>
+<span class="cl"><span class="kw">WHERE</span> branch_name = <span class="st">'Brooklyn Bank'</span>;</span>
+<span class="cl"><span class="cm">-- → 38656 が1件だけ返る</span></span>
+</pre>
+  <p class="code-label">▶ ステップ2〜3：38656でハードコードして確認 → サブクエリに置き換える</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> a.account_number, c.customer_name, a.branch_name</span>
+<span class="cl"><span class="kw">FROM</span> account a</span>
+<span class="cl"><span class="kw">JOIN</span> depositor d <span class="kw">ON</span> a.account_number = d.account_number</span>
+<span class="cl"><span class="kw">JOIN</span> customer c <span class="kw">ON</span> d.customer_id = c.customer_id</span>
+<span class="cl"><span class="kw">WHERE</span> a.branch_name = <span class="st">'Brooklyn Bank'</span></span>
+<span class="cl"><span class="kw">AND</span> a.balance &gt; (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">MIN</span>(balance) <span class="kw">FROM</span> account <span class="kw">WHERE</span> branch_name = <span class="st">'Brooklyn Bank'</span></span>
+<span class="cl">);</span>
+</pre><div class="output-reveal">account_number | customer_name | branch_name
+----------------+----------------+---------------
+A-217           | Hank Irwin     | Brooklyn Bank
+A-305           | Maria Chen     | Brooklyn Bank
+...</div>
+  <div class="warn-box">⚠️ <strong>ハードコードだけの段階で件数を必ず確認しましょう。</strong>「Brooklyn Bankの全員」を出すクエリより、「最小残高を超える人」に絞ったクエリのほうが必ず件数が少なくなるはずです。もし増えていたら、JOINの条件かWHEREの条件のどこかが間違っています。</div>
+  <div class="teal-box">📌 <strong>この例のように「外側のWHEREと同じ絞り込み条件（<code>branch_name = 'Brooklyn Bank'</code>）」をサブクエリの中にも書く必要があることがあります。</strong>そうしないと、サブクエリが「その支店の最小残高」ではなく「全支店の中の最小残高」を返してしまい、意味が変わってしまいます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>JOINで必要なテーブルをつなげ、WHEREでその支店に絞り、さらに「その支店の最小残高」をサブクエリで計算して比較する。JOINとサブクエリは同時に使ってよい。</p></div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>実例③：ある地域のすべての支店で融資を受けている顧客</h2><div class="unit-sub">HAVING COUNT(DISTINCT ...) = (SELECT COUNT(*) ...)</div></div>
+  </div>
+  <p>問題：「Brooklynという都市にあるすべての支店で、少なくとも1件ずつローンを組んでいる顧客を探したい」。<code>branch_city = 'Brooklyn'</code>の支店が何件あるかをまず確認し、それと同じ数だけ<strong>異なる</strong>Brooklyn支店でローンを持っている顧客を探します。</p>
+  <p class="code-label">▶ ステップ1：欲しい値（Brooklynにある支店の数）を単独で確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*)</span>
+<span class="cl"><span class="kw">FROM</span> branch</span>
+<span class="cl"><span class="kw">WHERE</span> branch_city = <span class="st">'Brooklyn'</span>;</span>
+<span class="cl"><span class="cm">-- → 2 が1件だけ返る（例：Brooklyn Bank, Brooklyn Bridge Bank）</span></span>
+</pre>
+  <p class="code-label">▶ ステップ2〜3：2でハードコードして確認 → サブクエリに置き換える</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> br.customer_id</span>
+<span class="cl"><span class="kw">FROM</span> borrower br</span>
+<span class="cl"><span class="kw">JOIN</span> loan l <span class="kw">ON</span> br.loan_number = l.loan_number</span>
+<span class="cl"><span class="kw">WHERE</span> l.branch_name <span class="kw">IN</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> branch_name <span class="kw">FROM</span> branch <span class="kw">WHERE</span> branch_city = <span class="st">'Brooklyn'</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">GROUP BY</span> br.customer_id</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> l.branch_name) = (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> branch <span class="kw">WHERE</span> branch_city = <span class="st">'Brooklyn'</span></span>
+<span class="cl">);</span>
+</pre><div class="output-reveal">customer_id
+------------
+10048
+10098</div>
+  <div class="teal-box">📌 <strong>なぜ<code>COUNT(DISTINCT branch_name)</code>で、ただの<code>COUNT(branch_name)</code>ではダメなのか？</strong>同じ顧客が同じBrooklyn支店で2件のローンを組んでいる可能性があります。単純な<code>COUNT</code>だとそれを2件と数えてしまい、実際には1支店にしか融資がないのに「Brooklynの全支店で融資がある」と誤判定してしまいます。<code>DISTINCT</code>を付けることで「支店の種類の数」を正しく数えられます。</div>
+  <div class="teal-box">📌 <strong>右辺を<code>2</code>と決め打ちせず<code>(SELECT COUNT(*) FROM branch WHERE branch_city = 'Brooklyn')</code>にしておく理由。</strong>今後Brooklynに支店が増えたり減ったりしても、このクエリはコードを書き換えることなく正しい件数と自動的に比較してくれます。決め打ちの数字は、データが変わった瞬間に古い基準のままになってしまいます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「ある地域の全支店で」という条件は、HAVING COUNT(DISTINCT 支店名) = その地域の支店数、という形にする。DISTINCTで二重カウントを防ぎ、支店数もサブクエリで計算しておけば、データが変わっても壊れません。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the recommended first step when building a complex subquery-based query?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Write the entire final query in one attempt</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Figure out the single value you need and check it with its own query first</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Delete all WHERE clauses and start with SELECT *</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Always use a correlated subquery</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">After confirming the target value, what should you do before writing the subquery?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Hardcode that value directly into the WHERE clause and test the outer query</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Immediately delete the outer query</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Convert every table to a view</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Add DISTINCT to every column</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">To find customers living in the same city as customer '10001' (excluding that customer), which condition is needed in addition to the city match?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ORDER BY customer_id DESC</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>AND customer_id &lt;&gt; '10001'</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>GROUP BY customer_city</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>HAVING COUNT(*) = 1</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In the branch-minimum-balance example, why must the subquery also filter WHERE branch_name = 'Brooklyn Bank'?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Otherwise it would compute the minimum balance across all branches, not just that one</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because branch_name is a primary key</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because MIN() cannot run without a WHERE clause</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To avoid using JOIN</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which tables must be joined to connect account balances to a customer's name?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>branch and loan only</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>account, depositor, and customer</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>borrower and loan only</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>customer only, no join needed</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why use COUNT(DISTINCT branch_name) instead of COUNT(branch_name) when checking for loans at every Brooklyn branch?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>DISTINCT makes the query run faster in every case</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Without DISTINCT, a customer with two loans at the same branch would be double-counted, falsely suggesting coverage of two branches</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>COUNT(branch_name) is not valid SQL</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>DISTINCT is required syntax after GROUP BY</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why compare against (SELECT COUNT(*) FROM branch WHERE branch_city = 'Brooklyn') instead of hardcoding the number 2?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Hardcoded numbers are not allowed in HAVING clauses</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The subquery version stays correct automatically if branches are added or removed</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It makes the query run without a GROUP BY</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>PostgreSQL cannot compare COUNT to an integer literal</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">If replacing a hardcoded value with a subquery suddenly returns far more rows than before, what does that most likely indicate?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The query is now correct and complete</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The subquery is likely returning multiple rows/values, causing an unintended multiplication effect</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>PostgreSQL has cached the wrong table</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The ORDER BY clause is missing</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 1, 0, 1, 1, 1, 1];
+var FEEDBACKS=["Identify and confirm the single value you actually need before writing the surrounding query — this gives you a known-good target to test against.","Hardcoding the confirmed value into the outer query lets you verify that everything outside the subquery works correctly before adding any subquery complexity.","Without excluding the customer's own id, the query would also return that same customer as one of the 'other' customers living in that city.","A subquery without that filter would compute the minimum balance across the entire account table, not just the target branch, giving the wrong comparison value.","account holds balance and branch_name, depositor links accounts to customer_id, and customer holds the name — all three must be joined.","A customer could have two loans at the very same branch; without DISTINCT that would count as 2 toward the required total, wrongly implying two different branches are covered.","A subquery-based count keeps working correctly even if Brooklyn branches are added or removed later, while a hardcoded number would silently become wrong.","A scalar subquery is supposed to return a single value; if it instead returns multiple rows, the outer query effectively multiplies matches, producing far more results than expected."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">incremental query building</div>
+      <div class="term-en">段階的なクエリ構築</div>
+      <div class="term-def">一気に完成形を書かず、値の確認→ハードコード→サブクエリ化、と一段ずつテストしながら組み立てる進め方。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">hardcoding</div>
+      <div class="term-en">決め打ち・ハードコード</div>
+      <div class="term-def">計算で求めるべき値を、確認のために一時的に具体的な数字や文字列として直接書き込むこと。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">scalar subquery</div>
+      <div class="term-en">スカラーサブクエリ</div>
+      <div class="term-def">1行1列＝単一の値だけを返すサブクエリ。WHEREの比較にそのまま使える。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">HAVING</div>
+      <div class="term-en">ハビング句</div>
+      <div class="term-def">GROUP BYでまとめた後の集約結果（COUNTなど）を条件で絞り込む句。集約値の比較にはWHEREではなくHAVINGを使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">COUNT(DISTINCT ...)</div>
+      <div class="term-en">重複を除いた件数</div>
+      <div class="term-def">同じ値の重複を1件として数える集計。同じ支店への複数ローンを二重カウントしないために使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">self-referencing subquery</div>
+      <div class="term-en">自己参照サブクエリ</div>
+      <div class="term-def">同じテーブルに対して、別の行の値（例：他の顧客の都市）を調べるために発行するサブクエリ。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>詰まったら、まず外側のクエリを「サブクエリ抜き・仮の数字」で動かしてみましょう。動けば半分終わったも同然。あとはその数字を<code>(SELECT ...)</code>に置き換えるだけです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧭 SQLレッスン：M6 サブクエリ③（問題の解き方）</p>
+  <p style="margin-top:.5rem;"><a href="subqueries_sets.html">← サブクエリ②</a> · <a href="m6_plus.html">M6+ 教科書だけの内容へ →</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

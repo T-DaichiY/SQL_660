@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Aggregate function — 集計関数とGROUP BY</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 📊 Aggregate <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Aggregate function</div>
+  <h1>📊 集計関数（Aggregate function）</h1>
+  <p>1行ずつの計算から、<strong>複数行をまとめて1つの値にする</strong>計算へ。AVG・SUMと、セットで必要になるGROUP BY。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 集計関数とは</a><a href="#unit2">② GROUP BYが必須</a><a href="#unit3">③ AVGとSUMの実例</a><a href="#unit4">④ 別名とWHEREの制約</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>集計関数とは</h2><div class="unit-sub">前のレッスンの手計算を、自動化する</div></div>
+  </div>
+  <p>前のレッスンでは、<code>(s_close - s_open) / s_open</code> のように<strong>1行の中で列同士を計算</strong>しました。しかしこれでは求められないものがあります——たとえば<strong>平均</strong>です。</p>
+  <div class="note-box">🤔 <strong>なぜ平均は手計算できないのか：</strong>平均を出すには「全部でいくつのレコードがあるか」を知る必要があります。しかし1行ずつの計算では、その行の値しか見えていません。<strong>複数の行をまたいでまとめる</strong>には、専用の道具が要ります。それが<strong>集計関数（aggregate function）</strong>です。</div>
+  <table class="compare-table">
+    <tr><th>関数</th><th>意味</th><th>例</th></tr>
+    <tr><td><code>AVG()</code></td><td>平均</td><td><code>AVG(s_close)</code></td></tr>
+    <tr><td><code>SUM()</code></td><td>合計</td><td><code>SUM(volume)</code></td></tr>
+    <tr><td><code>COUNT()</code></td><td>件数</td><td><code>COUNT(order_num)</code></td></tr>
+    <tr><td><code>MAX()</code> / <code>MIN()</code></td><td>最大 / 最小</td><td><code>MAX(grade)</code></td></tr>
+  </table>
+  <p>構文はこれまでと同じ形です。<code>SELECT</code>で始まり、列の代わりに<strong>関数で包んだ列</strong>を書きます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">AVG</span>(s_close)</span>
+<span class="cl"><span class="kw">FROM</span> stocks;</span>
+</pre>
+  <div class="note-box">✍️ 関数名は<code>AVG</code>のように<strong>大文字で書くのが良いスタイル</strong>です（小文字でも動作します）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>集計関数は「たくさんの行を1つの値にまとめる」関数。平均・合計・件数・最大・最小がその代表です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>GROUP BY が必須になる理由</h2><div class="unit-sub">「何ごとに」まとめるのかを指定する</div></div>
+  </div>
+  <p>知りたいのは「全銘柄をひっくるめた平均」ではなく、<strong>「銘柄ごとの平均終値」</strong>のはずです。では、その「銘柄ごと」をSQLにどう伝えるのか——それが<code>GROUP BY</code>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, <span class="kw">AVG</span>(s_close)</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">GROUP BY</span> s_index</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | avg
+--------+---------------------
+AAPL    |  128.4327...
+AMZN    | 1702.9981...
+（14銘柄それぞれの平均）</div>
+  <p>やっていることは<strong>「<code>s_index</code>の値ごとにデータを小分けし、その小分けごとに平均を取り、結果として報告する」</strong>です。</p>
+  <div class="warn-box">⚠️ <strong>GROUP BYを忘れるとエラーになります。</strong>集計関数と、集計していない普通の列を並べて書いた場合、その列は必ず<code>GROUP BY</code>に書かなければなりません。</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- GROUP BY を書かないと…</span></span>
+<span class="cl"><span class="kw">SELECT</span> s_index, <span class="kw">AVG</span>(s_close) <span class="kw">FROM</span> stocks;</span>
+</pre><div class="output-reveal">ERROR:  column "stocks.s_index" must appear in the
+        GROUP BY clause or be used in an aggregate function</div>
+  <p>エラーメッセージが解決策そのものを教えてくれています——<strong>「その列をGROUP BYに入れるか、それ自体も集計関数で包むか、どちらかにせよ」</strong>。<code>s_index</code>は文字列なので数学的な計算はできません。したがって<code>GROUP BY</code>に入れるのが正解です。</p>
+  <h3>Excelの平均と比べてみる</h3>
+  <table class="compare-table">
+    <tr><th></th><th>Excel</th><th>SQL</th></tr>
+    <tr><td>書き方</td><td><code>=AVERAGE(A1:A58)</code></td><td><code>AVG(s_close)</code></td></tr>
+    <tr><td>範囲の指定</td><td>自分でセル範囲を選ぶ</td><td><code>GROUP BY</code>で「まとめる基準」を指定</td></tr>
+    <tr><td>銘柄が14個あったら</td><td>14個の数式を作る</td><td>クエリは<strong>1本のまま</strong></td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>GROUP BYは「範囲指定」の代わりです。</strong>Excelでは自分でデータを並べ替えて範囲を切り出す必要がありますが、データベースは膨大な行を扱うのでそれは非現実的です。代わりに「この列の値ごとにまとめて」と指示すれば、SQLが裏側で全部やってくれます。同じ値を見つけるたびに、その仲間だけで平均を計算してくれるわけです。</div>
+  <p><code>GROUP BY</code>には<strong>複数の列</strong>を指定することもできます（詳しくは Group by のレッスンで扱います）。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>集計関数を使ったら<code>GROUP BY</code>もセットで書く。「何ごとに集計するのか」を伝えるためです。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>AVG と SUM の実例</h2><div class="unit-sub">stocksテーブルで試す</div></div>
+  </div>
+  <h3>例1：銘柄ごとの平均終値</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, <span class="kw">AVG</span>(s_close)</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">GROUP BY</span> s_index</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre>
+  <p>14銘柄それぞれの平均株価が並びます。安い銘柄と高い銘柄がひと目で分かり、前レッスンで見たパーセント変化がどこから来ているのかも掴めます。</p>
+  <h3>例2：銘柄ごとの出来高の合計</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, <span class="kw">SUM</span>(volume)</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">GROUP BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | sum
+--------+-------------
+AAPL    |  9823456700
+XYZ     |           0
+（取引が記録されなかった銘柄は0）</div>
+  <p><code>AVG</code>を<code>SUM</code>に、<code>s_close</code>を<code>volume</code>に変えただけです。<strong>集計関数はどれも同じ形で使えます。</strong>期間中に何件の取引が処理されたかが分かります。</p>
+  <div class="teal-box">📌 <strong>覚え方：</strong>集計（aggregate）とは<strong>データをまとめる（grouping）</strong>ことです。だからこそ「どうまとめるか」を必ず指定しなければなりません。</div>
+  <h3>例3：合計の大きい順に並べる</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, <span class="kw">SUM</span>(volume) <span class="kw">AS</span> total_volume</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">GROUP BY</span> s_index</span>
+<span class="cl"><span class="kw">ORDER BY</span> total_volume <span class="kw">DESC</span>;</span>
+</pre>
+  <p>集計結果に別名を付ければ、<strong>その別名で並べ替えられます</strong>。<code>ORDER BY SUM(volume) DESC</code>と書いても動きますが、別名のほうが読みやすくなります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>AVGもSUMも使い方は同じ。<code>関数(列) … GROUP BY まとめる列</code>の形を覚えれば応用できます。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>別名は使える、WHEREでは使えない</h2><div class="unit-sub">集計とフィルタの順序</div></div>
+  </div>
+  <div class="warn-box">⚠️ <strong>集計関数はWHERE句では使えません。</strong>SELECTで集計した結果を<code>WHERE</code>の条件にすることはできません。WHEREは<strong>集計より前</strong>に実行されるからです（行を集める前に、その集計結果は存在しません）。集計結果で絞り込みたい場合は<code>HAVING</code>を使います——これは後のレッスンで扱います。</div>
+  <h3>複雑なクエリの組み立て例</h3>
+  <p>「銘柄ごとの平均パーセント変化を、小数2桁で見たい」——これまで学んだ道具を全部使います。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       <span class="kw">CAST</span>(<span class="kw">AVG</span>(((s_close - s_open) / s_open) * <span class="nm">100</span>)</span>
+<span class="cl">            <span class="kw">AS</span> <span class="kw">numeric</span>(<span class="nm">10</span>,<span class="nm">2</span>)) <span class="kw">AS</span> percent_change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">WHERE</span> s_close <span class="kw">IS NOT NULL</span></span>
+<span class="cl"><span class="kw">GROUP BY</span> s_index</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | percent_change
+--------+----------------
+AAPL    |           0.12
+AMZN    |          -0.03</div>
+  <div class="viz">
+    <div class="viz-title">このクエリで起きていること</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>WHERE でNULLを除く</strong><span>集計の<strong>前</strong>に不要な行を落とす</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>GROUP BY で銘柄ごとに小分け</strong><span>s_index の値ごとにグループを作る</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>AVG で平均を計算</strong><span>グループごとに1つの値へ</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>CAST で整形 → ORDER BY で並べる</strong><span>読みやすい形に仕上げる</span></div></div>
+    </div>
+    <div class="viz-cap">WHEREは集計の前、HAVING（後述）は集計の後。この順序が要点。</div>
+  </div>
+  <div class="teal-box">📌 <strong>なぜ先にNULLを除くのか：</strong>取引がなかった日など、値の無い行が混ざったまま平均を取ると、結果が不当に引っ張られてしまいます。<strong>集計の前にデータを掃除しておく</strong>——これが正確な統計値を得るコツです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>集計結果には別名を付けてORDER BYで使える。ただしWHEREには書けません（集計より前に走るため）。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What makes an aggregate function different from the column math of the previous lesson?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It combines many rows into a single value</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It works only on text columns</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It changes the values stored in the table</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It can only be used without a FROM clause</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why can't you compute an average with plain column arithmetic?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Division is not supported between two columns</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A single row does not know how many rows exist</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Averages require the money data type</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The result would always be NULL</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">"SELECT s_index, AVG(s_close) FROM stocks;" raises an error. What is missing?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A GROUP BY clause naming s_index</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A WHERE clause on s_close</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A CAST around the AVG call</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An alias for the aggregated column</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">The error says the column "must appear in the GROUP BY clause or be used in an aggregate function." What are your two options?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Group by that column, or aggregate it too</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rename the column, or delete it from the table</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Cast the column, or sort by it</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Quote the column, or move it after FROM</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In the Excel comparison, GROUP BY plays the role of:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The equals sign that starts a formula</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The cell range being averaged</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The name of the worksheet</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The chart drawn from the data</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Can you use an aggregate function inside a WHERE clause?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No — WHERE runs before the aggregation</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Yes, exactly like any ordinary column</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Yes, but only for AVG and SUM</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only when the query has no GROUP BY</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Can you sort by an alias given to an aggregate, e.g. ORDER BY total_volume DESC?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No, aliases never work with aggregates</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only if the alias is quoted</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only in ascending order</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why add "WHERE s_close IS NOT NULL" before averaging?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Otherwise the query returns a syntax error</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To clean the data before it is aggregated</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because AVG cannot be combined with CAST</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To make GROUP BY optional in that query</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 0, 1, 0, 0, 1];
+var FEEDBACKS=["Aggregates work across many rows and collapse them into one value, unlike row-by-row arithmetic.","An average needs to know the whole set of rows, and row-level math only sees the current row.","When a non-aggregated column sits next to an aggregate, it has to be named in GROUP BY.","The message states both fixes: put it in GROUP BY, or wrap it in an aggregate. Since s_index is text, grouping is the sensible one.","In Excel you pick the range by hand; in SQL, GROUP BY defines which rows belong to each aggregate.","Aggregates are not available in WHERE. Filtering on an aggregate result is done with HAVING.","Aliases work in ORDER BY, so sorting on the aggregate's alias is fine — and easier to read.","Rows with no value would distort the average, so they are removed before the aggregation happens."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">aggregate function</div>
+      <div class="term-en">集計関数</div>
+      <div class="term-def">複数行をまとめて1つの値にする関数。AVG・SUM・COUNT・MAX・MIN など。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">AVG()</div>
+      <div class="term-en">平均</div>
+      <div class="term-def">グループ内の値の平均を返す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">SUM()</div>
+      <div class="term-en">合計</div>
+      <div class="term-def">グループ内の値を合計する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">GROUP BY</div>
+      <div class="term-en">グループ化</div>
+      <div class="term-def">「何ごとに集計するか」を指定する句。集計関数とセットで使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">must appear in the GROUP BY clause</div>
+      <div class="term-en">代表的なエラー</div>
+      <div class="term-def">集計していない列をGROUP BYに入れ忘れたときに出る。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>集計関数を書いたら、反射的に「この結果は<strong>何ごとの</strong>集計か？」と自問しましょう。その答えがそのまま<code>GROUP BY</code>に書く列です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 SQLレッスン：M4 集計関数（Aggregate function）</p>
+  <p style="margin-top:.5rem;"><a href="math_columns.html">← 列の計算</a> · <a href="index.html">🏠 概要</a> · <a href="max_min.html">次：Max and min →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M1 INSERT INTO — レコードの追加 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M1·M2 ✏️ INSERT <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main active" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M1 · INSERT INTO</div>
+  <h1>✏️ INSERT INTO文 — テーブルにレコードを追加する</h1>
+  <p>データベース → テーブル → レコードという階層を理解し、1件の挿入・複数件の挿入・列を指定した部分挿入の3つのやり方を学ぶ。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 基本のINSERT構文</a><a href="#unit2">② 列の順番と落とし穴</a><a href="#unit3">③ 列を指定して挿入する</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>データベース → テーブル → レコードという階層</h2><div class="unit-sub">INSERT INTOの基本構文と、なぜ「ADD」ではなく「INSERT」なのか</div></div>
+  </div>
+  <p>データベースは一番上位の存在で、その中にテーブルがあり、テーブルの中に個々の<strong>レコード（行）</strong>があります。Excelで例えるなら、テーブルはシート、レコードはその中の1行にあたります。<code>CREATE TABLE</code>で列（列見出し）を定義したら、次はその見出しに合うデータを1行ずつ埋めていく作業——それが<strong>INSERT</strong>です。</p>
+  <div class="note-box">💡 データベース全体からは色々なテーブルの情報を検索できますが、実際のレコードは常にテーブルの中に存在します。「データベースは高レベル、テーブルはもう少し具体的、レコードはさらに具体的」という階層を意識しましょう。</div>
+  <h3>基本のキーワード：INSERT INTO ... VALUES ...</h3>
+  <p>INSERT文は3つのパーツからできています。①何をする（INSERT）、②どこに入れる（INTO テーブル名）、③何を入れる（VALUES 値のリスト）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> table_name</span>
+<span class="cl"><span class="kw">VALUES</span> (value1, value2, value3, ...);</span>
+</pre>
+  <p>VALUESの後ろの丸括弧の中に、カンマ区切りで値を並べます。1つの丸括弧のまとまりが、テーブルの1行（1レコード）に対応します。カンマの位置が、そのままテーブルの列から列への移動を表しています。</p>
+  <div class="teal-box">📌 <strong>なぜ「ADD」ではなく「INSERT」？</strong> ADD（足す）は算数・数学的な計算をイメージさせる言葉です。私たちはここで計算をしているのではなく、テーブルに新しい情報を「挿し込んで」いるだけ。だから言語的に自然な「INSERT」が使われています。</p></div>
+  <h3>複数行を一度に挿入する</h3>
+  <p>丸括弧のまとまりをカンマで区切って複数並べると、一度のINSERT文で複数行をまとめて挿入できます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> students</span>
+<span class="cl"><span class="kw">VALUES</span></span>
+<span class="cl">    (<span class="nm">1</span>, <span class="st">'John'</span>, <span class="st">'Smith'</span>, <span class="st">'jsmith@email.com'</span>, <span class="nm">425</span>),</span>
+<span class="cl">    (<span class="nm">2</span>, <span class="st">'Mary'</span>, <span class="st">'Lee'</span>, <span class="st">'mlee@email.com'</span>, <span class="nm">310</span>);</span>
+</pre><div class="output-reveal">INSERT 0 2</div>
+  <p>最後の行だけ文末をセミコロン(;)で終え、それ以外の行はカンマ(,)で続けます。これは、スプレッドシートに1行ずつ入力していくのと同じ感覚です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INSERT INTOはテーブルに新しい行を足すための命令。丸括弧1つ＝1行、カンマで列から列へ、複数の丸括弧をカンマでつなげば複数行を一気に追加できます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>列を指定しないと「定義順」が絶対ルール</h2><div class="unit-sub">同じデータ型ならエラーにならない——だからこそ危険な入れ違い</div></div>
+  </div>
+  <p>先ほどの構文には、どの列に何を入れるかという指定がありませんでした。列名を書かなかった場合、PostgreSQLは<strong>CREATE TABLEで定義した列の並び順どおりに値が来る</strong>と仮定します。</p>
+  <p>ここでは <code>id</code>・<code>first_name</code>・<code>last_name</code>・<code>email</code>・<code>amount</code>（注文金額）という5つの列を持つテーブルを例に考えます。</p>
+  <h3>正しい順番の場合</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> orders</span>
+<span class="cl"><span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="st">'John'</span>, <span class="st">'Smith'</span>, <span class="st">'jsmith@email.com'</span>, <span class="nm">425</span>);</span>
+</pre><div class="output-reveal">INSERT 0 1</div>
+  <p>id・first_name・last_name・email・amountの順で値を並べているので、問題なく成功します。</p>
+  <h3>同じデータ型どうしを入れ違えた場合 — エラーにならない罠</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> orders</span>
+<span class="cl"><span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="st">'Smith'</span>, <span class="st">'John'</span>, <span class="st">'jsmith@email.com'</span>, <span class="nm">425</span>);</span>
+</pre><div class="output-reveal">INSERT 0 1
+-- 成功してしまう！ first_name列に 'Smith'、last_name列に 'John' が入る</div>
+  <p>first_nameとlast_nameを入れ違えても、両方とも<code>varchar</code>型の文字列なので、データベースはエラーを出しません。「文字数の上限内に収まる文字列か？」というチェックしか行われないからです。データベースは"Smith"が姓なのか名なのか意味までは理解しません。これが<strong>転記ミス（transposition error）</strong>と呼ばれる、見つけにくいバグの正体です。</p>
+  <h3>データ型そのものが違う場合 — ここでようやくエラー</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> orders</span>
+<span class="cl"><span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="st">'jsmith@email.com'</span>, <span class="st">'John'</span>, <span class="nm">425</span>, <span class="st">'Smith'</span>);</span>
+</pre><div class="output-reveal">ERROR:  invalid input syntax for type numeric: "Smith"</div>
+  <p>今度はemail（varchar）をfirst_name列の位置に、数値のamount列の位置に文字列'Smith'を置いてしまいました。amount列は数値型を期待しているため、今度こそ明確な<strong>データ型エラー</strong>で止まります。</p>
+  <table class="compare-table">
+    <thead><tr><th>ケース</th><th>結果</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>正しい順番</td><td>✅ 成功</td><td>列の定義順と値の順が一致</td></tr>
+      <tr><td>同じ型どうしの入れ違い（姓・名）</td><td>⚠️ 成功してしまう（データが誤り）</td><td>型チェックは通るが、内容の意味までは検証されない</td></tr>
+      <tr><td>型そのものが不一致（文字列 → 数値列）</td><td>❌ エラー</td><td>データ型が根本的に一致しない</td></tr>
+    </tbody>
+  </table>
+  <div class="warn-box">⚠️ <strong>一番怖いのは「エラーにならないミス」。</strong>型は合っているのに中身が入れ違っている転記ミスは、実行時には何も警告してくれません。INSERT文を書くときは、必ず列の定義順を確認してから値を並べましょう。スプレッドシートからコピーする場合も、列の並びをテーブル定義に合わせてから貼り付けるのが安全です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>チェックされているのは「型が合っているか」だけで、「内容が正しいか」ではありません。同じ型どうしを入れ違えてもエラーは出ないので、列の順番は自分の目でしっかり確認するクセをつけましょう。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>列を指定して一部だけ挿入する</h2><div class="unit-sub">INSERT INTO table (列名, ...) VALUES (...) — 自動採番の列はスキップ</div></div>
+  </div>
+  <p>すべての列に自分で値を入れなくてよいケースもあります。例えば<code>bigserial</code>型のID列は、データベース側が自動的に連番を割り振ってくれるので、こちらから値を渡す必要がありません。そんなときは、INTOの後ろに<strong>使う列名だけ</strong>を丸括弧で指定します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> students (first_name, last_name, email, credits)</span>
+<span class="cl"><span class="kw">VALUES</span></span>
+<span class="cl">    (<span class="st">'John'</span>, <span class="st">'Smith'</span>, <span class="st">'jsmith@email.com'</span>, <span class="nm">36</span>),</span>
+<span class="cl">    (<span class="st">'Mary'</span>, <span class="st">'Lee'</span>, <span class="st">'mlee@email.com'</span>, <span class="nm">42</span>);</span>
+</pre><div class="output-reveal">INSERT 0 2</div>
+  <p>id列とgpa列（GPAは後で計算する想定）には触れず、first_name・last_name・email・creditsの4列だけを指定しています。VALUESの中の値は、この<strong>列リストで宣言した順番</strong>と対応していれば構いません——テーブル本来の定義順である必要はありません。</p>
+  <div class="note-box">💡 これはWebサイトの新規登録フォームと同じ発想です。ユーザーは自分でIDを決めず、名前やメールアドレスなど基本情報だけを入力し、IDはシステム側が自動で割り振ります。</div>
+  <h3>それでも列リストと値の順番は一致させる</h3>
+  <p>列リストで順番を自由に変えられるといっても、指定した列リストの並びと、VALUESの並びが食い違えば、当然データは誤った列に入ってしまいます（Unit②で見た問題がここでも起こり得ます）。</p>
+  <div class="warn-box">⚠️ 列リストを <code>(email, first_name, last_name, credits)</code> にしたのに、VALUESを <code>('John', 'Smith', 'jsmith@email.com', 36)</code> の順で書けば、emailの列に'John'が入ってしまいます。列リストの並びと値の並びは常にセットで確認しましょう。</div>
+  <h3>実務での活用：テーブル間で列の順番を揃える</h3>
+  <p>students・teachers・adminのように似た構造の複数テーブルがある場合、共通する列（例：last_name, first_name, email）の並び順を全テーブルで統一しておくと、データ入力や自動化の際に迷いがなくなります。テーブル固有の列（salaryやdepartmentなど）はその後ろに追加すればよいだけです。</p>
+  <div class="teal-box">📌 <strong>自動化への発展：</strong> Googleフォームなどのオンラインフォームで集めたデータを、関数（ストアドプロシージャ）を使って自動的にINSERTするしくみを作れば、手作業での入力を減らせます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>列リストを指定すれば、自動採番される列などを飛ばして必要な列だけ埋められます。ルールは1つだけ——「列リストの順番」と「VALUESの順番」を必ず一致させること。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 9</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which keyword combination begins the basic statement for adding a new row to a table?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ADD INTO</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>INSERT INTO</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>CREATE INTO</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>PUT INTO</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why is "INSERT" used instead of "ADD" for this SQL command?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>"ADD" is a reserved word that cannot appear in SQL at all</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>"ADD" implies a mathematical operation, not adding a record</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>"INSERT" is shorter to type than "ADD"</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>There is no real reason, they are fully interchangeable</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In "INSERT INTO students VALUES (1, 'Ann', 'Lee');", what does one parenthesized, comma-separated set of values represent?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>An entire table, freshly created</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>One row (record) in the table</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A single column's definition</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An entire database, top to bottom</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">If an INSERT statement gives no explicit column list, in what order must the values be listed?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Alphabetical order of the column names</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Any order, since PostgreSQL detects it automatically</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The order the columns were defined in CREATE TABLE</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Numeric columns first, then text columns</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A table has columns (first_name varchar, last_name varchar). You accidentally swap the values, inserting the last name into first_name and vice versa. What happens?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>PostgreSQL detects the mismatch and swaps the two values back automatically</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The insert fails immediately, raising a column-order syntax error</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It succeeds silently, since both columns share the same data type</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The whole table is dropped automatically as a built-in safety measure</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does putting a text value like 'Smith' into a numeric column cause an error, while swapping two varchar columns does not?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>PostgreSQL checks the data TYPE, not the meaning or content of the value</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Numeric columns are always optional, so any type error there is unrelated</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>varchar columns never trigger any kind of validation check at all</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is essentially random which inserts happen to succeed or fail</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why would you provide an explicit column list, e.g. "INSERT INTO students (first_name, last_name, email) VALUES (...)"?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To skip columns like an auto-generated bigserial ID</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Column lists are required for every INSERT, with no exceptions</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It permanently changes the table's column order</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It disables data type checking for that statement</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">When a column list IS given, what order must the VALUES follow?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The order the columns were originally defined in CREATE TABLE, always</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Order does not matter when a column list is given</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Reverse alphabetical order of the column names</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The order the column names were listed in that INSERT statement</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">How do you insert multiple rows in a single INSERT statement?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Run separate CREATE TABLE statements for each row</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Use the UNION keyword between column lists</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It is not possible; each row needs its own INSERT statement</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>List multiple parenthesized value sets, separated by commas</button></div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 1, 2, 2, 0, 0, 3, 3];
+var FEEDBACKS=["The statement begins with INSERT INTO table_name, followed by VALUES and the data to add.", "\"ADD\" implies a mathematical/arithmetic operation, while INSERT correctly conveys inserting a new record into a table.", "Each parenthesized, comma-separated group of values in a VALUES clause corresponds to exactly one row (record) being added to the table.", "Without an explicit column list, PostgreSQL assumes the values are given in the exact order the columns were defined in CREATE TABLE.", "Because both columns are the same data type (varchar), the swap passes PostgreSQL's type check and the insert succeeds silently — with the data now wrong.", "PostgreSQL only validates that a value's data TYPE matches the column's type; it has no way to know the semantic meaning of the content, like whose name is whose.", "An explicit column list lets you omit columns you don't want to set manually, such as an auto-incrementing bigserial primary key.", "When a column list is provided, the VALUES must line up with the order the columns were listed in that same INSERT statement, not necessarily the table's original definition order.", "Multiple rows can be inserted in one statement by listing several parenthesized value sets separated by commas, ending the whole statement with a semicolon."];
+var score=0,done=0,total=9;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">INSERT INTO</div>
+      <div class="term-en">Insert Statement</div>
+      <div class="term-def">テーブルに新しい行（レコード）を追加するSQL文。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">VALUES</div>
+      <div class="term-en">Values Clause</div>
+      <div class="term-def">挿入する実際の値を、丸括弧・カンマ区切りで指定する部分。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">column list</div>
+      <div class="term-en">列リスト</div>
+      <div class="term-def">INTOの後ろに指定する、挿入対象の列名の並び。省略時はテーブル定義順が使われる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">bigserial</div>
+      <div class="term-en">自動採番</div>
+      <div class="term-def">値を指定しなくてもデータベースが自動的に連番を割り振ってくれる整数型。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">data type mismatch</div>
+      <div class="term-en">データ型の不一致</div>
+      <div class="term-def">列が期待する型と異なる型の値を入れようとしてエラーになること。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">transposition error</div>
+      <div class="term-en">転記ミス</div>
+      <div class="term-def">同じデータ型の値同士を入れ違えてしまうミス。エラーにならないため気づきにくい。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>INSERT文を書くときは、まずテーブル定義（またはINTOの後ろの列リスト）を確認し、その並び順にそって値を1つずつ数えながら書くクセをつけると、転記ミスを大きく減らせます。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>✏️ SQLレッスン：INSERT INTO文 — レコードの追加</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

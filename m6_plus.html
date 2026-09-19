@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6+ アンチ結合・CTE・CASE式 — 教科書7章・13章より</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6+ 🧩 アンチ結合・CTE・CASE <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6+ · Anti-joins, CTEs & CASE (textbook Ch.7, 13)</div>
+  <h1>🧩 アンチ結合・CTE・CASE式 — 教科書だけの内容</h1>
+  <p>ここまでのM6は講義動画の内容でした。この最後の1本は<strong>講義では扱っていない、教科書『Practical SQL 完全ガイド』第7章・第13章の内容</strong>です。JOINとサブクエリをさらに使いこなすための3つの技を身につけます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① アンチ結合（LEFT JOIN + IS NULL）</a><a href="#unit2">② CTE（共通テーブル式）</a><a href="#unit3">③ CASE式で値を分類する</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>アンチ結合 — 「片方にしかない行」を探す</h2><div class="unit-sub">LEFT JOIN + WHERE ... IS NULL</div></div>
+  </div>
+  <p>結合で一致しなかった側の列は<code>NULL</code>（不明・存在しない）になります。この性質を逆手に取ると、「<strong>一致しなかった行だけ</strong>」を取り出せます。これを<strong>アンチ結合（anti-join）</strong>と呼びます。M6でJOINの種類を学んだとき、LEFT JOINは「左テーブルの全行＋一致すれば右の値も」返すものでした。そこに<code>WHERE 右テーブルの列 IS NULL</code>を足すだけで、「右に一致相手がいない左の行」だけに絞り込めます。</p>
+  <p>University DBで、<strong>一度も履修登録（<code>takes</code>）していない学生</strong>を探してみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> student.student_id, student.name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id</span>
+<span class="cl"><span class="kw">WHERE</span> takes.student_id <span class="kw">IS NULL</span>;</span>
+</pre><div class="output-reveal">student_id | name
+128 | Levy
+...（takesに1行も現れない学生だけが残る）</div>
+  <div class="note-box">💡 <strong>なぜこれで「一致しない行」だけ残るのか：</strong>LEFT JOINは<code>student</code>の全行を必ず残します。<code>takes</code>側に一致する行があれば<code>takes.student_id</code>には実際の値が入りますが、一致する行が無ければ<code>NULL</code>で埋められます。そこを<code>WHERE takes.student_id IS NULL</code>で絞り込めば、「一致相手が無かった行」だけが残るわけです。</div>
+  <div class="teal-box">📌 <strong>INNER JOINでは同じことができません。</strong>INNER JOINは最初から一致した行しか返さないので、そもそも「一致しなかった行」がテーブルに存在しないからです。アンチ結合には必ずLEFT（またはRIGHT）JOINが必要です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>LEFT JOINしてから「相手側がNULLの行だけ」を選ぶと、「片方にしかいない」行を見つけられます。出席していない学生、注文履歴のない顧客、などを探すときによく使うテクニックです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>CTE（共通テーブル式）で読みやすく</h2><div class="unit-sub">WITH ... AS (...) で「一時的な名前付きテーブル」を作る</div></div>
+  </div>
+  <p><strong>CTE（Common Table Expression）</strong>は<code>WITH 名前 AS (サブクエリ)</code>という形で、サブクエリに一時的な名前を付けて、本体クエリから普通のテーブルのように呼び出せる仕組みです。M6のサブクエリで学んだ「派生テーブル（FROM句のサブクエリ）」と、できることはほぼ同じですが、クエリの先頭にまとめて書けるぶん読みやすくなります。</p>
+  <p>例えば、「学部の平均取得単位数（<code>tot_cred</code>）より単位数が多い学生」を、これまで学んだ書き方（派生テーブルをFROM句に埋め込む）とCTEの書き方で比べてみます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- これまでの書き方：FROM句にサブクエリを直接埋め込む</span></span>
+<span class="cl"><span class="kw">SELECT</span> student.name, student.tot_cred, dept_avg.avg_cred</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> dept_name, avg(tot_cred) <span class="kw">AS</span> avg_cred</span>
+<span class="cl">    <span class="kw">FROM</span> student <span class="kw">GROUP BY</span> dept_name</span>
+<span class="cl">) <span class="kw">AS</span> dept_avg <span class="kw">ON</span> student.dept_name = dept_avg.dept_name</span>
+<span class="cl"><span class="kw">WHERE</span> student.tot_cred > dept_avg.avg_cred;</span>
+</pre>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- CTEで書き直す：WITHで先に名前を付けておく</span></span>
+<span class="cl"><span class="kw">WITH</span> dept_avg <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> dept_name, avg(tot_cred) <span class="kw">AS</span> avg_cred</span>
+<span class="cl">    <span class="kw">FROM</span> student <span class="kw">GROUP BY</span> dept_name</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> student.name, student.tot_cred, dept_avg.avg_cred</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> dept_avg <span class="kw">ON</span> student.dept_name = dept_avg.dept_name</span>
+<span class="cl"><span class="kw">WHERE</span> student.tot_cred > dept_avg.avg_cred;</span>
+</pre><div class="output-reveal">name | tot_cred | avg_cred
+Shankar | 102 | 81.5
+...（本体クエリの構造がすっきりし、dept_avgという名前だけで意味が分かる）</div>
+  <p>CTEは<strong>1回定義すれば、本体クエリの中で何度でも参照</strong>できます。同じサブクエリを2箇所にコピペする必要がなくなり、条件を変えたいときも<code>WITH</code>の中の1箇所を直すだけで済みます。</p>
+  <div class="teal-box">📌 <strong>使い分けの目安：</strong>サブクエリが短く1回しか使わないならFROM句にそのまま書いてOK。名前を付けたほうが意味が伝わる場合や、同じ計算を複数回使う場合はCTEにまとめましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CTEは「クエリの中で使う変数」のようなもの。<code>WITH 名前 AS (...)</code>で計算をあらかじめ名付けておけば、本体のクエリがすっきり読みやすくなります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>CASE式で値を分類する</h2><div class="unit-sub">数値を「Freshman」「Senior」のようなカテゴリに変換</div></div>
+  </div>
+  <p><code>CASE WHEN 条件 THEN 結果 ... ELSE 結果 END</code>は「もし〜なら」の条件分岐をSELECTの中に書ける式です。数値データをカテゴリ（ラベル）に変換したいときによく使います。</p>
+  <p>University DBの<code>student.tot_cred</code>（取得単位数）から、学年ラベルを作ってみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name, tot_cred,</span>
+<span class="cl">    <span class="kw">CASE</span></span>
+<span class="cl">        <span class="kw">WHEN</span> tot_cred >= <span class="nm">90</span> <span class="kw">THEN</span> <span class="st">'Senior'</span></span>
+<span class="cl">        <span class="kw">WHEN</span> tot_cred >= <span class="nm">60</span> <span class="kw">THEN</span> <span class="st">'Junior'</span></span>
+<span class="cl">        <span class="kw">WHEN</span> tot_cred >= <span class="nm">30</span> <span class="kw">THEN</span> <span class="st">'Sophomore'</span></span>
+<span class="cl">        <span class="kw">ELSE</span> <span class="st">'Freshman'</span></span>
+<span class="cl">    <span class="kw">END</span> <span class="kw">AS</span> class_year</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">ORDER BY</span> tot_cred <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">name | tot_cred | class_year
+Zhang | 102 | Senior
+Shankar | 102 | Senior
+Levy | 46 | Sophomore
+...</div>
+  <div class="warn-box">⚠️ <strong>条件は上から順に評価され、最初にtrueになったものが採用されます。</strong>それ以降の<code>WHEN</code>は評価されません。もし<code>tot_cred >= 30</code>を一番上に書いてしまうと、単位数90の学生も「Sophomore以上」の最初の条件に引っかかって、意図せず<code>Senior</code>や<code>Junior</code>の分岐に届かなくなります。範囲の広い条件ほど後ろに、狭い（厳しい）条件ほど先に書くのが基本です。</div>
+  <p>CASE式は集計と組み合わせるのにも便利です。例えば、学年ラベルごとの人数を数えることもできます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span></span>
+<span class="cl">    <span class="kw">CASE</span> <span class="kw">WHEN</span> tot_cred >= <span class="nm">90</span> <span class="kw">THEN</span> <span class="st">'Senior'</span></span>
+<span class="cl">         <span class="kw">WHEN</span> tot_cred >= <span class="nm">60</span> <span class="kw">THEN</span> <span class="st">'Junior'</span></span>
+<span class="cl">         <span class="kw">WHEN</span> tot_cred >= <span class="nm">30</span> <span class="kw">THEN</span> <span class="st">'Sophomore'</span></span>
+<span class="cl">         <span class="kw">ELSE</span> <span class="st">'Freshman'</span> <span class="kw">END</span> <span class="kw">AS</span> class_year,</span>
+<span class="cl">    count(*) <span class="kw">AS</span> num_students</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">GROUP BY</span> class_year</span>
+<span class="cl"><span class="kw">ORDER BY</span> num_students <span class="kw">DESC</span>;</span>
+</pre>
+  <div class="teal-box">📌 <strong>CASE式はSELECTリストのどこでも使えます。</strong>普通の列と同じように<code>GROUP BY</code>や<code>ORDER BY</code>のエイリアスとしても参照できるので、集計・分類・並べ替えのどこにでも組み込めます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CASE式は「もしこの値がXXならこのラベル、そうでなければ次の条件…」という変換ルールです。数値をそのまま見せるのではなく、人が読みやすいカテゴリに変えたいときに使います。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">To find rows in the left table that have no match in the right table (an anti-join), which JOIN type must you use?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>INNER JOIN</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>LEFT JOIN (or RIGHT JOIN)</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>CROSS JOIN</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Any join type works equally well</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In SELECT s.* FROM student s LEFT JOIN takes t ON s.student_id = t.student_id WHERE t.student_id IS NULL, what does the result represent?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Students who have taken at least one course</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Students who have never taken any course</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All students, regardless of enrollment</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An error, because IS NULL can't follow a JOIN</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why can't INNER JOIN be used to build an anti-join?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>INNER JOIN is slower than LEFT JOIN</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>INNER JOIN only keeps rows that already matched, so unmatched rows never exist in its result to filter for</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>INNER JOIN doesn't support the ON clause</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>INNER JOIN can only be used with two tables</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does WITH dept_avg AS (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) create?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A permanent new table in the database</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A temporary, named result set (CTE) that the main query can reference like a table</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An index on the student table</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A view that persists after the session ends</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is the main advantage of a CTE over repeating the same subquery in multiple places?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CTEs execute in parallel across servers automatically</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>You define the calculation once and reference it multiple times, improving readability and making changes easier</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>CTEs are the only way to use GROUP BY</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>CTEs automatically create an index</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In a CASE WHEN ... THEN ... ELSE ... END expression, what happens once a WHEN condition evaluates to true?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>All remaining WHEN conditions are still checked and the last true one wins</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The corresponding THEN result is returned immediately and no further WHEN conditions are checked</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The query raises an error</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The ELSE clause is used instead</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why does condition order matter in a CASE expression like the class_year example (tot_cred >= 90 THEN 'Senior' listed before tot_cred >= 30 THEN 'Sophomore')?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It doesn't matter; PostgreSQL checks all conditions and picks the most specific one</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>If the broader condition (>= 30) were listed first, a student with 90+ credits would match it first and never reach the 'Senior' branch</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>CASE expressions require WHEN clauses in alphabetical order</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Order only matters when ELSE is omitted</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Can a CASE expression's result be used in GROUP BY, like grouping students by their computed class_year label?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No, CASE expressions can only appear in SELECT, never in GROUP BY</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Yes — the CASE expression's alias can be referenced in GROUP BY and ORDER BY just like a normal column</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only if the CASE expression is inside a CTE first</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only with the crosstab() extension enabled</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 1, 1, 1, 1, 1, 1];
+var FEEDBACKS=["An anti-join needs a LEFT or RIGHT JOIN, because it relies on unmatched rows showing up with NULLs on the other side.","With no matching takes row, takes.student_id comes back NULL, so this filters to students who never appear in takes — i.e. never took a course.","INNER JOIN drops any row that didn't find a match, so there's nothing left in the result to test for 'no match' with IS NULL.","WITH dept_avg AS (...) defines a Common Table Expression: a named, temporary result the main query can FROM/JOIN just like a table, valid only for that one query.","A CTE lets you name a calculation once and reuse it, avoiding duplicated subqueries and making later changes a one-place edit.","CASE evaluates WHEN conditions top to bottom and stops at the first true one — later conditions are never checked for that row.","Because tot_cred >= 30 is true for a 90-credit student too, putting it first would catch that student before the more specific 'Senior' branch is ever reached.","A CASE expression's alias behaves like any other computed column, so it can be referenced in GROUP BY, ORDER BY, or WHERE (via a subquery/CTE) just like a normal column."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">anti-join</div>
+      <div class="term-en">アンチ結合</div>
+      <div class="term-def">LEFT JOIN + WHERE ... IS NULLで「片方にしかない行」を探す手法。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">CTE (Common Table Expression)</div>
+      <div class="term-en">共通テーブル式</div>
+      <div class="term-def">WITH 名前 AS (...)で定義する、一時的な名前付きサブクエリ。本体から何度でも参照できる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">derived table</div>
+      <div class="term-en">派生テーブル</div>
+      <div class="term-def">FROM句に直接書かれたサブクエリ。CTEとほぼ同じ目的だが名前を先に付けられない。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">CASE expression</div>
+      <div class="term-en">CASE式</div>
+      <div class="term-def">WHEN条件THEN結果を上から順に評価し、最初にtrueになったものを返す条件分岐式。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>アンチ結合・CTE・CASE式はどれも「今まで学んだJOIN・サブクエリの発展形」です。まずはこれまでのM6レッスンを復習してから読むと理解しやすいです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧩 SQLレッスン：M6+ アンチ結合・CTE・CASE式（教科書7章・13章）</p>
+  <p style="margin-top:.5rem;"><a href="subqueries_strategy.html">← サブクエリ③</a> · <a href="index.html">🏠 概要へ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

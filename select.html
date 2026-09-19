@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Select statement — SELECT文の基本とワイルドカード</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M3 🔍 Select <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Select statement</div>
+  <h1>🔍 SELECT文 — クエリの基本</h1>
+  <p>「select what from where（何を・どこから）」——すべてのクエリの土台になる SELECT 文と、全列を表すワイルドカード <code>*</code> を学ぶ。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① クエリとは何か</a><a href="#unit2">② 列を指定する</a><a href="#unit3">③ ワイルドカード *</a><a href="#unit4">④ この先の流れ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>クエリとは何か</h2><div class="unit-sub">データに「質問」をすること＝フィルタリング</div></div>
+  </div>
+  <p><strong>クエリ（query）</strong>とは、データに対して質問をすることです。そしてSQLでその質問を投げる道具が<strong>SELECT文</strong>です。教科書ではこれを「<strong>フィルタリング（filtering）</strong>」と表現します。Excelでフィルタをかけたことがあれば、イメージは同じです——余分なデータを取り除き、今の自分に必要なデータだけを表示する、ということです。</p>
+  <div class="note-box">📌 <strong>このモジュールのキーワードは「フィルタ」の一言です。</strong>大量のデータ（このレッスンで使う<code>sales</code>テーブルは約2,823行）から、どうやって欲しいものだけに絞り込むか——それがこれから学ぶ全コマンドの共通テーマです。絞り込む対象は「列」か「行」のどちらかしかありません。</div>
+  <h3>覚えるべき語順：select what from where</h3>
+  <p>SELECT文の思考の型はいたってシンプルです。</p>
+  <div class="viz">
+    <div class="viz-title">SELECT文の考え方</div>
+    <div class="flow-diagram">
+      <div class="flow-box">SELECT<br><small>何を？</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">列名 または *<br><small>取り出したい列</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">FROM<br><small>どこから？</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">テーブル名<br><small>データの置き場所</small></div>
+    </div>
+    <div class="viz-cap">「select what from where」＝「何を、どこから」。この語順が全クエリの骨格になる。</div>
+  </div>
+  <p>日本語や英語では「売上テーブルからバイクの売上を全部見たい」と言いますが、SQLでは必ず<strong>「何を（SELECT）→ どこから（FROM）」</strong>の順番で書きます。この語順が体に染み込むまで、何度も手を動かして練習してください。ここが崩れると、この先のORDER BYやWHEREを積み上げたときに必ず混乱します。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>クエリ＝データへの質問。SELECT文は「何を、どこから」の2つを答えるだけ。まずこの型を覚えます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>列を指定して取り出す</h2><div class="unit-sub">カンマ区切りで複数列——ただしカッコは付けない</div></div>
+  </div>
+  <h3>1列だけ取り出す</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> order_num</span>
+<span class="cl"><span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">order_num
+---------
+    10100
+    10101
+    10102
+   ... (2383 rows)</div>
+  <p>これで<code>sales</code>テーブルの<code>order_num</code>列だけが返ってきます。<strong>行数は減りません</strong>——2,823行すべてが返り、表示される列が1本に絞られただけです。ここが重要な点で、SELECTで絞っているのはあくまで<strong>列</strong>です。</p>
+  <h3>複数の列を取り出す</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> order_num, quantity, price</span>
+<span class="cl"><span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">order_num | quantity | price
+----------+----------+-------
+    10100 |       30 |  $50.5
+    10101 |       25 | $100.0</div>
+  <p>複数の列が欲しいときは<strong>カンマで区切って並べる</strong>だけです。2列でも3列でも4列でも、必要なだけ書けます。</p>
+  <div class="warn-box">⚠️ <strong>INSERTとの違いに注意：</strong>INSERT文では<code>INSERT INTO sales (order_num, quantity)</code>のように列名をカッコで囲みました。しかしSELECTでは<strong>カッコを付けてはいけません</strong>。<code>SELECT (order_num, quantity) FROM sales;</code>と書くと、カッコが「グループ化」として解釈され、<code>(10100,30)</code>のように1つの塊にまとめられた奇妙な結果が返ってきます。<strong>データを入れるINSERTはカッコあり、データを取り出すSELECTはカッコなし</strong>と覚えましょう。</div>
+  <h3>なぜ列を絞るのか</h3>
+  <p>「全部見ればいいのでは？」と思うかもしれません。しかし実務では、地域別・売上額別・日付別・担当者別などで<strong>集計</strong>したいとき、関係のない列が並んでいると読みにくく、扱いにくくなります。データサイエンスの分析でも、興味があるのは相関を調べたい3〜4列だけ、ということがほとんどです。必要な列だけを取り出し、それを整えてから次の処理へ渡す——この流れが基本です。</p>
+  <div class="note-box">💡 <strong>なぜExcelではなくSQLなのか：</strong>2,823行程度ならExcelでもできます。しかし数十万行になると、Excelでは現実的に扱えません。データベースは大量データの保管・整理・抽出のための道具です。SQLで絞り込んでからPythonなどにエクスポートする、というのがこの先の典型的なワークフローです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>欲しい列名をカンマで並べるだけ。カッコは付けない（付けると1つの塊にまとめられてしまう）。行数は減らず、列だけが絞られます。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>ワイルドカード <code>*</code> — 全部を表す記号</h2><div class="unit-sub">アスタリスク1文字で「全列」</div></div>
+  </div>
+  <p><strong>ワイルドカード（wild card）</strong>とは、具体的な値の代わりに置く「なんでもあり」の記号のことです。SELECT文で最初に出会うワイルドカードが<strong>アスタリスク <code>*</code></strong> で、これは<strong>「すべての列」</strong>を意味します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> sales;</span>
+</pre><div class="output-reveal">order_num | quantity | price | order_date | region | ...
+----------+----------+-------+------------+--------+----
+    10100 |       30 | $50.5 | 2003-01-06 | EMEA   | ...
+   ... 全列 × 2383行</div>
+  <p><code>*</code>は、列名をすべてカンマ区切りで書き並べる代わりの省略記法です。テーブルの中身をひととおり眺めたいとき、まずこれを実行するのが定石です。全列・全行が返ってくるので、テーブル全体がそのまま表示されます。</p>
+  <h3><code>public.</code> は何者か</h3>
+  <p>pgAdminで「View/Edit All Rows」を実行すると、次のようなSQLが自動生成されます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> public.sales;</span>
+<span class="cl"><span class="cm">-- public. は省略しても同じ結果になる</span></span>
+</pre>
+  <p>先頭の<code>public.</code>は<strong>スキーマ（schema）</strong>名です。<code>public</code>は誰でもアクセスできる既定のスキーマなので、今の段階では<strong>省略して構いません</strong>。<code>SELECT * FROM sales;</code>でも全く同じ結果になります。</p>
+  <div class="teal-box">📌 スキーマは主に<strong>アクセス制御</strong>のために使います。全員が見てよいデータは<code>public</code>に、限られた人だけが見るべきデータは別のスキーマに置き、権限を設定する——といった使い分けです。詳しくは後のコースで扱いますが、「<code>public.</code>＝公開スキーマの意味」とだけ押さえておきましょう。</div>
+  <div class="note-box">✍️ <strong>書式の自由度：</strong>SQLは空白や改行に寛容です。<code>SELECT order_num , quantity FROM sales ;</code>のように余分なスペースが入っても正しく動きます。ただし読みやすさのため、キーワードは大文字、句ごとに改行するのが一般的なスタイルです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>*</code>は「全列ください」の記号。<code>SELECT * FROM テーブル名;</code>でテーブル全体が見られます。<code>public.</code>は省略OK。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>この先の学習の流れ</h2><div class="unit-sub">列で絞る → 並べ替える → 行で絞る</div></div>
+  </div>
+  <p>これから学ぶコマンドには、<strong>論理的な順序</strong>があります。バラバラな知識として覚えるのではなく、「絞り込みの段階が進んでいく」と捉えると迷いません。</p>
+  <div class="viz">
+    <div class="viz-title">M3・M4 のロードマップ</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🔍</span><div class="step-text"><strong>① SELECT — 列で絞る</strong><span>まず「どの列を見るか」を決める（今ここ）</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔽</span><div class="step-text"><strong>② ORDER BY — 並べ替える</strong><span>昇順・降順に整理する</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">✨</span><div class="step-text"><strong>③ DISTINCT — 重複を消す</strong><span>ここから「行」の絞り込みに入る</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🎯</span><div class="step-text"><strong>④ WHERE — 条件で行を絞る</strong><span>比較演算子（&gt; &lt; =）で条件を書く</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔗</span><div class="step-text"><strong>⑤ 論理演算子・LIKE</strong><span>AND/OR/BETWEEN/IN、文字パターン検索</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">➗</span><div class="step-text"><strong>⑥ 別名(AS)と列の計算（M4）</strong><span>新しい値を作り、名前を付ける</span></div></div>
+    </div>
+    <div class="viz-cap">列 → 行 の順に narrow down していく。SELECTは常にその出発点。</div>
+  </div>
+  <div class="teal-box">📌 <strong>「列が先、行が後」</strong>——これが絞り込みの大原則です。まず「どの列を見るのか」を決め、その上で「どの行を残すのか」を考えます。この順序が頭に入っていれば、複雑なクエリでも組み立て方に迷いません。</div>
+  <div class="warn-box">⚠️ <strong>ここは全クエリの土台です。</strong>急いで読み飛ばすと、この先のサブクエリなどで必ず行き詰まります。<code>sales</code>テーブルで列を変え、列数を変え、何度も繰り返し実行して「select what from where」を体に入れてください。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>学ぶ順番＝絞り込みが細かくなる順番。まず列（SELECT）、次に並べ替え（ORDER BY）、最後に行（DISTINCT・WHERE）です。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A query is best described as:</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A way of asking a question of your data</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A command that permanently deletes unwanted table columns</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A backup copy of a table stored in the public schema</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A rule that restricts which users may read a table</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which phrase captures the required order of a basic SELECT statement?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>From where, select what</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Select what, from where</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Where from, what select</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Table first, then columns</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you request several specific columns in one SELECT statement?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Separate the column names with commas</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Wrap the column names in parentheses</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Write one separate SELECT per column</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Separate the column names with semicolons</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What happens if you write SELECT (order_num, quantity) FROM sales;?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The values get grouped together into one odd combined column</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It returns exactly the same two clean separate columns</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The parentheses make the query run considerably faster</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Postgres silently drops the second column from the output</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In SELECT * FROM sales;, what does the asterisk mean?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only the first column of the table</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Every column in the table</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A comment marker that is ignored</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Multiplication of the numeric columns</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Selecting a single column from a 2,823-row table returns how many rows?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only one row</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the rows with no NULL values in them</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All 2,823 rows</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The first 100 rows by default</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">What does the "public." prefix in "SELECT * FROM public.sales;" refer to?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The schema the table lives in</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A required keyword for every SELECT</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The name of the database server</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A flag that makes the results shareable</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Which describes the logical order of the tools taught in this module?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Rows are always filtered before any columns are chosen</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Columns first, then ordering, then filtering rows</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Sorting must always be done before selecting any column</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The order of these commands makes no difference at all</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 0, 1, 2, 0, 1];
+var FEEDBACKS=["A query asks a question of the data. The book frames it as filtering — removing what you don't need so you only see what matters.","The structure is always \"select what, from where\": SELECT names the columns, FROM names the table.","Multiple columns are simply listed and separated by commas.","Parentheses act as a grouping function in a SELECT, producing one combined value like (10100,30) instead of two columns. Only INSERT uses parentheses for a column list.","The asterisk is a wildcard meaning every column — shorthand for typing out all column names.","SELECT with a column list filters columns, not rows. All 2,823 rows still come back, just with fewer columns shown.","public is the default schema. It can be omitted here; schemas matter later for access control.","You narrow columns first (SELECT), then organise them (ORDER BY), then cut rows down (DISTINCT, WHERE)."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">query</div>
+      <div class="term-en">クエリ／問い合わせ</div>
+      <div class="term-def">データに質問を投げること。SELECT文がその手段。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">SELECT</div>
+      <div class="term-en">選択する</div>
+      <div class="term-def">取り出したい列を指定するキーワード。すべてのクエリの起点。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">FROM</div>
+      <div class="term-en">〜から</div>
+      <div class="term-def">データを取り出すテーブルを指定するキーワード。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">wild card (*)</div>
+      <div class="term-en">ワイルドカード</div>
+      <div class="term-def">「すべての列」を表すアスタリスク。列名を全部書く代わりになる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">schema</div>
+      <div class="term-en">スキーマ</div>
+      <div class="term-def">テーブルをまとめる名前空間。<code>public</code>が既定で、アクセス制御に使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">filtering</div>
+      <div class="term-en">フィルタリング</div>
+      <div class="term-def">必要なデータだけを残す操作。列と行の2方向がある。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>「select what from where」を口に出して唱えながら、列を変えて何度も実行してみましょう。この型が自動化されると、ORDER BYやWHEREは自然に積み上がります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔍 SQLレッスン：SELECT文 — クエリの基本</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要に戻る</a> · <a href="order_by.html">次：ORDER BY →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

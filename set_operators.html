@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 集合演算子 — UNION・INTERSECT・EXCEPT</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 ➕ 集合演算子 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Set Operators</div>
+  <h1>➕ 集合演算子（UNION・INTERSECT・EXCEPT）</h1>
+  <p><strong>JOIN</strong>は別々のテーブルの列を<strong>横に並べる</strong>操作でした。それに対して<strong>集合演算子（set operator）</strong>は、<strong>形（列数・列の型）が同じ2つのクエリの結果を、行として重ねたり比較したりする</strong>操作です。JOINは「テーブル」を参照しますが、集合演算子は「クエリ（SELECT文）」同士を組み合わせる点も大きな違いです。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① JOINとSET演算子の違い</a><a href="#unit2">② UNION</a><a href="#unit3">③ INTERSECT</a><a href="#unit4">④ EXCEPT</a><a href="#unit5">⑤ ルールとALL</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>JOINとSET演算子の違い</h2><div class="unit-sub">「横に並べる」か「縦に重ねる」か</div></div>
+  </div>
+  <p>たとえば<code>teaches</code>（誰がどの授業を教えているか）と<code>takes</code>（誰がどの授業を受けているか）から、両方の<code>course_id</code>を見たいとします。</p>
+  <p><strong>JOIN</strong>を使うと、2つのテーブルの<code>course_id</code>列を条件で結び付けて、<strong>1行の中に両方の列を並べて</strong>表示します。「instructorの列」と「studentの列」が横に並ぶだけで、データそのものが混ざり合うわけではありません。</p>
+  <p>一方<strong>集合演算子</strong>を使うと、「teachesのcourse_id」と「takesのcourse_id」を<strong>1本の列に統合し、重複を除いたユニークな行のリスト</strong>として返します。列を横に増やすのではなく、行を縦に積み重ねる（または比較する）イメージです。</p>
+  <div class="viz">
+    <div class="viz-title">JOIN＝横に並べる／SET演算子＝縦に重ねる</div>
+    <div class="flow-diagram">
+      <div class="flow-box input">teaches.course_id</div>
+      <div class="flow-arrow">＋</div>
+      <div class="flow-box input">takes.course_id</div>
+    </div>
+    <p style="text-align:center;margin:.5rem 0;color:var(--text-light);font-size:.9rem">JOIN → 1行に2列として並ぶ（同じ行に instructor 側 course_id と student 側 course_id）</p>
+    <p style="text-align:center;margin:.5rem 0;color:var(--text-light);font-size:.9rem">SET演算子（UNIONなど） → 1列にまとめて重複を除いた行のリストになる</p>
+  </div>
+  <table class="compare-table">
+    <tr><th></th><th>JOIN</th><th>集合演算子（UNION/INTERSECT/EXCEPT）</th></tr>
+    <tr><td>組み合わせ方</td><td>列を横に並べる</td><td>行を縦に重ねる／比較する</td></tr>
+    <tr><td>対象</td><td>テーブル（キーで結合）</td><td>クエリ（SELECT文の結果）</td></tr>
+    <tr><td>重複行</td><td>自動では除去しない</td><td>自動で除去する（ALLを付けない限り）</td></tr>
+    <tr><td>順序</td><td>LEFT/RIGHTで結果が変わる</td><td>基本は順序を問わない（EXCEPTだけ例外）</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>JOINはテーブルの列を横に並べる。集合演算子は2つのクエリの行を縦に重ねたり比べたりする。集合演算子は自動的に重複を消す。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>UNION（行を結合する）</h2><div class="unit-sub">両方に存在する行をすべて集める</div></div>
+  </div>
+  <p><code>UNION</code>は、2つのクエリの結果を<strong>すべて合体させ、重複を除いたユニークな一覧</strong>を作ります。「教えられている、または受講されているコースを全部見たい」というときに使えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> teaches</span>
+<span class="cl"><span class="kw">UNION</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes</span>
+<span class="cl"><span class="kw">ORDER BY</span> course_id;</span>
+</pre><div class="output-reveal">course_id
+----------
+CS-101
+CS-190
+CS-315
+...
+(85 rows)</div>
+  <p>teachesが100件、takesが30,000件あっても、UNIONは重複を除いて<strong>「教えられている、または受講されているコースの種類」</strong>だけを返すので、結果はずっと少なくなります（この例では85種類）。</p>
+  <div class="warn-box">⚠️ <strong>UNIONにWHEREを付けるときは要注意。</strong>片方のクエリだけに条件（例：<code>WHERE year = 2009</code>）を付けても、もう片方のクエリは絞り込まれないため、結果がほとんど変わらないことがあります。両方のクエリに同じ条件を書くか、後述のINTERSECTを検討しましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>UNIONは2つのクエリの結果を1つのリストにまとめ、重複を除きます。「どちらかにあれば含める」という演算子です。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>INTERSECT（共通する行）</h2><div class="unit-sub">両方のクエリに存在する行だけを残す</div></div>
+  </div>
+  <p><code>INTERSECT</code>は、<strong>両方のクエリの結果に共通して存在する行だけ</strong>を返します。ベン図でいう「重なった部分」だけです。</p>
+  <p>例えば「前提科目（prereq）を持ち、かつ実際に教えられている（teaches）コース」を調べたいとします。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> prereq</span>
+<span class="cl"><span class="kw">INTERSECT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> teaches</span>
+<span class="cl"><span class="kw">WHERE</span> year = <span class="nm">2009</span>;</span>
+</pre><div class="output-reveal">course_id
+----------
+CS-101
+CS-190
+CS-315
+(3 rows)</div>
+  <p>先ほどのUNIONの例で「WHEREを片方に付けても絞り込めない」という問題がありましたが、INTERSECTなら<strong>両方のクエリに存在する行だけが残る</strong>ため、片方のクエリだけに<code>WHERE year = 2009</code>を付けても正しく絞り込めます——結局「2009年に教えられていたコース」に自然と限定されるからです。</p>
+  <div class="teal-box">📌 <strong>INTERSECTはWHERE句をどちらのクエリに置くかが重要です。</strong>ただし列自体が存在しないクエリには置けません——例えば<code>prereq(course_id, prereq_id)</code>には<code>year</code>列が無いので、<code>WHERE year = 2009</code>は<code>teaches</code>側のクエリに書く必要があります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INTERSECTは「両方のクエリに存在する行」だけを返します。片方だけにある行は消えます。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>EXCEPT（差集合・順序に注意）</h2><div class="unit-sub">1番目のクエリから2番目のクエリの行を引く</div></div>
+  </div>
+  <p><code>EXCEPT</code>は、<strong>1つ目のクエリの結果から、2つ目のクエリにも存在する行を取り除いた</strong>結果を返します。「A EXCEPT B」は「AにあってBに無いもの」で、イメージとしては<strong>A − B</strong>です。</p>
+  <p>例えば「前提科目が設定されていないコース」を知りたいとき、<strong>全コース</strong>から<strong>前提科目テーブルに登場するコース</strong>を引きます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> course</span>
+<span class="cl"><span class="kw">EXCEPT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> prereq;</span>
+</pre><div class="output-reveal">course_id
+----------
+CS-001
+CS-002
+CS-005
+...
+(121 rows)</div>
+  <p>courseテーブルには200件あり、prereqには重複を含めて（同じコースに複数の前提科目があるため）ユニークなcourse_idが約100件ほど登場します。結果として、EXCEPTで残るのは<strong>121件</strong>——「前提科目が1つも設定されていないコース」です。</p>
+  <div class="warn-box">⚠️ <strong>EXCEPTだけはUNIONやINTERSECTと違い、クエリの順序を入れ替えると結果が変わります。</strong><code>A EXCEPT B</code>は「Aのうち、Bに無いもの」ですが、<code>B EXCEPT A</code>は「Bのうち、Aに無いもの」——まったく別の結果です。
+  <pre class="code-block" style="margin-top:.75rem">
+<span class="cl"><span class="cm">-- 全コースから、前提科目テーブルにあるコースを引く → 121件</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> course <span class="kw">EXCEPT</span> <span class="kw">SELECT</span> course_id <span class="kw">FROM</span> prereq;</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 順序を逆にすると…</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> prereq <span class="kw">EXCEPT</span> <span class="kw">SELECT</span> course_id <span class="kw">FROM</span> course;</span>
+</pre><div class="output-reveal">course_id
+----------
+(0 rows)</div>
+  prereqに登場するコースIDは、すべてcourseテーブルにも存在するため（外部キーの制約上当然）、「prereqにあってcourseに無いもの」は<strong>0件</strong>になります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>EXCEPTは「A − B」。1つ目のクエリから2つ目のクエリと重なる行を取り除きます。順番を変えると答えも変わる、UNION/INTERSECTには無い特徴です。</p></div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>ルールとALLキーワード</h2><div class="unit-sub">列数・データ型を揃える／重複行の扱い</div></div>
+  </div>
+  <p>集合演算子を使うための基本ルールは2つだけです。</p>
+  <ol>
+    <li><strong>2つのクエリの列数（SELECTする列の数）が一致していること</strong></li>
+    <li><strong>対応する列同士のデータ型が互換であること</strong>（列名が同じである必要はない）</li>
+  </ol>
+  <p>JOINでは列の型がずれていても「キーが一致するか」さえ分かれば結合できますが、集合演算子は<strong>列を1本に統合してしまう</strong>ため、型が揃っていないと「重複かどうか」「存在するかどうか」を判定できません。例えば1つ目のクエリの<code>course_id</code>が整数型、2つ目が文字列型だと、SQLはこの2つを同じ値として比較できず、エラーになります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 基本構文</span></span>
+<span class="cl"><span class="kw">SELECT</span> col1, col2 <span class="kw">FROM</span> table_a</span>
+<span class="cl"><span class="kw">UNION</span> <span class="cm">-- または INTERSECT / EXCEPT（+ ALL も可）</span></span>
+<span class="cl"><span class="kw">SELECT</span> col1, col2 <span class="kw">FROM</span> table_b</span>
+<span class="cl"><span class="kw">ORDER BY</span> col1; <span class="cm">-- ORDER BYは最後に1回だけ</span></span>
+</pre>
+  <div class="teal-box">📌 <strong>UNION ALL / INTERSECT ALL / EXCEPT ALLは重複行を残します。</strong>通常のUNION・INTERSECT・EXCEPTは結果から重複行を自動で取り除きますが、時系列イベントの繰り返しなど「重複そのものが意味を持つ」データでは、<code>ALL</code>を付けることで元の重複を保持できます。例えばteachesとtakesを<code>UNION</code>すると重複が除かれた一覧になりますが、<code>UNION ALL</code>にすると片方が30,000件・もう片方が100件なら、合計30,100件がそのまま返ります。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> teaches</span>
+<span class="cl"><span class="kw">UNION ALL</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes;</span>
+</pre><div class="output-reveal">course_id
+----------
+... (重複を含む)
+(30100 rows)</div>
+  <table class="compare-table">
+    <tr><th>演算子</th><th>重複の扱い</th><th>順序</th></tr>
+    <tr><td>UNION</td><td>除去</td><td>問わない</td></tr>
+    <tr><td>UNION ALL</td><td>保持</td><td>問わない</td></tr>
+    <tr><td>INTERSECT</td><td>除去</td><td>問わない</td></tr>
+    <tr><td>EXCEPT</td><td>除去</td><td><strong>重要：A EXCEPT B ≠ B EXCEPT A</strong></td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>2つのクエリは列数とデータ型を揃える。ALLを付けると重複を消さずに全部残す。EXCEPTだけは順序で結果が変わるので要注意。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the key difference between a JOIN and a set operator like UNION?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>JOIN combines columns side by side; UNION merges rows from two queries</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They are exactly the same operation</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>JOIN only works on one table</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>UNION requires a foreign key</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does UNION return by default?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only rows present in both queries</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All rows from both queries combined, with duplicates removed</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only rows from the first query</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A Cartesian product of both queries</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">INTERSECT returns which rows?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Rows that appear in the first query but not the second</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rows that appear in either query</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows that appear in both queries</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Rows that appear in neither query</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does A EXCEPT B return?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Rows in B that are not in A</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rows in A that are not in B</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows in both A and B</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>All rows from A and B combined</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Is A EXCEPT B the same as B EXCEPT A?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes, EXCEPT is always commutative</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No — EXCEPT is order-sensitive and can give very different results</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Yes, but only when using ALL</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They always both return zero rows</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does the ALL keyword do when added to UNION, INTERSECT, or EXCEPT?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It sorts the results alphabetically</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It keeps duplicate rows instead of removing them</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It joins every table in the database</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It converts the query into a JOIN</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">For two queries to be combined with a set operator, what must match?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The table names must be identical</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The number of columns and their data types must be compatible</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The column names must be identical</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Both queries must use WHERE clauses</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why might adding WHERE year = 2009 to only one side of a UNION fail to filter the combined result as expected?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>UNION ignores WHERE clauses entirely</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The other, unfiltered query still contributes its full set of rows to the merged result</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE can only be used with INTERSECT</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>UNION requires WHERE to appear before SELECT</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 2, 1, 1, 1, 1, 1];
+var FEEDBACKS=["JOIN puts columns from related tables side by side in one row; UNION merges rows from two queries into one combined list.","UNION combines the rows of both queries into one list and removes duplicate rows by default.","INTERSECT keeps only the rows that appear in both queries — the overlap of the two result sets.","A EXCEPT B keeps the rows that are in A but removes any that also appear in B — think of it as A minus B.","EXCEPT is the one set operator where order matters: A EXCEPT B and B EXCEPT A can return completely different rows.","ALL disables the automatic duplicate removal, so every matching row from both queries is kept, including repeats.","Set operators need the same number of columns in both queries, with data types that are compatible column by column; column names don't need to match.","Because UNION still includes every row from the query without the filter, the merged list ends up almost as large as if no filter were applied at all."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">set operator</div>
+      <div class="term-en">集合演算子</div>
+      <div class="term-def">2つのクエリの結果を行単位で合成・比較する演算子（UNION/INTERSECT/EXCEPT）。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">UNION</div>
+      <div class="term-en">和集合</div>
+      <div class="term-def">両方のクエリの行をすべて合わせ、重複を除いたリストを返す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">INTERSECT</div>
+      <div class="term-en">積集合</div>
+      <div class="term-def">両方のクエリに共通して存在する行だけを返す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">EXCEPT</div>
+      <div class="term-en">差集合</div>
+      <div class="term-def">1つ目のクエリから、2つ目のクエリにもある行を取り除く。順序が結果を左右する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">UNION ALL</div>
+      <div class="term-en">重複を残すUNION</div>
+      <div class="term-def">重複除去をせず、両方のクエリの行をすべてそのまま残す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">compatible data type</div>
+      <div class="term-en">互換のあるデータ型</div>
+      <div class="term-def">列名は違ってもよいが、対応する列同士の型はSQLが比較できるものである必要がある。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>迷ったらまず2つのクエリを別々に実行し、<strong>列数と型が一致しているか</strong>を目で確認してから演算子でつなぎましょう。EXCEPTだけは順序を変えて2回試してみると理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>➕ SQLレッスン：M6 集合演算子</p>
+  <p style="margin-top:.5rem;"><a href="joins_relationships.html">← テーブルの関係とJOIN</a> · <a href="subqueries_basics.html">サブクエリへ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

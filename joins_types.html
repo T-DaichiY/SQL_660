@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 JOINの基本と種類</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 🔗 JOINの種類 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Joins & Join Types</div>
+  <h1>🔗 JOINの基本と種類</h1>
+  <p>これまでのモジュールでは、常に<strong>1つのテーブル</strong>だけを相手にクエリを書いてきました。でも実際のデータベースは、<code>student</code>や<code>takes</code>のように役割ごとに分かれた小さなテーブルの集まりです。ここからは、複数のテーブルを<strong>JOIN（結合）</strong>で繋げて、1つの結果として取り出す方法を学びます。JOINはSQLの中でも最も強力な機能のひとつで、これができるようになると「学生ごとの履修一覧」「教員ごとの担当授業」といった実用的なレポートが作れるようになります。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① JOINとは何か</a><a href="#unit2">② 主キーと外部キー</a><a href="#unit3">③ 基本のJOIN構文</a><a href="#unit4">④ 5種類のJOIN</a><a href="#unit5">⑤ 実例で比較する</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>JOINとは何か（結合の考え方）</h2><div class="unit-sub">複数テーブルのデータを1つの結果にまとめる</div></div>
+  </div>
+  <p><strong>JOIN（結合）</strong>とは、複数のテーブルにまたがるデータを、<strong>共通の列</strong>を手がかりにして1つの結果として取り出す操作です。たとえば顧客テーブル<code>customers</code>と注文テーブル<code>orders</code>があるとき、どちらのテーブルにも<code>customer_id</code>という列があれば、その値が一致する行同士を結びつけて「どの顧客が何を注文したか」を1つの表として見ることができます。</p>
+  <p>なぜテーブルを最初から1つの巨大な表にまとめておかないのでしょうか。理由は、データが重複してしまい管理が煩雑になるからです。顧客情報を注文のたびに毎回書き写していたら、名前を1つ変更するだけで何百行も修正することになります。そこで、テーブルを役割ごとに小さく分割し（顧客はcustomersに、注文はordersに）、必要なときだけJOINで結びつける、という設計が使われます。</p>
+  <div class="viz">
+    <div class="viz-title">JOINの基本アイデア</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🧑</span><div class="step-text"><strong>customersテーブル</strong><span>customer_id（PK）, first_name ... 各顧客が1行、customer_idは重複しない</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🧾</span><div class="step-text"><strong>ordersテーブル</strong><span>order_id, customer_id（FK）, amount ... 同じcustomer_idが複数回出てくることもある</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔗</span><div class="step-text"><strong>customer_idが一致する行同士を結合</strong><span>両方に存在するcustomer_idだけが結果に現れる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">📋</span><div class="step-text"><strong>結果：顧客名＋注文金額の1つの表</strong><span>どのテーブルの列でも自由に選んで表示できる</span></div></div>
+    </div>
+    <div class="viz-cap">JOINは「共通の列の値が一致する行を、横に繋げる」操作。</div>
+  </div>
+  <div class="teal-box">📌 <strong>JOINは単に「両方に存在するか」を調べるだけでなく、一致した行に関連する他の列の値も一緒に取り出せます。</strong>これがJOINの真の強みです——存在確認と、値の取得を同時に行えます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>JOINは、共通の列（例：customer_id）を手がかりに、複数のテーブルを横に繋げて1つの結果として見る仕組みです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>主キーと外部キー・参照整合性</h2><div class="unit-sub">JOINが成立する理由</div></div>
+  </div>
+  <p>JOINがうまく機能する背景には、<strong>主キー（PRIMARY KEY）</strong>と<strong>外部キー（FOREIGN KEY）</strong>の関係があります。<code>customers.customer_id</code>は各顧客を一意に識別する<strong>主キー</strong>です——同じ値が2つの行に現れることはありません。一方、<code>orders.customer_id</code>は「この注文がどの顧客のものか」を示す<strong>外部キー</strong>で、こちらは同じ顧客が何度も注文できるので値が繰り返し現れます。</p>
+  <p>ここで重要になるのが<strong>参照整合性（referential integrity）</strong>という考え方です。もし<code>orders</code>テーブルの<code>customer_id</code>列に外部キー制約を付けているなら、その値は必ず<code>customers</code>テーブルに存在する<code>customer_id</code>（または<code>NULL</code>）でなければなりません。つまり「顧客として登録されていない人の注文」はデータベースのレベルで作れなくなります。</p>
+  <div class="flow-diagram">
+    <div class="flow-box input">takes<br><small>student_id（FK）</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box output">student<br><small>student_id（PK）</small></div>
+  </div>
+  <p>University データベースで言えば、<code>takes.student_id</code>（外部キー）は必ず<code>student.student_id</code>（主キー）のどれかを指していなければならない、という関係です。この矢印の向き——FKからPKへ——を覚えておくと、ER図の読み方にもそのまま応用できます。</p>
+  <div class="warn-box">⚠️ <strong>参照整合性とは、外部キーの値が参照先の主キーに実在するか、またはNULLでなければならない、というルールです。</strong>これが守られていないと、「存在しない学生の履修記録」のような矛盾したデータが生まれてしまいます。制約として設定していなくても、JOINを書くときはこの前提が成り立っているかを常に意識しましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>主キーは「その表で1つしかない値」、外部キーは「他の表の主キーを指す値」。外部キーの値は必ず参照先に存在する（参照整合性）——だからJOINで確実に相手が見つかります。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>基本のJOIN構文（ON句）</h2><div class="unit-sub">student と takes を実際に結合する</div></div>
+  </div>
+  <p>JOINの基本構文は次の形です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> 列名 <span class="kw">FROM</span> テーブルA <span class="kw">JOIN</span> テーブルB <span class="kw">ON</span> テーブルA.共通列 = テーブルB.共通列;</span>
+</pre>
+  <p>University データベースの<code>student</code>テーブルには2,000件の学生レコードがあり、<code>takes</code>テーブルには学生がどの科目を履修したかが記録されています。両方に<code>student_id</code>列があるので、これを手がかりにJOINできます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> student.name, takes.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id;</span>
+</pre><div class="output-reveal">     name      | course_id
+----------------+-----------
+ Zhang          | CS-101
+ Zhang          | CS-347
+ Shankar        | CS-101
+ Shankar        | CS-190
+ Levy           | CS-101
+ Levy           | CS-315
+ Brandt         | EE-181
+ ...
+(~30000 rows)</div>
+  <p><code>student</code>テーブルは2,000行しかありませんが、結合結果はそれよりはるかに多い約30,000行になります。これは1人の学生が複数の科目を履修しているため、その分だけ行が増えるからです。</p>
+  <div class="warn-box">⚠️ <strong>なぜ<code>student.student_id</code>のようにテーブル名を付ける必要があるのか。</strong><code>student</code>にも<code>takes</code>にも<code>student_id</code>という同じ名前の列があるため、単に<code>student_id</code>とだけ書くと「どちらのテーブルの列か分からない」というエラーになります。<code>student.name</code>や<code>takes.course_id</code>のように、<strong>重複する列名だけ</strong>テーブル名で修飾すれば十分です。重複していない列（<code>name</code>など片方にしかない列）は修飾しなくても動きますが、書いておいても害はありません。</div>
+  <div class="teal-box">📌 <strong>設計のコツ：</strong>テーブルをまたいで同じ意味の列には同じ名前を付ける（例：どちらも<code>student_id</code>）のが一般的です。ただしJOINするクエリでは、重複する列名を書くたびにどちらのテーブルか明示する必要がある、という点を忘れないようにしましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>FROM A JOIN B ON A.列 = B.列</code>が基本形。両方のテーブルに同じ列名（例：student_id）がある場合は、<code>テーブル名.列名</code>で必ず区別します。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>5種類のJOIN（Venn図で理解する）</h2><div class="unit-sub">INNER・LEFT・RIGHT・FULL OUTER・CROSS</div></div>
+  </div>
+  <p>ひとくちに「JOIN」と言っても、実は<strong>片方のテーブルにしか存在しない行をどう扱うか</strong>によって何種類かに分かれます。テーブルAとテーブルBを2つの円だと考えると、それぞれのJOINがどの部分を返すのかがイメージしやすくなります。</p>
+  <div class="venn-row">
+    <div class="venn-item">
+      <div class="venn-shape"><div class="venn-circle a dim"></div><div class="venn-circle b dim"></div></div>
+      <div class="venn-item-title">INNER JOIN</div>
+      <div class="venn-item-desc">両方に一致する行だけ</div>
+    </div>
+    <div class="venn-item">
+      <div class="venn-shape"><div class="venn-circle a"></div><div class="venn-circle b dim"></div></div>
+      <div class="venn-item-title">LEFT JOIN</div>
+      <div class="venn-item-desc">左の全行＋一致した右の値</div>
+    </div>
+    <div class="venn-item">
+      <div class="venn-shape"><div class="venn-circle a dim"></div><div class="venn-circle b"></div></div>
+      <div class="venn-item-title">RIGHT JOIN</div>
+      <div class="venn-item-desc">右の全行＋一致した左の値</div>
+    </div>
+    <div class="venn-item">
+      <div class="venn-shape"><div class="venn-circle a"></div><div class="venn-circle b"></div></div>
+      <div class="venn-item-title">FULL OUTER JOIN</div>
+      <div class="venn-item-desc">両方の全行（一致しない分はNULL）</div>
+    </div>
+    <div class="venn-item">
+      <div class="cross-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="venn-item-title">CROSS JOIN</div>
+      <div class="venn-item-desc">全組み合わせ（直積）</div>
+    </div>
+  </div>
+  <p class="viz-cap" style="text-align:center;margin-top:-.5rem;">中央が濃い部分＝一致する行、破線の円＝「片方だけの行は含まれない」ことを示す。CROSS JOINは重なりではなく全組み合わせなのでVenn図の形にならない。</p>
+  <p>実際に確認するため、<code>course</code>（200件）と<code>prereq</code>（100件、<code>course_id</code>と<code>prereq_id</code>のペア）を使って、各JOINの行数がどう変わるかを見てみましょう。<code>prereq</code>は「この科目を取るにはこの前提科目が必要」というデータで、前提科目を持たない科目もあります。</p>
+  <h3>① INNER JOIN（内部結合）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">JOIN</span> prereq <span class="kw">ON</span> course.course_id = prereq.course_id;</span>
+</pre><div class="output-reveal">course_id | title              | dept_name | credits | prereq_id
+----------+--------------------+-----------+---------+----------
+ CS-347   | Database System... | Comp. Sci.|    3    | CS-101
+ CS-315   | Robotics           | Comp. Sci.|    3    | CS-101
+ ...
+(100 rows)</div>
+  <p><code>JOIN</code>だけ書くと、既定で<code>INNER JOIN</code>と同じ意味になります。前提科目情報がある100件の科目だけが返ります——前提科目を持たない100件の科目は結果から消えます。</p>
+  <h3>② LEFT JOIN（左外部結合）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">LEFT JOIN</span> prereq <span class="kw">ON</span> course.course_id = prereq.course_id;</span>
+</pre><div class="output-reveal">course_id | title              | dept_name | credits | prereq_id
+----------+--------------------+-----------+---------+----------
+ BIO-101  | Intro. to Biology  | Biology   |    4    | NULL
+ CS-101   | Intro. to Computer.| Comp. Sci.|    4    | NULL
+ CS-347   | Database System... | Comp. Sci.|    3    | CS-101
+ ...
+(211 rows)</div>
+  <p>左のテーブル（<code>course</code>）は全200件が必ず残り、前提科目が無い科目には<code>prereq_id</code>に<code>NULL</code>が入ります。さらに1科目が複数の前提科目を持つこともあるため、行数は200を超えて211件になります。</p>
+  <h3>③ RIGHT JOIN（右外部結合）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> prereq <span class="kw">RIGHT JOIN</span> course <span class="kw">ON</span> prereq.course_id = course.course_id;</span>
+</pre><div class="output-reveal">course_id | prereq_id | title              | dept_name | credits
+----------+-----------+--------------------+-----------+---------
+ BIO-101  | NULL      | Intro. to Biology  | Biology   |    4
+ CS-347   | CS-101    | Database System... | Comp. Sci.|    3
+ ...
+(211 rows)</div>
+  <p>RIGHT JOINはLEFT JOINの左右を入れ替えただけです。ここでは右側に置いた<code>course</code>が全件残るので、結果はLEFT JOINで<code>course</code>を左に置いたときと同じ211件になります。</p>
+  <h3>④ FULL OUTER JOIN（完全外部結合）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">FULL OUTER JOIN</span> prereq <span class="kw">ON</span> course.course_id = prereq.course_id;</span>
+</pre><div class="output-reveal">course_id | title              | dept_name | credits | prereq_id
+----------+--------------------+-----------+---------+----------
+ BIO-101  | Intro. to Biology  | Biology   |    4    | NULL
+ CS-347   | Database System... | Comp. Sci.|    3    | CS-101
+ ...
+(211 rows)</div>
+  <p>今回はたまたま<code>prereq</code>側に<code>course</code>へ存在しない<code>course_id</code>が無いため、LEFT JOINと同じ211件になります。もし<code>prereq</code>に存在しない科目コードがあれば、それも両方のNULL埋めで含まれ、行数はさらに増えたはずです。</p>
+  <h3>⑤ CROSS JOIN（交差結合）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">CROSS JOIN</span> prereq;</span>
+</pre><div class="output-reveal">course_id | title              | ... | prereq_id
+----------+--------------------+-----+----------
+ CS-101   | Intro. to Computer.| ... | CS-101
+ CS-101   | Intro. to Computer.| ... | CS-190
+ CS-101   | Intro. to Computer.| ... | CS-315
+ ...
+(~20,000 rows)</div>
+  <p>CROSS JOINには<code>ON</code>句がありません——一致条件で絞り込むのではなく、<code>course</code>の200行それぞれに<code>prereq</code>の100行すべてを掛け合わせるからです。200 × 100 で理論上2万通りの組み合わせが生成されます。</p>
+  <div class="warn-box">⚠️ <strong>CROSS JOINはCartesian product（直積）を生成します——使用には注意が必要です。</strong>たった200行と100行のテーブルでも2万行に膨れ上がりました。数万行・数十万行のテーブル同士でCROSS JOINを行うと、結果が爆発的に大きくなり、非常に負荷の高い処理になります。商品テーブル×色テーブルのように「全組み合わせを列挙したい」場合など、限られた場面でのみ使いましょう。</div>
+  <div class="teal-box">📌 <strong>LEFTとRIGHTは「鏡写し」の関係です。</strong><code>A LEFT JOIN B</code>と<code>B RIGHT JOIN A</code>は同じ結果になります。クエリの中でテーブルをどちらに書くか（先か後か）によって「左」「右」が決まるだけなので、基本的にはLEFT JOINだけ覚えておけば困りません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INNER＝両方にある行だけ。LEFT／RIGHT＝片方は全部＋一致分（足りない側はNULL）。FULL OUTER＝両方全部。CROSS＝全組み合わせ（要注意）。</p></div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>実例で比較する（行数の違い）</h2><div class="unit-sub">同じ2つのテーブルでも、JOINの種類で結果が変わる</div></div>
+  </div>
+  <p>ここまでの<code>course</code>（200件）×<code>prereq</code>（100件、複数の重複あり）の結果をまとめると、JOINの種類によって返ってくる行数がまったく違うことが分かります。</p>
+  <table class="compare-table">
+    <tr><th>JOINの種類</th><th>返る行数</th><th>理由</th></tr>
+    <tr><td>INNER JOIN</td><td>100</td><td>前提科目情報があるペアだけ</td></tr>
+    <tr><td>LEFT JOIN（course基準）</td><td>211</td><td>全200科目＋前提科目重複分、無い科目はNULL</td></tr>
+    <tr><td>RIGHT JOIN（course基準）</td><td>211</td><td>LEFT JOINの左右を入れ替えただけで同じ結果</td></tr>
+    <tr><td>FULL OUTER JOIN</td><td>211</td><td>両側の未一致行もNULLで含むが、今回は片側に漏れが無いため同数</td></tr>
+    <tr><td>CROSS JOIN</td><td>約20,000</td><td>200 × 100の全組み合わせ（直積）</td></tr>
+  </table>
+  <p>このように、<strong>同じ2つのテーブル・同じ結合条件でも、JOINの種類を変えるだけで結果の行数と意味がまったく変わります。</strong>「一致するものだけ欲しいのか」「片方は全部見たいのか」「全組み合わせが欲しいのか」——目的に応じて正しいJOINを選ぶことが、正確なクエリを書く第一歩です。</p>
+  <div class="teal-box">📌 <strong>迷ったときの目安：</strong>「欠けている側があってもいいから、主となるテーブルの全件を見たい」ならLEFT JOIN。「両方に揃っている確実なデータだけでいい」ならINNER JOIN。「全パターンを網羅したい」ときだけCROSS JOINを検討しましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>同じテーブルでもJOINの種類で行数は大きく変わります。INNERは一番少なく、LEFT/RIGHT/FULL OUTERはそれより多く、CROSSは桁違いに多くなります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the basic purpose of a JOIN?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To delete duplicate rows in one table</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To combine data from multiple tables using a common column</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To sort a table's rows alphabetically</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To create a backup of a table</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In student and takes, why must you write student.student_id instead of just student_id?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>student_id is not a real column</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>student_id exists in both tables, so the column name is ambiguous</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>PostgreSQL requires table prefixes on every column, always</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It makes the query run faster</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does referential integrity require of a foreign key value?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It must be unique within its own table</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It must exist in the referenced table's primary key, or be NULL</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It must always be a number</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It must be indexed</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which join keeps only rows that match in both tables?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CROSS JOIN</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>FULL OUTER JOIN</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>INNER JOIN</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>LEFT JOIN</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">course LEFT JOIN prereq ON course.course_id = prereq.course_id returns:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only courses that have a prerequisite</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All rows from course, with NULL prereq_id where there is no match</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only rows from prereq</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Every combination of course and prereq rows</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which two joins are mirror images of each other, just with the table order swapped?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>INNER JOIN and CROSS JOIN</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>LEFT JOIN and RIGHT JOIN</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>FULL OUTER JOIN and INNER JOIN</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>CROSS JOIN and LEFT JOIN</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">What does a FULL OUTER JOIN return?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only matching rows</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Every possible combination of rows from both tables</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All rows from both tables, matched where possible and NULL-filled where not</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only rows unique to the left table</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why should CROSS JOIN be used with caution on large tables?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It deletes unmatched rows permanently</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It produces a Cartesian product, so the row count can explode (e.g. 200 x 100 = 20,000)</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It requires a primary key on both tables</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is not supported in PostgreSQL</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 1, 2, 1, 1, 2, 1];
+var FEEDBACKS=["A JOIN's purpose is to combine data from two or more tables by matching values in a shared column.","Both student and takes contain a student_id column, so PostgreSQL cannot tell which table you mean unless you qualify it.","Referential integrity means a foreign key value must either match a primary key value in the referenced table or be NULL.","Plain JOIN defaults to INNER JOIN, which returns only rows where the join column matches in both tables.","LEFT JOIN keeps every row from the left table (course) and fills in NULL for prereq columns when there is no match.","RIGHT JOIN is just LEFT JOIN with the table order reversed — A LEFT JOIN B equals B RIGHT JOIN A.","FULL OUTER JOIN returns all rows from both tables, matching where the join column lines up and using NULL elsewhere.","CROSS JOIN has no ON condition — it pairs every row of one table with every row of the other, so results grow multiplicatively."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">join</div>
+      <div class="term-en">結合</div>
+      <div class="term-def">共通の列を手がかりに、複数テーブルの行を1つの結果として結びつける操作。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">primary key</div>
+      <div class="term-en">主キー</div>
+      <div class="term-def">テーブルの各行を一意に識別する列。値は重複しない。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">foreign key</div>
+      <div class="term-en">外部キー</div>
+      <div class="term-def">他のテーブルの主キーを参照する列。同じ値が複数回現れてもよい。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">referential integrity</div>
+      <div class="term-en">参照整合性</div>
+      <div class="term-def">外部キーの値は、参照先テーブルの主キーに存在するかNULLでなければならないという原則。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">INNER JOIN</div>
+      <div class="term-en">内部結合</div>
+      <div class="term-def">両方のテーブルで一致する行だけを返す、既定のJOIN。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">CROSS JOIN</div>
+      <div class="term-en">交差結合</div>
+      <div class="term-def">ON句を使わず、2つのテーブルの全ての行の組み合わせ（直積）を返す。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>JOINの種類で迷ったら、まずVenn図（円の重なり）を思い出しましょう。「濃い部分だけ欲しい」ならINNER、「片方は全部欲しい」ならLEFT/RIGHT、「両方全部」ならFULL OUTERです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔗 SQLレッスン：M6 JOINの基本と種類</p>
+  <p style="margin-top:.5rem;"><a href="relational_db.html">← リレーショナルDB</a> · <a href="joins_relationships.html">テーブルの関係へ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

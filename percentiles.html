@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4+ Percentile and mode — 公式マニュアルで学ぶ高度な集計関数</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4+ 📐 Percentile <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4+ · Reading the manual</div>
+  <h1>📐 公式マニュアルを読む — パーセンタイルと最頻値</h1>
+  <p>AVGやSUMは公式マニュアルの「一般的な集計関数」に載っています。では<strong>中央値（median）</strong>は？ 実際にPostgreSQL公式マニュアル §9.21を読みながら、答えを探します。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① マニュアルの読み方</a><a href="#unit2">② 中央値は存在しない</a><a href="#unit3">③ discとcontの違い</a><a href="#unit4">④ 実例で比較する</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>マニュアルの読み方</h2><div class="unit-sub">「→」は返り値の型を表す</div></div>
+  </div>
+  <p>これまで<code>AVG()</code>や<code>SUM()</code>を「使い方」として学びましたが、PostgreSQLには<a href="https://www.postgresql.org/docs/current/functions-aggregate.html" target="_blank" rel="noopener">公式マニュアル §9.21「Aggregate Functions」</a>という一次資料があります。実際の記述はこうです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">avg ( numeric ) → numeric</span></span>
+<span class="cl"><span class="cm">Computes the average (arithmetic mean) of all the non-null input values.</span></span>
+</pre>
+  <p>読み方はシンプルです。<code>関数名 ( 引数の型 )</code> の後の<strong><code>→</code></strong>が、<strong>「この関数が返す型」</strong>を表します。<code>avg(numeric)</code>は「numeric型の列を渡すと、numeric型の値を1つ返す」という意味です。</p>
+  <table class="compare-table">
+    <tr><th>記法</th><th>意味</th></tr>
+    <tr><td><code>avg ( numeric )</code></td><td>numeric型の引数を1つ受け取る</td></tr>
+    <tr><td><code>→ numeric</code></td><td>返り値の型はnumeric</td></tr>
+    <tr><td>Partial Mode: Yes</td><td>並列クエリ最適化に対応している（今は気にしなくてOK）</td></tr>
+  </table>
+  <div class="note-box">🤔 <strong>マニュアルは「表」で分類されています。</strong>Table 9.62が<code>AVG・SUM・COUNT・MAX・MIN</code>などの汎用集計関数、Table 9.63が<code>STDDEV</code>などの統計系、Table 9.64が今日の主役——<strong>「並び順」を使う集計関数</strong>です。</p></div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>マニュアルの<code>→</code>は「この関数はこの型を返す」という意味。読めるようになると、知らない関数も自力で調べられます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>中央値（MEDIAN）は存在しない</h2><div class="unit-sub">ないものを、あるものから作る</div></div>
+  </div>
+  <p>ここでよくある誤解があります——「平均に<code>AVG()</code>があるなら、中央値にも<code>MEDIAN()</code>があるはず」。実際にTable 9.62の汎用集計関数一覧をすべて見ても、その名前はどこにもありません。</p>
+  <div class="warn-box">⚠️ <strong>PostgreSQLに組み込みの<code>MEDIAN()</code>関数は存在しません。</strong>Table 9.62にある関数は<code>any_value, array_agg, avg, bit_and/or/xor, bool_and/or, count, every, json_agg, max, min, range_agg, string_agg, sum, xmlagg</code>——このどれも中央値ではありません。</div>
+  <p>中央値を求めるには、Table 9.64「<strong>順序集合集計関数（ordered-set aggregate functions）</strong>」にある<code>percentile_cont()</code>を使います。これは「並べたときの、指定した割合の位置にある値」を返す関数です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">percentile_cont</span>(<span class="nm">0.5</span>) <span class="kw">WITHIN GROUP</span> (<span class="kw">ORDER BY</span> s_close)</span>
+<span class="cl"><span class="kw">FROM</span> stocks;</span>
+</pre><div class="output-reveal">percentile_cont
+-----------------
+        94.615000
+（全終値のちょうど中央にあたる値）</div>
+  <div class="teal-box">📌 <strong>構文がこれまでと違います。</strong>順序集合集計関数は<code>関数(割合) WITHIN GROUP (ORDER BY 列)</code>という形です。カッコの中の<code>0.5</code>は「50パーセンタイル＝中央値」を指定する<strong>直接引数（direct argument）</strong>で、<code>ORDER BY</code>は集計する前にデータを並べる順序を指定します。</div>
+  <p>つまり<code>0.5</code>を<code>0.25</code>や<code>0.9</code>に変えれば、第1四分位数や上位10%の境界値も同じ形で求められます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>中央値専用の関数はない。<code>percentile_cont(0.5) WITHIN GROUP (ORDER BY 列)</code>で「並べて真ん中」を求めるのが公式なやり方です。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>percentile_cont と percentile_disc の違い</h2><div class="unit-sub">補間する（cont）／実データのまま返す（disc）</div></div>
+  </div>
+  <p>Table 9.64には、ほぼ同じ名前の関数がもう1つあります。マニュアルの説明を並べてみます。</p>
+  <table class="compare-table">
+    <tr><th>関数</th><th>マニュアルの説明（要約）</th></tr>
+    <tr><td><code>percentile_cont</code></td><td>連続パーセンタイル。<strong>必要なら値の間を補間する（interpolate）</strong></td></tr>
+    <tr><td><code>percentile_disc</code></td><td>離散パーセンタイル。<strong>並び順の位置が指定した割合以上になる、最初の実データの値</strong>をそのまま返す</td></tr>
+  </table>
+  <p>データが偶数個のとき、中央値は本来「真ん中の2つの値の平均」です。この違いが、2つの関数のふるまいの差として表れます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 4つの値 [10, 20, 30, 40] の中央値を2つの関数で求める</span></span>
+<span class="cl"><span class="kw">SELECT</span></span>
+<span class="cl">  <span class="kw">percentile_cont</span>(<span class="nm">0.5</span>) <span class="kw">WITHIN GROUP</span> (<span class="kw">ORDER BY</span> v) <span class="kw">AS</span> cont,</span>
+<span class="cl">  <span class="kw">percentile_disc</span>(<span class="nm">0.5</span>) <span class="kw">WITHIN GROUP</span> (<span class="kw">ORDER BY</span> v) <span class="kw">AS</span> disc</span>
+<span class="cl"><span class="kw">FROM</span> (<span class="kw">VALUES</span> (<span class="nm">10</span>),(<span class="nm">20</span>),(<span class="nm">30</span>),(<span class="nm">40</span>)) <span class="kw">AS</span> t(v);</span>
+</pre><div class="output-reveal">cont | disc
+-----+------
+  25 |   20
+（真の中央値は(20+30)/2=25。contはそれを補間で再現するが、
+ discは実データにある20か30のどちらか一方しか返せない）</div>
+  <div class="viz">
+    <div class="viz-title">なぜ結果が変わるのか</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>データを並べる</strong><span>10, 20, 30, 40</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>真ん中の位置は「20と30の間」</strong><span>4個のデータなので、ちょうど境界に落ちる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔵</span><div class="step-text"><strong>cont：20と30を補間 → 25</strong><span>実データに存在しない値を作ってよい</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🟢</span><div class="step-text"><strong>disc：実データの20をそのまま返す</strong><span>新しい値は作らない、必ず元の1行の値</span></div></div>
+    </div>
+    <div class="viz-cap">contは「統計的に正しい中央値」に近づける。discは「実際にテーブルにある値」を保証する。</div>
+  </div>
+  <div class="warn-box">⚠️ <strong>偶数個のデータでは、<code>percentile_disc(0.5)</code>は「真の中央値」と一致しない場合があります。</strong>discが返すのは常に元のデータの1つの値であり、2値の平均を計算することはありません。統計的な中央値が必要なら<code>percentile_cont</code>を使います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>cont = continuous（連続）</strong>→ 補間してなめらかな値を作る。<strong>disc = discrete（離散）</strong>→ 実データの値をそのまま返す。名前の由来を覚えれば迷いません。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>実例で比較する</h2><div class="unit-sub">mode・percentile_cont・percentile_discを並べて使う</div></div>
+  </div>
+  <p>Table 9.64にはもう1つ、<code>mode()</code>——<strong>最頻値</strong>を求める関数があります。構文は同じ<code>WITHIN GROUP (ORDER BY ...)</code>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       <span class="kw">mode</span>() <span class="kw">WITHIN GROUP</span> (<span class="kw">ORDER BY</span> volume) <span class="kw">AS</span> most_common_volume,</span>
+<span class="cl">       <span class="kw">percentile_cont</span>(<span class="nm">0.5</span>) <span class="kw">WITHIN GROUP</span> (<span class="kw">ORDER BY</span> volume) <span class="kw">AS</span> median_volume</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">GROUP BY</span> s_index</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | most_common_volume | median_volume
+--------+--------------------+---------------
+AAPL    |            9800000 |      10120500
+（銘柄ごとに「一番よく出る出来高」と「中央の出来高」を並べて見る）</div>
+  <p><code>mode()</code>と<code>percentile_cont()</code>はどちらもTable 9.64の関数なので、<strong>GROUP BYと一緒に使える</strong>点も、これまで学んだ<code>AVG</code>や<code>SUM</code>と同じです。</p>
+  <table class="compare-table">
+    <tr><th>関数</th><th>返す値</th><th>補間する？</th><th>GROUP BYと併用</th></tr>
+    <tr><td><code>AVG()</code></td><td>平均</td><td>—</td><td>可</td></tr>
+    <tr><td><code>mode()</code></td><td>最頻値</td><td>しない</td><td>可</td></tr>
+    <tr><td><code>percentile_cont(0.5)</code></td><td>中央値（統計的に正確）</td><td>する</td><td>可</td></tr>
+    <tr><td><code>percentile_disc(0.5)</code></td><td>中央値に近い実データの値</td><td>しない</td><td>可</td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>実務での使い分け：</strong>レポート用に「統計的に正しい中央値」を出すなら<code>percentile_cont(0.5)</code>。「実際に存在した1件の値」として説明したいなら<code>percentile_disc(0.5)</code>。どちらも公式マニュアルの同じ表に載っている、正式な集計関数です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>mode・percentile_cont・percentile_discは、これまでの集計関数と同じ感覚でGROUP BYと組み合わせられる。違うのは構文が<code>WITHIN GROUP (ORDER BY ...)</code>になる点だけ。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">According to the official manual, which built-in aggregate computes the median directly?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>median()</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>avg()</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is no built-in median() — use percentile_cont(0.5)</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>mode()</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In a manual signature like "avg ( numeric ) → numeric", what does the "→" represent?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A keyboard shortcut</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The function's return type</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A join condition</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The order the arguments are evaluated</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">percentile_cont, percentile_disc and mode() belong to which category in the manual?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>General-purpose aggregates</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Statistical aggregates</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Ordered-set aggregates</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Hypothetical-set aggregates</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What is the key difference between percentile_cont and percentile_disc?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>cont interpolates between values; disc returns an actual value from the data</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>disc is only for text columns</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>cont requires GROUP BY, disc does not</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>There is no real difference</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What syntax do ordered-set aggregates like percentile_cont require?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>GROUP BY only, no ORDER BY</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WITHIN GROUP (ORDER BY ...)</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>HAVING (ORDER BY ...)</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>PARTITION BY</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">For a dataset with an even number of values, why might percentile_disc(0.5) not equal the "true" statistical median?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It always raises an error on even counts</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It returns one of the two middle values instead of averaging them</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It silently drops NULLs incorrectly</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It requires an alias to run</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which function finds the most frequently occurring value in a column?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>avg()</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>mode()</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>count()</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>sum()</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Can mode() and percentile_cont() be combined with GROUP BY, like AVG() and SUM()?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes — they are aggregate functions too</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No, ordered-set aggregates never use GROUP BY</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only mode(), not percentile_cont()</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only inside a WHERE clause</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 1, 2, 0, 1, 1, 1, 0];
+var FEEDBACKS=["The manual's general-purpose aggregate list has no median() — the documented way to get a median is percentile_cont(0.5).","The arrow after a signature is the manual's notation for the function's return type.","mode(), percentile_cont and percentile_disc are all listed under Table 9.64, the ordered-set aggregate functions.","cont interpolates a value between two data points if needed; disc always returns one real value that exists in the data.","Ordered-set aggregates take a direct argument (like 0.5) and use WITHIN GROUP (ORDER BY column) instead of plain parentheses.","disc can only hand back an actual row's value, so for an even-count dataset it picks one middle value rather than averaging the two.","mode() returns the most frequent value in the aggregated argument, per Table 9.64.","Both are aggregate functions, so they combine with GROUP BY exactly like AVG() and SUM() do."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">ordered-set aggregate</div>
+      <div class="term-en">順序集合集計関数</div>
+      <div class="term-def">並び順そのものを使う集計関数。mode・percentile_cont・percentile_discなど。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">WITHIN GROUP (ORDER BY …)</div>
+      <div class="term-en">並び順の指定</div>
+      <div class="term-def">順序集合集計関数専用の構文。集計する前にどの列で並べるかを指定する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">percentile_cont()</div>
+      <div class="term-en">連続パーセンタイル</div>
+      <div class="term-def">必要なら値の間を補間して求める。統計的に正確な中央値を出せる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">percentile_disc()</div>
+      <div class="term-en">離散パーセンタイル</div>
+      <div class="term-def">補間せず、実データにある値をそのまま返す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">mode()</div>
+      <div class="term-en">最頻値</div>
+      <div class="term-def">最も多く出現する値を返す。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>公式マニュアルで知らない関数を見たら、まず<code>→</code>の後の返り値の型と、その関数がどの表（Table）に載っているかを確認しましょう。表の分類が、使い方のヒントになります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📐 SQLレッスン：M4+ Percentile and mode（公式マニュアル §9.21 解説）</p>
+  <p style="margin-top:.5rem;"><a href="having.html">← Having</a> · <a href="index.html">🏠 概要</a> · <a href="naming.html">M5 命名規則 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

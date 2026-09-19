@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超やさしい版：M6 サブクエリ①</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 🎯 サブクエリ① <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy active" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Subqueries① 🍎</div>
+    <h1>🍎 超やさしい版：サブクエリ①</h1>
+    <p>サブクエリ＝カッコの中に入ったもう1つのクエリ。先に中を実行してから外を実行する。</p>
+    <div class="unit-nav"><a href="#u1">JOINとの違い</a><a href="#u2">スカラー・列</a><a href="#u3">テーブル・相関</a><a href="subqueries_basics.html" class="easy-toplink">🎯 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>サブクエリって何？</h2><div class="unit-sub">カッコの中にもう1つのクエリ</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>サブクエリ＝カッコ（　）の中に書かれたもう1つのSELECT文。</strong>先にカッコの中身が実行されて1つの結果（値・リスト・表）になり、それを外側のクエリが使います。</p></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;">
+    <div style="background:#dbeafe;border:2px solid #2563eb;border-radius:12px;padding:1.25rem">
+      <h4 style="color:#1d4ed8;margin-top:0">JOIN</h4>
+      <p style="color:#1d4ed8;margin:0;font-size:.85rem">2つ以上のテーブルの列を横に並べて、1つの結果として表示したいとき。基本はJOINの方が速い。</p>
+    </div>
+    <div style="background:#fef3c7;border:2px solid #d97706;border-radius:12px;padding:1.25rem">
+      <h4 style="color:#92400e;margin-top:0">サブクエリ</h4>
+      <p style="color:#92400e;margin:0;font-size:.85rem">「先に1つの値（平均など）を計算してから比較したい」「リストに含まれるかだけ知りたい」ときに使う。</p>
+    </div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>JOINで書けるなら、基本はJOIN。JOINで書きにくいとき（先に値を計算したい、リストと比較したいだけ）がサブクエリの出番です。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>スカラー・列サブクエリ</h2><div class="unit-sub">1つの値 or 1つのリスト</div></div></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🔢</div>
+    <div class="ru-text"><strong>スカラーサブクエリ＝1つの値だけを返す。</strong>「平均より多い学生」を探すとき、平均の数字を決め打ちせず、カッコの中で毎回計算させます。</div>
+  </div>
+  <p class="code-label">▶ 平均単位数より多い学生（スカラーサブクエリ）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name, tot_cred</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">WHERE</span> tot_cred &gt; (<span class="kw">SELECT AVG</span>(tot_cred) <span class="kw">FROM</span> student);</span>
+</pre>
+  <div class="big-rule">
+    <div class="ru-arrow">📋</div>
+    <div class="ru-text"><strong>列サブクエリ＝1つの列・複数行のリストを返す。</strong>「このリストに含まれているか」を<code>WHERE x IN (SELECT ...)</code>で調べます。</div>
+  </div>
+  <p class="code-label">▶ CS-101を履修した学生の名前（列サブクエリ）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">WHERE</span> student_id <span class="kw">IN</span> (<span class="kw">SELECT</span> student_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> course_id = <span class="st">'CS-101'</span>);</span>
+</pre>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>返す値が1個ならスカラー、リストならIN と組み合わせる列サブクエリ。どちらもエイリアス（別名）は不要です。</p></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>テーブル・相関サブクエリ</h2><div class="unit-sub">表そのもの／行ごとに毎回実行</div></div></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🗂️</div>
+    <div class="ru-text"><strong>テーブルサブクエリ＝複数列・複数行の「一時的な表」を作ってJOINする。</strong>必ずエイリアス（<code>AS 別名</code>）が必要です。</div>
+  </div>
+  <p class="code-label">▶ 学科ごとの平均単位数と比較する（テーブルサブクエリ）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s.name, d.avg_credits</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="kw">AS</span> s</span>
+<span class="cl"><span class="kw">JOIN</span> (<span class="kw">SELECT</span> dept_name, <span class="kw">AVG</span>(tot_cred) <span class="kw">AS</span> avg_credits <span class="kw">FROM</span> student <span class="kw">GROUP BY</span> dept_name) <span class="kw">AS</span> d</span>
+<span class="cl"><span class="kw">ON</span> s.dept_name = d.dept_name;</span>
+</pre>
+  <div class="big-rule">
+    <div class="ru-arrow">🔁</div>
+    <div class="ru-text"><strong>相関サブクエリ＝外側の1行ごとに、内側のクエリがもう一度実行される。</strong>教員が4人いれば、内側は4回実行されます。</div>
+  </div>
+  <p class="code-label">▶ 教員ごとの指導学生数を数える（相関サブクエリ）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> name,</span>
+<span class="cl">    (<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> advisor <span class="kw">WHERE</span> advisor.instructor_id = instructor.instructor_id) <span class="kw">AS</span> num_advisees</span>
+<span class="cl"><span class="kw">FROM</span> instructor;</span>
+</pre>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>複合主キーのテーブルをJOINすると、行が重複することがあります。</strong>同じcourse_idでも、section_idや学期が違えば「別の行」。DISTINCTや相関サブクエリで対策します。</div>
+  </div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. スカラーサブクエリはいくつの値を返す？<span class="cp-a">A. 1つだけ（単一の値）。</span></div><div class="cp-q">Q2. 列サブクエリはどんな演算子とよく組み合わせる？<span class="cp-a">A. IN 演算子。WHERE x IN (SELECT ...) の形。</span></div><div class="cp-q">Q3. 相関サブクエリが「普通のサブクエリ」と違う点は？<span class="cp-a">A. 外側の行ごとに内側のクエリが毎回再実行されること。</span></div></div>
+</div>
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="subqueries_basics.html">🎯 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• サブクエリ＝カッコの中のもう1つのクエリ</p><p style="margin:.4rem 0">• スカラー＝1つの値、列＝1つのリスト</p><p style="margin:.4rem 0">• テーブルサブクエリはエイリアス必須</p><p style="margin:.4rem 0">• 相関サブクエリは外側の行ごとに再実行</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しい例文や英語MCQクイズは <a href="subqueries_basics.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：M6 サブクエリ① — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="subqueries_basics.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 外部キー — 参照整合性</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M5 🔗 FK <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Foreign keys</div>
+  <h1>🔗 外部キー — 参照整合性</h1>
+  <p>外部キー（FOREIGN KEY）は「他のテーブルに実在する値だけを許す」制約です。存在しない学生を履修させない——それが参照整合性です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 外部キーとは</a><a href="#unit2">② REFERENCES構文</a><a href="#unit3">③ エラーと修正</a><a href="#unit4">④ 教科書の例</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>外部キーとは何か</h2><div class="unit-sub">他のテーブルの主キーを指す値</div></div>
+  </div>
+  <p><strong>外部キー（FOREIGN KEY）</strong>とは、あるテーブルの列の値が、<strong>別のテーブルの主キー（または一意な列）に実在する値でなければならない</strong>、という制約です。</p>
+  <p>たとえば大学のデータベースで、指導教員（advisor）の担当欄に、<strong>実際には在籍していない学生の番号</strong>が入ってしまったらどうでしょうか。あるいは、注文レコードの顧客欄に、<strong>存在しない顧客ID</strong>が入ってしまったら？ どちらも「参照先が実在しない」という同じ問題です。外部キーはこれを防ぎます。</p>
+  <div class="viz">
+    <div class="viz-title">FKとPKの向き</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🧑‍🎓</span><div class="step-text"><strong>students（親）</strong><span><code>student_id</code> が主キー（PK）</span></div></div>
+      <div class="flow-arrow-v">↑ 参照（FK → PK）</div>
+      <div class="flow-step"><span class="step-icon">📚</span><div class="step-text"><strong>takes（子）</strong><span><code>student_id</code> が外部キー（FK）</span></div></div>
+    </div>
+    <div class="viz-cap">矢印の向きはいつも「子のFK → 親のPK」。takesの<code>student_id</code>は、studentsに実在する<code>student_id</code>しか受け付けません。</div>
+  </div>
+  <div class="teal-box">📌 <strong>1対多はまったく問題ありません。</strong>同じ<code>student_id</code>が<code>takes</code>テーブルに何回出てきても構いません——1人の学生は複数の科目を履修するからです。禁止されているのは「親に存在しない値」であって、「重複」ではありません。</div>
+  <p>大学のスキーマ全体でも、外部キーはあちこちに張られています：<code>takes</code>と<code>advisor</code>はどちらも<code>students</code>を参照し、<code>teaches</code>は<code>instructors</code>を参照し、<code>section</code>は<code>course</code>と<code>classroom</code>の<strong>2列を同時に参照する複合外部キー</strong>を持っています。テーブルが増えるほど、こうした参照の網目がデータベース全体の整合性を支えます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>外部キーは「よそのテーブルに実在する値しか入れない」という約束です。矢印はいつも子から親（FK→PK）へ向きます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>REFERENCES構文</h2><div class="unit-sub">列制約としてそのまま書ける</div></div>
+  </div>
+  <p>外部キーは、主キーと同じく<strong>列制約</strong>として、データ型のすぐ後ろに書けます。キーワードは<code>REFERENCES</code>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- takes.student_id は students.student_id を参照する</span></span>
+<span class="cl">student_id <span class="kw">bigint</span> <span class="kw">REFERENCES</span> students (student_id)</span>
+</pre>
+  <p><code>REFERENCES 参照先テーブル名 (参照先の列名)</code>という並びです。参照先の列は、そのテーブルの<strong>主キーか一意な列</strong>でなければなりません——そうでなければ「どの行を指しているか」が一意に決まらないからです。</p>
+  <div class="note-box">🖥️ <strong>pgAdminでの見え方：</strong>このテーブルを開いて<strong>Constraints</strong>のサブメニューを見ると、主キーのアイコンとは別に<strong>Foreign-keyの項目</strong>が並びます。1つの列に「PKである」「他テーブルのFKである」という2つの性質が同時に付くこともあります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データ型のすぐ後ろに <code>REFERENCES テーブル名 (列名)</code> を書くだけ。参照先は必ずPKか一意な列です。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>実演：エラーと正しい手順</h2><div class="unit-sub">存在しない学生は履修できない</div></div>
+  </div>
+  <p>実際にテーブルを作って試してみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> takes (</span>
+<span class="cl">    student_id <span class="kw">bigint</span> <span class="kw">REFERENCES</span> students (student_id),</span>
+<span class="cl">    grade <span class="kw">varchar</span>(1)</span>
+<span class="cl">);</span>
+</pre><div class="output-reveal">CREATE TABLE
+Query returned successfully.</div>
+  <p><code>students</code>に<code>student_id = 1, 2, 3</code>が在籍している状態で、まず存在する学生を履修させます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> takes <span class="kw">VALUES</span> (<span class="nm">1</span>, <span class="st">'A'</span>);</span>
+</pre><div class="output-reveal">INSERT 0 1</div>
+  <p>次に、<strong>存在しない</strong><code>student_id = 4</code>を履修させようとすると——</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> takes <span class="kw">VALUES</span> (<span class="nm">4</span>, <span class="st">'B'</span>);</span>
+</pre><div class="output-reveal">ERROR:  insert or update on table "takes" violates foreign key constraint "takes_student_id_fkey"
+DETAIL:  Key (student_id)=(4) is not present in table "students".</div>
+  <div class="warn-box">⚠️ <strong>これは事故ではなく、外部キーが正しく仕事をしている証拠です。</strong>4番の学生はまだ<code>students</code>に存在しないので、「4番の学生の履修記録」を作ることはできません。</div>
+  <p>修正するには、先に学生本人を<code>students</code>に入学させます（<code>student_id</code>は代理キーなので自動採番されます）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> students (first_name, last_name, email)</span>
+<span class="cl"><span class="kw">VALUES</span> (<span class="st">'Jane'</span>, <span class="st">'Doe'</span>, <span class="st">'jdoe@example.edu'</span>);</span>
+</pre><div class="output-reveal">INSERT 0 1
+（student_id = 4 が自動採番される）</div>
+  <p>これで<code>students</code>に4番が実在するので、同じINSERTがそのまま成功します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">INSERT INTO</span> takes <span class="kw">VALUES</span> (<span class="nm">4</span>, <span class="st">'B'</span>);</span>
+</pre><div class="output-reveal">INSERT 0 1</div>
+  <div class="viz">
+    <div class="viz-title">正しい順番</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>入学</strong><span>studentsに行を追加</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>学籍番号発行</strong><span>student_idが自動採番される</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>履修登録</strong><span>takesにその学籍番号で行を追加</span></div></div>
+    </div>
+    <div class="viz-cap">親（students）が先、子（takes）が後。この順序を飛ばすことはできません。</div>
+  </div>
+  <div class="teal-box">📌 <strong>削除は逆向きの同じ問題です。</strong>子（takes）から参照されている親（students）の行は、そのままでは削除できません。「先に子を消してから親を消す」か、次のレッスンで学ぶ<code>ON DELETE CASCADE</code>で自動的に子ごと消すか、どちらかが必要です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>親が先、子が後——これがFKの鉄則です。存在しない親を子から指すことはできず、参照されている親を先に消すこともできません。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>教科書ではこう</h2><div class="unit-sub">licenses と registrations</div></div>
+  </div>
+  <p>教科書<em>Practical SQL</em>では、免許証（<code>licenses</code>）と、その免許に対する更新登録（<code>registrations</code>）の例で外部キーを説明しています。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> licenses (</span>
+<span class="cl">    license_id <span class="kw">text</span>,</span>
+<span class="cl">    first_name <span class="kw">text</span>,</span>
+<span class="cl">    last_name <span class="kw">text</span>,</span>
+<span class="cl">    <span class="kw">CONSTRAINT</span> licenses_key <span class="kw">PRIMARY KEY</span> (license_id)</span>
+<span class="cl">);</span>
+</pre>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> registrations (</span>
+<span class="cl">    registration_id <span class="kw">text</span>,</span>
+<span class="cl">    registration_date <span class="kw">timestamp with time zone</span>,</span>
+<span class="cl">    license_id <span class="kw">text</span> <span class="kw">REFERENCES</span> licenses (license_id),</span>
+<span class="cl">    <span class="kw">CONSTRAINT</span> registration_key <span class="kw">PRIMARY KEY</span> (registration_id, license_id)</span>
+<span class="cl">);</span>
+</pre><div class="output-reveal">CREATE TABLE
+Query returned successfully.</div>
+  <p>ここでも1対多の関係です——1枚の免許証（<code>licenses</code>）に対して、更新のたびに<code>registrations</code>に複数行が積み重なります。さらに注目したいのは、<code>registration_key</code>自体が<code>registration_id</code>と<code>license_id</code>の<strong>複合主キー</strong>になっている点です。1つの列が「主キーの一部」であると同時に「他テーブルへの外部キー」であってもまったく問題ありません。</p>
+  <div class="teal-box">📌 <strong>外部キーは代理キーにも自然キーにも張れます。</strong>参照先が主キーでありさえすれば、その主キーが自動採番の代理キーであっても、免許証番号のような自然キーであっても構いません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>1枚の免許証に何回も更新登録がぶら下がる——これも1対多のFKです。複合主キーの一部が同時にFKになることもあります。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A foreign key value must match:</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A primary (or unique) key in another table</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Any value already in the same table</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A value entered by the DBA only</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A value produced by an aggregate function</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does a foreign key mainly protect against?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Rows that point to a parent record that doesn't exist</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Slow queries on large tables</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Two rows having the same primary key</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Columns with the wrong data type</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In "takes(student_id REFERENCES students(student_id))", which direction does the reference point?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>From takes (child) to students (parent)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>From students (parent) to takes (child)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Both directions equally</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither — REFERENCES has no direction</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Can the same student_id appear many times in "takes"?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes — one student takes many courses</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No — a foreign key column must be unique</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only if takes has no primary key</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only once per calendar year</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">"INSERT INTO takes VALUES (4,'B');" fails with a foreign key error. What is the fix?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>First insert student 4 into students</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Change grade to a number instead of 'B'</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Drop the foreign key constraint on takes</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Retry the same statement a second time</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why can't you delete a row from "students" while "takes" still references it?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It would leave an orphaned row behind in takes</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>PostgreSQL never allows any DELETE statement</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>students has no primary key</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>takes has too many columns</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">In the textbook's licenses/registrations example, what kind of key is "registration_key"?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A composite primary key on two columns</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A single-column surrogate key</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A foreign key with no primary key at all</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An index, not a key</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What must the referenced column in the parent table be?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A primary key or a unique column</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Any text column</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A column with a DEFAULT value</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A column allowing NULL values</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 0, 0, 0, 0, 0, 0];
+var FEEDBACKS=["A foreign key value must match a primary or unique key already present in the referenced table.","Foreign keys enforce referential integrity — they stop a row from pointing at a parent that isn't really there.","The arrow always runs from the child's foreign key back to the parent's primary key: takes → students.","Many-to-one references are fine — a student can appear in takes once per course they are enrolled in.","The parent row must exist before the child row can reference it, so student 4 must be inserted into students first.","Deleting the parent would strand the child row in takes with a foreign key pointing at nothing — an orphan.","registration_id and license_id together form the composite primary key registration_key.","The referenced column must be a primary key or a unique column, or the reference wouldn't identify one row."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">外部キー</div>
+      <div class="term-en">foreign key</div>
+      <div class="term-def">他テーブルの主キー（または一意な列）に一致する値でなければならない列。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">REFERENCES</div>
+      <div class="term-en">REFERENCES</div>
+      <div class="term-def">「参照先テーブル名 (列名)」の形で外部キーを宣言する列制約キーワード。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">参照整合性</div>
+      <div class="term-en">referential integrity</div>
+      <div class="term-def">外部キーが常に実在する親の値を指している、というデータベース全体の一貫性。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">孤児レコード</div>
+      <div class="term-en">orphan record</div>
+      <div class="term-def">参照しているはずの親の行が存在しない（または消えた）子の行。FKはこれを防ぐ。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">1対多</div>
+      <div class="term-en">one-to-many</div>
+      <div class="term-def">1件の親に対し、子が何行あってもよい関係。takes内で同じstudent_idが複数回現れるのはこれ。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>エラーが出たら慌てず「参照先に本当にその値があるか？」を確認しましょう。無ければ先に親を作る——これがFKエラーの99%の直し方です。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔗 SQLレッスン：M5 外部キー — 参照整合性</p>
+  <p style="margin-top:.5rem;"><a href="composite_surrogate.html">← PK②</a> · <a href="index.html">🏠 概要に戻る</a> · <a href="cascade.html">Cascade →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

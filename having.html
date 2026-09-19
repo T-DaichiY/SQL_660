@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Having — 集計結果で行を絞り込む</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 🚦 Having <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Having</div>
+  <h1>🚦 HAVING — 集計後のフィルタ</h1>
+  <p>WHEREは集計の<strong>前</strong>、HAVINGは集計の<strong>後</strong>。「注文が2件以上の顧客だけ」を出すにはHAVINGが要ります。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① なぜWHEREでは無理か</a><a href="#unit2">② HAVINGの位置</a><a href="#unit3">③ 実例と活用</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>なぜWHEREでは絞れないのか</h2><div class="unit-sub">WHEREは集計より先に走る</div></div>
+  </div>
+  <p>ここまでは<code>WHERE</code>で行を絞ってきました。<code>WHERE ord_amount &lt; 1000</code>のように、<strong>普通の列</strong>を条件にする場合はこれで十分です。</p>
+  <p>しかし、こういう要求はどうでしょうか——<strong>「注文件数が2件未満の顧客を除外したい」</strong>。ここで条件になっているのは<code>COUNT(customer_code)</code>という<strong>集計結果</strong>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ❌ これはエラーになる</span></span>
+<span class="cl"><span class="kw">SELECT</span> customer_code, <span class="kw">COUNT</span>(customer_code)</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">COUNT</span>(customer_code) &gt; <span class="nm">1</span></span>
+<span class="cl"><span class="kw">GROUP BY</span> customer_code;</span>
+</pre><div class="output-reveal">ERROR:  aggregate functions are not allowed in WHERE</div>
+  <div class="warn-box">⚠️ <strong>理由はタイミングです。</strong>WHEREは<strong>集計が行われる前</strong>に、1行ずつ判定して行を絞り込みます。その時点では<code>COUNT</code>の結果はまだ存在しません。存在しないものを条件にはできない——だからエラーになります。</div>
+  <div class="viz">
+    <div class="viz-title">処理される順番</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>WHERE</strong><span>集計の<strong>前</strong>に、普通の列で行を絞る</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>GROUP BY</strong><span>残った行をグループに分ける</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>集計関数</strong><span>グループごとにCOUNT・SUM などを計算</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>HAVING</strong><span>集計の<strong>後</strong>に、集計結果でグループを絞る</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">5️⃣</span><div class="step-text"><strong>ORDER BY</strong><span>最後に並べ替える</span></div></div>
+    </div>
+    <div class="viz-cap">WHEREは前、HAVINGは後（post-aggregation）。この違いがすべて。</div>
+  </div>
+  <div class="teal-box">📌 <strong>集計値を行のフィルタに使いたいときは、必ず<code>HAVING</code>を使う。</strong>これが唯一の方法です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>WHEREは「集計する前の行」を絞り、HAVINGは「集計した後のグループ」を絞ります。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>HAVINGを書く位置</h2><div class="unit-sub">GROUP BYより後ろ</div></div>
+  </div>
+  <p>WHEREをHAVINGに書き換えるだけでは、まだエラーになります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ❌ 位置が間違っている</span></span>
+<span class="cl"><span class="kw">SELECT</span> customer_code, <span class="kw">COUNT</span>(customer_code)</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(customer_code) &gt; <span class="nm">1</span></span>
+<span class="cl"><span class="kw">GROUP BY</span> customer_code;</span>
+</pre><div class="output-reveal">ERROR:  syntax error at or near "GROUP"</div>
+  <div class="warn-box">⚠️ <strong>HAVINGはGROUP BYの<span style="text-decoration:underline">後</span>に書きます。</strong>グループを作るのが<code>GROUP BY</code>であり、HAVINGはそのグループができた後に効く句だからです。順番が逆では意味が通りません。</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- ⭕ 正しい順番</span></span>
+<span class="cl"><span class="kw">SELECT</span> customer_code, <span class="kw">COUNT</span>(customer_code)</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">GROUP BY</span> customer_code</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(customer_code) &gt; <span class="nm">1</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> customer_code;</span>
+</pre><div class="output-reveal">customer_code | count
+--------------+-------
+C00002        |     3
+C00005        |     2
+C00013        |     2
+（1件だけの顧客は除外された）</div>
+  <h3>句の並び順（完全版）</h3>
+  <table class="compare-table">
+    <tr><th>順番</th><th>句</th><th>役割</th></tr>
+    <tr><td>1</td><td><code>SELECT</code></td><td>列と集計関数</td></tr>
+    <tr><td>2</td><td><code>FROM</code></td><td>テーブル</td></tr>
+    <tr><td>3</td><td><code>WHERE</code></td><td>集計<strong>前</strong>の行フィルタ</td></tr>
+    <tr><td>4</td><td><code>GROUP BY</code></td><td>グループ化</td></tr>
+    <tr><td>5</td><td><code>HAVING</code></td><td>集計<strong>後</strong>のフィルタ</td></tr>
+    <tr><td>6</td><td><code>ORDER BY</code></td><td>並べ替え</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>覚え方は <strong>GROUP BY → HAVING</strong> の順。グループを作ってから、そのグループをふるいにかけます。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>実例と活用</h2><div class="unit-sub">リピーターと新規顧客を切り分ける</div></div>
+  </div>
+  <h3>まず全体を見る</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer_code, <span class="kw">COUNT</span>(customer_code)</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">GROUP BY</span> customer_code</span>
+<span class="cl"><span class="kw">ORDER BY</span> customer_code;</span>
+</pre><div class="output-reveal">customer_code | count
+--------------+-------
+C00001        |     1
+C00002        |     3
+C00003        |     1
+C00005        |     2
+...</div>
+  <p>多くの顧客は注文1件だけ、一部の顧客が複数回注文していることが分かります。</p>
+  <h3>リピーターだけを抽出する</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> customer_code, <span class="kw">COUNT</span>(customer_code) <span class="kw">AS</span> quantity</span>
+<span class="cl"><span class="kw">FROM</span> orders</span>
+<span class="cl"><span class="kw">GROUP BY</span> customer_code</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(customer_code) &gt; <span class="nm">1</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> quantity <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer_code | quantity
+--------------+----------
+C00002        |        3
+C00005        |        2
+C00013        |        2</div>
+  <p>1回きりの顧客が除外され、<strong>2回・3回と注文しているVIP顧客</strong>だけが残りました。</p>
+  <h3>逆に新規顧客を探す</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(customer_code) = <span class="nm">1</span></span>
+</pre>
+  <p>条件を<code>= 1</code>に変えれば、<strong>初回購入だけの顧客</strong>の一覧になります。「もっと知ってもらうためにアプローチすべき相手」を絞り込む、といった実務的な使い方ができます。</p>
+  <div class="teal-box">📌 <strong>集計結果にも別名が付けられます。</strong>上の例では<code>COUNT(customer_code) AS quantity</code>としました。列見出しが<code>quantity</code>になるだけでなく、<code>ORDER BY quantity DESC</code>のように<strong>並べ替えにも使えます</strong>。これで「顧客コード順」ではなく「注文回数の多い順」に並べられます。集計値も普通の列と同じように、名前を付けて扱えると考えてください。</div>
+  <div class="warn-box">⚠️ <strong>ただしHAVINGの中では、集計関数をそのまま書くのが基本です</strong>（<code>HAVING COUNT(customer_code) &gt; 1</code>）。別名が使えるのは<code>ORDER BY</code>です——別名がいつ使えるかは<a href="alias.html">Aliasing columns</a>のレッスンを参照してください。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「◯件以上のグループだけ」ならHAVING。別名を付ければ、注文回数の多い順に並べることもできます。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is HAVING for?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Filtering rows using an aggregate result</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Sorting the grouped output</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Renaming an aggregated column</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Creating the groups themselves</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why can't an aggregate be used in WHERE?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE filters before the aggregation happens</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE only accepts text comparisons</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Aggregates return NULL inside WHERE</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE runs only once per table, not per row</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Where must HAVING be placed?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>After GROUP BY</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Before GROUP BY</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Before FROM</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Anywhere after SELECT</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Putting HAVING before GROUP BY produces:</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A syntax error</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The same result, just written differently</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A silently wrong count</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A warning, but the query still runs</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which clause order is correct?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE, GROUP BY, HAVING, ORDER BY</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>HAVING, WHERE, GROUP BY, ORDER BY</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>GROUP BY, WHERE, ORDER BY, HAVING</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>ORDER BY, GROUP BY, HAVING, WHERE</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">"HAVING COUNT(customer_code) > 1" keeps which customers?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Those with two or more orders</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Those with exactly one order</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Those whose order total exceeds 1</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>All customers, unchanged</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">How would you list only first-time customers?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>HAVING COUNT(customer_code) = 1</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE customer_code = 1</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ORDER BY COUNT(customer_code) ASC</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>DISTINCT customer_code</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">After writing "COUNT(customer_code) AS quantity", what can you do with that alias?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Sort by it with ORDER BY quantity DESC</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Filter with WHERE quantity > 1</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Store it permanently as a new table column</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Nothing — aliases on aggregates are ignored</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 0, 0, 0, 0, 0, 0];
+var FEEDBACKS=["HAVING is the way to filter using a value produced by an aggregate function.","WHERE is evaluated before rows are grouped and aggregated, so the aggregate result does not exist yet.","GROUP BY builds the groups first; HAVING then filters them, so it comes afterwards.","GROUP BY has to come first — writing HAVING before it is a syntax error.","SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY is the fixed clause order.","Groups whose count is greater than one survive, so customers with repeat orders remain.","Setting the condition to = 1 isolates the customers who have ordered exactly once.","Aliases work in ORDER BY, letting you sort by number of orders instead of by customer code."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">HAVING</div>
+      <div class="term-en">集計後フィルタ</div>
+      <div class="term-def">集計結果を条件に、グループを絞り込む句。GROUP BYの後に書く。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">post aggregation</div>
+      <div class="term-en">集計後</div>
+      <div class="term-def">集計が終わった段階。HAVINGはここで働く。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">WHERE と HAVING</div>
+      <div class="term-en">前と後</div>
+      <div class="term-def">WHEREは集計前の行を、HAVINGは集計後のグループを絞る。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">句の順番</div>
+      <div class="term-en">clause order</div>
+      <div class="term-def">SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>「条件に使いたい値は、集計しないと出てこないか？」——YESならHAVING、NOならWHERE。この一問で判断できます。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🚦 SQLレッスン：M4 HAVING — 集計後のフィルタ</p>
+  <p style="margin-top:.5rem;"><a href="sum.html">← SUM</a> · <a href="index.html">🏠 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

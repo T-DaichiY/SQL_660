@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 Math and columns — 四則演算とパーセント変化</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M4 ➗ Math <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Math and columns</div>
+  <h1>➗ 列の計算</h1>
+  <p>列同士を足し引き掛け割りして、新しい値を作る。株価データでパーセント変化を計算し、CASTで読みやすく整える。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 列で計算する</a><a href="#unit2">② 演算の順序</a><a href="#unit3">③ パーセント変化</a><a href="#unit4">④ 整形とNULL処理</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>列同士の計算</h2><div class="unit-sub">2 + 2 の「2」を列名に置き換えるだけ</div></div>
+  </div>
+  <div class="note-box">📦 <strong>このレッスンからデータセットが変わります。</strong>ここでは<strong>株価の履歴データ（stocksテーブル）</strong>を使います。テーブル作成とインポートの手順に従って準備してください。このデータには<strong>NULLが含まれている</strong>ため、インポート時の設定に注意が必要です。</div>
+  <p>SQLは<code>2 + 2</code>のような計算ができます。そして、その<strong>数字の部分を列名に置き換える</strong>と、行ごとに計算が行われます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 数字同士の計算</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="nm">2</span> + <span class="nm">2</span>;          <span class="cm">-- 4</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 列同士の計算 ← これが本題</span></span>
+<span class="cl"><span class="kw">SELECT</span> column_a + column_b <span class="kw">FROM</span> some_table;</span>
+</pre>
+  <p>足し算・引き算・掛け算・割り算のすべてが使えます。列と列、列と定数、どちらの組み合わせでも構いません。</p>
+  <h3>例1：株価の終値 − 始値（1日の変動）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, s_close - s_open <span class="kw">AS</span> change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | change
+--------+---------
+      1 |   43.91
+      2 |  -12.05
+      3 |
+      4 |  -47.62</div>
+  <div class="teal-box">📌 <strong>なぜ「終値 − 始値」の順番なのか。</strong>上がったのか下がったのかを知りたいので、<strong>新しい値から古い値を引きます</strong>。結果がプラスなら上昇、マイナスなら下落です。逆にすると符号が反転してしまいます。</div>
+  <p>結果の列は<code>AS change</code>で名前を付けています（前のレッスンの内容です）。計算元の2列がどちらも数値型なので、結果も数値型になります。</p>
+  <div class="warn-box">⚠️ <strong>NULLがあると結果もNULLになります。</strong>上の結果の3行目が空欄なのは、<code>s_close</code>か<code>s_open</code>のどちらかがNULLだからです。実データにNULLが混ざるのは普通のことで、<strong>「0として扱う」「無視する」「その行を除く」</strong>など、目的に応じた判断が必要になります。</div>
+  <h3>例2：高値 − 安値（その日の値幅）</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, s_date, s_high - s_low <span class="kw">AS</span> diff</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | s_date     |   diff
+--------+------------+--------
+      1 | 2019-01-02 | 113.62
+      2 | 2019-01-03 |  58.40</div>
+  <h3>計算列で並べ替える</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index, s_close - s_open <span class="kw">AS</span> change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> change <span class="kw">DESC</span>;</span>
+</pre>
+  <p><strong>これまで並べ替えの対象は既存の列だけでしたが、いまや自分が作った列でも並べ替えられます。</strong>「一番値上がりした日は？」「一番下落した日は？」といった問いに答えられるようになりました。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>数式の数字の部分を列名にするだけ。<code>SELECT 列A - 列B AS 名前 FROM テーブル;</code>で新しい列ができます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>演算の順序（order of operations）</h2><div class="unit-sub">カッコを忘れると意味が変わる</div></div>
+  </div>
+  <p>「1日の値幅は、株価全体の何％にあたるか」を計算してみましょう。値幅を終値で割ります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       (s_high - s_low) / s_close <span class="kw">AS</span> percent_delta</span>
+<span class="cl"><span class="kw">FROM</span> stocks;</span>
+</pre><div class="output-reveal">s_index | percent_delta
+--------+---------------------
+      1 | 0.01043210987654321
+      2 | 0.02871500000000000</div>
+  <div class="warn-box">⚠️ <strong>カッコを外すと全く別の計算になります。</strong><code>s_high - s_low / s_close</code>と書くと、算数のルール（掛け算・割り算が先）により<strong>先に<code>s_low / s_close</code>が計算されてしまいます</strong>。「高値から（安値÷終値）を引く」という、意味のない式になってしまいます。</div>
+  <h3>パーセント表示にする</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       ((s_high - s_low) / s_close) * <span class="nm">100</span> <span class="kw">AS</span> percent_delta</span>
+<span class="cl"><span class="kw">FROM</span> stocks;</span>
+</pre><div class="output-reveal">s_index | percent_delta
+--------+---------------------
+      1 | 1.04321098765432100
+      2 | 2.87150000000000000</div>
+  <p>100を掛けるときも<strong>全体をカッコで囲みます</strong>。カッコを増やすほど式は読みにくくなりますが、<strong>意図した順序で計算されること</strong>のほうが遥かに重要です。</p>
+  <div class="teal-box">📌 <strong>迷ったらカッコを付ける。</strong>不要なカッコがあっても結果は変わりませんが、必要なカッコが無いと結果が変わります。数式を書いたら「どこから計算されるか」を必ず声に出して確認しましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>算数と同じで掛け算・割り算が先。引き算を先にやりたければ<code>(A - B) / C</code>のようにカッコで囲みます。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>パーセント変化（percent change）</h2><div class="unit-sub">(新 − 旧) ÷ 旧</div></div>
+  </div>
+  <div class="viz">
+    <div class="viz-title">パーセント変化の公式</div>
+    <div class="flow-diagram">
+      <div class="flow-box">新しい値 − 古い値<br><small>変化量</small></div>
+      <div class="flow-arrow">÷</div>
+      <div class="flow-box">古い値<br><small>基準</small></div>
+      <div class="flow-arrow">×</div>
+      <div class="flow-box">100<br><small>％に変換</small></div>
+    </div>
+    <div class="viz-cap">「もとの値に対して、どれくらいの割合で変化したか」を測る。</div>
+  </div>
+  <h3>なぜ「差」ではなく「割合」なのか</h3>
+  <p>ある物の値段が500ドル上がったとします。これは大きな変化でしょうか？</p>
+  <table class="compare-table">
+    <tr><th>もとの値段</th><th>500ドルの値上がりは</th><th>パーセント変化</th></tr>
+    <tr><td>10ドルのもの</td><td>とんでもない高騰</td><td>+5000%</td></tr>
+    <tr><td>300ドルのゲーム機</td><td>誰も買えなくなる</td><td>約 +167%</td></tr>
+    <tr><td>50万ドルの家</td><td>ほぼ誤差</td><td>+0.1%</td></tr>
+  </table>
+  <p><strong>同じ「500ドル」でも意味がまったく違います。</strong>だから変化量そのものではなく、<strong>もとの値に対する割合</strong>で見るのです。インフレ率、消費者物価指数（CPI）、生活費の変動など、世の中の多くの指標がこの考え方でできています。</p>
+  <h3>手計算で確かめる</h3>
+  <table class="compare-table">
+    <tr><th>古い値</th><th>新しい値</th><th>計算</th><th>結果</th></tr>
+    <tr><td>$5</td><td>$10</td><td>(10 − 5) ÷ 5 = 1</td><td><strong>+100%</strong>（2倍）</td></tr>
+    <tr><td>$3</td><td>$7</td><td>(7 − 3) ÷ 3 = 1.333</td><td><strong>+133%</strong></td></tr>
+    <tr><td>$175</td><td>$150</td><td>(150 − 175) ÷ 175 = −0.143</td><td><strong>−14.3%</strong>（値下がり）</td></tr>
+    <tr><td>$9,500</td><td>$10,000</td><td>(10000 − 9500) ÷ 9500 = 0.0526</td><td><strong>+5.26%</strong></td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>結果は小数で返ります。</strong>計算結果が<code>1</code>なら1%ではなく<strong>100%</strong>です。<code>0.0526</code>なら<strong>5.26%</strong>。パーセント表示にしたければ<strong>100を掛ける</strong>必要があります。</div>
+  <div class="teal-box">📌 <strong>符号の意味：</strong>新しい値のほうが大きければプラス（増加）、小さければマイナス（減少）。だから「新 − 旧」の順序が重要なのです。</div>
+  <h3>株価データに適用する</h3>
+  <p>始値（<code>s_open</code>）が「古い値」、終値（<code>s_close</code>）が「新しい値」です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       ((s_close - s_open) / s_open) * <span class="nm">100</span> <span class="kw">AS</span> percent_change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | percent_change
+--------+---------------------
+      1 |  0.5321098765432100
+      2 | -1.2050000000000000</div>
+  <div class="warn-box">⚠️ <strong>カッコの位置が命です。</strong><code>s_close - s_open / s_open</code>と書くと、<code>s_open / s_open</code>＝<strong>常に1</strong>が先に計算され、結果は「終値 − 1」というまったく無意味な値になります。しかもエラーにはならないため、間違いに気付きにくいのが厄介です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>パーセント変化＝<strong>(新 − 旧) ÷ 旧 × 100</strong>。カッコを2重に付けるのを忘れずに。</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>CASTで整形し、NULLを除外する</h2><div class="unit-sub">読める結果に仕上げる</div></div>
+  </div>
+  <h3>小数点以下が長すぎる問題</h3>
+  <p><code>0.5321098765432100</code>のような値は読みにくいので、<strong>CAST</strong>を使って小数第2位までに整えます（CASTのレッスンで学んだ内容です）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       <span class="kw">CAST</span>(((s_close - s_open) / s_open) * <span class="nm">100</span> <span class="kw">AS</span> <span class="kw">numeric</span>(<span class="nm">10</span>,<span class="nm">2</span>))</span>
+<span class="cl">         <span class="kw">AS</span> percent_change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> s_index;</span>
+</pre><div class="output-reveal">s_index | percent_change
+--------+----------------
+      1 |           0.53
+      2 |          -1.21
+      3 |
+      4 |          -2.07</div>
+  <p><code>numeric(10,2)</code>は「全体で10桁、うち小数点以下2桁」という意味です（数値データ型のレッスンの precision と scale ）。ぐっと読みやすくなりました。</p>
+  <h3>計算列で並べ替える</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       <span class="kw">CAST</span>(((s_close - s_open) / s_open) * <span class="nm">100</span> <span class="kw">AS</span> <span class="kw">numeric</span>(<span class="nm">10</span>,<span class="nm">2</span>)) <span class="kw">AS</span> percent_change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">ORDER BY</span> percent_change <span class="kw">DESC</span>;</span>
+</pre>
+  <p>これで「最も上昇率が高かった日」が分かります。しかし——<strong>NULLの行が先頭に並んでしまいます。</strong></p>
+  <h3>NULLを除外する</h3>
+  <div class="warn-box">⚠️ <strong>計算列の別名はWHEREでは使えません。</strong><code>WHERE percent_change IS NOT NULL</code>と書きたくなりますが、これはエラーになります。WHEREはSELECTより先に処理されるため、その時点では<code>percent_change</code>という名前がまだ存在しないからです。</div>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 元の列でNULLを除く</span></span>
+<span class="cl"><span class="kw">SELECT</span> s_index,</span>
+<span class="cl">       <span class="kw">CAST</span>(((s_close - s_open) / s_open) * <span class="nm">100</span> <span class="kw">AS</span> <span class="kw">numeric</span>(<span class="nm">10</span>,<span class="nm">2</span>)) <span class="kw">AS</span> percent_change</span>
+<span class="cl"><span class="kw">FROM</span> stocks</span>
+<span class="cl"><span class="kw">WHERE</span> s_close <span class="kw">IS NOT NULL</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> percent_change <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">s_index | percent_change
+--------+----------------
+    412 |          17.70
+    287 |          12.04
+    ...
+     93 |         -12.31</div>
+  <div class="teal-box">📌 <strong><code>IS NULL</code> と <code>IS NOT NULL</code>：</strong>前者はNULLの行<strong>だけ</strong>、後者はNULL<strong>以外</strong>の行を返します。計算結果がNULLになるのは元の列がNULLだからなので、<strong>元の列に対して</strong>条件を書けば目的を達成できます。</div>
+  <p>この結果から「最大の上昇は+17.70%、最大の下落は−12.31%」といったことが読み取れます。データ全体を眺めると多くの日が±0.5〜2%の範囲に収まっており、比較的安定した銘柄だと分かります。</p>
+  <div class="note-box">🚀 <strong>次のステップ：</strong>ここまでは1行ごとの計算でした。次のレッスンでは、<strong>複数行をまとめて集計する</strong>集計関数（aggregate functions）——合計・平均・最大・最小・件数——を学びます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>桁が多いときは<code>CAST(… AS numeric(10,2))</code>。NULLを除きたいときは、元の列に<code>IS NOT NULL</code>を使います（別名はWHEREで使えません）。</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">To see whether a stock rose or fell during the day, you compute:</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>s_close - s_open</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>s_open - s_close</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>s_open + s_close</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>s_high - s_low</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">If either column in "s_close - s_open" is NULL, the calculated value is:</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Zero</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>NULL</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The value of the non-NULL column</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An error that stops the query</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does "s_high - s_low / s_close" actually compute?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The division happens first, then the subtraction</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The subtraction happens first, then the division</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Operations run strictly left to right</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It raises a syntax error about missing parentheses</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What is the percent change formula?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>(new - old) / old</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>(old - new) / new</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>new / old - 1 / old</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>(new + old) / 2</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A price goes from $5 to $10. The percent change calculation returns 1. That means:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A 1% increase</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A 100% increase</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A 10% increase</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>No change at all</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why report a change as a percentage instead of a raw amount?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It scales the change relative to the original value</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Percentages are always smaller and easier to store</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SQL cannot subtract two money columns directly</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It removes NULL values from the result set</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">What does CAST(... AS numeric(10,2)) accomplish here?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It limits the result to two decimal places</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It converts the percentage back into a text string</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It rounds every value to the nearest whole ten</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It permanently alters the stored column type</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">You want to drop the NULL rows from a calculated percent_change column. What works?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE percent_change IS NOT NULL</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE s_close IS NOT NULL</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ORDER BY percent_change NOT NULL</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>DISTINCT percent_change</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 0, 1, 0, 0, 1];
+var FEEDBACKS=["New value minus old value: close minus open. A positive result means the stock went up.","Any arithmetic involving NULL produces NULL — the row is not an error, it just has no value.","Multiplication and division bind tighter than subtraction, so s_low / s_close is evaluated first. Parentheses are required to get the intended result.","Percent change is the amount of change divided by the original value: (new - old) / old.","The result is a decimal proportion, so 1 means the value doubled — a 100% increase.","The same $500 change is huge on a $10 item and negligible on a $500,000 house. The percentage puts it in context.","numeric(10,2) keeps 10 digits total with 2 after the decimal point, making the output readable.","WHERE cannot see the alias, so you filter on the underlying column instead."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">order of operations</div>
+      <div class="term-en">演算の順序</div>
+      <div class="term-def">掛け算・割り算が先。順序を変えたければカッコで囲む。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">percent change</div>
+      <div class="term-en">パーセント変化</div>
+      <div class="term-def">(新 − 旧) ÷ 旧。変化量を元の値に対する割合で表す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">percent delta</div>
+      <div class="term-en">変化率</div>
+      <div class="term-def">パーセント変化の別名。Δ（デルタ）は「変化」を意味する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">numeric(10,2)</div>
+      <div class="term-en">精度とスケール</div>
+      <div class="term-def">全体10桁・小数2桁。CASTで結果を読みやすく整形する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">IS NOT NULL</div>
+      <div class="term-en">NULLでない</div>
+      <div class="term-def">値が入っている行だけを残す条件。計算列のNULL除去は元の列に対して行う。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>計算式を書いたら、必ず1行分を手計算して答え合わせをしましょう。カッコの位置ミスはエラーにならず、静かに間違った値を返してくるのが一番怖いパターンです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>➗ SQLレッスン：列の計算 — 四則演算とパーセント変化</p>
+  <p style="margin-top:.5rem;"><a href="alias.html">← 列の別名(AS)</a> · <a href="index.html">🏠 概要に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>
