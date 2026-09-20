@@ -28,7 +28,7 @@
   <h1>🎯 サブクエリ①：スカラー・列・テーブルサブクエリ</h1>
   <p><strong>サブクエリ（subquery）</strong>とは、あるクエリの中にさらに別のクエリが入れ子になったものです。「まず先に値、または値のリストを計算しておかないと、外側のクエリでそれと比較・フィルタ・JOINできない」というときに使います。ロシアの入れ子人形（マトリョーシカ）のように、1つ開けるとまた中に別のクエリが入っているイメージです。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① サブクエリとは</a><a href="#unit2">② スカラー</a><a href="#unit3">③ 列サブクエリ</a><a href="#unit4">④ テーブルサブクエリ</a><a href="#unit5">⑤ 相関サブクエリ</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① サブクエリとは</a><a href="#unit2">② スカラー</a><a href="#unit3">③ 列サブクエリ</a><a href="#unit4">④ テーブルサブクエリ</a><a href="#unit5">⑤ 相関サブクエリ</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -159,6 +159,69 @@
   </div>
   <div class="warn-box">⚠️ <strong>複合主キー（composite primary key）を持つテーブルをJOINやサブクエリで経由すると、行が重複・増殖することがあります。</strong>例えば<code>takes</code>テーブルの主キーは<code>student_id, course_id, section_id, semester, year</code>の組み合わせ全体です。同じ<code>course_id</code>でも学期やセクションが違えば「別の行」として扱われるため、<code>DISTINCT</code>を付けたつもりでも意図した列だけで重複が消えないことがあります。相関サブクエリで外側の1行ごとに計算させる、あるいは<code>SELECT DISTINCT</code>で本当に消したい列を明示するなど、複合主キーの構造を理解した上で重複を防ぐ工夫が必要です。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>相関サブクエリは、外側の行1つにつき内側のクエリを1回ずつ実行する「行ごとの再計算」です。GROUP BYなしで「行ごとの集計値」を1列として追加できます。複合主キーのテーブルを扱うときは、行の重複に注意しましょう。</p></div>
+</div>
+
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-sb1">
+      <div class="ptitle">Q1. スカラーサブクエリで平均より上の学生を探す</div>
+      <p class="ptask">University DBの<code>student</code>テーブルから、<code>tot_cred</code>（取得単位数）が全学生の平均より多い学生の<code>name</code>と<code>tot_cred</code>を求めるSQLを書いてください。平均値はハードコードせず、スカラーサブクエリで計算してください。</p>
+      <textarea class="code-editor" id="p-sb1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-sb1', ['SELECT','WHERE','AVG(','FROM STUDENT'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-sb1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-sb1-result"></div>
+      <div class="answer-reveal" id="p-sb1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name, tot_cred</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">WHERE</span> tot_cred &gt; (<span class="kw">SELECT AVG</span>(tot_cred) <span class="kw">FROM</span> student);</span></pre>
+        <p class="answer-note">カッコの中は独立したもう1本のクエリで、実行結果は単一の数値に置き換わります。だからエイリアス不要で、そのまま比較値として使えます。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-sb2">
+      <div class="ptitle">Q2. 列サブクエリでCS-101履修者を探す</div>
+      <p class="ptask"><code>takes</code>テーブルで<code>course_id = 'CS-101'</code>を履修したことのある学生の<code>name</code>を、<code>student</code>テーブルから求めるSQLを書いてください。<code>IN</code>と列サブクエリを使いましょう。</p>
+      <textarea class="code-editor" id="p-sb2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-sb2', ['SELECT','IN (','FROM TAKES'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-sb2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-sb2-result"></div>
+      <div class="answer-reveal" id="p-sb2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">WHERE</span> student_id <span class="kw">IN</span> (<span class="kw">SELECT</span> student_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> course_id = <span class="st">'CS-101'</span>);</span></pre>
+        <p class="answer-note">カッコの中は1列だけを返す列サブクエリなので、<code>WHERE ... IN (...)</code>でそのまま「リストに含まれるか」を判定できます。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-sb3">
+      <div class="ptitle">Q3.（発展）相関サブクエリで教員ごとの指導人数を数える</div>
+      <p class="ptask"><code>instructor</code>テーブルの各行に対して、<code>advisor</code>テーブルからその教員（<code>instructor_id</code>が一致する行）の指導学生数を数える列<code>num_advisees</code>を追加してください。相関サブクエリ（<code>SELECT COUNT(*) ...</code>をSELECT句の中に書く）を使います。</p>
+      <textarea class="code-editor" id="p-sb3-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-sb3', ['SELECT','COUNT(','FROM ADVISOR','WHERE ADVISOR.INSTRUCTOR_ID'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-sb3', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-sb3-result"></div>
+      <div class="answer-reveal" id="p-sb3-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name, dept_name,</span>
+<span class="cl">    (<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> advisor <span class="kw">WHERE</span> advisor.instructor_id = instructor.instructor_id) <span class="kw">AS</span> num_advisees</span>
+<span class="cl"><span class="kw">FROM</span> instructor</span>
+<span class="cl"><span class="kw">ORDER BY</span> dept_name, name;</span></pre>
+        <p class="answer-note"><code>instructor.instructor_id</code>は外側クエリの「今見ている行」を指すため、<code>instructor</code>の1行ごとに内側のCOUNTが再実行されます。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="quiz-section" id="quiz">
@@ -318,5 +381,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>

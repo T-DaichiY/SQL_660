@@ -28,7 +28,7 @@
   <h1>🗄️ リレーショナルデータベース入門</h1>
   <p>M1〜M5では、常に<strong>1つのテーブル</strong>を相手にクエリを書いてきました。M6からは複数のテーブルをまたいでデータを扱っていきます。その前提として、まずはデータベースそのものの仕組み——DBMSの使われ方、モデルの種類、そしてリレーショナル方式の強みであるACID特性を整理しておきましょう。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① DBMSの用途</a><a href="#unit2">② データベースモデルの種類</a><a href="#unit3">③ ACID特性</a><a href="#unit4">④ RDBMSのメリット</a><a href="#unit5">⑤ NoSQLとの比較</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① DBMSの用途</a><a href="#unit2">② データベースモデルの種類</a><a href="#unit3">③ ACID特性</a><a href="#unit4">④ RDBMSのメリット</a><a href="#unit5">⑤ NoSQLとの比較</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -134,6 +134,49 @@
   <p>NoSQLの中でもよく見かけるのが<strong>ドキュメント型</strong>です。例えば、あるハッシュキーに、その人（や対象）に関するあらゆる情報をまとめたJSON形式のドキュメントが紐づいている、という形式です。キーさえ分かれば、そのドキュメントを丸ごと取得できます。<strong>キー・バリュー型</strong>も同様に、あるキーに1つの値を対応させるシンプルな構造で、暗号分野などでも活用されます。</p>
   <div class="teal-box">📌 <strong>「NoSQL」は "not SQL"（SQLを使わない）という意味ではなく、"not only SQL"（SQLだけではない）の略です。</strong>SQLとNoSQLは対立するものではなく、多くの企業はアプリケーションの用途や機能ごとに両方を使い分けています。どちらが「勝つ」かという話ではありません。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>NoSQLはスキーマを事前に固定しない分、分散させやすく大規模データに向いています。RDBMSは構造が厳格な分、整合性と管理のしやすさに優れます。「NoSQL＝SQL不要」ではなく「SQLだけではない」という意味です。</p></div>
+</div>
+
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-rdb1">
+      <div class="ptitle">Q1. インポートした行数を確認する</div>
+      <p class="ptask">University DBを読み込んだあと、<code>student</code>テーブルに何行あるか確認したいです。行数を1つの数値として返すSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-rdb1-input" rows="4">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-rdb1', ['SELECT','COUNT(','FROM','STUDENT'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-rdb1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-rdb1-result"></div>
+      <div class="answer-reveal" id="p-rdb1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">FROM</span> student;</span></pre>
+        <p class="answer-note"><code>count(*)</code>は「行数を数える」集計関数です（M4で学習済み）。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-rdb2">
+      <div class="ptitle">Q2. 主キー・外部キーを意識したCREATE TABLE</div>
+      <p class="ptask"><code>book_id</code>（整数・主キー）と<code>title</code>（文字列）を持つ<code>book</code>テーブルを作るSQLを書いてください。ACIDの「整合性」を保つ第一歩は、こうした制約をきちんと定義することです。</p>
+      <textarea class="code-editor" id="p-rdb2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-rdb2', ['CREATE TABLE','PRIMARY KEY'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-rdb2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-rdb2-result"></div>
+      <div class="answer-reveal" id="p-rdb2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">CREATE TABLE</span> book (</span>
+<span class="cl">    book_id <span class="kw">integer</span> <span class="kw">PRIMARY KEY</span>,</span>
+<span class="cl">    title <span class="kw">text</span></span>
+<span class="cl">);</span></pre>
+        <p class="answer-note">主キー制約があるおかげで、<code>book_id</code>の重複やNULLがデータベース側で防がれます。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="quiz-section" id="quiz">
@@ -293,5 +336,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>

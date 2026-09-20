@@ -28,7 +28,7 @@
   <h1>🧩 アンチ結合・CTE・CASE式 — 教科書だけの内容</h1>
   <p>ここまでのM6は講義動画の内容でした。この最後の1本は<strong>講義では扱っていない、教科書『Practical SQL 完全ガイド』第7章・第13章の内容</strong>です。JOINとサブクエリをさらに使いこなすための3つの技を身につけます。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① アンチ結合（LEFT JOIN + IS NULL）</a><a href="#unit2">② CTE（共通テーブル式）</a><a href="#unit3">③ CASE式で値を分類する</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① アンチ結合（LEFT JOIN + IS NULL）</a><a href="#unit2">② CTE（共通テーブル式）</a><a href="#unit3">③ CASE式で値を分類する</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -127,6 +127,77 @@ Levy | 46 | Sophomore
 </pre>
   <div class="teal-box">📌 <strong>CASE式はSELECTリストのどこでも使えます。</strong>普通の列と同じように<code>GROUP BY</code>や<code>ORDER BY</code>のエイリアスとしても参照できるので、集計・分類・並べ替えのどこにでも組み込めます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CASE式は「もしこの値がXXならこのラベル、そうでなければ次の条件…」という変換ルールです。数値をそのまま見せるのではなく、人が読みやすいカテゴリに変えたいときに使います。</p></div>
+</div>
+
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-mp1">
+      <div class="ptitle">Q1. 一度も履修登録していない学生（アンチ結合）</div>
+      <p class="ptask"><code>student</code>を<code>takes</code>にLEFT JOINし、<strong>一度も履修登録（takes）をしていない学生</strong>の<code>student_id</code>・<code>name</code>を求めるアンチ結合のSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-mp1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-mp1', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-mp1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-mp1-result"></div>
+      <div class="answer-reveal" id="p-mp1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.student_id, student.name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id</span>
+<span class="cl"><span class="kw">WHERE</span> takes.student_id <span class="kw">IS NULL</span>;</span></pre>
+        <p class="answer-note">LEFT JOINで一致しなかった行は<code>takes</code>側がNULLになります。それを<code>WHERE ... IS NULL</code>で絞り込むのがアンチ結合です。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-mp2">
+      <div class="ptitle">Q2. 平均単位数より多い学生（CTE）</div>
+      <p class="ptask"><code>WITH avg_credits AS (...)</code>というCTEで<code>student.tot_cred</code>の平均を計算し、その平均<strong>より多い</strong>単位数を持つ学生の<code>name</code>・<code>tot_cred</code>を求めるSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-mp2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-mp2', ['WITH','AVG(','SELECT'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-mp2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-mp2-result"></div>
+      <div class="answer-reveal" id="p-mp2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">WITH</span> avg_credits <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> avg(tot_cred) <span class="kw">AS</span> avg_cred <span class="kw">FROM</span> student</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> student.name, student.tot_cred</span>
+<span class="cl"><span class="kw">FROM</span> student, avg_credits</span>
+<span class="cl"><span class="kw">WHERE</span> student.tot_cred &gt; avg_credits.avg_cred;</span></pre>
+        <p class="answer-note"><code>WITH</code>で先に平均値に名前（<code>avg_credits</code>）を付けておき、本体クエリから普通のテーブルのように参照します。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-mp3">
+      <div class="ptitle">Q3. tot_credで学年を分類する（CASE）</div>
+      <p class="ptask"><code>student.tot_cred</code>を使い、90以上なら<code>'Senior'</code>、60以上なら<code>'Junior'</code>、30以上なら<code>'Sophomore'</code>、それ以外は<code>'Freshman'</code>というラベル（<code>class_year</code>という列名）を付けるCASE式のSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-mp3-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-mp3', ['CASE','WHEN','ELSE'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-mp3', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-mp3-result"></div>
+      <div class="answer-reveal" id="p-mp3-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name, tot_cred,</span>
+<span class="cl">    <span class="kw">CASE</span></span>
+<span class="cl">        <span class="kw">WHEN</span> tot_cred &gt;= <span class="nm">90</span> <span class="kw">THEN</span> <span class="st">'Senior'</span></span>
+<span class="cl">        <span class="kw">WHEN</span> tot_cred &gt;= <span class="nm">60</span> <span class="kw">THEN</span> <span class="st">'Junior'</span></span>
+<span class="cl">        <span class="kw">WHEN</span> tot_cred &gt;= <span class="nm">30</span> <span class="kw">THEN</span> <span class="st">'Sophomore'</span></span>
+<span class="cl">        <span class="kw">ELSE</span> <span class="st">'Freshman'</span></span>
+<span class="cl">    <span class="kw">END</span> <span class="kw">AS</span> class_year</span>
+<span class="cl"><span class="kw">FROM</span> student;</span></pre>
+        <p class="answer-note">広い条件（<code>&gt;= 30</code>）を先に書くと、単位数の多い学生もそこで止まってしまいます。厳しい条件ほど先に書きましょう。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="quiz-section" id="quiz">
@@ -276,5 +347,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>

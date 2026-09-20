@@ -28,7 +28,7 @@
   <h1>🧭 サブクエリ③：問題の解き方</h1>
   <p>このページは新しい構文の話ではありません。<strong>どんな複雑なサブクエリの問題にも通用する「解き方の手順」</strong>を扱います。いきなり完成形を書こうとせず、まず欲しい値を仮の数字で決め打ちして動作を確認し、それをサブクエリに置き換えていく——この積み上げ方さえ身につければ、初見の問題でも詰まらずに進められます。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① 欲しい値を仮の数字で</a><a href="#unit2">② 仮の数字をサブクエリに</a><a href="#unit3">③ 同じ都市の顧客</a><a href="#unit4">④ 支店の最低残高</a><a href="#unit5">⑤ ある地域の全支店で融資</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① 欲しい値を仮の数字で</a><a href="#unit2">② 仮の数字をサブクエリに</a><a href="#unit3">③ 同じ都市の顧客</a><a href="#unit4">④ 支店の最低残高</a><a href="#unit5">⑤ ある地域の全支店で融資</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -181,6 +181,75 @@ A-305           | Maria Chen     | Brooklyn Bank
   <div class="teal-box">📌 <strong>なぜ<code>COUNT(DISTINCT branch_name)</code>で、ただの<code>COUNT(branch_name)</code>ではダメなのか？</strong>同じ顧客が同じBrooklyn支店で2件のローンを組んでいる可能性があります。単純な<code>COUNT</code>だとそれを2件と数えてしまい、実際には1支店にしか融資がないのに「Brooklynの全支店で融資がある」と誤判定してしまいます。<code>DISTINCT</code>を付けることで「支店の種類の数」を正しく数えられます。</div>
   <div class="teal-box">📌 <strong>右辺を<code>2</code>と決め打ちせず<code>(SELECT COUNT(*) FROM branch WHERE branch_city = 'Brooklyn')</code>にしておく理由。</strong>今後Brooklynに支店が増えたり減ったりしても、このクエリはコードを書き換えることなく正しい件数と自動的に比較してくれます。決め打ちの数字は、データが変わった瞬間に古い基準のままになってしまいます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「ある地域の全支店で」という条件は、HAVING COUNT(DISTINCT 支店名) = その地域の支店数、という形にする。DISTINCTで二重カウントを防ぎ、支店数もサブクエリで計算しておけば、データが変わっても壊れません。</p></div>
+</div>
+
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-str1">
+      <div class="ptitle">Q1. 平均残高より多い口座の顧客</div>
+      <p class="ptask">「まず仮の数字でハードコード→サブクエリに置き換える」手順で、<code>account</code>テーブルの<strong>平均残高（AVG）より多い残高</strong>を持つ口座の<code>account_number</code>・<code>branch_name</code>・<code>balance</code>を求めるSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-str1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-str1', ['SELECT','FROM','AVG(','WHERE'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-str1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-str1-result"></div>
+      <div class="answer-reveal" id="p-str1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> account_number, branch_name, balance</span>
+<span class="cl"><span class="kw">FROM</span> account</span>
+<span class="cl"><span class="kw">WHERE</span> balance &gt; (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(balance) <span class="kw">FROM</span> account</span>
+<span class="cl">);</span></pre>
+        <p class="answer-note">まず<code>SELECT AVG(balance) FROM account;</code>だけを単独で実行して数字を確認し、その値をハードコードしてから<code>(SELECT ...)</code>に置き換えるのがこのページの手順です。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-str2">
+      <div class="ptitle">Q2. Johnsonと同じ都市に住む顧客</div>
+      <p class="ptask"><code>customer_name = 'Johnson'</code>の顧客と<strong>同じ都市</strong>に住んでいる、<strong>他の</strong>顧客（Johnson本人は除く）の<code>customer_id</code>・<code>customer_name</code>を求めるSQLを書いてください。列サブクエリと本人除外の条件を使います。</p>
+      <textarea class="code-editor" id="p-str2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-str2', ['SELECT','FROM','WHERE','<>'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-str2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-str2-result"></div>
+      <div class="answer-reveal" id="p-str2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> customer_id, customer_name</span>
+<span class="cl"><span class="kw">FROM</span> customer</span>
+<span class="cl"><span class="kw">WHERE</span> customer_city = (</span>
+<span class="cl">    <span class="kw">SELECT</span> customer_city <span class="kw">FROM</span> customer <span class="kw">WHERE</span> customer_name = <span class="st">'Johnson'</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">AND</span> customer_name &lt;&gt; <span class="st">'Johnson'</span>;</span></pre>
+        <p class="answer-note">Unit③の「同じ都市の顧客」と同じパターンです。本人を除外する<code>AND customer_name &lt;&gt; 'Johnson'</code>を忘れないでください。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-str3">
+      <div class="ptitle">Q3. 2支店を超えるローンを持つ顧客</div>
+      <p class="ptask"><code>borrower</code>と<code>loan</code>をJOINし、<strong>3つ以上の異なる支店</strong>でローンを組んでいる顧客の<code>customer_id</code>を求めるSQLを書いてください。Unit⑤の「Brooklynの全支店で融資」と同じ<code>HAVING COUNT(DISTINCT ...)</code>のパターンを使います。</p>
+      <textarea class="code-editor" id="p-str3-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-str3', ['GROUP BY','HAVING','COUNT(DISTINCT'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-str3', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-str3-result"></div>
+      <div class="answer-reveal" id="p-str3-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> br.customer_id</span>
+<span class="cl"><span class="kw">FROM</span> borrower br</span>
+<span class="cl"><span class="kw">JOIN</span> loan l <span class="kw">ON</span> br.loan_number = l.loan_number</span>
+<span class="cl"><span class="kw">GROUP BY</span> br.customer_id</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> l.branch_name) &gt; <span class="nm">2</span>;</span></pre>
+        <p class="answer-note"><code>COUNT(DISTINCT branch_name)</code>を使うことで、同じ支店で複数ローンを組んでいても二重カウントされません。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="quiz-section" id="quiz">
@@ -340,5 +409,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>

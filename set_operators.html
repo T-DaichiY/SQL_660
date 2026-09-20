@@ -28,7 +28,7 @@
   <h1>➕ 集合演算子（UNION・INTERSECT・EXCEPT）</h1>
   <p><strong>JOIN</strong>は別々のテーブルの列を<strong>横に並べる</strong>操作でした。それに対して<strong>集合演算子（set operator）</strong>は、<strong>形（列数・列の型）が同じ2つのクエリの結果を、行として重ねたり比較したりする</strong>操作です。JOINは「テーブル」を参照しますが、集合演算子は「クエリ（SELECT文）」同士を組み合わせる点も大きな違いです。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① JOINとSET演算子の違い</a><a href="#unit2">② UNION</a><a href="#unit3">③ INTERSECT</a><a href="#unit4">④ EXCEPT</a><a href="#unit5">⑤ ルールとALL</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① JOINとSET演算子の違い</a><a href="#unit2">② UNION</a><a href="#unit3">③ INTERSECT</a><a href="#unit4">④ EXCEPT</a><a href="#unit5">⑤ ルールとALL</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -177,6 +177,68 @@ CS-005
     <tr><td>EXCEPT</td><td>除去</td><td><strong>重要：A EXCEPT B ≠ B EXCEPT A</strong></td></tr>
   </table>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>2つのクエリは列数とデータ型を揃える。ALLを付けると重複を消さずに全部残す。EXCEPTだけは順序で結果が変わるので要注意。</p></div>
+</div>
+
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-so1">
+      <div class="ptitle">Q1. UNIONで2つのクエリを合体する</div>
+      <p class="ptask"><code>takes</code>テーブルから、Spring学期に履修された<code>course_id</code>の一覧と、Fall学期に履修された<code>course_id</code>の一覧を<code>UNION</code>で1つのリストにまとめるSQLを書いてください（重複は自動で除去されます）。</p>
+      <textarea class="code-editor" id="p-so1-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-so1', ['UNION'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-so1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-so1-result"></div>
+      <div class="answer-reveal" id="p-so1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> semester = <span class="st">'Spring'</span></span>
+<span class="cl"><span class="kw">UNION</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> semester = <span class="st">'Fall'</span>;</span></pre>
+        <p class="answer-note">UNIONは2つのクエリの行を1つのリストに合体し、重複を除いた結果を返します。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-so2">
+      <div class="ptitle">Q2. INTERSECTで両学期に共通する科目を探す</div>
+      <p class="ptask"><code>takes</code>テーブルを使い、2009年のSpring学期にも2009年のFall学期にも履修されている<code>course_id</code>を<code>INTERSECT</code>で求めるSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-so2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-so2', ['INTERSECT'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-so2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-so2-result"></div>
+      <div class="answer-reveal" id="p-so2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2009</span></span>
+<span class="cl"><span class="kw">INTERSECT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2009</span>;</span></pre>
+        <p class="answer-note">INTERSECTは両方のクエリに共通する行だけを返します——ベン図の「重なった部分」です。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-so3">
+      <div class="ptitle">Q3.（応用）EXCEPTで差を求める（順序に注意）</div>
+      <p class="ptask"><code>takes</code>テーブルを使い、「2009年のSpring学期に履修されたが、2009年のFall学期には履修されなかった」<code>course_id</code>を<code>EXCEPT</code>で求めるSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-so3-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-so3', ['EXCEPT'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-so3', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-so3-result"></div>
+      <div class="answer-reveal" id="p-so3-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2009</span></span>
+<span class="cl"><span class="kw">EXCEPT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> takes <span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2009</span>;</span></pre>
+        <p class="answer-note">EXCEPTは順序が重要です——A EXCEPT Bは「Aにあって、Bに無いもの」。クエリの順番を入れ替えると結果も変わります（B EXCEPT Aは別物）。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="quiz-section" id="quiz">
@@ -336,5 +398,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>

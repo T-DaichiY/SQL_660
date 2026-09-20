@@ -28,7 +28,7 @@
   <h1>🧮 サブクエリ②：集合演算子と列挙で絞り込む</h1>
   <p>サブクエリ同士は、<code>INTERSECT</code>や<code>EXCEPT</code>のような<strong>集合演算子</strong>で組み合わせたり、<code>IN</code>・<code>NOT IN</code>で「この値の集合に含まれるか」を調べたりできます。「片方のグループにだけ存在する行」「両方のグループに共通する行」を見つけたいとき、この考え方が力を発揮します。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① INTERSECT</a><a href="#unit2">② EXCEPT</a><a href="#unit3">③ IN・NOT IN</a><a href="#unit4">④ AND・OR・NOT</a><a href="#unit5">⑤ HAVING</a><a href="#unit6">⑥ CAST・DISTINCT実例</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① INTERSECT</a><a href="#unit2">② EXCEPT</a><a href="#unit3">③ IN・NOT IN</a><a href="#unit4">④ AND・OR・NOT</a><a href="#unit5">⑤ HAVING</a><a href="#unit6">⑥ CAST・DISTINCT実例</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -165,6 +165,73 @@
   <p>分解すると、①<code>customer</code>・<code>depositor</code>・<code>account</code>をJOINして、顧客と口座残高を結びつける、②相関サブクエリで「その口座と同じ支店の平均残高」を計算する、③外側の<code>WHERE</code>でその平均をCASTして数値比較する、④顧客が複数口座を持っていると同じ顧客名が何度も出てくるので<code>DISTINCT</code>で1人1行にまとめる、という4段構えです。</p>
   <div class="warn-box">⚠️ <strong>JOINの後にDISTINCTを忘れると、複数口座を持つ顧客が行数分だけ重複して出てきます。</strong>「distinctな顧客リストが欲しい」と分かった時点で、SELECT句にDISTINCTを入れる癖をつけましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>JOIN＋サブクエリ＋CAST＋DISTINCTは組み合わせて使える。money型はCAST(列 AS numeric)で数値に変換してから比較・計算する。JOINで重複が出そうならDISTINCTを忘れずに。</p></div>
+</div>
+
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-ss1">
+      <div class="ptitle">Q1. INTERSECTで両学期に開講されたcourse_idを探す</div>
+      <p class="ptask"><code>section</code>テーブルを使い、<strong>Fall 2023にもSpring 2024にも</strong>開講された<code>course_id</code>を求めるSQLを書いてください。2つの<code>SELECT</code>を<code>INTERSECT</code>でつなぎます。</p>
+      <textarea class="code-editor" id="p-ss1-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-ss1', ['SELECT','INTERSECT','FROM SECTION'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-ss1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-ss1-result"></div>
+      <div class="answer-reveal" id="p-ss1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2023</span></span>
+<span class="cl"><span class="kw">INTERSECT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2024</span>;</span></pre>
+        <p class="answer-note"><code>INTERSECT</code>は2つの結果セットに<strong>両方とも</strong>含まれる行だけを残し、重複も自動的に取り除きます。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-ss2">
+      <div class="ptitle">Q2. IN（列挙リスト）で複数学科の講座を絞り込む</div>
+      <p class="ptask"><code>course</code>テーブルから、<code>dept_name</code>が<strong>'Comp. Sci.'、'Physics'、'Math'のいずれか</strong>に該当する行をすべて求めるSQLを書いてください。手書きの列挙リストと<code>IN</code>を使いましょう。</p>
+      <textarea class="code-editor" id="p-ss2-input" rows="4">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-ss2', ['SELECT','IN (','FROM COURSE'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-ss2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-ss2-result"></div>
+      <div class="answer-reveal" id="p-ss2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course</span>
+<span class="cl"><span class="kw">WHERE</span> dept_name <span class="kw">IN</span> (<span class="st">'Comp. Sci.'</span>, <span class="st">'Physics'</span>, <span class="st">'Math'</span>);</span></pre>
+        <p class="answer-note">文字列の列挙値は必ずシングルクォートで囲みます。数値ならクォート無しでそのまま書きます。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-ss3">
+      <div class="ptitle">Q3.（発展）HAVING＋サブクエリで平均以上の講師を探す</div>
+      <p class="ptask"><code>teaches</code>テーブルから講師ごとの担当セクション数を集計し、<strong>全講師の平均担当セクション数より多い</strong>講師の<code>instructor_id</code>と件数を求めるSQLを書いてください。<code>GROUP BY</code>・<code>HAVING</code>と、平均を計算するサブクエリを組み合わせます。</p>
+      <textarea class="code-editor" id="p-ss3-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-ss3', ['GROUP BY','HAVING','AVG(','FROM TEACHES'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-ss3', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-ss3-result"></div>
+      <div class="answer-reveal" id="p-ss3-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> instructor_id, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> section_count</span>
+<span class="cl"><span class="kw">FROM</span> teaches</span>
+<span class="cl"><span class="kw">GROUP BY</span> instructor_id</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(*) &gt; (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(cnt)</span>
+<span class="cl">    <span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> cnt <span class="kw">FROM</span> teaches <span class="kw">GROUP BY</span> instructor_id) <span class="kw">AS</span> counts</span>
+<span class="cl">);</span></pre>
+        <p class="answer-note"><code>WHERE</code>は行ごとのフィルタ、<code>HAVING</code>はグループごとのフィルタです。内側のサブクエリで先に「講師ごとの平均」をしきい値として計算しています。</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="quiz-section" id="quiz">
@@ -324,5 +391,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>

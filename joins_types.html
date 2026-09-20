@@ -28,7 +28,7 @@
   <h1>🔗 JOINの基本と種類</h1>
   <p>これまでのモジュールでは、常に<strong>1つのテーブル</strong>だけを相手にクエリを書いてきました。でも実際のデータベースは、<code>student</code>や<code>takes</code>のように役割ごとに分かれた小さなテーブルの集まりです。ここからは、複数のテーブルを<strong>JOIN（結合）</strong>で繋げて、1つの結果として取り出す方法を学びます。JOINはSQLの中でも最も強力な機能のひとつで、これができるようになると「学生ごとの履修一覧」「教員ごとの担当授業」といった実用的なレポートが作れるようになります。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① JOINとは何か</a><a href="#unit2">② 主キーと外部キー</a><a href="#unit3">③ 基本のJOIN構文</a><a href="#unit4">④ 5種類のJOIN</a><a href="#unit5">⑤ 実例で比較する</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① JOINとは何か</a><a href="#unit2">② 主キーと外部キー</a><a href="#unit3">③ 基本のJOIN構文</a><a href="#unit4">④ 5種類のJOIN</a><a href="#unit5">⑤ 実例で比較する</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -218,6 +218,67 @@
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>同じテーブルでもJOINの種類で行数は大きく変わります。INNERは一番少なく、LEFT/RIGHT/FULL OUTERはそれより多く、CROSSは桁違いに多くなります。</p></div>
 </div>
 
+<div class="practice-section" id="practice">
+  <h2>💻 コード練習（自己採点）</h2>
+  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
+  <div class="practice-group">
+
+    <div class="practice-card" id="p-jt1">
+      <div class="ptitle">Q1. student と takes を INNER JOIN する</div>
+      <p class="ptask"><code>student</code>テーブルと<code>takes</code>テーブルを<code>student_id</code>で結合し、学生の名前（<code>name</code>）と履修科目（<code>course_id</code>）を表示するSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-jt1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-jt1', ['SELECT','JOIN','ON'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-jt1', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-jt1-result"></div>
+      <div class="answer-reveal" id="p-jt1-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.name, takes.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id;</span></pre>
+        <p class="answer-note">プレーンな<code>JOIN</code>は既定で<code>INNER JOIN</code>と同じ意味です。両方のテーブルに<code>student_id</code>があるので、テーブル名で修飾しています。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-jt2">
+      <div class="ptitle">Q2. 前提科目が無いコースを LEFT JOIN で見つける</div>
+      <p class="ptask"><code>course</code>テーブルを<code>prereq</code>テーブルに<code>course_id</code>でLEFT JOINし、前提科目が設定されていないコース（<code>prereq_id</code>がNULLの行）だけを表示するSQLを書いてください。</p>
+      <textarea class="code-editor" id="p-jt2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-jt2', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-jt2', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-jt2-result"></div>
+      <div class="answer-reveal" id="p-jt2-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course.course_id, course.title</span>
+<span class="cl"><span class="kw">FROM</span> course</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> prereq <span class="kw">ON</span> course.course_id = prereq.course_id</span>
+<span class="cl"><span class="kw">WHERE</span> prereq.prereq_id <span class="kw">IS NULL</span>;</span></pre>
+        <p class="answer-note">LEFT JOINは<code>course</code>の全行を残すので、一致しない行では<code>prereq</code>側の列がNULLになります。それを<code>WHERE ... IS NULL</code>で絞り込みます。</p>
+      </div>
+    </div>
+
+    <div class="practice-card" id="p-jt3">
+      <div class="ptitle">Q3.（応用）CROSS JOINは慎重に</div>
+      <p class="ptask">小さなテーブル同士（例えば<code>course</code>と<code>prereq</code>）を<code>CROSS JOIN</code>して、全組み合わせを取得するSQLを書いてください。行数が大きく膨れ上がることを意識しながら書いてみましょう。</p>
+      <textarea class="code-editor" id="p-jt3-input" rows="4">-- ここにSQLを書いてください
+</textarea>
+      <div class="practice-toolbar">
+        <button class="check-btn" onclick="checkPractice('p-jt3', ['CROSS JOIN'])">✅ 答え合わせ</button>
+        <button class="reveal-btn" onclick="toggleAnswer('p-jt3', this)">💡 答えを見る</button>
+      </div>
+      <div class="check-result" id="p-jt3-result"></div>
+      <div class="answer-reveal" id="p-jt3-answer" hidden>
+        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">CROSS JOIN</span> prereq;</span></pre>
+        <p class="answer-note">CROSS JOINにはON句がなく、直積（Cartesian product）を生成します。大きなテーブル同士では絶対に避けましょう。</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <div class="quiz-section" id="quiz">
   <div class="quiz-header">
     <h2>📝 確認クイズ</h2>
@@ -375,5 +436,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.1});
 units.forEach(function(u){obs.observe(u);});
 </script>
+<script src="practice.js"></script>
 <script src="typewriter.js"></script>
 </body></html>
