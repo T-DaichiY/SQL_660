@@ -28,7 +28,7 @@
   <h1>🔗 JOINの基本と種類</h1>
   <p>これまでのモジュールでは、常に<strong>1つのテーブル</strong>だけを相手にクエリを書いてきました。でも実際のデータベースは、<code>student</code>や<code>takes</code>のように役割ごとに分かれた小さなテーブルの集まりです。ここからは、複数のテーブルを<strong>JOIN（結合）</strong>で繋げて、1つの結果として取り出す方法を学びます。JOINはSQLの中でも最も強力な機能のひとつで、これができるようになると「学生ごとの履修一覧」「教員ごとの担当授業」といった実用的なレポートが作れるようになります。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① JOINとは何か</a><a href="#unit2">② 主キーと外部キー</a><a href="#unit3">③ 基本のJOIN構文</a><a href="#unit4">④ 5種類のJOIN</a><a href="#unit5">⑤ 実例で比較する</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① JOINとは何か</a><a href="#unit2">② 主キーと外部キー</a><a href="#unit3">③ 基本のJOIN構文</a><a href="#unit4">④ 5種類のJOIN</a><a href="#unit5">⑤ 実例で比較する</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -57,6 +57,23 @@
   </div>
   <div class="teal-box">📌 <strong>JOINは単に「両方に存在するか」を調べるだけでなく、一致した行に関連する他の列の値も一緒に取り出せます。</strong>これがJOINの真の強みです——存在確認と、値の取得を同時に行えます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>JOINは、共通の列（例：customer_id）を手がかりに、複数のテーブルを横に繋げて1つの結果として見る仕組みです。</p></div>
+  <div class="practice-card" id="p-jt-u1">
+    <div class="ptitle">💻 ミニ練習：共通の列でテーブルを繋ぐ</div>
+    <p class="ptask"><code>instructor</code>（教員）テーブルと<code>teaches</code>（担当科目）テーブルを、共通の列<code>instructor_id</code>で結合し、教員名（<code>name</code>）と担当科目（<code>course_id</code>）を表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-jt-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jt-u1', ['SELECT','JOIN','TEACHES'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jt-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jt-u1-result"></div>
+    <div class="answer-reveal" id="p-jt-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> instructor.name, teaches.course_id</span>
+<span class="cl"><span class="kw">FROM</span> instructor</span>
+<span class="cl"><span class="kw">JOIN</span> teaches <span class="kw">ON</span> instructor.instructor_id = teaches.instructor_id;</span></pre>
+      <p class="answer-note">両方のテーブルにある<code>instructor_id</code>を手がかりに、一致する行同士を横に繋げています。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit2">
@@ -74,6 +91,23 @@
   <p>University データベースで言えば、<code>takes.student_id</code>（外部キー）は必ず<code>student.student_id</code>（主キー）のどれかを指していなければならない、という関係です。この矢印の向き——FKからPKへ——を覚えておくと、ER図の読み方にもそのまま応用できます。</p>
   <div class="warn-box">⚠️ <strong>参照整合性とは、外部キーの値が参照先の主キーに実在するか、またはNULLでなければならない、というルールです。</strong>これが守られていないと、「存在しない学生の履修記録」のような矛盾したデータが生まれてしまいます。制約として設定していなくても、JOINを書くときはこの前提が成り立っているかを常に意識しましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>主キーは「その表で1つしかない値」、外部キーは「他の表の主キーを指す値」。外部キーの値は必ず参照先に存在する（参照整合性）——だからJOINで確実に相手が見つかります。</p></div>
+  <div class="practice-card" id="p-jt-u2">
+    <div class="ptitle">💻 ミニ練習：外部キーから主キーへ辿る</div>
+    <p class="ptask"><code>takes</code>（履修記録）テーブルの外部キー<code>student_id</code>を使って<code>student</code>（主キー）テーブルと結合し、学生名（<code>name</code>）と成績（<code>grade</code>）を表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-jt-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jt-u2', ['SELECT','JOIN','GRADE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jt-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jt-u2-result"></div>
+    <div class="answer-reveal" id="p-jt-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.name, takes.grade</span>
+<span class="cl"><span class="kw">FROM</span> takes</span>
+<span class="cl"><span class="kw">JOIN</span> student <span class="kw">ON</span> takes.student_id = student.student_id;</span></pre>
+      <p class="answer-note"><code>takes.student_id</code>（FK）は必ず<code>student.student_id</code>（PK）のどれかを指しているという参照整合性があるからこそ、このJOINは確実に相手を見つけられます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit3">
@@ -105,6 +139,23 @@
   <div class="warn-box">⚠️ <strong>なぜ<code>student.student_id</code>のようにテーブル名を付ける必要があるのか。</strong><code>student</code>にも<code>takes</code>にも<code>student_id</code>という同じ名前の列があるため、単に<code>student_id</code>とだけ書くと「どちらのテーブルの列か分からない」というエラーになります。<code>student.name</code>や<code>takes.course_id</code>のように、<strong>重複する列名だけ</strong>テーブル名で修飾すれば十分です。重複していない列（<code>name</code>など片方にしかない列）は修飾しなくても動きますが、書いておいても害はありません。</div>
   <div class="teal-box">📌 <strong>設計のコツ：</strong>テーブルをまたいで同じ意味の列には同じ名前を付ける（例：どちらも<code>student_id</code>）のが一般的です。ただしJOINするクエリでは、重複する列名を書くたびにどちらのテーブルか明示する必要がある、という点を忘れないようにしましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>FROM A JOIN B ON A.列 = B.列</code>が基本形。両方のテーブルに同じ列名（例：student_id）がある場合は、<code>テーブル名.列名</code>で必ず区別します。</p></div>
+  <div class="practice-card" id="p-jt-u3">
+    <div class="ptitle">💻 ミニ練習：student と takes を INNER JOIN する</div>
+    <p class="ptask"><code>student</code>テーブルと<code>takes</code>テーブルを<code>student_id</code>で結合し、学生の名前（<code>name</code>）と履修科目（<code>course_id</code>）を表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-jt-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jt-u3', ['SELECT','JOIN','COURSE_ID'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jt-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jt-u3-result"></div>
+    <div class="answer-reveal" id="p-jt-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.name, takes.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id;</span></pre>
+      <p class="answer-note">プレーンな<code>JOIN</code>は既定で<code>INNER JOIN</code>と同じ意味です。両方のテーブルに<code>student_id</code>があるので、テーブル名で修飾しています。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit4">
@@ -197,6 +248,24 @@
   <div class="warn-box">⚠️ <strong>CROSS JOINはCartesian product（直積）を生成します——使用には注意が必要です。</strong>たった200行と100行のテーブルでも2万行に膨れ上がりました。数万行・数十万行のテーブル同士でCROSS JOINを行うと、結果が爆発的に大きくなり、非常に負荷の高い処理になります。商品テーブル×色テーブルのように「全組み合わせを列挙したい」場合など、限られた場面でのみ使いましょう。</div>
   <div class="teal-box">📌 <strong>LEFTとRIGHTは「鏡写し」の関係です。</strong><code>A LEFT JOIN B</code>と<code>B RIGHT JOIN A</code>は同じ結果になります。クエリの中でテーブルをどちらに書くか（先か後か）によって「左」「右」が決まるだけなので、基本的にはLEFT JOINだけ覚えておけば困りません。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INNER＝両方にある行だけ。LEFT／RIGHT＝片方は全部＋一致分（足りない側はNULL）。FULL OUTER＝両方全部。CROSS＝全組み合わせ（要注意）。</p></div>
+  <div class="practice-card" id="p-jt-u4">
+    <div class="ptitle">💻 ミニ練習：前提科目が無いコースを LEFT JOIN で見つける</div>
+    <p class="ptask"><code>course</code>テーブルを<code>prereq</code>テーブルに<code>course_id</code>でLEFT JOINし、前提科目が設定されていないコース（<code>prereq_id</code>がNULLの行）だけを表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-jt-u4-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jt-u4', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jt-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jt-u4-result"></div>
+    <div class="answer-reveal" id="p-jt-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course.course_id, course.title</span>
+<span class="cl"><span class="kw">FROM</span> course</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> prereq <span class="kw">ON</span> course.course_id = prereq.course_id</span>
+<span class="cl"><span class="kw">WHERE</span> prereq.prereq_id <span class="kw">IS NULL</span>;</span></pre>
+      <p class="answer-note">LEFT JOINは<code>course</code>の全行を残すので、一致しない行では<code>prereq</code>側の列がNULLになります。それを<code>WHERE ... IS NULL</code>で絞り込みます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit5">
@@ -216,66 +285,20 @@
   <p>このように、<strong>同じ2つのテーブル・同じ結合条件でも、JOINの種類を変えるだけで結果の行数と意味がまったく変わります。</strong>「一致するものだけ欲しいのか」「片方は全部見たいのか」「全組み合わせが欲しいのか」——目的に応じて正しいJOINを選ぶことが、正確なクエリを書く第一歩です。</p>
   <div class="teal-box">📌 <strong>迷ったときの目安：</strong>「欠けている側があってもいいから、主となるテーブルの全件を見たい」ならLEFT JOIN。「両方に揃っている確実なデータだけでいい」ならINNER JOIN。「全パターンを網羅したい」ときだけCROSS JOINを検討しましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>同じテーブルでもJOINの種類で行数は大きく変わります。INNERは一番少なく、LEFT/RIGHT/FULL OUTERはそれより多く、CROSSは桁違いに多くなります。</p></div>
-</div>
-
-<div class="practice-section" id="practice">
-  <h2>💻 コード練習（自己採点）</h2>
-  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
-  <div class="practice-group">
-
-    <div class="practice-card" id="p-jt1">
-      <div class="ptitle">Q1. student と takes を INNER JOIN する</div>
-      <p class="ptask"><code>student</code>テーブルと<code>takes</code>テーブルを<code>student_id</code>で結合し、学生の名前（<code>name</code>）と履修科目（<code>course_id</code>）を表示するSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-jt1-input" rows="5">-- ここにSQLを書いてください
+  <div class="practice-card" id="p-jt-u5">
+    <div class="ptitle">💻 ミニ練習：（応用）CROSS JOINは慎重に</div>
+    <p class="ptask">小さなテーブル同士（例えば<code>course</code>と<code>prereq</code>）を<code>CROSS JOIN</code>して、全組み合わせを取得するSQLを書いてください。行数が大きく膨れ上がることを意識しながら書いてみましょう。</p>
+    <textarea class="code-editor" id="p-jt-u5-input" rows="4">-- ここにSQLを書いてください
 </textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-jt1', ['SELECT','JOIN','ON'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-jt1', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-jt1-result"></div>
-      <div class="answer-reveal" id="p-jt1-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.name, takes.course_id</span>
-<span class="cl"><span class="kw">FROM</span> student</span>
-<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id;</span></pre>
-        <p class="answer-note">プレーンな<code>JOIN</code>は既定で<code>INNER JOIN</code>と同じ意味です。両方のテーブルに<code>student_id</code>があるので、テーブル名で修飾しています。</p>
-      </div>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jt-u5', ['CROSS JOIN'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jt-u5', this)">💡 答えを見る</button>
     </div>
-
-    <div class="practice-card" id="p-jt2">
-      <div class="ptitle">Q2. 前提科目が無いコースを LEFT JOIN で見つける</div>
-      <p class="ptask"><code>course</code>テーブルを<code>prereq</code>テーブルに<code>course_id</code>でLEFT JOINし、前提科目が設定されていないコース（<code>prereq_id</code>がNULLの行）だけを表示するSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-jt2-input" rows="6">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-jt2', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-jt2', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-jt2-result"></div>
-      <div class="answer-reveal" id="p-jt2-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course.course_id, course.title</span>
-<span class="cl"><span class="kw">FROM</span> course</span>
-<span class="cl"><span class="kw">LEFT JOIN</span> prereq <span class="kw">ON</span> course.course_id = prereq.course_id</span>
-<span class="cl"><span class="kw">WHERE</span> prereq.prereq_id <span class="kw">IS NULL</span>;</span></pre>
-        <p class="answer-note">LEFT JOINは<code>course</code>の全行を残すので、一致しない行では<code>prereq</code>側の列がNULLになります。それを<code>WHERE ... IS NULL</code>で絞り込みます。</p>
-      </div>
+    <div class="check-result" id="p-jt-u5-result"></div>
+    <div class="answer-reveal" id="p-jt-u5-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">CROSS JOIN</span> prereq;</span></pre>
+      <p class="answer-note">CROSS JOINにはON句がなく、直積（Cartesian product）を生成します。大きなテーブル同士では絶対に避けましょう。</p>
     </div>
-
-    <div class="practice-card" id="p-jt3">
-      <div class="ptitle">Q3.（応用）CROSS JOINは慎重に</div>
-      <p class="ptask">小さなテーブル同士（例えば<code>course</code>と<code>prereq</code>）を<code>CROSS JOIN</code>して、全組み合わせを取得するSQLを書いてください。行数が大きく膨れ上がることを意識しながら書いてみましょう。</p>
-      <textarea class="code-editor" id="p-jt3-input" rows="4">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-jt3', ['CROSS JOIN'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-jt3', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-jt3-result"></div>
-      <div class="answer-reveal" id="p-jt3-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course <span class="kw">CROSS JOIN</span> prereq;</span></pre>
-        <p class="answer-note">CROSS JOINにはON句がなく、直積（Cartesian product）を生成します。大きなテーブル同士では絶対に避けましょう。</p>
-      </div>
-    </div>
-
   </div>
 </div>
 

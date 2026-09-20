@@ -28,7 +28,7 @@
   <h1>🧬 テーブルの関係とJOINの応用</h1>
   <p>ここでは、テーブル同士がどんな<strong>「関係（relationship）」</strong>で結びついているかを整理し、それを踏まえて<strong>エイリアス</strong>や<strong>3つ以上のテーブルのJOIN</strong>、<strong>JOIN結果に対する計算</strong>まで一気に見ていきます。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① テーブルの関係</a><a href="#unit2">② 多対多と中間テーブル</a><a href="#unit3">③ エイリアスで短く</a><a href="#unit4">④ 3つ以上のJOIN</a><a href="#unit5">⑤ ON句とWHERE句の違い</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① テーブルの関係</a><a href="#unit2">② 多対多と中間テーブル</a><a href="#unit3">③ エイリアスで短く</a><a href="#unit4">④ 3つ以上のJOIN</a><a href="#unit5">⑤ ON句とWHERE句の違い</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -69,6 +69,23 @@
   </div>
   <div class="teal-box">📌 <strong>なぜ関係を意識するのか？</strong> 1対1なら結果件数は絞られ、1対多や多対多ではJOINした瞬間に行が増殖します。「なぜこんなに行数が増えたんだろう？」と思ったら、まず関係の種類を確認するクセをつけましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>テーブル同士の関係は1対1・1対多・多対多の3種類。University DBでは、department↔instructorとinstructor↔studentは1対多です。</p></div>
+  <div class="practice-card" id="p-jr-u1">
+    <div class="ptitle">💻 ミニ練習：1対多の関係をJOINで確認する</div>
+    <p class="ptask"><code>department</code>（学部）テーブルと<code>instructor</code>（教員）テーブルを、共通の列<code>dept_name</code>で結合し、学部名（<code>dept_name</code>）と教員名（<code>name</code>）を表示するSQLを書いてください。1つの学部に複数の教員が対応する「1対多」の関係を確認しましょう。</p>
+    <textarea class="code-editor" id="p-jr-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jr-u1', ['SELECT','JOIN','INSTRUCTOR'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jr-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jr-u1-result"></div>
+    <div class="answer-reveal" id="p-jr-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> department.dept_name, instructor.name</span>
+<span class="cl"><span class="kw">FROM</span> department</span>
+<span class="cl"><span class="kw">JOIN</span> instructor <span class="kw">ON</span> department.dept_name = instructor.dept_name;</span></pre>
+      <p class="answer-note">同じ<code>dept_name</code>が結果に何度も現れれば、それが「1つの学部に複数の教員」という1対多の証拠です。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit2">
@@ -91,6 +108,24 @@
   </div>
   <div class="teal-box">📌 <strong>中間テーブルは、多対多を2つの1対多に分解する仕組みです。</strong>studentとcourseを直接つなぐ列は存在しませんが、takesが両方の主キーを外部キーとして持つことで、間接的に多対多の関係を表現できます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>student↔courseは多対多。直接はつなげないので、両方のIDを持つtakesという中間テーブルを介して結びつけます。</p></div>
+  <div class="practice-card" id="p-jr-u2">
+    <div class="ptitle">💻 ミニ練習：中間テーブル経由で「多」の側を確認する</div>
+    <p class="ptask"><code>student</code>と<code>takes</code>を<code>student_id</code>でJOINし、<code>student_id</code>が128の学生が履修している科目コード（<code>course_id</code>）をすべて表示するSQLを書いてください。結果が複数行になれば、それが「1人の学生が複数の科目を履修できる」という多対多の一端です。</p>
+    <textarea class="code-editor" id="p-jr-u2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jr-u2', ['SELECT','JOIN','WHERE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jr-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jr-u2-result"></div>
+    <div class="answer-reveal" id="p-jr-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.name, takes.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id</span>
+<span class="cl"><span class="kw">WHERE</span> student.student_id = <span class="nm">128</span>;</span></pre>
+      <p class="answer-note">同じ学生に対して複数の<code>course_id</code>が返ってくるのは、<code>takes</code>が中間テーブルとして両方のIDを保持しているからです。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit3">
@@ -113,6 +148,23 @@
 </pre>
   <div class="teal-box">📌 <strong>エイリアスの書き方は「テーブル名 スペース 別名」。</strong><code>AS</code>を挟んで<code>student AS S</code>と書いても同じ意味になりますが、<code>AS</code>を省略してもエラーにはなりません。列名の前の<code>S.</code>や<code>T.</code>も省略可能な場合がありますが（列名が全テーブルの中で一意なとき）、どのテーブルの列か分かりやすくするために付けておくのがおすすめです。短いクエリでは1文字のエイリアス（S, T, Cなど）がよく使われます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>テーブル名の後にスペースと短い名前を書けば、それがエイリアスになります。student S, takes Tのように書けば、S.やT.でずっと短く書けます。</p></div>
+  <div class="practice-card" id="p-jr-u3">
+    <div class="ptitle">💻 ミニ練習：USING句でJOINする</div>
+    <p class="ptask"><code>student</code>と<code>takes</code>を、<code>ON</code>ではなく<code>USING(student_id)</code>を使って結合し、学生IDと履修科目IDを表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-jr-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jr-u3', ['USING'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jr-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jr-u3-result"></div>
+    <div class="answer-reveal" id="p-jr-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.student_id, takes.course_id</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">USING</span> (student_id);</span></pre>
+      <p class="answer-note">両テーブルの列名が同じ（<code>student_id</code>）ときは<code>USING(列名)</code>で短く書けます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit4">
@@ -141,6 +193,24 @@
 </pre>
   <div class="teal-box">📌 <strong>JOINは上から順に処理されます。</strong>まずstudentとtakesがstudent_idで結合され、その中間結果に対して次にcourseがcourse_idで結合されます。すべてを一度にごちゃまぜに結合しているわけではありません。だからこそ、studentが直接持っていないcourse_idも、takesを経由すれば橋渡しできるのです。「欲しい列があるテーブルまで、共通の列を持つテーブルを辿ってつなぐ」というイメージで考えると分かりやすいです。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>studentにない列（title）は、student→takes→courseと順番にJOINして辿り着きます。JOINは書いた順に処理され、前のJOIN結果に次のテーブルが結合されます。</p></div>
+  <div class="practice-card" id="p-jr-u4">
+    <div class="ptitle">💻 ミニ練習：student → takes → course の3テーブルJOIN</div>
+    <p class="ptask"><code>student</code>・<code>takes</code>・<code>course</code>をエイリアス（S, T, C）を使ってつなぎ、学生が履修している科目のタイトル（<code>title</code>）を表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-jr-u4-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jr-u4', ['JOIN','FROM STUDENT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jr-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-jr-u4-result"></div>
+    <div class="answer-reveal" id="p-jr-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> S.name, C.title</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="nm">S</span></span>
+<span class="cl"><span class="kw">JOIN</span> takes <span class="nm">T</span> <span class="kw">ON</span> S.student_id = T.student_id</span>
+<span class="cl"><span class="kw">JOIN</span> course <span class="nm">C</span> <span class="kw">ON</span> T.course_id = C.course_id;</span></pre>
+      <p class="answer-note">studentはcourse_idを直接持たないので、takesを経由して橋渡しします。JOINは上から順に処理されます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit5">
@@ -181,69 +251,23 @@
 </pre>
   <p>ON句に入れた場合、2002年以外に履修していない学生でも<strong>studentの行自体はLEFT JOINで残り</strong>、takes側の列がNULLになるだけです。一方WHERE句に条件を入れると、結合の後で<code>T.year = 2002</code>を満たさない行（NULLも含む）がすべて削られてしまい、結果的にLEFT JOINなのにINNER JOINと同じような挙動になってしまいます。</p>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ON句の条件は結合中に効き、WHERE句の条件は結合後に効きます。INNER JOINなら差が出にくいですが、LEFT JOINなど外部結合では結果が変わるので要注意です。</p></div>
-</div>
-
-<div class="practice-section" id="practice">
-  <h2>💻 コード練習（自己採点）</h2>
-  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
-  <div class="practice-group">
-
-    <div class="practice-card" id="p-jr1">
-      <div class="ptitle">Q1. student → takes → course の3テーブルJOIN</div>
-      <p class="ptask"><code>student</code>・<code>takes</code>・<code>course</code>をエイリアス（S, T, C）を使ってつなぎ、学生が履修している科目のタイトル（<code>title</code>）を表示するSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-jr1-input" rows="6">-- ここにSQLを書いてください
+  <div class="practice-card" id="p-jr-u5">
+    <div class="ptitle">💻 ミニ練習：（応用）GROUP BYで科目ごとの履修者数</div>
+    <p class="ptask"><code>takes</code>を<code>course</code>とJOINし、<code>course_id</code>ごとに履修している学生数を数えるSQLを書いてください（<code>GROUP BY</code>と<code>COUNT</code>を使用）。</p>
+    <textarea class="code-editor" id="p-jr-u5-input" rows="5">-- ここにSQLを書いてください
 </textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-jr1', ['JOIN','FROM STUDENT'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-jr1', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-jr1-result"></div>
-      <div class="answer-reveal" id="p-jr1-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> S.name, C.title</span>
-<span class="cl"><span class="kw">FROM</span> student <span class="nm">S</span></span>
-<span class="cl"><span class="kw">JOIN</span> takes <span class="nm">T</span> <span class="kw">ON</span> S.student_id = T.student_id</span>
-<span class="cl"><span class="kw">JOIN</span> course <span class="nm">C</span> <span class="kw">ON</span> T.course_id = C.course_id;</span></pre>
-        <p class="answer-note">studentはcourse_idを直接持たないので、takesを経由して橋渡しします。JOINは上から順に処理されます。</p>
-      </div>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-jr-u5', ['GROUP BY','COUNT('])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-jr-u5', this)">💡 答えを見る</button>
     </div>
-
-    <div class="practice-card" id="p-jr2">
-      <div class="ptitle">Q2. USING句でJOINする</div>
-      <p class="ptask"><code>student</code>と<code>takes</code>を、<code>ON</code>ではなく<code>USING(student_id)</code>を使って結合し、学生IDと履修科目IDを表示するSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-jr2-input" rows="5">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-jr2', ['USING'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-jr2', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-jr2-result"></div>
-      <div class="answer-reveal" id="p-jr2-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.student_id, takes.course_id</span>
-<span class="cl"><span class="kw">FROM</span> student</span>
-<span class="cl"><span class="kw">JOIN</span> takes <span class="kw">USING</span> (student_id);</span></pre>
-        <p class="answer-note">両テーブルの列名が同じ（<code>student_id</code>）ときは<code>USING(列名)</code>で短く書けます。</p>
-      </div>
-    </div>
-
-    <div class="practice-card" id="p-jr3">
-      <div class="ptitle">Q3.（応用）GROUP BYで科目ごとの履修者数</div>
-      <p class="ptask"><code>takes</code>を<code>course</code>とJOINし、<code>course_id</code>ごとに履修している学生数を数えるSQLを書いてください（<code>GROUP BY</code>と<code>COUNT</code>を使用）。</p>
-      <textarea class="code-editor" id="p-jr3-input" rows="5">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-jr3', ['GROUP BY','COUNT('])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-jr3', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-jr3-result"></div>
-      <div class="answer-reveal" id="p-jr3-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> T.course_id, <span class="kw">COUNT</span>(T.student_id) <span class="kw">AS</span> num_students</span>
+    <div class="check-result" id="p-jr-u5-result"></div>
+    <div class="answer-reveal" id="p-jr-u5-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> T.course_id, <span class="kw">COUNT</span>(T.student_id) <span class="kw">AS</span> num_students</span>
 <span class="cl"><span class="kw">FROM</span> takes <span class="nm">T</span></span>
 <span class="cl"><span class="kw">JOIN</span> course <span class="nm">C</span> <span class="kw">ON</span> T.course_id = C.course_id</span>
 <span class="cl"><span class="kw">GROUP BY</span> T.course_id;</span></pre>
-        <p class="answer-note">JOINした結果に対しても、通常のクエリと同じように<code>GROUP BY</code>と集計関数が使えます。</p>
-      </div>
+      <p class="answer-note">JOINした結果に対しても、通常のクエリと同じように<code>GROUP BY</code>と集計関数が使えます。</p>
     </div>
-
   </div>
 </div>
 

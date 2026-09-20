@@ -28,7 +28,7 @@
   <h1>🧩 アンチ結合・CTE・CASE式 — 教科書だけの内容</h1>
   <p>ここまでのM6は講義動画の内容でした。この最後の1本は<strong>講義では扱っていない、教科書『Practical SQL 完全ガイド』第7章・第13章の内容</strong>です。JOINとサブクエリをさらに使いこなすための3つの技を身につけます。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① アンチ結合（LEFT JOIN + IS NULL）</a><a href="#unit2">② CTE（共通テーブル式）</a><a href="#unit3">③ CASE式で値を分類する</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① アンチ結合（LEFT JOIN + IS NULL）</a><a href="#unit2">② CTE（共通テーブル式）</a><a href="#unit3">③ CASE式で値を分類する</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -53,6 +53,24 @@
   <div class="note-box">💡 <strong>なぜこれで「一致しない行」だけ残るのか：</strong>LEFT JOINは<code>student</code>の全行を必ず残します。<code>takes</code>側に一致する行があれば<code>takes.student_id</code>には実際の値が入りますが、一致する行が無ければ<code>NULL</code>で埋められます。そこを<code>WHERE takes.student_id IS NULL</code>で絞り込めば、「一致相手が無かった行」だけが残るわけです。</div>
   <div class="teal-box">📌 <strong>INNER JOINでは同じことができません。</strong>INNER JOINは最初から一致した行しか返さないので、そもそも「一致しなかった行」がテーブルに存在しないからです。アンチ結合には必ずLEFT（またはRIGHT）JOINが必要です。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>LEFT JOINしてから「相手側がNULLの行だけ」を選ぶと、「片方にしかいない」行を見つけられます。出席していない学生、注文履歴のない顧客、などを探すときによく使うテクニックです。</p></div>
+  <div class="practice-card" id="p-mp-u1">
+    <div class="ptitle">💻 ミニ練習：一度も履修登録していない学生（アンチ結合）</div>
+    <p class="ptask"><code>student</code>を<code>takes</code>にLEFT JOINし、<strong>一度も履修登録（takes）をしていない学生</strong>の<code>student_id</code>・<code>name</code>を求めるアンチ結合のSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-mp-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-mp-u1', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-mp-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-mp-u1-result"></div>
+    <div class="answer-reveal" id="p-mp-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.student_id, student.name</span>
+<span class="cl"><span class="kw">FROM</span> student</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id</span>
+<span class="cl"><span class="kw">WHERE</span> takes.student_id <span class="kw">IS NULL</span>;</span></pre>
+      <p class="answer-note">LEFT JOINで一致しなかった行は<code>takes</code>側がNULLになります。それを<code>WHERE ... IS NULL</code>で絞り込むのがアンチ結合です。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit2">
@@ -88,6 +106,26 @@ Shankar | 102 | 81.5
   <p>CTEは<strong>1回定義すれば、本体クエリの中で何度でも参照</strong>できます。同じサブクエリを2箇所にコピペする必要がなくなり、条件を変えたいときも<code>WITH</code>の中の1箇所を直すだけで済みます。</p>
   <div class="teal-box">📌 <strong>使い分けの目安：</strong>サブクエリが短く1回しか使わないならFROM句にそのまま書いてOK。名前を付けたほうが意味が伝わる場合や、同じ計算を複数回使う場合はCTEにまとめましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CTEは「クエリの中で使う変数」のようなもの。<code>WITH 名前 AS (...)</code>で計算をあらかじめ名付けておけば、本体のクエリがすっきり読みやすくなります。</p></div>
+  <div class="practice-card" id="p-mp-u2">
+    <div class="ptitle">💻 ミニ練習：平均単位数より多い学生（CTE）</div>
+    <p class="ptask"><code>WITH avg_credits AS (...)</code>というCTEで<code>student.tot_cred</code>の平均を計算し、その平均<strong>より多い</strong>単位数を持つ学生の<code>name</code>・<code>tot_cred</code>を求めるSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-mp-u2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-mp-u2', ['WITH','AVG(','SELECT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-mp-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-mp-u2-result"></div>
+    <div class="answer-reveal" id="p-mp-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> avg_credits <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> avg(tot_cred) <span class="kw">AS</span> avg_cred <span class="kw">FROM</span> student</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> student.name, student.tot_cred</span>
+<span class="cl"><span class="kw">FROM</span> student, avg_credits</span>
+<span class="cl"><span class="kw">WHERE</span> student.tot_cred &gt; avg_credits.avg_cred;</span></pre>
+      <p class="answer-note"><code>WITH</code>で先に平均値に名前（<code>avg_credits</code>）を付けておき、本体クエリから普通のテーブルのように参照します。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit3">
@@ -127,65 +165,18 @@ Levy | 46 | Sophomore
 </pre>
   <div class="teal-box">📌 <strong>CASE式はSELECTリストのどこでも使えます。</strong>普通の列と同じように<code>GROUP BY</code>や<code>ORDER BY</code>のエイリアスとしても参照できるので、集計・分類・並べ替えのどこにでも組み込めます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CASE式は「もしこの値がXXならこのラベル、そうでなければ次の条件…」という変換ルールです。数値をそのまま見せるのではなく、人が読みやすいカテゴリに変えたいときに使います。</p></div>
-</div>
-
-<div class="practice-section" id="practice">
-  <h2>💻 コード練習（自己採点）</h2>
-  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
-  <div class="practice-group">
-
-    <div class="practice-card" id="p-mp1">
-      <div class="ptitle">Q1. 一度も履修登録していない学生（アンチ結合）</div>
-      <p class="ptask"><code>student</code>を<code>takes</code>にLEFT JOINし、<strong>一度も履修登録（takes）をしていない学生</strong>の<code>student_id</code>・<code>name</code>を求めるアンチ結合のSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-mp1-input" rows="5">-- ここにSQLを書いてください
+  <div class="practice-card" id="p-mp-u3">
+    <div class="ptitle">💻 ミニ練習：tot_credで学年を分類する（CASE）</div>
+    <p class="ptask"><code>student.tot_cred</code>を使い、90以上なら<code>'Senior'</code>、60以上なら<code>'Junior'</code>、30以上なら<code>'Sophomore'</code>、それ以外は<code>'Freshman'</code>というラベル（<code>class_year</code>という列名）を付けるCASE式のSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-mp-u3-input" rows="7">-- ここにSQLを書いてください
 </textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-mp1', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-mp1', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-mp1-result"></div>
-      <div class="answer-reveal" id="p-mp1-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> student.student_id, student.name</span>
-<span class="cl"><span class="kw">FROM</span> student</span>
-<span class="cl"><span class="kw">LEFT JOIN</span> takes <span class="kw">ON</span> student.student_id = takes.student_id</span>
-<span class="cl"><span class="kw">WHERE</span> takes.student_id <span class="kw">IS NULL</span>;</span></pre>
-        <p class="answer-note">LEFT JOINで一致しなかった行は<code>takes</code>側がNULLになります。それを<code>WHERE ... IS NULL</code>で絞り込むのがアンチ結合です。</p>
-      </div>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-mp-u3', ['CASE','WHEN','ELSE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-mp-u3', this)">💡 答えを見る</button>
     </div>
-
-    <div class="practice-card" id="p-mp2">
-      <div class="ptitle">Q2. 平均単位数より多い学生（CTE）</div>
-      <p class="ptask"><code>WITH avg_credits AS (...)</code>というCTEで<code>student.tot_cred</code>の平均を計算し、その平均<strong>より多い</strong>単位数を持つ学生の<code>name</code>・<code>tot_cred</code>を求めるSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-mp2-input" rows="6">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-mp2', ['WITH','AVG(','SELECT'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-mp2', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-mp2-result"></div>
-      <div class="answer-reveal" id="p-mp2-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">WITH</span> avg_credits <span class="kw">AS</span> (</span>
-<span class="cl">    <span class="kw">SELECT</span> avg(tot_cred) <span class="kw">AS</span> avg_cred <span class="kw">FROM</span> student</span>
-<span class="cl">)</span>
-<span class="cl"><span class="kw">SELECT</span> student.name, student.tot_cred</span>
-<span class="cl"><span class="kw">FROM</span> student, avg_credits</span>
-<span class="cl"><span class="kw">WHERE</span> student.tot_cred &gt; avg_credits.avg_cred;</span></pre>
-        <p class="answer-note"><code>WITH</code>で先に平均値に名前（<code>avg_credits</code>）を付けておき、本体クエリから普通のテーブルのように参照します。</p>
-      </div>
-    </div>
-
-    <div class="practice-card" id="p-mp3">
-      <div class="ptitle">Q3. tot_credで学年を分類する（CASE）</div>
-      <p class="ptask"><code>student.tot_cred</code>を使い、90以上なら<code>'Senior'</code>、60以上なら<code>'Junior'</code>、30以上なら<code>'Sophomore'</code>、それ以外は<code>'Freshman'</code>というラベル（<code>class_year</code>という列名）を付けるCASE式のSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-mp3-input" rows="7">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-mp3', ['CASE','WHEN','ELSE'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-mp3', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-mp3-result"></div>
-      <div class="answer-reveal" id="p-mp3-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name, tot_cred,</span>
+    <div class="check-result" id="p-mp-u3-result"></div>
+    <div class="answer-reveal" id="p-mp-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name, tot_cred,</span>
 <span class="cl">    <span class="kw">CASE</span></span>
 <span class="cl">        <span class="kw">WHEN</span> tot_cred &gt;= <span class="nm">90</span> <span class="kw">THEN</span> <span class="st">'Senior'</span></span>
 <span class="cl">        <span class="kw">WHEN</span> tot_cred &gt;= <span class="nm">60</span> <span class="kw">THEN</span> <span class="st">'Junior'</span></span>
@@ -193,10 +184,8 @@ Levy | 46 | Sophomore
 <span class="cl">        <span class="kw">ELSE</span> <span class="st">'Freshman'</span></span>
 <span class="cl">    <span class="kw">END</span> <span class="kw">AS</span> class_year</span>
 <span class="cl"><span class="kw">FROM</span> student;</span></pre>
-        <p class="answer-note">広い条件（<code>&gt;= 30</code>）を先に書くと、単位数の多い学生もそこで止まってしまいます。厳しい条件ほど先に書きましょう。</p>
-      </div>
+      <p class="answer-note">広い条件（<code>&gt;= 30</code>）を先に書くと、単位数の多い学生もそこで止まってしまいます。厳しい条件ほど先に書きましょう。</p>
     </div>
-
   </div>
 </div>
 

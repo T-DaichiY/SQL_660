@@ -28,7 +28,7 @@
   <h1>🗄️ リレーショナルデータベース入門</h1>
   <p>M1〜M5では、常に<strong>1つのテーブル</strong>を相手にクエリを書いてきました。M6からは複数のテーブルをまたいでデータを扱っていきます。その前提として、まずはデータベースそのものの仕組み——DBMSの使われ方、モデルの種類、そしてリレーショナル方式の強みであるACID特性を整理しておきましょう。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① DBMSの用途</a><a href="#unit2">② データベースモデルの種類</a><a href="#unit3">③ ACID特性</a><a href="#unit4">④ RDBMSのメリット</a><a href="#unit5">⑤ NoSQLとの比較</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① DBMSの用途</a><a href="#unit2">② データベースモデルの種類</a><a href="#unit3">③ ACID特性</a><a href="#unit4">④ RDBMSのメリット</a><a href="#unit5">⑤ NoSQLとの比較</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -51,6 +51,21 @@
   <div class="teal-box">📌 <strong>この用途の違いが、どのデータベースモデルを選ぶかに直結します。</strong>「データをどう蓄積し、どう取り出したいか」によって、最適なDBMSの種類は変わってきます。次のユニットで、その選択肢を見ていきましょう。</div>
   <div class="teal-box">🧭 <strong>この先のM6モジュールでは、University（大学）サンプルデータベースを使います。</strong>pgAdminで新しいデータベースを作成し、テーブル構造（主キー・外部キー・データ型）を定義する<strong>DDLスクリプト</strong>をクエリツールで実行してテーブルを作成、続けて<strong>データファイル</strong>（SQL形式のINSERT文）を実行してレコードを流し込む、という2段階でインポートします。まだの人は、セットアップ動画で先にインポートを済ませておきましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データベースの使い道は大きく2つ。「ためておく」データウェアハウジングと、「その場で処理する」OLTP。SNSもネットショップも、この組み合わせでできています。</p></div>
+  <div class="practice-card" id="p-rdb-u1">
+    <div class="ptitle">💻 ミニ練習：インポートした行数を確認する</div>
+    <p class="ptask">University DBを読み込んだあと、<code>student</code>テーブルに何行あるか確認したいです。行数を1つの数値として返すSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-rdb-u1-input" rows="4">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rdb-u1', ['SELECT','COUNT(','FROM','STUDENT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rdb-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rdb-u1-result"></div>
+    <div class="answer-reveal" id="p-rdb-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">FROM</span> student;</span></pre>
+      <p class="answer-note"><code>count(*)</code>は「行数を数える」集計関数です（M4で学習済み）。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit2">
@@ -69,6 +84,24 @@
   <p>リレーショナルモデルを直感的に理解するには、Excelを思い浮かべると分かりやすいです。1つのワークブックに「シート1」と「シート2」があり、シート2のセルで<code>=シート1!A1</code>のように参照すると、シート1の値が変わればシート2の表示も自動的に更新されます。リレーショナルデータベースも同じで、あるテーブルの値を別のテーブルから参照できます。その仕組みを支えるのが<strong>主キー（Primary Key／PK）</strong>と<strong>外部キー（Foreign Key／FK）</strong>——テーブル同士を結びつける、一意な値です（詳しくはM5で扱った通りです）。</p>
   <p>これらのモデルにはそれぞれ強みと弱みがあり、優劣が一律に決まるわけではありません。ただし、SQLを使う<strong>RDBMS（Relational Database Management System／関係データベース管理システム）</strong>は長年デファクトスタンダードとされてきました。近年は他のモデル（特にNoSQL）も人気を集めていますが、多くの有名サービスは今もRDBMSの上に構築されているか、少なくとも重要な役割を担っています。大企業ほど、用途に応じて複数のモデルを併用しているケースも珍しくありません——「全部SQL」である必要はないのです。</p>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>階層型は「親は1人」、ネットワーク型は「親は複数OK」、オブジェクト指向型は「データ＋操作をセットで扱う」、リレーショナル型は「表同士をキーで繋ぐ」。今学んでいるのはこの最後、リレーショナル型です。</p></div>
+  <div class="practice-card" id="p-rdb-u2">
+    <div class="ptitle">💻 ミニ練習：主キーを持つテーブルを作る</div>
+    <p class="ptask"><code>book_id</code>（整数・主キー）と<code>title</code>（文字列）を持つ<code>book</code>テーブルを作るSQLを書いてください。主キーがあるからこそ、後から他のテーブルの外部キーで参照できます。</p>
+    <textarea class="code-editor" id="p-rdb-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rdb-u2', ['CREATE TABLE','PRIMARY KEY'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rdb-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rdb-u2-result"></div>
+    <div class="answer-reveal" id="p-rdb-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">CREATE TABLE</span> book (</span>
+<span class="cl">    book_id <span class="kw">integer</span> <span class="kw">PRIMARY KEY</span>,</span>
+<span class="cl">    title <span class="kw">text</span></span>
+<span class="cl">);</span></pre>
+      <p class="answer-note">主キー制約があるおかげで、<code>book_id</code>の重複やNULLがデータベース側で防がれます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit3">
@@ -96,6 +129,24 @@
   <p><strong>永続性（Durability）</strong>は、コミット（確定）されたトランザクションは失われないという性質です。一度トランザクションが完了し、データベースに反映されると、そのデータは確定したものとして扱われます。中途半端な状態のまま保存されることはありません。</p>
   <div class="teal-box">📌 <strong>ACIDのおかげでRDBMSは「壊れにくい」システムになっています。</strong>壊すこと自体は不可能ではありませんが、他の多くの仕組みに比べて、格段に壊れにくく設計されています。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ACID＝「全部成功か全部失敗（原子性）」「変更は確実に反映（一貫性）」「他の処理に邪魔されない（独立性）」「確定したら消えない（永続性）」。この4つがRDBMSの信頼性の源です。</p></div>
+  <div class="practice-card" id="p-rdb-u3">
+    <div class="ptitle">💻 ミニ練習：CHECK制約で一貫性を守る</div>
+    <p class="ptask"><code>instructor_id</code>（整数・主キー）と<code>salary</code>（数値）を持つ<code>instructor</code>テーブルを作ってください。<code>salary</code>が0以上でなければならない、というルールを<code>CHECK</code>制約で追加し、矛盾したデータが入らないようにしましょう（＝一貫性／Consistency）。</p>
+    <textarea class="code-editor" id="p-rdb-u3-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rdb-u3', ['CREATE TABLE','CHECK','SALARY'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rdb-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rdb-u3-result"></div>
+    <div class="answer-reveal" id="p-rdb-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">CREATE TABLE</span> instructor (</span>
+<span class="cl">    instructor_id <span class="kw">integer</span> <span class="kw">PRIMARY KEY</span>,</span>
+<span class="cl">    salary <span class="kw">numeric</span> <span class="kw">CHECK</span> (salary >= <span class="nm">0</span>)</span>
+<span class="cl">);</span></pre>
+      <p class="answer-note">CHECK制約があると、条件を満たさないINSERT/UPDATEはデータベース側で自動的に拒否されます。これも「一貫性」を保つ仕組みの1つです。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit4">
@@ -115,6 +166,21 @@
   </table>
   <div class="teal-box">📌 <strong>ベンダーによってSQLの「方言」は異なります。</strong>就職先や関わる業界によって、使われているRDBMSの種類は変わってきます。「どの現場でどのSQLが使われているか」を調べ、違いを理解しておくことも実務では大切です。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>RDBMSが今も使われ続けているのは、データを速く正確に取り出せて、管理がしやすく、同時アクセスにも障害にも強く、開発も楽になるから。学校の校務システムも銀行も、裏側の多くはRDBMSです。</p></div>
+  <div class="practice-card" id="p-rdb-u4">
+    <div class="ptitle">💻 ミニ練習：効率的なデータアクセスを体感する</div>
+    <p class="ptask"><code>student</code>テーブルから、<code>tot_cred</code>が90より多い学生の名前だけを出力するSQLを書いてください。大量の行から必要な情報だけを素早く取り出せるのが、RDBMSの強みの1つです。</p>
+    <textarea class="code-editor" id="p-rdb-u4-input" rows="4">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rdb-u4', ['SELECT','WHERE','TOT_CRED'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rdb-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rdb-u4-result"></div>
+    <div class="answer-reveal" id="p-rdb-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> name <span class="kw">FROM</span> student <span class="kw">WHERE</span> tot_cred > <span class="nm">90</span>;</span></pre>
+      <p class="answer-note">数百万行あっても、<code>WHERE</code>句1つで条件に合う行だけに絞り込めます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit5">
@@ -134,48 +200,20 @@
   <p>NoSQLの中でもよく見かけるのが<strong>ドキュメント型</strong>です。例えば、あるハッシュキーに、その人（や対象）に関するあらゆる情報をまとめたJSON形式のドキュメントが紐づいている、という形式です。キーさえ分かれば、そのドキュメントを丸ごと取得できます。<strong>キー・バリュー型</strong>も同様に、あるキーに1つの値を対応させるシンプルな構造で、暗号分野などでも活用されます。</p>
   <div class="teal-box">📌 <strong>「NoSQL」は "not SQL"（SQLを使わない）という意味ではなく、"not only SQL"（SQLだけではない）の略です。</strong>SQLとNoSQLは対立するものではなく、多くの企業はアプリケーションの用途や機能ごとに両方を使い分けています。どちらが「勝つ」かという話ではありません。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>NoSQLはスキーマを事前に固定しない分、分散させやすく大規模データに向いています。RDBMSは構造が厳格な分、整合性と管理のしやすさに優れます。「NoSQL＝SQL不要」ではなく「SQLだけではない」という意味です。</p></div>
-</div>
-
-<div class="practice-section" id="practice">
-  <h2>💻 コード練習（自己採点）</h2>
-  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
-  <div class="practice-group">
-
-    <div class="practice-card" id="p-rdb1">
-      <div class="ptitle">Q1. インポートした行数を確認する</div>
-      <p class="ptask">University DBを読み込んだあと、<code>student</code>テーブルに何行あるか確認したいです。行数を1つの数値として返すSQLを書いてください。</p>
-      <textarea class="code-editor" id="p-rdb1-input" rows="4">-- ここにSQLを書いてください
+  <div class="practice-card" id="p-rdb-u5">
+    <div class="ptitle">💻 ミニ練習：固定されたスキーマを体感する</div>
+    <p class="ptask"><code>student</code>テーブルの<strong>全列</strong>を出力するSQLを書いてください。RDBMSでは列（スキーマ）が事前に固定されているので、どんな行でも同じ列構成で返ってきます——これがNoSQLとの大きな違いです。</p>
+    <textarea class="code-editor" id="p-rdb-u5-input" rows="3">-- ここにSQLを書いてください
 </textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-rdb1', ['SELECT','COUNT(','FROM','STUDENT'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-rdb1', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-rdb1-result"></div>
-      <div class="answer-reveal" id="p-rdb1-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">FROM</span> student;</span></pre>
-        <p class="answer-note"><code>count(*)</code>は「行数を数える」集計関数です（M4で学習済み）。</p>
-      </div>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rdb-u5', ['SELECT','FROM','STUDENT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rdb-u5', this)">💡 答えを見る</button>
     </div>
-
-    <div class="practice-card" id="p-rdb2">
-      <div class="ptitle">Q2. 主キー・外部キーを意識したCREATE TABLE</div>
-      <p class="ptask"><code>book_id</code>（整数・主キー）と<code>title</code>（文字列）を持つ<code>book</code>テーブルを作るSQLを書いてください。ACIDの「整合性」を保つ第一歩は、こうした制約をきちんと定義することです。</p>
-      <textarea class="code-editor" id="p-rdb2-input" rows="5">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-rdb2', ['CREATE TABLE','PRIMARY KEY'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-rdb2', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-rdb2-result"></div>
-      <div class="answer-reveal" id="p-rdb2-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">CREATE TABLE</span> book (</span>
-<span class="cl">    book_id <span class="kw">integer</span> <span class="kw">PRIMARY KEY</span>,</span>
-<span class="cl">    title <span class="kw">text</span></span>
-<span class="cl">);</span></pre>
-        <p class="answer-note">主キー制約があるおかげで、<code>book_id</code>の重複やNULLがデータベース側で防がれます。</p>
-      </div>
+    <div class="check-result" id="p-rdb-u5-result"></div>
+    <div class="answer-reveal" id="p-rdb-u5-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> student;</span></pre>
+      <p class="answer-note">どの行も同じ列（student_id, name, dept_name, tot_cred...）を持っています。NoSQLのドキュメント型なら、行ごとに持っている項目が違っても構いません。</p>
     </div>
-
   </div>
 </div>
 

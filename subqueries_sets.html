@@ -28,7 +28,7 @@
   <h1>🧮 サブクエリ②：集合演算子と列挙で絞り込む</h1>
   <p>サブクエリ同士は、<code>INTERSECT</code>や<code>EXCEPT</code>のような<strong>集合演算子</strong>で組み合わせたり、<code>IN</code>・<code>NOT IN</code>で「この値の集合に含まれるか」を調べたりできます。「片方のグループにだけ存在する行」「両方のグループに共通する行」を見つけたいとき、この考え方が力を発揮します。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
-    <a href="#unit1">① INTERSECT</a><a href="#unit2">② EXCEPT</a><a href="#unit3">③ IN・NOT IN</a><a href="#unit4">④ AND・OR・NOT</a><a href="#unit5">⑤ HAVING</a><a href="#unit6">⑥ CAST・DISTINCT実例</a><a href="#practice">💻 コード練習</a><a href="#quiz">📝 Quiz</a>
+    <a href="#unit1">① INTERSECT</a><a href="#unit2">② EXCEPT</a><a href="#unit3">③ IN・NOT IN</a><a href="#unit4">④ AND・OR・NOT</a><a href="#unit5">⑤ HAVING</a><a href="#unit6">⑥ CAST・DISTINCT実例</a><a href="#quiz">📝 Quiz</a>
   </div>
 </div>
 </div>
@@ -51,6 +51,25 @@
 </pre>
   <p>この例では、それぞれのサブクエリが「その学期に開講されたcourse_idの一覧」を返し、<code>INTERSECT</code>が<strong>両方の一覧に含まれるcourse_idだけ</strong>を残します。JOINや複数の<code>AND</code>条件でも似た結果を作れますが、<code>INTERSECT</code>の真価は、この結果をさらに<strong>より大きなクエリの<code>WHERE ... IN (...)</code>の中に組み込む</strong>ときに発揮されます。バラバラの条件を1つのまとまった値の集合として扱い、それを使って別のテーブルを絞り込めるからです。</p>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INTERSECTは「両方に共通する行だけ」を返す。ベン図の重なり部分。重複も自動で消える。</p></div>
+  <div class="practice-card" id="p-ss-u1">
+    <div class="ptitle">💻 ミニ練習：INTERSECTで両学期に開講されたcourse_idを探す</div>
+    <p class="ptask"><code>section</code>テーブルを使い、<strong>Fall 2023にもSpring 2024にも</strong>開講された<code>course_id</code>を求めるSQLを書いてください。2つの<code>SELECT</code>を<code>INTERSECT</code>でつなぎます。</p>
+    <textarea class="code-editor" id="p-ss-u1-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ss-u1', ['SELECT','INTERSECT','FROM SECTION'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ss-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ss-u1-result"></div>
+    <div class="answer-reveal" id="p-ss-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2023</span></span>
+<span class="cl"><span class="kw">INTERSECT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2024</span>;</span></pre>
+      <p class="answer-note"><code>INTERSECT</code>は2つの結果セットに<strong>両方とも</strong>含まれる行だけを残し、重複も自動的に取り除きます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit2">
@@ -81,6 +100,25 @@
 </pre>
   <p>組み立て方の順番が重要です。まず<strong>欲しい最終結果</strong>（title, course_id）から書き始め、次に条件を作る2本のサブクエリを組み立て、最後に<code>EXCEPT</code>でできた「1つの値の集合」を丸ごとカッコで囲み、外側の<code>WHERE course_id IN (...)</code>につなげます。カッコで囲むのは、2つのサブクエリの組み合わせ全体が<strong>1つのまとまった結果セット</strong>として扱われる必要があるからです。</p>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>EXCEPTは「1つ目にはあるけど、2つ目には無いもの」を返す引き算。2つのサブクエリをカッコでまとめて、それを外側のIN (...)に渡すのが定番パターン。</p></div>
+  <div class="practice-card" id="p-ss-u2">
+    <div class="ptitle">💻 ミニ練習：EXCEPTで片方だけの学期を探す</div>
+    <p class="ptask"><code>section</code>テーブルを使い、<strong>Fall 2023には開講されたが、Spring 2024には開講されなかった</strong><code>course_id</code>を求めるSQLを書いてください。2つの<code>SELECT</code>を<code>EXCEPT</code>でつなぎます。</p>
+    <textarea class="code-editor" id="p-ss-u2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ss-u2', ['SELECT','EXCEPT','FROM SECTION'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ss-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ss-u2-result"></div>
+    <div class="answer-reveal" id="p-ss-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2023</span></span>
+<span class="cl"><span class="kw">EXCEPT</span></span>
+<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2024</span>;</span></pre>
+      <p class="answer-note"><code>EXCEPT</code>は1つ目の結果から、2つ目の結果に存在する行を取り除く「引き算」です。<code>INTERSECT</code>と同じく重複は自動的に除去されます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit3">
@@ -102,6 +140,22 @@
 </pre>
   <p>実際に部門名を列挙する前に、<code>SELECT DISTINCT dept_name FROM instructor</code>のようなクエリで<strong>正しいつづり・略し方</strong>を確認しておくと安心です。「Computer Science」ではなく「Comp. Sci.」のように省略表記されていることも多く、タイプミスがあるとクエリはエラーにならずに<strong>単に0件を返す</strong>だけなので気づきにくいからです。</p>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>INは「このリストに入っている？」、NOT INは「入っていない？」を調べる。文字列は'クォート'で、数値はそのまま書く。列名の型に合わせるのがルール。</p></div>
+  <div class="practice-card" id="p-ss-u3">
+    <div class="ptitle">💻 ミニ練習：IN（列挙リスト）で複数学科の講座を絞り込む</div>
+    <p class="ptask"><code>course</code>テーブルから、<code>dept_name</code>が<strong>'Comp. Sci.'、'Physics'、'Math'のいずれか</strong>に該当する行をすべて求めるSQLを書いてください。手書きの列挙リストと<code>IN</code>を使いましょう。</p>
+    <textarea class="code-editor" id="p-ss-u3-input" rows="4">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ss-u3', ['SELECT','IN (','FROM COURSE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ss-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ss-u3-result"></div>
+    <div class="answer-reveal" id="p-ss-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course</span>
+<span class="cl"><span class="kw">WHERE</span> dept_name <span class="kw">IN</span> (<span class="st">'Comp. Sci.'</span>, <span class="st">'Physics'</span>, <span class="st">'Math'</span>);</span></pre>
+      <p class="answer-note">文字列の列挙値は必ずシングルクォートで囲みます。数値ならクォート無しでそのまま書きます。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit4">
@@ -124,6 +178,23 @@
   <p>ここで重要な注意点があります。<code>NOT IN (サブクエリ)</code>を使うとき、そのサブクエリの結果に<strong>1つでもNULLが混じっていると、外側の条件は0件を返してしまいます</strong>（NULLとの比較は真にも偽にもならず「不明」になるため）。これはSQLの古典的な落とし穴なので、<code>NOT IN</code>の対象になる列がNULLを含みうる場合は、サブクエリ側に<code>WHERE 列 IS NOT NULL</code>を足すなどの対策が安全です。</p>
   <div class="warn-box">⚠️ <strong>NOT INの右側のサブクエリがNULLを1件でも返すと、外側のNOT IN全体が黙って0件になります。</strong>エラーは出ないため非常に気づきにくい落とし穴です。NULLが混ざりうる列には、サブクエリ側で<code>IS NOT NULL</code>を付けるか、<code>NOT EXISTS</code>を検討しましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ANDは「両方満たす」、ORは「どちらか満たす」、NOTは「反転」。同じ2つのサブクエリでも、AND/OR/NOTの選び方で結果の意味も件数もガラッと変わる。</p></div>
+  <div class="practice-card" id="p-ss-u4">
+    <div class="ptitle">💻 ミニ練習：AND + NOT INで「片方は満たすが、もう片方は満たさない」条件を作る</div>
+    <p class="ptask"><code>section</code>テーブルから、<strong>Fall 2006には開講されたが、Spring 2008には開講されなかった</strong><code>course_id</code>を求めるSQLを書いてください。<code>IN</code>と<code>NOT IN</code>を<code>AND</code>でつないで書きましょう。</p>
+    <textarea class="code-editor" id="p-ss-u4-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ss-u4', ['SELECT','IN (','NOT IN'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ss-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ss-u4-result"></div>
+    <div class="answer-reveal" id="p-ss-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
+<span class="cl"><span class="kw">WHERE</span> course_id <span class="kw">IN</span> (<span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section <span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2006</span>)</span>
+<span class="cl">  <span class="kw">AND</span> course_id <span class="kw">NOT IN</span> (<span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section <span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2008</span>);</span></pre>
+      <p class="answer-note">2つの<code>IN</code>条件を<code>AND</code>でつなぐと「両方満たす」になります。<code>NOT IN</code>側のサブクエリにNULLが混じると全体が0件になる点にも注意しましょう。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit5">
@@ -143,6 +214,27 @@
 </pre>
   <p>内側のサブクエリは「講師ごとの担当セクション数」をまず集計し、それをさらに<code>AVG</code>で平均して1つの数値（しきい値）に変えています。外側のクエリはもう一度講師ごとに集計し、<code>HAVING</code>でその平均を超えるグループだけを残します。<code>WHERE</code>は行ごとのフィルタ、<code>HAVING</code>はグループごとのフィルタという役割の違いを思い出しておくと、この構造が理解しやすくなります。</p>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>HAVINGの比較相手にサブクエリを置ける。「平均より多い／少ない」のようなグループ単位の条件を、サブクエリで計算した数値と比べる。</p></div>
+  <div class="practice-card" id="p-ss-u5">
+    <div class="ptitle">💻 ミニ練習：（発展）HAVING＋サブクエリで平均以上の講師を探す</div>
+    <p class="ptask"><code>teaches</code>テーブルから講師ごとの担当セクション数を集計し、<strong>全講師の平均担当セクション数より多い</strong>講師の<code>instructor_id</code>と件数を求めるSQLを書いてください。<code>GROUP BY</code>・<code>HAVING</code>と、平均を計算するサブクエリを組み合わせます。</p>
+    <textarea class="code-editor" id="p-ss-u5-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ss-u5', ['GROUP BY','HAVING','AVG(','FROM TEACHES'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ss-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ss-u5-result"></div>
+    <div class="answer-reveal" id="p-ss-u5-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> instructor_id, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> section_count</span>
+<span class="cl"><span class="kw">FROM</span> teaches</span>
+<span class="cl"><span class="kw">GROUP BY</span> instructor_id</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(*) &gt; (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(cnt)</span>
+<span class="cl">    <span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> cnt <span class="kw">FROM</span> teaches <span class="kw">GROUP BY</span> instructor_id) <span class="kw">AS</span> counts</span>
+<span class="cl">);</span></pre>
+      <p class="answer-note"><code>WHERE</code>は行ごとのフィルタ、<code>HAVING</code>はグループごとのフィルタです。内側のサブクエリで先に「講師ごとの平均」をしきい値として計算しています。</p>
+    </div>
+  </div>
 </div>
 
 <div class="unit" id="unit6">
@@ -165,72 +257,28 @@
   <p>分解すると、①<code>customer</code>・<code>depositor</code>・<code>account</code>をJOINして、顧客と口座残高を結びつける、②相関サブクエリで「その口座と同じ支店の平均残高」を計算する、③外側の<code>WHERE</code>でその平均をCASTして数値比較する、④顧客が複数口座を持っていると同じ顧客名が何度も出てくるので<code>DISTINCT</code>で1人1行にまとめる、という4段構えです。</p>
   <div class="warn-box">⚠️ <strong>JOINの後にDISTINCTを忘れると、複数口座を持つ顧客が行数分だけ重複して出てきます。</strong>「distinctな顧客リストが欲しい」と分かった時点で、SELECT句にDISTINCTを入れる癖をつけましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>JOIN＋サブクエリ＋CAST＋DISTINCTは組み合わせて使える。money型はCAST(列 AS numeric)で数値に変換してから比較・計算する。JOINで重複が出そうならDISTINCTを忘れずに。</p></div>
-</div>
-
-<div class="practice-section" id="practice">
-  <h2>💻 コード練習（自己採点）</h2>
-  <p class="practice-intro">SQLを自分で書いて、必要なキーワードが揃っているか確認しましょう。「答え合わせ」はキーワードチェック（本物の実行結果ではありません）、「答えを見る」で模範解答が見られます。実際に合っているかは、ぜひpgAdminでも実行して確かめてください。</p>
-  <div class="practice-group">
-
-    <div class="practice-card" id="p-ss1">
-      <div class="ptitle">Q1. INTERSECTで両学期に開講されたcourse_idを探す</div>
-      <p class="ptask"><code>section</code>テーブルを使い、<strong>Fall 2023にもSpring 2024にも</strong>開講された<code>course_id</code>を求めるSQLを書いてください。2つの<code>SELECT</code>を<code>INTERSECT</code>でつなぎます。</p>
-      <textarea class="code-editor" id="p-ss1-input" rows="6">-- ここにSQLを書いてください
+  <div class="practice-card" id="p-ss-u6">
+    <div class="ptitle">💻 ミニ練習：CASTとDISTINCTで支店の平均残高と比較する</div>
+    <p class="ptask">banking DBで、<code>customer</code>・<code>depositor</code>・<code>account</code>をJOINし、自分の口座残高（<code>balance</code>）が<strong>同じ支店（<code>branch_name</code>）の平均残高より多い</strong>顧客の名前を、重複なしで求めてください。<code>balance</code>は<code>money</code>型なので<code>CAST(... AS numeric)</code>で変換し、<code>DISTINCT</code>で1人1行にまとめましょう。</p>
+    <textarea class="code-editor" id="p-ss-u6-input" rows="10">-- ここにSQLを書いてください
 </textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-ss1', ['SELECT','INTERSECT','FROM SECTION'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-ss1', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-ss1-result"></div>
-      <div class="answer-reveal" id="p-ss1-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
-<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Fall'</span> <span class="kw">AND</span> year = <span class="nm">2023</span></span>
-<span class="cl"><span class="kw">INTERSECT</span></span>
-<span class="cl"><span class="kw">SELECT</span> course_id <span class="kw">FROM</span> section</span>
-<span class="cl"><span class="kw">WHERE</span> semester = <span class="st">'Spring'</span> <span class="kw">AND</span> year = <span class="nm">2024</span>;</span></pre>
-        <p class="answer-note"><code>INTERSECT</code>は2つの結果セットに<strong>両方とも</strong>含まれる行だけを残し、重複も自動的に取り除きます。</p>
-      </div>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ss-u6', ['CAST(','DISTINCT','AVG('])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ss-u6', this)">💡 答えを見る</button>
     </div>
-
-    <div class="practice-card" id="p-ss2">
-      <div class="ptitle">Q2. IN（列挙リスト）で複数学科の講座を絞り込む</div>
-      <p class="ptask"><code>course</code>テーブルから、<code>dept_name</code>が<strong>'Comp. Sci.'、'Physics'、'Math'のいずれか</strong>に該当する行をすべて求めるSQLを書いてください。手書きの列挙リストと<code>IN</code>を使いましょう。</p>
-      <textarea class="code-editor" id="p-ss2-input" rows="4">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-ss2', ['SELECT','IN (','FROM COURSE'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-ss2', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-ss2-result"></div>
-      <div class="answer-reveal" id="p-ss2-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> course</span>
-<span class="cl"><span class="kw">WHERE</span> dept_name <span class="kw">IN</span> (<span class="st">'Comp. Sci.'</span>, <span class="st">'Physics'</span>, <span class="st">'Math'</span>);</span></pre>
-        <p class="answer-note">文字列の列挙値は必ずシングルクォートで囲みます。数値ならクォート無しでそのまま書きます。</p>
-      </div>
-    </div>
-
-    <div class="practice-card" id="p-ss3">
-      <div class="ptitle">Q3.（発展）HAVING＋サブクエリで平均以上の講師を探す</div>
-      <p class="ptask"><code>teaches</code>テーブルから講師ごとの担当セクション数を集計し、<strong>全講師の平均担当セクション数より多い</strong>講師の<code>instructor_id</code>と件数を求めるSQLを書いてください。<code>GROUP BY</code>・<code>HAVING</code>と、平均を計算するサブクエリを組み合わせます。</p>
-      <textarea class="code-editor" id="p-ss3-input" rows="7">-- ここにSQLを書いてください
-</textarea>
-      <div class="practice-toolbar">
-        <button class="check-btn" onclick="checkPractice('p-ss3', ['GROUP BY','HAVING','AVG(','FROM TEACHES'])">✅ 答え合わせ</button>
-        <button class="reveal-btn" onclick="toggleAnswer('p-ss3', this)">💡 答えを見る</button>
-      </div>
-      <div class="check-result" id="p-ss3-result"></div>
-      <div class="answer-reveal" id="p-ss3-answer" hidden>
-        <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> instructor_id, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> section_count</span>
-<span class="cl"><span class="kw">FROM</span> teaches</span>
-<span class="cl"><span class="kw">GROUP BY</span> instructor_id</span>
-<span class="cl"><span class="kw">HAVING</span> <span class="kw">COUNT</span>(*) &gt; (</span>
-<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(cnt)</span>
-<span class="cl">    <span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> cnt <span class="kw">FROM</span> teaches <span class="kw">GROUP BY</span> instructor_id) <span class="kw">AS</span> counts</span>
+    <div class="check-result" id="p-ss-u6-result"></div>
+    <div class="answer-reveal" id="p-ss-u6-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> c.customer_name</span>
+<span class="cl"><span class="kw">FROM</span> customer <span class="kw">AS</span> c</span>
+<span class="cl"><span class="kw">JOIN</span> depositor <span class="kw">AS</span> d <span class="kw">ON</span> c.customer_id = d.customer_id</span>
+<span class="cl"><span class="kw">JOIN</span> account <span class="kw">AS</span> a <span class="kw">ON</span> d.account_number = a.account_number</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">CAST</span>(a.balance <span class="kw">AS</span> numeric) &gt; (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(<span class="kw">CAST</span>(a2.balance <span class="kw">AS</span> numeric))</span>
+<span class="cl">    <span class="kw">FROM</span> account <span class="kw">AS</span> a2</span>
+<span class="cl">    <span class="kw">WHERE</span> a2.branch_name = a.branch_name</span>
 <span class="cl">);</span></pre>
-        <p class="answer-note"><code>WHERE</code>は行ごとのフィルタ、<code>HAVING</code>はグループごとのフィルタです。内側のサブクエリで先に「講師ごとの平均」をしきい値として計算しています。</p>
-      </div>
+      <p class="answer-note">相関サブクエリで「同じ支店の平均残高」を計算し、外側の<code>WHERE</code>で<code>CAST</code>した数値同士を比較しています。複数口座を持つ顧客が重複しないよう<code>DISTINCT</code>で1人1行にまとめます。</p>
     </div>
-
   </div>
 </div>
 
