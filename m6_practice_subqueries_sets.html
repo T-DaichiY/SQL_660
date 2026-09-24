@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 サブクエリ応用</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 サブクエリ応用 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · サブクエリ応用</div>
+  <h1>🧮 サブクエリ応用 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ SQLレッスン：M6演習 — サブクエリ応用</p>
+  <p style="margin-top:.5rem;"><a href="subqueries_sets.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"ss-b1", tier:"basic", title:"IN で複数の学部を列挙する",
+    scenario:"<code>student</code>テーブルから、<code>dept_name</code>が<code>'Comp. Sci.'</code>・<code>'Physics'</code>・<code>'Math'</code>のいずれかである学生を、<strong>student.name, student.dept_name</strong>の順で出力してください。",
+    concept:"IN で手書きの列挙リストと比較する", hint:"WHERE dept_name IN ('Comp. Sci.', 'Physics', 'Math')　※文字列は必ずシングルクォートで囲む",
+    starter:"-- student.name, student.dept_name の順で出力してください\n",
+    solution:"SELECT student.name, student.dept_name FROM student WHERE student.dept_name IN ('Comp. Sci.', 'Physics', 'Math');" },
+  { id:"ss-b2", tier:"basic", title:"NOT IN で対象外を列挙する",
+    scenario:"<code>student</code>テーブルから、<code>dept_name</code>が<code>'Comp. Sci.'</code>・<code>'Physics'</code>・<code>'Math'</code>の<strong>いずれでもない</strong>学生を、<strong>student.name, student.dept_name</strong>の順で出力してください。",
+    concept:"NOT IN で手書きの列挙リストを除外する", hint:"WHERE dept_name NOT IN ('Comp. Sci.', 'Physics', 'Math')",
+    starter:"-- student.name, student.dept_name の順で出力してください\n",
+    solution:"SELECT student.name, student.dept_name FROM student WHERE student.dept_name NOT IN ('Comp. Sci.', 'Physics', 'Math');" },
+  { id:"ss-b3", tier:"basic", title:"INTERSECT で共通の科目を求める",
+    scenario:"2023年秋（Fall, 2023）に<strong>teaches</strong>テーブルで担当された<code>course_id</code>の集合と、同じ学期に<strong>takes</strong>テーブルで履修された<code>course_id</code>の集合の、<strong>両方に含まれる</strong>科目を求めてください。列は<strong>course_id</strong>の1列だけにしてください。",
+    concept:"INTERSECT（2つの列サブクエリの共通部分）", hint:"SELECT course_id FROM teaches WHERE semester='Fall' AND year=2023 INTERSECT SELECT course_id FROM takes WHERE semester='Fall' AND year=2023;",
+    starter:"-- course_id の1列だけを出力してください\n",
+    solution:"SELECT course_id FROM teaches WHERE semester='Fall' AND year=2023 INTERSECT SELECT course_id FROM takes WHERE semester='Fall' AND year=2023;" },
+  { id:"ss-b4", tier:"basic", title:"EXCEPT で「担当者がいない履修」を求める",
+    scenario:"2023年秋（Fall, 2023）に<strong>takes</strong>テーブルで履修された<code>course_id</code>の集合から、同じ学期に<strong>teaches</strong>テーブルで担当された<code>course_id</code>の集合を<strong>引いた</strong>ものを求めてください（＝履修記録はあるのに、teachesテーブルに担当教員の記録が無い科目）。列は<strong>course_id</strong>の1列だけにしてください。",
+    concept:"EXCEPT（2つの列サブクエリの差集合）", hint:"SELECT course_id FROM takes WHERE semester='Fall' AND year=2023 EXCEPT SELECT course_id FROM teaches WHERE semester='Fall' AND year=2023;",
+    starter:"-- course_id の1列だけを出力してください（1行になるはず）\n",
+    solution:"SELECT course_id FROM takes WHERE semester='Fall' AND year=2023 EXCEPT SELECT course_id FROM teaches WHERE semester='Fall' AND year=2023;" },
+  { id:"ss-b5", tier:"basic", title:"DISTINCT で重複した顧客名を除く",
+    scenario:"<code>customer</code>と<code>borrower</code>、<code>loan</code>をJOINして、ローン（融資）を持っている顧客の名前を求めてください。ある顧客が複数のローンを持っている場合でも、名前は<strong>1回だけ</strong>出るようにしてください。列は<strong>customer_name</strong>の1列だけにしてください（DISTINCTを使わないと、複数ローンを持つ顧客の名前が重複して出てしまいます）。",
+    concept:"DISTINCTでJOIN後の重複行を除去する", hint:"SELECT DISTINCT customer.customer_name FROM customer JOIN borrower ON customer.customer_id = borrower.customer_id JOIN loan ON borrower.loan_number = loan.loan_number;",
+    starter:"-- customer_name の1列だけを出力してください（DISTINCTを忘れずに）\n",
+    solution:"SELECT DISTINCT customer.customer_name FROM customer JOIN borrower ON customer.customer_id = borrower.customer_id JOIN loan ON borrower.loan_number = loan.loan_number;" },
+
+  // ===== INTERMEDIATE =====
+  { id:"ss-i1", tier:"intermediate", title:"IN にサブクエリを使う",
+    scenario:"手書きのリストではなく、<strong>サブクエリ</strong>を使って、ローン（融資）を持っている顧客を<code>customer</code>テーブルから求めてください（<code>customer_id IN (SELECT customer_id FROM borrower)</code>のように書きます）。<strong>customer.customer_id, customer.customer_name</strong>の順で出力してください。",
+    concept:"IN + サブクエリ（手書きリストの代わりに別テーブルの値を使う）", hint:"WHERE customer_id IN (SELECT customer_id FROM borrower)",
+    starter:"-- customer.customer_id, customer.customer_name の順で出力してください\n",
+    solution:"SELECT customer.customer_id, customer.customer_name FROM customer WHERE customer.customer_id IN (SELECT borrower.customer_id FROM borrower);" },
+  { id:"ss-i2", tier:"intermediate", title:"NOT IN のNULL落とし穴を避けた安全な書き方",
+    scenario:"注意：<code>NOT IN (サブクエリ)</code>は、サブクエリの結果に<strong>NULLが1つでも含まれると、外側のNOT IN全体が0件になってしまう</strong>という落とし穴があります（NULLとの比較は真にも偽にもならず「不明」になるため）。この落とし穴を避けるには、サブクエリに<code>IS NOT NULL</code>条件を必ず加えるか、<code>NOT EXISTS</code>を使う必要があります。今回は、ブルックリン市（<code>branch_city = 'Brooklyn'</code>）にある支店の口座を1つも持っていない顧客を、<strong>安全な書き方</strong>で求めてください。<strong>customer.customer_id, customer.customer_name</strong>の順で出力してください。",
+    concept:"NOT IN + NULL の落とし穴と、IS NOT NULL / NOT EXISTS による安全策", hint:"WHERE customer_id NOT IN (SELECT depositor.customer_id FROM depositor JOIN account ON ... JOIN branch ON ... WHERE branch_city='Brooklyn' AND depositor.customer_id IS NOT NULL)",
+    starter:"-- customer.customer_id, customer.customer_name の順で出力してください\n",
+    solution:"SELECT customer.customer_id, customer.customer_name FROM customer WHERE customer.customer_id NOT IN (SELECT depositor.customer_id FROM depositor JOIN account ON depositor.account_number = account.account_number JOIN branch ON account.branch_name = branch.branch_name WHERE branch.branch_city = 'Brooklyn' AND depositor.customer_id IS NOT NULL);" },
+  { id:"ss-i3", tier:"intermediate", title:"AND で IN と数値条件を組み合わせる",
+    scenario:"<code>student</code>テーブルから、<code>dept_name</code>が<code>'Comp. Sci.'</code>または<code>'Physics'</code>で、<strong>かつ</strong><code>tot_cred</code>が50より大きい学生を求めてください。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"IN条件とAND/OR/NOTを組み合わせる", hint:"WHERE dept_name IN ('Comp. Sci.', 'Physics') AND tot_cred > 50",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name FROM student WHERE student.dept_name IN ('Comp. Sci.', 'Physics') AND student.tot_cred > 50;" },
+  { id:"ss-i4", tier:"intermediate", title:"HAVING をサブクエリの平均値と比較する",
+    scenario:"<code>student</code>テーブルを<code>dept_name</code>ごとにGROUP BYし、その学部の学生数が「<strong>全学部の平均学生数</strong>」より多い学部だけを残してください。<strong>student.dept_name, count(*)（別名 cnt）</strong>の順で出力してください。平均は、各学部の学生数を数えるサブクエリをさらに集計して求めます。",
+    concept:"HAVING をサブクエリで計算したしきい値と比較する", hint:"HAVING count(*) > (SELECT avg(cnt) FROM (SELECT count(*) AS cnt FROM student GROUP BY dept_name))",
+    starter:"-- student.dept_name, count(*) AS cnt の順で出力してください（1学部だけ残るはず）\n",
+    solution:"SELECT student.dept_name, count(*) AS cnt FROM student GROUP BY student.dept_name HAVING count(*) > (SELECT avg(cnt) FROM (SELECT count(*) AS cnt FROM student GROUP BY dept_name));" },
+  { id:"ss-i5", tier:"intermediate", title:"CAST で残高を数値型に変換する",
+    scenario:"<code>account</code>テーブルから、<code>balance</code>を<code>CAST(balance AS REAL)</code>で明示的に数値型に変換したうえで、20000より大きい口座を求めてください。<strong>account.account_number, CAST(account.balance AS REAL)（別名 balance）</strong>の順で出力してください。",
+    concept:"CAST(列 AS 型) の構文練習", hint:"SELECT account_number, CAST(balance AS REAL) AS balance FROM account WHERE CAST(balance AS REAL) > 20000;",
+    starter:"-- account.account_number, CAST(account.balance AS REAL) AS balance の順で出力してください\n",
+    solution:"SELECT account.account_number, CAST(account.balance AS REAL) AS balance FROM account WHERE CAST(account.balance AS REAL) > 20000;" },
+
+  // ===== ADVANCED =====
+  { id:"ss-a1", tier:"advanced", title:"EXCEPT を IN の中に入れ子にする",
+    scenario:"<code>department</code>テーブルから、「<code>building = 'Taylor'</code>である学部の集合」から「<code>budget &lt; 90000</code>である学部の集合」を<code>EXCEPT</code>で引いた集合を作り、その結果に<code>dept_name</code>が含まれる学生を<code>student</code>テーブルから<code>IN</code>で求めてください。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"WHERE col IN ((サブクエリ) EXCEPT (サブクエリ)) の入れ子パターン", hint:"WHERE dept_name IN (SELECT dept_name FROM department WHERE building='Taylor' EXCEPT SELECT dept_name FROM department WHERE budget<90000)",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name FROM student WHERE student.dept_name IN (SELECT dept_name FROM department WHERE building = 'Taylor' EXCEPT SELECT dept_name FROM department WHERE budget < 90000);" },
+  { id:"ss-a2", tier:"advanced", title:"HAVING COUNT(DISTINCT ...) で複数支店にローンを持つ顧客を探す",
+    scenario:"<code>customer</code>、<code>borrower</code>、<code>loan</code>をJOINし、顧客ごとにグループ化して、<strong>異なる支店（branch_name）</strong>で2件以上のローンを持っている顧客を求めてください。<strong>customer.customer_id, customer.customer_name</strong>の順で出力してください。",
+    concept:"HAVING count(DISTINCT 列) >= n（重複を除いた件数でしきい値判定）", hint:"GROUP BY customer.customer_id, customer.customer_name HAVING count(DISTINCT loan.branch_name) >= 2",
+    starter:"-- customer.customer_id, customer.customer_name の順で出力してください（1件だけ見つかるはず）\n",
+    solution:"SELECT customer.customer_id, customer.customer_name FROM customer JOIN borrower ON customer.customer_id = borrower.customer_id JOIN loan ON borrower.loan_number = loan.loan_number GROUP BY customer.customer_id, customer.customer_name HAVING count(DISTINCT loan.branch_name) >= 2;" },
+  { id:"ss-a3", tier:"advanced", title:"相関サブクエリ＋CAST＋DISTINCTで支店平均超えの顧客を探す",
+    scenario:"<code>customer</code>、<code>depositor</code>、<code>account</code>をJOINし、<strong>自分の口座がある支店の平均残高</strong>を上回る残高を持つ顧客の名前を求めてください（残高は<code>CAST(... AS REAL)</code>で比較すること）。支店の平均残高は、外側のクエリの<code>account.branch_name</code>と同じ支店の口座だけを対象にした<strong>相関サブクエリ</strong>で計算します。同じ顧客が複数回出ないよう<strong>DISTINCT</strong>を使い、列は<strong>customer_name</strong>の1列だけにしてください。",
+    concept:"相関サブクエリ＋CAST＋JOIN＋DISTINCTの組み合わせ", hint:"WHERE CAST(account.balance AS REAL) > (SELECT avg(CAST(a2.balance AS REAL)) FROM account AS a2 WHERE a2.branch_name = account.branch_name)",
+    starter:"-- customer_name の1列だけを出力してください（DISTINCTを忘れずに）\n",
+    solution:"SELECT DISTINCT customer.customer_name FROM customer JOIN depositor ON customer.customer_id = depositor.customer_id JOIN account ON depositor.account_number = account.account_number WHERE CAST(account.balance AS REAL) > (SELECT avg(CAST(a2.balance AS REAL)) FROM account AS a2 WHERE a2.branch_name = account.branch_name);" },
+  { id:"ss-a4", tier:"advanced", title:"IN を2段階入れ子にする",
+    scenario:"Comp. Sci.学部が開講する科目（<code>course.dept_name = 'Comp. Sci.'</code>）の<code>course_id</code>を求めるサブクエリを内側に置き、その科目を履修したことがある学生の<code>student_id</code>を求めるサブクエリを中間に置き、それらに一致する学生を<code>student</code>テーブルから求めてください（<code>IN</code>を2段階入れ子にします）。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"IN を2階層ネストする（サブクエリの中にサブクエリ）", hint:"WHERE student_id IN (SELECT student_id FROM takes WHERE course_id IN (SELECT course_id FROM course WHERE dept_name='Comp. Sci.'))",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name FROM student WHERE student.student_id IN (SELECT takes.student_id FROM takes WHERE takes.course_id IN (SELECT course.course_id FROM course WHERE course.dept_name = 'Comp. Sci.'));" },
+  { id:"ss-a5", tier:"advanced", title:"文字列と数値を混在させた列挙リスト",
+    scenario:"<code>account</code>テーブルから、支店（<code>branch_name</code>）が<code>'Brooklyn Bank'</code>または<code>'Midtown Bank'</code>で、<strong>かつ</strong>残高（<code>balance</code>）が42000・27000・9000のいずれかである口座を求めてください。支店名は文字列なのでシングルクォートで囲み、残高は数値なのでクォート無しで書くことに注意してください。<strong>account.account_number, account.balance</strong>の順で出力してください。",
+    concept:"IN の列挙リストで文字列と数値のクォート規則を正しく使い分ける", hint:"WHERE branch_name IN ('Brooklyn Bank', 'Midtown Bank') AND balance IN (42000, 27000, 9000)",
+    starter:"-- account.account_number, account.balance の順で出力してください\n",
+    solution:"SELECT account.account_number, account.balance FROM account WHERE account.branch_name IN ('Brooklyn Bank', 'Midtown Bank') AND account.balance IN (42000, 27000, 9000);" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

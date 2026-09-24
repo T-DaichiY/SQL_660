@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 サブクエリ基礎</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 サブクエリ基礎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · サブクエリ基礎</div>
+  <h1>🎯 サブクエリ基礎 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ SQLレッスン：M6演習 — サブクエリ基礎</p>
+  <p style="margin-top:.5rem;"><a href="subqueries_basics.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"sb-b1", tier:"basic", title:"平均単位数より多い学生を探す（スカラーサブクエリ）",
+    scenario:"<code>student</code>テーブルから、全学生の<strong>平均tot_cred</strong>より多くの単位を持つ学生を探してください。<strong>student.name, student.tot_cred</strong>の順で出力してください。",
+    concept:"スカラーサブクエリ（1つの値を返すサブクエリをWHEREで比較に使う）", hint:"WHERE tot_cred > (SELECT avg(tot_cred) FROM student)",
+    starter:"-- student.name, student.tot_cred の順で出力してください\n",
+    solution:"SELECT name, tot_cred FROM student WHERE tot_cred > (SELECT avg(tot_cred) FROM student);" },
+  { id:"sb-b2", tier:"basic", title:"最も給料が高い教員を探す（スカラーサブクエリ）",
+    scenario:"<code>instructor</code>テーブルから、給料（<code>salary</code>）が全教員の中で最大の教員を探してください。<strong>instructor.name, instructor.salary</strong>の順で出力してください。",
+    concept:"スカラーサブクエリ（max()を使った1件抽出）", hint:"WHERE salary = (SELECT max(salary) FROM instructor)",
+    starter:"-- instructor.name, instructor.salary の順で出力してください\n",
+    solution:"SELECT name, salary FROM instructor WHERE salary = (SELECT max(salary) FROM instructor);" },
+  { id:"sb-b3", tier:"basic", title:"特定の科目を履修した学生を探す（IN）",
+    scenario:"<code>takes</code>テーブルで<code>course_id = 'CS-101'</code>を履修した学生の<strong>student.name</strong>だけを、列サブクエリ（<code>IN</code>）を使って出力してください（列は1つだけ）。",
+    concept:"列サブクエリ（WHERE ... IN (SELECT ...)）", hint:"WHERE student_id IN (SELECT student_id FROM takes WHERE course_id = 'CS-101')",
+    starter:"-- student.name の1列だけ出力してください\n",
+    solution:"SELECT name FROM student WHERE student_id IN (SELECT student_id FROM takes WHERE course_id = 'CS-101');" },
+  { id:"sb-b4", tier:"basic", title:"特定の科目を履修していない学生を探す（NOT IN）",
+    scenario:"<code>takes</code>テーブルで<code>course_id = 'CS-101'</code>を一度も履修していない学生の<strong>student.name</strong>だけを、列サブクエリ（<code>NOT IN</code>）を使って出力してください（列は1つだけ）。",
+    concept:"列サブクエリ（WHERE ... NOT IN (SELECT ...)）", hint:"WHERE student_id NOT IN (SELECT student_id FROM takes WHERE course_id = 'CS-101')",
+    starter:"-- student.name の1列だけ出力してください\n",
+    solution:"SELECT name FROM student WHERE student_id NOT IN (SELECT student_id FROM takes WHERE course_id = 'CS-101');" },
+  { id:"sb-b5", tier:"basic", title:"履修登録の総件数より多くの単位を持つ学生を探す（他テーブルの件数と比較）",
+    scenario:"<code>takes</code>テーブルの履修登録の総件数（<code>count(*)</code>）をサブクエリで求め、その数より多くの<code>tot_cred</code>を持つ学生を<code>student</code>テーブルから探してください。<strong>student.name, student.tot_cred</strong>の順で出力してください。",
+    concept:"スカラーサブクエリ（別テーブルのcount(*)と比較）", hint:"WHERE tot_cred > (SELECT count(*) FROM takes)",
+    starter:"-- student.name, student.tot_cred の順で出力してください\n",
+    solution:"SELECT name, tot_cred FROM student WHERE tot_cred > (SELECT count(*) FROM takes);" },
+
+  // ===== INTERMEDIATE =====
+  { id:"sb-i1", tier:"intermediate", title:"Comp. Sci.学部内の平均単位数と比較する",
+    scenario:"Comp. Sci.学部の学生のうち、<strong>Comp. Sci.学部内だけ</strong>の平均tot_credより多くの単位を持つ学生を探してください（サブクエリも<code>WHERE dept_name = 'Comp. Sci.'</code>で絞り込むこと）。<strong>student.name, student.tot_cred</strong>の順で出力してください。",
+    concept:"WHEREで絞り込んだ範囲内でのスカラーサブクエリ", hint:"WHERE dept_name='Comp. Sci.' AND tot_cred > (SELECT avg(tot_cred) FROM student WHERE dept_name='Comp. Sci.')",
+    starter:"-- student.name, student.tot_cred の順で出力してください\n",
+    solution:"SELECT name, tot_cred FROM student WHERE dept_name = 'Comp. Sci.' AND tot_cred > (SELECT avg(tot_cred) FROM student WHERE dept_name = 'Comp. Sci.');" },
+  { id:"sb-i2", tier:"intermediate", title:"自分の学部の平均より単位が多い学生を探す（テーブルサブクエリ）",
+    scenario:"FROM句の中でサブクエリを使い、学部ごとの平均tot_cred（<code>dept_name, avg_cred</code>）を計算する導出表（derived table）を作ってください。それを<code>student</code>とJOINし、<strong>自分の学部の平均</strong>よりtot_credが多い学生を探してください。<strong>student.name, student.dept_name, student.tot_cred</strong>の順で出力してください。",
+    concept:"テーブルサブクエリ／導出表（FROM句のサブクエリに別名を付けてJOIN）", hint:"JOIN (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) AS dept_avg ON student.dept_name = dept_avg.dept_name",
+    starter:"-- student.name, student.dept_name, student.tot_cred の順で出力してください\n",
+    solution:"SELECT student.name, student.dept_name, student.tot_cred FROM student JOIN (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) AS dept_avg ON student.dept_name = dept_avg.dept_name WHERE student.tot_cred > dept_avg.avg_cred;" },
+  { id:"sb-i3", tier:"intermediate", title:"列サブクエリに条件を追加する",
+    scenario:"<code>course_id = 'CS-101'</code>を履修した学生のうち、さらに<code>tot_cred > 50</code>の学生だけを、列サブクエリ（<code>IN</code>）とAND条件を組み合わせて探してください。<strong>student.name, student.tot_cred</strong>の順で出力してください。",
+    concept:"列サブクエリ＋追加のWHERE条件（AND）", hint:"WHERE student_id IN (SELECT student_id FROM takes WHERE course_id = 'CS-101') AND tot_cred > 50",
+    starter:"-- student.name, student.tot_cred の順で出力してください\n",
+    solution:"SELECT name, tot_cred FROM student WHERE student_id IN (SELECT student_id FROM takes WHERE course_id = 'CS-101') AND tot_cred > 50;" },
+  { id:"sb-i4", tier:"intermediate", title:"JOINとサブクエリを組み合わせる",
+    scenario:"<code>student</code>と<code>takes</code>をJOINし、<code>takes.course_id</code>が<code>prereq</code>テーブルの<code>prereq_id</code>（＝他の科目の前提科目になっている科目）のいずれかに一致する履修だけを出力してください。<strong>student.name, takes.course_id</strong>の順で出力してください。",
+    concept:"JOIN + WHERE句の列サブクエリ", hint:"student JOIN takes ON ... WHERE takes.course_id IN (SELECT prereq_id FROM prereq)",
+    starter:"-- student.name, takes.course_id の順で出力してください\n",
+    solution:"SELECT student.name, takes.course_id FROM student JOIN takes ON student.student_id = takes.student_id WHERE takes.course_id IN (SELECT prereq_id FROM prereq);" },
+  { id:"sb-i5", tier:"intermediate", title:"人数の多い学部の学生だけを探す（GROUP BY + HAVING のサブクエリ）",
+    scenario:"<code>student</code>テーブルを学部ごとにグループ化し、所属学生数が3人より多い学部（<code>HAVING count(*) > 3</code>）だけをサブクエリで求め、その学部に所属する学生を<code>IN</code>で探してください。<strong>student.name, student.dept_name</strong>の順で出力してください。",
+    concept:"GROUP BY + HAVINGを含む列サブクエリ", hint:"WHERE dept_name IN (SELECT dept_name FROM student GROUP BY dept_name HAVING count(*) > 3)",
+    starter:"-- student.name, student.dept_name の順で出力してください\n",
+    solution:"SELECT name, dept_name FROM student WHERE dept_name IN (SELECT dept_name FROM student GROUP BY dept_name HAVING count(*) > 3);" },
+
+  // ===== ADVANCED =====
+  { id:"sb-a1", tier:"advanced", title:"各教員のアドバイジー数を数える（相関サブクエリ）",
+    scenario:"全ての教員について、<code>instructor.name</code>と、その教員が<code>advisor</code>テーブルで何人の学生を指導しているか（相関サブクエリ<code>(SELECT count(*) FROM advisor WHERE advisor.instructor_id = instructor.instructor_id)</code>をSELECT句で使う）を出力してください。<strong>instructor.name, 人数</strong>の順（8行）で出力してください。",
+    concept:"相関サブクエリ（外側の各行ごとにサブクエリが再実行される）", hint:"SELECT instructor.name, (SELECT count(*) FROM advisor WHERE advisor.instructor_id = instructor.instructor_id) FROM instructor",
+    starter:"-- instructor.name, 担当アドバイジー数 の順で出力してください（8行）\n",
+    solution:"SELECT instructor.name, (SELECT count(*) FROM advisor WHERE advisor.instructor_id = instructor.instructor_id) AS num_advisees FROM instructor;" },
+  { id:"sb-a2", tier:"advanced", title:"学部平均より多くの授業を担当する教員（相関サブクエリ）",
+    scenario:"<code>teaches</code>テーブルから、各教員が担当する授業回数（行数）を数え、それが<strong>その教員と同じ学部の教員の平均担当回数</strong>より多い教員を探してください（<code>instructor.dept_name</code>で相関させること）。<strong>instructor.name, instructor.dept_name, 担当回数</strong>の順で出力してください。",
+    concept:"相関サブクエリ（外側のdept_nameを内側の集計条件に使う）", hint:"WHERE (担当回数) > (同学部のteaches行数の合計) / (同学部の教員数)、どちらも i.dept_name = instructor.dept_name で相関させる",
+    starter:"-- instructor.name, instructor.dept_name, 担当回数 の順で出力してください\n",
+    solution:"SELECT i.name, i.dept_name, (SELECT count(*) FROM teaches WHERE teaches.instructor_id = i.instructor_id) AS num_sections FROM instructor i WHERE (SELECT count(*) FROM teaches WHERE teaches.instructor_id = i.instructor_id) > ((SELECT count(*) FROM teaches JOIN instructor i2 ON teaches.instructor_id = i2.instructor_id WHERE i2.dept_name = i.dept_name) * 1.0 / (SELECT count(*) FROM instructor i3 WHERE i3.dept_name = i.dept_name));" },
+  { id:"sb-a3", tier:"advanced", title:"平均単位数が60を超える学部を探す（導出表＋集計フィルタ）",
+    scenario:"FROM句のサブクエリ（導出表）で学部ごとの平均tot_cred（<code>dept_name, avg_cred</code>）を計算し、その結果のうち<code>avg_cred > 60</code>の学部だけを出力してください。<strong>dept_name, avg_cred</strong>の順で出力してください。",
+    concept:"導出表＋その集計結果に対するWHEREフィルタ", hint:"FROM (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) AS dept_avg WHERE avg_cred > 60",
+    starter:"-- dept_name, avg_cred の順で出力してください\n",
+    solution:"SELECT dept_name, avg_cred FROM (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) AS dept_avg WHERE avg_cred > 60;" },
+  { id:"sb-a4", tier:"advanced", title:"JOINの代わりにサブクエリだけで書く",
+    scenario:"Comp. Sci.学部に所属する教員がアドバイザーになっている学生の<strong>student.name</strong>だけを、<strong>JOINを一切使わず</strong>、入れ子の列サブクエリ（<code>IN (SELECT ... IN (SELECT ...))</code>）だけで出力してください（列は1つだけ）。",
+    concept:"サブクエリとJOINの等価性（同じ結果を入れ子のサブクエリだけで表現する）", hint:"WHERE student_id IN (SELECT student_id FROM advisor WHERE instructor_id IN (SELECT instructor_id FROM instructor WHERE dept_name = 'Comp. Sci.'))",
+    starter:"-- student.name の1列だけ出力してください\n",
+    solution:"SELECT name FROM student WHERE student_id IN (SELECT student_id FROM advisor WHERE instructor_id IN (SELECT instructor_id FROM instructor WHERE dept_name = 'Comp. Sci.'));" },
+  { id:"sb-a5", tier:"advanced", title:"複合主キーによる重複に注意する（DISTINCTが必要な例）",
+    scenario:"<code>takes</code>テーブルの主キーは複合キー（student_id, course_id, section_id, semester, year）なので、同じ学生が複数のComp. Sci.科目（<code>course</code>テーブルで<code>dept_name = 'Comp. Sci.'</code>の科目）を履修していると、同じ<code>student_id</code>が複数回現れます。列サブクエリ<code>IN (SELECT course_id FROM course WHERE dept_name = 'Comp. Sci.')</code>を使い、<code>DISTINCT</code>を使って<strong>重複のない学生数</strong>を1列（件数）だけで出力してください。",
+    concept:"複合主キーによる行の重複とDISTINCTの必要性", hint:"SELECT count(DISTINCT student_id) FROM takes WHERE course_id IN (SELECT course_id FROM course WHERE dept_name = 'Comp. Sci.')",
+    starter:"-- 重複のない学生数を1列だけ出力してください\n",
+    solution:"SELECT count(DISTINCT student_id) AS num_students FROM takes WHERE course_id IN (SELECT course_id FROM course WHERE dept_name = 'Comp. Sci.');" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

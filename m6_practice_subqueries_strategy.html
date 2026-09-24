@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 サブクエリで問題を解く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 サブクエリで問題を解く <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · サブクエリで問題を解く</div>
+  <h1>🧭 サブクエリで問題を解く — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ SQLレッスン：M6演習 — サブクエリで問題を解く</p>
+  <p style="margin-top:.5rem;"><a href="subqueries_strategy.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"ss-b1", tier:"basic", title:"平均残高より多い口座を探す",
+    scenario:"銀行のシステム部から「平均残高より多く預けている口座を全部リストアップして」と頼まれました。<code>account</code>テーブル全体の平均残高（<code>AVG(balance)</code>）をサブクエリで求め、それより残高が多い口座だけを、<strong>account_number, balance</strong>の順で出力してください。",
+    concept:"スカラーサブクエリ（WHERE句で単一の数値と比較）", hint:"WHERE balance > (SELECT avg(balance) FROM account)",
+    starter:"-- account_number, balance の順で出力してください\n",
+    solution:"SELECT account_number, balance FROM account WHERE balance > (SELECT avg(balance) FROM account);" },
+  { id:"ss-b2", tier:"basic", title:"最も金額が大きい融資を探す",
+    scenario:"<code>loan</code>テーブルの中で、最も金額（<code>amount</code>）が大きい融資が1件だけあります。<code>MAX(amount)</code>をサブクエリで求め、それに一致する融資を<strong>loan_number, amount</strong>の順で出力してください。",
+    concept:"スカラーサブクエリ（最大値との一致）", hint:"WHERE amount = (SELECT max(amount) FROM loan)",
+    starter:"-- loan_number, amount の順で出力してください（1行になるはず）\n",
+    solution:"SELECT loan_number, amount FROM loan WHERE amount = (SELECT max(amount) FROM loan);" },
+  { id:"ss-b3", tier:"basic", title:"平均資産より少ない支店を探す",
+    scenario:"経営陣が「全支店の平均資産（assets）より少ない支店」を確認したいそうです。<code>branch</code>テーブル全体の平均資産をサブクエリで求め、それより資産が少ない支店を<strong>branch_name, assets</strong>の順で出力してください。",
+    concept:"スカラーサブクエリ（平均との比較）", hint:"WHERE assets < (SELECT avg(assets) FROM branch)",
+    starter:"-- branch_name, assets の順で出力してください\n",
+    solution:"SELECT branch_name, assets FROM branch WHERE assets < (SELECT avg(assets) FROM branch);" },
+  { id:"ss-b4", tier:"basic", title:"融資を受けたことがある顧客を探す",
+    scenario:"融資担当が「1件でも融資を受けたことがある顧客の一覧」を欲しがっています。<code>borrower</code>テーブルに登場する<code>customer_id</code>のリストをサブクエリで作り、<code>customer</code>テーブルからそれに一致する顧客を<strong>customer_id, customer_name</strong>の順で出力してください。",
+    concept:"列を返すサブクエリ（IN）", hint:"WHERE customer_id IN (SELECT customer_id FROM borrower)",
+    starter:"-- customer_id, customer_name の順で出力してください\n",
+    solution:"SELECT customer_id, customer_name FROM customer WHERE customer_id IN (SELECT customer_id FROM borrower);" },
+  { id:"ss-b5", tier:"basic", title:"Manhattanの支店にある口座を探す",
+    scenario:"branch_cityが'Manhattan'である支店に開設されている口座を全て知りたいです。まず<code>branch</code>テーブルからbranch_city='Manhattan'の<code>branch_name</code>をサブクエリで取り出し、それに一致する口座を<code>account</code>テーブルから<strong>account_number, balance</strong>の順で出力してください。",
+    concept:"列を返すサブクエリ（IN）で他テーブルの条件を使う", hint:"WHERE branch_name IN (SELECT branch_name FROM branch WHERE branch_city = 'Manhattan')",
+    starter:"-- account_number, balance の順で出力してください\n",
+    solution:"SELECT account_number, balance FROM account WHERE branch_name IN (SELECT branch_name FROM branch WHERE branch_city = 'Manhattan');" },
+
+  // ===== INTERMEDIATE =====
+  { id:"ss-i1", tier:"intermediate", title:"顧客10001と同じ通りに住む別の顧客を探す（自己参照サブクエリ）",
+    scenario:"顧客'10001'と同じ<code>customer_street</code>に住んでいる、顧客'10001'以外の顧客を探してください。まず顧客'10001'自身のcustomer_streetをサブクエリで求め、それに一致する顧客を、<strong>自分自身（10001）は除外して</strong>、<strong>customer_id, customer_name</strong>の順で出力してください。",
+    concept:"自己参照サブクエリ＋自己除外（<>）", hint:"WHERE customer_street = (SELECT customer_street FROM customer WHERE customer_id = '10001') AND customer_id <> '10001'",
+    starter:"-- customer_id, customer_name の順で出力してください（10001自身は含めない）\n",
+    solution:"SELECT customer_id, customer_name FROM customer WHERE customer_street = (SELECT customer_street FROM customer WHERE customer_id = '10001') AND customer_id <> '10001';" },
+  { id:"ss-i2", tier:"intermediate", title:"Brooklyn Bankの中で平均より残高が多い口座",
+    scenario:"'Brooklyn Bank'という支店の口座の中で、<strong>その支店自身の平均残高</strong>より多い口座を探してください。サブクエリの中でも<code>branch_name = 'Brooklyn Bank'</code>という条件を忘れずに繰り返してください（全支店の平均ではありません）。<strong>account_number, balance</strong>の順で出力してください。",
+    concept:"JOIN＋スカラーサブクエリ（同じ絞り込み条件をサブクエリ内でも繰り返す）", hint:"WHERE branch_name = 'Brooklyn Bank' AND balance > (SELECT avg(balance) FROM account WHERE branch_name = 'Brooklyn Bank')",
+    starter:"-- account_number, balance の順で出力してください（Brooklyn Bankの口座のみ）\n",
+    solution:"SELECT account_number, balance FROM account WHERE branch_name = 'Brooklyn Bank' AND balance > (SELECT avg(balance) FROM account WHERE branch_name = 'Brooklyn Bank');" },
+  { id:"ss-i3", tier:"intermediate", title:"融資の合計額が2万ドルを超える顧客",
+    scenario:"<code>borrower</code>と<code>loan</code>をJOINし、顧客ごとに融資額（amount）を合計してください。<strong>合計融資額が20000を超える顧客だけ</strong>を、<strong>customer_id, 合計融資額</strong>の順で出力してください（合計融資額の列名は自由です）。",
+    concept:"JOIN＋GROUP BY＋HAVING（複数の融資をまとめて集計）", hint:"GROUP BY borrower.customer_id HAVING sum(loan.amount) > 20000",
+    starter:"-- customer_id, 合計融資額 の順で出力してください\n",
+    solution:"SELECT borrower.customer_id, sum(loan.amount) AS total_amount FROM borrower JOIN loan ON borrower.loan_number = loan.loan_number GROUP BY borrower.customer_id HAVING sum(loan.amount) > 20000;" },
+  { id:"ss-i4", tier:"intermediate", title:"平均より多く融資を受けている顧客",
+    scenario:"融資を受けたことがある顧客について、1人あたりの平均融資件数（<code>borrower</code>テーブルの行数 ÷ 融資を受けた顧客の人数）をサブクエリで求め、それより<strong>多くの融資件数を持つ顧客</strong>を<strong>customer_id, 融資件数</strong>の順で出力してください（融資件数の列名は自由です）。",
+    concept:"HAVING句での比較にサブクエリで計算した値を使う", hint:"HAVING count(*) > (SELECT count(*)*1.0/count(DISTINCT customer_id) FROM borrower)",
+    starter:"-- customer_id, 融資件数 の順で出力してください\n",
+    solution:"SELECT borrower.customer_id, count(*) AS loan_count FROM borrower GROUP BY borrower.customer_id HAVING count(*) > (SELECT count(*) * 1.0 / count(DISTINCT customer_id) FROM borrower);" },
+  { id:"ss-i5", tier:"intermediate", title:"口座数が最も多い支店を探す",
+    scenario:"どの支店が最も多くの口座を持っているか調べてください。<code>account</code>を支店ごとにGROUP BYして口座数を数え、その中の最大値をサブクエリ（派生テーブル）で求めて、その最大値と一致する支店を<strong>branch_name, 口座数</strong>の順で出力してください（口座数の列名は自由です）。",
+    concept:"GROUP BY＋派生テーブル（サブクエリ）で最大値と比較", hint:"HAVING count(*) = (SELECT max(cnt) FROM (SELECT count(*) AS cnt FROM account GROUP BY branch_name))",
+    starter:"-- branch_name, 口座数 の順で出力してください（1行になるはず）\n",
+    solution:"SELECT branch_name, count(*) AS acct_count FROM account GROUP BY branch_name HAVING count(*) = (SELECT max(cnt) FROM (SELECT count(*) AS cnt FROM account GROUP BY branch_name));" },
+
+  // ===== ADVANCED =====
+  { id:"ss-a1", tier:"advanced", title:"Brooklynの全支店で融資を受けている顧客",
+    scenario:"branch_cityが'Brooklyn'である支店は2つあります。この<strong>2つの支店の両方</strong>で融資を受けている顧客を探してください。<code>borrower</code>と<code>loan</code>と<code>customer</code>をJOINし、まず<code>loan.branch_name</code>がBrooklynの支店（サブクエリ<code>SELECT branch_name FROM branch WHERE branch_city='Brooklyn'</code>）に絞り込んでから、顧客ごとにグループ化してください。<code>COUNT(DISTINCT branch_name)</code>が<code>(SELECT count(*) FROM branch WHERE branch_city = 'Brooklyn')</code>と一致する顧客を、<strong>customer_id, customer_name</strong>の順で出力してください。",
+    concept:"HAVING COUNT(DISTINCT ...) を動的なサブクエリのしきい値と比較する（対象を先に絞り込む）", hint:"WHERE loan.branch_name IN (SELECT branch_name FROM branch WHERE branch_city='Brooklyn') ... GROUP BY borrower.customer_id HAVING count(DISTINCT loan.branch_name) = (SELECT count(*) FROM branch WHERE branch_city = 'Brooklyn')",
+    starter:"-- customer_id, customer_name の順で出力してください（1行になるはず）\n",
+    solution:"SELECT borrower.customer_id, customer.customer_name FROM borrower JOIN loan ON borrower.loan_number = loan.loan_number JOIN customer ON borrower.customer_id = customer.customer_id WHERE loan.branch_name IN (SELECT branch_name FROM branch WHERE branch_city = 'Brooklyn') GROUP BY borrower.customer_id, customer.customer_name HAVING count(DISTINCT loan.branch_name) = (SELECT count(*) FROM branch WHERE branch_city = 'Brooklyn');" },
+  { id:"ss-a2", tier:"advanced", title:"Manhattanの全支店で融資を受けている顧客（0件になるはず）",
+    scenario:"同じ考え方をbranch_cityが'Manhattan'の支店（2つ）に当てはめてください。<code>borrower</code>と<code>loan</code>と<code>customer</code>をJOINし、まず<code>loan.branch_name</code>がManhattanの支店（サブクエリ<code>SELECT branch_name FROM branch WHERE branch_city='Manhattan'</code>）に絞り込んでから、顧客ごとにグループ化してください。<code>COUNT(DISTINCT branch_name)</code>が<code>(SELECT count(*) FROM branch WHERE branch_city = 'Manhattan')</code>と一致する顧客を、<strong>customer_id, customer_name</strong>の順で出力してください。<strong>このデータでは、Manhattanの2支店の両方で融資を受けている顧客は誰もいないため、結果が0件になれば正解です。</strong>",
+    concept:"HAVING COUNT(DISTINCT ...) が0件を返すケースの確認（対象を先に絞り込む）", hint:"WHERE loan.branch_name IN (SELECT branch_name FROM branch WHERE branch_city='Manhattan') ... GROUP BY borrower.customer_id HAVING count(DISTINCT loan.branch_name) = (SELECT count(*) FROM branch WHERE branch_city = 'Manhattan')",
+    starter:"-- customer_id, customer_name の順で出力してください（0行になるはず）\n",
+    solution:"SELECT borrower.customer_id, customer.customer_name FROM borrower JOIN loan ON borrower.loan_number = loan.loan_number JOIN customer ON borrower.customer_id = customer.customer_id WHERE loan.branch_name IN (SELECT branch_name FROM branch WHERE branch_city = 'Manhattan') GROUP BY borrower.customer_id, customer.customer_name HAVING count(DISTINCT loan.branch_name) = (SELECT count(*) FROM branch WHERE branch_city = 'Manhattan');" },
+  { id:"ss-a3", tier:"advanced", title:"顧客10001と同じ通りに住み、かつ融資も受けている顧客",
+    scenario:"顧客'10001'と同じcustomer_streetに住む顧客（'10001'自身は除く）のうち、<strong>さらに1件以上の融資も受けている</strong>顧客だけを探してください。自己参照サブクエリ（同じ通りに住む顧客）と、<code>borrower</code>テーブルへのサブクエリ（融資を受けている顧客）の両方を組み合わせ、<strong>customer_id, customer_name</strong>の順で出力してください。",
+    concept:"自己参照サブクエリ＋別テーブルへのサブクエリを組み合わせる多段構成", hint:"WHERE customer_street = (SELECT customer_street FROM customer WHERE customer_id='10001') AND customer_id <> '10001' AND customer_id IN (SELECT customer_id FROM borrower)",
+    starter:"-- customer_id, customer_name の順で出力してください（1行になるはず）\n",
+    solution:"SELECT customer_id, customer_name FROM customer WHERE customer_street = (SELECT customer_street FROM customer WHERE customer_id = '10001') AND customer_id <> '10001' AND customer_id IN (SELECT customer_id FROM borrower);" },
+  { id:"ss-a4", tier:"advanced", title:"預金残高の合計が最も多い支店を探す",
+    scenario:"どの支店が、口座残高の合計（SUM）が最も多いか調べてください。まず支店ごとにSUM(balance)を計算する派生テーブルを作り、その中の最大値をサブクエリで求めて、それと一致する支店を<strong>branch_name, 合計残高</strong>の順で出力してください（合計残高の列名は自由です）。",
+    concept:"派生テーブル（SUM＋GROUP BY）とサブクエリで最大値を求める", hint:"FROM (SELECT branch_name, sum(balance) AS total_balance FROM account GROUP BY branch_name) WHERE total_balance = (SELECT max(total_balance) FROM (SELECT sum(balance) AS total_balance FROM account GROUP BY branch_name))",
+    starter:"-- branch_name, 合計残高 の順で出力してください（1行になるはず）\n",
+    solution:"SELECT branch_name, total_balance FROM (SELECT branch_name, sum(balance) AS total_balance FROM account GROUP BY branch_name) WHERE total_balance = (SELECT max(total_balance) FROM (SELECT sum(balance) AS total_balance FROM account GROUP BY branch_name));" },
+  { id:"ss-a5", tier:"advanced", title:"「まずハードコード、次にサブクエリ」を実践する",
+    scenario:"'Midtown Bank'の資産（assets）は5,000,000です。最初はこの数字をそのままWHERE句に書いて、<code>WHERE assets &gt; 5000000</code>で資産がそれより多い支店を確認した、と想像してください。これは動きますが、Midtown Bankの資産が変わるたびに数字を書き直す必要があります。<strong>今度は5000000という決め打ちの数字を使わず、branch_name='Midtown Bank'の資産をサブクエリで求めて比較する最終版</strong>を書いてください。<strong>branch_name, assets</strong>の順で出力してください。",
+    concept:"ハードコードした値をサブクエリに置き換える「解き方の手順」の総仕上げ", hint:"WHERE assets > (SELECT assets FROM branch WHERE branch_name = 'Midtown Bank')",
+    starter:"-- branch_name, assets の順で出力してください（1行になるはず）\n",
+    solution:"SELECT branch_name, assets FROM branch WHERE assets > (SELECT assets FROM branch WHERE branch_name = 'Midtown Bank');" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

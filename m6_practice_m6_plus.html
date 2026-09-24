@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 アンチ結合・CTE・CASE式</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 アンチ結合・CTE・CASE式 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · アンチ結合・CTE・CASE式</div>
+  <h1>🧩 アンチ結合・CTE・CASE式 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🧩 SQLレッスン：M6演習 — アンチ結合・CTE・CASE式</p>
+  <p style="margin-top:.5rem;"><a href="m6_plus.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"mp-b1", tier:"basic", title:"一度も履修していない学生を探す（アンチ結合）",
+    scenario:"<code>student</code>を<code>takes</code>にLEFT JOINし、<code>takes</code>側に一致する行が無い学生（＝一度も履修登録をしていない学生）を探してください。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"アンチ結合（LEFT JOIN + IS NULL）", hint:"student LEFT JOIN takes ON student.student_id = takes.student_id ... WHERE takes.student_id IS NULL",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name FROM student LEFT JOIN takes ON student.student_id = takes.student_id WHERE takes.student_id IS NULL;" },
+  { id:"mp-b2", tier:"basic", title:"指導教員が割り当てられていない学生を探す",
+    scenario:"<code>student</code>を<code>advisor</code>にLEFT JOINし、指導教員（advisor）が割り当てられていない学生を探してください。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"アンチ結合（LEFT JOIN + IS NULL）", hint:"student LEFT JOIN advisor ON student.student_id = advisor.student_id ... WHERE advisor.student_id IS NULL",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name FROM student LEFT JOIN advisor ON student.student_id = advisor.student_id WHERE advisor.student_id IS NULL;" },
+  { id:"mp-b3", tier:"basic", title:"CTEで学部ごとの平均単位数を求める",
+    scenario:"<code>WITH dept_avg AS (...)</code>というCTEを作り、その中で<code>student</code>を<code>dept_name</code>でグループ化して平均<code>tot_cred</code>を計算してください。本体クエリでは<code>dept_avg</code>から<strong>dept_name, avg_cred</strong>の順で全行出力してください。",
+    concept:"CTE（WITH ... AS で名前付きサブクエリを作る）", hint:"WITH dept_avg AS (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) SELECT dept_name, avg_cred FROM dept_avg;",
+    starter:"-- dept_name, avg_cred の順で出力してください（9学部ぶん）\n",
+    solution:"WITH dept_avg AS (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) SELECT dept_name, avg_cred FROM dept_avg;" },
+  { id:"mp-b4", tier:"basic", title:"CASE式で学年を分類する",
+    scenario:"<code>student.tot_cred</code>を使って、<code>CASE WHEN tot_cred&gt;=90 THEN 'Senior' WHEN tot_cred&gt;=60 THEN 'Junior' WHEN tot_cred&gt;=30 THEN 'Sophomore' ELSE 'Freshman' END</code>という学年ラベルを作り、<strong>student.name, class_year（CASE式の別名）</strong>の順で全学生を出力してください。",
+    concept:"CASE式（数値を条件でラベルに変換する）", hint:"SELECT student.name, CASE WHEN tot_cred>=90 THEN 'Senior' WHEN tot_cred>=60 THEN 'Junior' WHEN tot_cred>=30 THEN 'Sophomore' ELSE 'Freshman' END AS class_year FROM student;",
+    starter:"-- student.name, class_year の順で出力してください（全20名）\n",
+    solution:"SELECT student.name, CASE WHEN student.tot_cred >= 90 THEN 'Senior' WHEN student.tot_cred >= 60 THEN 'Junior' WHEN student.tot_cred >= 30 THEN 'Sophomore' ELSE 'Freshman' END AS class_year FROM student;" },
+  { id:"mp-b5", tier:"basic", title:"CASE式で口座残高を2段階に分類する",
+    scenario:"<code>account</code>テーブルについて、<code>balance</code>が30000以上なら<code>'High'</code>、それ未満なら<code>'Low'</code>というラベルをCASE式で作ってください。<strong>account.account_number, account.balance, balance_tier（CASE式の別名）</strong>の順で全口座を出力してください。",
+    concept:"CASE式（WHEN 1つ + ELSE の単純な2分類）", hint:"CASE WHEN balance >= 30000 THEN 'High' ELSE 'Low' END AS balance_tier",
+    starter:"-- account.account_number, account.balance, balance_tier の順で出力してください（全8口座）\n",
+    solution:"SELECT account.account_number, account.balance, CASE WHEN account.balance >= 30000 THEN 'High' ELSE 'Low' END AS balance_tier FROM account;" },
+
+  // ===== INTERMEDIATE =====
+  { id:"mp-i1", tier:"intermediate", title:"指導教員を1人も担当していない教員を探す",
+    scenario:"<code>instructor</code>を<code>advisor</code>に<code>instructor_id</code>でLEFT JOINし、一度もadvisorとして登録されていない教員を探してください。<strong>instructor.instructor_id, instructor.name</strong>の順で出力してください。",
+    concept:"アンチ結合（別のキー同士のLEFT JOIN + IS NULL）", hint:"instructor LEFT JOIN advisor ON instructor.instructor_id = advisor.instructor_id ... WHERE advisor.instructor_id IS NULL",
+    starter:"-- instructor.instructor_id, instructor.name の順で出力してください\n",
+    solution:"SELECT instructor.instructor_id, instructor.name FROM instructor LEFT JOIN advisor ON instructor.instructor_id = advisor.instructor_id WHERE advisor.instructor_id IS NULL;" },
+  { id:"mp-i2", tier:"intermediate", title:"CTEを使って学部平均より単位数が多い学生を探す",
+    scenario:"<code>WITH dept_avg AS (...)</code>で学部ごとの平均<code>tot_cred</code>を計算し、本体クエリで<code>student</code>と<code>dept_avg</code>を<code>dept_name</code>でJOINして、平均より<code>tot_cred</code>が多い学生を探してください。<strong>student.name, student.tot_cred, dept_avg.avg_cred</strong>の順で出力してください。",
+    concept:"CTE + JOIN（CTEを本体クエリでテーブルのように使う）", hint:"WITH dept_avg AS (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) SELECT ... FROM student JOIN dept_avg ON student.dept_name=dept_avg.dept_name WHERE student.tot_cred > dept_avg.avg_cred;",
+    starter:"-- student.name, student.tot_cred, dept_avg.avg_cred の順で出力してください\n",
+    solution:"WITH dept_avg AS (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) SELECT student.name, student.tot_cred, dept_avg.avg_cred FROM student JOIN dept_avg ON student.dept_name = dept_avg.dept_name WHERE student.tot_cred > dept_avg.avg_cred;" },
+  { id:"mp-i3", tier:"intermediate", title:"CASE式で教員の給与を3段階に分類する",
+    scenario:"<code>instructor.salary</code>について、90000以上なら<code>'High'</code>、75000以上なら<code>'Mid'</code>、それ未満なら<code>'Standard'</code>というラベルをCASE式で作ってください。<strong>instructor.name, instructor.salary, pay_band（CASE式の別名）</strong>の順で全教員を出力してください。",
+    concept:"CASE式（WHEN 2つ以上の多段階分類・上から順に評価される）", hint:"CASE WHEN salary>=90000 THEN 'High' WHEN salary>=75000 THEN 'Mid' ELSE 'Standard' END AS pay_band",
+    starter:"-- instructor.name, instructor.salary, pay_band の順で出力してください（全8教員）\n",
+    solution:"SELECT instructor.name, instructor.salary, CASE WHEN instructor.salary >= 90000 THEN 'High' WHEN instructor.salary >= 75000 THEN 'Mid' ELSE 'Standard' END AS pay_band FROM instructor;" },
+  { id:"mp-i4", tier:"intermediate", title:"教員が1人もいない学部を探す",
+    scenario:"<code>department</code>を<code>instructor</code>に<code>dept_name</code>でLEFT JOINし、その学部に所属する教員が1人もいない学部を探してください。<strong>department.dept_name</strong>だけを出力してください。",
+    concept:"アンチ結合（学部側を主とする片方向の不一致検出）", hint:"department LEFT JOIN instructor ON department.dept_name = instructor.dept_name ... WHERE instructor.dept_name IS NULL",
+    starter:"-- department.dept_name だけを出力してください\n",
+    solution:"SELECT department.dept_name FROM department LEFT JOIN instructor ON department.dept_name = instructor.dept_name WHERE instructor.dept_name IS NULL;" },
+  { id:"mp-i5", tier:"intermediate", title:"CTEで履修科目数を数えて2科目以上の学生を探す",
+    scenario:"<code>WITH takes_count AS (...)</code>で<code>takes</code>を<code>student_id</code>ごとにグループ化し、履修件数<code>count(*)</code>を<code>n</code>という別名で計算してください。本体クエリで<code>student</code>と<code>takes_count</code>をJOINし、<code>n</code>が2以上の学生を探してください。<strong>student.name, takes_count.n</strong>の順で出力してください。",
+    concept:"CTE + count(*)（集計結果を名前付きテーブルとして再利用する）", hint:"WITH takes_count AS (SELECT student_id, count(*) AS n FROM takes GROUP BY student_id) SELECT ... FROM student JOIN takes_count ON student.student_id=takes_count.student_id WHERE takes_count.n >= 2;",
+    starter:"-- student.name, takes_count.n の順で出力してください\n",
+    solution:"WITH takes_count AS (SELECT student_id, count(*) AS n FROM takes GROUP BY student_id) SELECT student.name, takes_count.n FROM student JOIN takes_count ON student.student_id = takes_count.student_id WHERE takes_count.n >= 2;" },
+
+  // ===== ADVANCED =====
+  { id:"mp-a1", tier:"advanced", title:"授業を1つも担当していない教員が本当にいないか確認する（アンチ結合）",
+    scenario:"<code>instructor</code>を<code>teaches</code>にLEFT JOINし、一度も授業を担当していない教員を探してください。このデータでは実は全教員が何かしら担当しているため、<strong>結果が0件になれば正解</strong>です。<strong>instructor.instructor_id, instructor.name</strong>の順で出力してください。",
+    concept:"アンチ結合で「0件であること」を確認する", hint:"instructor LEFT JOIN teaches ON instructor.instructor_id = teaches.instructor_id ... WHERE teaches.instructor_id IS NULL",
+    starter:"-- instructor.instructor_id, instructor.name の順で出力してください（0行になるはず）\n",
+    solution:"SELECT instructor.instructor_id, instructor.name FROM instructor LEFT JOIN teaches ON instructor.instructor_id = teaches.instructor_id WHERE teaches.instructor_id IS NULL;" },
+  { id:"mp-a2", tier:"advanced", title:"CTE＋アンチ結合：指導教員がいないのに学部平均より単位数が多い学生",
+    scenario:"<code>WITH dept_avg AS (...)</code>で学部ごとの平均<code>tot_cred</code>を計算してください。本体クエリでは、<code>student</code>を<code>advisor</code>にLEFT JOINして指導教員が割り当てられていない学生（アンチ結合）だけに絞り込み、さらに<code>dept_avg</code>とJOINして学部平均より<code>tot_cred</code>が多い学生だけを残してください。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"CTE + アンチ結合の組み合わせ", hint:"WITH dept_avg AS (...) SELECT ... FROM student LEFT JOIN advisor ON ... JOIN dept_avg ON student.dept_name=dept_avg.dept_name WHERE advisor.student_id IS NULL AND student.tot_cred > dept_avg.avg_cred;",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"WITH dept_avg AS (SELECT dept_name, avg(tot_cred) AS avg_cred FROM student GROUP BY dept_name) SELECT student.student_id, student.name FROM student LEFT JOIN advisor ON student.student_id = advisor.student_id JOIN dept_avg ON student.dept_name = dept_avg.dept_name WHERE advisor.student_id IS NULL AND student.tot_cred > dept_avg.avg_cred;" },
+  { id:"mp-a3", tier:"advanced", title:"CASE式＋GROUP BY：学年ごとの学生数を数える",
+    scenario:"M6+レッスンと同じCASE式（<code>tot_cred&gt;=90→'Senior'</code>, <code>&gt;=60→'Junior'</code>, <code>&gt;=30→'Sophomore'</code>, それ以外→<code>'Freshman'</code>）で<code>class_year</code>という別名を作り、その別名で<code>GROUP BY</code>して各学年の人数<code>count(*)</code>を求めてください。<strong>class_year, num_students（count(*)の別名）</strong>の順で出力してください（SQLiteではGROUP BYの中でSELECTの別名を参照できます）。",
+    concept:"CASE式 + GROUP BY（CASE結果の別名でグループ化・集計）", hint:"SELECT CASE WHEN tot_cred>=90 THEN 'Senior' ... END AS class_year, count(*) AS num_students FROM student GROUP BY class_year;",
+    starter:"-- class_year, num_students の順で出力してください（4行になるはず）\n",
+    solution:"SELECT CASE WHEN tot_cred >= 90 THEN 'Senior' WHEN tot_cred >= 60 THEN 'Junior' WHEN tot_cred >= 30 THEN 'Sophomore' ELSE 'Freshman' END AS class_year, count(*) AS num_students FROM student GROUP BY class_year;" },
+  { id:"mp-a4", tier:"advanced", title:"CTE＋CASE式：給与帯ごとの教員数を数える",
+    scenario:"<code>WITH pay_band AS (...)</code>というCTEを作り、その中で<code>instructor</code>の各行に対してCASE式（90000以上→<code>'High'</code>、75000以上→<code>'Mid'</code>、それ未満→<code>'Standard'</code>）で<code>band</code>という列を作ってください。本体クエリでは<code>pay_band</code>を<code>band</code>で<code>GROUP BY</code>し、各給与帯の教員数<code>count(*)</code>を求めてください。<strong>band, num_instructors（count(*)の別名）</strong>の順で出力してください。",
+    concept:"CTE + CASE式 + GROUP BY（分類を先にCTEで作ってから集計する）", hint:"WITH pay_band AS (SELECT instructor_id, name, CASE WHEN salary>=90000 THEN 'High' WHEN salary>=75000 THEN 'Mid' ELSE 'Standard' END AS band FROM instructor) SELECT band, count(*) AS num_instructors FROM pay_band GROUP BY band;",
+    starter:"-- band, num_instructors の順で出力してください（3行になるはず）\n",
+    solution:"WITH pay_band AS (SELECT instructor_id, name, CASE WHEN salary >= 90000 THEN 'High' WHEN salary >= 75000 THEN 'Mid' ELSE 'Standard' END AS band FROM instructor) SELECT band, count(*) AS num_instructors FROM pay_band GROUP BY band;" },
+  { id:"mp-a5", tier:"advanced", title:"アンチ結合＋CASE式：指導教員がいない学生を学年ごとに数える",
+    scenario:"<code>student</code>を<code>advisor</code>にLEFT JOINして指導教員が割り当てられていない学生（アンチ結合）だけに絞り込み、その学生たちを<code>tot_cred</code>から作ったCASE式の学年ラベル（<code>class_year</code>：90/60/30の閾値でSenior/Junior/Sophomore/Freshman）で<code>GROUP BY</code>して、学年ごとの人数を数えてください。<strong>class_year, n（count(*)の別名）</strong>の順で出力してください。",
+    concept:"アンチ結合 + CASE式 + GROUP BY の統合", hint:"SELECT CASE WHEN tot_cred>=90 THEN 'Senior' ... END AS class_year, count(*) AS n FROM student LEFT JOIN advisor ON student.student_id=advisor.student_id WHERE advisor.student_id IS NULL GROUP BY class_year;",
+    starter:"-- class_year, n の順で出力してください\n",
+    solution:"SELECT CASE WHEN student.tot_cred >= 90 THEN 'Senior' WHEN student.tot_cred >= 60 THEN 'Junior' WHEN student.tot_cred >= 30 THEN 'Sophomore' ELSE 'Freshman' END AS class_year, count(*) AS n FROM student LEFT JOIN advisor ON student.student_id = advisor.student_id WHERE advisor.student_id IS NULL GROUP BY class_year;" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

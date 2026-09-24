@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 JOINの基本と種類</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 JOINの基本と種類 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · JOINの基本と種類</div>
+  <h1>🔗 JOINの基本と種類 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ SQLレッスン：M6演習 — JOINの基本と種類</p>
+  <p style="margin-top:.5rem;"><a href="joins_types.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"jt-b1", tier:"basic", title:"学生と履修科目をJOINする",
+    scenario:"<code>student</code>テーブルと<code>takes</code>テーブルを<code>student_id</code>でJOINし、<strong>student.name, takes.course_id</strong>の順で出力してください。",
+    concept:"基本のINNER JOIN構文（JOIN ... ON）", hint:"FROM student JOIN takes ON student.student_id = takes.student_id",
+    starter:"-- student.name, takes.course_id の順で出力してください\n",
+    solution:"SELECT student.name, takes.course_id FROM student JOIN takes ON student.student_id = takes.student_id;" },
+  { id:"jt-b2", tier:"basic", title:"教員が担当する科目をJOINする",
+    scenario:"<code>instructor</code>テーブルと<code>teaches</code>テーブルを<code>instructor_id</code>でJOINし、<strong>instructor.name, teaches.course_id</strong>の順で出力してください。",
+    concept:"基本のINNER JOIN構文", hint:"FROM instructor JOIN teaches ON instructor.instructor_id = teaches.instructor_id",
+    starter:"-- instructor.name, teaches.course_id の順で出力してください\n",
+    solution:"SELECT instructor.name, teaches.course_id FROM instructor JOIN teaches ON instructor.instructor_id = teaches.instructor_id;" },
+  { id:"jt-b3", tier:"basic", title:"前提科目があるものだけをJOINする",
+    scenario:"<code>course</code>テーブルと<code>prereq</code>テーブルを<code>course_id</code>でJOINし、<strong>course.course_id, prereq.prereq_id</strong>の順で出力してください（前提科目が無い科目は結果に含めません）。",
+    concept:"INNER JOIN（一致する行だけを残す）", hint:"course JOIN prereq ON course.course_id = prereq.course_id",
+    starter:"-- course.course_id, prereq.prereq_id の順で出力してください\n",
+    solution:"SELECT course.course_id, prereq.prereq_id FROM course JOIN prereq ON course.course_id = prereq.course_id;" },
+  { id:"jt-b4", tier:"basic", title:"全ての科目にLEFT JOINする",
+    scenario:"<code>course</code>テーブルを基準に<code>prereq</code>テーブルをLEFT JOINし、<strong>course.course_id, prereq.prereq_id</strong>の順で全ての科目を出力してください（前提科目が無い科目はprereq.prereq_idがNULLになります）。",
+    concept:"LEFT JOIN（左側の全行を残す）", hint:"course LEFT JOIN prereq ON course.course_id = prereq.course_id",
+    starter:"-- course.course_id, prereq.prereq_id の順で出力してください（全11科目が出るはず）\n",
+    solution:"SELECT course.course_id, prereq.prereq_id FROM course LEFT JOIN prereq ON course.course_id = prereq.course_id;" },
+  { id:"jt-b5", tier:"basic", title:"テーブル名で列を明示してJOINする",
+    scenario:"Comp. Sci.学部の学生について、<code>student</code>と<code>takes</code>をJOINし、<strong>student.student_id, student.name, takes.course_id</strong>の順で出力してください（<code>student_id</code>は両テーブルにあるので、必ずテーブル名で明示すること）。",
+    concept:"列名の曖昧さ解消（テーブル名.列名）", hint:"WHERE student.dept_name = 'Comp. Sci.' を忘れずに",
+    starter:"-- student.student_id, student.name, takes.course_id の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name, takes.course_id FROM student JOIN takes ON student.student_id = takes.student_id WHERE student.dept_name = 'Comp. Sci.';" },
+
+  // ===== INTERMEDIATE =====
+  { id:"jt-i1", tier:"intermediate", title:"前提科目が無い科目を探す",
+    scenario:"LEFT JOINと<code>IS NULL</code>を組み合わせて、前提科目が1つも無い科目を探してください。<strong>course.course_id, course.title</strong>の順で出力してください。",
+    concept:"LEFT JOIN + IS NULL（アンチ結合の第一歩）", hint:"course LEFT JOIN prereq ... WHERE prereq.course_id IS NULL",
+    starter:"-- course.course_id, course.title の順で出力してください\n",
+    solution:"SELECT course.course_id, course.title FROM course LEFT JOIN prereq ON course.course_id = prereq.course_id WHERE prereq.course_id IS NULL;" },
+  { id:"jt-i2", tier:"intermediate", title:"RIGHT JOINで全学部を残す",
+    scenario:"<code>instructor</code>を基準にせず、<code>department</code>側を必ず全部残したいです。<code>instructor RIGHT JOIN department</code>を使い、<strong>department.dept_name, instructor.name</strong>の順で出力してください（教員がいない学部はinstructor.nameがNULLになります）。",
+    concept:"RIGHT JOIN（右側の全行を残す）", hint:"instructor RIGHT JOIN department ON instructor.dept_name = department.dept_name",
+    starter:"-- department.dept_name, instructor.name の順で出力してください（全8学部が出るはず）\n",
+    solution:"SELECT department.dept_name, instructor.name FROM instructor RIGHT JOIN department ON instructor.dept_name = department.dept_name;" },
+  { id:"jt-i3", tier:"intermediate", title:"FULL OUTER JOINで参照整合性の乱れを見つける",
+    scenario:"<code>department</code>と<code>student</code>を<code>dept_name</code>でFULL OUTER JOINし、<strong>department.dept_name, student.name, student.dept_name</strong>の順で出力してください。学生の中に、departmentテーブルに存在しない学部を持つ人が紛れ込んでいないか確認しましょう。",
+    concept:"FULL OUTER JOIN（両側の全行を残す）", hint:"department FULL OUTER JOIN student ON department.dept_name = student.dept_name",
+    starter:"-- department.dept_name, student.name, student.dept_name の順で出力してください\n",
+    solution:"SELECT department.dept_name, student.name, student.dept_name FROM department FULL OUTER JOIN student ON department.dept_name = student.dept_name;" },
+  { id:"jt-i4", tier:"intermediate", title:"CROSS JOINで組み合わせを作る",
+    scenario:"student_idが101と102の2人と、course_idが'CS-101'と'CS-190'の2科目について、全ての組み合わせ（2×2＝4行）を作ってください。<strong>s.name, c.course_id</strong>の順で出力してください。",
+    concept:"CROSS JOIN（直積・全組み合わせ）", hint:"(SELECT name FROM student WHERE student_id IN (101,102)) AS s CROSS JOIN (SELECT course_id FROM course WHERE course_id IN ('CS-101','CS-190')) AS c",
+    starter:"-- s.name, c.course_id の順で出力してください（4行になるはず）\n",
+    solution:"SELECT s.name, c.course_id FROM (SELECT name FROM student WHERE student_id IN (101,102)) AS s CROSS JOIN (SELECT course_id FROM course WHERE course_id IN ('CS-101','CS-190')) AS c;" },
+  { id:"jt-i5", tier:"intermediate", title:"複合キーでJOINする",
+    scenario:"<code>takes</code>と<code>section</code>は、<code>course_id</code>・<code>section_id</code>・<code>semester</code>・<code>year</code>の4列全てが一致して初めて同じ授業回を指します。student_id=101の履修について、この4条件をすべて<code>ON</code>句の<code>AND</code>でつないでJOINし、<strong>takes.course_id, section.room_number</strong>の順で出力してください。",
+    concept:"ON句に複数条件をANDでつなぐ", hint:"ON takes.course_id=section.course_id AND takes.section_id=section.section_id AND takes.semester=section.semester AND takes.year=section.year",
+    starter:"-- takes.course_id, section.room_number の順で出力してください（student_id=101で2行）\n",
+    solution:"SELECT takes.course_id, section.room_number FROM takes JOIN section ON takes.course_id = section.course_id AND takes.section_id = section.section_id AND takes.semester = section.semester AND takes.year = section.year WHERE takes.student_id = 101;" },
+
+  // ===== ADVANCED =====
+  { id:"jt-a1", tier:"advanced", title:"一度も履修していない学生を探す（アンチ結合）",
+    scenario:"LEFT JOINと<code>IS NULL</code>を使って、一度も<code>takes</code>に現れたことがない学生を探してください。<strong>student.student_id, student.name</strong>の順で出力してください。",
+    concept:"アンチ結合（LEFT JOIN + IS NULL）", hint:"student LEFT JOIN takes ... WHERE takes.student_id IS NULL",
+    starter:"-- student.student_id, student.name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name FROM student LEFT JOIN takes ON student.student_id = takes.student_id WHERE takes.student_id IS NULL;" },
+  { id:"jt-a2", tier:"advanced", title:"存在しない学部に所属する学生だけを取り出す",
+    scenario:"<code>student</code>を<code>department</code>にLEFT JOINし、<code>department</code>側がNULLになる行（＝departmentテーブルに存在しない学部を持つ学生）だけを取り出してください。<strong>student.student_id, student.name, student.dept_name</strong>の順で出力してください。",
+    concept:"アンチ結合で参照整合性違反を検出する", hint:"student LEFT JOIN department ON student.dept_name = department.dept_name ... WHERE department.dept_name IS NULL",
+    starter:"-- student.student_id, student.name, student.dept_name の順で出力してください\n",
+    solution:"SELECT student.student_id, student.name, student.dept_name FROM student LEFT JOIN department ON student.dept_name = department.dept_name WHERE department.dept_name IS NULL;" },
+  { id:"jt-a3", tier:"advanced", title:"CROSS JOINの結果件数を確認する",
+    scenario:"<code>department</code>（8行）と<code>course</code>（11行）をCROSS JOINすると何行になるか、<code>count(*)</code>で確認してください。結果は1列（件数）だけにしてください。",
+    concept:"CROSS JOINの行数＝両テーブルの行数の掛け算", hint:"SELECT count(*) FROM department CROSS JOIN course;",
+    starter:"-- 件数を1列だけ出力してください\n",
+    solution:"SELECT count(*) FROM department CROSS JOIN course;" },
+  { id:"jt-a4", tier:"advanced", title:"LEFT JOINの行数を求める",
+    scenario:"<code>course LEFT JOIN prereq</code>の結果が何行になるか、<code>count(*)</code>で確認してください（このデータでは各科目の前提科目は最大1つなので、course の行数と一致するはずです）。結果は1列だけにしてください。",
+    concept:"LEFT JOINは左テーブルの行数以上になる", hint:"SELECT count(*) FROM course LEFT JOIN prereq ON course.course_id = prereq.course_id;",
+    starter:"-- 件数を1列だけ出力してください\n",
+    solution:"SELECT count(*) FROM course LEFT JOIN prereq ON course.course_id = prereq.course_id;" },
+  { id:"jt-a5", tier:"advanced", title:"誰も受講していない科目が無いことを確認する",
+    scenario:"<code>course</code>を<code>takes</code>にLEFT JOINし、一度も履修登録がない科目（<code>takes.course_id IS NULL</code>）を探してください。このデータでは実は全科目に受講者がいるため、<strong>結果が0件になれば正解</strong>です。<strong>course.course_id, course.title</strong>の順で出力してください。",
+    concept:"アンチ結合で「0件であること」を確認する", hint:"course LEFT JOIN takes ... WHERE takes.course_id IS NULL",
+    starter:"-- course.course_id, course.title の順で出力してください（0行になるはず）\n",
+    solution:"SELECT DISTINCT course.course_id, course.title FROM course LEFT JOIN takes ON course.course_id = takes.course_id WHERE takes.course_id IS NULL;" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

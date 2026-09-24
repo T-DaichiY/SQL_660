@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 テーブルの関係とJOIN応用</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 テーブルの関係とJOIN応用 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · テーブルの関係とJOIN応用</div>
+  <h1>🧬 テーブルの関係とJOIN応用 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ SQLレッスン：M6演習 — テーブルの関係とJOIN応用</p>
+  <p style="margin-top:.5rem;"><a href="joins_relationships.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"jr-b1", tier:"basic", title:"テーブルにエイリアスを付けてJOINする",
+    scenario:"<code>student</code>テーブルに<code>S</code>、<code>takes</code>テーブルに<code>T</code>というエイリアス（別名）を付けて<code>student_id</code>でJOINし、<strong>S.name, T.course_id</strong>の順で出力してください。",
+    concept:"テーブルのエイリアシング（AS）", hint:"FROM student AS S JOIN takes AS T ON S.student_id = T.student_id",
+    starter:"-- S.name, T.course_id の順で出力してください\n",
+    solution:"SELECT S.name, T.course_id FROM student AS S JOIN takes AS T ON S.student_id = T.student_id;" },
+  { id:"jr-b2", tier:"basic", title:"USING句でJOINを書き換える",
+    scenario:"<code>instructor</code>テーブルと<code>teaches</code>テーブルは、どちらも同じ列名<code>instructor_id</code>を持っています。<code>ON</code>の代わりに<code>USING(instructor_id)</code>を使ってJOINし、<strong>instructor.name, teaches.course_id</strong>の順で出力してください。",
+    concept:"USING句（同名の列でJOINするときの省略記法）", hint:"FROM instructor JOIN teaches USING(instructor_id)",
+    starter:"-- instructor.name, teaches.course_id の順で出力してください\n",
+    solution:"SELECT instructor.name, teaches.course_id FROM instructor JOIN teaches USING(instructor_id);" },
+  { id:"jr-b3", tier:"basic", title:"3つのテーブルを連結してJOINする",
+    scenario:"<code>student</code>→<code>takes</code>→<code>course</code>の順に3つのテーブルをJOINでつなげ、学生が履修している科目の正式名称を調べてください。<strong>student.name, course.title</strong>の順で出力してください。",
+    concept:"3テーブルの連結JOIN（chain join）", hint:"student JOIN takes ON student.student_id=takes.student_id JOIN course ON takes.course_id=course.course_id",
+    starter:"-- student.name, course.title の順で出力してください\n",
+    solution:"SELECT student.name, course.title FROM student JOIN takes ON student.student_id = takes.student_id JOIN course ON takes.course_id = course.course_id;" },
+  { id:"jr-b4", tier:"basic", title:"学部ごとの学生数を数える",
+    scenario:"JOINは使わず、<code>student</code>テーブルだけを使って学部（<code>dept_name</code>）ごとの学生数を数えてください。<strong>dept_name, count(*)</strong>の順で出力してください。",
+    concept:"単一テーブルでのGROUP BY + COUNT", hint:"SELECT dept_name, count(*) FROM student GROUP BY dept_name;",
+    starter:"-- dept_name, count(*) の順で出力してください\n",
+    solution:"SELECT dept_name, count(*) FROM student GROUP BY dept_name;" },
+  { id:"jr-b5", tier:"basic", title:"科目ごとの履修者数をJOINで数える",
+    scenario:"<code>takes</code>テーブルと<code>course</code>テーブルを<code>course_id</code>でJOINし、科目タイトル（<code>title</code>）ごとに履修者数を数えてください。<strong>course.title, count(*)</strong>の順で出力してください。",
+    concept:"JOIN結果に対するGROUP BY + COUNT", hint:"takes JOIN course ON takes.course_id=course.course_id GROUP BY course.title",
+    starter:"-- course.title, count(*) の順で出力してください\n",
+    solution:"SELECT course.title, count(*) FROM takes JOIN course ON takes.course_id = course.course_id GROUP BY course.title;" },
+
+  // ===== INTERMEDIATE =====
+  { id:"jr-i1", tier:"intermediate", title:"エイリアス＋USINGで3テーブルを連結する",
+    scenario:"<code>student</code>に<code>S</code>、<code>takes</code>に<code>T</code>、<code>course</code>に<code>C</code>というエイリアスを付け、<code>USING</code>句を2回使って（<code>student_id</code>と<code>course_id</code>）3テーブルを連結してください。<strong>S.name, C.title</strong>の順で出力してください。",
+    concept:"エイリアス＋USING句の組み合わせ", hint:"student AS S JOIN takes AS T USING(student_id) JOIN course AS C USING(course_id)",
+    starter:"-- S.name, C.title の順で出力してください\n",
+    solution:"SELECT S.name, C.title FROM student AS S JOIN takes AS T USING(student_id) JOIN course AS C USING(course_id);" },
+  { id:"jr-i2", tier:"intermediate", title:"教員が2人以上いる学部を探す（1:N関係）",
+    scenario:"<code>instructor</code>テーブル（JOIN不要）を使い、学部と教員は1対多（1つの学部に複数の教員が所属できる）の関係です。教員が2人より多く（<code>count(*) &gt; 1</code>）所属している学部を、<strong>dept_name, count(*)</strong>の順で出力してください。",
+    concept:"GROUP BY + HAVINGで1:N関係のカーディナリティを確認する", hint:"SELECT dept_name, count(*) FROM instructor GROUP BY dept_name HAVING count(*) > 1;",
+    starter:"-- dept_name, count(*) の順で出力してください\n",
+    solution:"SELECT dept_name, count(*) FROM instructor GROUP BY dept_name HAVING count(*) > 1;" },
+  { id:"jr-i3", tier:"intermediate", title:"学生ごとの平均履修単位数をJOIN+AVGで求める",
+    scenario:"<code>takes</code>と<code>course</code>を<code>course_id</code>でJOINし、学生（<code>student_id</code>）ごとに履修している科目の平均単位数（<code>credits</code>の平均）を求めてください。<strong>takes.student_id, avg(course.credits)</strong>の順で出力してください。",
+    concept:"JOIN結果に対するGROUP BY + AVG", hint:"takes JOIN course ON takes.course_id=course.course_id GROUP BY takes.student_id",
+    starter:"-- takes.student_id, avg(course.credits) の順で出力してください\n",
+    solution:"SELECT takes.student_id, avg(course.credits) FROM takes JOIN course ON takes.course_id = course.course_id GROUP BY takes.student_id;" },
+  { id:"jr-i4", tier:"intermediate", title:"JOIN + WHERE + ORDER BYを組み合わせる",
+    scenario:"<code>student</code>と<code>takes</code>をJOINし、Comp. Sci.学部の学生の履修だけに絞り込んでから、<strong>学生名の昇順</strong>で並べ替えてください。<strong>student.name, takes.course_id</strong>の順で出力してください。（この問題は出力の並び順も採点対象です）",
+    concept:"JOIN + WHERE + ORDER BYの組み合わせ", hint:"... WHERE student.dept_name='Comp. Sci.' ORDER BY student.name",
+    starter:"-- student.name, takes.course_id の順で、name の昇順に並べて出力してください\n",
+    solution:"SELECT student.name, takes.course_id FROM student JOIN takes ON student.student_id = takes.student_id WHERE student.dept_name = 'Comp. Sci.' ORDER BY student.name;",
+    orderSensitive:true },
+  { id:"jr-i5", tier:"intermediate", title:"ON句の中で外部結合の相手を絞り込む",
+    scenario:"全学生を残したまま、<code>takes</code>との結合を<code>student</code>にLEFT JOINしてください。ただし<code>ON</code>句に<code>takes.course_id = 'CS-101'</code>という条件を<code>AND</code>で追加し、CS-101を履修していない学生は<code>takes</code>側の列がNULLになるようにしてください。<strong>student.student_id, student.name, takes.course_id</strong>の順で、全20人の学生を出力してください。",
+    concept:"LEFT JOINのON句に結合相手を絞る条件を書く（行は消えない）", hint:"student LEFT JOIN takes ON student.student_id=takes.student_id AND takes.course_id='CS-101'",
+    starter:"-- student.student_id, student.name, takes.course_id の順で出力してください（20行になるはず）\n",
+    solution:"SELECT student.student_id, student.name, takes.course_id FROM student LEFT JOIN takes ON student.student_id = takes.student_id AND takes.course_id = 'CS-101';" },
+
+  // ===== ADVANCED =====
+  { id:"jr-a1", tier:"advanced", title:"ON句で条件を絞る（外部結合はそのまま残る）",
+    scenario:"<code>department</code>を基準に<code>instructor</code>をLEFT JOINしてください。結合条件は<code>dept_name</code>の一致に加えて、<code>ON</code>句の中で<code>AND instructor.salary &gt; 85000</code>という条件も付けてください。<strong>department.dept_name, instructor.name</strong>の順で出力してください。ON句の条件は「結合相手を絞る」だけなので、条件に合う高給教員がいない学部でも学部の行自体は消えません（結果は9行になるはずです）。",
+    concept:"ON句での条件はLEFT JOINの左側の行を消さない", hint:"department LEFT JOIN instructor ON department.dept_name=instructor.dept_name AND instructor.salary>85000",
+    starter:"-- department.dept_name, instructor.name の順で出力してください（9行になるはず）\n",
+    solution:"SELECT department.dept_name, instructor.name FROM department LEFT JOIN instructor ON department.dept_name = instructor.dept_name AND instructor.salary > 85000;" },
+  { id:"jr-a2", tier:"advanced", title:"同じ条件をWHERE句に書くと結果が変わる",
+    scenario:"前の問題と同じ<code>department LEFT JOIN instructor ON department.dept_name = instructor.dept_name</code>を使いますが、今度は<code>instructor.salary &gt; 85000</code>という条件を<code>ON</code>句ではなく<code>WHERE</code>句に書いてください。WHERE句はJOINが終わった後に行を絞り込むため、給与条件を満たす教員がいない学部の行（instructor側がNULLの行を含む）は全て消え、結果的にINNER JOINと同じ働きになります。<strong>department.dept_name, instructor.name</strong>の順で出力してください（結果は4行になり、前の問題の9行より少なくなるはずです）。",
+    concept:"WHERE句での条件はLEFT JOINを実質INNER JOINに変えてしまう", hint:"department LEFT JOIN instructor ON department.dept_name=instructor.dept_name WHERE instructor.salary>85000",
+    starter:"-- department.dept_name, instructor.name の順で出力してください（4行になるはず）\n",
+    solution:"SELECT department.dept_name, instructor.name FROM department LEFT JOIN instructor ON department.dept_name = instructor.dept_name WHERE instructor.salary > 85000;" },
+  { id:"jr-a3", tier:"advanced", title:"3テーブルJOIN + GROUP BYで受講科目の種類数を数える",
+    scenario:"<code>student</code>・<code>takes</code>・<code>course</code>の3テーブルをJOINし、学生の所属学部（<code>student.dept_name</code>）ごとに、その学部の学生たちが履修している科目の「種類数」（重複を除いた<code>course.course_id</code>の数）を数えてください。<strong>student.dept_name, count(DISTINCT course.course_id)</strong>の順で出力してください。",
+    concept:"多テーブルJOIN + GROUP BY + COUNT(DISTINCT ...)", hint:"student JOIN takes ON ... JOIN course ON ... GROUP BY student.dept_name",
+    starter:"-- student.dept_name, count(DISTINCT course.course_id) の順で出力してください\n",
+    solution:"SELECT student.dept_name, count(DISTINCT course.course_id) FROM student JOIN takes ON student.student_id = takes.student_id JOIN course ON takes.course_id = course.course_id GROUP BY student.dept_name;" },
+  { id:"jr-a4", tier:"advanced", title:"JOINの順序（左右）を間違えると行が消える",
+    scenario:"全11科目について、それぞれの前提科目（<code>prereq</code>）の数を数えてください。前提科目が1つも無い科目も「0件」として結果に含める必要があります。そのためには<code>course</code>を必ず左側にしてLEFT JOINする必要があります（逆にすると前提科目が無い科目が結果から消えてしまいます）。<strong>course.course_id, count(prereq.prereq_id)</strong>の順で、11行になるように出力してください。",
+    concept:"LEFT JOINでは「全行を残したい側」を左に置く", hint:"course LEFT JOIN prereq ON course.course_id=prereq.course_id GROUP BY course.course_id",
+    starter:"-- course.course_id, count(prereq.prereq_id) の順で出力してください（11行になるはず）\n",
+    solution:"SELECT course.course_id, count(prereq.prereq_id) FROM course LEFT JOIN prereq ON course.course_id = prereq.course_id GROUP BY course.course_id;" },
+  { id:"jr-a5", tier:"advanced", title:"指導教員と学生の学部が食い違っている人を探す",
+    scenario:"<code>student</code>・<code>advisor</code>・<code>instructor</code>の3テーブルをJOINでつなげ、学生本人の学部（<code>student.dept_name</code>）と、その指導教員の所属学部（<code>instructor.dept_name</code>）が一致しない（<code>&lt;&gt;</code>）ケースだけを取り出してください。<strong>student.name, student.dept_name, instructor.name, instructor.dept_name</strong>の順で出力してください。",
+    concept:"3テーブルJOIN + WHEREによる整合性チェック", hint:"student JOIN advisor ON student.student_id=advisor.student_id JOIN instructor ON advisor.instructor_id=instructor.instructor_id WHERE student.dept_name <> instructor.dept_name",
+    starter:"-- student.name, student.dept_name, instructor.name, instructor.dept_name の順で出力してください\n",
+    solution:"SELECT student.name, student.dept_name, instructor.name, instructor.dept_name FROM student JOIN advisor ON student.student_id = advisor.student_id JOIN instructor ON advisor.instructor_id = instructor.instructor_id WHERE student.dept_name <> instructor.dept_name;" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>
