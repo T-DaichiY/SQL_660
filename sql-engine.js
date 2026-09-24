@@ -201,7 +201,6 @@ function buildPracticeCard(p) {
     '<div class="ptitle">' + escapeHtmlSQL(p.title) + ' <span class="ptier">' + p.tier + "</span></div>" +
     '<p class="ptask">' + p.scenario + "</p>" +
     '<p class="pconcept">🎯 <strong>スキル:</strong> ' + escapeHtmlSQL(p.concept) + "</p>" +
-    '<p class="phint">💡 <strong>ヒント:</strong> ' + escapeHtmlSQL(p.hint) + "</p>" +
     '<div class="editor-wrap">' +
       '<pre class="code-highlight" id="hl-' + p.id + '" aria-hidden="true"><code></code></pre>' +
       '<textarea class="code-editor" id="ed-' + p.id + '" spellcheck="false" wrap="off"></textarea>' +
@@ -209,9 +208,11 @@ function buildPracticeCard(p) {
     '<div class="practice-toolbar">' +
       '<button class="run-btn" type="button" data-id="' + p.id + '">▶ 実行</button>' +
       '<button class="check-btn" type="button" data-id="' + p.id + '">✅ 採点</button>' +
-      '<button class="reveal-btn" type="button" data-id="' + p.id + '">💡 答えを見る</button>' +
+      '<button class="hint-btn" type="button" data-id="' + p.id + '">💡 ヒントを見る</button>' +
+      '<button class="reveal-btn" type="button" data-id="' + p.id + '">🔑 答えを見る</button>' +
     "</div>" +
     '<div class="check-result" id="result-' + p.id + '"></div>' +
+    '<p class="phint" id="hint-' + p.id + '" hidden>💡 <strong>ヒント:</strong> ' + escapeHtmlSQL(p.hint) + "</p>" +
     '<div class="answer-reveal" id="answer-' + p.id + '" hidden>' +
       '<pre class="code-block"><code id="answer-code-' + p.id + '"></code></pre>' +
     "</div>";
@@ -245,8 +246,10 @@ function wirePracticeCard(p) {
 
   var runBtn = document.querySelector('.run-btn[data-id="' + p.id + '"]');
   var checkBtn = document.querySelector('.check-btn[data-id="' + p.id + '"]');
+  var hintBtn = document.querySelector('.hint-btn[data-id="' + p.id + '"]');
   var revealBtn = document.querySelector('.reveal-btn[data-id="' + p.id + '"]');
   var resultEl = document.getElementById("result-" + p.id);
+  var hintEl = document.getElementById("hint-" + p.id);
   var answerEl = document.getElementById("answer-" + p.id);
   var answerCodeEl = document.getElementById("answer-code-" + p.id);
   answerCodeEl.innerHTML = highlightSQL(p.solution);
@@ -257,7 +260,10 @@ function wirePracticeCard(p) {
   });
 
   checkBtn.addEventListener("click", function () {
-    if (editor.value.trim() === "" || /^--/.test(editor.value.trim())) {
+    // Strip line comments (the starter text always begins with a "-- ..." prompt)
+    // before checking whether the student actually wrote any SQL yet.
+    var withoutComments = editor.value.replace(/--[^\n]*/g, "").trim();
+    if (withoutComments === "") {
       resultEl.innerHTML = '<div class="check-result-msg fail">✍️ まずSQLを入力してから採点してください。</div>';
       return;
     }
@@ -275,9 +281,14 @@ function wirePracticeCard(p) {
     resultEl.innerHTML = html;
   });
 
+  hintBtn.addEventListener("click", function () {
+    hintEl.hidden = !hintEl.hidden;
+    hintBtn.textContent = hintEl.hidden ? "💡 ヒントを見る" : "🙈 ヒントを隠す";
+  });
+
   revealBtn.addEventListener("click", function () {
     answerEl.hidden = !answerEl.hidden;
-    revealBtn.textContent = answerEl.hidden ? "💡 答えを見る" : "🙈 答えを隠す";
+    revealBtn.textContent = answerEl.hidden ? "🔑 答えを見る" : "🙈 答えを隠す";
   });
 }
 
