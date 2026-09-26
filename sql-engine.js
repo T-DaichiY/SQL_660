@@ -483,7 +483,42 @@ function wirePracticeCard(p) {
   });
 }
 
+/* ===== Schema reference panel (which tables/columns exist) ===== */
+
+var UNIVERSITY_TABLES = ["department", "instructor", "student", "course", "section", "takes", "teaches", "advisor", "prereq"];
+var BANKING_TABLES = ["branch", "customer", "account", "depositor", "loan", "borrower"];
+
+function schemaTableRow(t) {
+  return '<div class="schema-table"><span class="schema-tname">' + escapeHtmlSQL(t) + "</span>" +
+    '<span class="schema-cols">' + escapeHtmlSQL(SCHEMA_INFO[t].join(", ")) + "</span></div>";
+}
+
+function buildSchemaRefHTML() {
+  return '<div class="schema-ref" id="schemaRef">' +
+    '<button type="button" class="schema-ref-toggle" id="schemaRefToggle">📋 テーブル構成（列一覧）を見る ▾</button>' +
+    '<div class="schema-ref-body" id="schemaRefBody" hidden>' +
+      '<div class="schema-group"><h3>🎓 University DB</h3>' + UNIVERSITY_TABLES.map(schemaTableRow).join("") + "</div>" +
+      '<div class="schema-group"><h3>🏦 Banking DB</h3>' + BANKING_TABLES.map(schemaTableRow).join("") + "</div>" +
+    "</div>" +
+  "</div>";
+}
+
+function wireSchemaReference() {
+  var toggle = document.getElementById("schemaRefToggle");
+  var body = document.getElementById("schemaRefBody");
+  if (!toggle || !body) return;
+  toggle.addEventListener("click", function () {
+    body.hidden = !body.hidden;
+    toggle.textContent = body.hidden ? "📋 テーブル構成（列一覧）を見る ▾" : "🙈 テーブル構成を隠す ▴";
+  });
+}
+
 function renderPracticeArena(problems, containers) {
+  var intro = document.querySelector(".arena-intro");
+  if (intro && !document.getElementById("schemaRef")) {
+    intro.insertAdjacentHTML("afterend", buildSchemaRefHTML());
+    wireSchemaReference();
+  }
   var byTier = { basic: containers.basicsEl, intermediate: containers.intermediateEl, advanced: containers.advancedEl };
   problems.forEach(function (p) {
     var target = byTier[p.tier];
