@@ -120,6 +120,35 @@ var SQL_KEYWORDS = ["SELECT","FROM","WHERE","JOIN","INNER","LEFT","RIGHT","FULL"
   "FOREIGN","REFERENCES","CHECK","DEFAULT","UNIQUE"];
 var SQL_TYPES = ["INTEGER","INT","TEXT","NUMERIC","REAL","VARCHAR","CHAR","DATE","BOOLEAN","MONEY"];
 
+/* Table/column names available for autocomplete — must match SEED_SQL above. */
+var SCHEMA_INFO = {
+  department: ["dept_name", "building", "budget"],
+  instructor: ["instructor_id", "name", "dept_name", "salary"],
+  student: ["student_id", "name", "dept_name", "tot_cred"],
+  course: ["course_id", "title", "dept_name", "credits"],
+  section: ["course_id", "section_id", "semester", "year", "building", "room_number"],
+  takes: ["student_id", "course_id", "section_id", "semester", "year", "grade"],
+  teaches: ["instructor_id", "course_id", "section_id", "semester", "year"],
+  advisor: ["student_id", "instructor_id"],
+  prereq: ["course_id", "prereq_id"],
+  branch: ["branch_name", "branch_city", "assets"],
+  customer: ["customer_id", "customer_name", "customer_street", "customer_city"],
+  account: ["account_number", "branch_name", "balance"],
+  depositor: ["customer_id", "account_number"],
+  loan: ["loan_number", "branch_name", "amount"],
+  borrower: ["customer_id", "loan_number"]
+};
+var SCHEMA_TABLES = Object.keys(SCHEMA_INFO);
+var SCHEMA_COLUMNS = (function () {
+  var seen = {}, list = [];
+  SCHEMA_TABLES.forEach(function (t) {
+    SCHEMA_INFO[t].forEach(function (c) {
+      if (!seen[c]) { seen[c] = true; list.push(c); }
+    });
+  });
+  return list;
+})();
+
 function escapeHtmlSQL(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -164,6 +193,135 @@ function highlightSQLLine(line) {
 function highlightSQL(code) {
   return code.split("\n").map(highlightSQLLine).join("\n");
 }
+
+/* ===== Autocomplete (keywords + table/column names) ===== */
+
+var AC = { open: false, editorId: null, items: [], active: 0, dropdownEl: null };
+
+function acGetWordRangeAtCaret(editor) {
+  var pos = editor.selectionStart, val = editor.value;
+  var start = pos;
+  while (start > 0 && /[A-Za-z0-9_]/.test(val[start - 1])) start--;
+  return { start: start, end: pos, word: val.slice(start, pos) };
+}
+
+// Classic "mirror div" technique: clone the textarea's box/font metrics onto an
+// offscreen div containing the text up to the caret, then read where that text
+// ends to know the caret's on-screen pixel position.
+function acGetCaretCoordinates(textarea, position) {
+  var mirror = document.createElement("div");
+  var style = getComputedStyle(textarea);
+  ["boxSizing", "width", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft",
+   "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
+   "fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing", "whiteSpace"]
+    .forEach(function (p) { mirror.style[p] = style[p]; });
+  mirror.style.position = "absolute";
+  mirror.style.visibility = "hidden";
+  mirror.style.top = "0";
+  mirror.style.left = "-9999px";
+  document.body.appendChild(mirror);
+  mirror.textContent = textarea.value.substring(0, position);
+  var span = document.createElement("span");
+  span.textContent = textarea.value.substring(position) || ".";
+  mirror.appendChild(span);
+  var coords = { top: span.offsetTop, left: span.offsetLeft, height: span.offsetHeight || parseInt(style.lineHeight, 10) || 18 };
+  document.body.removeChild(mirror);
+  return coords;
+}
+
+function acGetDropdown() {
+  if (!AC.dropdownEl) {
+    AC.dropdownEl = document.createElement("div");
+    AC.dropdownEl.className = "autocomplete-dropdown";
+    AC.dropdownEl.hidden = true;
+    document.body.appendChild(AC.dropdownEl);
+  }
+  return AC.dropdownEl;
+}
+
+function acHide() {
+  AC.open = false;
+  AC.editorId = null;
+  if (AC.dropdownEl) AC.dropdownEl.hidden = true;
+}
+
+function acCandidateTag(word) {
+  var up = word.toUpperCase();
+  if (SQL_TYPES.indexOf(up) !== -1) return "type";
+  if (SQL_KEYWORDS.indexOf(up) !== -1) return "keyword";
+  if (SCHEMA_TABLES.indexOf(word) !== -1) return "table";
+  return "column";
+}
+
+function acUpdate(editorId) {
+  var editor = document.getElementById("ed-" + editorId);
+  var range = acGetWordRangeAtCaret(editor);
+  if (range.word.length < 1) { acHide(); return; }
+  var upper = range.word.toUpperCase();
+  var lower = range.word.toLowerCase();
+  var kwMatches = SQL_KEYWORDS.concat(SQL_TYPES).filter(function (k) {
+    return k.indexOf(upper) === 0;
+  });
+  var nameMatches = SCHEMA_TABLES.concat(SCHEMA_COLUMNS).filter(function (n) {
+    return n.toLowerCase().indexOf(lower) === 0;
+  });
+  var seen = {};
+  var items = [];
+  kwMatches.concat(nameMatches).forEach(function (text) {
+    if (seen[text]) return;
+    seen[text] = true;
+    items.push({ text: text, tag: acCandidateTag(text) });
+  });
+  items = items.slice(0, 8);
+  if (items.length === 0 || (items.length === 1 && items[0].text.toLowerCase() === lower)) { acHide(); return; }
+  AC.open = true;
+  AC.editorId = editorId;
+  AC.items = items;
+  AC.active = 0;
+  acRender(editor, range);
+}
+
+var AC_TAG_LABEL = { keyword: "keyword", type: "type", table: "table", column: "column" };
+
+function acRender(editor, range) {
+  var dd = acGetDropdown();
+  dd.innerHTML = "";
+  AC.items.forEach(function (item, idx) {
+    var el = document.createElement("div");
+    el.className = "autocomplete-item" + (idx === AC.active ? " active" : "");
+    el.innerHTML = "<span>" + escapeHtmlSQL(item.text) + '</span><span class="ac-tag">' + AC_TAG_LABEL[item.tag] + "</span>";
+    el.addEventListener("mousedown", function (e) {
+      e.preventDefault();
+      acApply(idx);
+    });
+    dd.appendChild(el);
+  });
+  var coords = acGetCaretCoordinates(editor, range.end);
+  var rect = editor.getBoundingClientRect();
+  dd.style.left = (rect.left + window.scrollX + coords.left - editor.scrollLeft) + "px";
+  dd.style.top = (rect.top + window.scrollY + coords.top + coords.height - editor.scrollTop) + "px";
+  dd.hidden = false;
+}
+
+function acApply(idx) {
+  if (!AC.open || !AC.editorId) return;
+  var editor = document.getElementById("ed-" + AC.editorId);
+  var range = acGetWordRangeAtCaret(editor);
+  var chosen = AC.items[idx !== undefined ? idx : AC.active];
+  if (!chosen) return;
+  var before = editor.value.slice(0, range.start), after = editor.value.slice(range.end);
+  editor.value = before + chosen.text + after;
+  var newPos = before.length + chosen.text.length;
+  editor.selectionStart = editor.selectionEnd = newPos;
+  editor.dispatchEvent(new Event("input"));
+  acHide();
+  editor.focus();
+}
+
+document.addEventListener("scroll", function () { if (AC.open) acHide(); }, true);
+document.addEventListener("mousedown", function (e) {
+  if (AC.open && AC.dropdownEl && !AC.dropdownEl.contains(e.target)) acHide();
+});
 
 /* ===== Result table rendering ===== */
 
@@ -229,12 +387,45 @@ function wirePracticeCard(p) {
     hlCode.innerHTML = highlightSQL(editor.value) + "\n";
   }
   sync();
-  editor.addEventListener("input", sync);
+  editor.addEventListener("input", function () {
+    sync();
+    acUpdate(p.id);
+  });
   editor.addEventListener("scroll", function () {
     hl.scrollTop = editor.scrollTop;
     hl.scrollLeft = editor.scrollLeft;
+    if (AC.open && AC.editorId === p.id) acHide();
+  });
+  editor.addEventListener("blur", function () {
+    // Small delay so a mousedown on a dropdown item still registers as a click
+    // before we hide it (blur fires before the item's own click otherwise).
+    setTimeout(function () { if (AC.editorId === p.id) acHide(); }, 150);
   });
   editor.addEventListener("keydown", function (e) {
+    if (AC.open && AC.editorId === p.id) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        AC.active = (AC.active + 1) % AC.items.length;
+        acRender(editor, acGetWordRangeAtCaret(editor));
+        return;
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        AC.active = (AC.active - 1 + AC.items.length) % AC.items.length;
+        acRender(editor, acGetWordRangeAtCaret(editor));
+        return;
+      }
+      if (e.key === "Tab" || e.key === "Enter") {
+        e.preventDefault();
+        acApply();
+        return;
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        acHide();
+        return;
+      }
+    }
     if (e.key === "Tab") {
       e.preventDefault();
       var s = editor.selectionStart, en = editor.selectionEnd;
