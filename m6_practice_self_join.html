@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6演習 自己結合（SELF JOIN）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=8">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 自己結合 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6演習 · 自己結合</div>
+  <h1>🔁 自己結合（SELF JOIN） — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🔁 SQLレッスン：M6演習 — 自己結合（SELF JOIN）</p>
+  <p style="margin-top:.5rem;"><a href="self_join.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js?v=7"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"sj-b1", tier:"basic", title:"同じ学部の教員ペアを自己結合で探す（未フィルタ）",
+    scenario:"<code>instructor</code>テーブルを自分自身に<code>i1</code>, <code>i2</code>というエイリアスで結合し、同じ<code>dept_name</code>を持つ教員のペアを<strong>i1.name, i2.name</strong>の順で出力してください。まだ自分自身とのペアや重複は除外しなくて構いません。",
+    concept:"自己結合の基本（テーブルを2つのエイリアスで扱う）", hint:"FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name",
+    starter:"-- i1.name, i2.name の順で出力してください（14行になるはず）\n",
+    solution:"SELECT i1.name, i2.name FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name;" },
+  { id:"sj-b2", tier:"basic", title:"自分自身とのペアを除外する",
+    scenario:"<code>instructor</code>の自己結合に<code>i1.instructor_id &lt;&gt; i2.instructor_id</code>という条件を加え、自分自身とのペアを除いた上で<strong>i1.name, i2.name</strong>の順で出力してください。",
+    concept:"&lt;&gt; で対角線（自分自身とのペア）を除く", hint:"ON i1.dept_name = i2.dept_name AND i1.instructor_id <> i2.instructor_id",
+    starter:"-- i1.name, i2.name の順で出力してください（6行になるはず）\n",
+    solution:"SELECT i1.name, i2.name FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id <> i2.instructor_id;" },
+  { id:"sj-b3", tier:"basic", title:"向き違いの重複ペアもまとめて除く",
+    scenario:"<code>instructor</code>の自己結合で<code>i1.instructor_id &lt; i2.instructor_id</code>という条件を使い、それぞれのペアが1回だけ出るようにして<strong>i1.name, i2.name</strong>の順で出力してください。",
+    concept:"&lt; でユニークなペアだけを残す", hint:"ON i1.dept_name = i2.dept_name AND i1.instructor_id < i2.instructor_id",
+    starter:"-- i1.name, i2.name の順で出力してください（3行になるはず）\n",
+    solution:"SELECT i1.name, i2.name FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id < i2.instructor_id;" },
+  { id:"sj-b4", tier:"basic", title:"Comp. Sci.学部の学生ペアを自己結合で探す",
+    scenario:"<code>student</code>テーブルを<code>s1</code>, <code>s2</code>で自己結合し、<code>s1.dept_name = 'Comp. Sci.'</code>かつ<code>s1.student_id &lt; s2.student_id</code>である学生ペアを<strong>s1.name, s2.name</strong>の順で出力してください。",
+    concept:"WHERE条件と自己結合の組み合わせ", hint:"ON s1.dept_name = s2.dept_name AND s1.student_id < s2.student_id ... WHERE s1.dept_name = 'Comp. Sci.'",
+    starter:"-- s1.name, s2.name の順で出力してください（10行になるはず）\n",
+    solution:"SELECT s1.name, s2.name FROM student AS s1 JOIN student AS s2 ON s1.dept_name = s2.dept_name AND s1.student_id < s2.student_id WHERE s1.dept_name = 'Comp. Sci.';" },
+  { id:"sj-b5", tier:"basic", title:"前提科目を通じた自己参照（course→prereq→course）",
+    scenario:"<code>course</code>テーブルを<code>c</code>（元の科目）と<code>pre</code>（前提科目）の2つのエイリアスで扱い、<code>prereq</code>テーブルを経由して結合し、<strong>c.title, pre.title</strong>の順（各科目のタイトルと、その前提科目のタイトル）で出力してください。",
+    concept:"中間テーブルを経由した自己参照パターン", hint:"course AS c JOIN prereq AS p ON c.course_id = p.course_id JOIN course AS pre ON p.prereq_id = pre.course_id",
+    starter:"-- c.title, pre.title の順で出力してください（4行になるはず）\n",
+    solution:"SELECT c.title, pre.title FROM course AS c JOIN prereq AS p ON c.course_id = p.course_id JOIN course AS pre ON p.prereq_id = pre.course_id;" },
+
+  // ===== INTERMEDIATE =====
+  { id:"sj-i1", tier:"intermediate", title:"同じ都市の顧客ペアを探す",
+    scenario:"<code>customer</code>テーブルを<code>c1</code>, <code>c2</code>で自己結合し、同じ<code>customer_city</code>を持ち、かつ自分自身ではない顧客ペアを<strong>c1.customer_name, c2.customer_name</strong>の順で出力してください。",
+    concept:"別テーブル（Banking DB）での自己結合＋自分除外", hint:"ON c1.customer_city = c2.customer_city AND c1.customer_id <> c2.customer_id",
+    starter:"-- c1.customer_name, c2.customer_name の順で出力してください（16行になるはず）\n",
+    solution:"SELECT c1.customer_name, c2.customer_name FROM customer AS c1 JOIN customer AS c2 ON c1.customer_city = c2.customer_city AND c1.customer_id <> c2.customer_id;" },
+  { id:"sj-i2", tier:"intermediate", title:"同じ都市の顧客のユニークなペア",
+    scenario:"<code>customer</code>の自己結合で<code>c1.customer_id &lt; c2.customer_id</code>を使い、同じ<code>customer_city</code>の顧客のユニークなペアを<strong>c1.customer_name, c2.customer_name</strong>の順で出力してください。",
+    concept:"&lt; を使った銀行DBでのユニークペア抽出", hint:"ON c1.customer_city = c2.customer_city AND c1.customer_id < c2.customer_id",
+    starter:"-- c1.customer_name, c2.customer_name の順で出力してください（8行になるはず）\n",
+    solution:"SELECT c1.customer_name, c2.customer_name FROM customer AS c1 JOIN customer AS c2 ON c1.customer_city = c2.customer_city AND c1.customer_id < c2.customer_id;" },
+  { id:"sj-i3", tier:"intermediate", title:"同じ学部内で給与が高い教員ペアを探す",
+    scenario:"<code>instructor</code>を自己結合し、同じ<code>dept_name</code>かつ<code>i1.salary &gt; i2.salary</code>である教員ペアを<strong>i1.name, i2.name</strong>の順（給与が高い方, 低い方）で出力してください。",
+    concept:"等号以外の比較演算子を使った自己結合", hint:"ON i1.dept_name = i2.dept_name AND i1.salary > i2.salary",
+    starter:"-- i1.name, i2.name の順で出力してください（3行になるはず）\n",
+    solution:"SELECT i1.name, i2.name FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.salary > i2.salary;" },
+  { id:"sj-i4", tier:"intermediate", title:"その学部で唯一の教員を探す（自己結合＋アンチ結合）",
+    scenario:"<code>instructor</code>を<code>i1</code>, <code>i2</code>でLEFT JOINし（<code>i1.dept_name = i2.dept_name AND i1.instructor_id &lt;&gt; i2.instructor_id</code>）、<code>i2.instructor_id IS NULL</code>で絞り込んで、自分の学部に他の教員がいない教員を<strong>i1.name, i1.dept_name</strong>の順で出力してください。",
+    concept:"LEFT JOIN自己結合でアンチ結合パターンを応用する", hint:"LEFT JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id <> i2.instructor_id ... WHERE i2.instructor_id IS NULL",
+    starter:"-- i1.name, i1.dept_name の順で出力してください（5行になるはず）\n",
+    solution:"SELECT i1.name, i1.dept_name FROM instructor AS i1 LEFT JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id <> i2.instructor_id WHERE i2.instructor_id IS NULL;" },
+  { id:"sj-i5", tier:"intermediate", title:"その学部で唯一の学生を探す（データ不整合にも気づく）",
+    scenario:"<code>student</code>を<code>s1</code>, <code>s2</code>でLEFT JOINし、同じ<code>dept_name</code>を持つ他の学生がいない学生を<strong>s1.name, s1.dept_name</strong>の順で出力してください。結果の中に、departmentテーブルに存在しない学部を持つ学生が紛れ込んでいないか確認してみましょう。",
+    concept:"LEFT JOIN自己結合の応用（参照整合性の問題も同時に発見できる）", hint:"LEFT JOIN student AS s2 ON s1.dept_name = s2.dept_name AND s1.student_id <> s2.student_id ... WHERE s2.student_id IS NULL",
+    starter:"-- s1.name, s1.dept_name の順で出力してください（1行になるはず）\n",
+    solution:"SELECT s1.name, s1.dept_name FROM student AS s1 LEFT JOIN student AS s2 ON s1.dept_name = s2.dept_name AND s1.student_id <> s2.student_id WHERE s2.student_id IS NULL;" },
+
+  // ===== ADVANCED =====
+  { id:"sj-a1", tier:"advanced", title:"学部ごとの教員ペア数を数える",
+    scenario:"<code>instructor</code>の自己結合（<code>i1.instructor_id &lt; i2.instructor_id</code>）の結果を<code>dept_name</code>でグループ化し、学部ごとのペア数を<strong>i1.dept_name, COUNT(*)</strong>の順で出力してください。",
+    concept:"自己結合の結果をGROUP BY・COUNTで集計する", hint:"GROUP BY i1.dept_name の前に、自己結合の条件を i1.dept_name = i2.dept_name AND i1.instructor_id < i2.instructor_id にする",
+    starter:"-- i1.dept_name, COUNT(*) の順で出力してください（1行になるはず：Comp. Sci.が3ペア）\n",
+    solution:"SELECT i1.dept_name, COUNT(*) FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id < i2.instructor_id GROUP BY i1.dept_name;" },
+  { id:"sj-a2", tier:"advanced", title:"同じ学部内の前提科目ペアだけを探す",
+    scenario:"Unit⑤（基礎5）の<code>course</code>→<code>prereq</code>→<code>course</code>の自己参照に、<code>c.dept_name = pre.dept_name</code>（科目と前提科目が同じ学部）という条件を追加し、<strong>c.title, pre.title</strong>の順で出力してください。",
+    concept:"中間テーブル経由の自己参照＋追加のWHERE条件", hint:"course AS c JOIN prereq AS p ON c.course_id = p.course_id JOIN course AS pre ON p.prereq_id = pre.course_id WHERE c.dept_name = pre.dept_name",
+    starter:"-- c.title, pre.title の順で出力してください（3行になるはず）\n",
+    solution:"SELECT c.title, pre.title FROM course AS c JOIN prereq AS p ON c.course_id = p.course_id JOIN course AS pre ON p.prereq_id = pre.course_id WHERE c.dept_name = pre.dept_name;" },
+  { id:"sj-a3", tier:"advanced", title:"給与差が大きい教員ペアを探す",
+    scenario:"<code>instructor</code>を自己結合し、同じ学部内で<code>i1.salary - i2.salary &gt; 10000</code>である教員ペアを<strong>i1.name, i2.name</strong>の順で出力してください。",
+    concept:"計算式を使った自己結合の絞り込み", hint:"ON i1.dept_name = i2.dept_name AND i1.instructor_id <> i2.instructor_id ... WHERE i1.salary - i2.salary > 10000",
+    starter:"-- i1.name, i2.name の順で出力してください（2行になるはず）\n",
+    solution:"SELECT i1.name, i2.name FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id <> i2.instructor_id WHERE i1.salary - i2.salary > 10000;" },
+  { id:"sj-a4", tier:"advanced", title:"同じ通りに住む顧客ペアを探す",
+    scenario:"<code>customer</code>を自己結合し、同じ<code>customer_street</code>に住む顧客のユニークなペア（<code>c1.customer_id &lt; c2.customer_id</code>）を<strong>c1.customer_name, c2.customer_name, c1.customer_city</strong>の順で出力してください。",
+    concept:"別の列（customer_street）を軸にした自己結合＋追加列の表示", hint:"ON c1.customer_street = c2.customer_street AND c1.customer_id < c2.customer_id",
+    starter:"-- c1.customer_name, c2.customer_name, c1.customer_city の順で出力してください（3行になるはず）\n",
+    solution:"SELECT c1.customer_name, c2.customer_name, c1.customer_city FROM customer AS c1 JOIN customer AS c2 ON c1.customer_street = c2.customer_street AND c1.customer_id < c2.customer_id;" },
+  { id:"sj-a5", tier:"advanced", title:"ユニークな教員ペアの総数を数える",
+    scenario:"<code>instructor</code>の自己結合（<code>i1.instructor_id &lt; i2.instructor_id</code>）で作られる、全学部を通じたユニークなペアの総数を<code>COUNT(*)</code>で数えてください。結果は1列（件数）だけにしてください。",
+    concept:"自己結合＋集約関数で1つの数値にまとめる", hint:"SELECT COUNT(*) FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id < i2.instructor_id;",
+    starter:"-- 件数を1列だけ出力してください（3になるはず）\n",
+    solution:"SELECT COUNT(*) FROM instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name AND i1.instructor_id < i2.instructor_id;" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

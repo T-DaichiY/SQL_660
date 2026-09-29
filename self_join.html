@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 自己結合（SELF JOIN）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M6 🔁 自己結合 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Self Joins</div>
+  <h1>🔁 自己結合（SELF JOIN）</h1>
+  <p>これまでのJOINは、常に<strong>異なる2つのテーブル</strong>を結びつけてきました。でも実は、<strong>同じテーブルを自分自身に結合する</strong>ことも可能です——これを<strong>自己結合（SELF JOIN）</strong>と呼びます。「同じ部署の教員同士を比べたい」「同じ学部の学生をペアにしたい」といった、<strong>1つのテーブルの中で行同士を比較する</strong>場面で使う、JOINの特別な使い方です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 自己結合とは何か</a><a href="#unit2">② エイリアスが必須の理由</a><a href="#unit3">③ 自分自身と重複を除く</a><a href="#unit4">④ LEFT JOINとの組み合わせ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>自己結合とは何か（同じテーブルを2回使う）</h2><div class="unit-sub">1つのテーブルの中で行同士を比較する</div></div>
+  </div>
+  <p><strong>自己結合（SELF JOIN）</strong>は、新しいJOINの種類ではありません。<code>INNER JOIN</code>や<code>LEFT JOIN</code>と同じ構文をそのまま使いますが、<strong>FROM句とJOIN句に同じテーブル名を2回書く</strong>という点だけが違います。たとえば「同じ学部（<code>dept_name</code>）に所属する教員同士の組み合わせを知りたい」という場合、<code>instructor</code>テーブルを<strong>自分自身と結合</strong>することで実現できます。</p>
+  <p>なぜこんなことが必要なのでしょうか。通常のJOINは「<code>student</code>の行」と「<code>takes</code>の行」のように<strong>別々のテーブルの行同士</strong>を比べます。しかし「教員Aと教員Bが同じ部署か」を調べたいとき、AもBも同じ<code>instructor</code>テーブルの行です。そこでSQLは、1つのテーブルを<strong>あたかも2つの別々のテーブルであるかのように扱う</strong>ためのテクニックとして、自己結合を用意しています。</p>
+  <div class="viz">
+    <div class="viz-title">自己結合の基本アイデア</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🗄️</span><div class="step-text"><strong>instructorテーブルは実体としては1つだけ</strong><span>instructor_id, name, dept_name, salary ... 8名の教員が入っている</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🏷️</span><div class="step-text"><strong>クエリの中で2つの別名（エイリアス）を付ける</strong><span>i1（1人目役）と i2（2人目役）——同じテーブルを指すが、SQL上は別物として扱われる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔗</span><div class="step-text"><strong>i1.dept_name = i2.dept_name で結合</strong><span>「同じ学部に属する教員のペア」を意味する条件</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">📋</span><div class="step-text"><strong>結果：教員Aと教員Bのペアの一覧</strong><span>1つのテーブルから、行同士の組み合わせが生まれる</span></div></div>
+    </div>
+    <div class="viz-cap">テーブルは1つのままだが、クエリの中では「i1」「i2」という2つの役割に分けて扱う。</div>
+  </div>
+  <div class="teal-box">📌 <strong>自己結合は「新しいJOINの種類」ではなく「JOINの使い方の1つ」です。</strong>INNER JOINでもLEFT JOINでも自己結合はできます——ポイントは、FROMとJOINの両方に同じテーブル名が登場する、という点だけです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>自己結合とは、同じテーブルを2回使って、そのテーブルの中の行同士を比較・組み合わせることです。「学部が同じ教員のペアを探す」のように、1つのテーブルの中で行同士の関係を調べたいときに使います。</p></div>
+  <div class="practice-card" id="p-sj-u1">
+    <div class="ptitle">💻 ミニ練習：同じ部署の学生ペアを探す</div>
+    <p class="ptask"><code>student</code>テーブルを自分自身に結合し（エイリアスは<code>s1</code>, <code>s2</code>を使う）、同じ<code>dept_name</code>を持つ学生のペアの名前（<code>s1.name</code>, <code>s2.name</code>）を表示するSQLを書いてください。まだ重複や自分自身とのペアは気にしなくて構いません。</p>
+    <textarea class="code-editor" id="p-sj-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-sj-u1', ['SELECT','JOIN','STUDENT','AS'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-sj-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-sj-u1-result"></div>
+    <div class="answer-reveal" id="p-sj-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> s1.name, s2.name</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="kw">AS</span> s1</span>
+<span class="cl"><span class="kw">JOIN</span> student <span class="kw">AS</span> s2 <span class="kw">ON</span> s1.dept_name = s2.dept_name;</span></pre>
+      <p class="answer-note">同じ<code>student</code>テーブルを<code>s1</code>と<code>s2</code>という2つの別名で扱うことで、行同士を比較できます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>エイリアスが必須の理由</h2><div class="unit-sub">同じテーブル名を2回書くと、SQLはどちらか区別できない</div></div>
+  </div>
+  <p>自己結合では<strong>エイリアス（別名）が絶対に必要</strong>です。もし<code>FROM instructor JOIN instructor ON ...</code>とだけ書いたら、SQLエンジンは「<code>instructor</code>」という同じ名前が2回出てきても、どちらのことを指しているのか区別できずエラーになります。そこで<code>AS</code>キーワード（省略も可）を使い、それぞれに違う名前を付けます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> 列名 <span class="kw">FROM</span> テーブル名 <span class="kw">AS</span> エイリアス1 <span class="kw">JOIN</span> テーブル名 <span class="kw">AS</span> エイリアス2 <span class="kw">ON</span> エイリアス1.列 = エイリアス2.列;</span>
+</pre>
+  <p>実際に「同じ学部の教員ペア」を、まだ何も絞り込まずに実行してみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> i1.name <span class="kw">AS</span> instructor_a, i2.name <span class="kw">AS</span> instructor_b, i1.dept_name</span>
+<span class="cl"><span class="kw">FROM</span> instructor <span class="kw">AS</span> i1</span>
+<span class="cl"><span class="kw">JOIN</span> instructor <span class="kw">AS</span> i2 <span class="kw">ON</span> i1.dept_name = i2.dept_name;</span>
+</pre><div class="output-reveal">instructor_a | instructor_b | dept_name
+-------------+--------------+-----------
+ Brandt      | Brandt       | Comp. Sci.
+ Brandt      | Katz         | Comp. Sci.
+ Brandt      | Bourikas     | Comp. Sci.
+ Katz        | Brandt       | Comp. Sci.
+ Katz        | Katz         | Comp. Sci.
+ Katz        | Bourikas     | Comp. Sci.
+ Bourikas    | Brandt       | Comp. Sci.
+ Bourikas    | Katz         | Comp. Sci.
+ Bourikas    | Bourikas     | Comp. Sci.
+ Kim         | Kim          | Elec. Eng.
+ ...
+(14 rows)</div>
+  <p>Comp. Sci.には教員が3人（Brandt, Katz, Bourikas）いるので、3×3＝9通りの組み合わせが全部出てきます。その中には「Brandt と Brandt」のように<strong>自分自身とのペア</strong>や、「Brandt→Katz」と「Katz→Brandt」のように<strong>同じペアが向きだけ変えて2回</strong>出てくるものが含まれています。これは自己結合特有の問題で、次のUnitで解決します。</p>
+  <div class="warn-box">⚠️ <strong>エイリアスを付け忘れると、列名があいまいになりエラーになります。</strong><code>SELECT name FROM instructor JOIN instructor ON dept_name = dept_name</code>のように書くと、「<code>name</code>や<code>dept_name</code>はどちらの<code>instructor</code>のことか」をSQLエンジンが判断できず、エラーになります。自己結合では、SELECTの列にもON句にも、必ずエイリアスを付けましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>テーブル AS 別名1 JOIN テーブル AS 別名2 ON 別名1.列 = 別名2.列</code>が基本形。エイリアスを付けないと、SQLはどちらの<code>instructor</code>を指しているのか区別できずエラーになります。</p></div>
+  <div class="practice-card" id="p-sj-u2">
+    <div class="ptitle">💻 ミニ練習：エイリアス付きで教員を自己結合する</div>
+    <p class="ptask"><code>instructor</code>テーブルを<code>i1</code>, <code>i2</code>というエイリアスで自己結合し、同じ<code>dept_name</code>を持つ教員のペア（<code>i1.name</code>, <code>i2.name</code>）を表示するSQLを書いてください（まだ自分自身とのペアは除外しなくて構いません）。</p>
+    <textarea class="code-editor" id="p-sj-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-sj-u2', ['SELECT','JOIN','INSTRUCTOR','AS','ON'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-sj-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-sj-u2-result"></div>
+    <div class="answer-reveal" id="p-sj-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> i1.name, i2.name</span>
+<span class="cl"><span class="kw">FROM</span> instructor <span class="kw">AS</span> i1</span>
+<span class="cl"><span class="kw">JOIN</span> instructor <span class="kw">AS</span> i2 <span class="kw">ON</span> i1.dept_name = i2.dept_name;</span></pre>
+      <p class="answer-note">エイリアス<code>i1</code>・<code>i2</code>があるおかげで、SQLは「1人目のinstructor」と「2人目のinstructor」を区別できます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分自身と重複ペアを除く</h2><div class="unit-sub"><code>&lt;&gt;</code> と <code>&lt;</code> の使い分け</div></div>
+  </div>
+  <p>Unit②の結果には2つの問題がありました。①同じ教員同士のペア（<code>Brandt, Brandt</code>）、②向きだけ違う重複ペア（<code>Brandt→Katz</code>と<code>Katz→Brandt</code>）です。これらはどちらも、ON句に条件を1つ足すことで解決できます。</p>
+  <p><strong>①自分自身を除く：</strong>主キーが等しくない、という条件を<code>AND</code>で足します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> i1.name <span class="kw">AS</span> instructor_a, i2.name <span class="kw">AS</span> instructor_b</span>
+<span class="cl"><span class="kw">FROM</span> instructor <span class="kw">AS</span> i1</span>
+<span class="cl"><span class="kw">JOIN</span> instructor <span class="kw">AS</span> i2 <span class="kw">ON</span> i1.dept_name = i2.dept_name <span class="kw">AND</span> i1.instructor_id &lt;&gt; i2.instructor_id;</span>
+</pre><div class="output-reveal">instructor_a | instructor_b
+-------------+--------------
+ Brandt      | Katz
+ Brandt      | Bourikas
+ Katz        | Brandt
+ Katz        | Bourikas
+ Bourikas    | Brandt
+ Bourikas    | Katz
+(6 rows)</div>
+  <p>自分自身とのペア（対角線の3行）が消えて6行になりました。しかし<code>Brandt→Katz</code>と<code>Katz→Brandt</code>はまだ両方残っています——これは同じペアを2回数えていることになります。</p>
+  <p><strong>②向きの重複も除く：</strong><code>&lt;&gt;</code>の代わりに<code>&lt;</code>（小なり）を使うと、片方向だけが残ります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> i1.name <span class="kw">AS</span> instructor_a, i2.name <span class="kw">AS</span> instructor_b</span>
+<span class="cl"><span class="kw">FROM</span> instructor <span class="kw">AS</span> i1</span>
+<span class="cl"><span class="kw">JOIN</span> instructor <span class="kw">AS</span> i2 <span class="kw">ON</span> i1.dept_name = i2.dept_name <span class="kw">AND</span> i1.instructor_id &lt; i2.instructor_id;</span>
+</pre><div class="output-reveal">instructor_a | instructor_b
+-------------+--------------
+ Brandt      | Katz
+ Brandt      | Bourikas
+ Katz        | Bourikas
+(3 rows)</div>
+  <p><code>instructor_id</code>が小さい方を必ず<code>i1</code>側に固定することで、それぞれのペアが1回だけ出てくるようになりました。3人から2人を選ぶ組み合わせは<code>3C2 = 3</code>通りなので、ちょうど3行という計算とも一致します。</p>
+  <table class="compare-table">
+    <tr><th>ON句の条件</th><th>行数</th><th>理由</th></tr>
+    <tr><td>条件なし（<code>dept_name</code>のみ）</td><td>14</td><td>各部署内でN×N（自分自身とのペアも含む全組み合わせ）</td></tr>
+    <tr><td><code>i1.instructor_id &lt;&gt; i2.instructor_id</code></td><td>6</td><td>対角線（自分自身とのペア）を除外</td></tr>
+    <tr><td><code>i1.instructor_id &lt; i2.instructor_id</code></td><td>3</td><td>向きの重複も除外し、ユニークなペアだけ残す</td></tr>
+  </table>
+  <div class="teal-box">📌 <strong>迷ったときの目安：</strong>「AとBが同じかどうかだけ知りたい／ペアを1回だけ数えたい」なら<code>&lt;</code>。「自分以外の全員との組み合わせを両方向とも見たい」なら<code>&lt;&gt;</code>。目的によって使い分けましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>&lt;&gt;</code>は自分自身とのペアを除きます。<code>&lt;</code>はさらに、向きだけ違う重複ペア（A→BとB→A）もまとめて1つにしてくれます。</p></div>
+  <div class="practice-card" id="p-sj-u3">
+    <div class="ptitle">💻 ミニ練習：重複のない学生ペアを見つける</div>
+    <p class="ptask"><code>student</code>テーブルを<code>s1</code>, <code>s2</code>で自己結合し、同じ<code>dept_name</code>を持ち、かつ<code>s1.student_id &lt; s2.student_id</code>である学生ペアの名前（<code>s1.name</code>, <code>s2.name</code>）を表示するSQLを書いてください（自分自身や向き違いの重複は含まれません）。</p>
+    <textarea class="code-editor" id="p-sj-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-sj-u3', ['SELECT','JOIN','STUDENT_ID','<'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-sj-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-sj-u3-result"></div>
+    <div class="answer-reveal" id="p-sj-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> s1.name, s2.name</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="kw">AS</span> s1</span>
+<span class="cl"><span class="kw">JOIN</span> student <span class="kw">AS</span> s2 <span class="kw">ON</span> s1.dept_name = s2.dept_name <span class="kw">AND</span> s1.student_id &lt; s2.student_id;</span></pre>
+      <p class="answer-note"><code>&lt;</code>を使うことで、自分自身とのペアも、向きだけ違う重複ペアも、両方まとめて除外できます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>LEFT JOINとの組み合わせ（「唯一」を探す）</h2><div class="unit-sub">アンチ結合の考え方を自己結合に応用する</div></div>
+  </div>
+  <p>自己結合は<code>INNER JOIN</code>だけのものではありません。<code>LEFT JOIN</code>と組み合わせれば、「ペアが1人もいない行」——つまり<strong>その部署で唯一の教員</strong>——を見つけることもできます。これはM6+で学んだ<strong>アンチ結合（LEFT JOIN + IS NULL）</strong>の考え方を、自己結合に応用したものです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> i1.name, i1.dept_name</span>
+<span class="cl"><span class="kw">FROM</span> instructor <span class="kw">AS</span> i1</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> instructor <span class="kw">AS</span> i2</span>
+<span class="cl">  <span class="kw">ON</span> i1.dept_name = i2.dept_name <span class="kw">AND</span> i1.instructor_id &lt;&gt; i2.instructor_id</span>
+<span class="cl"><span class="kw">WHERE</span> i2.instructor_id <span class="kw">IS NULL</span>;</span>
+</pre><div class="output-reveal">name        | dept_name
+------------+-----------
+ Kim        | Elec. Eng.
+ Srinivasan | Finance
+ Chen       | Physics
+ Wu         | Math
+ Singh      | Biology
+(5 rows)</div>
+  <p>この<code>LEFT JOIN</code>は「自分と同じ部署で、自分ではない教員（<code>i2</code>）」を探そうとします。もしそんな教員が1人もいなければ、<code>i2</code>側の列はすべて<code>NULL</code>になります。それを<code>WHERE i2.instructor_id IS NULL</code>で絞り込むと、「同じ部署に自分以外の教員がいない＝その部署で唯一の教員」だけが残ります。</p>
+  <div class="warn-box">⚠️ <strong>自己結合もCROSS JOIN同様、条件を付け忘れると行数が爆発的に増えることがあります。</strong>大きなテーブルで<code>ON</code>句の条件が緩い自己結合（例：等号なしの範囲比較）を書くと、理論上は元の行数の2乗に近い結果になり得ます。<code>&lt;&gt;</code>や<code>&lt;</code>で確実に絞り込む習慣をつけましょう。</div>
+  <div class="teal-box">📌 <strong>自己結合は「新しいJOIN」ではなく「同じテーブルを2つの役割に分けて使うテクニック」です。</strong>INNER JOINで「同じグループの相手」を探し、LEFT JOIN + IS NULLで「相手がいない行（＝唯一の存在）」を探す——組み合わせ次第で表現の幅が大きく広がります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>自己結合をLEFT JOINで行い、結果がNULLになった行だけをWHEREで残すと、「ペアが見つからない行＝グループの中で唯一の存在」を探せます。</p></div>
+  <div class="practice-card" id="p-sj-u4">
+    <div class="ptitle">💻 ミニ練習：唯一の学部を持つ学生を探す</div>
+    <p class="ptask"><code>student</code>を<code>s1</code>, <code>s2</code>で自己結合し、<code>LEFT JOIN</code>と<code>WHERE ... IS NULL</code>を使って、同じ<code>dept_name</code>の学生が自分以外に1人もいない学生（<code>s1.name</code>, <code>s1.dept_name</code>）を表示するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-sj-u4-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-sj-u4', ['LEFT JOIN','IS NULL'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-sj-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-sj-u4-result"></div>
+    <div class="answer-reveal" id="p-sj-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> s1.name, s1.dept_name</span>
+<span class="cl"><span class="kw">FROM</span> student <span class="kw">AS</span> s1</span>
+<span class="cl"><span class="kw">LEFT JOIN</span> student <span class="kw">AS</span> s2</span>
+<span class="cl">  <span class="kw">ON</span> s1.dept_name = s2.dept_name <span class="kw">AND</span> s1.student_id &lt;&gt; s2.student_id</span>
+<span class="cl"><span class="kw">WHERE</span> s2.student_id <span class="kw">IS NULL</span>;</span></pre>
+      <p class="answer-note">アンチ結合と同じ考え方——LEFT JOINで「相手」を探し、見つからなかった行（NULL）だけをWHEREで残します。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is a self join?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A join between two different tables</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Joining a table to itself, using two aliases to compare its rows</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A join that deletes duplicate rows automatically</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A new SQL keyword, separate from JOIN</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why are aliases required in a self join?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because the same table name appears twice, and SQL needs a way to tell the two instances apart</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Aliases make the query run faster</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Aliases are only needed for CROSS JOIN</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They are optional and rarely used in a self join</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">instructor AS i1 JOIN instructor AS i2 ON i1.dept_name = i2.dept_name, with no other condition, will include:</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only pairs of two different instructors</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Every instructor paired with themselves, plus every pair in both directions</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>No rows, because a table cannot join itself</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only instructors with no department</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which condition removes an instructor being paired with themselves?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>i1.dept_name = i2.dept_name</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>i1.instructor_id <> i2.instructor_id</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>i1.name = i2.name</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE i1.instructor_id IS NULL</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which condition additionally removes reversed duplicate pairs (A,B and B,A)?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>i1.instructor_id <> i2.instructor_id</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>i1.instructor_id < i2.instructor_id</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>i1.dept_name <> i2.dept_name</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>DISTINCT i1.name</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A self LEFT JOIN with i1.id <> i2.id and WHERE i2.id IS NULL finds:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Every row that has at least one match</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rows with no "partner" under that condition — e.g. the only instructor in their department</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All rows in the table, unfiltered</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Rows where instructor_id is NULL in the original table</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">How many times must the same table appear in FROM/JOIN to perform a self join?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Exactly once</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>At least twice, each with its own alias</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Zero times — self joins use a special keyword instead of the table name</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Exactly three times</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Which JOIN types can be used to perform a self join?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only INNER JOIN</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only CROSS JOIN</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Any JOIN type (INNER, LEFT, etc.) — self join just means both sides are the same table</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>None — self joins require a special SELF JOIN keyword</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 1, 1, 1, 1, 1, 2];
+var FEEDBACKS=["A self join joins a table to itself, using two aliases so SQL can tell the two roles apart.","Because the same table name appears on both sides of the JOIN, SQL cannot resolve which instance a column belongs to without an alias.","Without a filter, every row matches itself (dept_name = dept_name for the same row) and every same-department pair appears in both directions.","i1.instructor_id <> i2.instructor_id excludes the diagonal where an instructor would be paired with themselves.","i1.instructor_id < i2.instructor_id keeps only one direction, so each pair appears exactly once.","LEFT JOIN keeps every row from i1, and WHERE i2... IS NULL keeps only the rows where no different-but-matching row (i2) was found — i.e. the only one in their group.","A self join needs the table to appear at least twice, each given its own alias so it can be treated as two separate roles.","Self join is not a distinct JOIN type — it just describes using the same table on both sides of any JOIN (INNER, LEFT, RIGHT, etc.)."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">self join</div>
+      <div class="term-en">自己結合</div>
+      <div class="term-def">同じテーブルを2つのエイリアスで扱い、自分自身に結合する（＝そのテーブルの行同士を比較する）こと。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">alias</div>
+      <div class="term-en">エイリアス（別名）</div>
+      <div class="term-def">テーブルや列に付ける一時的な別名。自己結合では同じテーブルを区別するために必須。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">&lt;&gt; (not equal)</div>
+      <div class="term-en">不等号</div>
+      <div class="term-def">「等しくない」を表す演算子。自己結合で自分自身とのペアを除くのに使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">&lt; (less than)</div>
+      <div class="term-en">小なり</div>
+      <div class="term-def">主キーの大小で片方向だけを残し、向き違いの重複ペアを1つにまとめる比較演算子。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">anti-join pattern</div>
+      <div class="term-en">アンチ結合パターン</div>
+      <div class="term-def">LEFT JOIN + WHERE ... IS NULLで「一致する相手がいない行」を探す手法。自己結合にも応用できる。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>自己結合で迷ったら、まず「テーブルを紙に2枚印刷したつもりで」考えてみましょう。1枚目がi1役、2枚目がi2役。あとは普通のJOINと同じです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔁 SQLレッスン：M6 自己結合（SELF JOIN）</p>
+  <p style="margin-top:.5rem;"><a href="joins_relationships.html">← テーブルの関係とJOIN</a> · <a href="set_operators.html">集合演算子へ →</a> · <a href="m6_practice_self_join.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="typewriter.js"></script>
+</body></html>
