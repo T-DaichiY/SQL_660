@@ -135,6 +135,7 @@
   }
 
   document.querySelectorAll('.code-block').forEach(block=>{
+    if(block.classList.contains('cs-block')) return;
     if(block.closest('.tw-shell')) return;
     const lines=buildLines(block);
     if(lines.length===0) return;
