@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7演習 ALTER・トランザクション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=9">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 ALTER・Txn <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M7演習 · ALTER・トランザクション・分割・削除</div>
+  <h1>🔒 ALTER・トランザクション・分割 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m6_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <p style="margin-top:.5rem">🐘 この演習ではPostgreSQLの書き方（::キャスト、START TRANSACTION、POSITION(x IN y)、ALTER COLUMN … TYPE など）も使えます。内部でSQLiteに自動変換して実行します。</p>
+  <p style="margin-top:.5rem">🧪 「更新系」の問題は、あなたのSQLを実行したあとのテーブルの状態を模範解答と比べて採点します（SELECTの結果ではありません）。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🔒 SQLレッスン：M7演習 — ALTER・トランザクション・分割・削除</p>
+  <p style="margin-top:.5rem;"><a href="m7_wrangling_txn.html">← レッスンに戻る</a> · <a href="m6_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script>window.ARENA_OPTS = { pgCompat: true, schemaGroups: ["ds_jobs"] };</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js?v=9"></script>
+<script>
+var SQL_PROBLEMS = [
+  // ===== BASIC =====
+  { id:"at-b1", tier:"basic", mode:"mutate", title:"型を指定して列を追加する（ADD COLUMN）",
+    scenario:"<code>ds_jobs</code>テーブルに、整数型の新しい列<strong>low_range</strong>を追加してください。型は<code>INT</code>を指定します（<code>INTEGER</code>と書くと型名が一致しません）。値はまだ入れなくて構いません（全行NULLのまま）。",
+    concept:"ALTER TABLE … ADD COLUMN 列名 型", hint:"ALTER TABLE ds_jobs ADD COLUMN …",
+    starter:"-- ds_jobs に INT 型の列 low_range を追加（列は15個から16個になる）\n",
+    solution:"ALTER TABLE ds_jobs ADD COLUMN low_range INT;",
+    verify:"SELECT name, type FROM pragma_table_info('ds_jobs') ORDER BY cid" },
+  { id:"at-b2", tier:"basic", mode:"mutate", title:"列名を変更する（RENAME COLUMN）",
+    scenario:"<code>ds_jobs</code>テーブルの<code>founded</code>列の名前を<strong>founded_year</strong>に変更してください。列の数や型は変わりません。",
+    concept:"ALTER TABLE … RENAME COLUMN 旧名 TO 新名", hint:"RENAME COLUMN founded TO …",
+    starter:"-- founded を founded_year に改名（列数は15のまま）\n",
+    solution:"ALTER TABLE ds_jobs RENAME COLUMN founded TO founded_year;",
+    verify:"SELECT name, type FROM pragma_table_info('ds_jobs') ORDER BY cid" },
+  { id:"at-b3", tier:"basic", mode:"mutate", title:"バックアップテーブルを作る（CREATE TABLE … AS SELECT）",
+    scenario:"変更を加える前に、<code>ds_jobs</code>の全列・全行をコピーしたバックアップテーブル<strong>ds_jobs_backup</strong>を作成してください。コピーの行数が<strong>30行</strong>になれば成功です。",
+    concept:"CREATE TABLE 新テーブル AS SELECT * FROM 元テーブル", hint:"CREATE TABLE … AS SELECT * FROM …",
+    starter:"-- ds_jobs_backup を作成（COUNT(*) が30になるはず）\n",
+    solution:"CREATE TABLE ds_jobs_backup AS SELECT * FROM ds_jobs;",
+    verify:"SELECT COUNT(*) AS n FROM ds_jobs_backup" },
+  { id:"at-b4", tier:"basic", mode:"mutate", title:"不要な列を削除する（DROP COLUMN）",
+    scenario:"<code>ds_jobs</code>テーブルから<strong>headquarters</strong>列を削除してください。他の列とデータは残ります（列は15個から14個になるはず）。",
+    concept:"ALTER TABLE … DROP COLUMN 列名", hint:"ALTER TABLE ds_jobs DROP COLUMN …",
+    starter:"-- headquarters 列を削除（列は14個になる）\n",
+    solution:"ALTER TABLE ds_jobs DROP COLUMN headquarters;",
+    verify:"SELECT name, type FROM pragma_table_info('ds_jobs') ORDER BY cid" },
+  { id:"at-b5", tier:"basic", mode:"mutate", title:"テーブルごと削除する（DROP TABLE）",
+    scenario:"対応表<code>ownership_map</code>はもう不要になりました。このテーブルを丸ごと削除してください。確認は<code>sqlite_master</code>のうち<code>ds_jobs</code>と<code>ownership_map</code>だけを見る問い合わせで行い、実行後は<code>ds_jobs</code>の1行だけが残るはずです（DROP TABLEは元に戻せない操作です）。",
+    concept:"DROP TABLE テーブル名", hint:"DROP TABLE …",
+    starter:"-- ownership_map を削除（確認クエリの結果は ds_jobs の1行）\n",
+    solution:"DROP TABLE ownership_map;",
+    verify:"SELECT name FROM sqlite_master WHERE type='table' AND name IN ('ds_jobs','ownership_map') ORDER BY name" },
+
+  // ===== INTERMEDIATE =====
+  { id:"at-i1", tier:"intermediate", mode:"mutate", title:"1つのALTERで2列をまとめて追加する",
+    scenario:"<code>ds_jobs</code>に、<code>ADD COLUMN</code>を<strong>コンマで2つつなげた1本のALTER文</strong>で、<strong>low_range</strong>（<code>INT</code>）と<strong>high_range</strong>（<code>INT</code>）の2列をこの順に追加してください。列は15個から17個になります。",
+    concept:"1つのALTER TABLEに複数のADD COLUMNを並べる", hint:"ALTER TABLE ds_jobs ADD COLUMN a INT, ADD COLUMN b INT",
+    starter:"-- low_range INT, high_range INT を1文で追加（列は17個）\n",
+    solution:"ALTER TABLE ds_jobs ADD COLUMN low_range INT, ADD COLUMN high_range INT;",
+    verify:"SELECT name, type FROM pragma_table_info('ds_jobs') ORDER BY cid" },
+  { id:"at-i2", tier:"intermediate", mode:"mutate", title:"location を city と state に分割する",
+    scenario:"<code>location</code>列は<code>'Burbank, CA'</code>のような「都市, 州」形式のTEXTです。<code>ds_jobs</code>に<code>TEXT</code>型の列<strong>city</strong>と<strong>state</strong>を追加し、<code>SPLIT_PART(location, ', ', n)</code>で全30行を埋めてください（例：post_id 1なら city='Burbank'、state='CA'）。",
+    concept:"ADD COLUMN + UPDATE … SPLIT_PART で1列を2列に分ける", hint:"区切りは ', '（コンマ＋半角スペース）。1番目が都市、2番目が州",
+    starter:"-- city, state を追加して SPLIT_PART で埋める（全30行が更新される）\n",
+    solution:"ALTER TABLE ds_jobs ADD COLUMN city TEXT, ADD COLUMN state TEXT;\nUPDATE ds_jobs SET city = SPLIT_PART(location, ', ', 1), state = SPLIT_PART(location, ', ', 2);",
+    verify:"SELECT post_id, city, state FROM ds_jobs ORDER BY post_id" },
+  { id:"at-i3", tier:"intermediate", mode:"mutate", title:"トランザクションで rating の -1 を NULL にして COMMIT",
+    scenario:"<code>ds_jobs.rating</code>の<strong>-1</strong>は「評価なし」を意味する番兵値で、5行（post_id 4, 11, 18, 25, 29）あります。<code>BEGIN</code>（または<code>START TRANSACTION</code>）で始め、<code>rating = -1</code>の行の<code>rating</code>を<code>NULL</code>に更新して、<strong>COMMIT</strong>で確定してください。",
+    concept:"BEGIN … UPDATE … COMMIT（変更を確定する）", hint:"BEGIN; UPDATE … WHERE rating = -1; COMMIT;",
+    starter:"-- BEGIN → UPDATE（5行）→ COMMIT の順に書く\n",
+    solution:"BEGIN;\nUPDATE ds_jobs SET rating = NULL WHERE rating = -1;\nCOMMIT;",
+    verify:"SELECT post_id, rating FROM ds_jobs ORDER BY post_id",
+    requireKeywords:["COMMIT"] },
+  { id:"at-i4", tier:"intermediate", title:"ROLLBACKする前に、トランザクション内の状態を確かめる",
+    scenario:"<code>BEGIN;</code>で始め、<code>ds_jobs</code>から<code>rating = -1</code>の行を<code>DELETE</code>し、<strong>その直後（トランザクション内）に</strong><code>SELECT COUNT(*) FROM ds_jobs</code>で件数を確認して、最後に<code>ROLLBACK;</code>してください。採点されるのはこのSELECTの結果で、<strong>1行1列（件数）</strong>、値は<strong>25</strong>になるはずです（ROLLBACK後、実際のテーブルは30行に戻ります）。",
+    concept:"トランザクション内でだけ見える変更 → ROLLBACKで取り消す", hint:"BEGIN; DELETE …; SELECT COUNT(*) …; ROLLBACK;",
+    starter:"-- BEGIN; DELETE; SELECT COUNT(*); ROLLBACK; の順（結果は25の1行）\n",
+    solution:"BEGIN;\nDELETE FROM ds_jobs WHERE rating = -1;\nSELECT COUNT(*) FROM ds_jobs;\nROLLBACK;" },
+  { id:"at-i5", tier:"intermediate", mode:"mutate", title:"salary_estimate から下限を取り出して low_range に入れる",
+    scenario:"<code>salary_estimate</code>は<code>'$110K-$163K (Glassdoor est.)'</code>の形式です。<code>ds_jobs</code>に<code>TEXT</code>型の列<strong>low_range</strong>を追加し、<code>LEFT</code>と<code>POSITION('K' IN salary_estimate)</code>で最初の<code>K</code>の手前までを取り出し、<code>REPLACE</code>で<code>$</code>を消して全30行に入れてください（post_id 1なら<code>'110'</code>、post_id 3なら<code>'45'</code>。文字列のまま、<code>000</code>はまだ付けません）。",
+    concept:"LEFT + POSITION + REPLACE で文字列から数字部分を抜き出す", hint:"REPLACE(LEFT(salary_estimate, POSITION('K' IN salary_estimate) - 1), '$', '')",
+    starter:"-- low_range TEXT を追加して全30行を更新（'$' も消す）\n",
+    solution:"ALTER TABLE ds_jobs ADD COLUMN low_range TEXT;\nUPDATE ds_jobs SET low_range = REPLACE(LEFT(salary_estimate, POSITION('K' IN salary_estimate) - 1), '$', '');",
+    verify:"SELECT post_id, low_range FROM ds_jobs ORDER BY post_id" },
+
+  // ===== ADVANCED =====
+  { id:"at-a1", tier:"advanced", mode:"mutate", title:"'000'を連結して INT に型変換する（USING）",
+    scenario:"<code>ds_jobs</code>に<code>TEXT</code>型の<strong>low_range</strong>を追加し、下限の数字（<code>'110'</code>など。<code>SPLIT_PART</code>と<code>REPLACE</code>で取り出す）に<code>|| '000'</code>を連結して<code>'110000'</code>の形にしてください。そのあと<code>ALTER COLUMN low_range SET DATA TYPE INT USING low_range::INT</code>で<strong>整数型に変換</strong>します。実行後、post_id 1は<code>110000</code>（integer）になり、全30行が整数になるはずです。",
+    concept:"文字列の連結 || と ALTER COLUMN … TYPE INT USING",
+    hint:"SPLIT_PART(salary_estimate, '-', 1) は '$110K'。K と $ を REPLACE で消す",
+    starter:"-- ADD COLUMN → UPDATE（|| '000'）→ ALTER COLUMN … TYPE INT USING\n",
+    solution:"ALTER TABLE ds_jobs ADD COLUMN low_range TEXT;\nUPDATE ds_jobs SET low_range = REPLACE(REPLACE(SPLIT_PART(salary_estimate, '-', 1), '$', ''), 'K', '') || '000';\nALTER TABLE ds_jobs ALTER COLUMN low_range SET DATA TYPE INT USING low_range::INT;",
+    verify:"SELECT post_id, low_range, typeof(low_range) AS t FROM ds_jobs ORDER BY post_id" },
+  { id:"at-a2", tier:"advanced", title:"REPLACEの順番を確かめてから ROLLBACK する",
+    scenario:"<code>BEGIN;</code>のあと、<code>job_title</code>を<code>REPLACE(REPLACE(job_title, 'Sr.', 'Senior'), 'Sr', 'Senior')</code>（<strong>'Sr.'を先に</strong>置換する順番）で全行更新し、その直後に<code>job_title = 'Senior Data Scientist'</code>の行数を<code>SELECT COUNT(*)</code>で数えて、最後に<code>ROLLBACK;</code>してください。採点対象はそのSELECTの<strong>1行1列</strong>の結果で、<strong>7</strong>になるはずです（'Senior. Data Scientist -'の2行はこの置換では直りません）。",
+    concept:"順序に依存するREPLACEを、ROLLBACKできる場所で安全に試す", hint:"BEGIN; UPDATE ds_jobs SET job_title = REPLACE(REPLACE(…)); SELECT COUNT(*) …; ROLLBACK;",
+    starter:"-- BEGIN; UPDATE; SELECT COUNT(*); ROLLBACK;（結果は7の1行）\n",
+    solution:"BEGIN;\nUPDATE ds_jobs SET job_title = REPLACE(REPLACE(job_title, 'Sr.', 'Senior'), 'Sr', 'Senior');\nSELECT COUNT(*) FROM ds_jobs WHERE job_title = 'Senior Data Scientist';\nROLLBACK;" },
+  { id:"at-a3", tier:"advanced", mode:"mutate", title:"city を埋めてから NOT NULL 制約を付ける",
+    scenario:"<code>ds_jobs</code>に<code>TEXT</code>型の列<strong>city</strong>を追加し、<code>SPLIT_PART(location, ', ', 1)</code>で全30行を埋めてから、<code>ALTER COLUMN city SET NOT NULL</code>を付けてください。<strong>順番が大切</strong>で、NULLが残ったままではNOT NULLを付けられません。実行後、cityのnotnullは1、全行に都市名が入っているはずです。",
+    concept:"データを整えてから SET NOT NULL（順序が命）", hint:"ADD COLUMN → UPDATE（全行）→ ALTER COLUMN city SET NOT NULL",
+    starter:"-- ADD COLUMN city → UPDATE → SET NOT NULL の順\n",
+    solution:"ALTER TABLE ds_jobs ADD COLUMN city TEXT;\nUPDATE ds_jobs SET city = SPLIT_PART(location, ', ', 1);\nALTER TABLE ds_jobs ALTER COLUMN city SET NOT NULL;",
+    verify:"SELECT name AS k, type AS v, \"notnull\" AS n FROM pragma_table_info('ds_jobs') WHERE name = 'city' UNION ALL SELECT 'row' || post_id, city, 0 FROM ds_jobs" },
+  { id:"at-a4", tier:"advanced", mode:"mutate", title:"【総合】給与分割パイプラインを1つのトランザクションで",
+    scenario:"<code>START TRANSACTION</code>（または<code>BEGIN</code>）で始め、次を実行して<strong>COMMIT</strong>してください。(1) <code>ds_jobs</code>に<code>TEXT</code>型の<code>low_range</code>と<code>high_range</code>を追加、(2) <code>salary_estimate</code>（例：<code>'$110K-$163K (Glassdoor est.)'</code>）から下限・上限の数字を取り出し<code>|| '000'</code>を連結、(3) 両列を<code>ALTER COLUMN … TYPE INT USING …::INT</code>で整数化。post_id 1は<code>110000</code>と<code>163000</code>、post_id 3は<code>45000</code>と<code>79000</code>、全行が整数になるはずです。",
+    concept:"ADD COLUMN → UPDATE → 型変換 を1つのトランザクションにまとめて COMMIT",
+    hint:"上限は SPLIT_PART(salary_estimate, '-', 2) の '$163K (…' から K の手前まで（LEFT + POSITION、または SUBSTRING）",
+    starter:"-- START TRANSACTION; … COMMIT; （low_range / high_range ともINTに）\n",
+    solution:"START TRANSACTION;\nALTER TABLE ds_jobs ADD COLUMN low_range TEXT, ADD COLUMN high_range TEXT;\nUPDATE ds_jobs SET low_range = REPLACE(SPLIT_PART(SPLIT_PART(salary_estimate, '-', 1), 'K', 1), '$', '') || '000',\n  high_range = REPLACE(LEFT(SPLIT_PART(salary_estimate, '-', 2), POSITION('K' IN SPLIT_PART(salary_estimate, '-', 2)) - 1), '$', '') || '000';\nALTER TABLE ds_jobs ALTER COLUMN low_range SET DATA TYPE INT USING low_range::INT;\nALTER TABLE ds_jobs ALTER COLUMN high_range SET DATA TYPE INT USING high_range::INT;\nCOMMIT;",
+    verify:"SELECT name AS k, type AS a, 0 AS b, '' AS c FROM pragma_table_info('ds_jobs') WHERE name IN ('low_range','high_range') UNION ALL SELECT 'row' || post_id, low_range, high_range, typeof(low_range) || '/' || typeof(high_range) FROM ds_jobs",
+    requireKeywords:["COMMIT"] },
+  { id:"at-a5", tier:"advanced", mode:"mutate", title:"バックアップしてから salary_estimate 列を DROP する",
+    scenario:"分割が済んだ後を想定して、安全に元の列を消します。まず<code>CREATE TABLE ds_jobs_backup AS SELECT post_id, salary_estimate FROM ds_jobs</code>で、<strong>post_id と salary_estimate の2列だけ</strong>を全30行バックアップし、そのあと<code>ds_jobs</code>から<code>salary_estimate</code>列を<code>DROP COLUMN</code>してください。実行後、ds_jobsに<code>salary_estimate</code>は0列、ds_jobs_backupは30行になるはずです。",
+    concept:"バックアップ（CREATE TABLE AS）→ DROP COLUMN の安全な順序", hint:"先にバックアップを取る。DROP COLUMN のあとでは中身を取り出せない",
+    starter:"-- ①バックアップ作成 ②salary_estimate を DROP COLUMN\n",
+    solution:"CREATE TABLE ds_jobs_backup AS SELECT post_id, salary_estimate FROM ds_jobs;\nALTER TABLE ds_jobs DROP COLUMN salary_estimate;",
+    verify:"SELECT (SELECT COUNT(*) FROM pragma_table_info('ds_jobs') WHERE name = 'salary_estimate') AS in_main, (SELECT COUNT(*) FROM ds_jobs_backup) AS backup_rows, (SELECT COUNT(*) FROM pragma_table_info('ds_jobs_backup')) AS backup_cols" }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

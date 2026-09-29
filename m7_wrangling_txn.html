@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7 データ整形③ トランザクションと給与レンジの分割</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🔒 トランザクション <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M7 · Data Wrangling — Transactions, Splitting &amp; Dropping</div>
+  <h1>🔒 データ整形③：トランザクション・分割・削除</h1>
+  <p>データを書き換える作業は、間違えると元に戻せません。そこで<strong>トランザクション</strong>で「お試し」しながら作業する方法を学び、その総まとめとして、<code>salary_estimate</code>（例：<code>'$110K-$163K (Glassdoor est.)'</code>）を<strong>数値の下限・上限の2列に分割する</strong>実践例に取り組みます。最後は不要になった列・テーブルの削除（DROP）です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① トランザクションとは</a><a href="#unit2">② 給与レンジを分割する</a><a href="#unit3">③ 列とテーブルを削除する</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>トランザクションとは（COMMITとROLLBACK）</h2><div class="unit-sub">変更を「確定する前」に試して、確認して、取り消せる</div></div>
+  </div>
+  <p>これまで <code>UPDATE</code> や <code>ALTER TABLE</code> を1本ずつ実行してきました。しかし、データ整形では<strong>「まとめて何本も実行してから、結果を確かめたい」</strong>場面が増えます。そこで登場するのが<strong>トランザクション（transaction）</strong>です。複数のコマンドを1つの作業のまとまりとして囲み、<strong>結果を確認してから「確定（COMMIT）」するか「取り消し（ROLLBACK）」するかを選べる</strong>仕組みです。ゲームの「セーブ前のお試しプレイ」や、文書編集の「元に戻す」に近いイメージです。</p>
+  <div class="note-box">📝 この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行でしたが、ここでは <code>ds_jobs</code> テーブルの30行を使います。</div>
+  <h3>使う3つのキーワード</h3>
+  <table class="compare-table">
+    <tr><th>コマンド</th><th>役割</th></tr>
+    <tr><td><code>START TRANSACTION</code>（または <code>BEGIN</code>）</td><td>トランザクションを開始する。ここから先の変更は「仮」の状態になる</td></tr>
+    <tr><td><code>COMMIT</code></td><td>ここまでの変更をすべて<strong>確定</strong>（永続化）する</td></tr>
+    <tr><td><code>ROLLBACK</code></td><td>開始時点までの変更をすべて<strong>取り消し</strong>、元の状態に戻す</td></tr>
+  </table>
+  <p>この3つは<strong>それぞれ別のコマンド</strong>で、pgAdminなどでは<strong>1つずつ選択して順番に実行</strong>します。途中のコマンドが<strong>1つでもエラーになったら、必ず <code>ROLLBACK</code></strong> して最初からやり直します。エラーのまま放置すると、トランザクションが中途半端な状態で残ってしまいます。</p>
+  <h3>いつ使うか</h3>
+  <p>教科書（10章）とレクチャーでは、次のような場面が挙げられています。</p>
+  <ul>
+    <li><strong>複数のステップで表を変更するとき</strong>（次のUnitの給与レンジ分割のように、列追加→更新→型変換と続く作業）</li>
+    <li><strong>初めて使う関数や、自信のない書き方を試すとき</strong>（結果が想定と違えば取り消せる）</li>
+    <li><strong>「全部成功するか、全部失敗するか」でなければならない、関連するコマンド群</strong>。教科書の例は、ネット通販の注文処理です。「在庫を減らす」「注文を記録する」「クレジットカードに請求する」のうち、カードが拒否されたのに在庫だけ減っていたら困ります。そこで全部を1つのトランザクションにまとめ、カード決済が失敗したら <code>ROLLBACK</code> ですべてを元に戻します。</li>
+  </ul>
+  <div class="viz">
+    <div class="viz-title">トランザクションの流れ</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">▶️</span><div class="step-text"><strong>START TRANSACTION</strong><span>ここから「お試しモード」。変更はまだ確定していない</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">✏️</span><div class="step-text"><strong>UPDATE / ALTER TABLE ... を実行</strong><span>何本でもOK。同じトランザクション内の変更はすぐ確認できる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔍</span><div class="step-text"><strong>SELECT で結果を確認</strong><span>想定どおりの値になっているか、行数や型は正しいかを見る</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">✅❌</span><div class="step-text"><strong>COMMIT か ROLLBACK</strong><span>OKなら COMMIT で確定、おかしければ ROLLBACK で全部なかったことにする</span></div></div>
+    </div>
+    <div class="viz-cap">「実行 → 確認 → 確定か取り消し」の順番が、トランザクションの基本形。</div>
+  </div>
+  <h3>実際に試す：UPDATEしてROLLBACKする</h3>
+  <p>まず、変更前の平均評価（<code>rating</code>）を見ておきます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">ROUND</span>(<span class="kw">AVG</span>(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating <span class="kw">FROM</span> ds_jobs;</span>
+</pre><div class="output-reveal">avg_rating
+3.05
+(1 rows)</div>
+  <p>次に、トランザクションの中で <strong>WHERE句のない <code>UPDATE</code></strong>（＝全30行が対象）を実行してみます。本番のテーブルなら大事故ですが、トランザクションの中なら取り消せます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">START TRANSACTION</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">ROUND</span>(<span class="kw">AVG</span>(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating <span class="kw">FROM</span> ds_jobs;  <span class="cm">-- トランザクション内では変更が見える</span></span>
+<span class="cl"><span class="kw">ROLLBACK</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">ROUND</span>(<span class="kw">AVG</span>(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating <span class="kw">FROM</span> ds_jobs;  <span class="cm">-- 元に戻っている</span></span>
+</pre><div class="output-reveal">-- ROLLBACK前（トランザクションの中）
+avg_rating
+0
+(1 rows)
+
+-- ROLLBACK後
+avg_rating
+3.05
+(1 rows)</div>
+  <p>トランザクションの中では全行の <code>rating</code> が0になり、平均も0になりました。しかし <code>ROLLBACK</code> のあとは、平均が元の <strong>3.05</strong> に戻っています。もし <code>ROLLBACK</code> の代わりに <code>COMMIT</code> を実行していたら、この変更は永久に確定していました。</p>
+  <div class="teal-box">📌 <strong>トランザクションはバックアップの代わりではありません。</strong>トランザクションが守ってくれるのは「COMMITする前」だけです。一度 <code>COMMIT</code> したら元に戻せません。だから<strong>バックアップ（<code>CREATE TABLE ... AS SELECT</code> によるコピー）とセットで使う</strong>のが基本です。バックアップは「確定後の保険」、トランザクションは「確定前の安全確認」と覚えましょう。</div>
+  <div class="warn-box">⚠️ <strong>実務のヒント：</strong>①スクリプトはこまめに保存しておく（途中で接続が切れると、未COMMITの作業は失われます）。②<code>ROLLBACK</code> を何度も繰り返すと、pgAdminが不安定になったりクラッシュしたりすることがあります。慣れないうちは、変更を小さな単位に分けて、1つずつ確認しながら進めましょう。</div>
+  <div class="warn-box">💡 PostgreSQLの <code>START TRANSACTION</code> や <code>x::int</code> は、この演習アリーナでも自動変換されてそのまま動きます。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>トランザクションは「お試しモード」です。<code>START TRANSACTION</code>で始め、結果を確認して、良ければ<code>COMMIT</code>（確定）、ダメなら<code>ROLLBACK</code>（取り消し）。バックアップとセットで使うと安心です。</p></div>
+  <div class="practice-card" id="p-w3-u1">
+    <div class="ptitle">💻 ミニ練習：更新してから取り消す</div>
+    <p class="ptask">トランザクションを開始し、<code>ds_jobs</code>の全行の<code>rating</code>を0に更新してから、<code>ROLLBACK</code>で取り消すSQLを書いてください（COMMITは使いません）。</p>
+    <textarea class="code-editor" id="p-w3-u1-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w3-u1', ['START TRANSACTION','ROLLBACK'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w3-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w3-u1-result"></div>
+    <div class="answer-reveal" id="p-w3-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">START TRANSACTION</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span>;</span>
+<span class="cl"><span class="kw">ROLLBACK</span>;</span>
+</pre>
+      <p class="answer-note"><code>ROLLBACK</code>を実行したので、<code>rating</code>は元のままです。<code>START TRANSACTION</code>の代わりに<code>BEGIN</code>でも同じ意味になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>トランザクションで給与レンジを分割する</h2><div class="unit-sub">salary_estimate → low_range・high_range（INT）</div></div>
+  </div>
+  <p>この単元の主役は、Unit①のトランザクションを使った<strong>給与レンジの分割</strong>です。<code>ds_jobs.salary_estimate</code> には、たとえば <code>'$110K-$163K (Glassdoor est.)'</code> のような文字列が入っています。これでは「下限が10万ドル以上の求人」のような検索も、平均の計算もできません。1つのテキスト列を、<strong>数値の <code>low_range</code>（下限）と <code>high_range</code>（上限）の2列に分ける</strong>のがゴールです。</p>
+  <p>作業は「列追加→分割→記号の除去→桁の復元→型変換」と<strong>手順が多く、1つでも間違えるとデータを壊します</strong>。まさにトランザクションの出番です。全体像を先に見ておきましょう。</p>
+  <div class="viz">
+    <div class="viz-title">給与レンジ分割の8ステップ</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">1️⃣</span><div class="step-text"><strong>START TRANSACTION</strong><span>作業開始（お試しモード）</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>ALTER TABLE ... ADD COLUMN</strong><span>low_range / high_range をTEXTで追加</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>UPDATE ... SPLIT_PART(salary_estimate, '-', n)</strong><span>「-」の前後で2つに分ける（RETURNINGで確認）</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>REPLACE で「$」を除く</strong><span>'$110K' → '110K'</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">5️⃣</span><div class="step-text"><strong>「K」以降を除く</strong><span>SPLIT_PART(…,'K',1) か LEFT + POSITION で '110K (Glassdoor est.)' → '110'</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">6️⃣</span><div class="step-text"><strong>|| '000' を付ける</strong><span>'110' → '110000'（K＝千を戻す）</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">7️⃣</span><div class="step-text"><strong>ALTER COLUMN ... TYPE INT USING x::INT</strong><span>TEXT → INT に型変換。数字以外が残っているとエラー</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">8️⃣</span><div class="step-text"><strong>SELECT で確認 → COMMIT / ROLLBACK</strong><span>OKなら確定、おかしければ取り消し</span></div></div>
+    </div>
+    <div class="viz-cap">'$110K-$163K (Glassdoor est.)' → low_range = 110000, high_range = 163000</div>
+  </div>
+  <p>以下、ステップごとに実際に動かした結果を見ていきます（注目する行は post_id 1 <code>'$110K-$163K (Glassdoor est.)'</code>、2桁の下限を持つ post_id 3 <code>'$45K-$79K (Glassdoor est.)'</code>、そして <code>Employer est.</code> の post_id 8 <code>'$52K-$87K (Employer est.)'</code> の3行です）。</p>
+  <h3>ステップ①②　トランザクション開始と列の追加</h3>
+  <p>まず変更前の安全策として、バックアップがなければ <code>CREATE TABLE ds_jobs_backup AS SELECT * FROM ds_jobs;</code> でコピーを作っておきます。そのうえでトランザクションを開始し、列を追加します。分割した直後の値はまだ <code>'$110K'</code> のような文字列なので、<strong>最初はTEXT型</strong>で作ります。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">START TRANSACTION</span>;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs</span>
+<span class="cl">    <span class="kw">ADD COLUMN</span> low_range <span class="kw">TEXT</span>,</span>
+<span class="cl">    <span class="kw">ADD COLUMN</span> high_range <span class="kw">TEXT</span>;</span>
+</pre>
+  <h3>ステップ③　SPLIT_PART で「-」の前後に分ける</h3>
+  <p><code>SPLIT_PART(文字列, 区切り文字, n)</code> は、文字列を区切り文字で分けて<strong>n番目</strong>の部分を返します（nは1から始まる）。<code>'-'</code> で区切ると、1番目が下限側、2番目が上限側になります。<code>UPDATE ... RETURNING</code> を付けると、更新した行をその場で表示できるので、<strong>更新結果のプレビュー</strong>に便利です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">1</span>),</span>
+<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">RETURNING</span> post_id, salary_estimate, low_range, high_range;</span>
+</pre><div class="output-reveal">post_id | salary_estimate                | low_range | high_range
+1       | $110K-$163K (Glassdoor est.)   | $110K     | $163K (Glassdoor est.)
+2       | $137K-$171K (Glassdoor est.)   | $137K     | $171K (Glassdoor est.)
+3       | $45K-$79K (Glassdoor est.)     | $45K      | $79K (Glassdoor est.)
+...
+8       | $52K-$87K (Employer est.)      | $52K      | $87K (Employer est.)
+...
+(30 rows)</div>
+  <p>下限側は <code>$110K</code>、上限側は <code>$163K (Glassdoor est.)</code> になりました。上限側には注釈の <code>(Glassdoor est.)</code> や <code>(Employer est.)</code> がくっついたままです。これから<strong>不要な「$」「K」「注釈」を除いて、数字だけにします</strong>。</p>
+  <h3>ステップ④⑤　「$」と「K」以降を取り除く</h3>
+  <p>やり方は2通りあります。講義では文字位置を使う方法が紹介されました。</p>
+  <p><strong>A. 講義のやり方（SUBSTRING / LEFT ＋ POSITION）</strong>：先頭の「$」を <code>SUBSTRING(列, 2)</code> で（2文字目以降を取って）除き、次に<code>'K'</code>の位置を <code>POSITION('K' IN 列)</code> で探して、その直前までを <code>LEFT</code> で切り出します。<code>WHERE POSITION('K' IN 列) &gt; 0</code> は「Kを含む行だけ」を対象にする安全策です（Kが無い行に <code>LEFT(列, -1)</code> をかけると意図しない結果になるため）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SUBSTRING</span>(low_range, <span class="nm">2</span>),</span>
+<span class="cl">    high_range = <span class="kw">SUBSTRING</span>(high_range, <span class="nm">2</span>);</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range = <span class="kw">LEFT</span>(low_range, <span class="kw">POSITION</span>(<span class="st">'K'</span> <span class="kw">IN</span> low_range) - <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">POSITION</span>(<span class="st">'K'</span> <span class="kw">IN</span> low_range) &gt; <span class="nm">0</span>;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> high_range = <span class="kw">LEFT</span>(high_range, <span class="kw">POSITION</span>(<span class="st">'K'</span> <span class="kw">IN</span> high_range) - <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">POSITION</span>(<span class="st">'K'</span> <span class="kw">IN</span> high_range) &gt; <span class="nm">0</span>;</span>
+</pre>
+  <p><strong>B. もっと簡単なやり方（REPLACE ＋ SPLIT_PART）</strong>：「$」は <code>REPLACE(列, '$', '')</code> で空文字に置き換え、「K」より前だけが欲しいので、<code>SPLIT_PART(…, 'K', 1)</code> で<strong>K区切りの1番目</strong>を取ります。1本のUPDATEで済みます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(low_range, <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>),</span>
+<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(high_range, <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>);</span>
+</pre><div class="output-reveal">post_id | low_range | high_range
+1       | 110       | 163
+3       | 45        | 79
+8       | 52        | 87
+(3 rows)</div>
+  <p>AとBは<strong>どちらも同じ結果</strong>になります（実際に両方を実行して確認済み）。<code>'$45K'</code> のような2桁の下限も、<code>'$52K-$87K (Employer est.)'</code> のように注釈の文字が違う行も、同じ式で正しく処理されています。Bは短くて読みやすい反面、Aは「文字位置を探して切り出す」という文字列処理の基本が身につきます。</p>
+  <h3>ステップ⑥　「000」を付けて千ドル単位を戻す</h3>
+  <p>元の <code>K</code> は「千（thousand）」の意味でした。<code>110</code> を <code>110000</code> にするため、文字列連結演算子 <code>||</code> で末尾に <code>'000'</code> を付けます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range  = low_range || <span class="st">'000'</span>,</span>
+<span class="cl">    high_range = high_range || <span class="st">'000'</span>;</span>
+</pre><div class="output-reveal">post_id | low_range | high_range
+1       | 110000    | 163000
+3       | 45000     | 79000
+8       | 52000     | 87000
+(3 rows)</div>
+  <p>見た目は数値ですが、この時点ではまだ<strong>TEXT型</strong>です。文字列のままでは <code>AVG()</code> も大小比較も正しく動きません（<code>'9' &gt; '10'</code> のように文字の辞書順になる）。</p>
+  <h3>ステップ⑦　TEXT から INT に型変換する</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs</span>
+<span class="cl">    <span class="kw">ALTER COLUMN</span> low_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> low_range::<span class="kw">INT</span>;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs</span>
+<span class="cl">    <span class="kw">ALTER COLUMN</span> high_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> high_range::<span class="kw">INT</span>;</span>
+</pre>
+  <ul>
+    <li><code>ALTER COLUMN 列名 SET DATA TYPE 型</code>：列のデータ型を変更する。</li>
+    <li><code>USING 式</code>：<strong>既存の値をどのように新しい型へ変換するか</strong>を指定する。TEXTからINTへは自動では変換されないので、変換式が必要になる。</li>
+    <li><code>low_range::INT</code>：PostgreSQL独自の<strong>キャスト演算子 <code>::</code></strong>。<code>CAST(low_range AS INT)</code> と同じ意味（M2のCASTで学んだものの短縮形）。</li>
+  </ul>
+  <div class="warn-box">⚠️ <strong>変換できない文字が1つでも残っているとエラーになります。</strong>たとえばステップ⑤を飛ばして、<code>'$110K'</code> のまま型変換すると次のエラーになります。
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs</span>
+<span class="cl">    <span class="kw">ALTER COLUMN</span> low_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> low_range::<span class="kw">INT</span>;</span>
+</pre><div class="output-reveal">ERROR: invalid input syntax for type int: "$110K"</div>
+  「K」だけ残して「$」だけ除いた場合や、<code>'000'</code>を付けたあとに「K」が残っている <code>'110K000'</code> でも、<code>invalid input syntax for type int: "110K000"</code> と同様にエラーです。<strong>エラーになったらトランザクションの中で <code>ROLLBACK</code></strong> し、原因の手順（ステップ④⑤）を直して最初からやり直します。トランザクションで囲んでおいたおかげで、途中まで進んだ変更がテーブルに残る心配はありません。</div>
+  <h3>ステップ⑧　確認して COMMIT</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> post_id, salary_estimate, low_range, high_range</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">8</span>)</span>
+<span class="cl"><span class="kw">ORDER BY</span> post_id;</span>
+</pre><div class="output-reveal">post_id | salary_estimate              | low_range | high_range
+1       | $110K-$163K (Glassdoor est.) | 110000    | 163000
+3       | $45K-$79K (Glassdoor est.)   | 45000     | 79000
+8       | $52K-$87K (Employer est.)    | 52000     | 87000
+(3 rows)</div>
+  <p>元の <code>salary_estimate</code> と見比べて、値が正しく分かれていることを確認します。型が本当にINTになったかは、<code>SELECT name, type FROM pragma_table_info('ds_jobs')</code>（PostgreSQLでは <code>information_schema.columns</code>）で調べられます。問題なければ確定します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">COMMIT</span>;   <span class="cm">-- 確定。おかしければ代わりに ROLLBACK;</span></span>
+</pre>
+  <p>型がINTになったので、平均や最大・最小も計算できます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">ROUND</span>(<span class="kw">AVG</span>(low_range)) <span class="kw">AS</span> avg_low, <span class="kw">ROUND</span>(<span class="kw">AVG</span>(high_range)) <span class="kw">AS</span> avg_high,</span>
+<span class="cl">       <span class="kw">MIN</span>(low_range) <span class="kw">AS</span> min_low, <span class="kw">MAX</span>(high_range) <span class="kw">AS</span> max_high</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs;</span>
+</pre><div class="output-reveal">avg_low | avg_high | min_low | max_high
+90933   | 140600   | 45000   | 198000
+(1 rows)</div>
+  <div class="teal-box">📌 <strong>データ整形の定石：</strong>「新しい列を作る（TEXT）→ 元の列から値を取り出す → 不要な文字を除く → 目的の型に変換する」。元の <code>salary_estimate</code> 列は消さずに残しているので、いつでもやり直せます。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>1つの列に2つの情報（下限と上限）が入っていたら、まず新しい列を2つ作り、<code>SPLIT_PART</code>で分け、<code>REPLACE</code>や<code>SPLIT_PART(…,'K',1)</code>で数字だけにして、<code>'000'</code>を付け、最後に<code>USING x::INT</code>で数値型に変えます。全体を<code>START TRANSACTION</code>で囲んでおけば、失敗しても<code>ROLLBACK</code>でやり直せます。</p></div>
+  <div class="practice-card" id="p-w3-u2">
+    <div class="ptitle">💻 ミニ練習：下限だけを分割する</div>
+    <p class="ptask"><code>ds_jobs</code>に<code>low_range</code>列（TEXT型）を追加し、<code>salary_estimate</code>を<code>'-'</code>で分けた1番目の部分を<code>UPDATE</code>で入れてください（ここでは「$」や「K」の除去はしなくて構いません）。</p>
+    <textarea class="code-editor" id="p-w3-u2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w3-u2', ['ALTER TABLE','SPLIT_PART','UPDATE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w3-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w3-u2-result"></div>
+    <div class="answer-reveal" id="p-w3-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> low_range <span class="kw">TEXT</span>;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range = <span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">1</span>);</span>
+</pre>
+      <p class="answer-note"><code>SPLIT_PART(…, '-', 1)</code>は「-」で分けた1番目を返します。post_id 1の<code>low_range</code>は<code>'$110K'</code>になります。ここから先の「$」「K」の除去とINTへの変換は、本文のステップ④以降と同じです。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>列とテーブルを削除する</h2><div class="unit-sub">DROP COLUMN と DROP TABLE、そして DELETE とのちがい</div></div>
+  </div>
+  <p>整形の途中で、不要になった列やテーブルを消したくなることがあります。たとえば、Unit②の作業をバックアップのコピーで練習したあと、不要になったコピーを片づける場面です。ここでは<strong>「列を消す」と「テーブルごと消す」</strong>の2つを学びます。どちらも<strong>取り消しがきかない（トランザクション外なら即時確定）</strong>強力なコマンドなので、必ずバックアップを取ってから実行します。</p>
+  <h3>準備：2つ目のバックアップ表</h3>
+  <p>本番の <code>ds_jobs</code> を直接いじらず、練習用のコピー <code>ds_jobs_backup2</code> を作り、そこに給与レンジの列を足してみます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs_backup2 <span class="kw">AS</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs_backup2</span>
+<span class="cl">    <span class="kw">ADD COLUMN</span> low_range <span class="kw">INT</span>,</span>
+<span class="cl">    <span class="kw">ADD COLUMN</span> high_range <span class="kw">INT</span>;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">SELECT</span> name, type <span class="kw">FROM</span> pragma_table_info(<span class="st">'ds_jobs_backup2'</span>) <span class="kw">WHERE</span> cid &gt;= <span class="nm">12</span> <span class="kw">ORDER BY</span> cid;</span>
+</pre><div class="output-reveal">name       | type
+sector     | TEXT
+revenue    | TEXT
+competitors| TEXT
+low_range  | INT
+high_range | INT
+(5 rows)</div>
+  <p>（<code>pragma_table_info</code> はこのアリーナで列の一覧を調べる方法です。PostgreSQLでは <code>information_schema.columns</code> を使います。）</p>
+  <h3>列を削除する：ALTER TABLE ... DROP COLUMN</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs_backup2 <span class="kw">DROP COLUMN</span> low_range;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs_backup2 <span class="kw">DROP COLUMN</span> high_range;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">SELECT</span> name, type <span class="kw">FROM</span> pragma_table_info(<span class="st">'ds_jobs_backup2'</span>) <span class="kw">WHERE</span> cid &gt;= <span class="nm">12</span> <span class="kw">ORDER BY</span> cid;</span>
+</pre><div class="output-reveal">name       | type
+sector     | TEXT
+revenue    | TEXT
+competitors| TEXT
+(3 rows)</div>
+  <p><code>low_range</code> と <code>high_range</code> が消え、列数が元の15列に戻りました。PostgreSQLでは <code>DROP COLUMN low_range, DROP COLUMN high_range</code> のようにカンマで並べて1本にまとめることもできます。<strong>列を消すとその列のデータもすべて失われる</strong>ので注意してください。</p>
+  <h3>テーブルを削除する：DROP TABLE</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">DROP TABLE</span> ds_jobs_backup2;</span>
+</pre>
+  <p>テーブルの中身（行）も構造（列の定義）も、丸ごと消えます。存在しないテーブルに <code>DROP TABLE</code> を実行すると <code>ERROR: no such table</code>（PostgreSQLでは <code>table "..." does not exist</code>）になりますが、<strong><code>DROP TABLE IF EXISTS ds_jobs_backup2;</code></strong> と書けば、無ければ何もせず正常終了します。スクリプトを何度も再実行するときに便利です。列の削除にも <code>DROP COLUMN IF EXISTS</code> が使えます。</p>
+  <div class="teal-box">📌 <strong>まとめ：</strong>列を消す ＝ <code>ALTER TABLE ... DROP COLUMN</code>、テーブルごと消す ＝ <code>DROP TABLE</code>。</div>
+  <h3>DROP と DELETE のちがい</h3>
+  <table class="compare-table">
+    <tr><th>コマンド</th><th>消えるもの</th><th>テーブル自体</th><th>例</th></tr>
+    <tr><td><code>DELETE FROM t WHERE ...</code></td><td>条件に合う<strong>行</strong></td><td>残る（空になっても構造は残る）</td><td><code>DELETE FROM ds_jobs WHERE rating = -1;</code> → 5行が消えて25行になる</td></tr>
+    <tr><td><code>ALTER TABLE t DROP COLUMN c</code></td><td>1つの<strong>列</strong>（全行のその列の値）</td><td>残る（列が減る）</td><td><code>ALTER TABLE ds_jobs_backup2 DROP COLUMN low_range;</code></td></tr>
+    <tr><td><code>DROP TABLE t</code></td><td>テーブルそのもの（行も列も）</td><td>なくなる</td><td><code>DROP TABLE ds_jobs_backup2;</code></td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>WHERE句のない <code>DELETE FROM t;</code> は全行を削除します</strong>（<code>UPDATE</code> のWHERE忘れと同じ罠）。実行前に、同じ条件で <code>SELECT COUNT(*) ... WHERE ...</code> を実行して対象行数を確認する習慣をつけましょう。これらの削除系コマンドも、Unit①の<code>START TRANSACTION</code>で囲めば、<code>ROLLBACK</code>で取り消せます（PostgreSQLの場合）。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>列を消すときは<code>ALTER TABLE 表 DROP COLUMN 列</code>、表ごと消すときは<code>DROP TABLE 表</code>。行だけ消すのは<code>DELETE</code>です。どれも元に戻せないので、先にバックアップを取りましょう。</p></div>
+  <div class="practice-card" id="p-w3-u3">
+    <div class="ptitle">💻 ミニ練習：バックアップ表から列を消す</div>
+    <p class="ptask"><code>ds_jobs</code>のコピー<code>ds_jobs_backup2</code>を作り、そのコピーから<code>revenue</code>列を削除するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-w3-u3-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w3-u3', ['ALTER TABLE','DROP COLUMN'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w3-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w3-u3-result"></div>
+    <div class="answer-reveal" id="p-w3-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs_backup2 <span class="kw">AS</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs_backup2 <span class="kw">DROP COLUMN</span> revenue;</span>
+</pre>
+      <p class="answer-note"><code>ALTER TABLE 表 DROP COLUMN 列</code>で列を削除します。元の<code>ds_jobs</code>には触れていないので、<code>revenue</code>列は残っています。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does ROLLBACK do?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It makes every change in the transaction permanent</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It cancels all changes made since the transaction started</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It deletes the table and its backup copy</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It saves a copy of the table for later use</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which command makes the changes in a transaction permanent?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ROLLBACK, because it finalises the work done</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SAVE, which stores the table on disk</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>END TABLE, which closes the open table</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>COMMIT, which confirms every change so far</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">When is a transaction especially useful?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>When related commands must all succeed or all fail, e.g. an order and its card payment</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>When you only want to read some data with one simple SELECT query</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>When you want every query in the database to run much faster</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>When you need to rename one table using a single statement</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">How do transactions relate to backups?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A transaction fully replaces the need for having any backup</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Backups become unnecessary once START TRANSACTION is used</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They work together: transactions test changes, backups protect after COMMIT</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Each transaction automatically creates a hidden backup table</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">SPLIT_PART('$110K-$163K (Glassdoor est.)', '-', 2) returns:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>'$110K'</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>'$163K (Glassdoor est.)'</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>'110000'</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'-'</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does ALTER COLUMN low_range SET DATA TYPE INT USING low_range::INT fail on the value '110K'?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>USING can only be applied to tables that are still empty</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The :: operator can only be used on date and time columns</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A column can never be changed after the table is created</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'110K' has a non-numeric character, so it cannot become an integer</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which statement removes a column from a table?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ALTER TABLE ds_jobs DROP COLUMN low_range;</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>DELETE COLUMN low_range FROM ds_jobs;</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>REMOVE low_range FROM ds_jobs;</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>DROP low_range FROM TABLE ds_jobs;</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What is the difference between DELETE FROM t and DROP TABLE t?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Both remove the table structure and all rows</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>DELETE removes columns and DROP removes rows</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>DELETE removes rows but keeps the table; DROP TABLE removes the whole table</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They are two spellings of the same command</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 3, 0, 2];
+var FEEDBACKS=["ROLLBACK cancels everything done since START TRANSACTION and returns the data to its earlier state.", "COMMIT confirms the changes; after it you can no longer undo them with ROLLBACK.", "Related commands that depend on each other belong in one transaction, so a failure (such as a declined card) can undo all of them.", "A transaction only protects you until COMMIT; keep a backup copy as well for anything already committed.", "SPLIT_PART splits on '-' and returns the 2nd piece, which still has the K and the note attached.", "Every value must be convertible; leftover text such as 'K' or '$' causes an 'invalid input syntax for type int' error, so ROLLBACK and clean the text first.", "A column is removed with ALTER TABLE ... DROP COLUMN.", "DELETE works on rows and leaves an (empty) table behind; DROP TABLE removes the table itself, including its structure."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">transaction</div>
+      <div class="term-en">トランザクション</div>
+      <div class="term-def">複数のコマンドをひとまとまりにし、全部確定（COMMIT）か全部取り消し（ROLLBACK）かを選べる仕組み。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">COMMIT / ROLLBACK</div>
+      <div class="term-en">確定／取り消し</div>
+      <div class="term-def">COMMITでトランザクション内の変更を永続化し、ROLLBACKで開始時点に戻す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">SPLIT_PART()</div>
+      <div class="term-en">文字列の分割</div>
+      <div class="term-def">SPLIT_PART(文字列, 区切り, n) で、区切り文字で分けたn番目の部分を返す関数。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">USING x::INT</div>
+      <div class="term-en">型変換の式</div>
+      <div class="term-def">ALTER COLUMN ... TYPE で、既存値を新しい型にどう変換するかを指定する句。::はキャスト演算子。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">DROP COLUMN / DROP TABLE</div>
+      <div class="term-en">列／テーブルの削除</div>
+      <div class="term-def">列を消すALTER TABLE ... DROP COLUMN と、表ごと消すDROP TABLE。行だけ消すDELETEとは別物。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>整形は「バックアップ → START TRANSACTION → 変更 → SELECTで確認 → COMMIT（ダメならROLLBACK）」の型で進めましょう。エラーが出たら慌てずROLLBACKです。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔒 SQLレッスン：M7 データ整形③ トランザクション・分割・削除</p>
+  <p style="margin-top:.5rem;"><a href="m7_wrangling_clean.html">← クリーニング</a> · <a href="m7_plus.html">M7+ 教科書10章へ →</a> · <a href="m7_practice_alter_txn.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

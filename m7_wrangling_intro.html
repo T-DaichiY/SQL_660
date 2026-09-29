@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7 データ整形① 準備と探索</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🔎 準備・探索 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main active" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M7 · Data Wrangling — Review, Import &amp; Explore</div>
+  <h1>🔎 データ整形①：準備・取込・探索</h1>
+  <p>現実のデータは、きれいな状態では届きません。<strong>データ整形（データラングリング）</strong>は、生のデータを分析できる形に整える作業で、データサイエンティストは仕事の時間の<strong>大半をここに使う</strong>と言われます。この単元では、整形の全体の流れ、データの見直しと取り込み、そして<code>GROUP BY</code>を使った「汚れ探し」までを学びます。</p>
+  <p style="font-size:.9rem">📦 この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① データ整形とは？</a><a href="#unit2">② 見直しと取り込み</a><a href="#unit3">③ データを探索する</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>データ整形（ラングリング）とは？</h2><div class="unit-sub">なぜ汚れたデータが生まれ、どう進めるのか</div></div>
+  </div>
+  <p><strong>データ整形（data wrangling）</strong>とは、集めたデータの間違い・欠け・表記ゆれを直し、分析やレポートに使える状態にする作業のことです。<strong>データクリーニング</strong>、<strong>データ修復（remediation）</strong>、<strong>データマンジング（munging）</strong>とほぼ同じ意味で使われます。データサイエンティストは、モデルを作る時間よりも、この下ごしらえに多くの時間を使うと言われます。</p>
+  <p>ではなぜデータは汚れるのでしょうか。主な原因は3つです。</p>
+  <ul>
+    <li><strong>入力フォームの制限がゆるい</strong>：自由入力欄に人が打ち込むと、<code>Sr.</code>・<code>Sr</code>・<code>Senior</code>のように同じ意味が別の書き方で入る。</li>
+    <li><strong>外部業者（サードパーティ）から届く</strong>：他社のCSVは、こちらのルールとは無関係に作られている。</li>
+    <li><strong>データベース側に制約がない</strong>：型・NOT NULL・CHECKなどの制約（M5）がなければ、変な値も素通りする。</li>
+  </ul>
+  <p>M7を通して使う練習用テーブルは<code>ds_jobs</code>（データサイエンス系の求人30件）です。求人サイトのデータなので、まさに上の3つが全部当てはまります。</p>
+  <div class="viz">
+    <div class="viz-title">おすすめの整形プロセス</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">📝</span><div class="step-text"><strong>1. メモを取り始める</strong><span>気づいた汚れや、直す方針を書き残す（コメントとして残す）</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">👀</span><div class="step-text"><strong>2. データを見直す（review）</strong><span>CSVを開き、列ごとに型と中身を確認する</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">📥</span><div class="step-text"><strong>3. 取り込んで件数を検証する</strong><span>元のファイルの行数とテーブルの行数が一致するか確かめる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔎</span><div class="step-text"><strong>4. 探索する → 5. 計画する</strong><span>汚れを洗い出し、直す順番を決める</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">💾</span><div class="step-text"><strong>6. バックアップを作る</strong><span>直す前に必ず控えのテーブルを作る</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔧</span><div class="step-text"><strong>7. 簡単なものから直す → 8. 直すたびに見直す</strong><span>1回直したら結果を確認してから次へ</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">✅</span><div class="step-text"><strong>9. 最終まとめ（recap）</strong><span>何をどう直したかを振り返り、記録として残す</span></div></div>
+    </div>
+    <div class="viz-cap">M7 の各単元は、この流れの順番にそって進みます（この単元は 1〜5）。</div>
+  </div>
+  <div class="teal-box">📌 <strong>課題のイメージ：</strong>M7の最終課題では、自分で選んだデータセット（たとえばKaggleの公開データ）を整形します。形式は自由ですが、<strong>なぜそう直したのか</strong>をコメントで説明しながら、<strong>1つの<code>.sql</code>ファイル</strong>にまとめて提出します。</div>
+  <p>そこで大事になるのが<strong>SQLのコメント</strong>です。コメントは実行されず、人間への説明として読まれます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm">-- 1行コメント：ハイフン2つから行末まで</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> ds_jobs;  <span class="cm">-- 行の後ろにも書ける</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">/* ブロックコメント：</span></span>
+<span class="cl"><span class="cm">   複数行にわたって説明を書ける。</span></span>
+<span class="cl"><span class="cm">   取り込み後に行数を確かめる理由：取りこぼしを見つけるため */</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> ds_jobs;</span>
+</pre>
+  <div class="warn-box">⚠️ <strong><code>/*</code>を閉じ忘れると、その後ろが全部コメントになります。</strong>閉じる<code>*/</code>がないと、それ以降のSQLは1行も実行されません。「書いたのに何も起きない」ときは、まず閉じ忘れを疑いましょう。</div>
+  <p>コツは、<strong>各コマンドの上にブロックコメントを置き、「何をするか」ではなく「なぜそうするか」を書く</strong>ことです。「何をするか」はSQLを読めば分かりますが、理由は書かないと消えてしまいます。半年後の自分（や採点者）が読んだときに、判断の根拠が分かるようにしておきます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データ整形は「汚れたデータの大掃除」です。いきなり掃除を始めず、まずメモを取り、状態を確かめ、バックアップを取ってから、簡単なところから少しずつ直します。理由はコメントに残しましょう。</p></div>
+  <div class="practice-card" id="p-w1-u1">
+    <div class="ptitle">💻 ミニ練習：ブロックコメント付きで行数を数える</div>
+    <p class="ptask">まず<code>/* ... */</code>のブロックコメントで「取り込み後に行数を確認する理由」を書き、そのあとに<code>ds_jobs</code>テーブルの全行数を数えるSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-w1-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w1-u1', ['/*','*/','SELECT','COUNT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w1-u1-result"></div>
+    <div class="answer-reveal" id="p-w1-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="cm">/* 取り込みの取りこぼしがないか、行数で確かめる */</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> ds_jobs;</span></pre>
+      <p class="answer-note">結果は30。コメントは実行されないので、SQLの結果には影響しません。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>データを見直して取り込む（Review &amp; Import）</h2><div class="unit-sub">型を決めてからCREATE TABLE、取り込んだら件数を検証</div></div>
+  </div>
+  <p>取り込む前に、CSVの15列を1つずつ眺めて<strong>「この列は何型にするか」「どこが汚れていそうか」「どう直すか」</strong>をメモします。<code>ds_jobs</code>では次のようになります。</p>
+  <table class="compare-table">
+    <tr><th>列</th><th>予定の型</th><th>汚れている点</th><th>直す方針</th></tr>
+    <tr><td><code>post_id</code></td><td>integer</td><td>特になし（主キー）</td><td>そのまま</td></tr>
+    <tr><td><code>job_title</code></td><td>text</td><td><code>Sr.</code>/<code>Sr</code>/<code>Senior.</code>など表記ゆれ</td><td>統一する</td></tr>
+    <tr><td><code>salary_estimate</code></td><td>text</td><td><code>$110K-$163K (Glassdoor est.)</code>と文字列</td><td>下限・上限の数値列に分ける</td></tr>
+    <tr><td><code>job_description</code></td><td>text</td><td><code>TBD</code>・<code>n/a</code>・空文字が混在</td><td>NULLに揃える</td></tr>
+    <tr><td><code>rating</code></td><td>numeric</td><td>未評価が<code>-1</code>（番兵値）</td><td>NULLに置き換える</td></tr>
+    <tr><td><code>company_name</code></td><td>text</td><td>末尾に評価がくっつく（<code>Bluepeak Studios4.4</code>）</td><td>評価部分を取り除く</td></tr>
+    <tr><td><code>location</code></td><td>text</td><td><code>Burbank, CA</code>と市と州が1列</td><td>市・州に分割</td></tr>
+    <tr><td><code>headquarters</code></td><td>text</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
+    <tr><td><code>size</code></td><td>text</td><td>大きな問題なし</td><td>確認のみ</td></tr>
+    <tr><td><code>founded</code></td><td>integer</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
+    <tr><td><code>type_of_ownership</code></td><td>text</td><td><code>-1</code>・<code>Unknown</code>、長い名前</td><td>対応表で短いラベルに統一</td></tr>
+    <tr><td><code>industry</code>, <code>sector</code></td><td>text</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
+    <tr><td><code>revenue</code></td><td>text</td><td><code>Unknown / Non-Applicable</code></td><td>NULLに置き換える</td></tr>
+    <tr><td><code>competitors</code></td><td>text</td><td>なしが<code>-1</code>（文字列）</td><td>NULLに置き換える</td></tr>
+  </table>
+  <p>型が決まったら<code>CREATE TABLE</code>で作ります。ポイントは、<strong>数として使う列だけ数値型にし、それ以外は<code>text</code>にしておく</strong>ことです。取り込み時点で無理に整形しようとせず、「まず全部入れて、あとでSQLで直す」方が安全です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs (</span>
+<span class="cl">    post_id <span class="kw">integer</span> <span class="kw">PRIMARY KEY</span>,</span>
+<span class="cl">    job_title <span class="kw">text</span>,</span>
+<span class="cl">    salary_estimate <span class="kw">text</span>,</span>
+<span class="cl">    job_description <span class="kw">text</span>,</span>
+<span class="cl">    rating <span class="kw">numeric</span>,</span>
+<span class="cl">    company_name <span class="kw">text</span>,</span>
+<span class="cl">    location <span class="kw">text</span>,</span>
+<span class="cl">    headquarters <span class="kw">text</span>,</span>
+<span class="cl">    size <span class="kw">text</span>,</span>
+<span class="cl">    founded <span class="kw">integer</span>,</span>
+<span class="cl">    type_of_ownership <span class="kw">text</span>,</span>
+<span class="cl">    industry <span class="kw">text</span>,</span>
+<span class="cl">    sector <span class="kw">text</span>,</span>
+<span class="cl">    revenue <span class="kw">text</span>,</span>
+<span class="cl">    competitors <span class="kw">text</span></span>
+<span class="cl">);</span>
+</pre>
+  <p>テーブルができたら、CSVファイルを<code>COPY</code>で一括取り込みします（PostgreSQLの構文）。<code>HEADER</code>は「1行目は見出しなので読み飛ばす」という指定です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">COPY</span> ds_jobs</span>
+<span class="cl"><span class="kw">FROM</span> <span class="st">'C:\data\ds_jobs.csv'</span></span>
+<span class="cl"><span class="kw">WITH</span> (<span class="kw">FORMAT</span> CSV, <span class="kw">HEADER</span>);</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>この練習アリーナにはCSV取り込み機能がありません。</strong><code>COPY ... FROM</code>は説明用のPostgreSQL構文で、ここでは実行できません。<code>ds_jobs</code>はあらかじめ読み込み済みのテーブルとして用意されているので、以降の例と演習はすぐに試せます。</div>
+  <p>取り込んだら、<strong>必ず件数を検証</strong>します。元のCSVの行数（この教材の練習データでは30行、講義のファイルでは672行）とテーブルの行数が違えば、取り込みに失敗している証拠です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(company_name) <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(rating) <span class="kw">FROM</span> ds_jobs;</span>
+</pre><div class="output-reveal">count(*) = 30
+count(company_name) = 30
+count(rating) = 30</div>
+  <p>ここで重要な発見があります。評価<code>rating</code>が<code>-1</code>の行は5行あり、実質の「評価あり」は25行のはずです。それなのに<code>COUNT(rating)</code>は<strong>25ではなく30</strong>です。<code>COUNT(列)</code>はNULLを数えない（M4）ので、<code>-1</code>が<strong>NULLではなく本物の数値として</strong>取り込まれていることが分かります。</p>
+  <div class="teal-box">📌 <strong>番兵値（sentinel value）</strong>とは、「不明」「なし」を表すために入れられた特別な値（<code>-1</code>、<code>Unknown</code>など）です。SQLからは普通の値に見えるので、そのまま平均を取ると<code>-1</code>が混ざって結果が狂います。番兵値は<strong>NULLに置き換える</strong>のが基本方針です（次の単元で実際に直します）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>取り込む前に「どの列がどんな型か、どこが汚いか」を表にしておき、取り込んだら件数を数えて確かめます。「-1」はNULLではなくただの数字として入るので、COUNTでも数えられてしまいます。</p></div>
+  <div class="practice-card" id="p-w1-u2">
+    <div class="ptitle">💻 ミニ練習：行数と列の件数を確認する</div>
+    <p class="ptask"><code>ds_jobs</code>の全行数を<code>COUNT(*)</code>で、<code>rating</code>列の件数を<code>COUNT(rating)</code>で、1つのSELECTにまとめて求めてください。2つの値が同じになることを確かめましょう。</p>
+    <textarea class="code-editor" id="p-w1-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w1-u2', ['SELECT','COUNT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w1-u2-result"></div>
+    <div class="answer-reveal" id="p-w1-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*), <span class="kw">COUNT</span>(rating)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs;</span></pre>
+      <p class="answer-note">どちらも30になります。<code>-1</code>がNULLではなく数値として入っているので、5行の「未評価」も数えられてしまっています。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>データを探索する（Exploring）</h2><div class="unit-sub">GROUP BY + COUNT + ORDER BY で汚れを見つける</div></div>
+  </div>
+  <p>汚れを探す最強の道具は、M4で学んだ<code>GROUP BY</code>です。1つの列を選び、値ごとに何行あるかを数えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> col, <span class="kw">COUNT</span>(col)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP BY</span> col</span>
+<span class="cl"><span class="kw">ORDER BY</span> col;</span>
+</pre>
+  <p><strong><code>ORDER BY</code>を付けるのが肝心</strong>です。並べ替えると、似た値が隣り合って並び、<code>Sr.</code>・<code>Sr</code>・<code>Senior</code>のような「繰り返しのパターン」が目に入ります。順番がバラバラだと見逃してしまいます。また、同じ意味なのに別々の行として数えられていれば、それが表記ゆれの証拠です。</p>
+  <p>まず<code>job_title</code>に使ってみます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> job_title, <span class="kw">COUNT</span>(job_title)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> job_title <span class="kw">ORDER BY</span> job_title;</span>
+</pre><div class="output-reveal">job_title                     | count
+------------------------------+------
+Business Intelligence Analyst |  3
+Data Analyst                  |  4
+Data Engineer                 |  3
+Data Scientist                |  6
+Machine Learning Engineer     |  3
+Research Scientist            |  2
+Senior Data Scientist         |  3
+Senior. Data Scientist -      |  2
+Sr Data Scientist             |  2
+Sr. Data Scientist            |  2
+(10 rows)</div>
+  <p>下の4行は本来すべて同じ「Senior Data Scientist」のはずですが、4通りの書き方に分かれています（3+2+2+2で合計9行）。ピリオドの有無や、末尾の<code> -</code>が原因です。</p>
+  <p>次に<code>rating</code>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> rating, <span class="kw">COUNT</span>(rating)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> rating <span class="kw">ORDER BY</span> rating;</span>
+</pre><div class="output-reveal">rating | count
+-------+------
+    -1 |  5
+   2.9 |  1
+   3.2 |  1
+   3.3 |  1
+   3.4 |  1
+   ...（以下、最大4.6まで。全17行）</div>
+  <p>並べ替えたので、最小値の<code>-1</code>がいちばん上に来て、5行あることがすぐに分かります。次は<code>type_of_ownership</code>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> type_of_ownership, <span class="kw">COUNT</span>(type_of_ownership)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> type_of_ownership <span class="kw">ORDER BY</span> type_of_ownership;</span>
+</pre><div class="output-reveal">type_of_ownership              | count
+-------------------------------+------
+-1                             |  2
+College / University           |  1
+Company - Private              | 10
+Company - Public               |  8
+Government                     |  2
+Nonprofit Organization         |  3
+Private Practice / Firm        |  1
+Subsidiary or Business Segment |  2
+Unknown                        |  1
+(9 rows)</div>
+  <p><code>-1</code>と<code>Unknown</code>はどちらも「不明」で、実質同じ意味の番兵値が2種類あります。また<code>Company - Private</code>と<code>Private Practice / Firm</code>のように、もっと短い共通ラベルにまとめられそうな値もあります。</p>
+  <p>今度は<code>company_name</code>です（先頭8行のみ表示）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> company_name, <span class="kw">COUNT</span>(company_name)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> company_name <span class="kw">ORDER BY</span> company_name;</span>
+</pre><div class="output-reveal">company_name                   | count
+-------------------------------+------
+23Genomics3.8                  |  1
+Alder &amp; Oak Retail3.4          |  1
+Bluepeak Studios4.4            |  1
+Brightside Labs                |  1
+Cascade Streaming4.6           |  1
+Cedar Health                   |  1
+Chirp Social3.7                |  1
+County Public Health Agency3.2 |  1
+...</div>
+  <p>社名の末尾に評価（<code>4.4</code>など）がくっついています。ただし全行ではなく、<code>Brightside Labs</code>や<code>Cedar Health</code>のように<code>rating = -1</code>の行にはくっついていません。さらに厄介なのが<strong>境界のケース</strong>で、<code>District 9</code>に評価<code>4.2</code>がついた<code>District 94.2</code>は、「数字を全部取り除く」方法だと本来の社名の<code>9</code>まで消えてしまいます。<code>23Genomics3.8</code>も先頭の数字を巻き込むおそれがあります。</p>
+  <div class="warn-box">⚠️ 社名のようにほぼ全行がユニークな列では、GROUP BYの件数はほとんど1になります。この場合は件数よりも、<strong>並べ替えた文字列の見た目を目で確認する</strong>ことが探索の中心です。</div>
+  <p>最後に<code>salary_estimate</code>です（先頭6行のみ表示）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> salary_estimate, <span class="kw">COUNT</span>(salary_estimate)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> salary_estimate <span class="kw">ORDER BY</span> salary_estimate;</span>
+</pre><div class="output-reveal">salary_estimate               | count
+------------------------------+------
+$101K-$165K (Glassdoor est.)  |  1
+$105K-$158K (Glassdoor est.)  |  1
+$108K-$160K (Glassdoor est.)  |  1
+$110K-$163K (Glassdoor est.)  |  1
+$115K-$176K (Glassdoor est.)  |  1
+$118K-$172K (Glassdoor est.)  |  1
+...</div>
+  <p>すべての値が<code>$下限K-$上限K</code>の形で、末尾に<code>(Glassdoor est.)</code>か<code>(Employer est.)</code>が付いています（後者は3行）。このままでは数値として計算できないので、後で分解する必要があります。</p>
+  <p>探索で見つけたことは、その場でメモに残します。これが次の単元の設計図になります。</p>
+  <div class="note-box">📋 <strong>クリーニングのチェックリスト（ここまでの発見）</strong>
+    <ul>
+      <li><code>job_title</code>：<code>Sr.</code>/<code>Sr</code>/<code>Senior.</code>を<code>Senior</code>に統一（9行）</li>
+      <li><code>rating</code>：<code>-1</code>（5行）→ NULL</li>
+      <li><code>type_of_ownership</code>：<code>-1</code>と<code>Unknown</code> → NULL、他は短いラベルに</li>
+      <li><code>company_name</code>：末尾の評価を除去（<code>District 94.2</code>に注意）</li>
+      <li><code>salary_estimate</code>：数値2列に分解、末尾の(…est.)を除去</li>
+    </ul>
+  </div>
+  <p>💡 PostgreSQLの<code>x::int</code>のようなキャストは、この演習アリーナでも自動変換されてそのまま動きます（<code>COPY</code>だけは動きません）。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「GROUP BYで値ごとに数え、ORDER BYで並べる」だけで、表記ゆれや<code>-1</code>のような不自然な値が浮かび上がります。見つけた汚れは、忘れないようにチェックリストにメモしましょう。</p></div>
+  <div class="practice-card" id="p-w1-u3">
+    <div class="ptitle">💻 ミニ練習：ratingの値ごとの件数を見る</div>
+    <p class="ptask"><code>rating</code>ごとの件数を<code>GROUP BY</code>で数え、<code>rating</code>の小さい順に並べてください。先頭に<code>-1</code>の行が出て、件数が5になることを確認しましょう。</p>
+    <textarea class="code-editor" id="p-w1-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w1-u3', ['SELECT','GROUP BY','COUNT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w1-u3-result"></div>
+    <div class="answer-reveal" id="p-w1-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> rating, <span class="kw">COUNT</span>(rating)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP BY</span> rating</span>
+<span class="cl"><span class="kw">ORDER BY</span> rating;</span></pre>
+      <p class="answer-note">1行目が<code>-1 | 5</code>になります。最小値が先頭に来るので、番兵値を見つけやすくなります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does data wrangling (data cleaning) mean?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Deleting a database once a project ends</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Turning messy raw data into a form that is ready for analysis</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Encrypting the data before storing it</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Copying tables between two servers</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In the recommended wrangling process, when should you make a backup?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>After the final recap, once every change is finished</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only if an UPDATE fails with an error</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Never, because COMMIT already protects the data</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Before you start changing the data, after you have planned the fixes</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What happens if you open a comment with /* and forget to close it with */ ?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Everything after the /* is treated as a comment and is not run</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the current line is ignored</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>PostgreSQL closes the comment automatically at the semicolon</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The comment is ignored and the next statement runs normally</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A block comment above a command should mainly explain:</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Which SQL keywords the command contains</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The exact syntax of each clause in the command</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Why you are running the command and what you expect to find</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>How many rows the whole table has</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why does COUNT(rating) return 30 even though 5 rows have rating = -1?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>COUNT(column) counts every row including NULLs</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because -1 was imported as a real number, not as NULL, so COUNT counts it</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because COUNT ignores the WHERE clause</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because rating is a text column</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which query pattern is best for spotting inconsistent spellings in a column?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>SELECT DISTINCT * FROM ds_jobs;</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SELECT col, COUNT(col) FROM ds_jobs GROUP BY col ORDER BY col;</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SELECT SUM(col) FROM ds_jobs;</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>SELECT col FROM ds_jobs LIMIT 1;</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">The export contains a COPY ... FROM 'file.csv' WITH (FORMAT CSV, HEADER) statement. What does HEADER do?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It writes the column names to a new file</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It sorts the rows by the first column</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It skips the first row of the file because it holds column names</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It encrypts the imported columns</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why is ORDER BY used with the GROUP BY exploration query?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Similar values sit next to each other, so repeated patterns and odd values stand out</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It makes GROUP BY run faster than an unordered query</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes the -1 rows from the result</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is required, otherwise PostgreSQL raises a syntax error</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 1, 2, 0];
+var FEEDBACKS=["Data wrangling means fixing errors, gaps and inconsistent formats so the data can be analysed reliably.", "The backup comes before the first fix, so that a mistake can always be undone by going back to the copy.", "A block comment runs until */ is found, so an unclosed one silently swallows all the SQL after it.", "The SQL already shows what it does; the comment should record the reasoning that would otherwise be lost.", "COUNT(column) skips only NULLs. The -1 sentinel is an ordinary number, so it is counted like any other value.", "Grouping and ordering puts near-identical values next to each other with their counts, making variants like Sr. and Senior visible.", "HEADER tells COPY that the first line of the CSV is a header row of names, not data, so it is not loaded as a record.", "Sorting is not required for correctness, but it makes similar values line up so a reader can spot patterns and outliers."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">data wrangling</div><div class="term-en">データ整形（ラングリング）</div><div class="term-def">生のデータの誤り・欠け・表記ゆれを直し、分析に使える形へ整える作業全体。クリーニングとほぼ同義。</div></div>
+    <div class="term-item"><div class="term-name">sentinel value</div><div class="term-en">番兵値</div><div class="term-def">「不明」「なし」を表すために入れられた特別な値（-1、Unknownなど）。NULLではないのでCOUNTや平均に混ざってしまう。</div></div>
+    <div class="term-item"><div class="term-name">backup table</div><div class="term-en">バックアップテーブル</div><div class="term-def">整形の前に作っておく控えのコピー。失敗したときに元に戻すための保険。</div></div>
+    <div class="term-item"><div class="term-name">GROUP BY exploration</div><div class="term-en">GROUP BYによる探索</div><div class="term-def">SELECT col, COUNT(col) ... GROUP BY col ORDER BY col で値の分布を見て、表記ゆれや異常値を見つける手法。</div></div>
+    <div class="term-item"><div class="term-name">block comment</div><div class="term-en">ブロックコメント</div><div class="term-def">/* ... */ で囲んだ複数行のコメント。閉じ忘れると以降が全てコメントになる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>直す前に「まず数える」が鉄則です。<code>GROUP BY</code>と<code>COUNT</code>で列の中身を眺め、汚れをメモしてから、バックアップを取って修正に進みましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔎 SQLレッスン：M7 データ整形① 準備と探索</p>
+  <p style="margin-top:.5rem;"><a href="m6_plus.html">← M6+ アンチ結合・CTE・CASE</a> · <a href="m7_wrangling_clean.html">クリーニングへ →</a> · <a href="m7_practice_explore.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超やさしい版：M7 データ整形② クリーニング</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🧹 クリーニング <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy active" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M7 · Data Wrangling — Modifying &amp; Cleaning 🍎</div>
+    <h1>🍎 超やさしい版：ALTER・UPDATEでクリーニング</h1>
+    <p>散らかったデータを、<strong>バックアップを取ってから</strong>そうじします。使うのは<code>ALTER</code>と<code>UPDATE</code>だけ。練習用の30行のデータで見てみましょう。</p>
+    <div class="unit-nav"><a href="#u1">ALTERとUPDATE</a><a href="#u2">バックアップと置換</a><a href="#u3">会社名の評価を消す</a><a href="#u4">-1をNULLに</a><a href="m7_wrangling_clean.html" class="easy-toplink">🧹 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>ALTERとUPDATEのちがい</h2><div class="unit-sub">入れ物を変える？ 中身を変える？</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>ALTER＝表の「形」を変える。UPDATE＝表の「中身」を変える。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🗄️</div>
+    <div class="ru-text">たとえば、引き出し付きの棚を考えます。<strong>棚に引き出しを1つ足す</strong>のが<code>ALTER</code>、<strong>引き出しの中の物を入れ替える</strong>のが<code>UPDATE</code>です。</div>
+  </div>
+  <p class="code-label">▶ 列（引き出し）を足す</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> note <span class="kw">TEXT</span>;</span>
+</pre>
+  <p class="code-label">▶ 中身を書き換える</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span> <span class="kw">WHERE</span> post_id = <span class="nm">1</span>;</span>
+</pre>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>WHEREを書き忘れると、30行ぜんぶが書き換わります。</strong>「どの行？」を必ず書きましょう。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>SET＝何にするか。WHERE＝どの行か。この2つをセットで考えます。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. ALTERは何を変える？<span class="cp-a">A. 表の構造（列を足す・型を変えるなど）。</span></div><div class="cp-q">Q2. UPDATEでWHEREを忘れると？<span class="cp-a">A. 全行（この教材では30行）が書き換わる。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>バックアップをとってから直す</h2><div class="unit-sub">コピーを作ってから、宿題を書き直す</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>直す前にコピーを取る。</strong>失敗しても、コピーから戻せます。</p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">📋</div>
+    <div class="ru-text">大事な宿題を書き直す前に、<strong>コピー機でコピーを取る</strong>のと同じです。SQLでは<code>CREATE TABLE ... AS SELECT</code>を使います。</div>
+  </div>
+  <p class="code-label">▶ ds_jobsのコピーを作る</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs_backup <span class="kw">AS</span></span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> ds_jobs;</span>
+</pre>
+  <p class="code-label">▶ 'Sr.'を'Senior'に置き換える（REPLACE）</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = REPLACE(job_title, <span class="st">'Sr.'</span>, <span class="st">'Senior'</span>);</span>
+</pre>
+<div class="output-reveal">UPDATE 2   （post_id 5 と 19 が 'Senior Data Scientist' に）</div>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>順番が大事。</strong>先に<code>'Sr.'</code>（ピリオド付き）、あとで<code>'Sr'</code>。逆にすると<code>'Senior.'</code>のようにピリオドが残ります。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>最後に<code>GROUP BY job_title</code>で数えると、<code>'Senior Data Scientist'</code>が9行にそろいます。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. なぜ先にバックアップを取るの？<span class="cp-a">A. UPDATEを間違えたとき、コピーから元のデータに戻せるから。</span></div><div class="cp-q">Q2. 'Sr'を先に置き換えるとどうなる？<span class="cp-a">A. 'Sr.'が'Senior.'になり、ピリオドが残ってしまう。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>会社名の後ろの「評価」を消す</h2><div class="unit-sub">名前にくっついた数字をはさみで切る</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>後ろの3文字（例：4.4）を切り落とす。ただし評価がついている行だけ。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">✂️</div>
+    <div class="ru-text"><code>Bluepeak Studios4.4</code>の後ろの<code>4.4</code>は、評価がくっついたゴミです。<strong>全体の長さ−3文字</strong>だけ残せば消えます。</div>
+  </div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> company_name = <span class="kw">SUBSTRING</span>(company_name, <span class="nm">1</span>, <span class="kw">LENGTH</span>(company_name) - <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">RIGHT</span>(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span>
+</pre>
+<div class="output-reveal">UPDATE 25   （'Bluepeak Studios4.4' → 'Bluepeak Studios'）</div>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>WHEREがないと、きれいな名前まで削れます。</strong>たとえば<code>Open Door Health</code>が<code>Open Door Hea</code>になってしまいます。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>'_._'</code>は「何か1文字・ドット・何か1文字」。評価の形（4.4など）の行だけを選ぶ目印です。実行前に同じWHEREでSELECTして、25行だと確認しましょう。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SUBSTRINGの位置は0から？1から？<span class="cp-a">A. 1から数える。</span></div><div class="cp-q">Q2. WHEREで何をしているの？<span class="cp-a">A. 評価がついた25行だけを選び、きれいな5行を守っている。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>-1 を本物の NULL にする</h2><div class="unit-sub">「わからない」を、ちゃんと「空っぽ」にする</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>-1は「わからない」の代わりに入っただけ。</strong>NULLに直すと、計算が正しくなります。</p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🕳️</div>
+    <div class="ru-text">テストの「未受験」を<strong>0点</strong>と書くと、平均が下がりますよね。<code>-1</code>も同じ。本物の「空っぽ」＝<code>NULL</code>にします。</div>
+  </div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> competitors = <span class="kw">NULL</span></span>
+<span class="cl"><span class="kw">WHERE</span> competitors = <span class="st">'-1'</span>;</span>
+</pre>
+<div class="output-reveal">UPDATE 13</div>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>文字の列は<code>'-1'</code>（引用符あり）、数字の列は<code>-1</code>（引用符なし）。</strong><code>competitors</code>は文字の列、<code>rating</code>は数字の列です。</div>
+  </div>
+  <p class="code-label">▶ COUNT(rating)の変化</p>
+<div class="output-reveal">直す前： COUNT(rating) = 30
+直した後： COUNT(rating) = 25   （COUNT(*)は30のまま）</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>COUNT(列)はNULLを数えません。数が減れば、-1がNULLに変わった証拠です。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. competitorsの'-1'に引用符が必要なのはなぜ？<span class="cp-a">A. competitorsがTEXT（文字）の列だから。</span></div><div class="cp-q">Q2. 直した後、COUNT(rating)は？<span class="cp-a">A. 25。NULLの5行が数えられなくなるから。</span></div></div>
+</div>
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m7_wrangling_clean.html">🧹 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• ALTER＝形を変える、UPDATE＝中身を変える</p><p style="margin:.4rem 0">• 直す前に<code>CREATE TABLE ... AS SELECT</code>でバックアップ</p><p style="margin:.4rem 0">• WHEREを忘れると全行が変わる</p><p style="margin:.4rem 0">• -1は<code>SET 列 = NULL WHERE 列 = '-1'</code>でNULLに</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しい解説と英語MCQクイズは <a href="m7_wrangling_clean.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：M7 データ整形② クリーニング — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m7_wrangling_clean.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7+ データの検査と安全な修復（教科書10章）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7+ 🧩 教科書10章 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M7+ · Inspecting & Modifying Data (textbook Ch.10)</div>
+  <h1>🧩 M7+：重複検出・length診断・安全な修復</h1>
+  <p>ここまでのM7は講義動画の内容でした。この1本は<strong>講義では扱っていない、教科書『Practical SQL 完全ガイド』第10章（データの検査と変更）の内容</strong>です。「壊れたデータを見つける」「バックアップを取ってから直す」「消し方の違いを知る」という、データ整形の安全な作法を身につけます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 重複と表記ゆれ</a><a href="#unit2">② length()診断</a><a href="#unit3">③ バックアップと修復</a><a href="#unit4">④ テーブルをまたぐUPDATE</a><a href="#unit5">⑤ DELETE・TRUNCATE・DROP</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>重複と表記ゆれを探す</h2><div class="unit-sub">GROUP BY ... HAVING count(*) &gt; 1 で「データのインタビュー」</div></div>
+  </div>
+  <p>データを直す前に、まず<strong>「何がおかしいのか」を調べる</strong>のが鉄則です。教科書10章ではこれを「データのインタビュー」と呼び、最初の道具として<code>GROUP BY ... HAVING count(*) &gt; 1</code>を使います。M4で学んだGROUP BYとHAVINGの応用です。</p>
+  <div class="note-box">📖 <strong>教科書の題材について：</strong>教科書（Listing 10-2〜10-5）は米国の食肉・食鳥・卵処理施設のテーブル<code>meat_poultry_egg_establishments</code>（6,287行）を使っています。このページでは同じ考え方を、練習用の<code>ds_jobs</code>（30行）に当てはめて説明します。この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。</div>
+  <h3>重複レコードを探す（複数列でGROUP BY）</h3>
+  <p>「同じ会社・同じ場所」の行が2回以上入っていないかを調べます。重複の定義に使う列を全部<code>GROUP BY</code>に並べ、<code>HAVING count(*) &gt; 1</code>で「2行以上あるグループ」だけを残します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> company_name, location, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> company_name, location</span>
+<span class="cl"><span class="kw">HAVING</span> count(*) &gt; <span class="nm">1</span>;</span>
+</pre>
+<div class="output-reveal">(0 rows)</div>
+  <div class="teal-box">📌 <strong>「0行」は立派な結果です。</strong>エラーではなく「company_name＋locationの組で重複は1つもない」という確認ができたことを意味します。検査クエリは、問題が見つからなければ0行で返る、と覚えましょう。</div>
+  <h3>表記ゆれを探す（1列でGROUP BY）</h3>
+  <p>同じものが違う綴りで入っていないかは、その列だけで<code>GROUP BY</code>して件数を数え、目で見ます。教科書のListing 10-5では会社名<code>Armour-Eckrich Meats</code>が4通りの綴りに分かれていました。ds_jobsでは<code>job_title</code>が該当します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> job_title, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> job_title</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> job_title;</span>
+</pre>
+<div class="output-reveal">job_title | n
+Business Intelligence Analyst | 3
+Data Analyst | 4
+Data Engineer | 3
+Data Scientist | 6
+Machine Learning Engineer | 3
+Research Scientist | 2
+Senior Data Scientist | 3
+Senior. Data Scientist - | 2
+Sr Data Scientist | 2
+Sr. Data Scientist | 2
+(10 rows)</div>
+  <p>下の4行は、本来どれも「Senior Data Scientist」のはずなのに、<code>Senior Data Scientist</code>（3件）・<code>Sr. Data Scientist</code>（2件）・<code>Sr Data Scientist</code>（2件）・<code>Senior. Data Scientist -</code>（2件）と<strong>4通りの綴り</strong>に分かれています。ORDER BYで並べておくと、似た綴りが隣同士に集まって気づきやすくなります。</p>
+  <h3>HAVINGで「繰り返し登場する値」だけ絞る</h3>
+  <p>HAVINGは「グループ化したあとの絞り込み」でした。3件以上ある職種名だけを見たいときは次のようにします。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> job_title, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> job_title</span>
+<span class="cl"><span class="kw">HAVING</span> count(*) &gt; <span class="nm">2</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span>, job_title;</span>
+</pre>
+<div class="output-reveal">job_title | n
+Data Scientist | 6
+Data Analyst | 4
+Business Intelligence Analyst | 3
+Data Engineer | 3
+Machine Learning Engineer | 3
+Senior Data Scientist | 3
+(6 rows)</div>
+  <div class="warn-box">⚠️ <strong>WHEREとHAVINGの使い分け：</strong><code>count(*)</code>のような集計結果で絞るときは<code>WHERE</code>ではなく<code>HAVING</code>です。WHEREはグループ化の前に行を絞り、HAVINGはグループ化のあとにグループを絞ります。</div>
+  <p>2列でGROUP BYすると「同じ職種＋同じ業種」の組み合わせの重複も見つかります。<code>GROUP BY job_title, sector HAVING count(*) &gt; 1</code>を実行すると5組（例：<code>Data Engineer</code>×<code>Information Technology</code>が2件）が返ります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>GROUP BY</code>で「同じ値ごとの山」を作り、<code>count(*)</code>で山の高さを見ます。山が2以上（<code>HAVING count(*) &gt; 1</code>）なら重複。1列だけで山を作れば、綴り違いの山が別々に並ぶので表記ゆれが見つかります。</p></div>
+  <div class="practice-card" id="p-w4-u1">
+    <div class="ptitle">💻 ミニ練習：繰り返し登場する職種を探す</div>
+    <p class="ptask"><code>ds_jobs</code>を<code>job_title</code>でグループ化し、<strong>2回より多く（3件以上）登場する職種</strong>だけを、<code>job_title</code>と件数<code>n</code>で返すSQLを書いてください（<code>HAVING</code>を使う）。</p>
+    <textarea class="code-editor" id="p-w4-u1-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w4-u1', ['SELECT', 'GROUP BY', 'HAVING', 'COUNT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w4-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w4-u1-result"></div>
+    <div class="answer-reveal" id="p-w4-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> job_title, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> job_title</span>
+<span class="cl"><span class="kw">HAVING</span> count(*) &gt; <span class="nm">2</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span>;</span></pre>
+      <p class="answer-note">集計結果（件数）で絞るのでWHEREではなくHAVINGを使います。結果は6行（Data Scientistが6件で最多）になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>length() で形式の異常を見つける</h2><div class="unit-sub">GROUP BY length(列) で「仲間はずれの長さ」を探す</div></div>
+  </div>
+  <p>データが「なんとなく変」なとき、値の<strong>長さ</strong>を数えると異常が浮かび上がることがあります。教科書のListing 10-6では、5桁のはずの郵便番号（ZIP）が、Excelで数値扱いされて先頭の0が消え、3〜4文字になっていました。<code>length()</code>で<code>GROUP BY</code>すれば一目瞭然です。</p>
+  <div class="viz">
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">📊</span><div class="step-text"><strong>length(列)でGROUP BY</strong><span>長さごとの件数を出して、分布を眺める</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔎</span><div class="step-text"><strong>少数派の長さに注目</strong><span>ほとんどが同じ長さなら、外れた長さが怪しい</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🎯</span><div class="step-text"><strong>WHERE length(列) &lt; N で怪しい行を取り出す</strong><span>原因を確認してから修復に進む</span></div></div>
+    </div>
+  </div>
+  <div class="note-box">📖 <strong>教科書の例：</strong>meat_poultry_egg_establishmentsで<code>SELECT length(zip), count(*) FROM ... GROUP BY length(zip)</code>とすると、3文字：86件・4文字：496件・5文字（正常）：5,705件と分かりました。同じ手順をds_jobsに使います。</div>
+  <h3>job_descriptionの長さを調べる</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> LENGTH(job_description) <span class="kw">AS</span> len, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> LENGTH(job_description)</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> len;</span>
+</pre>
+<div class="output-reveal">len | n
+0 | 1
+3 | 2
+32 | 2
+33 | 3
+34 | 1
+37 | 1
+...（以下 38〜52文字が続く）
+(17 rows)</div>
+  <p>普通の説明文は30文字台〜50文字台なのに、<strong>長さ0が1件・長さ3が2件</strong>だけ飛び抜けて短いことが分かります。<code>WHERE</code>で取り出してみましょう。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> post_id, job_description, LENGTH(job_description) <span class="kw">AS</span> len</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_description) &lt; <span class="nm">5</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
+</pre>
+<div class="output-reveal">post_id | job_description | len
+11 | TBD | 3
+18 | n/a | 3
+29 |  | 0
+(3 rows)</div>
+  <p><code>'TBD'</code>（未定）、<code>'n/a'</code>（該当なし）、そして<strong>空文字列<code>''</code></strong>の3件です。空文字列は「値が空」という値であり、<code>NULL</code>とは別物なので、<code>IS NULL</code>では見つかりません。長さで探す方法が有効な理由はここにあります。</p>
+  <h3>数値の桁数も、TEXTにして数えられる</h3>
+  <p><code>length()</code>は文字列用の関数なので、数値列は<code>CAST(founded AS TEXT)</code>で文字列にしてから数えます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> LENGTH(CAST(founded <span class="kw">AS</span> <span class="kw">TEXT</span>)) <span class="kw">AS</span> len, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> LENGTH(CAST(founded <span class="kw">AS</span> <span class="kw">TEXT</span>))</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> len;</span>
+</pre>
+<div class="output-reveal">len | n
+2 | 2
+4 | 28
+(2 rows)</div>
+  <p>設立年は4桁のはずなのに、長さ2が2件あります。<code>WHERE LENGTH(CAST(founded AS TEXT)) &lt;&gt; 4</code>で確認すると、post_id 11と18の<code>founded</code>が<code>-1</code>（「-」の1文字＋数字の1文字＝2文字）でした。<code>-1</code>は「不明」を表すダミー値（センチネル）です。</p>
+  <div class="teal-box">📌 <strong>length()検査のコツ：</strong>①まず<code>GROUP BY length(列)</code>で分布を見る、②少数派の長さを<code>WHERE</code>で取り出す、③原因（先頭0の欠落・ダミー値・空文字列など）を特定してから修復、の順に進めます。会社名（<code>company_name</code>）の長さを見ても12〜30文字に散らばるだけで、長さで異常は見つかりません。「長さが揃うべき列」にこそ有効な検査です。</div>
+  <div class="note-box">💡 <strong>PostgreSQLでは：</strong><code>length()</code>のほか<code>char_length()</code>も使えます。この演習アリーナでもどちらも動きます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>length()</code>は文字数を数えるだけの関数ですが、「本来は同じ長さのはず」の列ではとても優秀な検査役です。長さの分布を出して、仲間はずれの長さを探しましょう。</p></div>
+  <div class="practice-card" id="p-w4-u2">
+    <div class="ptitle">💻 ミニ練習：短すぎる説明文を見つける</div>
+    <p class="ptask"><code>ds_jobs</code>から、<code>job_description</code>の長さが<strong>5文字未満</strong>の行の<code>post_id</code>と<code>job_description</code>を返すSQLを、<code>LENGTH()</code>を使って書いてください（結果は3行）。</p>
+    <textarea class="code-editor" id="p-w4-u2-input" rows="6">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w4-u2', ['SELECT', 'LENGTH', 'WHERE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w4-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w4-u2-result"></div>
+    <div class="answer-reveal" id="p-w4-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id, job_description</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_description) &lt; <span class="nm">5</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span></pre>
+      <p class="answer-note"><code>LENGTH()</code>を<code>WHERE</code>の中で使えば、条件に合う行だけを取り出せます。TBD・n/a・空文字列の3行が返ります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>列単位のバックアップと安全な修復</h2><div class="unit-sub">ADD COLUMN でコピー → 狭い WHERE で UPDATE → RETURNING で確認</div></div>
+  </div>
+  <p>異常が見つかったら、次は<strong>直す</strong>番です。ただし<code>UPDATE</code>は元に戻せません（<code>COMMIT</code>済みなら特に）。教科書10章は、修正前に<strong>バックアップを取る</strong>ことを強く勧めています。ここでは特に<strong>「列単位のバックアップ」</strong>を練習します。</p>
+  <h3>(a) 1列だけをテーブル内にバックアップする</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER</span> <span class="kw">TABLE</span> ds_jobs <span class="kw">ADD</span> <span class="kw">COLUMN</span> job_title_copy <span class="kw">TEXT</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> job_title_copy = job_title;</span>
+</pre>
+  <p>これでds_jobsに<code>job_title_copy</code>列ができ、修正前の職種名が全30行ぶん保存されます。後で元に戻したくなったら、逆向きに代入します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> job_title = job_title_copy;</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>WHEREのないUPDATEは全行に効きます。</strong>上の2つは意図的に全行を対象にしていますが、普通の修正では必ず<code>WHERE</code>で対象を絞ります。</div>
+  <h3>(b) 狭いWHEREで直し、RETURNINGで結果をすぐ確認</h3>
+  <p><code>RETURNING</code>はPostgreSQL独自の句で、<code>UPDATE</code>した行を、そのままSELECTしたように返してくれます（この演習アリーナでも動きます）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = <span class="st">'Senior Data Scientist'</span></span>
+<span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">15</span></span>
+<span class="cl"><span class="kw">RETURNING</span> post_id, job_title, job_title_copy;</span>
+</pre>
+<div class="output-reveal">post_id | job_title | job_title_copy
+15 | Senior Data Scientist | Senior. Data Scientist -
+(1 rows)</div>
+  <p>修正後の値（<code>job_title</code>）と、バックアップに残った元の値（<code>job_title_copy</code>）が並んで見えるので、間違いにすぐ気づけます。</p>
+  <h3>(c) LIKEの前方一致でまとめて標準化する</h3>
+  <p>表記ゆれのうち<code>Sr</code>で始まるものは、別の新しい列に標準名を入れて直すのが安全です。教科書ではcompany_standard列で同じことをしています（<code>WHERE company LIKE 'Armour%'</code>）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER</span> <span class="kw">TABLE</span> ds_jobs <span class="kw">ADD</span> <span class="kw">COLUMN</span> title_standard <span class="kw">TEXT</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> title_standard = job_title;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> title_standard = <span class="st">'Senior Data Scientist'</span></span>
+<span class="cl"><span class="kw">WHERE</span> job_title <span class="kw">LIKE</span> <span class="st">'Sr%'</span></span>
+<span class="cl"><span class="kw">RETURNING</span> post_id, job_title, title_standard;</span>
+</pre>
+<div class="output-reveal">post_id | job_title | title_standard
+5 | Sr. Data Scientist | Senior Data Scientist
+9 | Sr Data Scientist | Senior Data Scientist
+19 | Sr. Data Scientist | Senior Data Scientist
+23 | Sr Data Scientist | Senior Data Scientist
+(4 rows)</div>
+  <div class="warn-box">⚠️ <strong>まだ終わっていません：</strong><code>LIKE 'Sr%'</code>にヒットしたのは4件だけです。<code>Senior. Data Scientist -</code>（post_id 15, 28）は<code>Se</code>で始まるので拾えません。前方一致の条件は「拾いすぎ」と「拾い漏れ」の両方を確認しましょう。なお<code>LIKE</code>はPostgreSQLでは大文字小文字を区別しますが、この演習アリーナ（SQLite）では区別しません（PostgreSQLで区別しない検索は<code>ILIKE</code>）。</div>
+  <h3>(d) 連結演算子 || で欠けた文字を補う</h3>
+  <p>教科書では、先頭の0が消えたZIPコードを<code>SET zip = '00' || zip WHERE st IN ('PR','VI') AND length(zip) = 3</code>のように<strong>条件付きで</strong>直しました。同じ手順を、post_idから3桁の求人コードを作る場面で試します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER</span> <span class="kw">TABLE</span> ds_jobs <span class="kw">ADD</span> <span class="kw">COLUMN</span> job_code <span class="kw">TEXT</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> job_code = CAST(post_id <span class="kw">AS</span> <span class="kw">TEXT</span>);</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm">-- 1桁の行だけに '00' を、2桁の行だけに '0' を足す</span></span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> job_code = <span class="st">'00'</span> || job_code</span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_code) = <span class="nm">1</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> job_code = <span class="st">'0'</span> || job_code</span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_code) = <span class="nm">2</span>;</span>
+</pre>
+  <p>1回目のUPDATEで<code>001</code>〜<code>009</code>の9行が変わり、2回目で10〜30の21行が<code>010</code>〜<code>030</code>になります。最後に<code>SELECT LENGTH(job_code), count(*) ... GROUP BY LENGTH(job_code)</code>で確認すると、全30行が長さ3で揃います。</p>
+  <div class="note-box">💡 <strong>LPADという近道：</strong><code>LPAD(CAST(post_id AS TEXT), 3, '0')</code>なら左を0で埋めて3桁にする1行で済み、たとえば<code>3</code>→<code>003</code>、<code>12</code>→<code>012</code>になります。ただし<code>UPDATE</code>ではWHEREで直す行を限定する考え方が大切なので、まず<code>||</code>と<code>WHERE length()</code>の型を身につけましょう。</div>
+  <div class="warn-box">⚠️ <strong>順番に注意：</strong>先に「2桁に<code>'0'</code>を足す」を実行すると、1桁に<code>'00'</code>を足した直後の行（3桁）は対象外ですが、逆順や条件なしで実行すると3桁の行に余計な0が付いてしまいます。<strong>直したい行だけに当たるWHERE</strong>が命です。</div>
+  <h3>(e) バックアップは「テーブル」と「列」のどちらが良い？</h3>
+  <table class="compare-table">
+    <tr><th></th><th>テーブルのバックアップ</th><th>列のバックアップ</th></tr>
+    <tr><td>作り方</td><td><code>CREATE TABLE ds_jobs_backup AS SELECT * FROM ds_jobs;</code></td><td><code>ALTER TABLE ... ADD COLUMN x_copy TEXT;</code> ＋ <code>UPDATE ... SET x_copy = x;</code></td></tr>
+    <tr><td>守れる範囲</td><td>全列・全行（ds_jobsなら30行×15列）</td><td>その1列だけ</td></tr>
+    <tr><td>復元</td><td>別テーブルから値を戻す（結合が必要なことも）</td><td><code>UPDATE ... SET x = x_copy;</code>で1文</td></tr>
+    <tr><td>注意点</td><td>インデックスや主キー制約はコピーされない</td><td>元テーブルが太る。作業後に<code>DROP COLUMN</code>で片付ける</td></tr>
+  </table>
+  <p>迷ったら、大きな変更の前はテーブル丸ごとのバックアップ、1列だけの修正なら列バックアップ、と使い分けます。両方取っても構いません。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>直す前に「コピー」を取っておけば、失敗しても元に戻せます。直すときは<code>WHERE</code>で直したい行だけを指名し、<code>RETURNING</code>で結果をその場で確認。全行を巻き込むUPDATEは事故のもとです。</p></div>
+  <div class="practice-card" id="p-w4-u3">
+    <div class="ptitle">💻 ミニ練習：バックアップを取ってから直す</div>
+    <p class="ptask"><code>ds_jobs</code>に<code>job_title_copy</code>（TEXT）列を追加して<code>job_title</code>をコピーしたあと、post_id 9の<code>job_title</code>を<code>'Senior Data Scientist'</code>に直し、<code>RETURNING</code>で<code>post_id</code>・<code>job_title</code>・<code>job_title_copy</code>を返すSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-w4-u3-input" rows="8">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w4-u3', ['UPDATE', 'RETURNING'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w4-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w4-u3-result"></div>
+    <div class="answer-reveal" id="p-w4-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">ALTER</span> <span class="kw">TABLE</span> ds_jobs <span class="kw">ADD</span> <span class="kw">COLUMN</span> job_title_copy <span class="kw">TEXT</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> job_title_copy = job_title;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = <span class="st">'Senior Data Scientist'</span></span>
+<span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">9</span></span>
+<span class="cl"><span class="kw">RETURNING</span> post_id, job_title, job_title_copy;</span></pre>
+      <p class="answer-note">先に列バックアップを作り、狭い<code>WHERE post_id = 9</code>で1行だけ修正します。<code>RETURNING</code>で、修正後とバックアップ（<code>Sr Data Scientist</code>）を並べて確認できます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>テーブルをまたぐ UPDATE</h2><div class="unit-sub">相関サブクエリ＋EXISTS と UPDATE ... FROM</div></div>
+  </div>
+  <p>教科書10章の後半には「<strong>別のテーブルの値を使って更新する</strong>（Updating Values Across Tables）」という節があります。M6で学んだJOINやサブクエリの発想を<code>UPDATE</code>に持ち込む技です。ここでは、対応表<code>ownership_map</code>を使って<code>ds_jobs.type_of_ownership</code>の長い名前を短いラベルにそろえます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> ownership_map;</span>
+</pre>
+<div class="output-reveal">raw_label | clean_label
+Company - Private | Private
+Company - Public | Public
+Nonprofit Organization | Nonprofit
+Government | Government
+Subsidiary or Business Segment | Subsidiary
+College / University | Education
+Private Practice / Firm | Private
+(7 rows)</div>
+  <div class="note-box">📖 <strong>教科書の題材について：</strong>教科書（Listing 10-18〜10-19）では、州コードと地域名の対応表<code>state_regions</code>を作り、<code>WHERE EXISTS</code>のサブクエリで「New Englandの州の会社だけ」に検査期限（inspection_deadline）を入れています。ここでは同じ考え方で、対応表<code>ownership_map</code>（raw_label→clean_label）を使います。</div>
+  <h3>(1) 相関サブクエリ形式</h3>
+  <p>SET句の右辺に、<code>ownership_map</code>から対応する<code>clean_label</code>を探すサブクエリを書きます。サブクエリの中で外側の<code>ds_jobs.type_of_ownership</code>を参照するので「相関サブクエリ」（M6）です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl">    <span class="kw">SELECT</span> clean_label</span>
+<span class="cl">    <span class="kw">FROM</span> ownership_map</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="nm">1</span></span>
+<span class="cl">    <span class="kw">FROM</span> ownership_map</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">);</span>
+</pre>
+  <h3>なぜ WHERE EXISTS が必要か</h3>
+  <p>ds_jobsの30行のうち、<code>ownership_map</code>に対応があるのは<strong>27行</strong>で、対応がないのは<strong>3行</strong>（post_id 11の<code>'Unknown'</code>、post_id 18と29の<code>'-1'</code>）です。もし<code>WHERE EXISTS</code>を<strong>付けなかったら</strong>どうなるでしょう。</p>
+<pre class="code-block">
+<span class="cl"><span class="cm">-- 危険：WHERE EXISTS が無い</span></span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl">    <span class="kw">SELECT</span> clean_label <span class="kw">FROM</span> ownership_map</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">);</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, type_of_ownership <span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> type_of_ownership <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
+</pre>
+<div class="output-reveal">post_id | type_of_ownership
+11 | NULL
+18 | NULL
+29 | NULL
+(3 rows)</div>
+  <div class="warn-box">⚠️ <strong>対応のない3行が NULL に上書きされました！</strong>サブクエリは該当行が無いとNULLを返し、WHEREなしのUPDATEは全30行に効くので、元の値（<code>Unknown</code>や<code>-1</code>）が消えてしまいます。<code>WHERE EXISTS (...)</code>で「対応がある27行だけ」を更新対象にするのが安全です。</div>
+  <p>ガード付きで実行した後の分布は次の通りです。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> type_of_ownership, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> type_of_ownership</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span>, type_of_ownership;</span>
+</pre>
+<div class="output-reveal">type_of_ownership | n
+Private | 11
+Public | 8
+Nonprofit | 3
+-1 | 2
+Government | 2
+Subsidiary | 2
+Education | 1
+Unknown | 1
+(8 rows)</div>
+  <p><code>Company - Private</code>（10件）と<code>Private Practice / Firm</code>（1件）が<code>Private</code>にまとまって11件になり、<code>-1</code>と<code>Unknown</code>の3行は手つかずで残りました。</p>
+  <h3>(2) UPDATE ... FROM 形式（PostgreSQL）</h3>
+  <p>PostgreSQLには、JOIN風に書ける<code>UPDATE ... FROM ... WHERE</code>もあります。更新元テーブルを<code>FROM</code>に並べ、<code>WHERE</code>で結合条件を書くだけです。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> type_of_ownership = ownership_map.clean_label</span>
+<span class="cl"><span class="kw">FROM</span> ownership_map</span>
+<span class="cl"><span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership;</span>
+</pre>
+  <p>結合条件に合う行だけが更新されるので、<strong>一致しない3行は自然に対象外</strong>になり、EXISTSのガードが不要です。結果は(1)と同じ（27行更新）です。</p>
+  <table class="compare-table">
+    <tr><th></th><th>(1) 相関サブクエリ＋EXISTS</th><th>(2) UPDATE ... FROM</th></tr>
+    <tr><td>書き方</td><td>どのDBでも通りやすい標準的な書き方</td><td>PostgreSQL（とSQLite 3.33以降）の拡張構文</td></tr>
+    <tr><td>一致しない行</td><td>EXISTSを忘れるとNULLで上書き</td><td>結合条件で自動的に対象外</td></tr>
+    <tr><td>複数列を更新</td><td>列ごとにサブクエリが必要</td><td>SETに複数列を並べるだけ</td></tr>
+  </table>
+  <div class="note-box">💡 この演習アリーナでは、(1)も(2)も動きます。ただし更新の前に、<code>SELECT count(*) ... WHERE EXISTS (...)</code>で対象が27行であることを確認する習慣を付けましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「対応表を見ながら書き換える」作業です。表に載っている行だけ書き換え、載っていない行は触らない。これを保証するのが<code>WHERE EXISTS</code>（または<code>UPDATE ... FROM</code>）の役割です。</p></div>
+  <div class="practice-card" id="p-w4-u4">
+    <div class="ptitle">💻 ミニ練習：対応表で type_of_ownership を標準化</div>
+    <p class="ptask"><code>ownership_map</code>を使って<code>ds_jobs.type_of_ownership</code>を<code>clean_label</code>に置き換える<code>UPDATE</code>を書いてください。<strong>対応表にない行はNULLにならないよう</strong>、<code>WHERE EXISTS</code>のガードを付けること（27行が更新される）。</p>
+    <textarea class="code-editor" id="p-w4-u4-input" rows="10">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w4-u4', ['UPDATE', 'ownership_map', 'SELECT'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w4-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w4-u4-result"></div>
+    <div class="answer-reveal" id="p-w4-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl">    <span class="kw">SELECT</span> clean_label</span>
+<span class="cl">    <span class="kw">FROM</span> ownership_map</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="nm">1</span></span>
+<span class="cl">    <span class="kw">FROM</span> ownership_map</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">);</span></pre>
+      <p class="answer-note">SET句のサブクエリで対応するclean_labelを引き、WHERE EXISTSで対応がある27行に限定します。ガードが無いと対応のない3行がNULLになります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>DELETE・TRUNCATE・DROP の違い</h2><div class="unit-sub">消す範囲の違いと、トランザクションによる安全策</div></div>
+  </div>
+  <p>データを消す操作には4つの強さがあります。教科書10章の表に沿って整理しましょう。</p>
+  <table class="compare-table">
+    <tr><th>コマンド</th><th>何が消えるか</th><th>WHERE</th><th>元に戻せる？</th></tr>
+    <tr><td><code>DELETE FROM t WHERE ...</code></td><td>条件に合う行だけ</td><td>使える</td><td>トランザクション内なら<code>ROLLBACK</code>で可</td></tr>
+    <tr><td><code>TRUNCATE t</code></td><td>全行を高速に削除（行ごとの走査をしない）</td><td>使えない</td><td>PostgreSQLはトランザクション内なら可</td></tr>
+    <tr><td><code>ALTER TABLE t DROP COLUMN c</code></td><td>列とその中のデータ</td><td>―</td><td>バックアップ列・テーブルがなければ不可</td></tr>
+    <tr><td><code>DROP TABLE t</code></td><td>テーブル全体（構造もデータも）</td><td>―</td><td>バックアップがなければ不可</td></tr>
+  </table>
+  <div class="note-box">💡 <code>TRUNCATE t RESTART IDENTITY</code>（連番のカウンタも初期化）は<strong>PostgreSQLだけ</strong>の機能です。演習アリーナではTRUNCATEは全行削除として動きますが、RESTART IDENTITYの意味までは再現されません。</div>
+  <h3>DELETEの前に、まずSELECTでプレビュー</h3>
+  <p>消す前に、同じ<code>WHERE</code>を<code>SELECT</code>に付けて「何が消えるか」を確認します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> post_id, company_name, rating</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> rating = -<span class="nm">1</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
+</pre>
+<div class="output-reveal">post_id | company_name | rating
+4 | Open Door Health | -1
+11 | Brightside Labs | -1
+18 | Harbor Analytics | -1
+25 | Riverbend Institute | -1
+29 | Cedar Health | -1
+(5 rows)</div>
+  <p><code>rating = -1</code>は「評価なし」を表すダミー値でした。5行が対象だと分かったので、次はそのDELETEを<strong>トランザクションの中で</strong>試します。</p>
+  <h3>トランザクションで「試して、戻す」</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">START</span> <span class="kw">TRANSACTION</span>;</span>
+<span class="cl"><span class="kw">DELETE</span> <span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> rating = -<span class="nm">1</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">AS</span> remaining <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">ROLLBACK</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">AS</span> after_rollback <span class="kw">FROM</span> ds_jobs;</span>
+</pre>
+<div class="output-reveal">remaining
+25
+
+after_rollback
+30</div>
+  <p>トランザクション中は30行から25行に減っています（5行削除）が、<code>ROLLBACK</code>で全部なかったことになり、<code>after_rollback</code>は30に戻りました。結果に満足したら、<code>ROLLBACK</code>の代わりに<code>COMMIT</code>で確定します。</p>
+  <div class="warn-box">⚠️ <strong>COMMITした後は戻せません。</strong>そして、<code>DELETE FROM ds_jobs;</code>のようにWHEREを付け忘れると全30行が消えます。「SELECTでプレビュー → トランザクション内で実行 → 件数確認 → COMMIT」の流れを習慣にしましょう。</div>
+  <div class="note-box">💡 PostgreSQLの<code>START TRANSACTION</code>は、この演習アリーナでも自動変換されてそのまま動きます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>DELETE</code>は行、<code>DROP COLUMN</code>は列、<code>DROP TABLE</code>はテーブル全体を消します。取り返しがつかない操作は、まずSELECTで確認し、トランザクションの中で試してから確定しましょう。</p></div>
+  <div class="practice-card" id="p-w4-u5">
+    <div class="ptitle">💻 ミニ練習：評価なしの行を安全に削除</div>
+    <p class="ptask">トランザクション（<code>START TRANSACTION</code>〜<code>ROLLBACK</code>）の中で、<code>ds_jobs</code>から<code>rating = -1</code>の行を<code>DELETE</code>し、残りの行数を<code>SELECT count(*)</code>で確認してから取り消すSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-w4-u5-input" rows="8">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w4-u5', ['DELETE', 'WHERE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w4-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w4-u5-result"></div>
+    <div class="answer-reveal" id="p-w4-u5-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">START</span> <span class="kw">TRANSACTION</span>;</span>
+<span class="cl"><span class="kw">DELETE</span> <span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> rating = -<span class="nm">1</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">AS</span> remaining <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">ROLLBACK</span>;</span></pre>
+      <p class="answer-note"><code>WHERE rating = -1</code>で5行だけを消し、<code>remaining</code>は25になります。最後の<code>ROLLBACK</code>で30行に戻ります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A duplicate check with GROUP BY company_name, location HAVING count(*) &gt; 1 returns 0 rows. What does this mean?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The query failed because HAVING needs at least one row</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No company_name and location pair occurs twice, so there are no exact duplicates</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Every pair occurs exactly once and the table has been emptied</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The GROUP BY columns must be reversed before it can work</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why must a duplicate-finding query use HAVING count(*) &gt; 1 instead of WHERE count(*) &gt; 1?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE runs before grouping, when the counts do not exist yet; HAVING filters the finished groups</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>HAVING is faster because it skips the GROUP BY step entirely</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE can only compare text values, never numbers or counts</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>PostgreSQL treats WHERE and HAVING as the same clause internally</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A job_description is '' (an empty string). Which condition finds it, along with 'TBD' and 'n/a'?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE job_description IS NULL, because empty means NULL</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE job_description = NULL, using the equals sign</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE LENGTH(job_description) &lt; 5, because the empty string has length 0</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE COUNT(job_description) = 0 without a GROUP BY</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Before fixing job_title, you want a backup inside the same table. Which script does that and lets you restore it later?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CREATE INDEX job_title_copy ON ds_jobs; then TRUNCATE ds_jobs</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>UPDATE ds_jobs SET job_title = NULL; then reload the original file</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ALTER TABLE ds_jobs DROP COLUMN job_title; then add it again</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>ALTER TABLE ds_jobs ADD COLUMN job_title_copy TEXT; UPDATE ds_jobs SET job_title_copy = job_title;</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is the purpose of RETURNING post_id, job_title at the end of an UPDATE statement in PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It rolls the UPDATE back if the value looks wrong</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It shows the updated rows immediately, so you can check the change without a separate SELECT</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It copies the rows into a new backup table automatically</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It limits the UPDATE to the first matching row only</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does the textbook repair ZIP codes with SET zip = '0' || zip WHERE length(zip) = 4 instead of a WHERE-less UPDATE?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only the rows that lost a digit are changed, so correct 5-digit values are not damaged</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because the || operator refuses to run without a length() call</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because a WHERE-less UPDATE deletes the whole table in PostgreSQL</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because '0' || zip only works on the first row of the table</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">In UPDATE ds_jobs SET type_of_ownership = (SELECT clean_label FROM ownership_map WHERE ...), what does the extra WHERE EXISTS (...) guard prevent?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Duplicate rows being inserted into ownership_map</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The ownership_map table being dropped by mistake</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows that have no mapping from being overwritten with NULL</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The subquery from running once for each mapped row</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">You run START TRANSACTION; DELETE FROM ds_jobs WHERE rating = -1; and then find the result was wrong. What should you do?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Run TRUNCATE ds_jobs to reset the table</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Run DROP TABLE ds_jobs and rebuild it from memory</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Run COMMIT so the deleted rows are restored</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Run ROLLBACK, which cancels the DELETE and restores the 5 rows</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 2, 3, 1, 0, 2, 3];
+var FEEDBACKS=["HAVING count(*) > 1 keeps only groups with two or more rows. An empty result is a valid answer: nothing is duplicated.", "Aggregates such as count(*) are computed after GROUP BY, so conditions on them belong in HAVING.", "An empty string is a real value, not NULL. LENGTH() returns 0 for it, so a length filter catches all three placeholders.", "A copy column keeps every original value, and UPDATE ds_jobs SET job_title = job_title_copy restores it whenever needed.", "RETURNING outputs the listed columns of every row the UPDATE changed, which makes mistakes visible right away.", "A narrow WHERE limits the change to the broken rows. Without it, every ZIP would get an extra 0 and become wrong.", "Without the guard, every row is updated. Rows whose raw_label is missing from ownership_map get NULL from the subquery and lose their original value.", "Changes inside an open transaction are only provisional. ROLLBACK discards them, while COMMIT would make the deletion permanent."];
+
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">HAVING count(*) &gt; 1</div>
+      <div class="term-en">重複の検出</div>
+      <div class="term-def">GROUP BYの後にグループを絞る句。2行以上あるグループ＝重複を探せる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">length()</div>
+      <div class="term-en">文字数</div>
+      <div class="term-def">文字列の長さを返す関数。書式の異常や空文字列の検出に使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">RETURNING</div>
+      <div class="term-en">更新結果の即時表示</div>
+      <div class="term-def">UPDATE/DELETEで変更した行をその場で返すPostgreSQL独自句。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">|| (concatenation)</div>
+      <div class="term-en">文字列の連結</div>
+      <div class="term-def">文字列をつなぐ演算子。欠けた先頭の0を補う修復に使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">WHERE EXISTS</div>
+      <div class="term-en">存在チェック</div>
+      <div class="term-def">サブクエリが1行でも返せば真。対応のある行だけを更新対象にできる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">TRUNCATE</div>
+      <div class="term-en">全行の高速削除</div>
+      <div class="term-def">WHERE無しで全行を消すコマンド。DROP TABLEと違い表の構造は残る。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>UPDATEやDELETEの前に、(1)同じWHEREでSELECTして対象を確認、(2)バックアップ、(3)トランザクションで試す、の3点セットを習慣にしましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧩 SQLレッスン：M7+ データの検査と安全な修復（教科書10章）</p>
+  <p style="margin-top:.5rem;"><a href="m7_wrangling_txn.html">← トランザクションと分割</a> · <a href="m7_text.html">M7+② テキストマイニングへ →</a> · <a href="m7_practice_m7_plus.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -41,8 +41,318 @@ var SQL_ENGINE = (function () {
     "INSERT INTO account VALUES ('A-101','Brooklyn Bank',42000),('A-102','Brooklyn Bank',38656),('A-103','Brooklyn Bridge Bank',51000),('A-104','Midtown Bank',15000),('A-105','Midtown Bank',27000),('A-106','Downtown Bank',9000),('A-107','Bronx Central Bank',12000),('A-108','Brooklyn Bank',60000);",
     "INSERT INTO depositor VALUES ('10001','A-101'),('10002','A-102'),('10003','A-103'),('10004','A-108'),('10005','A-104'),('10006','A-105'),('10007','A-106'),('10008','A-107');",
     "INSERT INTO loan VALUES ('L-201','Brooklyn Bank',15000),('L-202','Brooklyn Bridge Bank',9000),('L-203','Midtown Bank',22000),('L-204','Downtown Bank',5000);",
-    "INSERT INTO borrower VALUES ('10002','L-201'),('10002','L-202'),('10003','L-201'),('10006','L-203');"
+    "INSERT INTO borrower VALUES ('10002','L-201'),('10002','L-202'),('10003','L-201'),('10006','L-203');",
+
+    /* M7: job-postings table used by the data-wrangling practice pages */
+    "CREATE TABLE ds_jobs (post_id INTEGER PRIMARY KEY, job_title TEXT, salary_estimate TEXT, job_description TEXT, rating REAL, company_name TEXT, location TEXT, headquarters TEXT, size TEXT, founded INTEGER, type_of_ownership TEXT, industry TEXT, sector TEXT, revenue TEXT, competitors TEXT);",
+    "INSERT INTO ds_jobs (post_id, job_title, salary_estimate, job_description, rating, company_name, location, headquarters, size, founded, type_of_ownership, industry, sector, revenue, competitors) VALUES (1,'Data Scientist','$110K-$163K (Glassdoor est.)','Build recommendation models for streaming content.',4.4,'Bluepeak Studios4.4','Burbank, CA','Burbank, CA','10000+ employees',1923,'Company - Public','Motion Picture Production','Media','$10+ billion (USD)','Starlight Media, Orbit Films'),(2,'Senior Data Scientist','$137K-$171K (Glassdoor est.)','Lead analytics projects for federal clients.',3.9,'Ironwood Consulting3.9','McLean, VA','McLean, VA','10000+ employees',1914,'Company - Private','Consulting','Business Services','$10+ billion (USD)','Vantage Group, Kessler & Co'),(3,'Data Analyst','$45K-$79K (Glassdoor est.)','Analyze clinical trial and sales data.',3.6,'Novaline Pharma3.6','Cambridge, MA','Osaka, Japan','10000+ employees',1781,'Company - Public','Biotech & Pharmaceuticals','Biotech & Pharma','$10+ billion (USD)','Curewell, Medisphere'),(4,'Data Scientist','$91K-$150K (Glassdoor est.)','Support outcomes research for cancer patients.',-1,'Open Door Health','Orange, CA','Orange, CA','51 to 200 employees',1998,'Nonprofit Organization','Health Care Services & Hospitals','Health Care','Unknown / Non-Applicable','-1'),(5,'Sr. Data Scientist','$101K-$165K (Glassdoor est.)','Develop machine learning tools for energy research.',4.1,'Pacific Grid Laboratory4.1','Richland, WA','Richland, WA','1001 to 5000 employees',1965,'Government','Federal Agencies','Government','$1 to $2 billion (USD)','-1'),(6,'Data Engineer','$79K-$131K (Glassdoor est.)','Design and maintain ETL pipelines.',4.2,'District 94.2','Dallas, TX','Dallas, TX','201 to 500 employees',2005,'Company - Private','IT Services','Information Technology','$50 to $100 million (USD)','-1'),(7,'Machine Learning Engineer','$124K-$198K (Glassdoor est.)','Train models on genetic and survey data.',3.8,'23Genomics3.8','Sunnyvale, CA','Sunnyvale, CA','501 to 1000 employees',2006,'Company - Private','Biotech & Pharmaceuticals','Biotech & Pharma','$100 to $500 million (USD)','HelixTrace, GeneNest'),(8,'Data Analyst','$52K-$87K (Employer est.)','Report on vehicle quality and warranty data.',3.5,'Kestrel Motor Works3.5','Dearborn, MI','Dearborn, MI','10000+ employees',1903,'Company - Public','Transportation Equipment Manufacturing','Manufacturing','$10+ billion (USD)','Falcon Auto, Ridgeline Motors'),(9,'Sr Data Scientist','$98K-$154K (Glassdoor est.)','Personalize playlists and podcast recommendations.',3.8,'Streamline Audio3.8','New York, NY','Stockholm, Sweden','5001 to 10000 employees',2006,'Company - Private','Internet','Information Technology','$1 to $2 billion (USD)','Tunehive, Echo Labs, SoundArc'),(10,'Business Intelligence Analyst','$61K-$96K (Glassdoor est.)','Build dashboards for supply chain performance.',3.3,'Meridian Food Supply3.3','Houston, TX','Houston, TX','10000+ employees',1969,'Company - Public','Wholesale','Business Services','$10+ billion (USD)','-1'),(11,'Data Scientist','$75K-$133K (Glassdoor est.)','TBD',-1,'Brightside Labs','Austin, TX','-1','1 to 50 employees',-1,'Unknown','-1','-1','Unknown / Non-Applicable','-1'),(12,'Senior Data Scientist','$140K-$190K (Glassdoor est.)','Optimize content delivery and personalization.',4.6,'Cascade Streaming4.6','Los Gatos, CA','Los Gatos, CA','5001 to 10000 employees',1997,'Company - Public','Internet','Information Technology','$10+ billion (USD)','Bluepeak Studios, Orbit Films'),(13,'Data Engineer','$88K-$142K (Glassdoor est.)','Build streaming data platforms on the cloud.',3.9,'Summit Financial3.9','McLean, VA','McLean, VA','10000+ employees',1994,'Company - Public','Banks & Credit Unions','Finance','$10+ billion (USD)','Anchor Bank, Crestline Credit'),(14,'Machine Learning Engineer','$115K-$176K (Glassdoor est.)','Improve perception models for driver assistance.',4.0,'Voltaic Motors4.0','Palo Alto, CA','Austin, TX','10000+ employees',2003,'Company - Private','Transportation Equipment Manufacturing','Manufacturing','$10+ billion (USD)','-1'),(15,'Senior. Data Scientist -','$108K-$160K (Glassdoor est.)','Apply statistics to patient outcomes.',3.7,'Lakeview Medical Center3.7','Rochester, MN','Rochester, MN','10000+ employees',1864,'Nonprofit Organization','Health Care Services & Hospitals','Health Care','$10+ billion (USD)','-1'),(16,'Data Analyst','$48K-$82K (Glassdoor est.)','Analyze basket data and promotion lift.',2.9,'Greenfield Markets2.9','Cincinnati, OH','Cincinnati, OH','10000+ employees',1883,'Company - Private','Grocery Stores & Supermarkets','Retail','$10+ billion (USD)','Harvest Mart, ValueCart'),(17,'Research Scientist','$105K-$158K (Glassdoor est.)','Research signal processing and learning systems.',4.3,'Northgate Research Lab4.3','Lexington, MA','Lexington, MA','1001 to 5000 employees',1951,'College / University','Research & Development','Business Services','$500 million to $1 billion (USD)','-1'),(18,'Data Scientist','$69K-$120K (Glassdoor est.)','n/a',-1,'Harbor Analytics','Portland, OR','-1','1 to 50 employees',-1,'-1','-1','-1','Unknown / Non-Applicable','-1'),(19,'Sr. Data Scientist','$122K-$175K (Glassdoor est.)','Detect fraud patterns across financial products.',4.4,'Finchley Software4.4','San Diego, CA','Mountain View, CA','5001 to 10000 employees',1983,'Company - Private','Computer Hardware & Software','Information Technology','$5 to $10 billion (USD)','Quillsoft, Bytewell'),(20,'Business Intelligence Analyst','$58K-$92K (Glassdoor est.)','Forecast demand for seasonal inventory.',3.4,'Alder & Oak Retail3.4','Seattle, WA','Seattle, WA','10000+ employees',1901,'Company - Private','Department, Clothing, & Shoe Stores','Retail','$10+ billion (USD)','Maple Row, Birch & Co'),(21,'Data Scientist','$84K-$141K (Glassdoor est.)','Deliver machine learning proof of concepts.',3.6,'Slate Advisory3.6','Chicago, IL','Seattle, WA','5001 to 10000 employees',2001,'Company - Private','Consulting','Business Services','$1 to $2 billion (USD)','Ironwood Consulting, Kessler & Co'),(22,'Senior Data Scientist','$132K-$186K (Employer est.)','Model creative workflow and subscription churn.',4.5,'Helix Creative Tools4.5','San Jose, CA','San Jose, CA','10000+ employees',1982,'Company - Public','Computer Hardware & Software','Information Technology','$10+ billion (USD)','Finchley Software, Pixelforge'),(23,'Sr Data Scientist','$95K-$149K (Glassdoor est.)','Price risk using telematics data.',3.8,'Pinnacle Insurance Group3.8','Chevy Chase, MD','Chevy Chase, MD','10000+ employees',1936,'Subsidiary or Business Segment','Insurance Carriers','Insurance','$10+ billion (USD)','Shieldpoint, Covera'),(24,'Data Engineer','$82K-$128K (Employer est.)','Scale search indexing pipelines.',4.1,'Marketbay4.1','Brooklyn, NY','Brooklyn, NY','1001 to 5000 employees',2005,'Company - Private','Internet','Information Technology','$500 million to $1 billion (USD)','Tradewind, Shopnest'),(25,'Research Scientist','$88K-$144K (Glassdoor est.)','Study climate data with statistical models.',-1,'Riverbend Institute','Boulder, CO','Boulder, CO','51 to 200 employees',1990,'Private Practice / Firm','Research & Development','Business Services','Unknown / Non-Applicable','-1'),(26,'Machine Learning Engineer','$118K-$172K (Glassdoor est.)','Rank timelines and detect abuse.',3.7,'Chirp Social3.7','San Francisco, CA','San Francisco, CA','1001 to 5000 employees',2006,'Company - Public','Internet','Information Technology','$1 to $2 billion (USD)','Tweetwave, Loop Social'),(27,'Data Analyst','$55K-$89K (Glassdoor est.)','Track operating room utilization.',4.0,'St. Clair Health System4.0','Boston, MA','Boston, MA','10000+ employees',1994,'Nonprofit Organization','Health Care Services & Hospitals','Health Care','$10+ billion (USD)','-1'),(28,'Senior. Data Scientist -','$126K-$179K (Glassdoor est.)','Model drug discovery experiments.',3.9,'Genova Biosciences3.9','South San Francisco, CA','South San Francisco, CA','10000+ employees',1976,'Subsidiary or Business Segment','Biotech & Pharmaceuticals','Biotech & Pharma','$10+ billion (USD)','Novaline Pharma, Curewell'),(29,'Data Scientist','$72K-$125K (Glassdoor est.)','',-1,'Cedar Health','Denver, CO','Denver, CO','201 to 500 employees',2011,'-1','Health Care Services & Hospitals','Health Care','Unknown / Non-Applicable','-1'),(30,'Business Intelligence Analyst','$50K-$83K (Glassdoor est.)','Maintain reporting dashboards for surveillance data.',3.2,'County Public Health Agency3.2','Atlanta, GA','Atlanta, GA','1001 to 5000 employees',1946,'Government','Federal Agencies','Government','$1 to $2 billion (USD)','-1');",
+    "CREATE TABLE ownership_map (raw_label TEXT PRIMARY KEY, clean_label TEXT);",
+    "INSERT INTO ownership_map VALUES ('Company - Private','Private'),('Company - Public','Public'),('Nonprofit Organization','Nonprofit'),('Government','Government'),('Subsidiary or Business Segment','Subsidiary'),('College / University','Education'),('Private Practice / Firm','Private');"
   ].join("\n");
+
+  function arenaOpts() {
+    return (typeof window !== "undefined" && window.ARENA_OPTS) || {};
+  }
+  function compatOn() { return !!arenaOpts().pgCompat; }
+
+  /* ---------- PostgreSQL compatibility layer (used by the M7 pages only) ----------
+     sql.js runs SQLite, which lacks several PostgreSQL features taught in M7.
+     Custom SQL functions cover LEFT/RIGHT/SPLIT_PART/...; a small SQL rewriter
+     covers ::casts, START TRANSACTION, POSITION(x IN y), ILIKE, ~ / ~*, TRUNCATE,
+     and ALTER COLUMN ... TYPE / SET NOT NULL (done by rebuilding the table). */
+
+  function registerPgFunctions(db) {
+    // sql.js takes the SQL arity from fn.length; -1 means "any number of arguments"
+    function variadic(name, fn) {
+      Object.defineProperty(fn, "length", { value: -1 });
+      db.create_function(name, fn);
+    }
+    function S(v) { return v === null || v === undefined ? null : String(v); }
+    db.create_function("left", function (s, n) {
+      s = S(s); if (s === null || n === null) return null;
+      return n >= 0 ? s.slice(0, n) : s.slice(0, Math.max(0, s.length + n));
+    });
+    db.create_function("right", function (s, n) {
+      s = S(s); if (s === null || n === null) return null;
+      return n >= 0 ? s.slice(Math.max(0, s.length - n)) : s.slice(-n);
+    });
+    db.create_function("split_part", function (s, d, n) {
+      s = S(s); d = S(d); if (s === null || d === null || n === null) return null;
+      if (n === 0) throw new Error("field position must not be zero");
+      var parts = d === "" ? [s] : s.split(d);
+      var idx = n > 0 ? n - 1 : parts.length + n;
+      return parts[idx] === undefined ? "" : parts[idx];
+    });
+    db.create_function("strpos", function (s, sub) {
+      s = S(s); sub = S(sub); if (s === null || sub === null) return null;
+      return s.indexOf(sub) + 1;
+    });
+    db.create_function("char_length", function (s) { s = S(s); return s === null ? null : s.length; });
+    db.create_function("initcap", function (s) {
+      s = S(s); if (s === null) return null;
+      return s.toLowerCase().replace(/(^|[^a-z0-9])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); });
+    });
+    function pad(s, n, fill, left) {
+      s = S(s); fill = S(fill); if (s === null || n === null || fill === null) return null;
+      if (s.length >= n) return s.slice(0, Math.max(0, n));
+      if (fill === "") return s;
+      var need = n - s.length, p = "";
+      while (p.length < need) p += fill;
+      p = p.slice(0, need);
+      return left ? p + s : s + p;
+    }
+    // sql.js registers a function under one name for any argument count, so use optional params
+    variadic("lpad", function (s, n, f) { return pad(s, n, f === undefined ? " " : f, true); });
+    variadic("rpad", function (s, n, f) { return pad(s, n, f === undefined ? " " : f, false); });
+    function mkRe(p, flags) {
+      try { return new RegExp(p, flags); } catch (e) { throw new Error("invalid regular expression: " + e.message); }
+    }
+    db.create_function("regexp", function (p, s) {
+      s = S(s); if (s === null || p === null) return null;
+      return mkRe(String(p), "").test(s) ? 1 : 0;
+    });
+    db.create_function("regexpi", function (p, s) {
+      s = S(s); if (s === null || p === null) return null;
+      return mkRe(String(p), "i").test(s) ? 1 : 0;
+    });
+    function rre(s, p, r, f) {
+      s = S(s); if (s === null || p === null || r === null) return null;
+      f = f === null || f === undefined ? "" : String(f);
+      var rep = String(r).replace(/\$/g, "$$$$").replace(/\\(\d)/g, "$$$1");
+      return s.replace(mkRe(String(p), (f.indexOf("g") >= 0 ? "g" : "") + (f.indexOf("i") >= 0 ? "i" : "")), rep);
+    }
+    variadic("regexp_replace", function (s, p, r, f) { return rre(s, p, r, f); });
+    db.create_function("regexp_substr", function (s, p) {
+      s = S(s); if (s === null || p === null) return null;
+      var m = mkRe(String(p), "").exec(s);
+      if (!m) return null;
+      return m.length > 1 ? (m[1] === undefined ? null : m[1]) : m[0];
+    });
+  }
+
+  // Replaces comments with a space and string/identifier literals with \x01N\x01 placeholders.
+  function pgTokenize(sql) {
+    var strings = [], out = "", i = 0, n = sql.length;
+    while (i < n) {
+      var c = sql[i], d = sql[i + 1];
+      if (c === "-" && d === "-") { while (i < n && sql[i] !== "\n") i++; out += " "; continue; }
+      if (c === "/" && d === "*") { var e = sql.indexOf("*/", i + 2); i = e === -1 ? n : e + 2; out += " "; continue; }
+      if (c === "'" || c === '"') {
+        var j = i + 1;
+        while (j < n) {
+          if (sql[j] === c) { if (sql[j + 1] === c) { j += 2; continue; } break; }
+          j++;
+        }
+        strings.push(sql.slice(i, j + 1));
+        out += "\x01" + (strings.length - 1) + "\x01";
+        i = j + 1; continue;
+      }
+      out += c; i++;
+    }
+    return { code: out, strings: strings };
+  }
+  function pgRestore(code, strings) {
+    return code.replace(/\x01(\d+)\x01/g, function (m, k) { return strings[+k]; });
+  }
+  function pgFindClose(code, openIdx) {
+    var depth = 0;
+    for (var i = openIdx; i < code.length; i++) {
+      if (code[i] === "(") depth++;
+      else if (code[i] === ")") { depth--; if (depth === 0) return i; }
+    }
+    return -1;
+  }
+  // index of a top-level (depth 0) occurrence of the regex `re` in `s`, or -1
+  function pgTopLevelIndex(s, re) {
+    var depth = 0;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i] === "(") depth++;
+      else if (s[i] === ")") depth--;
+      else if (depth === 0) {
+        var m = re.exec(s.slice(i));
+        if (m && m.index === 0) return { idx: i, len: m[0].length };
+      }
+    }
+    return null;
+  }
+  function pgSplitTop(s, sep) {
+    var parts = [], depth = 0, cur = "";
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (c === "(") depth++;
+      else if (c === ")") depth--;
+      if (c === sep && depth === 0) { parts.push(cur); cur = ""; } else cur += c;
+    }
+    parts.push(cur);
+    return parts;
+  }
+  function pgRewriteFunc(code, name, rewriter) {
+    var re = new RegExp("\\b" + name + "\\s*\\(", "gi"), from = 0, m;
+    while ((m = (re.lastIndex = from, re.exec(code)))) {
+      var open = m.index + m[0].length - 1, close = pgFindClose(code, open);
+      if (close === -1) break;
+      var inner = code.slice(open + 1, close), repl = rewriter(inner);
+      if (repl === null) { from = m.index + m[0].length; continue; }
+      code = code.slice(0, m.index) + repl + code.slice(close + 1);
+      from = m.index + repl.length;
+    }
+    return code;
+  }
+  function pgRewriteCasts(code) {
+    for (var guard = 0; guard < 60; guard++) {
+      var k = code.indexOf("::");
+      if (k === -1) break;
+      var j = k - 1;
+      while (j >= 0 && /\s/.test(code[j])) j--;
+      var end = j + 1, start;
+      if (code[j] === ")") {
+        var depth = 0;
+        for (start = j; start >= 0; start--) {
+          if (code[start] === ")") depth++;
+          else if (code[start] === "(") { depth--; if (depth === 0) break; }
+        }
+        var f = start - 1;
+        while (f >= 0 && /[\w.]/.test(code[f])) f--;
+        start = f + 1;
+      } else if (code[j] === "\x01") {
+        start = code.lastIndexOf("\x01", j - 1);
+      } else {
+        start = j;
+        while (start >= 0 && /[\w.]/.test(code[start])) start--;
+        start++;
+      }
+      var operand = code.slice(start, end);
+      var rest = code.slice(k + 2), tm = rest.match(/^\s*([A-Za-z_]\w*(?:\s*\(\s*\d+(?:\s*,\s*\d+)?\s*\))?)/);
+      if (!tm || !operand) { code = code.slice(0, k) + "\x02" + code.slice(k + 2); continue; }
+      code = code.slice(0, start) + "CAST(" + operand + " AS " + tm[1] + ")" + rest.slice(tm[0].length);
+    }
+    return code.replace(/\x02/g, "::");
+  }
+  function pgRewrite(code) {
+    code = code.replace(/\bSTART\s+TRANSACTION\b/gi, "BEGIN").replace(/\bILIKE\b/gi, "LIKE");
+    code = pgRewriteFunc(code, "POSITION", function (inner) {
+      var hit = pgTopLevelIndex(inner, /^\s+IN\s+/i);
+      if (!hit) return null;
+      return "INSTR(" + inner.slice(hit.idx + hit.len).trim() + ", " + inner.slice(0, hit.idx).trim() + ")";
+    });
+    code = pgRewriteFunc(code, "SUBSTRING", function (inner) {
+      var hit = pgTopLevelIndex(inner, /^\s+FROM\s+/i);
+      if (!hit) return null;
+      var x = inner.slice(0, hit.idx).trim(), rest = inner.slice(hit.idx + hit.len).trim();
+      var f = pgTopLevelIndex(rest, /^\s+FOR\s+/i);
+      if (f) return "SUBSTR(" + x + ", " + rest.slice(0, f.idx).trim() + ", " + rest.slice(f.idx + f.len).trim() + ")";
+      if (rest.charAt(0) === "\x01") return "REGEXP_SUBSTR(" + x + ", " + rest + ")";
+      return "SUBSTR(" + x + ", " + rest + ")";
+    });
+    code = pgRewriteCasts(code);
+    code = code.replace(/((?:[A-Za-z_][\w.]*(?:\s*\([^()]*\))?))\s*(!?~\*?)\s*(\x01\d+\x01)/g, function (m, operand, op, ph) {
+      return (op.charAt(0) === "!" ? "NOT " : "") + (op.indexOf("*") >= 0 ? "regexpi" : "regexp") + "(" + ph + ", " + operand + ")";
+    });
+    return code;
+  }
+
+  var PG_NUMERIC_TYPE = /^(int|integer|bigint|smallint|int2|int4|int8|numeric|decimal|real|float|double)/i;
+  var PG_INT_TYPE = /^(int|integer|bigint|smallint|int2|int4|int8)$/i;
+  function pgUnquote(id) { return String(id).replace(/^"|"$/g, ""); }
+
+  // SQLite cannot change a column type / NOT NULL in place, so rebuild the table.
+  function pgRebuild(db, table, col, opts) {
+    table = pgUnquote(table); col = pgUnquote(col);
+    var info = db.exec('SELECT cid, name, type, "notnull", dflt_value, pk FROM pragma_table_info(\'' + table.replace(/'/g, "''") + "') ORDER BY cid");
+    if (!info.length) throw new Error('relation "' + table + '" does not exist');
+    var cols = info[0].values.map(function (r) { return { name: r[1], type: r[2], notnull: r[3], dflt: r[4], pk: r[5] }; });
+    var target = null;
+    cols.forEach(function (c) { if (c.name.toLowerCase() === col.toLowerCase()) target = c; });
+    if (!target) throw new Error('column "' + col + '" of relation "' + table + '" does not exist');
+    var q = function (n) { return '"' + n + '"'; };
+    var expr = opts.using ? opts.using : q(target.name);
+    if (opts.type && PG_NUMERIC_TYPE.test(opts.type)) {
+      var inner = /^CAST\(([\s\S]*)\s+AS\s+[A-Za-z_]\w*(?:\s*\(\s*\d+(?:\s*,\s*\d+)?\s*\))?\)$/i.exec(expr.trim());
+      var chk = db.exec("SELECT " + (inner ? inner[1] : expr) + " AS v FROM " + q(table));
+      var isInt = PG_INT_TYPE.test(opts.type.replace(/\s*\(.*$/, ""));
+      var okRe = isInt ? /^\s*[-+]?\d+\s*$/ : /^\s*[-+]?(\d+(\.\d*)?|\.\d+)\s*$/;
+      if (chk.length) {
+        for (var i = 0; i < chk[0].values.length; i++) {
+          var v = chk[0].values[i][0];
+          if (v !== null && typeof v === "string" && !okRe.test(v)) {
+            throw new Error('invalid input syntax for type ' + opts.type.toLowerCase() + ': "' + v + '"');
+          }
+        }
+      }
+    }
+    var tmp = table + "__rebuild";
+    var defs = cols.map(function (c) {
+      var isT = c === target;
+      var type = isT && opts.type ? opts.type : c.type;
+      var nn = isT && opts.notnull !== undefined ? opts.notnull : c.notnull;
+      return q(c.name) + (type ? " " + type : "") + (nn ? " NOT NULL" : "") + (c.dflt !== null ? " DEFAULT " + c.dflt : "");
+    });
+    var pks = cols.filter(function (c) { return c.pk > 0; }).sort(function (a, b) { return a.pk - b.pk; });
+    if (pks.length) defs.push("PRIMARY KEY (" + pks.map(function (c) { return q(c.name); }).join(", ") + ")");
+    var sel = cols.map(function (c) {
+      if (c === target && opts.type) return "CAST(" + expr + " AS " + opts.type + ") AS " + q(c.name);
+      return q(c.name);
+    });
+    db.exec("CREATE TABLE " + q(tmp) + " (" + defs.join(", ") + ")");
+    try {
+      db.exec("INSERT INTO " + q(tmp) + " SELECT " + sel.join(", ") + " FROM " + q(table));
+    } catch (e) {
+      db.exec("DROP TABLE " + q(tmp));
+      if (/NOT NULL/i.test(e.message)) throw new Error('column "' + col + '" of relation "' + table + '" contains null values');
+      throw e;
+    }
+    db.exec("DROP TABLE " + q(table));
+    db.exec("ALTER TABLE " + q(tmp) + " RENAME TO " + q(table));
+  }
+
+  var PG_TYPE_EXPR = "([A-Za-z_]\\w*(?:\\s*\\(\\s*\\d+(?:\\s*,\\s*\\d+)?\\s*\\))?)";
+  function pgAlterAction(db, table, action, strings) {
+    var R = function (s) { return pgRestore(s, strings); };
+    var m = action.match(new RegExp("^ALTER\\s+(?:COLUMN\\s+)?(\\S+)\\s+(?:SET\\s+DATA\\s+)?TYPE\\s+" + PG_TYPE_EXPR + "(?:\\s+USING\\s+([\\s\\S]+))?$", "i"));
+    if (m) { pgRebuild(db, table, m[1], { type: m[2], using: m[3] ? R(m[3]) : null }); return; }
+    m = action.match(/^ALTER\s+(?:COLUMN\s+)?(\S+)\s+SET\s+NOT\s+NULL$/i);
+    if (m) { pgRebuild(db, table, m[1], { notnull: 1 }); return; }
+    m = action.match(/^ALTER\s+(?:COLUMN\s+)?(\S+)\s+DROP\s+NOT\s+NULL$/i);
+    if (m) { pgRebuild(db, table, m[1], { notnull: 0 }); return; }
+    db.exec("ALTER TABLE " + table + " " + R(action));
+  }
+
+  // Runs one (placeholder-form) statement; returns the latest row-producing result.
+  function pgRunStatement(db, stmt, strings, last) {
+    var R = function (s) { return pgRestore(s, strings); };
+    var m = stmt.match(/^TRUNCATE(?:\s+TABLE)?\s+(?:ONLY\s+)?(\S+?)(?:\s+RESTART\s+IDENTITY)?(?:\s+CASCADE)?$/i);
+    if (m) stmt = "DELETE FROM " + m[1];
+    var at = stmt.match(/^ALTER\s+TABLE\s+(?:IF\s+EXISTS\s+)?(?:ONLY\s+)?(\S+)\s+([\s\S]+)$/i);
+    if (at && !/^(RENAME|ADD|DROP)\s/i.test(at[2].trim()) || (at && pgSplitTop(at[2], ",").length > 1)) {
+      pgSplitTop(at[2], ",").forEach(function (a) { pgAlterAction(db, at[1], a.trim(), strings); });
+      return last;
+    }
+    var res = db.exec(R(stmt));
+    if (res.length) return { columns: res[res.length - 1].columns, rows: res[res.length - 1].values };
+    return last;
+  }
+
+  function pgExecScript(db, sql) {
+    var tk = pgTokenize(sql);
+    var code = pgRewrite(tk.code);
+    var last = { columns: [], rows: [] };
+    code.split(";").forEach(function (raw) {
+      var stmt = raw.trim();
+      if (stmt) last = pgRunStatement(db, stmt, tk.strings, last);
+    });
+    return last;
+  }
+
+  function openDb() {
+    var db = new SQLlib.Database(pristineBytes);
+    if (compatOn()) registerPgFunctions(db);
+    return db;
+  }
+  function runScript(db, sql) {
+    if (compatOn()) return pgExecScript(db, sql);
+    var res = db.exec(sql);
+    return res.length === 0 ? { columns: [], rows: [] } : { columns: res[0].columns, rows: res[0].values };
+  }
 
   function init() {
     if (readyPromise) return readyPromise;
@@ -61,17 +371,31 @@ var SQL_ENGINE = (function () {
     return readyPromise;
   }
 
+  var NOT_READY = "SQLエンジンを読み込み中です。少し待ってからもう一度お試しください。";
+
   // Runs `sql` against a fresh copy of the seeded DB. Never mutates shared state.
   function runQuery(sql) {
-    if (!SQLlib || !pristineBytes) {
-      return { error: "SQLエンジンを読み込み中です。少し待ってからもう一度お試しください。" };
-    }
-    var db = new SQLlib.Database(pristineBytes);
+    if (!SQLlib || !pristineBytes) return { error: NOT_READY };
+    var db = openDb();
     try {
-      var res = db.exec(sql);
+      var out = runScript(db, sql);
       db.close();
-      if (res.length === 0) return { columns: [], rows: [] };
-      return { columns: res[0].columns, rows: res[0].values };
+      return out;
+    } catch (e) {
+      db.close();
+      return { error: e.message };
+    }
+  }
+
+  // Runs a mutating script, then a verification query on the SAME fresh DB.
+  function runMutationPreview(script, verifySql) {
+    if (!SQLlib || !pristineBytes) return { error: NOT_READY };
+    var db = openDb();
+    try {
+      var scriptRes = runScript(db, script);
+      var state = runScript(db, verifySql);
+      db.close();
+      return { script: scriptRes.rows.length ? scriptRes : null, state: state };
     } catch (e) {
       db.close();
       return { error: e.message };
@@ -84,6 +408,21 @@ var SQL_ENGINE = (function () {
     });
   }
 
+  function compareRows(aRows, bRows, orderSensitive) {
+    var a = normalizeRows(aRows).map(function (r) { return r.join("\u0001"); });
+    var b = normalizeRows(bRows).map(function (r) { return r.join("\u0001"); });
+    if (!orderSensitive) { a.sort(); b.sort(); }
+    var pass = JSON.stringify(a) === JSON.stringify(b);
+    var diff = 0;
+    if (!pass) {
+      var pool = {};
+      b.forEach(function (x) { pool[x] = (pool[x] || 0) + 1; });
+      a.forEach(function (x) { if (pool[x]) pool[x]--; else diff++; });
+      diff = Math.max(diff, Math.abs(a.length - b.length));
+    }
+    return { pass: pass, diff: diff };
+  }
+
   function gradeQuery(studentSql, solutionSql, orderSensitive) {
     var student = runQuery(studentSql);
     if (student.error) {
@@ -91,23 +430,36 @@ var SQL_ENGINE = (function () {
     }
     var expected = runQuery(solutionSql);
     if (expected.error) {
-      // Should never happen if solutions were validated, but fail safe.
       return { pass: false, studentError: null, engineError: expected.error, student: student, expected: null };
     }
-    var a = normalizeRows(student.rows);
-    var b = normalizeRows(expected.rows);
-    if (!orderSensitive) {
-      a = a.map(function (r) { return r.join("\u0001"); }).sort();
-      b = b.map(function (r) { return r.join("\u0001"); }).sort();
-    } else {
-      a = a.map(function (r) { return r.join("\u0001"); });
-      b = b.map(function (r) { return r.join("\u0001"); });
-    }
-    var pass = JSON.stringify(a) === JSON.stringify(b);
-    return { pass: pass, student: student, expected: expected };
+    var c = compareRows(student.rows, expected.rows, orderSensitive);
+    return { pass: c.pass, diff: c.diff, student: student, expected: expected };
   }
 
-  return { init: init, runQuery: runQuery, gradeQuery: gradeQuery };
+  function stripForKeywordCheck(sql) {
+    return pgTokenize(sql).code;
+  }
+
+  // Mutate-then-verify grading: run the student's script and the model script on
+  // separate fresh DBs, then compare the result of the same verification SELECT.
+  function gradeMutation(studentSql, solutionSql, verifySql, orderSensitive, requireKeywords) {
+    if (requireKeywords && requireKeywords.length) {
+      var code = stripForKeywordCheck(studentSql);
+      for (var i = 0; i < requireKeywords.length; i++) {
+        if (!new RegExp("\\b" + requireKeywords[i].replace(/\s+/g, "\\s+") + "\\b", "i").test(code)) {
+          return { pass: false, missingKeyword: requireKeywords[i], student: null, expected: null };
+        }
+      }
+    }
+    var s = runMutationPreview(studentSql, verifySql);
+    if (s.error) return { pass: false, studentError: s.error, student: null, expected: null };
+    var e = runMutationPreview(solutionSql, verifySql);
+    if (e.error) return { pass: false, engineError: e.error, student: s.state, expected: null };
+    var c = compareRows(s.state.rows, e.state.rows, orderSensitive);
+    return { pass: c.pass, diff: c.diff, student: s.state, expected: e.state };
+  }
+
+  return { init: init, runQuery: runQuery, gradeQuery: gradeQuery, runMutationPreview: runMutationPreview, gradeMutation: gradeMutation };
 })();
 
 /* ===== Live syntax highlighting (textarea-over-pre overlay, SQL tokenizer) ===== */
@@ -117,8 +469,12 @@ var SQL_KEYWORDS = ["SELECT","FROM","WHERE","JOIN","INNER","LEFT","RIGHT","FULL"
   "UNION","ALL","INTERSECT","EXCEPT","DISTINCT","CASE","WHEN","THEN","ELSE","END","WITH",
   "LIMIT","ASC","DESC","BETWEEN","LIKE","EXISTS","CAST","COUNT","SUM","AVG","MIN","MAX",
   "INSERT","INTO","VALUES","UPDATE","SET","DELETE","CREATE","TABLE","PRIMARY","KEY",
-  "FOREIGN","REFERENCES","CHECK","DEFAULT","UNIQUE"];
-var SQL_TYPES = ["INTEGER","INT","TEXT","NUMERIC","REAL","VARCHAR","CHAR","DATE","BOOLEAN","MONEY"];
+  "FOREIGN","REFERENCES","CHECK","DEFAULT","UNIQUE",
+  "ALTER","ADD","COLUMN","DROP","RENAME","TO","BEGIN","COMMIT","ROLLBACK","TRANSACTION","START",
+  "RETURNING","TRUNCATE","USING","DATA","TYPE","ILIKE","IF","TRIM","LENGTH","REPLACE","SUBSTR","SUBSTRING",
+  "SPLIT_PART","STRPOS","POSITION","INSTR","UPPER","LOWER","INITCAP","CHAR_LENGTH","LPAD","RPAD",
+  "REGEXP","REGEXP_REPLACE","COALESCE","NULLIF","CONCAT","ROUND","GROUP_CONCAT","STRING_AGG","LIMIT","OFFSET","TEMP","VIEW","INDEX"];
+var SQL_TYPES = ["INTEGER","INT","BIGINT","TEXT","NUMERIC","DECIMAL","REAL","FLOAT","VARCHAR","CHAR","DATE","BOOLEAN","MONEY"];
 
 /* Table/column names available for autocomplete — must match SEED_SQL above. */
 var SCHEMA_INFO = {
@@ -136,8 +492,35 @@ var SCHEMA_INFO = {
   account: ["account_number", "branch_name", "balance"],
   depositor: ["customer_id", "account_number"],
   loan: ["loan_number", "branch_name", "amount"],
-  borrower: ["customer_id", "loan_number"]
+  borrower: ["customer_id", "loan_number"],
+  ds_jobs: ["post_id", "job_title", "salary_estimate", "job_description", "rating", "company_name", "location", "headquarters", "size", "founded", "type_of_ownership", "industry", "sector", "revenue", "competitors"],
+  ownership_map: ["raw_label", "clean_label"]
 };
+var SCHEMA_TYPES = {
+  ds_jobs: ["INTEGER PK", "TEXT", "TEXT", "TEXT", "REAL", "TEXT", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT"],
+  ownership_map: ["TEXT PK", "TEXT"]
+};
+var SCHEMA_GROUP_DEFS = {
+  university: { title: "🎓 University DB", tables: ["department", "instructor", "student", "course", "section", "takes", "teaches", "advisor", "prereq"] },
+  banking: { title: "🏦 Banking DB", tables: ["branch", "customer", "account", "depositor", "loan", "borrower"] },
+  ds_jobs: { title: "📊 求人データ（ds_jobs）", tables: ["ds_jobs", "ownership_map"] }
+};
+function activeSchemaGroups() {
+  var g = (typeof window !== "undefined" && window.ARENA_OPTS && window.ARENA_OPTS.schemaGroups) || ["university", "banking"];
+  return g.filter(function (k) { return SCHEMA_GROUP_DEFS[k]; });
+}
+function activeSchemaTables() {
+  var out = [];
+  activeSchemaGroups().forEach(function (k) { out = out.concat(SCHEMA_GROUP_DEFS[k].tables); });
+  return out;
+}
+function activeSchemaColumns() {
+  var seen = {}, list = [];
+  activeSchemaTables().forEach(function (t) {
+    (SCHEMA_INFO[t] || []).forEach(function (c) { if (!seen[c]) { seen[c] = true; list.push(c); } });
+  });
+  return list;
+}
 var SCHEMA_TABLES = Object.keys(SCHEMA_INFO);
 var SCHEMA_COLUMNS = (function () {
   var seen = {}, list = [];
@@ -249,7 +632,7 @@ function acCandidateTag(word) {
   var up = word.toUpperCase();
   if (SQL_TYPES.indexOf(up) !== -1) return "type";
   if (SQL_KEYWORDS.indexOf(up) !== -1) return "keyword";
-  if (SCHEMA_TABLES.indexOf(word) !== -1) return "table";
+  if (activeSchemaTables().indexOf(word) !== -1) return "table";
   return "column";
 }
 
@@ -262,7 +645,7 @@ function acUpdate(editorId) {
   var kwMatches = SQL_KEYWORDS.concat(SQL_TYPES).filter(function (k) {
     return k.indexOf(upper) === 0;
   });
-  var nameMatches = SCHEMA_TABLES.concat(SCHEMA_COLUMNS).filter(function (n) {
+  var nameMatches = activeSchemaTables().concat(activeSchemaColumns()).filter(function (n) {
     return n.toLowerCase().indexOf(lower) === 0;
   });
   var seen = {};
@@ -359,6 +742,9 @@ function buildPracticeCard(p) {
     '<div class="ptitle">' + escapeHtmlSQL(p.title) + ' <span class="ptier">' + p.tier + "</span></div>" +
     '<p class="ptask">' + p.scenario + "</p>" +
     '<p class="pconcept">🎯 <strong>スキル:</strong> ' + escapeHtmlSQL(p.concept) + "</p>" +
+    (p.mode === "mutate"
+      ? '<p class="pmode">🧪 <strong>更新系の問題：</strong>▶実行で更新後のテーブルの状態を確認でき、✅採点は「更新後のテーブルの状態」を模範解答と比べます。</p>'
+      : "") +
     '<div class="editor-wrap">' +
       '<pre class="code-highlight" id="hl-' + p.id + '" aria-hidden="true"><code></code></pre>' +
       '<textarea class="code-editor" id="ed-' + p.id + '" spellcheck="false" wrap="off"></textarea>' +
@@ -445,29 +831,50 @@ function wirePracticeCard(p) {
   var answerCodeEl = document.getElementById("answer-code-" + p.id);
   answerCodeEl.innerHTML = highlightSQL(p.solution);
 
+  function hasSql(text) {
+    // ignore both "-- line" and "/* block */" comments when checking that something was typed
+    return text.replace(/\/\*[\s\S]*?(\*\/|$)/g, "").replace(/--[^\n]*/g, "").trim() !== "";
+  }
+
   runBtn.addEventListener("click", function () {
+    if (p.mode === "mutate") {
+      var pv = SQL_ENGINE.runMutationPreview(editor.value, p.verify);
+      if (pv.error) {
+        resultEl.innerHTML = '<div class="result-label">▶ 実行結果</div>' + renderResultTable({ error: pv.error });
+        return;
+      }
+      var html = "";
+      if (pv.script) html += '<div class="result-label">▶ 実行結果（RETURNING／SELECTの出力）</div>' + renderResultTable(pv.script);
+      html += '<div class="result-label">📋 実行後のテーブルの状態</div>' + renderResultTable(pv.state);
+      resultEl.innerHTML = html;
+      return;
+    }
     var res = SQL_ENGINE.runQuery(editor.value);
     resultEl.innerHTML = '<div class="result-label">▶ 実行結果</div>' + renderResultTable(res);
   });
 
   checkBtn.addEventListener("click", function () {
-    // Strip line comments (the starter text always begins with a "-- ..." prompt)
-    // before checking whether the student actually wrote any SQL yet.
-    var withoutComments = editor.value.replace(/--[^\n]*/g, "").trim();
-    if (withoutComments === "") {
+    if (!hasSql(editor.value)) {
       resultEl.innerHTML = '<div class="check-result-msg fail">✍️ まずSQLを入力してから採点してください。</div>';
       return;
     }
-    var g = SQL_ENGINE.gradeQuery(editor.value, p.solution, !!p.orderSensitive);
+    var mutate = p.mode === "mutate";
+    var g = mutate
+      ? SQL_ENGINE.gradeMutation(editor.value, p.solution, p.verify, !!p.orderSensitive, p.requireKeywords)
+      : SQL_ENGINE.gradeQuery(editor.value, p.solution, !!p.orderSensitive);
     var html = "";
-    if (g.studentError) {
+    var label = mutate ? "📋 あなたの実行後のテーブルの状態" : "▶ あなたの実行結果";
+    if (g.missingKeyword) {
+      html += '<div class="check-result-msg fail">⚠️ この問題では <code>' + escapeHtmlSQL(g.missingKeyword) + '</code> を使う必要があります。SQLに含まれていません。</div>';
+    } else if (g.studentError) {
       html += '<div class="check-result-msg fail">❌ SQLエラー: ' + escapeHtmlSQL(g.studentError) + "</div>";
     } else if (g.pass) {
-      html += '<div class="check-result-msg pass">✅ 正解です！結果が模範解答と一致しました。</div>';
-      html += '<div class="result-label">▶ 実行結果</div>' + renderResultTable(g.student);
+      html += '<div class="check-result-msg pass">✅ 正解です！' + (mutate ? "更新後のテーブルの状態が模範解答と一致しました。" : "結果が模範解答と一致しました。") + "</div>";
+      html += '<div class="result-label">' + (mutate ? "📋 更新後のテーブルの状態" : "▶ 実行結果") + "</div>" + renderResultTable(g.student);
     } else {
-      html += '<div class="check-result-msg fail">❌ 結果が模範解答と一致しません。もう一度見直してみましょう。</div>';
-      html += '<div class="result-label">▶ あなたの実行結果</div>' + renderResultTable(g.student);
+      html += '<div class="check-result-msg fail">❌ ' + (mutate ? "更新後のテーブルの状態が模範解答と一致しません" : "結果が模範解答と一致しません") +
+        (mutate && g.diff ? "（一致しない行：約" + g.diff + "行）" : "") + "。もう一度見直してみましょう。</div>";
+      html += '<div class="result-label">' + label + "</div>" + renderResultTable(g.student);
     }
     resultEl.innerHTML = html;
   });
@@ -485,20 +892,22 @@ function wirePracticeCard(p) {
 
 /* ===== Schema reference panel (which tables/columns exist) ===== */
 
-var UNIVERSITY_TABLES = ["department", "instructor", "student", "course", "section", "takes", "teaches", "advisor", "prereq"];
-var BANKING_TABLES = ["branch", "customer", "account", "depositor", "loan", "borrower"];
-
 function schemaTableRow(t) {
+  var types = SCHEMA_TYPES[t];
+  var cols = SCHEMA_INFO[t].map(function (c, i) { return types ? c + " " + types[i] : c; });
   return '<div class="schema-table"><span class="schema-tname">' + escapeHtmlSQL(t) + "</span>" +
-    '<span class="schema-cols">' + escapeHtmlSQL(SCHEMA_INFO[t].join(", ")) + "</span></div>";
+    '<span class="schema-cols">' + escapeHtmlSQL(cols.join(", ")) + "</span></div>";
 }
 
 function buildSchemaRefHTML() {
+  var groups = activeSchemaGroups();
   return '<div class="schema-ref" id="schemaRef">' +
     '<button type="button" class="schema-ref-toggle" id="schemaRefToggle">📋 テーブル構成（列一覧）を見る ▾</button>' +
-    '<div class="schema-ref-body" id="schemaRefBody" hidden>' +
-      '<div class="schema-group"><h3>🎓 University DB</h3>' + UNIVERSITY_TABLES.map(schemaTableRow).join("") + "</div>" +
-      '<div class="schema-group"><h3>🏦 Banking DB</h3>' + BANKING_TABLES.map(schemaTableRow).join("") + "</div>" +
+    '<div class="schema-ref-body' + (groups.length === 1 ? " single" : "") + '" id="schemaRefBody" hidden>' +
+      groups.map(function (k) {
+        var def = SCHEMA_GROUP_DEFS[k];
+        return '<div class="schema-group"><h3>' + def.title + "</h3>" + def.tables.map(schemaTableRow).join("") + "</div>";
+      }).join("") +
     "</div>" +
   "</div>";
 }

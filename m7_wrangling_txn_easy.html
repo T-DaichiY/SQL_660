@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超やさしい版：M7 データ整形③ トランザクション・分割・削除</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🔒 トランザクション <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy active" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M7 · Transactions, Splitting &amp; Dropping 🍎</div>
+    <h1>🍎 超やさしい版：トランザクション・分割・削除</h1>
+    <p>データを書き換える前の「お試しモード」と、1つの列を2つに分ける実例、そして不要な列や表の消し方を学びます。</p>
+    <div class="unit-nav"><a href="#u1">お試しモード</a><a href="#u2">給与を2つに分ける</a><a href="#u3">消す</a><a href="m7_wrangling_txn.html" class="easy-toplink">🔒 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>トランザクション＝お試しモード</h2><div class="unit-sub">START TRANSACTION → 確認 → COMMIT か ROLLBACK</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">たとえば「元に戻す」ボタンがある下書きのようなものです。<strong>COMMITで確定、ROLLBACKで取り消し。</strong>エラーが出たらROLLBACKします。</p></div>
+  <p class="code-label">▶ 全員の評価を0にしてみる（でも取り消す）</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">START TRANSACTION</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">ROUND</span>(<span class="kw">AVG</span>(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">ROLLBACK</span>;</span>
+</pre><div class="output-reveal">avg_rating
+0</div>
+  <p>ROLLBACKのあとで平均を調べると、元の <strong>3.05</strong> に戻っています。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>トランザクションは、確定する前の安全確認です。ただしバックアップの代わりにはならないので、バックアップとセットで使いましょう。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>給与を「下限」と「上限」に分ける</h2><div class="unit-sub">'$110K-$163K (Glassdoor est.)' → 110000 と 163000</div></div></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🧺</div>
+    <div class="ru-text"><strong>洗濯物の仕分けと同じ：</strong>まずカゴを2つ用意（列を追加）→ 分ける（SPLIT_PART）→ ゴミを取る（$とK）→ 千を足す（||'000'）→ 数として登録（INTに変換）。</div>
+  </div>
+  <p class="code-label">▶ 分けて、きれいにして、数値にする</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">START TRANSACTION</span>;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> low_range <span class="kw">TEXT</span>, <span class="kw">ADD COLUMN</span> high_range <span class="kw">TEXT</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">1</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>,</span>
+<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">2</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ALTER COLUMN</span> low_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> low_range::<span class="kw">INT</span>;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ALTER COLUMN</span> high_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> high_range::<span class="kw">INT</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, low_range, high_range <span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">8</span>);</span>
+<span class="cl"><span class="kw">COMMIT</span>;</span>
+</pre><div class="output-reveal">post_id | low_range | high_range
+1       | 110000    | 163000
+3       | 45000     | 79000
+8       | 52000     | 87000
+(3 rows)</div>
+  <p>本編では、この長い式を1ステップずつに分けて説明しています。数字以外の文字（たとえば <code>110K</code>）が残っているとINTへの変換は<strong>エラー</strong>になります。そのときは <code>ROLLBACK</code> です。</p>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>SPLIT_PART(salary_estimate, '-', 2)</code> は何を返す？<span class="cp-a">A. 「-」で分けた2番目、つまり上限側（'$163K (Glassdoor est.)'）。</span></div><div class="cp-q">Q2. INTに変換するときにエラーになる原因は？<span class="cp-a">A. 「$」や「K」など、数字以外の文字が残っているから。</span></div></div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「列を追加 → 分ける → きれいにする → 型を変える」の順番です。全部トランザクションの中でやれば、失敗しても安心です。</p></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>列や表を消す</h2><div class="unit-sub">DROP COLUMN と DROP TABLE</div></div></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🗑️</div>
+    <div class="ru-text"><strong>列を消す＝ALTER TABLE … DROP COLUMN。表ごと消す＝DROP TABLE。</strong>行だけ消すのはDELETEです。消す前にバックアップのコピーを作りましょう。</div>
+  </div>
+  <p class="code-label">▶ コピーの表から列を消し、最後に表ごと消す</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs_backup2 <span class="kw">AS</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs_backup2 <span class="kw">ADD COLUMN</span> low_range <span class="kw">INT</span>;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs_backup2 <span class="kw">DROP COLUMN</span> low_range;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> n_cols <span class="kw">FROM</span> pragma_table_info(<span class="st">'ds_jobs_backup2'</span>);</span>
+<span class="cl"><span class="kw">DROP TABLE</span> <span class="kw">IF EXISTS</span> ds_jobs_backup2;</span>
+</pre><div class="output-reveal">n_cols
+15</div>
+  <p><code>low_range</code> を追加してから消したので、列数は元の15列に戻りました。<code>IF EXISTS</code> を付けると、表が無くてもエラーになりません。</p>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 列を消すコマンドは？<span class="cp-a">A. ALTER TABLE 表 DROP COLUMN 列。</span></div><div class="cp-q">Q2. DROP TABLE と DELETE FROM のちがいは？<span class="cp-a">A. DROP TABLEは表ごと消す。DELETE FROMは行だけ消して、表は残る。</span></div></div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>消す前にバックアップ。列ならDROP COLUMN、表ならDROP TABLE、行ならDELETE。</p></div>
+</div>
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m7_wrangling_txn.html">🔒 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• START TRANSACTION → 確認 → COMMIT / ROLLBACK</p><p style="margin:.4rem 0">• 1つの列は SPLIT_PART で分けられる</p><p style="margin:.4rem 0">• INTへの変換は USING x::INT。数字以外が残るとエラー</p><p style="margin:.4rem 0">• 列は DROP COLUMN、表は DROP TABLE</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">8ステップの詳しい解説と英語MCQクイズは <a href="m7_wrangling_txn.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：M7 データ整形③ — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m7_wrangling_txn.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="typewriter.js"></script>
+</body></html>

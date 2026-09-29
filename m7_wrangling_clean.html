@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7 データ整形② クリーニング</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🧹 クリーニング <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M7 · Data Wrangling — Modifying &amp; Cleaning</div>
+  <h1>🧹 データ整形②：ALTER・UPDATEでクリーニング</h1>
+  <p>ここからは<strong>データ整形の実践</strong>に入ります。前のレッスンで表の状態を調べたら、次は<strong>直す番</strong>です。<code>ALTER</code>と<code>UPDATE</code>の違いを整理し、<strong>バックアップを取ってから</strong>職種名の表記ゆれを直し、会社名にくっついた評価を取り除き、<code>-1</code>を本物のNULLに置き換えます。M3〜M4で学んだ<code>WHERE</code>・<code>LIKE</code>・<code>GROUP BY</code>・<code>COUNT</code>がそのまま検査の道具になります。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ALTERとUPDATEの違い</a><a href="#unit2">② バックアップとjob_title</a><a href="#unit3">③ 会社名の評価を除く</a><a href="#unit4">④ -1をNULLに</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ALTER TABLE と UPDATE の違い</h2><div class="unit-sub">構造を変えるのがALTER、データを変えるのがUPDATE</div></div>
+  </div>
+  <p>データを整えるときに使う2つの命令は、名前が似ていますが<strong>変えるものがまったく違います</strong>。<code>ALTER TABLE</code>は表の<strong>構造（列の追加・名前変更・データ型・NOT NULL制約）</strong>を変え、<code>UPDATE</code>は表に入っている<strong>データ（値そのもの）</strong>を変えます。M1〜M2で学んだ<code>CREATE TABLE</code>で作った「入れ物」を後から作り替えるのが<code>ALTER</code>、入れ物の中身を書き換えるのが<code>UPDATE</code>です。</p>
+  <p class="note-box" style="margin:0 0 1rem">📝 この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行ですが、ここでは<code>ds_jobs</code>テーブル（30行）を使い、実際に表示される件数で説明します。</p>
+  <table class="compare-table">
+    <tr><th></th><th>ALTER TABLE</th><th>UPDATE</th></tr>
+    <tr><td>変えるもの</td><td>表の<strong>構造</strong>（列・型・制約）</td><td>行の<strong>データ</strong>（値）</td></tr>
+    <tr><td>例</td><td>列を追加する／型を変える／NOT NULLを付ける</td><td>'Sr.'を'Senior'に直す／-1をNULLにする</td></tr>
+    <tr><td>影響する行</td><td>表全体（すべての行が対象）</td><td>WHEREで選んだ行（省略すると全行）</td></tr>
+    <tr><td>考えること</td><td>どの列を、どう変えるか</td><td>「どんな値にするか（SET）」と「どの行か（WHERE）」</td></tr>
+  </table>
+  <p>構文の骨組みを並べます。まず構造を変える<code>ALTER TABLE</code>です（列を削除する<code>DROP COLUMN</code>は次のレッスンで扱います）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER TABLE</span> t <span class="kw">ADD COLUMN</span> c type;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> t <span class="kw">ALTER COLUMN</span> c <span class="kw">SET DATA TYPE</span> type;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> t <span class="kw">ALTER COLUMN</span> c <span class="kw">SET NOT NULL</span>;</span>
+<span class="cl"><span class="kw">ALTER TABLE</span> t <span class="kw">ALTER COLUMN</span> c <span class="kw">DROP NOT NULL</span>;</span>
+</pre>
+  <p>次にデータを書き換える<code>UPDATE</code>です。<code>WHERE</code>は省略できますが、その意味は大きく変わります。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> t <span class="kw">SET</span> c = value;              -- WHEREなし：全行が変わる</span>
+<span class="cl"><span class="kw">UPDATE</span> t <span class="kw">SET</span> c = value <span class="kw">WHERE</span> cond;   -- 条件に合う行だけが変わる</span>
+</pre>
+  <p>実例として、まず<code>ds_jobs</code>に「整形済みか」を記録するための空の列を追加してみます。追加直後の新しい列は、全30行が<code>NULL</code>です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> cleaned_at <span class="kw">TEXT</span>;</span>
+</pre>
+<div class="output-reveal">name       | type
+-----------+------
+cleaned_at | TEXT
+(1 row)</div>
+  <div class="viz">
+    <div class="viz-title">UPDATEを書くときに考える2つのこと</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🎯</span><div class="step-text"><strong>SET：どんな値にするか</strong><span>例：SET job_title = 'Senior Data Scientist'</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔍</span><div class="step-text"><strong>WHERE：どの行を変えるか</strong><span>例：WHERE job_title = 'Sr. Data Scientist'</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">✅</span><div class="step-text"><strong>実行前にSELECTで確認</strong><span>同じWHEREでSELECTして、対象の行数をチェックする</span></div></div>
+    </div>
+    <div class="viz-cap">SETは「何に」、WHEREは「どこを」。この2つを分けて考えるとミスが減る。</div>
+  </div>
+  <div class="warn-box">⚠️ <strong>WHEREのないUPDATEは、表のすべての行を書き換えます。</strong>たとえば<code>UPDATE ds_jobs SET rating = 0;</code>を実行すると、30行すべての<code>rating</code>が0になります。実際に確認するには、次のように<code>BEGIN</code>で取引を始め、確認したら<code>ROLLBACK</code>で取り消します（取引の詳細は次のレッスンで学びます）。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">BEGIN</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span>;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> n, MIN(rating) <span class="kw">AS</span> mn, MAX(rating) <span class="kw">AS</span> mx <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">ROLLBACK</span>;</span>
+</pre>
+<div class="output-reveal">n  | mn | mx
+---+----+----
+30 |  0 |  0
+(1 row)</div>
+  <p>30行すべてが0になっているのが分かります。<code>ROLLBACK</code>したので、実際のデータは元どおり（最小-1・最大4.6）です。この失敗はバックアップなしでは取り返しがつかないので、次の単元で<strong>バックアップを先に取る</strong>習慣を学びます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>ALTER</code>は「入れ物」を作り替える、<code>UPDATE</code>は「中身」を書き換える。UPDATEは<code>SET</code>（何にする）と<code>WHERE</code>（どの行）をセットで考え、WHEREを忘れると全行が変わります。</p></div>
+  <div class="practice-card" id="p-w2-u1">
+    <div class="ptitle">💻 ミニ練習：列を追加する</div>
+    <p class="ptask"><code>ds_jobs</code>テーブルに、<code>TEXT</code>型の新しい列<code>cleaned_note</code>を追加するSQLを書いてください。</p>
+    <textarea class="code-editor" id="p-w2-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w2-u1', ['ALTER TABLE', 'ADD COLUMN'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w2-u1-result"></div>
+    <div class="answer-reveal" id="p-w2-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> cleaned_note <span class="kw">TEXT</span>;</span></pre>
+      <p class="answer-note"><code>ALTER TABLE 表名 ADD COLUMN 列名 型</code>が基本形。既存の30行の新しい列はすべて<code>NULL</code>になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>バックアップを取って job_title を整える</h2><div class="unit-sub">CREATE TABLE ... AS SELECT → UPDATE + REPLACE</div></div>
+  </div>
+  <p>データを書き換える前に、必ず<strong>バックアップ（複製テーブル）</strong>を取ります。UPDATEは元に戻す「取り消し」ボタンがありません（<code>COMMIT</code>後は特に）。教科書（第10章）でも、<strong>先にコピーを作ってからUPDATEする</strong>ことが勧められています。<code>CREATE TABLE ... AS SELECT</code>を使うと、1行でコピーできます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs_backup <span class="kw">AS</span></span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> n <span class="kw">FROM</span> ds_jobs_backup;</span>
+</pre>
+<div class="output-reveal"> n
+----
+ 30
+(1 row)</div>
+  <p>30行ちゃんとコピーされました。件数の確認までがバックアップの手順です。次に、直したい<code>job_title</code>の状態を<code>GROUP BY</code>（M4）で確認します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> job_title, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">GROUP BY</span> job_title</span>
+<span class="cl"><span class="kw">ORDER BY</span> job_title;</span>
+</pre>
+<div class="output-reveal">job_title                     | n
+------------------------------+---
+Business Intelligence Analyst | 3
+Data Analyst                  | 4
+Data Engineer                 | 3
+Data Scientist                | 6
+Machine Learning Engineer     | 3
+Research Scientist            | 2
+Senior Data Scientist         | 3
+Senior. Data Scientist -      | 2
+Sr Data Scientist             | 2
+Sr. Data Scientist            | 2
+(10 rows)</div>
+  <p>本来同じ「シニア・データサイエンティスト」のはずの職種が、4つの表記に分かれています（3＋2＋2＋2＝9行）。これを1つにまとめます。</p>
+  <p><strong>手順①：変な表記を完全一致で直す。</strong><code>'Senior. Data Scientist -'</code>（post_id 15, 28の2行）は、ほかのパターンと共通部分がないので、まず<strong>完全一致</strong>の<code>WHERE</code>で直します。<code>LIKE 'Senior%'</code>のように広く書くと、すでに正しい<code>'Senior Data Scientist'</code>の行まで巻き込むので避けます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = <span class="st">'Senior Data Scientist'</span></span>
+<span class="cl"><span class="kw">WHERE</span> job_title = <span class="st">'Senior. Data Scientist -'</span>;</span>
+</pre>
+<div class="output-reveal">UPDATE 2
+
+post_id | job_title
+--------+----------------------
+     15 | Senior Data Scientist
+     28 | Senior Data Scientist</div>
+  <p><strong>手順②：<code>REPLACE</code>で'Sr.'を直す。</strong><code>REPLACE(文字列, 探す文字, 置き換える文字)</code>は、文字列の中の一部だけを置き換える関数です。<code>WHERE</code>なしでも、'Sr.'を含まない行はそのまま変わりません（ただし行としては「更新」扱いになります）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = REPLACE(job_title, <span class="st">'Sr.'</span>, <span class="st">'Senior'</span>);</span>
+</pre>
+<div class="output-reveal">post_id | job_title
+--------+----------------------
+      5 | Senior Data Scientist   (Sr. → Senior)
+     19 | Senior Data Scientist   (Sr. → Senior)
+      9 | Sr Data Scientist       (まだ)
+     23 | Sr Data Scientist       (まだ)</div>
+  <p><strong>手順③：ピリオドなしの'Sr'を直す。</strong>これで残りの2行（post_id 9, 23）が直ります。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = REPLACE(job_title, <span class="st">'Sr'</span>, <span class="st">'Senior'</span>);</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>順番のワナ：必ず'Sr.'（ピリオド付き）を先に置き換えます。</strong>もし<code>REPLACE(job_title, 'Sr', 'Senior')</code>を先に実行すると、<code>'Sr. Data Scientist'</code>は<code>'Senior. Data Scientist'</code>になり、ピリオドが残ってしまいます（post_id 5, 19が<code>'Senior. Data Scientist'</code>になる）。長くて具体的なパターンから先に処理する、と覚えましょう。</div>
+  <p>直したあと、もう一度<code>GROUP BY</code>で確認します。<strong>変更前と変更後を同じクエリで比べる</strong>のが、クリーニングの基本チェックです。</p>
+<div class="output-reveal">job_title                     | n
+------------------------------+---
+Business Intelligence Analyst | 3
+Data Analyst                  | 4
+Data Engineer                 | 3
+Data Scientist                | 6
+Machine Learning Engineer     | 3
+Research Scientist            | 2
+Senior Data Scientist         | 9
+(7 rows)</div>
+  <p>10種類あった表記が7種類になり、<code>'Senior Data Scientist'</code>は9行（3＋2＋2＋2）にまとまりました。</p>
+  <div class="teal-box">📌 <strong>失敗したらバックアップから戻せます。</strong>たとえば<code>job_title</code>だけ元に戻したいときは、<code>UPDATE ds_jobs SET job_title = b.job_title FROM ds_jobs_backup AS b WHERE ds_jobs.post_id = b.post_id;</code>のように、主キー（<code>post_id</code>）で対応させて値をコピーし直します。表ごと戻すなら<code>DROP TABLE ds_jobs;</code>してからバックアップをコピーし直す方法もあります。</div>
+  <p class="note-box" style="margin:0 0 1rem">💡 PostgreSQLの<code>UPDATE ... FROM</code>は、この演習アリーナでもそのまま動きます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>まずバックアップ（<code>CREATE TABLE ... AS SELECT</code>）。次に、変な表記→<code>'Sr.'</code>→<code>'Sr'</code>の順で直し、<code>GROUP BY</code>で確認します。最終的に<code>'Senior Data Scientist'</code>は9行になります。</p></div>
+  <div class="practice-card" id="p-w2-u2">
+    <div class="ptitle">💻 ミニ練習：REPLACEでjob_titleを直す</div>
+    <p class="ptask"><code>ds_jobs</code>テーブルで、<code>job_title</code>に含まれる<code>'Sr.'</code>を<code>'Senior'</code>に置き換える<code>UPDATE</code>文を書いてください（post_id 5, 19の2行が変わります）。</p>
+    <textarea class="code-editor" id="p-w2-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w2-u2', [])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w2-u2-result"></div>
+    <div class="answer-reveal" id="p-w2-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> job_title = REPLACE(job_title, <span class="st">'Sr.'</span>, <span class="st">'Senior'</span>);</span></pre>
+      <p class="answer-note"><code>REPLACE(列, 探す文字, 置き換える文字)</code>を<code>SET</code>の右辺に書きます。'Sr.'が含まれない行は変化しません。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>会社名の末尾についた評価を取り除く</h2><div class="unit-sub">SUBSTRING・LENGTH・RIGHT と LIKE のワイルドカード</div></div>
+  </div>
+  <p>会社名（<code>company_name</code>）の末尾に、評価が貼り付いています（例：<code>Bluepeak Studios4.4</code>）。これは<code>rating</code>の値が3文字（<code>4.4</code>）として会社名に混ざったものです。<code>rating</code>が-1でない25行がこの状態で、評価が-1の5行は<code>Open Door Health</code>のようにきれいな名前のままです。</p>
+  <p>取り除くには「末尾3文字を切り落として、残りを取り出す」と考えます。使う関数は3つです。</p>
+  <table class="compare-table">
+    <tr><th>関数</th><th>働き</th><th>例</th></tr>
+    <tr><td><code>LENGTH(x)</code></td><td>文字数を返す</td><td>LENGTH('Bluepeak Studios4.4') → 19</td></tr>
+    <tr><td><code>SUBSTRING(x, 開始, 長さ)</code></td><td>開始位置から指定の長さを取り出す（<strong>位置は1から</strong>数える）</td><td>SUBSTRING('Bluepeak Studios4.4', 1, 16) → 'Bluepeak Studios'</td></tr>
+    <tr><td><code>RIGHT(x, n)</code></td><td>右端からn文字を取り出す</td><td>RIGHT('Bluepeak Studios4.4', 3) → '4.4'</td></tr>
+  </table>
+  <p>つまり「先頭から（全体の長さ−3）文字」を取れば評価が消えます：<code>SUBSTRING(company_name, 1, LENGTH(company_name) - 3)</code>。プログラミング言語のように0から数えるのではなく、<strong>SQLの位置は1始まり</strong>な点に注意しましょう。</p>
+  <p>ただし、5行のきれいな名前まで3文字削ると壊れてしまいます。そこで「どの行に適用するか」を<code>WHERE</code>で絞ります。条件は「右端3文字が<strong>数字・ドット・数字</strong>の形か」。M3で習った<code>LIKE</code>のワイルドカードを使います：<code>_</code>は任意の<strong>1文字</strong>、<code>%</code>は任意の<strong>0文字以上</strong>です。<code>'_._'</code>は「何か1文字、ドット、何か1文字」の3文字に一致します。</p>
+  <p><strong>UPDATEの前に、必ず同じWHEREでSELECTしてプレビュー</strong>します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> post_id, company_name,</span>
+<span class="cl">       SUBSTRING(company_name, <span class="nm">1</span>, LENGTH(company_name) - <span class="nm">3</span>) <span class="kw">AS</span> cleaned</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> RIGHT(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span></span>
+<span class="cl"><span class="kw">ORDER BY</span> post_id</span>
+<span class="cl"><span class="kw">LIMIT</span> <span class="nm">6</span>;</span>
+</pre>
+<div class="output-reveal">post_id | company_name              | cleaned
+--------+---------------------------+------------------------
+      1 | Bluepeak Studios4.4       | Bluepeak Studios
+      2 | Ironwood Consulting3.9    | Ironwood Consulting
+      3 | Novaline Pharma3.6        | Novaline Pharma
+      5 | Pacific Grid Laboratory4.1| Pacific Grid Laboratory
+      6 | District 94.2             | District 9
+      7 | 23Genomics3.8             | 23Genomics
+(6 rows。WHEREに一致するのは全部で25行)</div>
+  <p>プレビューは良さそうです。特に<code>District 94.2</code>は、末尾3文字が<code>4.2</code>なので<code>District 9</code>になります（社名の数字9は残る）。<code>23Genomics3.8</code>も先頭の23は残ります。<strong>一致するのは25行</strong>です。ではWHEREを付けなかった場合、きれいな5行はどうなるか見てみましょう（<code>SELECT</code>なので安全です）。</p>
+<div class="output-reveal">post_id | company_name        | wrong
+--------+---------------------+------------------
+      4 | Open Door Health    | Open Door Hea
+     11 | Brightside Labs     | Brightside L
+     18 | Harbor Analytics    | Harbor Analyt
+     25 | Riverbend Institute | Riverbend Instit
+     29 | Cedar Health        | Cedar Hea
+(5 rows)</div>
+  <div class="warn-box">⚠️ <strong>この<code>WHERE RIGHT(company_name, 3) LIKE '_._'</code>は省略できません。</strong>省略すると、評価が付いていない5行の会社名も末尾3文字が削られて<code>Open Door Hea</code>のように壊れます。<code>UPDATE</code>の前に、同じ<code>WHERE</code>を付けた<code>SELECT</code>で対象行を目で確認する習慣をつけましょう。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> company_name = SUBSTRING(company_name, <span class="nm">1</span>, LENGTH(company_name) - <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> RIGHT(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span>
+</pre>
+<div class="output-reveal">UPDATE 25</div>
+  <p>「UPDATE 25」と表示され、想定どおり25行が更新されました。行数が予想と違ったら、すぐ原因を調べます（バックアップがあるので戻せます）。確認として、<code>GROUP BY company_name</code>を実行すると、きれいな社名ごとにまとまって表示されます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> post_id, company_name</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">6</span>, <span class="nm">7</span>)</span>
+<span class="cl"><span class="kw">ORDER BY</span> post_id;</span>
+</pre>
+<div class="output-reveal">post_id | company_name
+--------+--------------------
+      1 | Bluepeak Studios
+      4 | Open Door Health
+      6 | District 9
+      7 | 23Genomics
+(4 rows)</div>
+  <div class="teal-box">📌 <strong>このパターン<code>'_._'</code>は「数字・ドット・数字」を想定した簡易な条件です。</strong>今回の評価は<code>2.9</code>〜<code>4.6</code>の形なので有効ですが、一般には<code>_</code>は数字以外の文字にも一致します。より厳密にしたいときは、次のレッスンで学ぶ正規表現（<code>~ '\d\.\d$'</code>）を使います。</div>
+  <p class="note-box" style="margin:0 0 1rem">💡 PostgreSQLの<code>LIKE</code>は大文字小文字を区別しますが、この演習アリーナ（SQLite）では区別しません。この課題の<code>'_._'</code>には影響しません。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>会社名の末尾3文字（評価）を切り落とすには<code>SUBSTRING(名前, 1, LENGTH(名前) - 3)</code>。ただし評価が付いていない行を壊さないよう、<code>WHERE RIGHT(名前, 3) LIKE '_._'</code>で対象の25行だけに絞ります。</p></div>
+  <div class="practice-card" id="p-w2-u3">
+    <div class="ptitle">💻 ミニ練習：会社名から評価を取り除く</div>
+    <p class="ptask"><code>ds_jobs</code>の<code>company_name</code>から末尾3文字の評価を取り除く<code>UPDATE</code>文を書いてください。ただし末尾3文字が<code>_._</code>の形（例：4.4）の行だけが対象です（25行）。</p>
+    <textarea class="code-editor" id="p-w2-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w2-u3', ['UPDATE', 'SUBSTRING', 'LENGTH', 'RIGHT', 'LIKE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w2-u3-result"></div>
+    <div class="answer-reveal" id="p-w2-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> company_name = SUBSTRING(company_name, <span class="nm">1</span>, LENGTH(company_name) - <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> RIGHT(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span></pre>
+      <p class="answer-note"><code>WHERE</code>を忘れると、評価の付いていない5行の会社名まで3文字削られてしまいます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>-1 を本物の NULL に置き換える</h2><div class="unit-sub">番兵値（sentinel）を NULL にして集計を正しくする</div></div>
+  </div>
+  <p>CSVから取り込んだデータには、「値がない」ことを<code>-1</code>や<code>'Unknown'</code>のような<strong>ふつうの値</strong>で表している列があります（番兵値＝sentinel value）。SQLは<code>-1</code>を本物のデータだと思って計算するので、平均や件数がゆがみます。これを本物の<code>NULL</code>（M3・M4で学んだ「値なし」）に置き換えるのが、クリーニングの大事な仕事です。</p>
+  <table class="compare-table">
+    <tr><th>列</th><th>番兵値</th><th>行数</th><th>書き方</th></tr>
+    <tr><td><code>competitors</code>（TEXT）</td><td>文字列の<code>'-1'</code></td><td>13行</td><td><code>WHERE competitors = '-1'</code>（引用符あり）</td></tr>
+    <tr><td><code>rating</code>（REAL）</td><td>数値の<code>-1</code></td><td>5行</td><td><code>WHERE rating = -1</code>（引用符なし）</td></tr>
+    <tr><td><code>headquarters</code>（TEXT）</td><td><code>'-1'</code></td><td>2行</td><td><code>WHERE headquarters = '-1'</code></td></tr>
+    <tr><td><code>revenue</code>（TEXT）</td><td><code>'Unknown / Non-Applicable'</code></td><td>5行</td><td>文字列で比較</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>列の型に合わせて引用符を使い分けます。</strong><code>competitors</code>は<code>TEXT</code>列なので、番兵は文字列の<code>'-1'</code>です。PostgreSQLで<code>WHERE competitors = -1</code>と書くと型が合わずエラーになります。逆に<code>rating</code>は数値列なので<code>= -1</code>（引用符なし）と書きます。</div>
+  <p>まず変更前の状態を、<code>COUNT(*)</code>と<code>COUNT(列)</code>の違いで確認します。<code>COUNT(列)</code>は<code>NULL</code>を数えないので、番兵値のままだと「-1の行」も数えられてしまいます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> total, <span class="kw">COUNT</span>(rating) <span class="kw">AS</span> c_rating,</span>
+<span class="cl">       <span class="kw">COUNT</span>(competitors) <span class="kw">AS</span> c_comp, ROUND(AVG(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs;</span>
+</pre>
+<div class="output-reveal">total | c_rating | c_comp | avg_rating
+------+----------+--------+-----------
+   30 |       30 |     30 |       3.05
+(1 row)</div>
+  <p>-1の行も数えるので<code>COUNT(rating)</code>は30、平均評価は3.05に下がってしまっています（-1が5行混ざっているため）。ではNULLに変えます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> competitors = <span class="kw">NULL</span> <span class="kw">WHERE</span> competitors = <span class="st">'-1'</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="kw">NULL</span> <span class="kw">WHERE</span> rating = -<span class="nm">1</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> headquarters = <span class="kw">NULL</span> <span class="kw">WHERE</span> headquarters = <span class="st">'-1'</span>;</span>
+</pre>
+<div class="output-reveal">UPDATE 13   (competitors)
+UPDATE 5    (rating: post_id 4, 11, 18, 25, 29)
+UPDATE 2    (headquarters: post_id 11, 18)</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> total, <span class="kw">COUNT</span>(rating) <span class="kw">AS</span> c_rating,</span>
+<span class="cl">       <span class="kw">COUNT</span>(competitors) <span class="kw">AS</span> c_comp, ROUND(AVG(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs;</span>
+</pre>
+<div class="output-reveal">total | c_rating | c_comp | avg_rating
+------+----------+--------+-----------
+   30 |       25 |     17 |       3.86
+(1 row)</div>
+  <p><code>COUNT(rating)</code>が30→25、<code>COUNT(competitors)</code>が30→17に減り、<code>COUNT(*)</code>は30のままです。この違いこそが、NULLに変わった証拠です。平均評価も3.05から本来の3.86になりました。番兵値をNULLにしないと、<code>AVG</code>や<code>MIN</code>などの集計がゆがむ理由がよく分かります。</p>
+  <p><strong>別解：<code>NULLIF</code>。</strong><code>NULLIF(列, '-1')</code>は「列が'-1'ならNULL、そうでなければ元の値」を返す関数です。UPDATEをコンパクトに書けます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> competitors = NULLIF(competitors, <span class="st">'-1'</span>);</span>
+</pre>
+  <p><code>WHERE</code>付きの<code>UPDATE ... = NULL</code>と結果は同じです。なお<code>revenue</code>の<code>'Unknown / Non-Applicable'</code>（5行）も、同じ考え方で<code>NULLIF(revenue, 'Unknown / Non-Applicable')</code>によりNULLにできます。</p>
+  <div class="teal-box">📌 <strong>NULLの判定は<code>= NULL</code>ではなく<code>IS NULL</code>。</strong>UPDATEで「値をNULLにする」ときは<code>SET col = NULL</code>で正しいのですが、「NULLの行を探す」ときはM3で学んだとおり<code>WHERE col IS NULL</code>を使います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「-1」や「Unknown」は本物のデータではなく「値がない」の代わりです。<code>UPDATE ... SET 列 = NULL WHERE 列 = '-1'</code>で本物のNULLにすると、<code>COUNT(列)</code>や<code>AVG</code>が正しい結果になります。TEXT列は<code>'-1'</code>、数値列は<code>-1</code>です。</p></div>
+  <div class="practice-card" id="p-w2-u4">
+    <div class="ptitle">💻 ミニ練習：-1をNULLに置き換える</div>
+    <p class="ptask"><code>ds_jobs</code>の<code>competitors</code>列で、値が文字列<code>'-1'</code>の行（13行）を<code>NULL</code>に更新する<code>UPDATE</code>文を書いてください。</p>
+    <textarea class="code-editor" id="p-w2-u4-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-w2-u4', ['UPDATE', 'NULL', 'competitors'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-w2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-w2-u4-result"></div>
+    <div class="answer-reveal" id="p-w2-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
+<span class="cl"><span class="kw">SET</span> competitors = <span class="kw">NULL</span></span>
+<span class="cl"><span class="kw">WHERE</span> competitors = <span class="st">'-1'</span>;</span></pre>
+      <p class="answer-note"><code>competitors</code>はTEXT列なので<code>'-1'</code>と引用符を付けます。<code>SET competitors = NULLIF(competitors, '-1')</code>でも同じ結果になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the difference between ALTER TABLE and UPDATE?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ALTER TABLE changes the data in rows; UPDATE changes the table structure</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ALTER TABLE changes the table structure; UPDATE changes the data in rows</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Both change only the values inside a single row</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Both change the structure, but UPDATE affects only one column</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What happens if you run UPDATE ds_jobs SET rating = 0; with no WHERE clause?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only the first row is updated</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only rows where rating is NULL are updated</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Every row in the table is updated</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The database refuses to run it without a WHERE clause</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which statement creates a backup copy of ds_jobs before cleaning?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CREATE TABLE ds_jobs_backup AS SELECT * FROM ds_jobs;</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>COPY TABLE ds_jobs TO ds_jobs_backup WITH DATA;</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ALTER TABLE ds_jobs ADD COLUMN backup_copy AS SELECT *;</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>UPDATE ds_jobs_backup SET * = ds_jobs WHERE 1 = 1;</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">You want to replace 'Sr.' and 'Sr' with 'Senior' in job_title. In which order should you run the REPLACE updates?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>'Sr' first, then 'Sr.'</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Either order gives the same result</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only one REPLACE is ever needed</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'Sr.' first, then 'Sr'</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why is the WHERE clause needed when trimming the rating from company_name with SUBSTRING?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Without it, clean names such as 'Open Door Health' would lose 3 letters</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It makes the UPDATE run faster because fewer rows are locked</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SUBSTRING is not allowed to run in an UPDATE without a WHERE clause</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It automatically converts the rating column into text for the update</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In LIKE '_._', what does the underscore _ match?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Any number of characters</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only a digit</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Exactly one character</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only a dot</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">The column competitors is TEXT and uses -1 as a placeholder. Which statement correctly sets those values to NULL?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>UPDATE ds_jobs SET competitors = NULL WHERE competitors = -1;</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>UPDATE ds_jobs SET competitors = NULL WHERE competitors = '-1';</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>UPDATE ds_jobs SET competitors = 'NULL' WHERE competitors IS NULL;</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>UPDATE ds_jobs SET competitors = -1 WHERE competitors = NULL;</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Before the fix, COUNT(rating) returns 30. After setting the 5 rows with rating = -1 to NULL, what does COUNT(rating) return?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>30, because COUNT(column) counts every row</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>5, because only the updated rows are counted</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0, because NULL values cancel the count</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>25, because COUNT(column) skips NULLs</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 2, 0, 3, 0, 2, 1, 3];
+var FEEDBACKS=["ALTER TABLE modifies structure (columns, types, constraints), while UPDATE modifies stored values.", "Without WHERE, UPDATE applies to all rows, so all 30 rows would get rating = 0.", "CREATE TABLE ... AS SELECT builds a new table containing the query result, which serves as a backup.", "Replacing 'Sr' first turns 'Sr.' into 'Senior.' and leaves a stray period, so the longer pattern 'Sr.' must go first.", "The SUBSTRING expression removes 3 characters from every row it touches, so unaffected rows must be excluded by the WHERE.", "_ matches exactly one character, while % matches zero or more characters.", "A TEXT column must be compared to the quoted string '-1', and SET col = NULL stores a real NULL.", "COUNT(column) skips NULLs, so 30 - 5 = 25; COUNT(*) would still return 30."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">ALTER TABLE</div>
+      <div class="term-en">テーブル構造の変更</div>
+      <div class="term-def">列の追加・データ型の変更・NOT NULL制約の設定など、表の構造を変える命令。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">UPDATE ... SET</div>
+      <div class="term-en">データの更新</div>
+      <div class="term-def">既存の行の値を書き換える命令。WHEREで対象の行を絞る。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">backup table</div>
+      <div class="term-en">バックアップテーブル</div>
+      <div class="term-def">CREATE TABLE ... AS SELECTで作る複製。更新前に取っておき、失敗時の復元に使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">REPLACE()</div>
+      <div class="term-en">文字列の置換</div>
+      <div class="term-def">文字列の中の一部を別の文字に置き換える関数。REPLACE(列, 探す文字, 置換後)。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">sentinel value</div>
+      <div class="term-en">番兵値</div>
+      <div class="term-def">「値なし」の代わりに入れられた-1や'Unknown'のようなふつうの値。NULLに直して使う。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">NULLIF()</div>
+      <div class="term-en">NULLIF関数</div>
+      <div class="term-def">2つの値が等しければNULLを、そうでなければ最初の値を返す関数。</div>
+    </div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>UPDATEを書くときは「①同じWHEREでSELECT→対象行数を確認 ②バックアップ確認 ③UPDATE ④GROUP BYやCOUNTで結果確認」の順番を守ると、失敗してもすぐ戻せます。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧹 SQLレッスン：M7 データ整形② クリーニング</p>
+  <p style="margin-top:.5rem;"><a href="m7_wrangling_intro.html">← 準備と探索</a> · <a href="m7_wrangling_txn.html">トランザクションと分割へ →</a> · <a href="m7_practice_clean.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="typewriter.js"></script>
+</body></html>
