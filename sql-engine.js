@@ -573,6 +573,33 @@ function highlightSQLLine(line) {
   return out;
 }
 
+/* Split a one-line solution into one clause per line (top level only; strings/parens/subqueries untouched). */
+function formatSQL(sql) {
+  if (sql.indexOf("\n") !== -1) return sql;
+  var BREAK = /^(FROM|WHERE|GROUP\s+BY|HAVING|ORDER\s+BY|LIMIT|UNION(\s+ALL)?|INTERSECT|EXCEPT|SET|VALUES|RETURNING|(NATURAL\s+|CROSS\s+|INNER\s+|(LEFT|RIGHT|FULL)(\s+OUTER)?\s+)?JOIN)\b/i;
+  var INDENT = /^(AND|OR|ON)\b/i;
+  var out = "", i = 0, depth = 0, n = sql.length;
+  while (i < n) {
+    var c = sql[i];
+    if (c === "'" || c === '"') {
+      var j = i + 1;
+      while (j < n && !(sql[j] === c && sql[j + 1] !== c)) j += (sql[j] === c ? 2 : 1);
+      out += sql.slice(i, j + 1); i = j + 1; continue;
+    }
+    if (c === "(") depth++;
+    if (c === ")") depth--;
+    var atWord = depth === 0 && /[A-Za-z]/.test(c) && (i === 0 || /[^A-Za-z0-9_]/.test(sql[i - 1]));
+    if (atWord && out.trim() !== "") {
+      var rest = sql.slice(i), m;
+      if ((m = BREAK.exec(rest))) { out = out.replace(/ +$/, "") + "\n"; }
+      else if (INDENT.test(rest)) { out = out.replace(/ +$/, "") + "\n  "; }
+      if (m) { out += m[0]; i += m[0].length; continue; }
+    }
+    out += c; i++;
+  }
+  return out;
+}
+
 function highlightSQL(code) {
   return code.split("\n").map(highlightSQLLine).join("\n");
 }
@@ -829,7 +856,7 @@ function wirePracticeCard(p) {
   var hintEl = document.getElementById("hint-" + p.id);
   var answerEl = document.getElementById("answer-" + p.id);
   var answerCodeEl = document.getElementById("answer-code-" + p.id);
-  answerCodeEl.innerHTML = highlightSQL(p.solution);
+  answerCodeEl.innerHTML = highlightSQL(formatSQL(p.solution));
 
   function hasSql(text) {
     // ignore both "-- line" and "/* block */" comments when checking that something was typed
