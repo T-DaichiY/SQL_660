@@ -44,7 +44,7 @@
     <div><h2>文字列関数ツールキット</h2><div class="unit-sub">upper・lower・initcap・char_length・trim・lpad と、LIKE / ILIKE の違い</div></div>
   </div>
   <p>データ整形で一番よく使うのは、やはり文字列の関数です。PostgreSQLには50以上の文字列関数がありますが、実務で毎日のように使うのは十数個。講義では<code>left()</code>・<code>right()</code>・<code>replace()</code>・<code>||</code>（連結）を使いました。ここではそれらを復習しながら、講義に出てこなかった関数（大文字小文字の変換、文字数、trimの応用、lpad）を加えて、<strong>ひとつの表</strong>にまとめます。</p>
-  <div class="note-box">📚 <strong>データについて：</strong>この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行。なお教科書の例題は<code>us_counties_pop_est_2019</code>（郡の人口）・<code>crime_reports</code>（犯罪報告書）・<code>president_speeches</code>（大統領演説）というテーブルを使っています。このページでは同じ考え方を<code>ds_jobs</code>の<code>job_title</code>・<code>company</code>・<code>job_desc</code>・<code>loc</code>に置き換えて説明します。</div>
+  <div class="note-box">📚 <strong>データについて：</strong>この教材の練習用データ（30行）は、講義で使ったKaggle／Glassdoorの実データ（<code>Uncleaned_DS_jobs.csv</code>、672行）から抜き出した30行のサンプルです。会社名や求人は本物なので、表記ゆれや<code>-1</code>などの汚れもそのまま残っています。なお教科書の例題は<code>us_counties_pop_est_2019</code>（郡の人口）・<code>crime_reports</code>（犯罪報告書）・<code>president_speeches</code>（大統領演説）というテーブルを使っています。このページでは同じ考え方を<code>ds_jobs</code>の<code>job_title</code>・<code>company</code>・<code>job_desc</code>・<code>loc</code>に置き換えて説明します。</div>
   <table class="compare-table">
     <tr><th>関数</th><th>働き</th><th>例</th><th>結果</th></tr>
     <tr><td><code>upper(x)</code></td><td>大文字にする</td><td><code>upper('Neal7')</code></td><td><code>NEAL7</code></td></tr>
@@ -52,13 +52,13 @@
     <tr><td><code>initcap(x)</code></td><td>各単語の先頭だけ大文字（PostgreSQL独自）</td><td><code>initcap('senior data scientist')</code></td><td><code>Senior Data Scientist</code></td></tr>
     <tr><td><code>char_length(x)</code> / <code>length(x)</code></td><td>文字数を返す</td><td><code>char_length(' Pat ')</code></td><td><code>5</code>（空白も数える）</td></tr>
     <tr><td><code>trim(x)</code></td><td>前後の空白を除去</td><td><code>trim(' Pat ')</code></td><td><code>Pat</code></td></tr>
-    <tr><td><code>trim(x, 'chars')</code></td><td>前後の指定文字を除去</td><td><code>trim('Senior. Data Scientist -', ' -')</code></td><td><code>Senior. Data Scientist</code></td></tr>
+    <tr><td><code>trim(x, 'chars')</code></td><td>前後の指定文字を除去</td><td><code>trim('(Sr.) Data Scientist -', ' -')</code></td><td><code>(Sr.) Data Scientist</code></td></tr>
     <tr><td><code>left(x, n)</code> / <code>right(x, n)</code></td><td>左／右からn文字</td><td><code>left('Burbank, CA', 7)</code> / <code>right('Burbank, CA', 2)</code></td><td><code>Burbank</code> / <code>CA</code></td></tr>
     <tr><td><code>replace(x, from, to)</code></td><td>文字列の置換</td><td><code>replace('bat', 'b', 'c')</code></td><td><code>cat</code></td></tr>
     <tr><td><code>a || b</code></td><td>文字列の連結</td><td><code>'a' || 'b'</code></td><td><code>ab</code></td></tr>
     <tr><td><code>lpad(x, n, fill)</code></td><td>左をfillで埋めて全体をn文字にする</td><td><code>lpad('7', 3, '0')</code></td><td><code>007</code></td></tr>
   </table>
-  <p>表の結果はすべてこの教材のエンジンで実行して確認したものです。では実データで<code>upper()</code>・<code>char_length()</code>・<code>trim(x, 'chars')</code>を使ってみましょう。<code>post_id</code>が5と15の行は、講義でも出てきた「表記ゆれのある職種名」です。</p>
+  <p>表の結果はすべてこの教材のエンジンで実行して確認したものです。では実データで<code>upper()</code>・<code>char_length()</code>・<code>trim(x, 'chars')</code>を使ってみましょう。<code>post_id</code>が0と93の行は、「表記ゆれのある職種名」の例です（0番は<code>Sr Data Scientist</code>、93番は括弧や末尾の<code>-</code>が付いています）。</p>
 
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> post_id, job_title,</span>
@@ -66,24 +66,24 @@
 <span class="cl">       CHAR_LENGTH(job_title) <span class="kw">AS</span> len,</span>
 <span class="cl">       TRIM(job_title, <span class="st">' -'</span>) <span class="kw">AS</span> title_trim</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">5</span>, <span class="nm">15</span>);</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">0</span>, <span class="nm">93</span>);</span>
 </pre>
 <div class="output-reveal">post_id | job_title | title_upper | len | title_trim
-5 | Sr. Data Scientist | SR. DATA SCIENTIST | 18 | Sr. Data Scientist
-15 | Senior. Data Scientist - | SENIOR. DATA SCIENTIST - | 24 | Senior. Data Scientist</div>
-  <div class="teal-box">📌 <strong><code>trim(x, 'chars')</code>は「文字の集合」を取る：</strong>第2引数は<code>' -'</code>（空白とハイフン）の<strong>並びではなく、どれか1文字でも当てはまれば削る文字の集合</strong>です。前後から、集合に含まれない文字にぶつかるまで削り続けます。そのため15番の末尾の<code>' -'</code>だけが消え、途中の空白は残ります。<code>ltrim</code>・<code>rtrim</code>で片側だけ削ることもできます。</div>
+0 | Sr Data Scientist | SR DATA SCIENTIST | 17 | Sr Data Scientist
+93 | (Sr.) Data Scientist - | (SR.) DATA SCIENTIST - | 22 | (Sr.) Data Scientist</div>
+  <div class="teal-box">📌 <strong><code>trim(x, 'chars')</code>は「文字の集合」を取る：</strong>第2引数は<code>' -'</code>（空白とハイフン）の<strong>並びではなく、どれか1文字でも当てはまれば削る文字の集合</strong>です。前後から、集合に含まれない文字にぶつかるまで削り続けます。そのため93番の末尾の<code>' -'</code>だけが消え、先頭の<code>(Sr.)</code>の括弧や途中の空白は残ります（括弧も消したいなら、集合を<code>' -()'</code>にします）。<code>ltrim</code>・<code>rtrim</code>で片側だけ削ることもできます。</div>
   <h3>initcap()の落とし穴：略語を認識しない</h3>
-  <p><code>initcap()</code>は便利ですが「単語の先頭以外を全部小文字にする」だけの単純な関数で、略語（ETL・SQL・AIなど）を理解しません。<code>job_desc</code>の6番でその弱点を確認します。</p>
+  <p><code>initcap()</code>は便利ですが「単語の先頭以外を全部小文字にする」だけの単純な関数で、略語（ETL・SQL・AIなど）を理解しません。<code>industry</code>列の411番（業種名<code>IT Services</code>）でその弱点を確認します。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> job_desc,</span>
-<span class="cl">       INITCAP(job_desc) <span class="kw">AS</span> titled</span>
+<span class="cl"><span class="kw">SELECT</span> industry,</span>
+<span class="cl">       INITCAP(industry) <span class="kw">AS</span> titled</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">6</span>;</span>
+<span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">411</span>;</span>
 </pre>
-<div class="output-reveal">job_desc | titled
-Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
-  <div class="warn-box">⚠️ <strong><code>ETL</code>が<code>Etl</code>になってしまいました。</strong>教科書の例でも<code>initcap('Practical SQL')</code>は<code>Practical Sql</code>になります。<code>'AI research at NASA'</code>も<code>Ai Research At Nasa</code>です。完璧なタイトルケース変換ではないので、略語を含む列では結果を必ず目で確認し、必要なら<code>replace()</code>で直しましょう。</div>
+<div class="output-reveal">industry | titled
+IT Services | It Services</div>
+  <div class="warn-box">⚠️ <strong><code>IT</code>が<code>It</code>になってしまいました。</strong>教科書の例でも<code>initcap('Practical SQL')</code>は<code>Practical Sql</code>になります。<code>'AI research at NASA'</code>も<code>Ai Research At Nasa</code>です。完璧なタイトルケース変換ではないので、略語を含む列では結果を必ず目で確認し、必要なら<code>replace()</code>で直しましょう（例：<code>replace(initcap(industry), 'It ', 'IT ')</code>）。</div>
   <h3>LIKE と ILIKE（大文字小文字の扱い）</h3>
   <p>M3で学んだ<code>LIKE</code>は、<strong>PostgreSQLでは大文字小文字を区別します</strong>。区別しない検索には<code>ILIKE</code>（Insensitive LIKE）を使います。たとえば<code>job_title LIKE 'senior%'</code>は、PostgreSQLでは<code>Senior Data Scientist</code>にマッチしません（先頭がSと大文字のため）。<code>ILIKE 'senior%'</code>ならマッチします。</p>
 
@@ -98,7 +98,7 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>文字列関数は「文字を整える道具箱」です。大文字小文字をそろえる（upper/lower）、余分な空白や記号を削る（trim）、長さを測る（char_length）、桁をそろえる（lpad）。initcapは便利ですが、略語には弱いので目視チェックを忘れずに。</p></div>
   <div class="practice-card" id="p-w5-u1">
     <div class="ptitle">💻 ミニ練習：職種名を大文字にして文字数も見る</div>
-    <p class="ptask"><code>ds_jobs</code>から、<code>post_id</code>が5と15の行について、<code>post_id</code>・<code>UPPER(job_title)</code>（別名<code>title_upper</code>）・<code>CHAR_LENGTH(job_title)</code>（別名<code>len</code>）を求めるSQLを書いてください。</p>
+    <p class="ptask"><code>ds_jobs</code>から、<code>post_id</code>が0と93の行について、<code>post_id</code>・<code>UPPER(job_title)</code>（別名<code>title_upper</code>）・<code>CHAR_LENGTH(job_title)</code>（別名<code>len</code>）を求めるSQLを書いてください。</p>
     <textarea class="code-editor" id="p-w5-u1-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -111,8 +111,8 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
 <span class="cl">       UPPER(job_title) <span class="kw">AS</span> title_upper,</span>
 <span class="cl">       CHAR_LENGTH(job_title) <span class="kw">AS</span> len</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">5</span>, <span class="nm">15</span>);</span></pre>
-      <p class="answer-note"><code>UPPER()</code>で大文字化、<code>CHAR_LENGTH()</code>で文字数を返します。結果は2行で、lenは18と24になるはずです（空白や末尾の<code>-</code>も文字数に含まれます）。</p>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">0</span>, <span class="nm">93</span>);</span></pre>
+      <p class="answer-note"><code>UPPER()</code>で大文字化、<code>CHAR_LENGTH()</code>で文字数を返します。結果は2行で、lenは17と22になるはずです（空白や末尾の<code>-</code>も文字数に含まれます）。</p>
     </div>
   </div>
 </div>
@@ -132,7 +132,7 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
     <tr><td><code>{m}</code> / <code>{m,n}</code></td><td>直前をちょうどm回／m〜n回</td><td><code>\d{1,3}</code> は 1〜3桁</td></tr>
     <tr><td><code>a|b</code></td><td>aまたはb</td><td><code>analyst|engineer</code></td></tr>
     <tr><td><code>( )</code></td><td>グループ化（抽出する部分の指定にも使う）</td><td><code>^(Sr|Senior)</code></td></tr>
-    <tr><td><code>^</code> / <code>$</code></td><td>文字列の先頭／末尾</td><td><code>[0-9]\.[0-9]$</code> は末尾の 4.4 など</td></tr>
+    <tr><td><code>^</code> / <code>$</code></td><td>文字列の先頭／末尾</td><td><code>[0-9]\.[0-9]$</code> は末尾の 3.1 など</td></tr>
   </table>
   <div class="note-box">💡 <code>.</code>や<code>?</code>などの記号そのものを探したいときは、直前に<code>\</code>を付けます（<code>\.</code>はピリオド1文字）。パターンを作るときは、<strong>regexr.com</strong>などのオンラインツールに文字列を貼って試しながら組み立てると、理解がずっと早くなります。</div>
   <h3>WHERE で使う照合演算子 ~ ~* !~ !~*</h3>
@@ -143,7 +143,7 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
     <tr><td><code>!~</code></td><td>マッチ<strong>しない</strong>（区別する）</td></tr>
     <tr><td><code>!~*</code></td><td>マッチしない（区別しない）</td></tr>
   </table>
-  <p>講義では、職種名の表記ゆれ（<code>Sr.</code>・<code>Sr</code>・<code>Senior.</code>...）を<code>REPLACE</code>で何回かに分けて直しました。正規表現なら「シニア系の職種」を1つのパターンで拾えます。</p>
+  <p>講義では、職種名の表記ゆれ（<code>Sr</code>・<code>Sr.</code>・<code>(Sr.)</code>・<code>Senior</code>...）を<code>REPLACE</code>で何回かに分けて直しました。正規表現なら「シニア系の職種」を1つのパターンで拾えます。</p>
 
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> post_id, job_title</span>
@@ -152,25 +152,26 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
 </pre>
 <div class="output-reveal">post_id | job_title
-2 | Senior Data Scientist
-5 | Sr. Data Scientist
-9 | Sr Data Scientist
-12 | Senior Data Scientist
-15 | Senior. Data Scientist -
-19 | Sr. Data Scientist
-22 | Senior Data Scientist
-23 | Sr Data Scientist
-28 | Senior. Data Scientist -
-(9 rows)</div>
-  <p>9行ヒットしました。講義の「4種類の表記ゆれがあわせて9行」と同じ結果です。同じ条件で演算子を変えると、次のように件数が変わります（すべて実測）。</p>
+0 | Sr Data Scientist
+93 | (Sr.) Data Scientist -
+98 | Senior Data Scientist
+131 | Senior Data Engineer
+142 | Senior Data Scientist
+155 | Sr Data Scientist
+169 | Sr Data Analyst
+207 | Senior Business Intelligence Analyst
+377 | Sr. Data Scientist
+551 | Senior Data Scientist
+(10 rows)</div>
+  <p>10行ヒットしました。<code>Sr</code>・<code>Sr.</code>・<code>(Sr.)</code>・<code>Senior</code>という表記ゆれが、1つのパターンで全部拾えています。同じ条件で演算子を変えると、次のように件数が変わります（すべて実測）。</p>
   <table class="compare-table">
     <tr><th>条件</th><th>件数</th><th>ポイント</th></tr>
     <tr><td><code>job_title ~ 'senior'</code></td><td>0</td><td>小文字のseniorはどこにもない（区別する）</td></tr>
     <tr><td><code>job_title ~* 'senior'</code></td><td>5</td><td><code>Senior</code>始まりの5行（Sr系は含まない）</td></tr>
-    <tr><td><code>job_title ~* 'sr\.?|senior'</code></td><td>9</td><td>Sr系とSenior系の両方</td></tr>
-    <tr><td><code>job_title !~* 'sr\.?|senior'</code></td><td>21</td><td>それ以外（9 + 21 = 全30行）</td></tr>
-    <tr><td><code>job_title ~ '^(Sr|Senior)'</code></td><td>9</td><td><code>^</code>で「先頭が」を指定</td></tr>
-    <tr><td><code>job_title ~* 'analyst|engineer'</code></td><td>13</td><td>Analyst 4 + Business Intelligence Analyst 3 + Data Engineer 3 + Machine Learning Engineer 3</td></tr>
+    <tr><td><code>job_title ~* 'sr\.?|senior'</code></td><td>10</td><td>Sr系とSenior系の両方</td></tr>
+    <tr><td><code>job_title !~* 'sr\.?|senior'</code></td><td>20</td><td>それ以外（10 + 20 = 全30行）</td></tr>
+    <tr><td><code>job_title ~ '^(Sr|Senior)'</code></td><td>9</td><td><code>^</code>で「先頭が」を指定。<code>(Sr.) ...</code>（93番）は先頭が括弧なので<strong>取りこぼす</strong></td></tr>
+    <tr><td><code>job_title ~* 'analyst|engineer'</code></td><td>11</td><td>Analyst系 5行（Data Analyst 3 + Sr Data Analyst 1 + Senior Business Intelligence Analyst 1）＋ Engineer系 6行（Data Engineer 2 + Senior Data Engineer 1 + Machine Learning Engineer 3）</td></tr>
   </table>
   <div class="note-box">💡 PostgreSQLの<code>~</code>・<code>~*</code>・<code>!~</code>・<code>!~*</code>は、この演習アリーナでも自動変換されてそのまま動きます（アリーナの正規表現はJavaScript風の書き方ですが、このページのパターンならどちらでも同じ動作です）。</div>
   <h3>regexp_replace()：パターンで置換する</h3>
@@ -183,33 +184,34 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
 </pre>
 <div class="output-reveal">first_only | all_matches | squeezed
 baa | bbb | a b c</div>
-  <p>本番は講義で最も面倒だった「会社名の末尾にくっついた評価値」です。<code>company</code>は<code>Bluepeak Studios4.4</code>のように末尾に評価値が付いていました。講義では<code>SUBSTRING(company FROM 1 FOR LENGTH(company) - 3)</code>で末尾3文字を削り、評価が-1の行は<code>CASE</code>で除外しました。正規表現なら「末尾の<code>数字.数字</code>」を空文字に置き換えるだけです。</p>
+  <p>本番は講義で最も面倒だった「会社名の末尾にくっついた評価値」です。実データの<code>company</code>は、<code>Healthfirst</code>＋<strong>改行</strong>＋<code>3.1</code>のように、会社名の後ろに<strong>改行（<code>CHAR(10)</code>）と評価値</strong>が付いています（<code>rating</code>が-1の行は付いていません）。講義では<code>SUBSTRING(company FROM 1 FOR LENGTH(company) - 4)</code>のように末尾4文字（改行1文字＋<code>3.1</code>の3文字）を削り、評価が-1の行は<code>CASE</code>で除外しました。正規表現なら「末尾の<code>改行 数字.数字</code>」を空文字に置き換えるだけです（改行は<code>\n</code>と書きます）。</p>
 
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> post_id, company,</span>
-<span class="cl">       REGEXP_REPLACE(company, <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
+<span class="cl">       REGEXP_REPLACE(company, <span class="st">'\n[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">6</span>, <span class="nm">7</span>);</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">0</span>, <span class="nm">98</span>, <span class="nm">158</span>, <span class="nm">411</span>);</span>
 </pre>
 <div class="output-reveal">post_id | company | clean
-1 | Bluepeak Studios4.4 | Bluepeak Studios
-4 | Open Door Health | Open Door Health
-6 | District 94.2 | District 9
-7 | 23Genomics3.8 | 23Genomics</div>
-  <div class="teal-box">📌 <strong>SUBSTRING方式との違い：</strong>末尾3文字を削る方法は、評価が付いていない行（rating = -1の5行）まで削ってしまい、<code>Open Door Health</code>が<code>Open Door Hea</code>になります。だから<code>CASE</code>が必要でした。<code>regexp_replace</code>は「パターンに<strong>マッチしたときだけ</strong>置換」するので、評価が付いていない行は自動的にそのままです。<code>District 94.2</code>のように名前の一部が数字でも、末尾の<code>4.2</code>だけが消えます。実際、パターンにマッチするのは25行で、これは評価が-1でない行の数と一致します。</div>
+0 | Healthfirst\n3.1 | Healthfirst
+98 | GutCheck\n3.8 | GutCheck
+158 | Radical Convergence | Radical Convergence
+411 | Evolvinc | Evolvinc</div>
+  <p class="answer-note">※ 出力の<code>\n</code>は、その位置に改行文字が入っていることを示す表記です。</p>
+  <div class="teal-box">📌 <strong>SUBSTRING／LEFT方式との違い：</strong>末尾4文字を削る方法は、評価が付いていない行（rating = -1の4行）まで削ってしまい、<code>Radical Convergence</code>が<code>Radical Converg</code>になります。だから<code>CASE</code>が必要でした。<code>regexp_replace</code>は「パターンに<strong>マッチしたときだけ</strong>置換」するので、評価が付いていない行は自動的にそのままです。実際、パターンにマッチするのは26行で、これは評価が-1でない行の数（30 - 4）と一致します。<strong>改行（<code>\n</code>）を含めずに<code>'[0-9]\.[0-9]$'</code>だけで置換すると、<code>Healthfirst</code>の後ろに改行が残る</strong>ので注意しましょう。</div>
   <div class="warn-box">⚠️ 正規表現は強力なぶん、<strong>思わぬ行にもマッチする</strong>危険があります。<code>UPDATE</code>の前には必ず<code>SELECT</code>で置換結果を確認しましょう（講義で学んだ「バックアップ」「WHEREなしのUPDATEは全行に効く」も同じです）。</div>
-  <p>もう1つ、<code>salary_est</code>末尾の<code>(Glassdoor est.)</code>と<code>(Employer est.)</code>も、括弧の中身が2種類あっても1つのパターンで消せます。</p>
+  <p>もう1つ、<code>salary_est</code>末尾の<code>(Glassdoor est.)</code>と<code>(Employer est.)</code>も、括弧の中身が2種類あっても1つのパターンで消せます。ただし実データには<code>$145K-$225K(Employer est.)</code>のように<strong>括弧の前に空白がない</strong>行（313番と317番）があるので、空白は<code>?</code>で「あってもなくてもよい」にします。</p>
 
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> post_id, salary_est,</span>
-<span class="cl">       REGEXP_REPLACE(salary_est, <span class="st">' \(.*\)$'</span>, <span class="st">''</span>) <span class="kw">AS</span> salary_only</span>
+<span class="cl">       REGEXP_REPLACE(salary_est, <span class="st">' ?\(.*\)$'</span>, <span class="st">''</span>) <span class="kw">AS</span> salary_only</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">8</span>);</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">0</span>, <span class="nm">313</span>);</span>
 </pre>
 <div class="output-reveal">post_id | salary_est | salary_only
-1 | $110K-$163K (Glassdoor est.) | $110K-$163K
-8 | $52K-$87K (Employer est.) | $52K-$87K</div>
-  <p><code>\(</code>と<code>\)</code>は「括弧そのもの」、<code>.*</code>は「何でも0文字以上」の意味です。</p>
+0 | $137K-$171K (Glassdoor est.) | $137K-$171K
+313 | $145K-$225K(Employer est.) | $145K-$225K</div>
+  <p><code>\(</code>と<code>\)</code>は「括弧そのもの」、<code>.*</code>は「何でも0文字以上」の意味です。もし空白なしの<code>' \(.*\)$'</code>で書くと、313番は変更されずに残ってしまいます。</p>
   <h3>SUBSTRING(x FROM 'pattern')：最初のマッチを取り出す</h3>
   <p>講義の<code>SUBSTRING(x FROM 位置 FOR 長さ)</code>は位置で切り出しました。<code>FROM</code>の後ろに正規表現を書くと、<strong>パターンにマッチした最初の部分</strong>を取り出せます。パターンに括弧<code>( )</code>があると、その中身だけが返ります。給与の数字を取り出すのに便利です。教科書にも「テキストから4桁の数字を取り出す」という例があります。</p>
 
@@ -218,13 +220,13 @@ baa | bbb | a b c</div>
 <span class="cl">       SUBSTRING(salary_est <span class="kw">FROM</span> <span class="st">'[0-9]+'</span>)       <span class="kw">AS</span> low_k,</span>
 <span class="cl">       SUBSTRING(salary_est <span class="kw">FROM</span> <span class="st">'-\$([0-9]+)K'</span>) <span class="kw">AS</span> high_k</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">8</span>, <span class="nm">22</span>);</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">75</span>, <span class="nm">313</span>, <span class="nm">510</span>);</span>
 </pre>
 <div class="output-reveal">post_id | salary_est | low_k | high_k
-1 | $110K-$163K (Glassdoor est.) | 110 | 163
-8 | $52K-$87K (Employer est.) | 52 | 87
-22 | $132K-$186K (Employer est.) | 132 | 186</div>
-  <p><code>[0-9]+</code>は「数字の連続」で、文字列中の最初の連続（下限）が取れます。<code>-\$([0-9]+)K</code>は、ハイフンと<code>$</code>の後ろの数字だけを括弧で切り出しています。下限が2桁（52）でも3桁（132）でも同じパターンで取れる点が、位置を数える方法との大きな違いです。取れたものは文字列なので、数値として使うときは<code>::int</code>で変換します。</p>
+75 | $79K-$131K (Glassdoor est.) | 79 | 131
+313 | $145K-$225K(Employer est.) | 145 | 225
+510 | $212K-$331K (Glassdoor est.) | 212 | 331</div>
+  <p><code>[0-9]+</code>は「数字の連続」で、文字列中の最初の連続（下限）が取れます。<code>-\$([0-9]+)K</code>は、ハイフンと<code>$</code>の後ろの数字だけを括弧で切り出しています。下限が2桁（79）でも3桁（145や212）でも同じパターンで取れる点が、位置を数える方法との大きな違いです。取れたものは文字列なので、数値として使うときは<code>::int</code>で変換します。</p>
   <h3>PostgreSQL専用の抽出関数（教科書のみ）</h3>
   <p>教科書では、犯罪報告書<code>crime_reports</code>の自由記述文から日付を取り出すために、次の関数を使います。</p>
   <ul>
@@ -232,13 +234,13 @@ baa | bbb | a b c</div>
     <li><code>regexp_matches(text, pattern, 'g')</code>：<code>'g'</code>を付けると<strong>すべて</strong>のマッチを1件ずつ行として返す（1つの報告書に日付が2つ出てくる場合など）。</li>
     <li><code>regexp_split_to_table(text, pattern)</code>：パターンで文字列を分割し、1要素1行のテーブルにする。</li>
   </ul>
-  <p>この教材のデータに当てはめると、たとえば<code>regexp_match(salary_est, '\$(\d+)K-\$(\d+)K')</code>は1行目で配列<code>{110,163}</code>を返し、<code>[1]</code>が下限・<code>[2]</code>が上限です。<code>competitors</code>を<code>regexp_split_to_table(competitors, ',\s*')</code>で分割すれば、<code>Starlight Media, Orbit Films</code>が2行になります。</p>
+  <p>この教材のデータに当てはめると、たとえば<code>regexp_match(salary_est, '\$(\d+)K-\$(\d+)K')</code>は0番の行で配列<code>{137,171}</code>を返し、<code>[1]</code>が下限・<code>[2]</code>が上限です。<code>competitors</code>を<code>regexp_split_to_table(competitors, ',\s*')</code>で分割すれば、0番の<code>EmblemHealth, UnitedHealth Group, Aetna</code>が3行になります（なお<code>competitors</code>の大半は<code>-1</code>で、これも後で<code>NULL</code>に直す対象です）。</p>
   <div class="warn-box">⚠️ <strong>この3つの関数は、このサイトの演習アリーナ（SQLite）では動きません。</strong>「読んで理解する」内容です。アリーナで同じことをするときは、この単元の<code>SUBSTRING(x FROM 'pattern')</code>と<code>regexp_replace()</code>を使いましょう（この2つはアリーナでも実行できます）。</div>
 
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>正規表現は「文字のあみ」です。<code>~</code>はあみにかかる行を探し、<code>regexp_replace</code>はかかった部分を別の文字に置き換え、<code>SUBSTRING(x FROM 'pattern')</code>はかかった部分だけを取り出します。まず<code>SELECT</code>で何がかかるかを確かめてから、<code>UPDATE</code>に進みましょう。</p></div>
   <div class="practice-card" id="p-w5-u2">
     <div class="ptitle">💻 ミニ練習：会社名の末尾の評価値を消す</div>
-    <p class="ptask"><code>ds_jobs</code>の<code>company</code>の末尾にくっついた評価値（<code>4.4</code>のような<code>数字.数字</code>）を<code>REGEXP_REPLACE</code>で取り除き、<code>post_id</code>と<code>clean_name</code>（別名）を<code>post_id</code>順に返すSQLを書いてください。</p>
+    <p class="ptask"><code>ds_jobs</code>の<code>company</code>の末尾にくっついた改行＋評価値（<code>\n3.1</code>のような<code>改行 数字.数字</code>）を<code>REGEXP_REPLACE</code>で取り除き、<code>post_id</code>と<code>clean_name</code>（別名）を<code>post_id</code>順に返すSQLを書いてください。</p>
     <textarea class="code-editor" id="p-w5-u2-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -248,10 +250,10 @@ baa | bbb | a b c</div>
     <div class="check-result" id="p-w5-u2-result"></div>
     <div class="answer-reveal" id="p-w5-u2-answer" hidden>
       <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id,</span>
-<span class="cl">       REGEXP_REPLACE(company, <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean_name</span>
+<span class="cl">       REGEXP_REPLACE(company, <span class="st">'\n[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean_name</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span></pre>
-      <p class="answer-note">パターン<code>[0-9]\.[0-9]$</code>は「文字列の末尾にある数字・ピリオド・数字」を表し、空文字<code>''</code>に置換しています。30行すべてが返り、評価の付いていない5行は元の名前のままです。</p>
+      <p class="answer-note">パターン<code>\n[0-9]\.[0-9]$</code>は「文字列の末尾にある改行・数字・ピリオド・数字」を表し、空文字<code>''</code>に置換しています。30行すべてが返り、評価の付いていない4行（post_id 158, 411, 519, 613）は元の名前のままです。</p>
     </div>
   </div>
 </div>
@@ -293,23 +295,23 @@ baa | bbb | a b c</div>
 <span class="cl"><span class="cm">-- 結果： false   （sitはあるので「!sit」が満たされない）</span></span>
 </pre>
   <h3>なぜ LIKE '%word%' では足りないのか</h3>
-  <p><code>ds_jobs</code>の<code>job_desc</code>で考えてみます（30行のうち1行は<code>Forecast demand for seasonal inventory.</code>）。</p>
+  <p><code>ds_jobs</code>の<code>job_desc</code>で考えてみます（30行のうち0番の説明文は<code>... defining, building, and <strong>improving</strong> statistical models ...</code>で始まります）。</p>
   <table class="compare-table">
     <tr><th>比べる点</th><th>LIKE '%word%'</th><th>全文検索</th></tr>
-    <tr><td>語形の違い</td><td><code>LIKE '%forecasting%'</code>は0行（Forecastは別の文字列）</td><td><code>to_tsquery('forecasting')</code>は語幹<code>forecast</code>にそろえるので、この行にマッチする</td></tr>
-    <tr><td>大文字小文字</td><td>PostgreSQLの<code>LIKE '%model%'</code>は小文字の4行だけ。<code>ILIKE</code>や<code>~*</code>なら6行（<code>Model ...</code>で始まる2行も含む）</td><td>自動で小文字化して照合</td></tr>
+    <tr><td>語形の違い</td><td><code>LIKE '%improve%'</code>は0行（<code>improving</code>は<code>improve</code>という文字列を含まない）</td><td><code>to_tsquery('english', 'improve')</code>も説明文側の<code>improving</code>も語幹<code>improv</code>にそろうので、0番の行にマッチする</td></tr>
+    <tr><td>大文字小文字</td><td>PostgreSQLの<code>LIKE '%data%'</code>は小文字の<code>data</code>を含む4行だけ。<code>ILIKE</code>や<code>~*</code>なら18行（<code>Data Analyst</code>など大文字始まりも含む）</td><td>自動で小文字化して照合</td></tr>
     <tr><td>複数語・論理条件</td><td><code>AND</code>や<code>OR</code>を何度も書く必要がある</td><td><code>'model &amp; data'</code>のように1つの検索語で書ける</td></tr>
     <tr><td>関連度の順位</td><td>付けられない（あるか無いかだけ）</td><td><code>ts_rank()</code>でスコア順に並べられる</td></tr>
     <tr><td>速度</td><td>先頭が<code>%</code>のLIKEは通常のインデックスが効かず全行を走査</td><td>GINインデックスで高速化できる</td></tr>
   </table>
-  <p>上の「モデルとデータを両方含む説明」は、正規表現なら<code>job_desc ~* 'model' AND job_desc ~* 'data'</code>で2行（post_idの7と25）と確認できます。全文検索で同じ条件を書くと次のようになります。</p>
+  <p>上の「モデルとデータを両方含む説明」は、正規表現なら<code>job_desc ~* 'model' AND job_desc ~* 'data'</code>で2行（post_idの0と78。0番は<code>models</code>、78番は<code>Modeling</code>）と確認できます。全文検索なら<code>models</code>も<code>Modeling</code>も語幹<code>model</code>にそろいます。全文検索で同じ条件を書くと次のようになります。</p>
 
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> post_id, job_desc</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_desc)</span>
 <span class="cl">      @@ to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>);</span>
-<span class="cl"><span class="cm">-- 想定結果： post_id 7 と 25 の2行</span></span>
+<span class="cl"><span class="cm">-- 想定結果： post_id 0 と 78 の2行</span></span>
 </pre>
   <h3>tsvector列とGINインデックス</h3>
   <p>上のように毎回<code>to_tsvector()</code>を呼ぶと、検索のたびに全行を変換するので遅くなります。教科書では、<strong>tsvector型の列を別に作って変換結果を保存</strong>し、その列に<strong>GINインデックス</strong>を張ります（GIN = 語から行を引く転置インデックス）。</p>
@@ -394,7 +396,7 @@ baa | bbb | a b c</div>
 
 <div class="quiz-q" id="q3">
   <div class="q-num">Question 3</div>
-  <div class="q-text">Which regular expression matches a rating such as 4.4 glued to the very end of a company name?</div>
+  <div class="q-text">Which regular expression matches a rating such as 3.8 at the very end of a company name?</div>
   <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>^[0-9]\.[0-9], which looks for digit, a literal dot and digit at the start of the string</button>
 <button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>[0-9].[0-9], which needs any character between two digits, wherever they occur</button>
 <button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>[0-9]*$, which matches any run of digits at the end but never needs a dot</button>
@@ -425,19 +427,19 @@ baa | bbb | a b c</div>
 <div class="quiz-q" id="q6">
   <div class="q-num">Question 6</div>
   <div class="q-text">What does to_tsvector('english', 'I am walking across the sitting room') produce?</div>
-  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Stemmed lexemes with positions, such as 'walk' and 'sit', with stop words removed</button>
-<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The same text left unchanged, but stored in a faster internal binary type</button>
-<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A translation of the whole sentence into another language of your choice</button>
-<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A single number that counts how many words the sentence contains in total</button></div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Stemmed lexemes with positions, such as 'walk' and 'sit', and no stop words</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The same text left unchanged, but stored in a faster internal binary type for searching</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A translation of the whole sentence into another language chosen by the user</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A single number that counts how many words the sentence contains in total, nothing more</button></div>
   <div class="q-feedback" id="fb6"></div>
 </div>
 
 <div class="quiz-q" id="q7">
   <div class="q-num">Question 7</div>
-  <div class="q-text">Why is LIKE '%forecasting%' not enough to find a job description containing the word 'Forecast'?</div>
-  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>LIKE cannot be used on TEXT columns, so full text search is the only option</button>
-<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>LIKE always returns an error when the search pattern starts with the % wildcard</button>
-<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>LIKE searches only the first word of each value and ignores the rest of the text</button>
+  <div class="q-text">Why is LIKE '%improve%' not enough to find a job description containing the word 'improving'?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>LIKE cannot be applied to TEXT columns at all, so full text search is the only possible option</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>LIKE always raises an error when the search pattern starts with the % wildcard character</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>LIKE searches only the first word of each stored value and silently ignores all the rest of the text</button>
 <button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>LIKE compares raw characters, so it has no stemming, no ranking and no fast index</button></div>
   <div class="q-feedback" id="fb7"></div>
 </div>
@@ -445,10 +447,10 @@ baa | bbb | a b c</div>
 <div class="quiz-q" id="q8">
   <div class="q-num">Question 8</div>
   <div class="q-text">Why might you pass a third normalisation argument to ts_rank(), as in ts_rank(vec, query, 1)?</div>
-  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To make the query run without a GIN index</button>
-<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To divide the score by the document length so long documents do not win just for containing more words</button>
-<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To convert the tsvector back into plain text</button>
-<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To make ts_rank() work on the SQLite practice arena</button></div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To make the query run without needing a GIN index on the column at all</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To correct the score for document length, so long texts do not win by size alone</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To convert the tsvector value back into the plain text it was made from</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To make ts_rank() work on the SQLite practice arena without any changes</button></div>
   <div class="q-feedback" id="fb8"></div>
 </div>
 </div>

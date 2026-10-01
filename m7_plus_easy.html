@@ -28,7 +28,7 @@
   <div class="ch-banner-inner">
     <div class="ch-tag">M7+ · Inspecting & Modifying Data 🍎</div>
     <h1>🍎 超やさしい版：重複検出・length診断・安全な修復</h1>
-    <p>ここは<strong>教科書『Practical SQL 完全ガイド』第10章だけに載っている</strong>内容で、講義動画では扱っていません。教材のデータは架空の30行サンプル（ds_jobs）です。</p>
+    <p>ここは<strong>教科書『Practical SQL 完全ガイド』第10章だけに載っている</strong>内容で、講義動画では扱っていません。教材のデータは、講義で使った本物のGlassdoorデータ（672行）から抜き出した30行のサンプル（ds_jobs）です。</p>
     <div class="unit-nav"><a href="#u1">重複と表記ゆれ</a><a href="#u2">length()診断</a><a href="#u3">バックアップと修復</a><a href="#u4">表をまたぐUPDATE</a><a href="#u5">DELETEとDROP</a><a href="m7_plus.html" class="easy-toplink">🧩 本編はこちら</a></div>
   </div>
 </div>
@@ -61,11 +61,11 @@
 <div class="output-reveal">job_title | n
 ...
 Senior Data Scientist | 3
-Senior. Data Scientist - | 2
+Sr Data Analyst | 1
 Sr Data Scientist | 2
-Sr. Data Scientist | 2
-(全部で10行)</div>
-  <p>同じ職種のはずなのに、綴りが4通りに分かれています。</p>
+Sr. Data Scientist | 1
+(全部で12行)</div>
+  <p>Data Scientistの上級職は、<code>(Sr.) Data Scientist -</code>を含めて綴りが4通りに分かれています。</p>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「山の高さ」で絞るときは<code>WHERE</code>ではなく<code>HAVING</code>を使います。</p></div>
   <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 重複を探すとき、HAVINGに何と書く？<span class="cp-a">A. <code>HAVING count(*) &gt; 1</code>。2行以上あるグループだけが残る。</span></div><div class="cp-q">Q2. 重複を探して0行だったら？<span class="cp-a">A. エラーではなく「重複なし」という正しい結果。</span></div></div>
 </div>
@@ -77,17 +77,17 @@ Sr. Data Scientist | 2
     <div class="ru-arrow">📏</div>
     <div class="ru-text">たとえば<strong>同じ長さのはずの鉛筆</strong>を並べて、1本だけ極端に短いものを探す作業です。</div>
   </div>
-  <p class="code-label">▶ 説明文が短すぎる行を探す</p>
+  <p class="code-label">▶ 本社所在地が短すぎる行を探す</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, job_desc, LENGTH(job_desc) <span class="kw">AS</span> len</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, headquarter, LENGTH(headquarter) <span class="kw">AS</span> len</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> LENGTH(job_desc) &lt; <span class="nm">5</span></span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(headquarter) &lt; <span class="nm">5</span></span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
 </pre>
-<div class="output-reveal">post_id | job_desc | len
-11 | TBD | 3
-18 | n/a | 3
-29 |  | 0
+<div class="output-reveal">post_id | headquarter | len
+158 | -1 | 2
+519 | -1 | 2
+613 | -1 | 2
 (3 rows)</div>
   <p class="code-label">▶ 設立年の桁数を調べる（数値はTEXTにしてから）</p>
 <pre class="code-block">
@@ -96,15 +96,15 @@ Sr. Data Scientist | 2
 <span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> LENGTH(CAST(founded <span class="kw">AS</span> <span class="kw">TEXT</span>));</span>
 </pre>
 <div class="output-reveal">len | n
-2 | 2
-4 | 28
+2 | 5
+4 | 25
 (2 rows)</div>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
-    <div class="ru-text">長さ2の2件は<code>-1</code>（「不明」のダミー値）です。空文字列<code>''</code>はNULLではなく長さ0の値なので、<code>IS NULL</code>では見つかりません。</div>
+    <div class="ru-text">長さ2の行は<code>-1</code>（「不明」のダミー値）です。<code>'-1'</code>はNULLではなく文字列の値なので、<code>IS NULL</code>では見つかりません。</div>
   </div>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>length()</code>は「本来は同じ長さのはず」の列で大活躍します。</p></div>
-  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 空文字列は IS NULL で見つかる？<span class="cp-a">A. 見つからない。空文字列は長さ0の「値」で、NULLとは別物。</span></div><div class="cp-q">Q2. 数値列の桁数を数えるには？<span class="cp-a">A. <code>CAST(列 AS TEXT)</code>で文字列にしてから<code>LENGTH()</code>。</span></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 文字列の'-1'や空文字列は IS NULL で見つかる？<span class="cp-a">A. 見つからない。どちらも「値」で、NULLとは別物。</span></div><div class="cp-q">Q2. 数値列の桁数を数えるには？<span class="cp-a">A. <code>CAST(列 AS TEXT)</code>で文字列にしてから<code>LENGTH()</code>。</span></div></div>
 </div>
 
 <div class="unit" id="u3">
@@ -121,11 +121,11 @@ Sr. Data Scientist | 2
 <span class="cl"></span>
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
 <span class="cl"><span class="kw">SET</span> job_title = <span class="st">'Senior Data Scientist'</span></span>
-<span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">15</span></span>
+<span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">93</span></span>
 <span class="cl"><span class="kw">RETURNING</span> post_id, job_title, job_title_copy;</span>
 </pre>
 <div class="output-reveal">post_id | job_title | job_title_copy
-15 | Senior Data Scientist | Senior. Data Scientist -
+93 | Senior Data Scientist | (Sr.) Data Scientist -
 (1 rows)</div>
   <p class="code-label">▶ 元に戻したくなったら</p>
 <pre class="code-block">
@@ -163,7 +163,7 @@ Sr. Data Scientist | 2
 <span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">);</span>
 </pre>
-  <p>30行のうち27行に対応があり、更新されます。残り3行（<code>Unknown</code>と<code>-1</code>が2件）はそのままです。</p>
+  <p>30行のうち27行に対応があり、更新されます。残り3行（owner_typeが<code>-1</code>の行）はそのままです。</p>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
     <div class="ru-text"><code>WHERE EXISTS</code>を付け忘れると、対応がない3行が<strong>NULLに上書き</strong>されてしまいます。</div>
@@ -194,8 +194,8 @@ Sr. Data Scientist | 2
 <span class="cl"><span class="kw">ROLLBACK</span>;</span>
 </pre>
 <div class="output-reveal">remaining
-25</div>
-  <p><code>rating = -1</code>の5行が消えて30行→25行になりましたが、<code>ROLLBACK</code>で30行に戻ります。</p>
+26</div>
+  <p><code>rating = -1</code>の4行が消えて30行→26行になりましたが、<code>ROLLBACK</code>で30行に戻ります。</p>
   <div class="big-rule">
     <div class="ru-arrow">↩️</div>
     <div class="ru-text">確定したいときは<code>COMMIT</code>、取り消したいときは<code>ROLLBACK</code>。<strong>COMMITの後はUndoできません。</strong></div>

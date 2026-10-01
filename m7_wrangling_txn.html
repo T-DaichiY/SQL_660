@@ -27,7 +27,7 @@
 <div class="ch-banner-inner">
   <div class="ch-tag">M7 · Data Wrangling — Transactions, Splitting &amp; Dropping</div>
   <h1>🔒 データ整形③：トランザクション・分割・削除</h1>
-  <p>データを書き換える作業は、間違えると元に戻せません。そこで<strong>トランザクション</strong>で「お試し」しながら作業する方法を学び、その総まとめとして、<code>salary_est</code>（例：<code>'$110K-$163K (Glassdoor est.)'</code>）を<strong>数値の下限・上限の2列に分割する</strong>実践例に取り組みます。最後は不要になった列・テーブルの削除（DROP）です。</p>
+  <p>データを書き換える作業は、間違えると元に戻せません。そこで<strong>トランザクション</strong>で「お試し」しながら作業する方法を学び、その総まとめとして、<code>salary_est</code>（例：<code>'$79K-$131K (Glassdoor est.)'</code>）を<strong>数値の下限・上限の2列に分割する</strong>実践例に取り組みます。最後は不要になった列・テーブルの削除（DROP）です。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
     <a href="#unit1">① トランザクションとは</a><a href="#unit2">② 給与レンジを分割する</a><a href="#unit3">③ 列とテーブルを削除する</a><a href="#quiz">📝 Quiz</a>
   </div>
@@ -42,7 +42,7 @@
     <div><h2>トランザクションとは（COMMITとROLLBACK）</h2><div class="unit-sub">変更を「確定する前」に試して、確認して、取り消せる</div></div>
   </div>
   <p>これまで <code>UPDATE</code> や <code>ALTER TABLE</code> を1本ずつ実行してきました。しかし、データ整形では<strong>「まとめて何本も実行してから、結果を確かめたい」</strong>場面が増えます。そこで登場するのが<strong>トランザクション（transaction）</strong>です。複数のコマンドを1つの作業のまとまりとして囲み、<strong>結果を確認してから「確定（COMMIT）」するか「取り消し（ROLLBACK）」するかを選べる</strong>仕組みです。ゲームの「セーブ前のお試しプレイ」や、文書編集の「元に戻す」に近いイメージです。</p>
-  <div class="note-box">📝 この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行でしたが、ここでは <code>ds_jobs</code> テーブルの30行を使います。</div>
+  <div class="note-box">📝 この教材の練習用データ（30行）は、講義で使ったKaggle／Glassdoorの実データ（<code>Uncleaned_DS_jobs.csv</code>、672行）から取り出した30行のサンプルです。ここでは <code>ds_jobs</code> テーブルのこの30行を使います。</div>
   <h3>使う3つのキーワード</h3>
   <table class="compare-table">
     <tr><th>コマンド</th><th>役割</th></tr>
@@ -76,7 +76,7 @@
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> <span class="kw">ROUND</span>(<span class="kw">AVG</span>(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating <span class="kw">FROM</span> ds_jobs;</span>
 </pre><div class="output-reveal">avg_rating
-3.05
+3.1
 (1 rows)</div>
   <p>次に、トランザクションの中で <strong>WHERE句のない <code>UPDATE</code></strong>（＝全30行が対象）を実行してみます。本番のテーブルなら大事故ですが、トランザクションの中なら取り消せます。</p>
 <pre class="code-block">
@@ -92,9 +92,9 @@ avg_rating
 
 -- ROLLBACK後
 avg_rating
-3.05
+3.1
 (1 rows)</div>
-  <p>トランザクションの中では全行の <code>rating</code> が0になり、平均も0になりました。しかし <code>ROLLBACK</code> のあとは、平均が元の <strong>3.05</strong> に戻っています。もし <code>ROLLBACK</code> の代わりに <code>COMMIT</code> を実行していたら、この変更は永久に確定していました。</p>
+  <p>トランザクションの中では全行の <code>rating</code> が0になり、平均も0になりました。しかし <code>ROLLBACK</code> のあとは、平均が元の <strong>3.1</strong> に戻っています。もし <code>ROLLBACK</code> の代わりに <code>COMMIT</code> を実行していたら、この変更は永久に確定していました。</p>
   <div class="teal-box">📌 <strong>トランザクションはバックアップの代わりではありません。</strong>トランザクションが守ってくれるのは「COMMITする前」だけです。一度 <code>COMMIT</code> したら元に戻せません。だから<strong>バックアップ（<code>CREATE TABLE ... AS SELECT</code> によるコピー）とセットで使う</strong>のが基本です。バックアップは「確定後の保険」、トランザクションは「確定前の安全確認」と覚えましょう。</div>
   <div class="warn-box">⚠️ <strong>実務のヒント：</strong>①スクリプトはこまめに保存しておく（途中で接続が切れると、未COMMITの作業は失われます）。②<code>ROLLBACK</code> を何度も繰り返すと、pgAdminが不安定になったりクラッシュしたりすることがあります。慣れないうちは、変更を小さな単位に分けて、1つずつ確認しながら進めましょう。</div>
   <div class="warn-box">💡 PostgreSQLの <code>START TRANSACTION</code> や <code>x::int</code> は、この演習アリーナでも自動変換されてそのまま動きます。</div>
@@ -124,7 +124,7 @@ avg_rating
     <div class="unit-num">②</div>
     <div><h2>トランザクションで給与レンジを分割する</h2><div class="unit-sub">salary_est → low_range・high_range（INT）</div></div>
   </div>
-  <p>この単元の主役は、Unit①のトランザクションを使った<strong>給与レンジの分割</strong>です。<code>ds_jobs.salary_est</code> には、たとえば <code>'$110K-$163K (Glassdoor est.)'</code> のような文字列が入っています。これでは「下限が10万ドル以上の求人」のような検索も、平均の計算もできません。1つのテキスト列を、<strong>数値の <code>low_range</code>（下限）と <code>high_range</code>（上限）の2列に分ける</strong>のがゴールです。</p>
+  <p>この単元の主役は、Unit①のトランザクションを使った<strong>給与レンジの分割</strong>です。<code>ds_jobs.salary_est</code> には、たとえば <code>'$79K-$131K (Glassdoor est.)'</code> のような文字列が入っています。これでは「下限が10万ドル以上の求人」のような検索も、平均の計算もできません。1つのテキスト列を、<strong>数値の <code>low_range</code>（下限）と <code>high_range</code>（上限）の2列に分ける</strong>のがゴールです。</p>
   <p>作業は「列追加→分割→記号の除去→桁の復元→型変換」と<strong>手順が多く、1つでも間違えるとデータを壊します</strong>。まさにトランザクションの出番です。全体像を先に見ておきましょう。</p>
   <div class="viz">
     <div class="viz-title">給与レンジ分割の8ステップ</div>
@@ -135,21 +135,21 @@ avg_rating
       <div class="flow-arrow-v">↓</div>
       <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>UPDATE ... SPLIT_PART(salary_est, '-', n)</strong><span>「-」の前後で2つに分ける（RETURNINGで確認）</span></div></div>
       <div class="flow-arrow-v">↓</div>
-      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>REPLACE で「$」を除く</strong><span>'$110K' → '110K'</span></div></div>
+      <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>REPLACE で「$」を除く</strong><span>'$79K' → '79K'</span></div></div>
       <div class="flow-arrow-v">↓</div>
-      <div class="flow-step"><span class="step-icon">5️⃣</span><div class="step-text"><strong>「K」以降を除く</strong><span>SPLIT_PART(…,'K',1) か LEFT + POSITION で '110K (Glassdoor est.)' → '110'</span></div></div>
+      <div class="flow-step"><span class="step-icon">5️⃣</span><div class="step-text"><strong>「K」以降を除く</strong><span>SPLIT_PART(…,'K',1) か LEFT + POSITION で '131K (Glassdoor est.)' → '131'</span></div></div>
       <div class="flow-arrow-v">↓</div>
-      <div class="flow-step"><span class="step-icon">6️⃣</span><div class="step-text"><strong>|| '000' を付ける</strong><span>'110' → '110000'（K＝千を戻す）</span></div></div>
+      <div class="flow-step"><span class="step-icon">6️⃣</span><div class="step-text"><strong>|| '000' を付ける</strong><span>'79' → '79000'（K＝千を戻す）</span></div></div>
       <div class="flow-arrow-v">↓</div>
       <div class="flow-step"><span class="step-icon">7️⃣</span><div class="step-text"><strong>ALTER COLUMN ... TYPE INT USING x::INT</strong><span>TEXT → INT に型変換。数字以外が残っているとエラー</span></div></div>
       <div class="flow-arrow-v">↓</div>
       <div class="flow-step"><span class="step-icon">8️⃣</span><div class="step-text"><strong>SELECT で確認 → COMMIT / ROLLBACK</strong><span>OKなら確定、おかしければ取り消し</span></div></div>
     </div>
-    <div class="viz-cap">'$110K-$163K (Glassdoor est.)' → low_range = 110000, high_range = 163000</div>
+    <div class="viz-cap">'$79K-$131K (Glassdoor est.)' → low_range = 79000, high_range = 131000</div>
   </div>
-  <p>以下、ステップごとに実際に動かした結果を見ていきます（注目する行は post_id 1 <code>'$110K-$163K (Glassdoor est.)'</code>、2桁の下限を持つ post_id 3 <code>'$45K-$79K (Glassdoor est.)'</code>、そして <code>Employer est.</code> の post_id 8 <code>'$52K-$87K (Employer est.)'</code> の3行です）。</p>
+  <p>以下、ステップごとに実際に動かした結果を見ていきます（注目する行は post_id 75 <code>'$79K-$131K (Glassdoor est.)'</code>、3桁の下限を持つ post_id 510 <code>'$212K-$331K (Glassdoor est.)'</code>、そして <code>Employer est.</code> で括弧の前にスペースがない post_id 313 <code>'$145K-$225K(Employer est.)'</code> の3行です）。</p>
   <h3>ステップ①②　トランザクション開始と列の追加</h3>
-  <p>まず変更前の安全策として、バックアップがなければ <code>CREATE TABLE ds_jobs_backup AS SELECT * FROM ds_jobs;</code> でコピーを作っておきます。そのうえでトランザクションを開始し、列を追加します。分割した直後の値はまだ <code>'$110K'</code> のような文字列なので、<strong>最初はTEXT型</strong>で作ります。</p>
+  <p>まず変更前の安全策として、バックアップがなければ <code>CREATE TABLE ds_jobs_backup AS SELECT * FROM ds_jobs;</code> でコピーを作っておきます。そのうえでトランザクションを開始し、列を追加します。分割した直後の値はまだ <code>'$79K'</code> のような文字列なので、<strong>最初はTEXT型</strong>で作ります。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">START TRANSACTION</span>;</span>
 <span class="cl"></span>
@@ -164,15 +164,17 @@ avg_rating
 <span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">1</span>),</span>
 <span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">2</span>)</span>
 <span class="cl"><span class="kw">RETURNING</span> post_id, salary_est, low_range, high_range;</span>
-</pre><div class="output-reveal">post_id | salary_est                | low_range | high_range
-1       | $110K-$163K (Glassdoor est.)   | $110K     | $163K (Glassdoor est.)
-2       | $137K-$171K (Glassdoor est.)   | $137K     | $171K (Glassdoor est.)
-3       | $45K-$79K (Glassdoor est.)     | $45K      | $79K (Glassdoor est.)
+</pre><div class="output-reveal">post_id | salary_est                   | low_range | high_range
+0       | $137K-$171K (Glassdoor est.) | $137K     | $171K (Glassdoor est.)
+61      | $75K-$131K (Glassdoor est.)  | $75K      | $131K (Glassdoor est.)
+75      | $79K-$131K (Glassdoor est.)  | $79K      | $131K (Glassdoor est.)
 ...
-8       | $52K-$87K (Employer est.)      | $52K      | $87K (Employer est.)
+313     | $145K-$225K(Employer est.)   | $145K     | $225K(Employer est.)
+...
+510     | $212K-$331K (Glassdoor est.) | $212K     | $331K (Glassdoor est.)
 ...
 (30 rows)</div>
-  <p>下限側は <code>$110K</code>、上限側は <code>$163K (Glassdoor est.)</code> になりました。上限側には注釈の <code>(Glassdoor est.)</code> や <code>(Employer est.)</code> がくっついたままです。これから<strong>不要な「$」「K」「注釈」を除いて、数字だけにします</strong>。</p>
+  <p>下限側は <code>$79K</code>、上限側は <code>$131K (Glassdoor est.)</code> になりました。上限側には注釈の <code>(Glassdoor est.)</code> や <code>(Employer est.)</code> がくっついたままです。これから<strong>不要な「$」「K」「注釈」を除いて、数字だけにします</strong>。</p>
   <h3>ステップ④⑤　「$」と「K」以降を取り除く</h3>
   <p>やり方は2通りあります。講義では文字位置を使う方法が紹介されました。</p>
   <p><strong>A. 講義のやり方（SUBSTRING / LEFT ＋ POSITION）</strong>：先頭の「$」を <code>SUBSTRING(列, 2)</code> で（2文字目以降を取って）除き、次に<code>'K'</code>の位置を <code>POSITION('K' IN 列)</code> で探して、その直前までを <code>LEFT</code> で切り出します。<code>WHERE POSITION('K' IN 列) &gt; 0</code> は「Kを含む行だけ」を対象にする安全策です（Kが無い行に <code>LEFT(列, -1)</code> をかけると意図しない結果になるため）。</p>
@@ -195,23 +197,23 @@ avg_rating
 <span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(low_range, <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>),</span>
 <span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(high_range, <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>);</span>
 </pre><div class="output-reveal">post_id | low_range | high_range
-1       | 110       | 163
-3       | 45        | 79
-8       | 52        | 87
+75      | 79        | 131
+313     | 145       | 225
+510     | 212       | 331
 (3 rows)</div>
-  <p>AとBは<strong>どちらも同じ結果</strong>になります（実際に両方を実行して確認済み）。<code>'$45K'</code> のような2桁の下限も、<code>'$52K-$87K (Employer est.)'</code> のように注釈の文字が違う行も、同じ式で正しく処理されています。Bは短くて読みやすい反面、Aは「文字位置を探して切り出す」という文字列処理の基本が身につきます。</p>
+  <p>AとBは<strong>どちらも同じ結果</strong>になります（実際に両方を実行して確認済み）。<code>'$79K'</code> のような2桁の下限も、<code>'$212K'</code> のような3桁の下限も、<code>'$145K-$225K(Employer est.)'</code> のように注釈の文字が違い括弧の前にスペースがない行も、同じ式で正しく処理されています。Bは短くて読みやすい反面、Aは「文字位置を探して切り出す」という文字列処理の基本が身につきます。</p>
   <h3>ステップ⑥　「000」を付けて千ドル単位を戻す</h3>
-  <p>元の <code>K</code> は「千（thousand）」の意味でした。<code>110</code> を <code>110000</code> にするため、文字列連結演算子 <code>||</code> で末尾に <code>'000'</code> を付けます。</p>
+  <p>元の <code>K</code> は「千（thousand）」の意味でした。<code>79</code> を <code>79000</code> にするため、文字列連結演算子 <code>||</code> で末尾に <code>'000'</code> を付けます。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
 <span class="cl"><span class="kw">SET</span> low_range  = low_range || <span class="st">'000'</span>,</span>
 <span class="cl">    high_range = high_range || <span class="st">'000'</span>;</span>
 </pre><div class="output-reveal">post_id | low_range | high_range
-1       | 110000    | 163000
-3       | 45000     | 79000
-8       | 52000     | 87000
+75      | 79000     | 131000
+313     | 145000    | 225000
+510     | 212000    | 331000
 (3 rows)</div>
-  <p>見た目は数値ですが、この時点ではまだ<strong>TEXT型</strong>です。文字列のままでは <code>AVG()</code> も大小比較も正しく動きません（<code>'9' &gt; '10'</code> のように文字の辞書順になる）。</p>
+  <p>見た目は数値ですが、この時点ではまだ<strong>TEXT型</strong>です。文字列のままでは <code>AVG()</code> も大小比較も正しく動きません（<code>'79000' &gt; '131000'</code> のように文字の辞書順になる）。</p>
   <h3>ステップ⑦　TEXT から INT に型変換する</h3>
 <pre class="code-block">
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs</span>
@@ -225,22 +227,22 @@ avg_rating
     <li><code>USING 式</code>：<strong>既存の値をどのように新しい型へ変換するか</strong>を指定する。TEXTからINTへは自動では変換されないので、変換式が必要になる。</li>
     <li><code>low_range::INT</code>：PostgreSQL独自の<strong>キャスト演算子 <code>::</code></strong>。<code>CAST(low_range AS INT)</code> と同じ意味（M2のCASTで学んだものの短縮形）。</li>
   </ul>
-  <div class="warn-box">⚠️ <strong>変換できない文字が1つでも残っているとエラーになります。</strong>たとえばステップ⑤を飛ばして、<code>'$110K'</code> のまま型変換すると次のエラーになります。
+  <div class="warn-box">⚠️ <strong>変換できない文字が1つでも残っているとエラーになります。</strong>たとえばステップ⑤を飛ばして、<code>'$137K'</code> のまま型変換すると次のエラーになります。
 <pre class="code-block">
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs</span>
 <span class="cl">    <span class="kw">ALTER COLUMN</span> low_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> low_range::<span class="kw">INT</span>;</span>
-</pre><div class="output-reveal">ERROR: invalid input syntax for type int: "$110K"</div>
-  「K」だけ残して「$」だけ除いた場合や、<code>'000'</code>を付けたあとに「K」が残っている <code>'110K000'</code> でも、<code>invalid input syntax for type int: "110K000"</code> と同様にエラーです。<strong>エラーになったらトランザクションの中で <code>ROLLBACK</code></strong> し、原因の手順（ステップ④⑤）を直して最初からやり直します。トランザクションで囲んでおいたおかげで、途中まで進んだ変更がテーブルに残る心配はありません。</div>
+</pre><div class="output-reveal">ERROR: invalid input syntax for type int: "$137K"</div>
+  「K」だけ残して「$」だけ除いた場合や、<code>'000'</code>を付けたあとに「K」が残っている <code>'137K000'</code> でも、<code>invalid input syntax for type int: "137K000"</code> と同様にエラーです。<strong>エラーになったらトランザクションの中で <code>ROLLBACK</code></strong> し、原因の手順（ステップ④⑤）を直して最初からやり直します。トランザクションで囲んでおいたおかげで、途中まで進んだ変更がテーブルに残る心配はありません。</div>
   <h3>ステップ⑧　確認して COMMIT</h3>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> post_id, salary_est, low_range, high_range</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">8</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">75</span>, <span class="nm">313</span>, <span class="nm">510</span>)</span>
 <span class="cl"><span class="kw">ORDER BY</span> post_id;</span>
-</pre><div class="output-reveal">post_id | salary_est              | low_range | high_range
-1       | $110K-$163K (Glassdoor est.) | 110000    | 163000
-3       | $45K-$79K (Glassdoor est.)   | 45000     | 79000
-8       | $52K-$87K (Employer est.)    | 52000     | 87000
+</pre><div class="output-reveal">post_id | salary_est                   | low_range | high_range
+75      | $79K-$131K (Glassdoor est.)  | 79000     | 131000
+313     | $145K-$225K(Employer est.)   | 145000    | 225000
+510     | $212K-$331K (Glassdoor est.) | 212000    | 331000
 (3 rows)</div>
   <p>元の <code>salary_est</code> と見比べて、値が正しく分かれていることを確認します。型が本当にINTになったかは、<code>SELECT name, type FROM pragma_table_info('ds_jobs')</code>（PostgreSQLでは <code>information_schema.columns</code>）で調べられます。問題なければ確定します。</p>
 <pre class="code-block">
@@ -252,7 +254,7 @@ avg_rating
 <span class="cl">       <span class="kw">MIN</span>(low_range) <span class="kw">AS</span> min_low, <span class="kw">MAX</span>(high_range) <span class="kw">AS</span> max_high</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs;</span>
 </pre><div class="output-reveal">avg_low | avg_high | min_low | max_high
-90933   | 140600   | 45000   | 198000
+108000  | 159400   | 75000   | 331000
 (1 rows)</div>
   <div class="teal-box">📌 <strong>データ整形の定石：</strong>「新しい列を作る（TEXT）→ 元の列から値を取り出す → 不要な文字を除く → 目的の型に変換する」。元の <code>salary_est</code> 列は消さずに残しているので、いつでもやり直せます。</div>
 <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>1つの列に2つの情報（下限と上限）が入っていたら、まず新しい列を2つ作り、<code>SPLIT_PART</code>で分け、<code>REPLACE</code>や<code>SPLIT_PART(…,'K',1)</code>で数字だけにして、<code>'000'</code>を付け、最後に<code>USING x::INT</code>で数値型に変えます。全体を<code>START TRANSACTION</code>で囲んでおけば、失敗しても<code>ROLLBACK</code>でやり直せます。</p></div>
@@ -272,7 +274,7 @@ avg_rating
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
 <span class="cl"><span class="kw">SET</span> low_range = <span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">1</span>);</span>
 </pre>
-      <p class="answer-note"><code>SPLIT_PART(…, '-', 1)</code>は「-」で分けた1番目を返します。post_id 1の<code>low_range</code>は<code>'$110K'</code>になります。ここから先の「$」「K」の除去とINTへの変換は、本文のステップ④以降と同じです。</p>
+      <p class="answer-note"><code>SPLIT_PART(…, '-', 1)</code>は「-」で分けた1番目を返します。post_id 75の<code>low_range</code>は<code>'$79K'</code>になります。ここから先の「$」「K」の除去とINTへの変換は、本文のステップ④以降と同じです。</p>
     </div>
   </div>
 </div>
@@ -322,7 +324,7 @@ competitors| TEXT
   <h3>DROP と DELETE のちがい</h3>
   <table class="compare-table">
     <tr><th>コマンド</th><th>消えるもの</th><th>テーブル自体</th><th>例</th></tr>
-    <tr><td><code>DELETE FROM t WHERE ...</code></td><td>条件に合う<strong>行</strong></td><td>残る（空になっても構造は残る）</td><td><code>DELETE FROM ds_jobs WHERE rating = -1;</code> → 5行が消えて25行になる</td></tr>
+    <tr><td><code>DELETE FROM t WHERE ...</code></td><td>条件に合う<strong>行</strong></td><td>残る（空になっても構造は残る）</td><td><code>DELETE FROM ds_jobs WHERE rating = -1;</code> → 4行が消えて26行になる</td></tr>
     <tr><td><code>ALTER TABLE t DROP COLUMN c</code></td><td>1つの<strong>列</strong>（全行のその列の値）</td><td>残る（列が減る）</td><td><code>ALTER TABLE ds_jobs_backup2 DROP COLUMN low_range;</code></td></tr>
     <tr><td><code>DROP TABLE t</code></td><td>テーブルそのもの（行も列も）</td><td>なくなる</td><td><code>DROP TABLE ds_jobs_backup2;</code></td></tr>
   </table>
@@ -394,20 +396,20 @@ competitors| TEXT
 </div>
 <div class="quiz-q" id="q5">
   <div class="q-num">Question 5</div>
-  <div class="q-text">SPLIT_PART('$110K-$163K (Glassdoor est.)', '-', 2) returns:</div>
-  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>'$110K'</button>
-<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>'$163K (Glassdoor est.)'</button>
-<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>'110000'</button>
+  <div class="q-text">SPLIT_PART('$79K-$131K (Glassdoor est.)', '-', 2) returns:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>'$79K'</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>'$131K (Glassdoor est.)'</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>'79000'</button>
 <button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'-'</button></div>
   <div class="q-feedback" id="fb5"></div>
 </div>
 <div class="quiz-q" id="q6">
   <div class="q-num">Question 6</div>
-  <div class="q-text">Why does ALTER COLUMN low_range SET DATA TYPE INT USING low_range::INT fail on the value '110K'?</div>
+  <div class="q-text">Why does ALTER COLUMN low_range SET DATA TYPE INT USING low_range::INT fail on the value '79K'?</div>
   <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>USING can only be applied to tables that are still empty</button>
 <button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The :: operator can only be used on date and time columns</button>
 <button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A column can never be changed after the table is created</button>
-<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'110K' has a non-numeric character, so it cannot become an integer</button></div>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>'79K' has a non-numeric character, so it cannot become an integer</button></div>
   <div class="q-feedback" id="fb6"></div>
 </div>
 <div class="quiz-q" id="q7">

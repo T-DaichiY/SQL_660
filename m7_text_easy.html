@@ -28,7 +28,7 @@
   <div class="ch-banner-inner">
     <div class="ch-tag">M7+ · Mining Text (textbook Ch.14) 🍎</div>
     <h1>🍎 超やさしい版：文字列関数・正規表現・全文検索</h1>
-    <p>この3つは<strong>教科書の第14章だけに載っている</strong>内容で、講義動画では扱っていません。文字を整える・探す・索引で引く、の3本立てです。練習用データ（30行）は講義のKaggleデータを模した架空のサンプルです。</p>
+    <p>この3つは<strong>教科書の第14章だけに載っている</strong>内容で、講義動画では扱っていません。文字を整える・探す・索引で引く、の3本立てです。練習用データ（30行）は講義のKaggle／Glassdoorの実データ（672行）から抜き出したサンプルです。</p>
     <div class="unit-nav"><a href="#u1">文字を整える</a><a href="#u2">あみで探して置き換える</a><a href="#u3">全文検索</a><a href="m7_text.html" class="easy-toplink">🔤 本編はこちら</a></div>
   </div>
 </div>
@@ -44,10 +44,10 @@
 <span class="cl"><span class="kw">SELECT</span> post_id, UPPER(job_title) <span class="kw">AS</span> up,</span>
 <span class="cl">       CHAR_LENGTH(job_title) <span class="kw">AS</span> len,</span>
 <span class="cl">       TRIM(job_title, <span class="st">' -'</span>) <span class="kw">AS</span> t</span>
-<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id = <span class="nm">15</span>;</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id = <span class="nm">93</span>;</span>
 </pre>
 <div class="output-reveal">post_id | up | len | t
-15 | SENIOR. DATA SCIENTIST - | 24 | Senior. Data Scientist</div>
+93 | (SR.) DATA SCIENTIST - | 22 | (Sr.) Data Scientist</div>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
     <div class="ru-text"><code>initcap()</code>は単語の先頭だけ大文字にしますが、<strong>略語は苦手</strong>。<code>ETL</code>が<code>Etl</code>になります。</div>
@@ -70,15 +70,15 @@
 <span class="cl"><span class="kw">WHERE</span> job_title ~* <span class="st">'sr\.?|senior'</span>;</span>
 </pre>
 <div class="output-reveal">count
-9</div>
-  <p class="code-label">▶ 会社名の最後にくっついた評価値を消す</p>
+10</div>
+  <p class="code-label">▶ 会社名の最後にくっついた改行と評価値を消す</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> REGEXP_REPLACE(company,</span>
-<span class="cl">       <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
-<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id = <span class="nm">1</span>;</span>
+<span class="cl">       <span class="st">'\n[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id = <span class="nm">0</span>;</span>
 </pre>
 <div class="output-reveal">clean
-Bluepeak Studios</div>
+Healthfirst</div>
   <div class="big-rule">
     <div class="ru-arrow">✨</div>
     <div class="ru-text"><code>~</code>は大文字小文字を区別、<code>~*</code>は区別しない。頭に<code>!</code>を付けると「かからない行」。</div>

@@ -45,12 +45,12 @@
 <span class="cl"><span class="kw">ROLLBACK</span>;</span>
 </pre><div class="output-reveal">avg_rating
 0</div>
-  <p>ROLLBACKのあとで平均を調べると、元の <strong>3.05</strong> に戻っています。</p>
+  <p>ROLLBACKのあとで平均を調べると、元の <strong>3.1</strong> に戻っています。</p>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>トランザクションは、確定する前の安全確認です。ただしバックアップの代わりにはならないので、バックアップとセットで使いましょう。</p></div>
 </div>
 
 <div class="unit" id="u2">
-  <div class="unit-header"><div class="unit-num">②</div><div><h2>給与を「下限」と「上限」に分ける</h2><div class="unit-sub">'$110K-$163K (Glassdoor est.)' → 110000 と 163000</div></div></div>
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>給与を「下限」と「上限」に分ける</h2><div class="unit-sub">'$79K-$131K (Glassdoor est.)' → 79000 と 131000</div></div></div>
   <div class="big-rule">
     <div class="ru-arrow">🧺</div>
     <div class="ru-text"><strong>洗濯物の仕分けと同じ：</strong>まずカゴを2つ用意（列を追加）→ 分ける（SPLIT_PART）→ ゴミを取る（$とK）→ 千を足す（||'000'）→ 数として登録（INTに変換）。</div>
@@ -64,15 +64,15 @@
 <span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">2</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>;</span>
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ALTER COLUMN</span> low_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> low_range::<span class="kw">INT</span>;</span>
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ALTER COLUMN</span> high_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> high_range::<span class="kw">INT</span>;</span>
-<span class="cl"><span class="kw">SELECT</span> post_id, low_range, high_range <span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">8</span>);</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, low_range, high_range <span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">75</span>, <span class="nm">313</span>, <span class="nm">510</span>);</span>
 <span class="cl"><span class="kw">COMMIT</span>;</span>
 </pre><div class="output-reveal">post_id | low_range | high_range
-1       | 110000    | 163000
-3       | 45000     | 79000
-8       | 52000     | 87000
+75      | 79000     | 131000
+313     | 145000    | 225000
+510     | 212000    | 331000
 (3 rows)</div>
-  <p>本編では、この長い式を1ステップずつに分けて説明しています。数字以外の文字（たとえば <code>110K</code>）が残っているとINTへの変換は<strong>エラー</strong>になります。そのときは <code>ROLLBACK</code> です。</p>
-  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>SPLIT_PART(salary_est, '-', 2)</code> は何を返す？<span class="cp-a">A. 「-」で分けた2番目、つまり上限側（'$163K (Glassdoor est.)'）。</span></div><div class="cp-q">Q2. INTに変換するときにエラーになる原因は？<span class="cp-a">A. 「$」や「K」など、数字以外の文字が残っているから。</span></div></div>
+  <p>本編では、この長い式を1ステップずつに分けて説明しています。数字以外の文字（たとえば <code>79K</code>）が残っているとINTへの変換は<strong>エラー</strong>になります。そのときは <code>ROLLBACK</code> です。</p>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>SPLIT_PART(salary_est, '-', 2)</code> は何を返す？<span class="cp-a">A. 「-」で分けた2番目、つまり上限側（'$131K (Glassdoor est.)'）。</span></div><div class="cp-q">Q2. INTに変換するときにエラーになる原因は？<span class="cp-a">A. 「$」や「K」など、数字以外の文字が残っているから。</span></div></div>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「列を追加 → 分ける → きれいにする → 型を変える」の順番です。全部トランザクションの中でやれば、失敗しても安心です。</p></div>
 </div>
 

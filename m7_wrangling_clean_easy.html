@@ -27,7 +27,7 @@
   <div class="ch-banner-inner">
     <div class="ch-tag">M7 · Data Wrangling — Modifying &amp; Cleaning 🍎</div>
     <h1>🍎 超やさしい版：ALTER・UPDATEでクリーニング</h1>
-    <p>散らかったデータを、<strong>バックアップを取ってから</strong>そうじします。使うのは<code>ALTER</code>と<code>UPDATE</code>だけ。練習用の30行のデータで見てみましょう。</p>
+    <p>散らかったデータを、<strong>バックアップを取ってから</strong>そうじします。使うのは<code>ALTER</code>と<code>UPDATE</code>だけ。本物のGlassdoorデータから取った練習用の30行で見てみましょう。</p>
     <div class="unit-nav"><a href="#u1">ALTERとUPDATE</a><a href="#u2">バックアップと置換</a><a href="#u3">会社名の評価を消す</a><a href="#u4">-1をNULLに</a><a href="m7_wrangling_clean.html" class="easy-toplink">🧹 本編はこちら</a></div>
   </div>
 </div>
@@ -47,7 +47,7 @@
 </pre>
   <p class="code-label">▶ 中身を書き換える</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span> <span class="kw">WHERE</span> post_id = <span class="nm">1</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="nm">0</span> <span class="kw">WHERE</span> post_id = <span class="nm">0</span>;</span>
 </pre>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
@@ -73,33 +73,33 @@
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
 <span class="cl"><span class="kw">SET</span> job_title = REPLACE(job_title, <span class="st">'Sr.'</span>, <span class="st">'Senior'</span>);</span>
 </pre>
-<div class="output-reveal">UPDATE 2   （post_id 5 と 19 が 'Senior Data Scientist' に）</div>
+<div class="output-reveal">UPDATE 2   （post_id 377 が 'Senior Data Scientist' に。93 は '(Senior) Data Scientist -' になり、まだ汚れが残る）</div>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
     <div class="ru-text"><strong>順番が大事。</strong>先に<code>'Sr.'</code>（ピリオド付き）、あとで<code>'Sr'</code>。逆にすると<code>'Senior.'</code>のようにピリオドが残ります。</div>
   </div>
-  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>最後に<code>GROUP BY job_title</code>で数えると、<code>'Senior Data Scientist'</code>が9行にそろいます。</p></div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>'(Sr.) Data Scientist -'</code>を完全一致で直し、<code>'Sr.'</code>→<code>'Sr'</code>の順に置き換えて、最後に<code>GROUP BY job_title</code>で数えると、<code>'Senior Data Scientist'</code>が7行にそろいます。</p></div>
   <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. なぜ先にバックアップを取るの？<span class="cp-a">A. UPDATEを間違えたとき、コピーから元のデータに戻せるから。</span></div><div class="cp-q">Q2. 'Sr'を先に置き換えるとどうなる？<span class="cp-a">A. 'Sr.'が'Senior.'になり、ピリオドが残ってしまう。</span></div></div>
 </div>
 <div class="unit" id="u3">
   <div class="unit-header"><div class="unit-num">③</div><div><h2>会社名の後ろの「評価」を消す</h2><div class="unit-sub">名前にくっついた数字をはさみで切る</div></div></div>
-  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>後ろの3文字（例：4.4）を切り落とす。ただし評価がついている行だけ。</strong></p></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>後ろの4文字（改行＋評価、例：3.1）を切り落とす。ただし評価がついている行だけ。</strong></p></div>
   <div class="big-rule">
     <div class="ru-arrow">✂️</div>
-    <div class="ru-text"><code>Bluepeak Studios4.4</code>の後ろの<code>4.4</code>は、評価がくっついたゴミです。<strong>全体の長さ−3文字</strong>だけ残せば消えます。</div>
+    <div class="ru-text"><code>Healthfirst</code>の後ろの「改行＋<code>3.1</code>」は、評価がくっついたゴミです。<strong>全体の長さ−4文字</strong>だけ残せば消えます。</div>
   </div>
   <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> company = <span class="kw">SUBSTRING</span>(company, <span class="nm">1</span>, <span class="kw">LENGTH</span>(company) - <span class="nm">3</span>)</span>
-<span class="cl"><span class="kw">WHERE</span> <span class="kw">RIGHT</span>(company, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span>
+<span class="cl"><span class="kw">SET</span> company = <span class="kw">SUBSTRING</span>(company, <span class="nm">1</span>, <span class="kw">LENGTH</span>(company) - <span class="nm">4</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> rating &lt;&gt; -<span class="nm">1</span>;</span>
 </pre>
-<div class="output-reveal">UPDATE 25   （'Bluepeak Studios4.4' → 'Bluepeak Studios'）</div>
+<div class="output-reveal">UPDATE 26   （'Healthfirst' + 改行 + '3.1' → 'Healthfirst'）</div>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
-    <div class="ru-text"><strong>WHEREがないと、きれいな名前まで削れます。</strong>たとえば<code>Open Door Health</code>が<code>Open Door Hea</code>になってしまいます。</div>
+    <div class="ru-text"><strong>WHEREがないと、きれいな名前まで削れます。</strong>たとえば<code>Radical Convergence</code>が<code>Radical Converg</code>になってしまいます。</div>
   </div>
-  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>'_._'</code>は「何か1文字・ドット・何か1文字」。評価の形（4.4など）の行だけを選ぶ目印です。実行前に同じWHEREでSELECTして、25行だと確認しましょう。</p></div>
-  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SUBSTRINGの位置は0から？1から？<span class="cp-a">A. 1から数える。</span></div><div class="cp-q">Q2. WHEREで何をしているの？<span class="cp-a">A. 評価がついた25行だけを選び、きれいな5行を守っている。</span></div></div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>rating &lt;&gt; -1</code>は「評価が-1ではない行」。評価がついた行だけを選ぶ目印です。実行前に同じWHEREでSELECTして、26行だと確認しましょう。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SUBSTRINGの位置は0から？1から？<span class="cp-a">A. 1から数える。</span></div><div class="cp-q">Q2. WHEREで何をしているの？<span class="cp-a">A. 評価がついた26行だけを選び、きれいな4行を守っている。</span></div></div>
 </div>
 <div class="unit" id="u4">
   <div class="unit-header"><div class="unit-num">④</div><div><h2>-1 を本物の NULL にする</h2><div class="unit-sub">「わからない」を、ちゃんと「空っぽ」にする</div></div></div>
@@ -112,16 +112,16 @@
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> competitors = <span class="kw">NULL</span></span>
 <span class="cl"><span class="kw">WHERE</span> competitors = <span class="st">'-1'</span>;</span>
 </pre>
-<div class="output-reveal">UPDATE 13</div>
+<div class="output-reveal">UPDATE 22</div>
   <div class="big-rule">
     <div class="ru-arrow">⚠️</div>
     <div class="ru-text"><strong>文字の列は<code>'-1'</code>（引用符あり）、数字の列は<code>-1</code>（引用符なし）。</strong><code>competitors</code>は文字の列、<code>rating</code>は数字の列です。</div>
   </div>
   <p class="code-label">▶ COUNT(rating)の変化</p>
 <div class="output-reveal">直す前： COUNT(rating) = 30
-直した後： COUNT(rating) = 25   （COUNT(*)は30のまま）</div>
+直した後： COUNT(rating) = 26   （COUNT(*)は30のまま）</div>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>COUNT(列)はNULLを数えません。数が減れば、-1がNULLに変わった証拠です。</p></div>
-  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. competitorsの'-1'に引用符が必要なのはなぜ？<span class="cp-a">A. competitorsがTEXT（文字）の列だから。</span></div><div class="cp-q">Q2. 直した後、COUNT(rating)は？<span class="cp-a">A. 25。NULLの5行が数えられなくなるから。</span></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. competitorsの'-1'に引用符が必要なのはなぜ？<span class="cp-a">A. competitorsがTEXT（文字）の列だから。</span></div><div class="cp-q">Q2. 直した後、COUNT(rating)は？<span class="cp-a">A. 26。NULLの4行が数えられなくなるから。</span></div></div>
 </div>
 <div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m7_wrangling_clean.html">🧹 本編を読む →</a></div>
 </main>
