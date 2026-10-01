@@ -111,15 +111,15 @@
     <tr><th>列</th><th>予定の型</th><th>汚れている点</th><th>直す方針</th></tr>
     <tr><td><code>post_id</code></td><td>integer</td><td>特になし（主キー）</td><td>そのまま</td></tr>
     <tr><td><code>job_title</code></td><td>text</td><td><code>Sr.</code>/<code>Sr</code>/<code>Senior.</code>など表記ゆれ</td><td>統一する</td></tr>
-    <tr><td><code>salary_estimate</code></td><td>text</td><td><code>$110K-$163K (Glassdoor est.)</code>と文字列</td><td>下限・上限の数値列に分ける</td></tr>
-    <tr><td><code>job_description</code></td><td>text</td><td><code>TBD</code>・<code>n/a</code>・空文字が混在</td><td>NULLに揃える</td></tr>
+    <tr><td><code>salary_est</code></td><td>text</td><td><code>$110K-$163K (Glassdoor est.)</code>と文字列</td><td>下限・上限の数値列に分ける</td></tr>
+    <tr><td><code>job_desc</code></td><td>text</td><td><code>TBD</code>・<code>n/a</code>・空文字が混在</td><td>NULLに揃える</td></tr>
     <tr><td><code>rating</code></td><td>numeric</td><td>未評価が<code>-1</code>（番兵値）</td><td>NULLに置き換える</td></tr>
-    <tr><td><code>company_name</code></td><td>text</td><td>末尾に評価がくっつく（<code>Bluepeak Studios4.4</code>）</td><td>評価部分を取り除く</td></tr>
-    <tr><td><code>location</code></td><td>text</td><td><code>Burbank, CA</code>と市と州が1列</td><td>市・州に分割</td></tr>
-    <tr><td><code>headquarters</code></td><td>text</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
-    <tr><td><code>size</code></td><td>text</td><td>大きな問題なし</td><td>確認のみ</td></tr>
+    <tr><td><code>company</code></td><td>text</td><td>末尾に評価がくっつく（<code>Bluepeak Studios4.4</code>）</td><td>評価部分を取り除く</td></tr>
+    <tr><td><code>loc</code></td><td>text</td><td><code>Burbank, CA</code>と市と州が1列</td><td>市・州に分割</td></tr>
+    <tr><td><code>headquarter</code></td><td>text</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
+    <tr><td><code>org_size</code></td><td>text</td><td>大きな問題なし</td><td>確認のみ</td></tr>
     <tr><td><code>founded</code></td><td>integer</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
-    <tr><td><code>type_of_ownership</code></td><td>text</td><td><code>-1</code>・<code>Unknown</code>、長い名前</td><td>対応表で短いラベルに統一</td></tr>
+    <tr><td><code>owner_type</code></td><td>text</td><td><code>-1</code>・<code>Unknown</code>、長い名前</td><td>対応表で短いラベルに統一</td></tr>
     <tr><td><code>industry</code>, <code>sector</code></td><td>text</td><td>不明が<code>-1</code></td><td>NULLに置き換える</td></tr>
     <tr><td><code>revenue</code></td><td>text</td><td><code>Unknown / Non-Applicable</code></td><td>NULLに置き換える</td></tr>
     <tr><td><code>competitors</code></td><td>text</td><td>なしが<code>-1</code>（文字列）</td><td>NULLに置き換える</td></tr>
@@ -129,15 +129,15 @@
 <span class="cl"><span class="kw">CREATE TABLE</span> ds_jobs (</span>
 <span class="cl">    post_id <span class="kw">integer</span> <span class="kw">PRIMARY KEY</span>,</span>
 <span class="cl">    job_title <span class="kw">text</span>,</span>
-<span class="cl">    salary_estimate <span class="kw">text</span>,</span>
-<span class="cl">    job_description <span class="kw">text</span>,</span>
+<span class="cl">    salary_est <span class="kw">text</span>,</span>
+<span class="cl">    job_desc <span class="kw">text</span>,</span>
 <span class="cl">    rating <span class="kw">numeric</span>,</span>
-<span class="cl">    company_name <span class="kw">text</span>,</span>
-<span class="cl">    location <span class="kw">text</span>,</span>
-<span class="cl">    headquarters <span class="kw">text</span>,</span>
-<span class="cl">    size <span class="kw">text</span>,</span>
+<span class="cl">    company <span class="kw">text</span>,</span>
+<span class="cl">    loc <span class="kw">text</span>,</span>
+<span class="cl">    headquarter <span class="kw">text</span>,</span>
+<span class="cl">    org_size <span class="kw">text</span>,</span>
 <span class="cl">    founded <span class="kw">integer</span>,</span>
-<span class="cl">    type_of_ownership <span class="kw">text</span>,</span>
+<span class="cl">    owner_type <span class="kw">text</span>,</span>
 <span class="cl">    industry <span class="kw">text</span>,</span>
 <span class="cl">    sector <span class="kw">text</span>,</span>
 <span class="cl">    revenue <span class="kw">text</span>,</span>
@@ -154,10 +154,10 @@
   <p>取り込んだら、<strong>必ず件数を検証</strong>します。元のCSVの行数（この教材の練習データでは30行、講義のファイルでは672行）とテーブルの行数が違えば、取り込みに失敗している証拠です。</p>
   <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> ds_jobs;</span>
-<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(company_name) <span class="kw">FROM</span> ds_jobs;</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(company) <span class="kw">FROM</span> ds_jobs;</span>
 <span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(rating) <span class="kw">FROM</span> ds_jobs;</span>
 </pre><div class="output-reveal">count(*) = 30
-count(company_name) = 30
+count(company) = 30
 count(rating) = 30</div>
   <p>ここで重要な発見があります。評価<code>rating</code>が<code>-1</code>の行は5行あり、実質の「評価あり」は25行のはずです。それなのに<code>COUNT(rating)</code>は<strong>25ではなく30</strong>です。<code>COUNT(列)</code>はNULLを数えない（M4）ので、<code>-1</code>が<strong>NULLではなく本物の数値として</strong>取り込まれていることが分かります。</p>
   <div class="teal-box">📌 <strong>番兵値（sentinel value）</strong>とは、「不明」「なし」を表すために入れられた特別な値（<code>-1</code>、<code>Unknown</code>など）です。SQLからは普通の値に見えるので、そのまま平均を取ると<code>-1</code>が混ざって結果が狂います。番兵値は<strong>NULLに置き換える</strong>のが基本方針です（次の単元で実際に直します）。</div>
@@ -223,11 +223,11 @@ Sr. Data Scientist            |  2
    3.3 |  1
    3.4 |  1
    ...（以下、最大4.6まで。全17行）</div>
-  <p>並べ替えたので、最小値の<code>-1</code>がいちばん上に来て、5行あることがすぐに分かります。次は<code>type_of_ownership</code>です。</p>
+  <p>並べ替えたので、最小値の<code>-1</code>がいちばん上に来て、5行あることがすぐに分かります。次は<code>owner_type</code>です。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> type_of_ownership, <span class="kw">COUNT</span>(type_of_ownership)</span>
-<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> type_of_ownership <span class="kw">ORDER BY</span> type_of_ownership;</span>
-</pre><div class="output-reveal">type_of_ownership              | count
+<span class="cl"><span class="kw">SELECT</span> owner_type, <span class="kw">COUNT</span>(owner_type)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> owner_type <span class="kw">ORDER BY</span> owner_type;</span>
+</pre><div class="output-reveal">owner_type              | count
 -------------------------------+------
 -1                             |  2
 College / University           |  1
@@ -240,11 +240,11 @@ Subsidiary or Business Segment |  2
 Unknown                        |  1
 (9 rows)</div>
   <p><code>-1</code>と<code>Unknown</code>はどちらも「不明」で、実質同じ意味の番兵値が2種類あります。また<code>Company - Private</code>と<code>Private Practice / Firm</code>のように、もっと短い共通ラベルにまとめられそうな値もあります。</p>
-  <p>今度は<code>company_name</code>です（先頭8行のみ表示）。</p>
+  <p>今度は<code>company</code>です（先頭8行のみ表示）。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> company_name, <span class="kw">COUNT</span>(company_name)</span>
-<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> company_name <span class="kw">ORDER BY</span> company_name;</span>
-</pre><div class="output-reveal">company_name                   | count
+<span class="cl"><span class="kw">SELECT</span> company, <span class="kw">COUNT</span>(company)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> company <span class="kw">ORDER BY</span> company;</span>
+</pre><div class="output-reveal">company                   | count
 -------------------------------+------
 23Genomics3.8                  |  1
 Alder &amp; Oak Retail3.4          |  1
@@ -257,11 +257,11 @@ County Public Health Agency3.2 |  1
 ...</div>
   <p>社名の末尾に評価（<code>4.4</code>など）がくっついています。ただし全行ではなく、<code>Brightside Labs</code>や<code>Cedar Health</code>のように<code>rating = -1</code>の行にはくっついていません。さらに厄介なのが<strong>境界のケース</strong>で、<code>District 9</code>に評価<code>4.2</code>がついた<code>District 94.2</code>は、「数字を全部取り除く」方法だと本来の社名の<code>9</code>まで消えてしまいます。<code>23Genomics3.8</code>も先頭の数字を巻き込むおそれがあります。</p>
   <div class="warn-box">⚠️ 社名のようにほぼ全行がユニークな列では、GROUP BYの件数はほとんど1になります。この場合は件数よりも、<strong>並べ替えた文字列の見た目を目で確認する</strong>ことが探索の中心です。</div>
-  <p>最後に<code>salary_estimate</code>です（先頭6行のみ表示）。</p>
+  <p>最後に<code>salary_est</code>です（先頭6行のみ表示）。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> salary_estimate, <span class="kw">COUNT</span>(salary_estimate)</span>
-<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> salary_estimate <span class="kw">ORDER BY</span> salary_estimate;</span>
-</pre><div class="output-reveal">salary_estimate               | count
+<span class="cl"><span class="kw">SELECT</span> salary_est, <span class="kw">COUNT</span>(salary_est)</span>
+<span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">GROUP BY</span> salary_est <span class="kw">ORDER BY</span> salary_est;</span>
+</pre><div class="output-reveal">salary_est               | count
 ------------------------------+------
 $101K-$165K (Glassdoor est.)  |  1
 $105K-$158K (Glassdoor est.)  |  1
@@ -276,9 +276,9 @@ $118K-$172K (Glassdoor est.)  |  1
     <ul>
       <li><code>job_title</code>：<code>Sr.</code>/<code>Sr</code>/<code>Senior.</code>を<code>Senior</code>に統一（9行）</li>
       <li><code>rating</code>：<code>-1</code>（5行）→ NULL</li>
-      <li><code>type_of_ownership</code>：<code>-1</code>と<code>Unknown</code> → NULL、他は短いラベルに</li>
-      <li><code>company_name</code>：末尾の評価を除去（<code>District 94.2</code>に注意）</li>
-      <li><code>salary_estimate</code>：数値2列に分解、末尾の(…est.)を除去</li>
+      <li><code>owner_type</code>：<code>-1</code>と<code>Unknown</code> → NULL、他は短いラベルに</li>
+      <li><code>company</code>：末尾の評価を除去（<code>District 94.2</code>に注意）</li>
+      <li><code>salary_est</code>：数値2列に分解、末尾の(…est.)を除去</li>
     </ul>
   </div>
   <p>💡 PostgreSQLの<code>x::int</code>のようなキャストは、この演習アリーナでも自動変換されてそのまま動きます（<code>COPY</code>だけは動きません）。</p>

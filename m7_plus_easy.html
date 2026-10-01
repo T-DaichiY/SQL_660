@@ -42,11 +42,11 @@
     <div class="ru-arrow">🧦</div>
     <div class="ru-text">たとえば<strong>靴下の引き出し</strong>。同じ柄ごとに山を作れば、「同じ柄が2足以上ある」も「似ているけど微妙に違う柄がある」もすぐ分かります。</div>
   </div>
-  <p class="code-label">▶ company_name と location の重複を調べる</p>
+  <p class="code-label">▶ company と loc の重複を調べる</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> company_name, location, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">SELECT</span> company, loc, count(*) <span class="kw">AS</span> n</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> company_name, location</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> company, loc</span>
 <span class="cl"><span class="kw">HAVING</span> count(*) &gt; <span class="nm">1</span>;</span>
 </pre>
 <div class="output-reveal">(0 rows)</div>
@@ -79,12 +79,12 @@ Sr. Data Scientist | 2
   </div>
   <p class="code-label">▶ 説明文が短すぎる行を探す</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, job_description, LENGTH(job_description) <span class="kw">AS</span> len</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, job_desc, LENGTH(job_desc) <span class="kw">AS</span> len</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> LENGTH(job_description) &lt; <span class="nm">5</span></span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_desc) &lt; <span class="nm">5</span></span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
 </pre>
-<div class="output-reveal">post_id | job_description | len
+<div class="output-reveal">post_id | job_desc | len
 11 | TBD | 3
 18 | n/a | 3
 29 |  | 0
@@ -154,13 +154,13 @@ Sr. Data Scientist | 2
   <p class="code-label">▶ 相関サブクエリ＋EXISTS</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl"><span class="kw">SET</span> owner_type = (</span>
 <span class="cl">    <span class="kw">SELECT</span> clean_label <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">)</span>
 <span class="cl"><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
 <span class="cl">    <span class="kw">SELECT</span> <span class="nm">1</span> <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">);</span>
 </pre>
   <p>30行のうち27行に対応があり、更新されます。残り3行（<code>Unknown</code>と<code>-1</code>が2件）はそのままです。</p>
@@ -171,9 +171,9 @@ Sr. Data Scientist | 2
   <p class="code-label">▶ PostgreSQLのUPDATE ... FROM</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> type_of_ownership = ownership_map.clean_label</span>
+<span class="cl"><span class="kw">SET</span> owner_type = ownership_map.clean_label</span>
 <span class="cl"><span class="kw">FROM</span> ownership_map</span>
-<span class="cl"><span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership;</span>
+<span class="cl"><span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type;</span>
 </pre>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>UPDATE ... FROM</code>なら、条件に合う行だけが更新されるので、ガードを書かなくて済みます。</p></div>
   <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. WHERE EXISTSが必要な理由は？<span class="cp-a">A. 対応表にない行が、サブクエリの結果NULLで上書きされるのを防ぐため。</span></div><div class="cp-q">Q2. 実際に何行が更新される？<span class="cp-a">A. 27行（対応がない3行は更新されない）。</span></div></div>

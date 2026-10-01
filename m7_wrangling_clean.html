@@ -213,7 +213,7 @@ Senior Data Scientist         | 9
     <div class="unit-num">③</div>
     <div><h2>会社名の末尾についた評価を取り除く</h2><div class="unit-sub">SUBSTRING・LENGTH・RIGHT と LIKE のワイルドカード</div></div>
   </div>
-  <p>会社名（<code>company_name</code>）の末尾に、評価が貼り付いています（例：<code>Bluepeak Studios4.4</code>）。これは<code>rating</code>の値が3文字（<code>4.4</code>）として会社名に混ざったものです。<code>rating</code>が-1でない25行がこの状態で、評価が-1の5行は<code>Open Door Health</code>のようにきれいな名前のままです。</p>
+  <p>会社名（<code>company</code>）の末尾に、評価が貼り付いています（例：<code>Bluepeak Studios4.4</code>）。これは<code>rating</code>の値が3文字（<code>4.4</code>）として会社名に混ざったものです。<code>rating</code>が-1でない25行がこの状態で、評価が-1の5行は<code>Open Door Health</code>のようにきれいな名前のままです。</p>
   <p>取り除くには「末尾3文字を切り落として、残りを取り出す」と考えます。使う関数は3つです。</p>
   <table class="compare-table">
     <tr><th>関数</th><th>働き</th><th>例</th></tr>
@@ -221,18 +221,18 @@ Senior Data Scientist         | 9
     <tr><td><code>SUBSTRING(x, 開始, 長さ)</code></td><td>開始位置から指定の長さを取り出す（<strong>位置は1から</strong>数える）</td><td>SUBSTRING('Bluepeak Studios4.4', 1, 16) → 'Bluepeak Studios'</td></tr>
     <tr><td><code>RIGHT(x, n)</code></td><td>右端からn文字を取り出す</td><td>RIGHT('Bluepeak Studios4.4', 3) → '4.4'</td></tr>
   </table>
-  <p>つまり「先頭から（全体の長さ−3）文字」を取れば評価が消えます：<code>SUBSTRING(company_name, 1, LENGTH(company_name) - 3)</code>。プログラミング言語のように0から数えるのではなく、<strong>SQLの位置は1始まり</strong>な点に注意しましょう。</p>
+  <p>つまり「先頭から（全体の長さ−3）文字」を取れば評価が消えます：<code>SUBSTRING(company, 1, LENGTH(company) - 3)</code>。プログラミング言語のように0から数えるのではなく、<strong>SQLの位置は1始まり</strong>な点に注意しましょう。</p>
   <p>ただし、5行のきれいな名前まで3文字削ると壊れてしまいます。そこで「どの行に適用するか」を<code>WHERE</code>で絞ります。条件は「右端3文字が<strong>数字・ドット・数字</strong>の形か」。M3で習った<code>LIKE</code>のワイルドカードを使います：<code>_</code>は任意の<strong>1文字</strong>、<code>%</code>は任意の<strong>0文字以上</strong>です。<code>'_._'</code>は「何か1文字、ドット、何か1文字」の3文字に一致します。</p>
   <p><strong>UPDATEの前に、必ず同じWHEREでSELECTしてプレビュー</strong>します。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, company_name,</span>
-<span class="cl">       SUBSTRING(company_name, <span class="nm">1</span>, LENGTH(company_name) - <span class="nm">3</span>) <span class="kw">AS</span> cleaned</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, company,</span>
+<span class="cl">       SUBSTRING(company, <span class="nm">1</span>, LENGTH(company) - <span class="nm">3</span>) <span class="kw">AS</span> cleaned</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> RIGHT(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span></span>
+<span class="cl"><span class="kw">WHERE</span> RIGHT(company, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span></span>
 <span class="cl"><span class="kw">ORDER BY</span> post_id</span>
 <span class="cl"><span class="kw">LIMIT</span> <span class="nm">6</span>;</span>
 </pre>
-<div class="output-reveal">post_id | company_name              | cleaned
+<div class="output-reveal">post_id | company              | cleaned
 --------+---------------------------+------------------------
       1 | Bluepeak Studios4.4       | Bluepeak Studios
       2 | Ironwood Consulting3.9    | Ironwood Consulting
@@ -242,7 +242,7 @@ Senior Data Scientist         | 9
       7 | 23Genomics3.8             | 23Genomics
 (6 rows。WHEREに一致するのは全部で25行)</div>
   <p>プレビューは良さそうです。特に<code>District 94.2</code>は、末尾3文字が<code>4.2</code>なので<code>District 9</code>になります（社名の数字9は残る）。<code>23Genomics3.8</code>も先頭の23は残ります。<strong>一致するのは25行</strong>です。ではWHEREを付けなかった場合、きれいな5行はどうなるか見てみましょう（<code>SELECT</code>なので安全です）。</p>
-<div class="output-reveal">post_id | company_name        | wrong
+<div class="output-reveal">post_id | company        | wrong
 --------+---------------------+------------------
       4 | Open Door Health    | Open Door Hea
      11 | Brightside Labs     | Brightside L
@@ -250,21 +250,21 @@ Senior Data Scientist         | 9
      25 | Riverbend Institute | Riverbend Instit
      29 | Cedar Health        | Cedar Hea
 (5 rows)</div>
-  <div class="warn-box">⚠️ <strong>この<code>WHERE RIGHT(company_name, 3) LIKE '_._'</code>は省略できません。</strong>省略すると、評価が付いていない5行の会社名も末尾3文字が削られて<code>Open Door Hea</code>のように壊れます。<code>UPDATE</code>の前に、同じ<code>WHERE</code>を付けた<code>SELECT</code>で対象行を目で確認する習慣をつけましょう。</div>
+  <div class="warn-box">⚠️ <strong>この<code>WHERE RIGHT(company, 3) LIKE '_._'</code>は省略できません。</strong>省略すると、評価が付いていない5行の会社名も末尾3文字が削られて<code>Open Door Hea</code>のように壊れます。<code>UPDATE</code>の前に、同じ<code>WHERE</code>を付けた<code>SELECT</code>で対象行を目で確認する習慣をつけましょう。</div>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> company_name = SUBSTRING(company_name, <span class="nm">1</span>, LENGTH(company_name) - <span class="nm">3</span>)</span>
-<span class="cl"><span class="kw">WHERE</span> RIGHT(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span>
+<span class="cl"><span class="kw">SET</span> company = SUBSTRING(company, <span class="nm">1</span>, LENGTH(company) - <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> RIGHT(company, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span>
 </pre>
 <div class="output-reveal">UPDATE 25</div>
-  <p>「UPDATE 25」と表示され、想定どおり25行が更新されました。行数が予想と違ったら、すぐ原因を調べます（バックアップがあるので戻せます）。確認として、<code>GROUP BY company_name</code>を実行すると、きれいな社名ごとにまとまって表示されます。</p>
+  <p>「UPDATE 25」と表示され、想定どおり25行が更新されました。行数が予想と違ったら、すぐ原因を調べます（バックアップがあるので戻せます）。確認として、<code>GROUP BY company</code>を実行すると、きれいな社名ごとにまとまって表示されます。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, company_name</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, company</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">6</span>, <span class="nm">7</span>)</span>
 <span class="cl"><span class="kw">ORDER BY</span> post_id;</span>
 </pre>
-<div class="output-reveal">post_id | company_name
+<div class="output-reveal">post_id | company
 --------+--------------------
       1 | Bluepeak Studios
       4 | Open Door Health
@@ -277,7 +277,7 @@ Senior Data Scientist         | 9
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>会社名の末尾3文字（評価）を切り落とすには<code>SUBSTRING(名前, 1, LENGTH(名前) - 3)</code>。ただし評価が付いていない行を壊さないよう、<code>WHERE RIGHT(名前, 3) LIKE '_._'</code>で対象の25行だけに絞ります。</p></div>
   <div class="practice-card" id="p-w2-u3">
     <div class="ptitle">💻 ミニ練習：会社名から評価を取り除く</div>
-    <p class="ptask"><code>ds_jobs</code>の<code>company_name</code>から末尾3文字の評価を取り除く<code>UPDATE</code>文を書いてください。ただし末尾3文字が<code>_._</code>の形（例：4.4）の行だけが対象です（25行）。</p>
+    <p class="ptask"><code>ds_jobs</code>の<code>company</code>から末尾3文字の評価を取り除く<code>UPDATE</code>文を書いてください。ただし末尾3文字が<code>_._</code>の形（例：4.4）の行だけが対象です（25行）。</p>
     <textarea class="code-editor" id="p-w2-u3-input" rows="5">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -287,8 +287,8 @@ Senior Data Scientist         | 9
     <div class="check-result" id="p-w2-u3-result"></div>
     <div class="answer-reveal" id="p-w2-u3-answer" hidden>
       <pre class="code-block"><span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> company_name = SUBSTRING(company_name, <span class="nm">1</span>, LENGTH(company_name) - <span class="nm">3</span>)</span>
-<span class="cl"><span class="kw">WHERE</span> RIGHT(company_name, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span></pre>
+<span class="cl"><span class="kw">SET</span> company = SUBSTRING(company, <span class="nm">1</span>, LENGTH(company) - <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">WHERE</span> RIGHT(company, <span class="nm">3</span>) <span class="kw">LIKE</span> <span class="st">'_._'</span>;</span></pre>
       <p class="answer-note"><code>WHERE</code>を忘れると、評価の付いていない5行の会社名まで3文字削られてしまいます。</p>
     </div>
   </div>
@@ -303,7 +303,7 @@ Senior Data Scientist         | 9
     <tr><th>列</th><th>番兵値</th><th>行数</th><th>書き方</th></tr>
     <tr><td><code>competitors</code>（TEXT）</td><td>文字列の<code>'-1'</code></td><td>13行</td><td><code>WHERE competitors = '-1'</code>（引用符あり）</td></tr>
     <tr><td><code>rating</code>（REAL）</td><td>数値の<code>-1</code></td><td>5行</td><td><code>WHERE rating = -1</code>（引用符なし）</td></tr>
-    <tr><td><code>headquarters</code>（TEXT）</td><td><code>'-1'</code></td><td>2行</td><td><code>WHERE headquarters = '-1'</code></td></tr>
+    <tr><td><code>headquarter</code>（TEXT）</td><td><code>'-1'</code></td><td>2行</td><td><code>WHERE headquarter = '-1'</code></td></tr>
     <tr><td><code>revenue</code>（TEXT）</td><td><code>'Unknown / Non-Applicable'</code></td><td>5行</td><td>文字列で比較</td></tr>
   </table>
   <div class="warn-box">⚠️ <strong>列の型に合わせて引用符を使い分けます。</strong><code>competitors</code>は<code>TEXT</code>列なので、番兵は文字列の<code>'-1'</code>です。PostgreSQLで<code>WHERE competitors = -1</code>と書くと型が合わずエラーになります。逆に<code>rating</code>は数値列なので<code>= -1</code>（引用符なし）と書きます。</div>
@@ -321,11 +321,11 @@ Senior Data Scientist         | 9
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> competitors = <span class="kw">NULL</span> <span class="kw">WHERE</span> competitors = <span class="st">'-1'</span>;</span>
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> rating = <span class="kw">NULL</span> <span class="kw">WHERE</span> rating = -<span class="nm">1</span>;</span>
-<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> headquarters = <span class="kw">NULL</span> <span class="kw">WHERE</span> headquarters = <span class="st">'-1'</span>;</span>
+<span class="cl"><span class="kw">UPDATE</span> ds_jobs <span class="kw">SET</span> headquarter = <span class="kw">NULL</span> <span class="kw">WHERE</span> headquarter = <span class="st">'-1'</span>;</span>
 </pre>
 <div class="output-reveal">UPDATE 13   (competitors)
 UPDATE 5    (rating: post_id 4, 11, 18, 25, 29)
-UPDATE 2    (headquarters: post_id 11, 18)</div>
+UPDATE 2    (headquarter: post_id 11, 18)</div>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> total, <span class="kw">COUNT</span>(rating) <span class="kw">AS</span> c_rating,</span>
 <span class="cl">       <span class="kw">COUNT</span>(competitors) <span class="kw">AS</span> c_comp, ROUND(AVG(rating), <span class="nm">2</span>) <span class="kw">AS</span> avg_rating</span>
@@ -409,7 +409,7 @@ UPDATE 2    (headquarters: post_id 11, 18)</div>
 </div>
 <div class="quiz-q" id="q5">
   <div class="q-num">Question 5</div>
-  <div class="q-text">Why is the WHERE clause needed when trimming the rating from company_name with SUBSTRING?</div>
+  <div class="q-text">Why is the WHERE clause needed when trimming the rating from company with SUBSTRING?</div>
   <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Without it, clean names such as 'Open Door Health' would lose 3 letters</button>
 <button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It makes the UPDATE run faster because fewer rows are locked</button>
 <button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SUBSTRING is not allowed to run in an UPDATE without a WHERE clause</button>

@@ -27,7 +27,7 @@
 <div class="ch-banner-inner">
   <div class="ch-tag">M7 · Data Wrangling — Transactions, Splitting &amp; Dropping</div>
   <h1>🔒 データ整形③：トランザクション・分割・削除</h1>
-  <p>データを書き換える作業は、間違えると元に戻せません。そこで<strong>トランザクション</strong>で「お試し」しながら作業する方法を学び、その総まとめとして、<code>salary_estimate</code>（例：<code>'$110K-$163K (Glassdoor est.)'</code>）を<strong>数値の下限・上限の2列に分割する</strong>実践例に取り組みます。最後は不要になった列・テーブルの削除（DROP）です。</p>
+  <p>データを書き換える作業は、間違えると元に戻せません。そこで<strong>トランザクション</strong>で「お試し」しながら作業する方法を学び、その総まとめとして、<code>salary_est</code>（例：<code>'$110K-$163K (Glassdoor est.)'</code>）を<strong>数値の下限・上限の2列に分割する</strong>実践例に取り組みます。最後は不要になった列・テーブルの削除（DROP）です。</p>
   <div class="ch-banner unit-nav" style="background:none;padding:0;">
     <a href="#unit1">① トランザクションとは</a><a href="#unit2">② 給与レンジを分割する</a><a href="#unit3">③ 列とテーブルを削除する</a><a href="#quiz">📝 Quiz</a>
   </div>
@@ -122,9 +122,9 @@ avg_rating
 <div class="unit" id="unit2">
   <div class="unit-header">
     <div class="unit-num">②</div>
-    <div><h2>トランザクションで給与レンジを分割する</h2><div class="unit-sub">salary_estimate → low_range・high_range（INT）</div></div>
+    <div><h2>トランザクションで給与レンジを分割する</h2><div class="unit-sub">salary_est → low_range・high_range（INT）</div></div>
   </div>
-  <p>この単元の主役は、Unit①のトランザクションを使った<strong>給与レンジの分割</strong>です。<code>ds_jobs.salary_estimate</code> には、たとえば <code>'$110K-$163K (Glassdoor est.)'</code> のような文字列が入っています。これでは「下限が10万ドル以上の求人」のような検索も、平均の計算もできません。1つのテキスト列を、<strong>数値の <code>low_range</code>（下限）と <code>high_range</code>（上限）の2列に分ける</strong>のがゴールです。</p>
+  <p>この単元の主役は、Unit①のトランザクションを使った<strong>給与レンジの分割</strong>です。<code>ds_jobs.salary_est</code> には、たとえば <code>'$110K-$163K (Glassdoor est.)'</code> のような文字列が入っています。これでは「下限が10万ドル以上の求人」のような検索も、平均の計算もできません。1つのテキスト列を、<strong>数値の <code>low_range</code>（下限）と <code>high_range</code>（上限）の2列に分ける</strong>のがゴールです。</p>
   <p>作業は「列追加→分割→記号の除去→桁の復元→型変換」と<strong>手順が多く、1つでも間違えるとデータを壊します</strong>。まさにトランザクションの出番です。全体像を先に見ておきましょう。</p>
   <div class="viz">
     <div class="viz-title">給与レンジ分割の8ステップ</div>
@@ -133,7 +133,7 @@ avg_rating
       <div class="flow-arrow-v">↓</div>
       <div class="flow-step"><span class="step-icon">2️⃣</span><div class="step-text"><strong>ALTER TABLE ... ADD COLUMN</strong><span>low_range / high_range をTEXTで追加</span></div></div>
       <div class="flow-arrow-v">↓</div>
-      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>UPDATE ... SPLIT_PART(salary_estimate, '-', n)</strong><span>「-」の前後で2つに分ける（RETURNINGで確認）</span></div></div>
+      <div class="flow-step"><span class="step-icon">3️⃣</span><div class="step-text"><strong>UPDATE ... SPLIT_PART(salary_est, '-', n)</strong><span>「-」の前後で2つに分ける（RETURNINGで確認）</span></div></div>
       <div class="flow-arrow-v">↓</div>
       <div class="flow-step"><span class="step-icon">4️⃣</span><div class="step-text"><strong>REPLACE で「$」を除く</strong><span>'$110K' → '110K'</span></div></div>
       <div class="flow-arrow-v">↓</div>
@@ -161,10 +161,10 @@ avg_rating
   <p><code>SPLIT_PART(文字列, 区切り文字, n)</code> は、文字列を区切り文字で分けて<strong>n番目</strong>の部分を返します（nは1から始まる）。<code>'-'</code> で区切ると、1番目が下限側、2番目が上限側になります。<code>UPDATE ... RETURNING</code> を付けると、更新した行をその場で表示できるので、<strong>更新結果のプレビュー</strong>に便利です。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">1</span>),</span>
-<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">2</span>)</span>
-<span class="cl"><span class="kw">RETURNING</span> post_id, salary_estimate, low_range, high_range;</span>
-</pre><div class="output-reveal">post_id | salary_estimate                | low_range | high_range
+<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">1</span>),</span>
+<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">RETURNING</span> post_id, salary_est, low_range, high_range;</span>
+</pre><div class="output-reveal">post_id | salary_est                | low_range | high_range
 1       | $110K-$163K (Glassdoor est.)   | $110K     | $163K (Glassdoor est.)
 2       | $137K-$171K (Glassdoor est.)   | $137K     | $171K (Glassdoor est.)
 3       | $45K-$79K (Glassdoor est.)     | $45K      | $79K (Glassdoor est.)
@@ -233,16 +233,16 @@ avg_rating
   「K」だけ残して「$」だけ除いた場合や、<code>'000'</code>を付けたあとに「K」が残っている <code>'110K000'</code> でも、<code>invalid input syntax for type int: "110K000"</code> と同様にエラーです。<strong>エラーになったらトランザクションの中で <code>ROLLBACK</code></strong> し、原因の手順（ステップ④⑤）を直して最初からやり直します。トランザクションで囲んでおいたおかげで、途中まで進んだ変更がテーブルに残る心配はありません。</div>
   <h3>ステップ⑧　確認して COMMIT</h3>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, salary_estimate, low_range, high_range</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, salary_est, low_range, high_range</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">8</span>)</span>
 <span class="cl"><span class="kw">ORDER BY</span> post_id;</span>
-</pre><div class="output-reveal">post_id | salary_estimate              | low_range | high_range
+</pre><div class="output-reveal">post_id | salary_est              | low_range | high_range
 1       | $110K-$163K (Glassdoor est.) | 110000    | 163000
 3       | $45K-$79K (Glassdoor est.)   | 45000     | 79000
 8       | $52K-$87K (Employer est.)    | 52000     | 87000
 (3 rows)</div>
-  <p>元の <code>salary_estimate</code> と見比べて、値が正しく分かれていることを確認します。型が本当にINTになったかは、<code>SELECT name, type FROM pragma_table_info('ds_jobs')</code>（PostgreSQLでは <code>information_schema.columns</code>）で調べられます。問題なければ確定します。</p>
+  <p>元の <code>salary_est</code> と見比べて、値が正しく分かれていることを確認します。型が本当にINTになったかは、<code>SELECT name, type FROM pragma_table_info('ds_jobs')</code>（PostgreSQLでは <code>information_schema.columns</code>）で調べられます。問題なければ確定します。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">COMMIT</span>;   <span class="cm">-- 確定。おかしければ代わりに ROLLBACK;</span></span>
 </pre>
@@ -254,11 +254,11 @@ avg_rating
 </pre><div class="output-reveal">avg_low | avg_high | min_low | max_high
 90933   | 140600   | 45000   | 198000
 (1 rows)</div>
-  <div class="teal-box">📌 <strong>データ整形の定石：</strong>「新しい列を作る（TEXT）→ 元の列から値を取り出す → 不要な文字を除く → 目的の型に変換する」。元の <code>salary_estimate</code> 列は消さずに残しているので、いつでもやり直せます。</div>
+  <div class="teal-box">📌 <strong>データ整形の定石：</strong>「新しい列を作る（TEXT）→ 元の列から値を取り出す → 不要な文字を除く → 目的の型に変換する」。元の <code>salary_est</code> 列は消さずに残しているので、いつでもやり直せます。</div>
 <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>1つの列に2つの情報（下限と上限）が入っていたら、まず新しい列を2つ作り、<code>SPLIT_PART</code>で分け、<code>REPLACE</code>や<code>SPLIT_PART(…,'K',1)</code>で数字だけにして、<code>'000'</code>を付け、最後に<code>USING x::INT</code>で数値型に変えます。全体を<code>START TRANSACTION</code>で囲んでおけば、失敗しても<code>ROLLBACK</code>でやり直せます。</p></div>
   <div class="practice-card" id="p-w3-u2">
     <div class="ptitle">💻 ミニ練習：下限だけを分割する</div>
-    <p class="ptask"><code>ds_jobs</code>に<code>low_range</code>列（TEXT型）を追加し、<code>salary_estimate</code>を<code>'-'</code>で分けた1番目の部分を<code>UPDATE</code>で入れてください（ここでは「$」や「K」の除去はしなくて構いません）。</p>
+    <p class="ptask"><code>ds_jobs</code>に<code>low_range</code>列（TEXT型）を追加し、<code>salary_est</code>を<code>'-'</code>で分けた1番目の部分を<code>UPDATE</code>で入れてください（ここでは「$」や「K」の除去はしなくて構いません）。</p>
     <textarea class="code-editor" id="p-w3-u2-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -270,7 +270,7 @@ avg_rating
       <pre class="code-block"><span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> low_range <span class="kw">TEXT</span>;</span>
 <span class="cl"></span>
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> low_range = <span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">1</span>);</span>
+<span class="cl"><span class="kw">SET</span> low_range = <span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">1</span>);</span>
 </pre>
       <p class="answer-note"><code>SPLIT_PART(…, '-', 1)</code>は「-」で分けた1番目を返します。post_id 1の<code>low_range</code>は<code>'$110K'</code>になります。ここから先の「$」「K」の除去とINTへの変換は、本文のステップ④以降と同じです。</p>
     </div>

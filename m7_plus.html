@@ -47,13 +47,13 @@
   <h3>重複レコードを探す（複数列でGROUP BY）</h3>
   <p>「同じ会社・同じ場所」の行が2回以上入っていないかを調べます。重複の定義に使う列を全部<code>GROUP BY</code>に並べ、<code>HAVING count(*) &gt; 1</code>で「2行以上あるグループ」だけを残します。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> company_name, location, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">SELECT</span> company, loc, count(*) <span class="kw">AS</span> n</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> company_name, location</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> company, loc</span>
 <span class="cl"><span class="kw">HAVING</span> count(*) &gt; <span class="nm">1</span>;</span>
 </pre>
 <div class="output-reveal">(0 rows)</div>
-  <div class="teal-box">📌 <strong>「0行」は立派な結果です。</strong>エラーではなく「company_name＋locationの組で重複は1つもない」という確認ができたことを意味します。検査クエリは、問題が見つからなければ0行で返る、と覚えましょう。</div>
+  <div class="teal-box">📌 <strong>「0行」は立派な結果です。</strong>エラーではなく「company＋locの組で重複は1つもない」という確認ができたことを意味します。検査クエリは、問題が見つからなければ0行で返る、と覚えましょう。</div>
   <h3>表記ゆれを探す（1列でGROUP BY）</h3>
   <p>同じものが違う綴りで入っていないかは、その列だけで<code>GROUP BY</code>して件数を数え、目で見ます。教科書のListing 10-5では会社名<code>Armour-Eckrich Meats</code>が4通りの綴りに分かれていました。ds_jobsでは<code>job_title</code>が該当します。</p>
 <pre class="code-block">
@@ -132,11 +132,11 @@ Senior Data Scientist | 3
     </div>
   </div>
   <div class="note-box">📖 <strong>教科書の例：</strong>meat_poultry_egg_establishmentsで<code>SELECT length(zip), count(*) FROM ... GROUP BY length(zip)</code>とすると、3文字：86件・4文字：496件・5文字（正常）：5,705件と分かりました。同じ手順をds_jobsに使います。</div>
-  <h3>job_descriptionの長さを調べる</h3>
+  <h3>job_descの長さを調べる</h3>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> LENGTH(job_description) <span class="kw">AS</span> len, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">SELECT</span> LENGTH(job_desc) <span class="kw">AS</span> len, count(*) <span class="kw">AS</span> n</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> LENGTH(job_description)</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> LENGTH(job_desc)</span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> len;</span>
 </pre>
 <div class="output-reveal">len | n
@@ -150,12 +150,12 @@ Senior Data Scientist | 3
 (17 rows)</div>
   <p>普通の説明文は30文字台〜50文字台なのに、<strong>長さ0が1件・長さ3が2件</strong>だけ飛び抜けて短いことが分かります。<code>WHERE</code>で取り出してみましょう。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, job_description, LENGTH(job_description) <span class="kw">AS</span> len</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, job_desc, LENGTH(job_desc) <span class="kw">AS</span> len</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> LENGTH(job_description) &lt; <span class="nm">5</span></span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_desc) &lt; <span class="nm">5</span></span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
 </pre>
-<div class="output-reveal">post_id | job_description | len
+<div class="output-reveal">post_id | job_desc | len
 11 | TBD | 3
 18 | n/a | 3
 29 |  | 0
@@ -174,12 +174,12 @@ Senior Data Scientist | 3
 4 | 28
 (2 rows)</div>
   <p>設立年は4桁のはずなのに、長さ2が2件あります。<code>WHERE LENGTH(CAST(founded AS TEXT)) &lt;&gt; 4</code>で確認すると、post_id 11と18の<code>founded</code>が<code>-1</code>（「-」の1文字＋数字の1文字＝2文字）でした。<code>-1</code>は「不明」を表すダミー値（センチネル）です。</p>
-  <div class="teal-box">📌 <strong>length()検査のコツ：</strong>①まず<code>GROUP BY length(列)</code>で分布を見る、②少数派の長さを<code>WHERE</code>で取り出す、③原因（先頭0の欠落・ダミー値・空文字列など）を特定してから修復、の順に進めます。会社名（<code>company_name</code>）の長さを見ても12〜30文字に散らばるだけで、長さで異常は見つかりません。「長さが揃うべき列」にこそ有効な検査です。</div>
+  <div class="teal-box">📌 <strong>length()検査のコツ：</strong>①まず<code>GROUP BY length(列)</code>で分布を見る、②少数派の長さを<code>WHERE</code>で取り出す、③原因（先頭0の欠落・ダミー値・空文字列など）を特定してから修復、の順に進めます。会社名（<code>company</code>）の長さを見ても12〜30文字に散らばるだけで、長さで異常は見つかりません。「長さが揃うべき列」にこそ有効な検査です。</div>
   <div class="note-box">💡 <strong>PostgreSQLでは：</strong><code>length()</code>のほか<code>char_length()</code>も使えます。この演習アリーナでもどちらも動きます。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>length()</code>は文字数を数えるだけの関数ですが、「本来は同じ長さのはず」の列ではとても優秀な検査役です。長さの分布を出して、仲間はずれの長さを探しましょう。</p></div>
   <div class="practice-card" id="p-w4-u2">
     <div class="ptitle">💻 ミニ練習：短すぎる説明文を見つける</div>
-    <p class="ptask"><code>ds_jobs</code>から、<code>job_description</code>の長さが<strong>5文字未満</strong>の行の<code>post_id</code>と<code>job_description</code>を返すSQLを、<code>LENGTH()</code>を使って書いてください（結果は3行）。</p>
+    <p class="ptask"><code>ds_jobs</code>から、<code>job_desc</code>の長さが<strong>5文字未満</strong>の行の<code>post_id</code>と<code>job_desc</code>を返すSQLを、<code>LENGTH()</code>を使って書いてください（結果は3行）。</p>
     <textarea class="code-editor" id="p-w4-u2-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -188,9 +188,9 @@ Senior Data Scientist | 3
     </div>
     <div class="check-result" id="p-w4-u2-result"></div>
     <div class="answer-reveal" id="p-w4-u2-answer" hidden>
-      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id, job_description</span>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id, job_desc</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> LENGTH(job_description) &lt; <span class="nm">5</span></span>
+<span class="cl"><span class="kw">WHERE</span> LENGTH(job_desc) &lt; <span class="nm">5</span></span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span></pre>
       <p class="answer-note"><code>LENGTH()</code>を<code>WHERE</code>の中で使えば、条件に合う行だけを取り出せます。TBD・n/a・空文字列の3行が返ります。</p>
     </div>
@@ -295,7 +295,7 @@ Senior Data Scientist | 3
     <div class="unit-num">④</div>
     <div><h2>テーブルをまたぐ UPDATE</h2><div class="unit-sub">相関サブクエリ＋EXISTS と UPDATE ... FROM</div></div>
   </div>
-  <p>教科書10章の後半には「<strong>別のテーブルの値を使って更新する</strong>（Updating Values Across Tables）」という節があります。M6で学んだJOINやサブクエリの発想を<code>UPDATE</code>に持ち込む技です。ここでは、対応表<code>ownership_map</code>を使って<code>ds_jobs.type_of_ownership</code>の長い名前を短いラベルにそろえます。</p>
+  <p>教科書10章の後半には「<strong>別のテーブルの値を使って更新する</strong>（Updating Values Across Tables）」という節があります。M6で学んだJOINやサブクエリの発想を<code>UPDATE</code>に持ち込む技です。ここでは、対応表<code>ownership_map</code>を使って<code>ds_jobs.owner_type</code>の長い名前を短いラベルにそろえます。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> ownership_map;</span>
 </pre>
@@ -310,18 +310,18 @@ Private Practice / Firm | Private
 (7 rows)</div>
   <div class="note-box">📖 <strong>教科書の題材について：</strong>教科書（Listing 10-18〜10-19）では、州コードと地域名の対応表<code>state_regions</code>を作り、<code>WHERE EXISTS</code>のサブクエリで「New Englandの州の会社だけ」に検査期限（inspection_deadline）を入れています。ここでは同じ考え方で、対応表<code>ownership_map</code>（raw_label→clean_label）を使います。</div>
   <h3>(1) 相関サブクエリ形式</h3>
-  <p>SET句の右辺に、<code>ownership_map</code>から対応する<code>clean_label</code>を探すサブクエリを書きます。サブクエリの中で外側の<code>ds_jobs.type_of_ownership</code>を参照するので「相関サブクエリ」（M6）です。</p>
+  <p>SET句の右辺に、<code>ownership_map</code>から対応する<code>clean_label</code>を探すサブクエリを書きます。サブクエリの中で外側の<code>ds_jobs.owner_type</code>を参照するので「相関サブクエリ」（M6）です。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl"><span class="kw">SET</span> owner_type = (</span>
 <span class="cl">    <span class="kw">SELECT</span> clean_label</span>
 <span class="cl">    <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">)</span>
 <span class="cl"><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
 <span class="cl">    <span class="kw">SELECT</span> <span class="nm">1</span></span>
 <span class="cl">    <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">);</span>
 </pre>
   <h3>なぜ WHERE EXISTS が必要か</h3>
@@ -329,14 +329,14 @@ Private Practice / Firm | Private
 <pre class="code-block">
 <span class="cl"><span class="cm">-- 危険：WHERE EXISTS が無い</span></span>
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl"><span class="kw">SET</span> owner_type = (</span>
 <span class="cl">    <span class="kw">SELECT</span> clean_label <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">);</span>
-<span class="cl"><span class="kw">SELECT</span> post_id, type_of_ownership <span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> type_of_ownership <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, owner_type <span class="kw">FROM</span> ds_jobs</span>
+<span class="cl"><span class="kw">WHERE</span> owner_type <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
 </pre>
-<div class="output-reveal">post_id | type_of_ownership
+<div class="output-reveal">post_id | owner_type
 11 | NULL
 18 | NULL
 29 | NULL
@@ -344,12 +344,12 @@ Private Practice / Firm | Private
   <div class="warn-box">⚠️ <strong>対応のない3行が NULL に上書きされました！</strong>サブクエリは該当行が無いとNULLを返し、WHEREなしのUPDATEは全30行に効くので、元の値（<code>Unknown</code>や<code>-1</code>）が消えてしまいます。<code>WHERE EXISTS (...)</code>で「対応がある27行だけ」を更新対象にするのが安全です。</div>
   <p>ガード付きで実行した後の分布は次の通りです。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> type_of_ownership, count(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">SELECT</span> owner_type, count(*) <span class="kw">AS</span> n</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> type_of_ownership</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span>, type_of_ownership;</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> owner_type</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> n <span class="kw">DESC</span>, owner_type;</span>
 </pre>
-<div class="output-reveal">type_of_ownership | n
+<div class="output-reveal">owner_type | n
 Private | 11
 Public | 8
 Nonprofit | 3
@@ -364,9 +364,9 @@ Unknown | 1
   <p>PostgreSQLには、JOIN風に書ける<code>UPDATE ... FROM ... WHERE</code>もあります。更新元テーブルを<code>FROM</code>に並べ、<code>WHERE</code>で結合条件を書くだけです。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> type_of_ownership = ownership_map.clean_label</span>
+<span class="cl"><span class="kw">SET</span> owner_type = ownership_map.clean_label</span>
 <span class="cl"><span class="kw">FROM</span> ownership_map</span>
-<span class="cl"><span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership;</span>
+<span class="cl"><span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type;</span>
 </pre>
   <p>結合条件に合う行だけが更新されるので、<strong>一致しない3行は自然に対象外</strong>になり、EXISTSのガードが不要です。結果は(1)と同じ（27行更新）です。</p>
   <table class="compare-table">
@@ -378,8 +378,8 @@ Unknown | 1
   <div class="note-box">💡 この演習アリーナでは、(1)も(2)も動きます。ただし更新の前に、<code>SELECT count(*) ... WHERE EXISTS (...)</code>で対象が27行であることを確認する習慣を付けましょう。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「対応表を見ながら書き換える」作業です。表に載っている行だけ書き換え、載っていない行は触らない。これを保証するのが<code>WHERE EXISTS</code>（または<code>UPDATE ... FROM</code>）の役割です。</p></div>
   <div class="practice-card" id="p-w4-u4">
-    <div class="ptitle">💻 ミニ練習：対応表で type_of_ownership を標準化</div>
-    <p class="ptask"><code>ownership_map</code>を使って<code>ds_jobs.type_of_ownership</code>を<code>clean_label</code>に置き換える<code>UPDATE</code>を書いてください。<strong>対応表にない行はNULLにならないよう</strong>、<code>WHERE EXISTS</code>のガードを付けること（27行が更新される）。</p>
+    <div class="ptitle">💻 ミニ練習：対応表で owner_type を標準化</div>
+    <p class="ptask"><code>ownership_map</code>を使って<code>ds_jobs.owner_type</code>を<code>clean_label</code>に置き換える<code>UPDATE</code>を書いてください。<strong>対応表にない行はNULLにならないよう</strong>、<code>WHERE EXISTS</code>のガードを付けること（27行が更新される）。</p>
     <textarea class="code-editor" id="p-w4-u4-input" rows="10">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -389,15 +389,15 @@ Unknown | 1
     <div class="check-result" id="p-w4-u4-result"></div>
     <div class="answer-reveal" id="p-w4-u4-answer" hidden>
       <pre class="code-block"><span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> type_of_ownership = (</span>
+<span class="cl"><span class="kw">SET</span> owner_type = (</span>
 <span class="cl">    <span class="kw">SELECT</span> clean_label</span>
 <span class="cl">    <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">)</span>
 <span class="cl"><span class="kw">WHERE</span> <span class="kw">EXISTS</span> (</span>
 <span class="cl">    <span class="kw">SELECT</span> <span class="nm">1</span></span>
 <span class="cl">    <span class="kw">FROM</span> ownership_map</span>
-<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.type_of_ownership</span>
+<span class="cl">    <span class="kw">WHERE</span> ownership_map.raw_label = ds_jobs.owner_type</span>
 <span class="cl">);</span></pre>
       <p class="answer-note">SET句のサブクエリで対応するclean_labelを引き、WHERE EXISTSで対応がある27行に限定します。ガードが無いと対応のない3行がNULLになります。</p>
     </div>
@@ -421,12 +421,12 @@ Unknown | 1
   <h3>DELETEの前に、まずSELECTでプレビュー</h3>
   <p>消す前に、同じ<code>WHERE</code>を<code>SELECT</code>に付けて「何が消えるか」を確認します。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, company_name, rating</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, company, rating</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> rating = -<span class="nm">1</span></span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span>
 </pre>
-<div class="output-reveal">post_id | company_name | rating
+<div class="output-reveal">post_id | company | rating
 4 | Open Door Health | -1
 11 | Brightside Labs | -1
 18 | Harbor Analytics | -1
@@ -481,9 +481,9 @@ after_rollback
 
 <div class="quiz-q" id="q1">
   <div class="q-num">Question 1</div>
-  <div class="q-text">A duplicate check with GROUP BY company_name, location HAVING count(*) &gt; 1 returns 0 rows. What does this mean?</div>
+  <div class="q-text">A duplicate check with GROUP BY company, loc HAVING count(*) &gt; 1 returns 0 rows. What does this mean?</div>
   <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The query failed because HAVING needs at least one row</button>
-<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No company_name and location pair occurs twice, so there are no exact duplicates</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No company and loc pair occurs twice, so there are no exact duplicates</button>
 <button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Every pair occurs exactly once and the table has been emptied</button>
 <button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The GROUP BY columns must be reversed before it can work</button></div>
   <div class="q-feedback" id="fb1"></div>
@@ -499,11 +499,11 @@ after_rollback
 </div>
 <div class="quiz-q" id="q3">
   <div class="q-num">Question 3</div>
-  <div class="q-text">A job_description is '' (an empty string). Which condition finds it, along with 'TBD' and 'n/a'?</div>
-  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE job_description IS NULL, because empty means NULL</button>
-<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE job_description = NULL, using the equals sign</button>
-<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE LENGTH(job_description) &lt; 5, because the empty string has length 0</button>
-<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE COUNT(job_description) = 0 without a GROUP BY</button></div>
+  <div class="q-text">A job_desc is '' (an empty string). Which condition finds it, along with 'TBD' and 'n/a'?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE job_desc IS NULL, because empty means NULL</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WHERE job_desc = NULL, using the equals sign</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WHERE LENGTH(job_desc) &lt; 5, because the empty string has length 0</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WHERE COUNT(job_desc) = 0 without a GROUP BY</button></div>
   <div class="q-feedback" id="fb3"></div>
 </div>
 <div class="quiz-q" id="q4">
@@ -535,7 +535,7 @@ after_rollback
 </div>
 <div class="quiz-q" id="q7">
   <div class="q-num">Question 7</div>
-  <div class="q-text">In UPDATE ds_jobs SET type_of_ownership = (SELECT clean_label FROM ownership_map WHERE ...), what does the extra WHERE EXISTS (...) guard prevent?</div>
+  <div class="q-text">In UPDATE ds_jobs SET owner_type = (SELECT clean_label FROM ownership_map WHERE ...), what does the extra WHERE EXISTS (...) guard prevent?</div>
   <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Duplicate rows being inserted into ownership_map</button>
 <button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The ownership_map table being dropped by mistake</button>
 <button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows that have no mapping from being overwritten with NULL</button>

@@ -60,8 +60,8 @@
 <span class="cl"><span class="kw">START TRANSACTION</span>;</span>
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ADD COLUMN</span> low_range <span class="kw">TEXT</span>, <span class="kw">ADD COLUMN</span> high_range <span class="kw">TEXT</span>;</span>
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">1</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>,</span>
-<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_estimate, <span class="st">'-'</span>, <span class="nm">2</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>;</span>
+<span class="cl"><span class="kw">SET</span> low_range  = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">1</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>,</span>
+<span class="cl">    high_range = <span class="kw">SPLIT_PART</span>(<span class="kw">REPLACE</span>(<span class="kw">SPLIT_PART</span>(salary_est, <span class="st">'-'</span>, <span class="nm">2</span>), <span class="st">'$'</span>, <span class="st">''</span>), <span class="st">'K'</span>, <span class="nm">1</span>) || <span class="st">'000'</span>;</span>
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ALTER COLUMN</span> low_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> low_range::<span class="kw">INT</span>;</span>
 <span class="cl"><span class="kw">ALTER TABLE</span> ds_jobs <span class="kw">ALTER COLUMN</span> high_range <span class="kw">SET</span> DATA <span class="kw">TYPE</span> <span class="kw">INT</span> <span class="kw">USING</span> high_range::<span class="kw">INT</span>;</span>
 <span class="cl"><span class="kw">SELECT</span> post_id, low_range, high_range <span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">8</span>);</span>
@@ -72,7 +72,7 @@
 8       | 52000     | 87000
 (3 rows)</div>
   <p>本編では、この長い式を1ステップずつに分けて説明しています。数字以外の文字（たとえば <code>110K</code>）が残っているとINTへの変換は<strong>エラー</strong>になります。そのときは <code>ROLLBACK</code> です。</p>
-  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>SPLIT_PART(salary_estimate, '-', 2)</code> は何を返す？<span class="cp-a">A. 「-」で分けた2番目、つまり上限側（'$163K (Glassdoor est.)'）。</span></div><div class="cp-q">Q2. INTに変換するときにエラーになる原因は？<span class="cp-a">A. 「$」や「K」など、数字以外の文字が残っているから。</span></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>SPLIT_PART(salary_est, '-', 2)</code> は何を返す？<span class="cp-a">A. 「-」で分けた2番目、つまり上限側（'$163K (Glassdoor est.)'）。</span></div><div class="cp-q">Q2. INTに変換するときにエラーになる原因は？<span class="cp-a">A. 「$」や「K」など、数字以外の文字が残っているから。</span></div></div>
   <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「列を追加 → 分ける → きれいにする → 型を変える」の順番です。全部トランザクションの中でやれば、失敗しても安心です。</p></div>
 </div>
 

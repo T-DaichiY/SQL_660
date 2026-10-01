@@ -73,7 +73,7 @@
 9</div>
   <p class="code-label">▶ 会社名の最後にくっついた評価値を消す</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> REGEXP_REPLACE(company_name,</span>
+<span class="cl"><span class="kw">SELECT</span> REGEXP_REPLACE(company,</span>
 <span class="cl">       <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs <span class="kw">WHERE</span> post_id = <span class="nm">1</span>;</span>
 </pre>
@@ -97,9 +97,9 @@ Bluepeak Studios</div>
   </div>
   <p class="code-label">▶ PostgreSQLで（アリーナでは実行できません）</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, job_description</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, job_desc</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_description)</span>
+<span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_desc)</span>
 <span class="cl">      @@ to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>);</span>
 </pre>
   <p>読み方：説明文を索引にして（tsvector）、検索語（tsquery）と<code>@@</code>で照合。<code>&amp;</code>は「かつ」です。</p>

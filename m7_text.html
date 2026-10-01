@@ -44,7 +44,7 @@
     <div><h2>文字列関数ツールキット</h2><div class="unit-sub">upper・lower・initcap・char_length・trim・lpad と、LIKE / ILIKE の違い</div></div>
   </div>
   <p>データ整形で一番よく使うのは、やはり文字列の関数です。PostgreSQLには50以上の文字列関数がありますが、実務で毎日のように使うのは十数個。講義では<code>left()</code>・<code>right()</code>・<code>replace()</code>・<code>||</code>（連結）を使いました。ここではそれらを復習しながら、講義に出てこなかった関数（大文字小文字の変換、文字数、trimの応用、lpad）を加えて、<strong>ひとつの表</strong>にまとめます。</p>
-  <div class="note-box">📚 <strong>データについて：</strong>この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行。なお教科書の例題は<code>us_counties_pop_est_2019</code>（郡の人口）・<code>crime_reports</code>（犯罪報告書）・<code>president_speeches</code>（大統領演説）というテーブルを使っています。このページでは同じ考え方を<code>ds_jobs</code>の<code>job_title</code>・<code>company_name</code>・<code>job_description</code>・<code>location</code>に置き換えて説明します。</div>
+  <div class="note-box">📚 <strong>データについて：</strong>この教材の練習用データ（30行）は講義で使ったKaggleのデータを模した架空のサンプルです。講義のデータは672行。なお教科書の例題は<code>us_counties_pop_est_2019</code>（郡の人口）・<code>crime_reports</code>（犯罪報告書）・<code>president_speeches</code>（大統領演説）というテーブルを使っています。このページでは同じ考え方を<code>ds_jobs</code>の<code>job_title</code>・<code>company</code>・<code>job_desc</code>・<code>loc</code>に置き換えて説明します。</div>
   <table class="compare-table">
     <tr><th>関数</th><th>働き</th><th>例</th><th>結果</th></tr>
     <tr><td><code>upper(x)</code></td><td>大文字にする</td><td><code>upper('Neal7')</code></td><td><code>NEAL7</code></td></tr>
@@ -73,15 +73,15 @@
 15 | Senior. Data Scientist - | SENIOR. DATA SCIENTIST - | 24 | Senior. Data Scientist</div>
   <div class="teal-box">📌 <strong><code>trim(x, 'chars')</code>は「文字の集合」を取る：</strong>第2引数は<code>' -'</code>（空白とハイフン）の<strong>並びではなく、どれか1文字でも当てはまれば削る文字の集合</strong>です。前後から、集合に含まれない文字にぶつかるまで削り続けます。そのため15番の末尾の<code>' -'</code>だけが消え、途中の空白は残ります。<code>ltrim</code>・<code>rtrim</code>で片側だけ削ることもできます。</div>
   <h3>initcap()の落とし穴：略語を認識しない</h3>
-  <p><code>initcap()</code>は便利ですが「単語の先頭以外を全部小文字にする」だけの単純な関数で、略語（ETL・SQL・AIなど）を理解しません。<code>job_description</code>の6番でその弱点を確認します。</p>
+  <p><code>initcap()</code>は便利ですが「単語の先頭以外を全部小文字にする」だけの単純な関数で、略語（ETL・SQL・AIなど）を理解しません。<code>job_desc</code>の6番でその弱点を確認します。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> job_description,</span>
-<span class="cl">       INITCAP(job_description) <span class="kw">AS</span> titled</span>
+<span class="cl"><span class="kw">SELECT</span> job_desc,</span>
+<span class="cl">       INITCAP(job_desc) <span class="kw">AS</span> titled</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> post_id = <span class="nm">6</span>;</span>
 </pre>
-<div class="output-reveal">job_description | titled
+<div class="output-reveal">job_desc | titled
 Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
   <div class="warn-box">⚠️ <strong><code>ETL</code>が<code>Etl</code>になってしまいました。</strong>教科書の例でも<code>initcap('Practical SQL')</code>は<code>Practical Sql</code>になります。<code>'AI research at NASA'</code>も<code>Ai Research At Nasa</code>です。完璧なタイトルケース変換ではないので、略語を含む列では結果を必ず目で確認し、必要なら<code>replace()</code>で直しましょう。</div>
   <h3>LIKE と ILIKE（大文字小文字の扱い）</h3>
@@ -183,30 +183,30 @@ Design and maintain ETL pipelines. | Design And Maintain Etl Pipelines.</div>
 </pre>
 <div class="output-reveal">first_only | all_matches | squeezed
 baa | bbb | a b c</div>
-  <p>本番は講義で最も面倒だった「会社名の末尾にくっついた評価値」です。<code>company_name</code>は<code>Bluepeak Studios4.4</code>のように末尾に評価値が付いていました。講義では<code>SUBSTRING(company_name FROM 1 FOR LENGTH(company_name) - 3)</code>で末尾3文字を削り、評価が-1の行は<code>CASE</code>で除外しました。正規表現なら「末尾の<code>数字.数字</code>」を空文字に置き換えるだけです。</p>
+  <p>本番は講義で最も面倒だった「会社名の末尾にくっついた評価値」です。<code>company</code>は<code>Bluepeak Studios4.4</code>のように末尾に評価値が付いていました。講義では<code>SUBSTRING(company FROM 1 FOR LENGTH(company) - 3)</code>で末尾3文字を削り、評価が-1の行は<code>CASE</code>で除外しました。正規表現なら「末尾の<code>数字.数字</code>」を空文字に置き換えるだけです。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, company_name,</span>
-<span class="cl">       REGEXP_REPLACE(company_name, <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, company,</span>
+<span class="cl">       REGEXP_REPLACE(company, <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">6</span>, <span class="nm">7</span>);</span>
 </pre>
-<div class="output-reveal">post_id | company_name | clean
+<div class="output-reveal">post_id | company | clean
 1 | Bluepeak Studios4.4 | Bluepeak Studios
 4 | Open Door Health | Open Door Health
 6 | District 94.2 | District 9
 7 | 23Genomics3.8 | 23Genomics</div>
   <div class="teal-box">📌 <strong>SUBSTRING方式との違い：</strong>末尾3文字を削る方法は、評価が付いていない行（rating = -1の5行）まで削ってしまい、<code>Open Door Health</code>が<code>Open Door Hea</code>になります。だから<code>CASE</code>が必要でした。<code>regexp_replace</code>は「パターンに<strong>マッチしたときだけ</strong>置換」するので、評価が付いていない行は自動的にそのままです。<code>District 94.2</code>のように名前の一部が数字でも、末尾の<code>4.2</code>だけが消えます。実際、パターンにマッチするのは25行で、これは評価が-1でない行の数と一致します。</div>
   <div class="warn-box">⚠️ 正規表現は強力なぶん、<strong>思わぬ行にもマッチする</strong>危険があります。<code>UPDATE</code>の前には必ず<code>SELECT</code>で置換結果を確認しましょう（講義で学んだ「バックアップ」「WHEREなしのUPDATEは全行に効く」も同じです）。</div>
-  <p>もう1つ、<code>salary_estimate</code>末尾の<code>(Glassdoor est.)</code>と<code>(Employer est.)</code>も、括弧の中身が2種類あっても1つのパターンで消せます。</p>
+  <p>もう1つ、<code>salary_est</code>末尾の<code>(Glassdoor est.)</code>と<code>(Employer est.)</code>も、括弧の中身が2種類あっても1つのパターンで消せます。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, salary_estimate,</span>
-<span class="cl">       REGEXP_REPLACE(salary_estimate, <span class="st">' \(.*\)$'</span>, <span class="st">''</span>) <span class="kw">AS</span> salary_only</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, salary_est,</span>
+<span class="cl">       REGEXP_REPLACE(salary_est, <span class="st">' \(.*\)$'</span>, <span class="st">''</span>) <span class="kw">AS</span> salary_only</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">8</span>);</span>
 </pre>
-<div class="output-reveal">post_id | salary_estimate | salary_only
+<div class="output-reveal">post_id | salary_est | salary_only
 1 | $110K-$163K (Glassdoor est.) | $110K-$163K
 8 | $52K-$87K (Employer est.) | $52K-$87K</div>
   <p><code>\(</code>と<code>\)</code>は「括弧そのもの」、<code>.*</code>は「何でも0文字以上」の意味です。</p>
@@ -214,13 +214,13 @@ baa | bbb | a b c</div>
   <p>講義の<code>SUBSTRING(x FROM 位置 FOR 長さ)</code>は位置で切り出しました。<code>FROM</code>の後ろに正規表現を書くと、<strong>パターンにマッチした最初の部分</strong>を取り出せます。パターンに括弧<code>( )</code>があると、その中身だけが返ります。給与の数字を取り出すのに便利です。教科書にも「テキストから4桁の数字を取り出す」という例があります。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, salary_estimate,</span>
-<span class="cl">       SUBSTRING(salary_estimate <span class="kw">FROM</span> <span class="st">'[0-9]+'</span>)       <span class="kw">AS</span> low_k,</span>
-<span class="cl">       SUBSTRING(salary_estimate <span class="kw">FROM</span> <span class="st">'-\$([0-9]+)K'</span>) <span class="kw">AS</span> high_k</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, salary_est,</span>
+<span class="cl">       SUBSTRING(salary_est <span class="kw">FROM</span> <span class="st">'[0-9]+'</span>)       <span class="kw">AS</span> low_k,</span>
+<span class="cl">       SUBSTRING(salary_est <span class="kw">FROM</span> <span class="st">'-\$([0-9]+)K'</span>) <span class="kw">AS</span> high_k</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> post_id <span class="kw">IN</span> (<span class="nm">1</span>, <span class="nm">8</span>, <span class="nm">22</span>);</span>
 </pre>
-<div class="output-reveal">post_id | salary_estimate | low_k | high_k
+<div class="output-reveal">post_id | salary_est | low_k | high_k
 1 | $110K-$163K (Glassdoor est.) | 110 | 163
 8 | $52K-$87K (Employer est.) | 52 | 87
 22 | $132K-$186K (Employer est.) | 132 | 186</div>
@@ -232,13 +232,13 @@ baa | bbb | a b c</div>
     <li><code>regexp_matches(text, pattern, 'g')</code>：<code>'g'</code>を付けると<strong>すべて</strong>のマッチを1件ずつ行として返す（1つの報告書に日付が2つ出てくる場合など）。</li>
     <li><code>regexp_split_to_table(text, pattern)</code>：パターンで文字列を分割し、1要素1行のテーブルにする。</li>
   </ul>
-  <p>この教材のデータに当てはめると、たとえば<code>regexp_match(salary_estimate, '\$(\d+)K-\$(\d+)K')</code>は1行目で配列<code>{110,163}</code>を返し、<code>[1]</code>が下限・<code>[2]</code>が上限です。<code>competitors</code>を<code>regexp_split_to_table(competitors, ',\s*')</code>で分割すれば、<code>Starlight Media, Orbit Films</code>が2行になります。</p>
+  <p>この教材のデータに当てはめると、たとえば<code>regexp_match(salary_est, '\$(\d+)K-\$(\d+)K')</code>は1行目で配列<code>{110,163}</code>を返し、<code>[1]</code>が下限・<code>[2]</code>が上限です。<code>competitors</code>を<code>regexp_split_to_table(competitors, ',\s*')</code>で分割すれば、<code>Starlight Media, Orbit Films</code>が2行になります。</p>
   <div class="warn-box">⚠️ <strong>この3つの関数は、このサイトの演習アリーナ（SQLite）では動きません。</strong>「読んで理解する」内容です。アリーナで同じことをするときは、この単元の<code>SUBSTRING(x FROM 'pattern')</code>と<code>regexp_replace()</code>を使いましょう（この2つはアリーナでも実行できます）。</div>
 
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>正規表現は「文字のあみ」です。<code>~</code>はあみにかかる行を探し、<code>regexp_replace</code>はかかった部分を別の文字に置き換え、<code>SUBSTRING(x FROM 'pattern')</code>はかかった部分だけを取り出します。まず<code>SELECT</code>で何がかかるかを確かめてから、<code>UPDATE</code>に進みましょう。</p></div>
   <div class="practice-card" id="p-w5-u2">
     <div class="ptitle">💻 ミニ練習：会社名の末尾の評価値を消す</div>
-    <p class="ptask"><code>ds_jobs</code>の<code>company_name</code>の末尾にくっついた評価値（<code>4.4</code>のような<code>数字.数字</code>）を<code>REGEXP_REPLACE</code>で取り除き、<code>post_id</code>と<code>clean_name</code>（別名）を<code>post_id</code>順に返すSQLを書いてください。</p>
+    <p class="ptask"><code>ds_jobs</code>の<code>company</code>の末尾にくっついた評価値（<code>4.4</code>のような<code>数字.数字</code>）を<code>REGEXP_REPLACE</code>で取り除き、<code>post_id</code>と<code>clean_name</code>（別名）を<code>post_id</code>順に返すSQLを書いてください。</p>
     <textarea class="code-editor" id="p-w5-u2-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -248,7 +248,7 @@ baa | bbb | a b c</div>
     <div class="check-result" id="p-w5-u2-result"></div>
     <div class="answer-reveal" id="p-w5-u2-answer" hidden>
       <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id,</span>
-<span class="cl">       REGEXP_REPLACE(company_name, <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean_name</span>
+<span class="cl">       REGEXP_REPLACE(company, <span class="st">'[0-9]\.[0-9]$'</span>, <span class="st">''</span>) <span class="kw">AS</span> clean_name</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> post_id;</span></pre>
       <p class="answer-note">パターン<code>[0-9]\.[0-9]$</code>は「文字列の末尾にある数字・ピリオド・数字」を表し、空文字<code>''</code>に置換しています。30行すべてが返り、評価の付いていない5行は元の名前のままです。</p>
@@ -293,7 +293,7 @@ baa | bbb | a b c</div>
 <span class="cl"><span class="cm">-- 結果： false   （sitはあるので「!sit」が満たされない）</span></span>
 </pre>
   <h3>なぜ LIKE '%word%' では足りないのか</h3>
-  <p><code>ds_jobs</code>の<code>job_description</code>で考えてみます（30行のうち1行は<code>Forecast demand for seasonal inventory.</code>）。</p>
+  <p><code>ds_jobs</code>の<code>job_desc</code>で考えてみます（30行のうち1行は<code>Forecast demand for seasonal inventory.</code>）。</p>
   <table class="compare-table">
     <tr><th>比べる点</th><th>LIKE '%word%'</th><th>全文検索</th></tr>
     <tr><td>語形の違い</td><td><code>LIKE '%forecasting%'</code>は0行（Forecastは別の文字列）</td><td><code>to_tsquery('forecasting')</code>は語幹<code>forecast</code>にそろえるので、この行にマッチする</td></tr>
@@ -302,12 +302,12 @@ baa | bbb | a b c</div>
     <tr><td>関連度の順位</td><td>付けられない（あるか無いかだけ）</td><td><code>ts_rank()</code>でスコア順に並べられる</td></tr>
     <tr><td>速度</td><td>先頭が<code>%</code>のLIKEは通常のインデックスが効かず全行を走査</td><td>GINインデックスで高速化できる</td></tr>
   </table>
-  <p>上の「モデルとデータを両方含む説明」は、正規表現なら<code>job_description ~* 'model' AND job_description ~* 'data'</code>で2行（post_idの7と25）と確認できます。全文検索で同じ条件を書くと次のようになります。</p>
+  <p>上の「モデルとデータを両方含む説明」は、正規表現なら<code>job_desc ~* 'model' AND job_desc ~* 'data'</code>で2行（post_idの7と25）と確認できます。全文検索で同じ条件を書くと次のようになります。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, job_description</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, job_desc</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_description)</span>
+<span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_desc)</span>
 <span class="cl">      @@ to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>);</span>
 <span class="cl"><span class="cm">-- 想定結果： post_id 7 と 25 の2行</span></span>
 </pre>
@@ -318,11 +318,11 @@ baa | bbb | a b c</div>
 <span class="cl"><span class="kw">ALTER</span> <span class="kw">TABLE</span> ds_jobs <span class="kw">ADD</span> <span class="kw">COLUMN</span> search_desc tsvector;</span>
 <span class="cl"></span>
 <span class="cl"><span class="kw">UPDATE</span> ds_jobs</span>
-<span class="cl"><span class="kw">SET</span> search_desc = to_tsvector(<span class="st">'english'</span>, job_description);</span>
+<span class="cl"><span class="kw">SET</span> search_desc = to_tsvector(<span class="st">'english'</span>, job_desc);</span>
 <span class="cl"></span>
 <span class="cl"><span class="kw">CREATE</span> <span class="kw">INDEX</span> desc_idx <span class="kw">ON</span> ds_jobs <span class="kw">USING</span> gin(search_desc);</span>
 <span class="cl"></span>
-<span class="cl"><span class="kw">SELECT</span> post_id, job_description</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, job_desc</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> search_desc @@ to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>);</span>
 </pre>
@@ -331,7 +331,7 @@ baa | bbb | a b c</div>
   <p><code>ts_rank(tsvector, tsquery)</code>は、検索語がどれだけ含まれているかに基づく<strong>関連度スコア</strong>を返します。<code>ORDER BY score DESC</code>で「一番それらしい」行が上に来ます。教科書では「war & security & threat & enemy」で演説をランキングしています。</p>
 
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> post_id, job_description,</span>
+<span class="cl"><span class="kw">SELECT</span> post_id, job_desc,</span>
 <span class="cl">       ts_rank(search_desc, to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>)) <span class="kw">AS</span> score</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
 <span class="cl"><span class="kw">WHERE</span> search_desc @@ to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>)</span>
@@ -342,7 +342,7 @@ baa | bbb | a b c</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>全文検索は「図書館の索引」です。本を丸ごと探す代わりに、本文を語のリストに整理（tsvector）しておき、検索語（tsquery）と突き合わせます。語形の違いも大丈夫で、関連度順に並べることもできます。ただしアリーナでは動かないので、仕組みと書き方を読んで理解しましょう。</p></div>
   <div class="practice-card" id="p-w5-u3">
     <div class="ptitle">📖 読んで理解：全文検索のSQLを書けるか自己チェック</div>
-    <p class="ptask"><strong>この問題はキーワードだけの自己チェックです。</strong>模範解答はPostgreSQL専用のSQLで、このサイトのアリーナでは実行できません。<code>ds_jobs</code>の<code>job_description</code>から、<code>'model &amp; data'</code>に一致する行を、関連度スコア<code>score</code>の高い順に返すSQLを、<code>to_tsvector('english', ...)</code>・<code>to_tsquery</code>・<code>@@</code>・<code>ts_rank</code>を使って書いてみてください。</p>
+    <p class="ptask"><strong>この問題はキーワードだけの自己チェックです。</strong>模範解答はPostgreSQL専用のSQLで、このサイトのアリーナでは実行できません。<code>ds_jobs</code>の<code>job_desc</code>から、<code>'model &amp; data'</code>に一致する行を、関連度スコア<code>score</code>の高い順に返すSQLを、<code>to_tsvector('english', ...)</code>・<code>to_tsquery</code>・<code>@@</code>・<code>ts_rank</code>を使って書いてみてください。</p>
     <textarea class="code-editor" id="p-w5-u3-input" rows="8">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -351,11 +351,11 @@ baa | bbb | a b c</div>
     </div>
     <div class="check-result" id="p-w5-u3-result"></div>
     <div class="answer-reveal" id="p-w5-u3-answer" hidden>
-      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id, job_description,</span>
-<span class="cl">       ts_rank(to_tsvector(<span class="st">'english'</span>, job_description),</span>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> post_id, job_desc,</span>
+<span class="cl">       ts_rank(to_tsvector(<span class="st">'english'</span>, job_desc),</span>
 <span class="cl">               to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>)) <span class="kw">AS</span> score</span>
 <span class="cl"><span class="kw">FROM</span> ds_jobs</span>
-<span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_description)</span>
+<span class="cl"><span class="kw">WHERE</span> to_tsvector(<span class="st">'english'</span>, job_desc)</span>
 <span class="cl">      @@ to_tsquery(<span class="st">'english'</span>, <span class="st">'model &amp; data'</span>)</span>
 <span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> score <span class="kw">DESC</span>;</span></pre>
       <p class="answer-note"><code>WHERE</code>で<code>@@</code>によりtsvectorとtsqueryを照合し、<code>ts_rank()</code>のスコアで並べ替えています。PostgreSQL専用なのでアリーナでは動きません。「答え合わせ」ではキーワードが含まれているかだけを確認します。</p>
