@@ -573,31 +573,94 @@ function highlightSQLLine(line) {
   return out;
 }
 
-/* Split a one-line solution into one clause per line (top level only; strings/parens/subqueries untouched). */
-function formatSQL(sql) {
-  if (sql.indexOf("\n") !== -1) return sql;
+/* Split a one-line solution into one clause per line (top level only; strings untouched).
+   Long subqueries / CTE bodies, CASE expressions, SELECT/SET lists and CREATE TABLE columns are broken up too. */
+function formatSQL(sql, ind) {
+  ind = ind || "";
+  if (sql.indexOf("\n") !== -1) {
+    // already multi-line: only re-format the lines that are still very long
+    return sql.split("\n").map(function (l) {
+      if (l.length <= 80) return l;
+      var lead = /^\s*/.exec(l)[0];
+      return formatSQL(l.trim(), lead);
+    }).join("\n");
+  }
   var BREAK = /^(FROM|WHERE|GROUP\s+BY|HAVING|ORDER\s+BY|LIMIT|UNION(\s+ALL)?|INTERSECT|EXCEPT|SET|VALUES|RETURNING|(NATURAL\s+|CROSS\s+|INNER\s+|(LEFT|RIGHT|FULL)(\s+OUTER)?\s+)?JOIN)\b/i;
   var INDENT = /^(AND|OR|ON)\b/i;
-  var out = "", i = 0, depth = 0, n = sql.length;
+  var out = "", i = 0, n = sql.length, c;
+  function skipString(k) { var q = sql[k], j = k + 1; while (j < n && !(sql[j] === q && sql[j + 1] !== q)) j += (sql[j] === q ? 2 : 1); return j + 1; }
+  function matchParen(k) { var d = 0; for (var j = k; j < n; j++) { var ch = sql[j]; if (ch === "'" || ch === '"') { j = skipString(j) - 1; continue; } if (ch === "(") d++; else if (ch === ")") { d--; if (d === 0) return j; } } return -1; }
   while (i < n) {
-    var c = sql[i];
-    if (c === "'" || c === '"') {
-      var j = i + 1;
-      while (j < n && !(sql[j] === c && sql[j + 1] !== c)) j += (sql[j] === c ? 2 : 1);
-      out += sql.slice(i, j + 1); i = j + 1; continue;
+    c = sql[i];
+    if (c === "'" || c === '"') { var e = skipString(i); out += sql.slice(i, e); i = e; continue; }
+    if (c === "(") {
+      var close = matchParen(i);
+      if (close > 0) {
+        var inner = sql.slice(i + 1, close);
+        if (/^\s*(SELECT|WITH)\b/i.test(inner) && inner.length > 45) {
+          out += "(\n" + formatSQL(inner.trim(), ind + "  ") + "\n" + ind + ")";
+        } else if (/^\s*CREATE\s+TABLE/i.test(sql) && out.replace(/\s/g, "").length < 80 && inner.length > 50 && /^\s*\w+\s+\w+/.test(inner)) {
+          out += "(\n" + splitTop(inner).map(function (x) { return ind + "  " + x; }).join("\n") + "\n" + ind + ")";
+        } else {
+          out += sql.slice(i, close + 1);
+        }
+        i = close + 1; continue;
+      }
     }
-    if (c === "(") depth++;
-    if (c === ")") depth--;
-    var atWord = depth === 0 && /[A-Za-z]/.test(c) && (i === 0 || /[^A-Za-z0-9_]/.test(sql[i - 1]));
+    if (c === ";" && /\S/.test(sql.slice(i + 1))) {
+      out += ";\n" + ind; i++;
+      while (i < n && /\s/.test(sql[i])) i++;
+      continue;
+    }
+    var atWord = /[A-Za-z]/.test(c) && (i === 0 || /[^A-Za-z0-9_]/.test(sql[i - 1]));
     if (atWord && out.trim() !== "") {
-      var rest = sql.slice(i), m;
-      if ((m = BREAK.exec(rest))) { out = out.replace(/ +$/, "") + "\n"; }
-      else if (INDENT.test(rest)) { out = out.replace(/ +$/, "") + "\n  "; }
-      if (m) { out += m[0]; i += m[0].length; continue; }
+      var rest = sql.slice(i), m = BREAK.exec(rest);
+      if (!m && /^SELECT\b/i.test(rest) && /\)\s*$/.test(out)) m = /^SELECT/i.exec(rest);
+      if (m) { out = out.replace(/ +$/, "") + "\n" + ind + m[0]; i += m[0].length; continue; }
+      if (INDENT.test(rest)) { out = out.replace(/ +$/, "") + "\n" + ind + "  "; }
     }
     out += c; i++;
   }
-  return out;
+  var lines = out.split("\n");
+  lines[0] = ind + lines[0];
+  return lines.map(function (l) { return breakLongLine(l, ind); }).join("\n");
+}
+
+function splitTop(body) {
+  var items = [], depth = 0, start = 0, k;
+  for (k = 0; k < body.length; k++) {
+    var ch = body[k];
+    if (ch === "'" || ch === '"') { k++; while (k < body.length && body[k] !== ch) k++; continue; }
+    if (ch === "(") depth++;
+    else if (ch === ")") depth--;
+    else if (ch === "," && depth === 0) { items.push(body.slice(start, k + 1).trim()); start = k + 1; }
+  }
+  items.push(body.slice(start).trim());
+  return items;
+}
+
+/* Still-long clause lines: one list item per line, then CASE ... WHEN/ELSE/END on separate lines. */
+function breakLongLine(line, ind) {
+  var lead = /^\s*/.exec(line)[0];
+  var m = /^(\s*)(SELECT(?:\s+DISTINCT)?|SET|GROUP\s+BY|ORDER\s+BY)\s+([\s\S]*)$/i.exec(line);
+  var lines = [line];
+  if (m && line.length > 60) {
+    var items = splitTop(m[3]);
+    if (items.length > 1) lines = [m[1] + m[2]].concat(items.map(function (x) { return m[1] + "  " + x; }));
+  }
+  var res = [];
+  lines.forEach(function (l) {
+    if (l.length > 90 && (l.match(/\bCASE\s+WHEN\b/gi) || []).length >= 2) {
+      var pad2 = /^\s*/.exec(l)[0];
+      l = l.replace(/\)\s*\+\s*\(CASE/g, ")\n" + pad2 + "  + (CASE");
+    } else if (l.length > 90 && /\bCASE\s+WHEN\b/i.test(l)) {
+      var pad = /^\s*/.exec(l)[0];
+      l = l.replace(/\s+(WHEN|ELSE)\s/g, function (all, kw) { return "\n" + pad + "    " + kw + " "; })
+           .replace(/\s+END\b/g, "\n" + pad + "  END");
+    }
+    res.push(l);
+  });
+  return res.join("\n");
 }
 
 function highlightSQL(code) {
