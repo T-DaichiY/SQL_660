@@ -133,7 +133,7 @@ MCQ は**正解が常に一番長い選択肢にならないよう**にする(�
 - push はユーザーが「push」「yes」等で承認してから。
 
 ## 8.5 M8（統計・CTE）で追加したもの
-- **データ**: `bikes`（NYC East River の自転車通行量、210行。講義のCSV＝4月1〜30日の30日分が7回繰り返されている）、`departments/employees/employee_projects`（架空・5部署20人）、銀行DB。`M8/bikes.csv`・`M8/M8_transcripts_whisper.txt` に素材を保存。
+- **データ**: `bikes`（講義の配布データそのまま：`M8/Lesson data set/` の `create_bikes_table.sql` と同じ列 `cross_date, high_temp, low_temp, precip, brooklyn, manhattan, williamsburg, queensboro, total`、210行。CSV自体が4月1〜30日の30日分を7回繰り返している。id・曜日の列は無い）、`departments/employees/employee_projects`（架空・5部署20人）、銀行DB。`M8/bikes.csv`・`M8/M8_transcripts_whisper.txt` に素材を保存。
 - **統計関数**: sql.js は集計関数を自作できないので `pgRewriteStats` が `corr / regr_slope / regr_intercept / regr_r2 / var_* / stddev_* / covar_*` を `SUM(CASE…)` の式に書き換える（NULLの組は無視＝PostgreSQLと同じ）。`pg_sqrt` を登録。講義の数値（0.74 / 370.18 / −7891.03 / 0.55 / 125.06 / 11.18）がそのまま再現される。
 - **採点**: 小数は有効10桁で比較（`normalizeRows`）。CTE・ウィンドウ関数はSQLite標準で動く。`percentile_cont` / crosstab / LATERAL は未対応＝概念のみ。
 - **注意**: SQLiteは整数÷整数が切り捨て（`::numeric` でも直らない）→ `* 100.0` を先に掛ける。

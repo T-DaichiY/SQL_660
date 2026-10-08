@@ -31,19 +31,19 @@
   <p>M8の講義動画は<code>corr()</code>・回帰・分散・CTEが中心でした。この1本は、<strong>教科書『Practical SQL 2nd ed.』11章（Statistical Functions in SQL）と13章（Advanced Query Techniques）のうち、講義にない節</strong>を、教科書の節の順に1つずつ学びます。教科書の国勢調査・気温・アンケートの表はこのサイトにないので、<code>bikes</code>と<code>employees</code>系の表で<strong>同じ形のクエリ</strong>を再現します。<code>percentile_cont</code>・<code>crosstab</code>・<code>LATERAL</code>は演習アリーナで動かないため、読むだけです。</p>
   <h3 style="margin-top:1rem">教科書対応表</h3>
   <table class="compare-table" style="background:#fff;color:#222">
-<tr><th>教科書の節</th><th>ページ（PDFのページ番号）</th><th>このページ</th></tr>
-<tr><td>11章 Creating Rankings with SQL / rank() と dense_rank()</td><td>p.280–281</td><td>①</td></tr>
-<tr><td>11章 Ranking Within Subgroups with PARTITION BY</td><td>p.282–283</td><td>②</td></tr>
-<tr><td>11章 Calculating Rates for Meaningful Comparisons / Tourism-Related Businesses</td><td>p.284–286</td><td>③</td></tr>
-<tr><td>11章 Smoothing Uneven Data</td><td>p.287–291</td><td>④</td></tr>
-<tr><td>13章 Using Subqueries / Filtering with Subqueries in a WHERE Clause</td><td>p.320–322</td><td>⑤</td></tr>
-<tr><td>13章 Creating Derived Tables / Joining Derived Tables</td><td>p.323–326</td><td>⑥</td></tr>
-<tr><td>13章 Generating Columns with Subqueries</td><td>p.327–328</td><td>⑦</td></tr>
-<tr><td>13章 Understanding Subquery Expressions（IN・EXISTS）／ Using Subqueries with LATERAL</td><td>p.329–334</td><td>⑧（LATERALは読むだけ）</td></tr>
-<tr><td>13章 Using Common Table Expressions</td><td>p.335–338</td><td>⑨</td></tr>
-<tr><td>13章 Performing Cross Tabulations（crosstab()は読むだけ、CASEでピボット）</td><td>p.339–344</td><td>⑩</td></tr>
-<tr><td>13章 Reclassifying Values with CASE ／ Using CASE in a CTE</td><td>p.345–349</td><td>⑪</td></tr>
-<tr><td>（教科書にはない補足）再帰CTE</td><td>p.338に一言のみ</td><td>⑫</td></tr>
+<tr><th>教科書の節</th><th>ページ</th><th>このページ</th></tr>
+<tr><td>11章 Creating Rankings with SQL / rank() と dense_rank()</td><td>p.193–194</td><td>①</td></tr>
+<tr><td>11章 Ranking Within Subgroups with PARTITION BY</td><td>p.195</td><td>②</td></tr>
+<tr><td>11章 Calculating Rates for Meaningful Comparisons / Tourism-Related Businesses</td><td>p.196–197</td><td>③</td></tr>
+<tr><td>11章 Smoothing Uneven Data</td><td>p.198–200</td><td>④</td></tr>
+<tr><td>13章 Using Subqueries / Filtering with Subqueries in a WHERE Clause</td><td>p.223–225</td><td>⑤</td></tr>
+<tr><td>13章 Creating Derived Tables / Joining Derived Tables</td><td>p.225–226</td><td>⑥</td></tr>
+<tr><td>13章 Generating Columns with Subqueries</td><td>p.227–228</td><td>⑦</td></tr>
+<tr><td>13章 Understanding Subquery Expressions（IN・EXISTS）／ Using Subqueries with LATERAL</td><td>p.229–233</td><td>⑧（LATERALは読むだけ）</td></tr>
+<tr><td>13章 Using Common Table Expressions</td><td>p.234–235</td><td>⑨</td></tr>
+<tr><td>13章 Performing Cross Tabulations（crosstab()は読むだけ、CASEでピボット）</td><td>p.236–240</td><td>⑩</td></tr>
+<tr><td>13章 Reclassifying Values with CASE ／ Using CASE in a CTE</td><td>p.241–243</td><td>⑪</td></tr>
+<tr><td>（教科書にはない補足）再帰CTE</td><td>p.235に一言のみ</td><td>⑫</td></tr>
 </table>
   <div class="ch-banner unit-nav" style="background:none;padding:0;margin-top:.8rem">
     <a href="#unit1">① rank()</a><a href="#unit2">② PARTITION BY</a><a href="#unit3">③ レート</a><a href="#unit4">④ ローリング平均</a><a href="#unit5">⑤ WHEREのサブクエリ</a><a href="#unit6">⑥ 派生テーブル</a><a href="#unit7">⑦ 列のサブクエリ</a><a href="#unit8">⑧ EXISTS・LATERAL</a><a href="#unit9">⑨ CTE</a><a href="#unit10">⑩ クロス集計</a><a href="#unit11">⑪ CASE</a><a href="#unit12">⑫ 補足</a><a href="#quiz">📝 Quiz</a>
@@ -56,9 +56,9 @@
 <div class="unit" id="unit1">
   <div class="unit-header">
     <div class="unit-num">①</div>
-    <div><h2>rank() と dense_rank()</h2><div class="unit-sub">教科書11章『Creating Rankings with SQL』／『Ranking with rank() and dense_rank()』（p.280–281）</div></div>
+    <div><h2>rank() と dense_rank()</h2><div class="unit-sub">教科書11章『Creating Rankings with SQL』／『Ranking with rank() and dense_rank()』（p.193–194）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Creating Rankings with SQL』→『Ranking with rank() and dense_rank()』（p.280–281）。教科書の例は8社の<code>widget_output</code>（Listing 11-6）。国勢調査・工場の表はこのサイトにないので、同じ書き方を<code>employees</code>（架空の20人）の<code>salary</code>に当てはめます。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Creating Rankings with SQL』→『Ranking with rank() and dense_rank()』（p.193–194）。教科書の例は8社の<code>widget_output</code>（Listing 11-6）。国勢調査・工場の表はこのサイトにないので、同じ書き方を<code>employees</code>（架空の20人）の<code>salary</code>に当てはめます。</div>
   <p>M4の<code>GROUP BY</code>は行をまとめて1行に減らす「集計関数」でした。教科書はこれと対比して、<strong>ウィンドウ関数（window function）は、まず行の集合を作り、その結果の上で各行ごとに値を計算する</strong>と説明します。行は減りません。順位づけの<code>rank()</code>と<code>dense_rank()</code>が代表です。</p>
   <h3>OVER (ORDER BY …) ＝「窓」を決める</h3>
   <p>関数名の後ろの<code>OVER (…)</code>が窓（window）の定義です。ここでは「<code>salary</code>の高い順に並べた全行」を窓にしています。2つの関数の違いは<strong>同順位（tie）のあとの番号</strong>だけです。</p>
@@ -120,9 +120,9 @@ Noah Fox | 50000 | 13 | 11
 <div class="unit" id="unit2">
   <div class="unit-header">
     <div class="unit-num">②</div>
-    <div><h2>PARTITION BY でグループ内の順位</h2><div class="unit-sub">教科書11章『Ranking Within Subgroups with PARTITION BY』（p.282–283）</div></div>
+    <div><h2>PARTITION BY でグループ内の順位</h2><div class="unit-sub">教科書11章『Ranking Within Subgroups with PARTITION BY』（p.195）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Ranking Within Subgroups with PARTITION BY』（p.282–283）。教科書は<code>store_sales</code>表（Listing 11-7）で「カテゴリごとの店の売上順位」を出します。このサイトでは「部署ごとの給料順位」に置き換えます。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Ranking Within Subgroups with PARTITION BY』（p.195）。教科書は<code>store_sales</code>表（Listing 11-7）で「カテゴリごとの店の売上順位」を出します。このサイトでは「部署ごとの給料順位」に置き換えます。</div>
   <p>全体の順位ではなく、<strong>グループの中での順位</strong>がほしいときは、<code>OVER</code>の中に<code>PARTITION BY</code>を足します。教科書の言葉では「<code>PARTITION BY</code>は、指定した列の値で表の行を区切る」。区切りごとに別々にランキングされます。<code>GROUP BY</code>と違って行は減りません。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> d.department_name, e.employee_name, e.salary,</span>
@@ -196,14 +196,14 @@ Sales | Ivy Kim | 62000
 <div class="unit" id="unit3">
   <div class="unit-header">
     <div class="unit-num">③</div>
-    <div><h2>レート（割合）で比べる</h2><div class="unit-sub">教科書11章『Calculating Rates for Meaningful Comparisons』／『Finding Rates of Tourism-Related Businesses』（p.284–286）</div></div>
+    <div><h2>レート（割合）で比べる</h2><div class="unit-sub">教科書11章『Calculating Rates for Meaningful Comparisons』／『Finding Rates of Tourism-Related Businesses』（p.196–197）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Calculating Rates for Meaningful Comparisons』と『Finding Rates of Tourism-Related Businesses』（p.284–286）。教科書は国勢調査の人口表<code>us_counties_pop_est_2019</code>と観光関連事業所数<code>cbp_naics_72_establishments</code>を結合して「人口1,000人あたりの事業所数」を出します（Listing 11-8、11-9）。これらの表はこのサイトにありません。同じ考え方を<code>bikes</code>（橋ごとの割合）と、単元⑥の<code>employees</code>系（給料1万あたりの作業時間）で再現します。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Calculating Rates for Meaningful Comparisons』と『Finding Rates of Tourism-Related Businesses』（p.196–197）。教科書は国勢調査の人口表<code>us_counties_pop_est_2019</code>と観光関連事業所数<code>cbp_naics_72_establishments</code>を結合して「人口1,000人あたりの事業所数」を出します（Listing 11-8、11-9）。これらの表はこのサイトにありません。同じ考え方を<code>bikes</code>（橋ごとの割合）と、単元⑥の<code>employees</code>系（給料1万あたりの作業時間）で再現します。</div>
   <p>教科書は、生の件数で順位をつけると誤解を生むと述べます。2019年のテキサスの出生数は377,599、ユタは46,826。しかしテキサスの人口はユタの約9倍なので、件数だけでは比べられません。<strong>1,000人あたりの出生率</strong>に直すとテキサス62.5、ユタ66.7で、順位が逆転します。式は<code>（件数 ÷ 母数）× 1,000</code>です。</p>
   <div class="note-box">📖 <strong><code>bikes</code>データについて：</strong>講義のCSVは<strong>4月1〜30日の30日分が7回繰り返されている</strong>ため、このサイトの<code>bikes</code>も210行で、同じ日付の行が7行ずつ（中身も同じ）あります。講師の数字（r = 0.74など）はこの210行で再現されます。</div>
   <h3>整数どうしの割り算に注意</h3>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> sum(brooklyn_bridge) / sum(total) <span class="kw">AS</span> share <span class="kw">FROM</span> bikes;</span>
+<span class="cl"><span class="kw">SELECT</span> sum(brooklyn) / sum(total) <span class="kw">AS</span> share <span class="kw">FROM</span> bikes;</span>
 </pre>
 <div class="output-reveal">share
 0
@@ -211,10 +211,10 @@ Sales | Ivy Kim | 62000
   <div class="warn-box">⚠️ <strong>結果は0です。</strong>教科書も「整数÷整数のとき、小数を出すには片方を<code>numeric</code>にする」と述べ、<code>establishments::numeric / pop_est_2018</code>のようにキャストして、<code>round(…, 1)</code>で小数第1位に丸めています。<br>💡 <strong>PostgreSQLでは</strong><code>::numeric</code>で小数になります。<strong>演習アリーナ（SQLite）では</strong>それだけでは整数除算が小数になりません。<code>100.0</code>のように小数点つきの数を<strong>先に掛けて</strong>から割ります。</div>
   <h3>100あたりの割合（％）</h3>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> round(sum(brooklyn_bridge)     * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> brooklyn_per100,</span>
-<span class="cl">       round(sum(manhattan_bridge)    * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> manhattan_per100,</span>
-<span class="cl">       round(sum(williamsburg_bridge) * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> williamsburg_per100,</span>
-<span class="cl">       round(sum(queensboro_bridge)   * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> queensboro_per100</span>
+<span class="cl"><span class="kw">SELECT</span> round(sum(brooklyn)     * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> brooklyn_per100,</span>
+<span class="cl">       round(sum(manhattan)    * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> manhattan_per100,</span>
+<span class="cl">       round(sum(williamsburg) * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> williamsburg_per100,</span>
+<span class="cl">       round(sum(queensboro)   * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> queensboro_per100</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span>
 </pre>
 <div class="output-reveal">brooklyn_per100 | manhattan_per100 | williamsburg_per100 | queensboro_per100
@@ -222,7 +222,7 @@ Sales | Ivy Kim | 62000
 (1 row)</div>
   <p>合計すると100.1になるのは丸めの誤差です。Williamsburg Bridgeがもっとも多く約3人に1人です。基準を10,000にすると次のように整数で比べられます。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> round(sum(brooklyn_bridge) * <span class="nm">10000.0</span> / sum(total), <span class="nm">0</span>) <span class="kw">AS</span> brooklyn_per10000</span>
+<span class="cl"><span class="kw">SELECT</span> round(sum(brooklyn) * <span class="nm">10000.0</span> / sum(total), <span class="nm">0</span>) <span class="kw">AS</span> brooklyn_per10000</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span>
 </pre>
 <div class="output-reveal">brooklyn_per10000
@@ -232,7 +232,7 @@ Sales | Ivy Kim | 62000
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>クラスAは30人中15人、クラスBは10人中7人がメガネ。人数ならA、100人あたりならB（50人と70人）。母数をそろえて比べるのがレートです。</p></div>
   <div class="practice-card" id="p-m8p-u3">
     <div class="ptitle">💻 ミニ練習：Queensboro Bridgeの割合を求める</div>
-    <p class="ptask"><code>bikes</code>全体の<code>total</code>のうち<code>queensboro_bridge</code>が占める割合を<strong>100あたり</strong>・小数第1位まで丸めて<code>queensboro_per100</code>で返してください。</p>
+    <p class="ptask"><code>bikes</code>全体の<code>total</code>のうち<code>queensboro</code>が占める割合を<strong>100あたり</strong>・小数第1位まで丸めて<code>queensboro_per100</code>で返してください。</p>
     <textarea class="code-editor" id="p-m8p-u3-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -242,7 +242,7 @@ Sales | Ivy Kim | 62000
     <div class="check-result" id="p-m8p-u3-result"></div>
     <div class="answer-reveal" id="p-m8p-u3-answer" hidden>
       <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> round(sum(queensboro_bridge) * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> queensboro_per100</span>
+<span class="cl"><span class="kw">SELECT</span> round(sum(queensboro) * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> queensboro_per100</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span>
 </pre>
       <p class="answer-note"><code>100.0</code>を先に掛けるのがポイントです。結果は23.1です。</p>
@@ -254,72 +254,81 @@ Sales | Ivy Kim | 62000
 <div class="unit" id="unit4">
   <div class="unit-header">
     <div class="unit-num">④</div>
-    <div><h2>ローリング平均で不規則なデータをなめらかに</h2><div class="unit-sub">教科書11章『Smoothing Uneven Data』（p.287–291）</div></div>
+    <div><h2>ローリング平均で不規則なデータをなめらかに</h2><div class="unit-sub">教科書11章『Smoothing Uneven Data』（p.198–200）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Smoothing Uneven Data』（Listing 11-10、p.287–291）。教科書は米国の柑橘類輸出額<code>us_exports</code>（月次）で12か月のローリング平均を出します。この表はないので、<code>bikes</code>の<code>total</code>で7行のローリング平均を作ります。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>11章『Smoothing Uneven Data』（Listing 11-10、p.198–200）。教科書は米国の柑橘類輸出額<code>us_exports</code>（月次）で12か月のローリング平均を出します。この表はないので、<code>bikes</code>の<code>total</code>で7日のローリング平均を作ります。</div>
   <p>教科書の説明：ローリング平均（rolling average、moving average）は、<strong>期間ごとに、動く窓の中の行の平均</strong>を計算したものです。金物店のハンマー売上がバラバラでも、直近7日の平均は6.6、6.9、6.6…と安定します。長い期間で見れば傾向（トレンド）が分かります。</p>
-  <p>構文は<code>avg(列) OVER (ORDER BY … ROWS BETWEEN n PRECEDING AND CURRENT ROW)</code>。教科書の12か月平均は<code>ROWS BETWEEN 11 PRECEDING AND CURRENT ROW</code>（今の行＋前の11行＝12行）でした。7行なら<code>6 PRECEDING</code>です。</p>
+  <p>構文は<code>avg(列) OVER (ORDER BY … ROWS BETWEEN n PRECEDING AND CURRENT ROW)</code>。教科書の12か月平均は<code>ROWS BETWEEN 11 PRECEDING AND CURRENT ROW</code>（今の行＋前の11行＝12行）でした。7日なら<code>6 PRECEDING</code>です。<code>bikes</code>は4/1〜4/30が7回繰り返された210行なので、先にCTE<code>daily</code>で<code>DISTINCT</code>をかけ、<strong>1日1行（30行）</strong>にしてから窓をかけます。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> id, date, total,</span>
-<span class="cl">       round(avg(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> id</span>
+<span class="cl"><span class="kw">WITH</span> daily <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">DISTINCT</span> cross_date, total <span class="kw">FROM</span> bikes</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> cross_date, total,</span>
+<span class="cl">       round(avg(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> cross_date</span>
 <span class="cl">                              <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="nm">6</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>), <span class="nm">1</span>) <span class="kw">AS</span> avg7</span>
-<span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> id;</span>
+<span class="cl"><span class="kw">FROM</span> daily</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> cross_date;</span>
 </pre>
-<div class="output-reveal">id | date | total | avg7
-1 | 2016-04-01 | 11497 | 11497
-2 | 2016-04-02 | 6922 | 9209.5
-3 | 2016-04-03 | 4759 | 7726
-4 | 2016-04-04 | 4335 | 6878.3
-5 | 2016-04-05 | 9471 | 7396.8
-6 | 2016-04-06 | 11919 | 8150.5
-7 | 2016-04-07 | 9596 | 8357
-8 | 2016-04-08 | 12744 | 8535.1
-9 | 2016-04-09 | 4510 | 8190.6
-10 | 2016-04-10 | 9126 | 8814.4
+<div class="output-reveal">cross_date | total | avg7
+2016-04-01 | 11497 | 11497
+2016-04-02 | 6922 | 9209.5
+2016-04-03 | 4759 | 7726
+2016-04-04 | 4335 | 6878.3
+2016-04-05 | 9471 | 7396.8
+2016-04-06 | 11919 | 8150.5
+2016-04-07 | 9596 | 8357
+2016-04-08 | 12744 | 8535.1
+2016-04-09 | 4510 | 8190.6
+2016-04-10 | 9126 | 8814.4
 ...
-(210 rows)</div>
-  <p>id=7の<code>avg7</code>は、1〜7行目の合計58499÷7＝<strong>8357</strong>。id=8は窓がずれて8535.1です。最初の6行は行数が足りず、あるぶんだけの平均です（教科書の表は7日そろうまで空欄）。</p>
-  <div class="warn-box">⚠️ <strong>教科書の注意（NOTE）：</strong>ローリング平均や合計は<strong>期間に抜けがないデータ</strong>で使います。欠けた月が1つあると、12か月の合計が13か月になるように、窓関数は<strong>日付ではなく行</strong>を数えるからです。<code>bikes</code>は同じ日付の行が7行ずつあるので、並び順は一意な<code>id</code>で決めます。</div>
-  <p>教科書は「<code>avg()</code>を<code>sum()</code>に替えればローリング合計になる」とも述べています。7行合計なら次のとおりです。</p>
+(30 rows)</div>
+  <p>4/7の<code>avg7</code>は、4/1〜4/7の合計58499÷7＝<strong>8357</strong>。4/8は窓が1日ずれて8535.1です。最初の6日は行数が足りず、あるぶんだけの平均です（教科書の表は7日そろうまで空欄）。</p>
+  <div class="warn-box">⚠️ <strong>教科書の注意（NOTE）：</strong>ローリング平均や合計は<strong>期間に抜けがないデータ</strong>で使います。欠けた月が1つあると、12か月の合計が13か月になるように、窓関数は<strong>日付ではなく行</strong>を数えるからです。<code>bikes</code>は同じ日付の行が7行ずつあるので、そのまま窓をかけると「直近7日」ではなく「同じ日の7行」になってしまいます。<code>DISTINCT</code>で1日1行にそろえるのがコツです。</div>
+  <p>教科書は「<code>avg()</code>を<code>sum()</code>に替えればローリング合計になる」とも述べています。7日合計なら次のとおりです。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> id, total,</span>
-<span class="cl">       sum(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> id</span>
+<span class="cl"><span class="kw">WITH</span> daily <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">DISTINCT</span> cross_date, total <span class="kw">FROM</span> bikes</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> cross_date, total,</span>
+<span class="cl">       sum(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> cross_date</span>
 <span class="cl">                        <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="nm">6</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>) <span class="kw">AS</span> sum7</span>
-<span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> id;</span>
+<span class="cl"><span class="kw">FROM</span> daily</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> cross_date;</span>
 </pre>
-<div class="output-reveal">id | total | sum7
-1 | 11497 | 11497
-2 | 6922 | 18419
-3 | 4759 | 23178
-4 | 4335 | 27513
-5 | 9471 | 36984
-6 | 11919 | 48903
-7 | 9596 | 58499
-8 | 12744 | 59746
+<div class="output-reveal">cross_date | total | sum7
+2016-04-01 | 11497 | 11497
+2016-04-02 | 6922 | 18419
+2016-04-03 | 4759 | 23178
+2016-04-04 | 4335 | 27513
+2016-04-05 | 9471 | 36984
+2016-04-06 | 11919 | 48903
+2016-04-07 | 9596 | 58499
+2016-04-08 | 12744 | 59746
 ...
-(210 rows)</div>
+(30 rows)</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>毎日のテストの点がバラバラでも、「直近1週間の平均点」をグラフにすれば上がっているか下がっているかが見えやすくなります。</p></div>
   <div class="practice-card" id="p-m8p-u4">
     <div class="ptitle">💻 ミニ練習：3行の移動平均</div>
-    <p class="ptask"><code>bikes</code>について、<code>id</code>、<code>total</code>、今日を含む直近<strong>3行</strong>の<code>total</code>の平均（小数第1位まで、別名<code>avg3</code>）を<code>id</code>順に返してください。</p>
+    <p class="ptask"><code>bikes</code>から1日1行にしたCTE <code>daily</code>（<code>SELECT DISTINCT cross_date, total</code>）を作り、<code>cross_date</code>、<code>total</code>、今日を含む直近<strong>3日</strong>の<code>total</code>の平均（小数第1位まで、別名<code>avg3</code>）を<code>cross_date</code>順に返してください。</p>
     <textarea class="code-editor" id="p-m8p-u4-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
-      <button class="check-btn" onclick="checkPractice('p-m8p-u4', ['SELECT', 'AVG', 'OVER', 'ROWS BETWEEN', 'PRECEDING'])">✅ 答え合わせ</button>
+      <button class="check-btn" onclick="checkPractice('p-m8p-u4', ['WITH', 'AVG', 'OVER', 'ROWS BETWEEN', 'PRECEDING'])">✅ 答え合わせ</button>
       <button class="reveal-btn" onclick="toggleAnswer('p-m8p-u4', this)">💡 答えを見る</button>
     </div>
     <div class="check-result" id="p-m8p-u4-result"></div>
     <div class="answer-reveal" id="p-m8p-u4-answer" hidden>
       <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> id, total,</span>
-<span class="cl">       round(avg(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> id</span>
+<span class="cl"><span class="kw">WITH</span> daily <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">DISTINCT</span> cross_date, total <span class="kw">FROM</span> bikes</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> cross_date, total,</span>
+<span class="cl">       round(avg(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> cross_date</span>
 <span class="cl">                              <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="nm">2</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>), <span class="nm">1</span>) <span class="kw">AS</span> avg3</span>
-<span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> id;</span>
+<span class="cl"><span class="kw">FROM</span> daily</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> cross_date;</span>
 </pre>
-      <p class="answer-note">「直近3行」は<code>2 PRECEDING AND CURRENT ROW</code>です。id=1は11497、id=2は9209.5、id=3からは3行そろって7726です。</p>
+      <p class="answer-note">「直近3日」は<code>2 PRECEDING AND CURRENT ROW</code>です。4/1は11497、4/2は9209.5、4/3からは3日そろって7726です。30行返ります。</p>
     </div>
   </div>
 
@@ -328,9 +337,9 @@ Sales | Ivy Kim | 62000
 <div class="unit" id="unit5">
   <div class="unit-header">
     <div class="unit-num">⑤</div>
-    <div><h2>WHERE句のサブクエリ</h2><div class="unit-sub">教科書13章『Using Subqueries』／『Filtering with Subqueries in a WHERE Clause』（p.320–322）</div></div>
+    <div><h2>WHERE句のサブクエリ</h2><div class="unit-sub">教科書13章『Using Subqueries』／『Filtering with Subqueries in a WHERE Clause』（p.223–225）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Using Subqueries』（p.320–321）と『Filtering with Subqueries in a WHERE Clause』（Listing 13-1、13-2、p.321–322）。教科書は国勢調査の郡の人口表で「人口が上位10％の郡」を出し、<code>percentile_cont(.9)</code>をサブクエリにします。<code>percentile_cont</code>は演習アリーナで動かないため、ここでは同じ形を<code>avg()</code>で書きます。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Using Subqueries』（p.223–224）と『Filtering with Subqueries in a WHERE Clause』（Listing 13-1、13-2、p.224–225）。教科書は国勢調査の郡の人口表で「人口が上位10％の郡」を出し、<code>percentile_cont(.9)</code>をサブクエリにします。<code>percentile_cont</code>は演習アリーナで動かないため、ここでは同じ形を<code>avg()</code>で書きます。</div>
   <p>教科書の定義：<strong>サブクエリ（subquery）は、別のクエリの中に入れ子にしたクエリ</strong>で、括弧で囲みます。計算や論理テストをしたり、外側のクエリに渡す行を作ったりします。値を1つだけ返す<strong>スカラーサブクエリ</strong>は、WHERE・IN・HAVINGの式の一部に使えます。外側のクエリを参照しないものが<strong>非相関サブクエリ（uncorrelated）</strong>、参照するものが<strong>相関サブクエリ（correlated）</strong>です。</p>
   <h3>比べる値を、サブクエリで作る</h3>
   <p>WHEREで絞るとき、比べる値が最初から分かっているとは限りません。そんなとき、その値を出すクエリをそのまま式に埋め込みます。「平均以上の給料の人」を、平均を調べるクエリと本体のクエリを分けずに書きます。</p>
@@ -400,9 +409,9 @@ Jack Wu | 58000
 <div class="unit" id="unit6">
   <div class="unit-header">
     <div class="unit-num">⑥</div>
-    <div><h2>派生テーブルと、派生テーブルの結合</h2><div class="unit-sub">教科書13章『Creating Derived Tables with Subqueries』／『Joining Derived Tables』（p.323–326）</div></div>
+    <div><h2>派生テーブルと、派生テーブルの結合</h2><div class="unit-sub">教科書13章『Creating Derived Tables with Subqueries』／『Joining Derived Tables』（p.225–226）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Creating Derived Tables with Subqueries』（Listing 13-3、p.323–324）と『Joining Derived Tables』（Listing 13-4、p.325–326）。教科書は、人口の平均と中央値の差を出す派生テーブル、そして「州ごとの観光事業所数」と「州ごとの人口」の2つの派生テーブルを結合して<strong>人口1,000人あたりの事業所数</strong>を出します。このサイトには観光の表がないので、同じ形を<code>employees</code>系（部署ごとの給料総額と作業時間の合計）で再現します。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Creating Derived Tables with Subqueries』（Listing 13-3、p.225）と『Joining Derived Tables』（Listing 13-4、p.226）。教科書は、人口の平均と中央値の差を出す派生テーブル、そして「州ごとの観光事業所数」と「州ごとの人口」の2つの派生テーブルを結合して<strong>人口1,000人あたりの事業所数</strong>を出します。このサイトには観光の表がないので、同じ形を<code>employees</code>系（部署ごとの給料総額と作業時間の合計）で再現します。</div>
   <p>サブクエリが<strong>行と列を返す</strong>なら、FROM句に置いて<strong>派生テーブル（derived table）</strong>として使えます。普通の表と同じように検索や結合ができます。教科書によれば、これも非相関サブクエリの一種です。必ず<strong>別名</strong>をつけます（教科書ではcalcs）。</p>
   <h3>派生テーブルを検索する</h3>
 <pre class="code-block">
@@ -474,9 +483,9 @@ Sales | 263000 | 380 | 14.4
 <div class="unit" id="unit7">
   <div class="unit-header">
     <div class="unit-num">⑦</div>
-    <div><h2>サブクエリで列を作る</h2><div class="unit-sub">教科書13章『Generating Columns with Subqueries』（p.327–328）</div></div>
+    <div><h2>サブクエリで列を作る</h2><div class="unit-sub">教科書13章『Generating Columns with Subqueries』（p.227–228）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Generating Columns with Subqueries』（Listing 13-5、13-6、p.327–328）。教科書は各郡の人口と、全郡の中央値との差を列として追加します。<code>percentile_cont</code>の代わりに、ここでは全員の平均給料との差を使います。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Generating Columns with Subqueries』（Listing 13-5、13-6、p.227–228）。教科書は各郡の人口と、全郡の中央値との差を列として追加します。<code>percentile_cont</code>の代わりに、ここでは全員の平均給料との差を使います。</div>
   <p>サブクエリは、SELECTの列リストにも置けます。ただし<strong>1行だけ返す</strong>こと。教科書のListing 13-5は、全郡の中央値を全行に同じ値で足す列<code>us_median</code>を作りました。同じ値が並ぶだけでは役に立たないので、Listing 13-6では<strong>各行がその値からどれだけ離れているか</strong>を計算します。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> employee_name, salary,</span>
@@ -522,9 +531,9 @@ Quin Hall | 55000 | -2800
 <div class="unit" id="unit8">
   <div class="unit-header">
     <div class="unit-num">⑧</div>
-    <div><h2>IN・EXISTS・NOT EXISTS と LATERAL</h2><div class="unit-sub">教科書13章『Understanding Subquery Expressions』（p.329–331）／『Using Subqueries with LATERAL』（p.332–334）</div></div>
+    <div><h2>IN・EXISTS・NOT EXISTS と LATERAL</h2><div class="unit-sub">教科書13章『Understanding Subquery Expressions』（p.229–230）／『Using Subqueries with LATERAL』（p.231–233）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Understanding Subquery Expressions』（Listing 13-7〜13-10、p.329–331）。教科書は<code>employees</code>表と、退職給付に申請した人の小さな表<code>retirees</code>を比べます。このサイトでは、<code>employees</code>と<code>employee_projects</code>（プロジェクトに参加した人の表）で「参加した人」「参加していない人」を探します。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Understanding Subquery Expressions』（Listing 13-7〜13-10、p.229–230）。教科書は<code>employees</code>表と、退職給付に申請した人の小さな表<code>retirees</code>を比べます。このサイトでは、<code>employees</code>と<code>employee_projects</code>（プロジェクトに参加した人の表）で「参加した人」「参加していない人」を探します。</div>
   <p>サブクエリ式（subquery expression）は、キーワードとサブクエリを組み合わせて、<strong>別の表に値が存在するか</strong>でWHEREの行を絞る書き方です。教科書は代表的な<code>IN</code>と<code>EXISTS</code>を取り上げます。</p>
   <h3>IN (サブクエリ)：リストをサブクエリで作る</h3>
 <pre class="code-block">
@@ -646,32 +655,24 @@ Paul Gill
 <div class="unit" id="unit9">
   <div class="unit-header">
     <div class="unit-num">⑨</div>
-    <div><h2>共通テーブル式（CTE）</h2><div class="unit-sub">教科書13章『Using Common Table Expressions』（Listing 13-13〜13-15、p.335–338）</div></div>
+    <div><h2>共通テーブル式（CTE）</h2><div class="unit-sub">教科書13章『Using Common Table Expressions』（Listing 13-13〜13-15、p.234–235）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Using Common Table Expressions』（p.335–338）。教科書は、人口10万人以上の郡を数えるCTE（13-13）、派生テーブルの結合をCTEに書き換えた例（13-14）、重複したサブクエリを1回にまとめた例（13-15）を挙げます。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Using Common Table Expressions』（p.234–235）。教科書は、人口10万人以上の郡を数えるCTE（13-13）、派生テーブルの結合をCTEに書き換えた例（13-14）、重複したサブクエリを1回にまとめた例（13-15）を挙げます。</div>
   <p>教科書の定義：<strong>CTE（common table expression）は、1つ以上のSELECTクエリで一時的な表をあらかじめ定義し、メインクエリで何度でも参照できる</strong>ものです。<code>WITH … AS</code>で書くので、非公式には「WITHクエリ」とも呼ばれます。利点は、コードが読みやすくなることと、重複が減ることです。</p>
   <h3>単純なCTE（Listing 13-13の形）</h3>
-  <p>CTEの名前の後ろの括弧に列名を並べると、サブクエリの列名を付け替えられます（省略可）。データ型は書きません。サブクエリの結果から引き継ぎます。「1回に15000人以上が通った行」を曜日ごとに数えます。</p>
+  <p>CTEの名前の後ろの括弧に列名を並べると、サブクエリの列名を付け替えられます（省略可）。データ型は書きません。サブクエリの結果から引き継ぎます。「利用者が15000人以上の日」を数えます。<code>bikes</code>は同じ日付が7回繰り返されているので、CTEの中で<code>DISTINCT</code>をかけて「日」を1回ずつにしています（教科書は郡ごとの件数を数えました）。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">WITH</span> large_days (day, total) <span class="kw">AS</span> (</span>
-<span class="cl">    <span class="kw">SELECT</span> day, total</span>
+<span class="cl"><span class="kw">WITH</span> large_days (cross_date, total) <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">DISTINCT</span> cross_date, total</span>
 <span class="cl">    <span class="kw">FROM</span> bikes</span>
 <span class="cl">    <span class="kw">WHERE</span> total &gt;= <span class="nm">15000</span></span>
 <span class="cl">)</span>
-<span class="cl"><span class="kw">SELECT</span> day, count(*) <span class="kw">AS</span> n_rows</span>
-<span class="cl"><span class="kw">FROM</span> large_days</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> n_rows <span class="kw">DESC</span>, day;</span>
+<span class="cl"><span class="kw">SELECT</span> count(*) <span class="kw">AS</span> n_days, round(avg(total), <span class="nm">0</span>) <span class="kw">AS</span> avg_total</span>
+<span class="cl"><span class="kw">FROM</span> large_days;</span>
 </pre>
-<div class="output-reveal">day | n_rows
-Thursday | 21
-Wednesday | 21
-Friday | 14
-Monday | 14
-Saturday | 14
-Sunday | 14
-Tuesday | 7
-(7 rows)</div>
+<div class="output-reveal">n_days | avg_total
+15 | 19226
+(1 row)</div>
   <h3>派生テーブルの結合をCTEで書き直す（Listing 13-14の形）</h3>
   <p>単元⑥の「2つの派生テーブルの結合」を、WITHの後にカンマ区切りで2つ並べて書き換えます。結果は単元⑥と同じです。ただし、まず部品（分母<code>pay</code>、分子<code>hrs</code>）を上に定義し、最後に結合するので、<strong>上から下へ読めます</strong>。</p>
 <pre class="code-block">
@@ -751,9 +752,9 @@ Quin Hall | 55000 | -2800
 <div class="unit" id="unit10">
   <div class="unit-header">
     <div class="unit-num">⑩</div>
-    <div><h2>クロス集計（crosstab）とCASEでのピボット</h2><div class="unit-sub">教科書13章『Performing Cross Tabulations』（p.339–344）</div></div>
+    <div><h2>クロス集計（crosstab）とCASEでのピボット</h2><div class="unit-sub">教科書13章『Performing Cross Tabulations』（p.236–240）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Performing Cross Tabulations』／『Installing the crosstab() Function』／『Tabulating Survey Results』／『Tabulating City Temperature Readings』（Listing 13-16〜13-19、p.339–344）。教科書はアイスクリームのアンケート<code>ice_cream_survey</code>（200件）と都市の気温表<code>temperature_readings</code>で、行を事務所・都市、列をフレーバー・月にした表を作ります。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Performing Cross Tabulations』／『Installing the crosstab() Function』／『Tabulating Survey Results』／『Tabulating City Temperature Readings』（Listing 13-16〜13-19、p.236–240）。教科書はアイスクリームのアンケート<code>ice_cream_survey</code>（200件）と都市の気温表<code>temperature_readings</code>で、行を事務所・都市、列をフレーバー・月にした表を作ります。</div>
   <p>クロス集計（cross tabulation、ピボットテーブル）は、<strong>縦に並んだ集計結果を、行×列の表に組み替える</strong>ことです。教科書の例は、選挙で候補者ごと・地区ごとの得票を並べる表です。縦のリストより、行列のほうが比べやすくなります。</p>
   <h3>crosstab()（読むだけ）</h3>
   <div class="warn-box">⚠️ <strong><code>crosstab()</code>は演習アリーナで実行できません。</strong>PostgreSQLの拡張機能<code>tablefunc</code>（<code>CREATE EXTENSION tablefunc;</code>で追加）の関数で、標準SQLにはありません。教科書は、他のDBMSの似た機能として、SQL Serverの<code>PIVOT</code>を挙げています。このためクロス集計の練習問題は、次の「CASEで作るピボット」で出します。</div>
@@ -775,23 +776,29 @@ Quin Hall | 55000 | -2800
   <h3>どのDBでも動く代替：CASEと集計でピボット</h3>
   <p>列にしたい値ごとに<code>sum(CASE WHEN 条件 THEN 1 ELSE 0 END)</code>を並べれば、同じような表ができます。<code>GROUP BY</code>の列が「行」になります。</p>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl"><span class="kw">WITH</span> banded <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">75</span> <span class="kw">THEN</span> <span class="st">&#x27;Hot&#x27;</span></span>
+<span class="cl">                <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">55</span> <span class="kw">AND</span> high_temp &lt; <span class="nm">75</span> <span class="kw">THEN</span> <span class="st">&#x27;Warm&#x27;</span></span>
+<span class="cl">                <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">45</span> <span class="kw">AND</span> high_temp &lt; <span class="nm">55</span> <span class="kw">THEN</span> <span class="st">&#x27;Cool&#x27;</span></span>
+<span class="cl">                <span class="kw">ELSE</span> <span class="st">&#x27;Cold&#x27;</span></span>
+<span class="cl">           <span class="kw">END</span> <span class="kw">AS</span> temp_group,</span>
+<span class="cl">           precip</span>
+<span class="cl">    <span class="kw">FROM</span> bikes</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> temp_group,</span>
 <span class="cl">       sum(<span class="kw">CASE</span> <span class="kw">WHEN</span> precip &gt; <span class="nm">0</span> <span class="kw">THEN</span> <span class="nm">1</span> <span class="kw">ELSE</span> <span class="nm">0</span> <span class="kw">END</span>) <span class="kw">AS</span> wet,</span>
 <span class="cl">       sum(<span class="kw">CASE</span> <span class="kw">WHEN</span> precip = <span class="nm">0</span> <span class="kw">THEN</span> <span class="nm">1</span> <span class="kw">ELSE</span> <span class="nm">0</span> <span class="kw">END</span>) <span class="kw">AS</span> dry</span>
-<span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span>
+<span class="cl"><span class="kw">FROM</span> banded</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> temp_group</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> temp_group;</span>
 </pre>
-<div class="output-reveal">day | wet | dry
-Friday | 21 | 14
-Monday | 14 | 14
-Saturday | 21 | 14
-Sunday | 7 | 21
-Thursday | 7 | 21
-Tuesday | 14 | 14
-Wednesday | 0 | 28
-(7 rows)</div>
-  <p>行が曜日、列が雨（<code>wet</code>）と晴れ（<code>dry</code>）です。WednesdayはWetが0で、雨の日がまったくありません。こうして行列にすると「曜日ごとの偏り」が一目で分かります（教科書の読み方：Midtownはチョコ好き、など）。</p>
+<div class="output-reveal">temp_group | wet | dry
+Cold | 21 | 7
+Cool | 7 | 14
+Hot | 7 | 14
+Warm | 49 | 91
+(4 rows)</div>
+  <p>行が気温帯（<code>temp_group</code>）、列が雨（<code>wet</code>）と晴れ（<code>dry</code>）の行数です。Coldは雨が21行・晴れが7行と雨に偏り、Hotは雨が7行・晴れが14行と晴れに偏っています。行列にすると偏りが一目で分かります（教科書の読み方：Midtownはチョコ好き、など）。数字は210行（4/1〜4/30を7回繰り返したもの）の行数です。</p>
   <p>別の例として、部署（行）×給料帯（列）の人数表も作れます。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span> d.department_name,</span>
@@ -811,10 +818,10 @@ Marketing | 2 | 2 | 0
 Sales | 1 | 2 | 2
 (5 rows)</div>
   <div class="teal-box">📌 教科書の練習問題は「表を裏返す」（行と列を入れ替える）ことです。CASE版なら、<code>GROUP BY</code>する列と<code>CASE</code>を並べる条件を入れ替えます。</div>
-  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「月曜に雨は何回？」「火曜に雨は何回？」…を縦に並べるより、曜日の行と雨・晴れの列の表にしたほうが比べやすい。それがクロス集計です。</p></div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「寒い日に雨は何回？」「暑い日に雨は何回？」…を縦に並べるより、気温帯の行と雨・晴れの列の表にしたほうが比べやすい。それがクロス集計です。</p></div>
   <div class="practice-card" id="p-m8p-u10">
-    <div class="ptitle">💻 ミニ練習：曜日×雨晴れのピボット</div>
-    <p class="ptask"><code>bikes</code>を<code>day</code>ごとに集計し、雨の行数<code>wet</code>（<code>precip &gt; 0</code>）と晴れの行数<code>dry</code>（<code>precip = 0</code>）を、<code>sum(CASE WHEN …)</code>で横に並べてください。</p>
+    <div class="ptitle">💻 ミニ練習：気温帯×雨晴れのピボット</div>
+    <p class="ptask">CTE <code>banded</code>で<code>high_temp</code>を気温帯<code>temp_group</code>に分類し（75以上＝Hot、55以上75未満＝Warm、45以上55未満＝Cool、それ以外＝Cold）、外側で<code>temp_group</code>ごとに雨の行数<code>wet</code>（<code>precip &gt; 0</code>）と晴れの行数<code>dry</code>（<code>precip = 0</code>）を、<code>sum(CASE WHEN …)</code>で横に並べてください。</p>
     <textarea class="code-editor" id="p-m8p-u10-input" rows="6">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
@@ -824,13 +831,22 @@ Sales | 1 | 2 | 2
     <div class="check-result" id="p-m8p-u10-result"></div>
     <div class="answer-reveal" id="p-m8p-u10-answer" hidden>
       <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl"><span class="kw">WITH</span> banded <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">75</span> <span class="kw">THEN</span> <span class="st">&#x27;Hot&#x27;</span></span>
+<span class="cl">                <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">55</span> <span class="kw">AND</span> high_temp &lt; <span class="nm">75</span> <span class="kw">THEN</span> <span class="st">&#x27;Warm&#x27;</span></span>
+<span class="cl">                <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">45</span> <span class="kw">AND</span> high_temp &lt; <span class="nm">55</span> <span class="kw">THEN</span> <span class="st">&#x27;Cool&#x27;</span></span>
+<span class="cl">                <span class="kw">ELSE</span> <span class="st">&#x27;Cold&#x27;</span></span>
+<span class="cl">           <span class="kw">END</span> <span class="kw">AS</span> temp_group,</span>
+<span class="cl">           precip</span>
+<span class="cl">    <span class="kw">FROM</span> bikes</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> temp_group,</span>
 <span class="cl">       sum(<span class="kw">CASE</span> <span class="kw">WHEN</span> precip &gt; <span class="nm">0</span> <span class="kw">THEN</span> <span class="nm">1</span> <span class="kw">ELSE</span> <span class="nm">0</span> <span class="kw">END</span>) <span class="kw">AS</span> wet,</span>
 <span class="cl">       sum(<span class="kw">CASE</span> <span class="kw">WHEN</span> precip = <span class="nm">0</span> <span class="kw">THEN</span> <span class="nm">1</span> <span class="kw">ELSE</span> <span class="nm">0</span> <span class="kw">END</span>) <span class="kw">AS</span> dry</span>
-<span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day;</span>
+<span class="cl"><span class="kw">FROM</span> banded</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> temp_group;</span>
 </pre>
-      <p class="answer-note">7行（曜日ごと）です。Wednesdayはwetが0、dryが28です。</p>
+      <p class="answer-note">4行です。Coldはwet 21・dry 7、Warmはwet 49・dry 91です。</p>
     </div>
   </div>
 
@@ -839,13 +855,13 @@ Sales | 1 | 2 | 2
 <div class="unit" id="unit11">
   <div class="unit-header">
     <div class="unit-num">⑪</div>
-    <div><h2>CASEで値を分類し直す／CTEの中でCASE</h2><div class="unit-sub">教科書13章『Reclassifying Values with CASE』／『Using CASE in a Common Table Expression』（Listing 13-20、13-21、p.345–349）</div></div>
+    <div><h2>CASEで値を分類し直す／CTEの中でCASE</h2><div class="unit-sub">教科書13章『Reclassifying Values with CASE』／『Using CASE in a Common Table Expression』（Listing 13-20、13-21、p.241–243）</div></div>
   </div>
-<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Reclassifying Values with CASE』（p.345–346）と『Using CASE in a Common Table Expression』（p.347–349）。教科書は3都市の最高気温<code>max_temp</code>を6段階（Hot、Warm、Pleasant、Cold、Frigid、Inhumane）に分けます。ここでは<code>bikes</code>の<code>high_temp</code>を4段階に分けます。</div>
+<div class="note-box">📖 <strong>教科書の該当箇所：</strong>13章『Reclassifying Values with CASE』（p.241–242）と『Using CASE in a Common Table Expression』（p.242–243）。教科書は3都市の最高気温<code>max_temp</code>を6段階（Hot、Warm、Pleasant、Cold、Frigid、Inhumane）に分けます。ここでは<code>bikes</code>の<code>high_temp</code>を4段階に分けます。</div>
   <p>教科書の説明：<code>CASE</code>は条件式で、「もしこうなら…」というロジックをクエリに足します。データ分析では<strong>値をカテゴリに再分類する</strong>のに便利です。構文は<code>CASE WHEN 条件 THEN 結果 [WHEN … THEN …] [ELSE 結果] END</code>。条件は上から順に調べ、<strong>最初に真になった結果を返して終了</strong>します。<code>ELSE</code>がなく、どれも真でない行は<code>NULL</code>になります。</p>
   <h3>値を分類し直す（Listing 13-20の形）</h3>
 <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> id, high_temp,</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> cross_date, high_temp,</span>
 <span class="cl">       <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">75</span> <span class="kw">THEN</span> <span class="st">&#x27;Hot&#x27;</span></span>
 <span class="cl">            <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">55</span> <span class="kw">AND</span> high_temp &lt; <span class="nm">75</span> <span class="kw">THEN</span> <span class="st">&#x27;Warm&#x27;</span></span>
 <span class="cl">            <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">45</span> <span class="kw">AND</span> high_temp &lt; <span class="nm">55</span> <span class="kw">THEN</span> <span class="st">&#x27;Cool&#x27;</span></span>
@@ -853,19 +869,19 @@ Sales | 1 | 2 | 2
 <span class="cl">            <span class="kw">ELSE</span> <span class="st">&#x27;No reading&#x27;</span></span>
 <span class="cl">       <span class="kw">END</span> <span class="kw">AS</span> temp_group</span>
 <span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> id;</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> cross_date;</span>
 </pre>
-<div class="output-reveal">id | high_temp | temp_group
-1 | 78.1 | Hot
-2 | 55 | Warm
-3 | 39.9 | Cold
-4 | 44.1 | Cold
-5 | 42.1 | Cold
-6 | 45 | Cool
-7 | 57 | Warm
-8 | 46.9 | Cool
+<div class="output-reveal">cross_date | high_temp | temp_group
+2016-04-01 | 78.1 | Hot
+2016-04-02 | 55 | Warm
+2016-04-03 | 39.9 | Cold
+2016-04-04 | 44.1 | Cold
+2016-04-05 | 42.1 | Cold
+2016-04-06 | 45 | Cool
+2016-04-07 | 57 | Warm
+2016-04-08 | 46.9 | Cool
 ...
-(210 rows)</div>
+(30 rows)</div>
   <p>範囲はすきまなく並べます（教科書：「すべての値が当てはまるようにし、ギャップを作らない」）。どれにも当てはまらないときのために<code>ELSE 'No reading'</code>を付けます。</p>
   <h3>CTEの中でCASE → 数える（Listing 13-21の形）</h3>
   <p>分類は「前処理」なので、CTEにするときれいです。教科書はCTE<code>temps_collapsed</code>で分類し、外側で<code>count(*)</code>と<code>GROUP BY</code>で数えます。同じ形で、4グループの行数を数えます。</p>
@@ -890,7 +906,7 @@ Cold | 28
 Hot | 21
 Cool | 21
 (4 rows)</div>
-  <p>Warm（55以上75未満）が140行で最多です。教科書は、Waikikiの気温を「Warmが361日」と数えて気候を比べました。分類すれば「何が多いか」を数えられます。</p>
+  <p>Warm（55以上75未満）が140行（210行のうち）で最多です。教科書は、Waikikiの気温を「Warmが361日」と数えて気候を比べました。分類すれば「何が多いか」を数えられます。</p>
   <div class="teal-box">📌 <strong>CTE版と同じ結果になる書き方：</strong>FROMの中にサブクエリを書く派生テーブル版でも同じです。教科書はCTEのほうが読みやすいとしています。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>点数を見て「80以上ならA、60以上ならB、それ以外はC」と成績をつけるのがCASE。ABC付きの下書き表に名前をつけて、あとで「Aは何人？」と数えるのがCTEの中のCASEです。</p></div>
   <div class="practice-card" id="p-m8p-u11">
@@ -925,7 +941,7 @@ Cool | 21
     <div class="unit-num">⑫</div>
     <div><h2>補足：再帰CTE（教科書にはない・講義で触れた内容）</h2><div class="unit-sub">WITH RECURSIVE（教科書13章は『RECURSIVEキーワードで可能』と一言だけ）</div></div>
   </div>
-  <div class="note-box">📖 <strong>この単元は「補足」です。</strong>教科書13章（p.338）は再帰CTEについて「<code>RECURSIVE</code>を付けると、CTEが自分自身の結果を繰り返し読む。階層データに便利」と一言述べるだけで、例は載っていません（詳細はPostgreSQLの公式ドキュメントを参照）。講義でも「再帰もある」と触れただけでした。基本の形だけ確かめます。</div>
+  <div class="note-box">📖 <strong>この単元は「補足」です。</strong>教科書13章（p.235）は再帰CTEについて「<code>RECURSIVE</code>を付けると、CTEが自分自身の結果を繰り返し読む。階層データに便利」と一言述べるだけで、例は載っていません（詳細はPostgreSQLの公式ドキュメントを参照）。講義でも「再帰もある」と触れただけでした。基本の形だけ確かめます。</div>
   <p>再帰CTEは3つの部品でできています：(1)<strong>アンカー</strong>（最初の1行）、(2)<code>UNION ALL</code>、(3)<strong>再帰部</strong>（CTE自身を参照し、前の行から次の行を作る。<code>WHERE</code>で止める）。</p>
 <pre class="code-block">
 <span class="cl"><span class="kw">WITH</span> <span class="kw">RECURSIVE</span> nums(n) <span class="kw">AS</span> (</span>
@@ -1019,7 +1035,7 @@ Cool | 21
 
 <div class="quiz-q" id="q3">
   <div class="q-num">Question 3</div>
-  <div class="q-text">In the arena, sum(brooklyn_bridge) / sum(total) returned 0. What is the best fix to get a percentage per 100?</div>
+  <div class="q-text">In the arena, sum(brooklyn) / sum(total) returned 0. What is the best fix to get a percentage per 100?</div>
   <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Wrap the whole expression in a LIMIT 1 clause so only one row comes back</button>
 <button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Switch from sum() to count() in the numerator of the expression</button>
 <button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Add a GROUP BY date clause so that each day is divided separately</button>
@@ -1029,11 +1045,11 @@ Cool | 21
 
 <div class="quiz-q" id="q4">
   <div class="q-num">Question 4</div>
-  <div class="q-text">avg(total) OVER (ORDER BY id ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) is calculated for the 10th row. Which rows are averaged?</div>
-  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>All 10 rows, from the first row up to the 10th row</button>
-<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the 10th row and the single row that follows it</button>
-<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows 4 to 10: the current row plus the 6 rows before it</button>
-<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Every row in the table, repeated again for each row</button></div>
+  <div class="q-text">avg(total) OVER (ORDER BY cross_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) is calculated for the 10th day. Which rows are averaged?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>All 10 days, from the first day up to the 10th day</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the 10th day and the single day that follows it</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Days 4 to 10: the current day plus the 6 days before it</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Every day in the table, repeated again for each day</button></div>
   <div class="q-feedback" id="fb4"></div>
 </div>
 
@@ -1070,8 +1086,8 @@ Cool | 21
 <div class="quiz-q" id="q8">
   <div class="q-num">Question 8</div>
   <div class="q-text">crosstab() cannot run in the arena. What can build a similar pivot table with columns &#x27;wet&#x27; and &#x27;dry&#x27;?</div>
-  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>GROUP BY day with sum(CASE WHEN … THEN 1 ELSE 0 END) columns</button>
-<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ORDER BY day with a LIMIT of 2 to keep two columns</button>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>GROUP BY temp_group with sum(CASE WHEN … THEN 1 ELSE 0 END) columns</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ORDER BY temp_group with a LIMIT of 2 to keep two columns</button>
 <button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A recursive CTE that adds one column per loop</button>
 <button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A window function with ROWS BETWEEN 1 PRECEDING</button></div>
   <div class="q-feedback" id="fb8"></div>
@@ -1079,7 +1095,7 @@ Cool | 21
 </div>
 <script>
 var ANSWERS=[1, 0, 3, 2, 2, 3, 1, 0];
-var FEEDBACKS=["rank() leaves a gap after a tie (1, 2, 2, 4). dense_rank() would give 3.", "Window functions run after WHERE, so filtering by rank needs a CTE or subquery around the ranking query.", "Integer / integer can truncate to 0. Multiplying by 100.0 first makes the whole calculation use decimals.", "The frame is 7 rows: the current row plus 6 preceding rows. It counts rows, not calendar days.", "The inner query does not refer to the outer query, so it is uncorrelated and its single value is computed once.", "Both give the same rows. A CTE is written first, can be named once and reused, so it usually reads more clearly.", "If the subquery returns even one NULL, NOT IN evaluates to unknown for every row and returns nothing.", "A CASE inside sum() counts only matching rows, so one sum per category gives one column per category."];
+var FEEDBACKS=["rank() leaves a gap after a tie (1, 2, 2, 4). dense_rank() would give 3.", "Window functions run after WHERE, so filtering by rank needs a CTE or subquery around the ranking query.", "Integer / integer can truncate to 0. Multiplying by 100.0 first makes the whole calculation use decimals.", "The frame is 7 rows: the current row plus 6 preceding rows. It counts rows, not calendar days, so duplicate dates must be removed first (DISTINCT).", "The inner query does not refer to the outer query, so it is uncorrelated and its single value is computed once.", "Both give the same rows. A CTE is written first, can be named once and reused, so it usually reads more clearly.", "If the subquery returns even one NULL, NOT IN evaluates to unknown for every row and returns nothing.", "A CASE inside sum() counts only matching rows, so one sum per category gives one column per category."];
 
 var score=0,done=0,total=8;
 function handleQ(btn){
@@ -1115,7 +1131,7 @@ function handleQ(btn){
     </div>
     <div class="term-item">
       <div class="term-name">PARTITION BY</div>
-      <div class="term-en">グループごとに計算（p.282–283）</div>
+      <div class="term-en">グループごとに計算（p.195）</div>
       <div class="term-def">OVERの中で行をグループに区切る。GROUP BYと違い行は減らない。</div>
     </div>
     <div class="term-item">
@@ -1135,7 +1151,7 @@ function handleQ(btn){
     </div>
     <div class="term-item">
       <div class="term-name">derived table</div>
-      <div class="term-en">派生テーブル（p.323–324）</div>
+      <div class="term-en">派生テーブル（p.225）</div>
       <div class="term-def">FROM句に置くサブクエリ。別名が必須。</div>
     </div>
     <div class="term-item">

@@ -100,19 +100,20 @@
   <p>講義で使う<code>bikes</code>テーブルの列は次のとおりです（練習アリーナのスキーマパネルにも出ます）。</p>
   <table class="compare-table">
     <tr><th>列</th><th>意味</th></tr>
-    <tr><td><code>date</code> / <code>day</code></td><td>日付（<code>'2016-04-01'</code>の形の文字列）／曜日名</td></tr>
+    <tr><td><code>cross_date</code></td><td>自転車が橋を渡った日（<code>date</code>型。<code>'2016-04-01'</code>の形）</td></tr>
     <tr><td><code>high_temp</code> / <code>low_temp</code></td><td>その日の最高気温／最低気温（°F）</td></tr>
-    <tr><td><code>precip</code></td><td>降水量（インチ）。<code>'T'</code>（ごく微量）は<code>0</code>、<code>'0.47 (S)'</code>は<code>0.47</code>にそろえてある</td></tr>
-    <tr><td><code>brooklyn_bridge</code>・<code>manhattan_bridge</code><br><code>williamsburg_bridge</code>・<code>queensboro_bridge</code></td><td>各橋を渡った自転車の数</td></tr>
+    <tr><td><code>precip</code></td><td>降水量（インチ）。<code>'T'</code>（ごく微量）は<code>0</code>、<code>'0.47 (S)'</code>は<code>0.47</code>にそろえてある（<code>numeric</code>列）</td></tr>
+    <tr><td><code>brooklyn</code>・<code>manhattan</code><br><code>williamsburg</code>・<code>queensboro</code></td><td>各橋を渡った自転車の数</td></tr>
     <tr><td><code>total</code></td><td>4つの橋の合計</td></tr>
   </table>
-  <div class="note-box">📋 講義のCSVは4月1〜30日の30日分が7回繰り返されている（210行）ため、<code>date</code>は30種類しかありません。</div>
-  <p>まず中身を3行だけ見てみましょう（<code>SELECT … FROM bikes LIMIT 3</code>、一部の列のみ）。</p>
-  <div class="output-reveal">id | date       | day      | high_temp | low_temp | precip | total
----+------------+----------+-----------+----------+--------+------
- 1 | 2016-04-01 | Friday   |      78.1 |       66 |   0.01 | 11497
- 2 | 2016-04-02 | Saturday |        55 |     48.9 |   0.15 |  6922
- 3 | 2016-04-03 | Sunday   |      39.9 |       34 |   0.09 |  4759
+  <div class="note-box">📋 講義のCSVは4月1〜30日の30日分が7回繰り返されている（210行）ため、<code>cross_date</code>は30種類しかありません。</div>
+  <p>講義のCREATE TABLEでは、列は <code>cross_date date, high_temp numeric, low_temp numeric, precip numeric, brooklyn integer, manhattan integer, williamsburg integer, queensboro integer, total integer</code> の9列で、<code>id</code>や曜日の列はありません。</p>
+  <p>まず中身を3行だけ見てみましょう（<code>SELECT … FROM bikes LIMIT 3</code>、橋ごとの列を除く）。</p>
+  <div class="output-reveal">cross_date | high_temp | low_temp | precip | total
+-----------+-----------+----------+--------+------
+2016-04-01 |      78.1 |       66 |   0.01 | 11497
+2016-04-02 |        55 |     48.9 |   0.15 |  6922
+2016-04-03 |      39.9 |       34 |   0.09 |  4759
 (3 rows)</div>
   <p>ここで講師は考えます。「<strong>通行量の合計（total）は、何かに左右されそうだ</strong>。たとえば最高気温では？」。つまり<strong>従属変数 Y ＝ total、独立変数 X ＝ high_temp</strong>です。</p>
   <pre class="code-block">
@@ -173,48 +174,45 @@
   <p>列を変えれば、いろいろな組み合わせを1つのSELECTで比べられます。橋ごとの気温との相関を一度に並べてみましょう（<code>AS</code>で別名を付けるとスッキリ読めます）。</p>
   <pre class="code-block">
 <span class="cl"><span class="kw">SELECT</span></span>
-<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(brooklyn_bridge,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> brooklyn,</span>
-<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(manhattan_bridge,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> manhattan,</span>
-<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(williamsburg_bridge, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
-<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(queensboro_bridge,   high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(brooklyn,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> brooklyn,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(manhattan,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> manhattan,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(williamsburg, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(queensboro,   high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span>
 </pre><div class="output-reveal">brooklyn | manhattan | williamsburg | queensboro
 ---------+-----------+--------------+-----------
     0.74 |      0.72 |         0.76 |       0.73</div>
   <p>4つの橋すべてで0.7前後の正の相関で、Williamsburg橋がもっとも強く（0.76）、Manhattan橋がもっとも弱い（0.72）という結果です。</p>
-  <p>統計関数は集計関数なので、<strong><code>GROUP BY</code>と組み合わせて「グループごとの相関」</strong>も求められます。曜日（<code>day</code>列）ごとの、気温と通行量の相関を見てみましょう。</p>
+  <p>統計関数は集計関数なので、<strong><code>GROUP BY</code>と組み合わせて「グループごとの相関」</strong>も求められます。最高気温の帯（50°F未満＝cool、65°F未満＝mild、それ以上＝warm）に<code>CASE</code>で分け、帯ごとの気温と通行量の相関を見てみましょう。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &lt; <span class="nm">50</span> <span class="kw">THEN</span> <span class="st">&#x27;cool&#x27;</span></span>
+<span class="cl">                 <span class="kw">WHEN</span> high_temp &lt; <span class="nm">65</span> <span class="kw">THEN</span> <span class="st">&#x27;mild&#x27;</span></span>
+<span class="cl">                 <span class="kw">ELSE</span> <span class="st">&#x27;warm&#x27;</span> <span class="kw">END</span> <span class="kw">AS</span> temp_band,</span>
 <span class="cl">       <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> r,</span>
 <span class="cl">       <span class="kw">count</span>(*) <span class="kw">AS</span> n</span>
 <span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span>
-</pre><div class="output-reveal">day       | r    | n 
-----------+------+---
-Friday    | 0.19 | 35
-Monday    | 0.96 | 28
-Saturday  | 0.86 | 35
-Sunday    |    1 | 28
-Thursday  | 0.88 | 28
-Tuesday   |  0.8 | 28
-Wednesday | 0.99 | 28
-(7 rows)</div>
-  <div class="warn-box">⚠️ <strong>データについての注意：</strong>講義のCSVは4月1〜30日の30日分が7回繰り返されています（<code>date</code>は30種類で、それぞれ7回ずつ、同じ値で登場します）。講義の数値（0.74など）はこのデータで再現されます。曜日ごとの行数は28〜35行ですが、実際には4〜5日分の値の繰り返しなので、曜日別の相関（Fridayの0.19、Sundayの1.0など）は<strong>極端な値</strong>になります。ここでは「<code>GROUP BY</code>と<code>corr</code>の組み合わせ方」を練習するための例として読んでください。</div>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> temp_band</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> temp_band;</span>
+</pre><div class="output-reveal">temp_band | r     | n 
+----------+-------+---
+cool      |  0.56 | 49
+mild      |  0.65 | 84
+warm      | -0.06 | 77
+(3 rows)</div>
+  <div class="warn-box">⚠️ <strong>データについての注意：</strong>この表は4月1〜30日の30日分が7回繰り返されたものです。講義の数値（0.74など）はこのデータで再現されます。帯ごとに見ると、coolは0.56、mildは0.65と正の相関ですが、<strong>warmでは−0.06とほぼ無関係</strong>になります。全体では強い相関でも、気温の範囲を狭めると見えなくなることがあります（教科書も、相関は「全体の傾向」を表すもので注意して解釈するよう述べています）。</div>
   <p>グループごとの相関に条件を付けるには、<strong><code>WHERE</code>ではなく<code>HAVING</code></strong>を使います（M4：集計後の値で絞るのは<code>HAVING</code>）。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &lt; <span class="nm">50</span> <span class="kw">THEN</span> <span class="st">&#x27;cool&#x27;</span></span>
+<span class="cl">                 <span class="kw">WHEN</span> high_temp &lt; <span class="nm">65</span> <span class="kw">THEN</span> <span class="st">&#x27;mild&#x27;</span></span>
+<span class="cl">                 <span class="kw">ELSE</span> <span class="st">&#x27;warm&#x27;</span> <span class="kw">END</span> <span class="kw">AS</span> temp_band,</span>
 <span class="cl">       <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> r</span>
 <span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
-<span class="cl"><span class="kw">HAVING</span> <span class="kw">corr</span>(total, high_temp) &gt; <span class="nm">0.9</span></span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span>
-</pre><div class="output-reveal">day       | r   
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> temp_band</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">corr</span>(total, high_temp) &gt; <span class="nm">0.6</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> temp_band;</span>
+</pre><div class="output-reveal">temp_band | r   
 ----------+-----
-Monday    | 0.96
-Sunday    |    1
-Wednesday | 0.99
-(3 rows)</div>
+mild      | 0.65</div>
   <p>最後に、相関を読むときの<strong>注意点</strong>を押さえましょう（最初の2つは教科書の注意、あとの2つは補足）。</p>
   <ul>
     <li><strong>相関は因果関係ではない。</strong>「気温と通行量が一緒に動く」ことは言えても、「気温が上がったから通行量が増えた」とまでは言えません（教科書の1つ目の注意：変化が一緒に動くだけで、原因は証明されない）。</li>
@@ -225,22 +223,24 @@ Wednesday | 0.99
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>corr</code>は集計関数。<code>GROUP BY</code>でグループ別の相関、<code>HAVING</code>で「相関が〇〇以上のグループだけ」が取り出せます。ただし<strong>相関があっても原因とは限りません</strong>。</p></div>
   <div class="practice-card" id="p-m8s-u4">
     <div class="ptitle">💻 ミニ練習：相関の強いグループだけ残す</div>
-    <p class="ptask"><code>bikes</code>を曜日（<code>day</code>）ごとにグループ化し、<code>total</code>と<code>high_temp</code>の相関が<strong>0.9以上</strong>の曜日だけを、<code>day</code>と丸めた相関<code>r</code>（小数第2位）の2列で、<code>day</code>の昇順に出力してください。</p>
+    <p class="ptask"><code>bikes</code>を最高気温の帯（<code>CASE</code>：50未満＝'cool'、65未満＝'mild'、それ以外＝'warm'）ごとにグループ化し、<code>total</code>と<code>high_temp</code>の相関が<strong>0.55以上</strong>の帯だけを、帯の名前<code>temp_band</code>と丸めた相関<code>r</code>（小数第2位）の2列で、<code>temp_band</code>の昇順に出力してください。</p>
     <textarea class="code-editor" id="p-m8s-u4-input" rows="5">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
-      <button class="check-btn" onclick="checkPractice('p-m8s-u4', ['SELECT', 'corr', 'GROUP BY', 'HAVING', 'day'])">✅ 答え合わせ</button>
+      <button class="check-btn" onclick="checkPractice('p-m8s-u4', ['SELECT', 'corr', 'GROUP BY', 'HAVING', 'CASE'])">✅ 答え合わせ</button>
       <button class="reveal-btn" onclick="toggleAnswer('p-m8s-u4', this)">💡 答えを見る</button>
     </div>
     <div class="check-result" id="p-m8s-u4-result"></div>
     <div class="answer-reveal" id="p-m8s-u4-answer" hidden>
-      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> day,</span>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &lt; <span class="nm">50</span> <span class="kw">THEN</span> <span class="st">&#x27;cool&#x27;</span></span>
+<span class="cl">                 <span class="kw">WHEN</span> high_temp &lt; <span class="nm">65</span> <span class="kw">THEN</span> <span class="st">&#x27;mild&#x27;</span></span>
+<span class="cl">                 <span class="kw">ELSE</span> <span class="st">&#x27;warm&#x27;</span> <span class="kw">END</span> <span class="kw">AS</span> temp_band,</span>
 <span class="cl">       <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> r</span>
 <span class="cl"><span class="kw">FROM</span> bikes</span>
-<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
-<span class="cl"><span class="kw">HAVING</span> <span class="kw">corr</span>(total, high_temp) &gt;= <span class="nm">0.9</span></span>
-<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span></pre>
-      <p class="answer-note">Monday（0.96）・Sunday（1.0）・Wednesday（0.99）の3行が残ります。グループ集計後の値で絞るので<code>WHERE</code>ではなく<code>HAVING</code>です。丸めた値ではなく元の<code>corr(...)</code>で比べている点にも注意しましょう。</p>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> temp_band</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">corr</span>(total, high_temp) &gt;= <span class="nm">0.55</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> temp_band;</span></pre>
+      <p class="answer-note">cool（0.56）とmild（0.65）の2行が残ります（warmは−0.06）。グループ集計後の値で絞るので<code>WHERE</code>ではなく<code>HAVING</code>です。丸めた値ではなく元の<code>corr(...)</code>で比べている点にも注意しましょう。</p>
     </div>
   </div>
 </div>

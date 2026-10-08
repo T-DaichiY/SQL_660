@@ -41,7 +41,7 @@
   <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
   <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
   <p style="margin-top:.5rem">🐘 この演習ではPostgreSQLの書き方（::キャスト、START TRANSACTION、POSITION(x IN y)、ALTER COLUMN … TYPE など）も使えます。内部でSQLiteに自動変換して実行します。</p>
-  <p style="margin-top:.5rem">🚲 使うテーブルは<code>bikes</code>（NYCのEast River橋の自転車通行量。講義のCSVは4月1〜30日の30日分が7回繰り返されていて、210行のまま使います）です。右側のスキーマ表で列名を確認できます。回帰関数は<code>regr_slope(Y, X)</code>のように<strong>Yが先・Xが後</strong>で、<code>round()</code>の前には<code>::numeric</code>へキャストします。</p>
+  <p style="margin-top:.5rem">🚲 使うテーブルは<code>bikes</code>（NYCのEast River橋の自転車通行量。日付の列は<code>cross_date</code>、橋の列は<code>brooklyn, manhattan, williamsburg, queensboro</code>です。講義のCSVは4月1〜30日の30日分が7回繰り返されていて、210行のまま使います）です。右側のスキーマ表で列名を確認できます。回帰関数は<code>regr_slope(Y, X)</code>のように<strong>Yが先・Xが後</strong>で、<code>round()</code>の前には<code>::numeric</code>へキャストします。</p>
   <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
 </div>
 
@@ -69,7 +69,7 @@
 
 <script>window.ARENA_OPTS = { pgCompat: true, schemaGroups: ["bikes"] };</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
-<script src="sql-engine.js?v=13"></script>
+<script src="sql-engine.js?v=14"></script>
 <script>
 var SQL_PROBLEMS = [
   { id:"rg-b1", tier:"basic", title:"気温から総通行量を予測する直線の傾き",
@@ -110,14 +110,14 @@ var SQL_PROBLEMS = [
     solution:"SELECT round(regr_r2(total, high_temp)::numeric, 2) AS r2_high, round(regr_r2(total, low_temp)::numeric, 2) AS r2_low, round(regr_r2(total, precip)::numeric, 2) AS r2_precip FROM bikes;" },
   { id:"rg-i3", tier:"intermediate", title:"橋ごとの傾きを比べる",
     scenario:"4つの橋それぞれの通行量を<code>high_temp</code>で説明する回帰の<strong>傾き</strong>を、<strong>brooklyn, manhattan, williamsburg, queensboro</strong>の順に小数第2位で出力してください。結果は1行4列（64.87, 109.78, 123.98, 71.54）になるはずです。気温が1度上がると増える人数が橋ごとに違うことが分かります。",
-    concept:"橋ごとの回帰（Yだけを替える）", hint:"regr_slope(brooklyn_bridge, high_temp) のようにYの列だけ橋ごとに替えます。",
+    concept:"橋ごとの回帰（Yだけを替える）", hint:"regr_slope(brooklyn, high_temp) のようにYの列だけ橋ごとに替えます。",
     starter:"-- brooklyn, manhattan, williamsburg, queensboro の順で（1行4列）\n",
-    solution:"SELECT round(regr_slope(brooklyn_bridge, high_temp)::numeric, 2) AS brooklyn, round(regr_slope(manhattan_bridge, high_temp)::numeric, 2) AS manhattan, round(regr_slope(williamsburg_bridge, high_temp)::numeric, 2) AS williamsburg, round(regr_slope(queensboro_bridge, high_temp)::numeric, 2) AS queensboro FROM bikes;" },
-  { id:"rg-i4", tier:"intermediate", title:"曜日ごとの回帰（GROUP BY）",
-    scenario:"<code>day</code>（曜日名）ごとに、<code>total</code>を<code>high_temp</code>で説明する回帰の傾きとr²を求めます。<strong>day, slope, r_squared</strong>の順に出力し（傾きとr²は小数第2位）、<code>day</code>のアルファベット順に並べてください。結果は7行になり、最初の行は（'Friday', 40.56, 0.04）、最後の行は（'Wednesday', 461.52, 0.99）です。",
-    concept:"回帰関数は集計関数。GROUP BYでグループ別に使える", hint:"SELECT day, round(regr_slope(total, high_temp)::numeric, 2), ... FROM bikes GROUP BY day ORDER BY day;",
-    starter:"-- day, slope, r_squared の順で（7行、dayの昇順）\n",
-    solution:"SELECT day, round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared FROM bikes GROUP BY day ORDER BY day;", orderSensitive:true },
+    solution:"SELECT round(regr_slope(brooklyn, high_temp)::numeric, 2) AS brooklyn, round(regr_slope(manhattan, high_temp)::numeric, 2) AS manhattan, round(regr_slope(williamsburg, high_temp)::numeric, 2) AS williamsburg, round(regr_slope(queensboro, high_temp)::numeric, 2) AS queensboro FROM bikes;" },
+  { id:"rg-i4", tier:"intermediate", title:"4月の上旬・中旬・下旬ごとの回帰（GROUP BY）",
+    scenario:"<code>cross_date</code>の日（<code>substr(cross_date, 9, 2)</code>）が<code>'10'</code>以下を<code>'early'</code>、<code>'20'</code>以下を<code>'mid'</code>、それ以外を<code>'late'</code>とし、<code>total</code>を<code>high_temp</code>で説明する回帰を期間ごとに求めます。<strong>period, slope, r_squared, days</strong>の順に出力し（傾きとr²は小数第2位、daysは行数）、<code>period</code>の昇順に並べてください。結果は3行（early: 118.22, 0.18, 70 / late: 170.32, 0.13, 70 / mid: 424.18, 0.46, 70）になるはずです。",
+    concept:"CASEで作ったグループごとの回帰（GROUP BY）", hint:"CASE WHEN substr(cross_date, 9, 2) <= '10' THEN 'early' WHEN ... <= '20' THEN 'mid' ELSE 'late' END AS period を使い、GROUP BY と ORDER BY に同じCASE（または別名）を書きます。",
+    starter:"-- period, slope, r_squared, days の順で（3行、periodの昇順）\n",
+    solution:"SELECT CASE WHEN substr(cross_date, 9, 2) <= '10' THEN 'early' WHEN substr(cross_date, 9, 2) <= '20' THEN 'mid' ELSE 'late' END AS period, round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared, count(*) AS days FROM bikes GROUP BY CASE WHEN substr(cross_date, 9, 2) <= '10' THEN 'early' WHEN substr(cross_date, 9, 2) <= '20' THEN 'mid' ELSE 'late' END ORDER BY period;", orderSensitive:true },
   { id:"rg-i5", tier:"intermediate", title:"通行量が10,000人になる気温（式を逆に解く）",
     scenario:"回帰直線 <code>y = slope * x + intercept</code> を<code>x</code>について解くと <code>x = (y - intercept) / slope</code> です。予測される<code>total</code>が<strong>10000</strong>になる<code>high_temp</code>を、小数第1位に丸めて<strong>1列だけ</strong>出力してください。結果は1行1列（48.3）になるはずです。",
     concept:"回帰式の変形と計算", hint:"round(((10000 - regr_intercept(total, high_temp)) / regr_slope(total, high_temp))::numeric, 1)",
@@ -130,10 +130,10 @@ var SQL_PROBLEMS = [
     starter:"-- kind, slope, r_squared, days の順で（2行、kindの昇順）\n",
     solution:"SELECT CASE WHEN precip > 0 THEN 'rain' ELSE 'dry' END AS kind, round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared, count(*) AS days FROM bikes GROUP BY CASE WHEN precip > 0 THEN 'rain' ELSE 'dry' END ORDER BY kind;", orderSensitive:true },
   { id:"rg-a2", tier:"advanced", title:"ある日の予測値と残差（実測 − 予測）",
-    scenario:"<code>2016-04-20</code>の日について（講義のCSVではこの日の行が7行重複しているので、<code>SELECT DISTINCT</code>で1行にまとめます）、<code>total</code>の実測値、回帰直線による予測値、その差（<strong>残差 = 実測 − 予測</strong>）を求めます。回帰の傾きと切片は<code>bikes</code>全体から計算し、<strong>date, total, predicted, residual</strong>の順に出力してください（predictedとresidualは整数に丸める）。結果は1行4列（'2016-04-20', 22591, 17281, 5310）になるはずです。",
+    scenario:"<code>cross_date = '2016-04-20'</code>の日について（講義のCSVではこの日の行が7行重複しているので、<code>SELECT DISTINCT</code>で1行にまとめます）、<code>total</code>の実測値、回帰直線による予測値、その差（<strong>残差 = 実測 − 予測</strong>）を求めます。回帰の傾きと切片は<code>bikes</code>全体から計算し、<strong>cross_date, total, predicted, residual</strong>の順に出力してください（predictedとresidualは整数に丸める）。結果は1行4列（'2016-04-20', 22591, 17281, 5310）になるはずです。",
     concept:"サブクエリで傾き・切片を求めて各行に当てはめる（残差）", hint:"SELECT DISTINCT で重複を除く。FROM bikes, (SELECT regr_slope(total, high_temp) AS m, regr_intercept(total, high_temp) AS b FROM bikes) AS f として、m * high_temp + b を計算します。",
-    starter:"-- date, total, predicted, residual の順で（1行4列）\n",
-    solution:"SELECT DISTINCT date, total, round((m * high_temp + b)::numeric, 0) AS predicted, round((total - (m * high_temp + b))::numeric, 0) AS residual FROM bikes, (SELECT regr_slope(total, high_temp) AS m, regr_intercept(total, high_temp) AS b FROM bikes) AS f WHERE date = '2016-04-20';" },
+    starter:"-- cross_date, total, predicted, residual の順で（1行4列）\n",
+    solution:"SELECT DISTINCT cross_date, total, round((m * high_temp + b)::numeric, 0) AS predicted, round((total - (m * high_temp + b))::numeric, 0) AS residual FROM bikes, (SELECT regr_slope(total, high_temp) AS m, regr_intercept(total, high_temp) AS b FROM bikes) AS f WHERE cross_date = '2016-04-20';" },
   { id:"rg-a3", tier:"advanced", title:"回帰直線より上にある日は何日？",
     scenario:"実測の<code>total</code>が、回帰直線による予測値（<code>slope * high_temp + intercept</code>）より<strong>大きい</strong>日（残差が正の日）の日数を数え、<strong>1列だけ</strong>出力してください。結果は1行1列（105）になるはずです。全体が210日なので、ちょうど半分です。",
     concept:"残差の符号で数える", hint:"FROM bikes, (SELECT regr_slope(...) AS m, regr_intercept(...) AS b FROM bikes) AS f WHERE total > m * high_temp + b",
@@ -143,7 +143,7 @@ var SQL_PROBLEMS = [
     scenario:"4つの橋それぞれについて、橋の通行量を<code>high_temp</code>で説明する回帰の<strong>r²</strong>（小数第3位）を求め、<strong>bridge, r_squared</strong>の順に、r²の大きい順で出力してください。bridgeは<code>'brooklyn'</code>・<code>'manhattan'</code>・<code>'williamsburg'</code>・<code>'queensboro'</code>の文字列です。<code>UNION ALL</code>で4つのSELECTをつなぎます。結果は4行になり、1行目は（'williamsburg', 0.584）、最後の行は（'manhattan', 0.519）です。",
     concept:"UNION ALLで複数の回帰を縦に並べて比べる", hint:"SELECT 'brooklyn' AS bridge, ... FROM bikes UNION ALL SELECT 'manhattan', ... を4つ作り、全体を外側のSELECTで包んで ORDER BY r_squared DESC。",
     starter:"-- bridge, r_squared の順で（4行、r_squaredの降順）\n",
-    solution:"SELECT bridge, r_squared FROM (SELECT 'brooklyn' AS bridge, round(regr_r2(brooklyn_bridge, high_temp)::numeric, 3) AS r_squared FROM bikes UNION ALL SELECT 'manhattan', round(regr_r2(manhattan_bridge, high_temp)::numeric, 3) FROM bikes UNION ALL SELECT 'williamsburg', round(regr_r2(williamsburg_bridge, high_temp)::numeric, 3) FROM bikes UNION ALL SELECT 'queensboro', round(regr_r2(queensboro_bridge, high_temp)::numeric, 3) FROM bikes) ORDER BY r_squared DESC;", orderSensitive:true },
+    solution:"SELECT bridge, r_squared FROM (SELECT 'brooklyn' AS bridge, round(regr_r2(brooklyn, high_temp)::numeric, 3) AS r_squared FROM bikes UNION ALL SELECT 'manhattan', round(regr_r2(manhattan, high_temp)::numeric, 3) FROM bikes UNION ALL SELECT 'williamsburg', round(regr_r2(williamsburg, high_temp)::numeric, 3) FROM bikes UNION ALL SELECT 'queensboro', round(regr_r2(queensboro, high_temp)::numeric, 3) FROM bikes) ORDER BY r_squared DESC;", orderSensitive:true },
   { id:"rg-a5", tier:"advanced", title:"涼しい日と暑い日で気温の効き方は同じ？",
     scenario:"<code>high_temp &lt; 60</code>の日を<code>'cool'</code>、<code>60</code>以上の日を<code>'warm'</code>に分け、<code>total</code>を<code>high_temp</code>で説明する回帰を帯ごとに求めます。<strong>band, slope, r_squared, days</strong>の順に出力し（傾きとr²は小数第2位）、<code>band</code>の昇順に並べてください。結果は2行（cool: 384.49, 0.35, 91 / warm: 124.7, 0.04, 119）になるはずです。暑い日は気温だけでは通行量をほとんど説明できないことが分かります。",
     concept:"条件で分けた回帰を比べて、直線の当てはまりを評価する", hint:"CASE WHEN high_temp < 60 THEN 'cool' ELSE 'warm' END AS band を使い、GROUP BY と ORDER BY に同じCASE（または別名）を書きます。",

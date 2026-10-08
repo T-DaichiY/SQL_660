@@ -184,7 +184,7 @@
 <span class="cl">       <span class="kw">round</span>((<span class="kw">avg</span>(low_temp) - <span class="kw">stddev_samp</span>(low_temp))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> lower_1sd,</span>
 <span class="cl">       <span class="kw">round</span>((<span class="kw">avg</span>(low_temp) + <span class="kw">stddev_samp</span>(low_temp))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> upper_1sd</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
-      <p class="answer-note">結果は46.41、36.89、55.93。平均46.41°Fのまわり、約±9.5°Fが1SDの範囲です。足し算・引き算した後で<code>::numeric</code>にしている（かっこの位置）点に注意。</p>
+      <p class="answer-note">結果は46.41、36.89、55.94。平均46.41°Fのまわり、約±9.5°Fが1SDの範囲です。足し算・引き算した後で<code>::numeric</code>にしている（かっこの位置）点に注意。</p>
     </div>
   </div>
 </div>
@@ -196,20 +196,20 @@
   </div>
   <p>標準偏差は「どの列のばらつきが大きいか」を比べるのにも使えます。4つの橋の通行量のばらつきを並べてみましょう。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">stddev_samp</span>(brooklyn_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> brooklyn,</span>
-<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(manhattan_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> manhattan,</span>
-<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(williamsburg_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
-<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(queensboro_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)   <span class="kw">AS</span> queensboro</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">stddev_samp</span>(brooklyn)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> brooklyn,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(manhattan)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> manhattan,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(williamsburg)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(queensboro)::<span class="kw">numeric</span>, <span class="nm">2</span>)   <span class="kw">AS</span> queensboro</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span>
 </pre><div class="output-reveal">brooklyn | manhattan | williamsburg | queensboro
 ---------+-----------+--------------+-----------
   981.24 |   1704.73 |      1814.04 |    1099.25</div>
   <p>標準偏差が最も大きいのは<strong>Williamsburg橋（1814）</strong>、最も小さいのは<strong>Brooklyn橋（981）</strong>です。ただし橋ごとに平均の通行量が違う（Williamsburg橋のほうがずっと多い）ので、標準偏差だけの比較は不公平です。そこで「<strong>標準偏差 ÷ 平均</strong>」（変動係数）という、平均に対する相対的なばらつきも見てみます。</p>
   <pre class="code-block">
-<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">avg</span>(brooklyn_bridge)::<span class="kw">numeric</span>, <span class="nm">1</span>)   <span class="kw">AS</span> avg_brooklyn,</span>
-<span class="cl">       <span class="kw">round</span>(<span class="kw">avg</span>(williamsburg_bridge)::<span class="kw">numeric</span>, <span class="nm">1</span>) <span class="kw">AS</span> avg_williamsburg,</span>
-<span class="cl">       <span class="kw">round</span>((<span class="kw">stddev_samp</span>(brooklyn_bridge)    / <span class="kw">avg</span>(brooklyn_bridge))::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> cv_brooklyn,</span>
-<span class="cl">       <span class="kw">round</span>((<span class="kw">stddev_samp</span>(williamsburg_bridge) / <span class="kw">avg</span>(williamsburg_bridge))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> cv_williamsburg</span>
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">avg</span>(brooklyn)::<span class="kw">numeric</span>, <span class="nm">1</span>)   <span class="kw">AS</span> avg_brooklyn,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">avg</span>(williamsburg)::<span class="kw">numeric</span>, <span class="nm">1</span>) <span class="kw">AS</span> avg_williamsburg,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">stddev_samp</span>(brooklyn)    / <span class="kw">avg</span>(brooklyn))::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> cv_brooklyn,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">stddev_samp</span>(williamsburg) / <span class="kw">avg</span>(williamsburg))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> cv_williamsburg</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span>
 </pre><div class="output-reveal">avg_brooklyn | avg_williamsburg | cv_brooklyn | cv_williamsburg
 -------------+------------------+-------------+----------------
@@ -228,17 +228,17 @@
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ばらつきを比べるときは標準偏差。ただし平均が違うなら「標準偏差÷平均」で相対的に比べると公平です。分散は大きな数になりがちで、直接は読みにくい。</p></div>
   <div class="practice-card" id="p-m8v-u4">
     <div class="ptitle">💻 ミニ練習：橋ごとの標準偏差を並べる</div>
-    <p class="ptask"><code>bikes</code>で<code>manhattan_bridge</code>と<code>queensboro_bridge</code>の標本標準偏差を、<code>round(…::numeric, 2)</code>で丸めて<code>manhattan</code>・<code>queensboro</code>の2列で出力してください。</p>
+    <p class="ptask"><code>bikes</code>で<code>manhattan</code>と<code>queensboro</code>の標本標準偏差を、<code>round(…::numeric, 2)</code>で丸めて<code>manhattan</code>・<code>queensboro</code>の2列で出力してください。</p>
     <textarea class="code-editor" id="p-m8v-u4-input" rows="5">-- ここにSQLを書いてください
 </textarea>
     <div class="practice-toolbar">
-      <button class="check-btn" onclick="checkPractice('p-m8v-u4', ['SELECT', 'stddev_samp', 'manhattan_bridge', 'queensboro_bridge'])">✅ 答え合わせ</button>
+      <button class="check-btn" onclick="checkPractice('p-m8v-u4', ['SELECT', 'stddev_samp', 'manhattan', 'queensboro'])">✅ 答え合わせ</button>
       <button class="reveal-btn" onclick="toggleAnswer('p-m8v-u4', this)">💡 答えを見る</button>
     </div>
     <div class="check-result" id="p-m8v-u4-result"></div>
     <div class="answer-reveal" id="p-m8v-u4-answer" hidden>
-      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">stddev_samp</span>(manhattan_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)  <span class="kw">AS</span> manhattan,</span>
-<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(queensboro_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">stddev_samp</span>(manhattan)::<span class="kw">numeric</span>, <span class="nm">2</span>)  <span class="kw">AS</span> manhattan,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(queensboro)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
 <span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
       <p class="answer-note">結果は1704.73と1099.25。Manhattan橋のほうがばらつきが大きいと分かります。</p>
     </div>
