@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超やさしい版：M8+ ウィンドウ関数・レート・再帰CTE（教科書11・13章）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M8+ 🍎 教科書11・13章 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M8+ · Statistical Functions & Advanced Queries 🍎</div>
+    <h1>🍎 超やさしい版：順位・割合・ローリング平均・CTE</h1>
+    <p>ここは<strong>教科書『Practical SQL 2nd ed.』11章と13章だけに載っている</strong>内容で、講義動画では扱っていません。データは<code>bikes</code>（自転車）と<code>employees</code>（架空の20人）です。</p>
+    <div class="unit-nav"><a href="#u1">順位</a><a href="#u2">割合</a><a href="#u3">ローリング平均</a><a href="#u4">相関とr²</a><a href="#u5">CASE入りCTE・再帰</a><a href="m8_plus.html" class="easy-toplink">🧩 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>順位をつける rank() と dense_rank()</h2><div class="unit-sub">同着のあとの数え方がちがう</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>順位は <code>rank() OVER (ORDER BY 列 DESC)</code>。</strong>同着のあと、<code>rank()</code>は番号を飛ばし、<code>dense_rank()</code>は詰めます。</p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🏃</div>
+    <div class="ru-text">たとえば<strong>かけっこ</strong>。2位が2人いたら、次の人は<code>rank()</code>だと4位、<code>dense_rank()</code>だと3位です。</div>
+  </div>
+  <p class="code-label">▶ 給料の高い順に順位をつける</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> employee_name, salary,</span>
+<span class="cl">       rank()       <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> rnk,</span>
+<span class="cl">       dense_rank() <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> dense_rnk</span>
+<span class="cl"><span class="kw">FROM</span> employees</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> salary <span class="kw">DESC</span>, employee_name;</span>
+</pre>
+<div class="output-reveal">employee_name | salary | rnk | dense_rnk
+Alice Tan | 95000 | 1 | 1
+Ben Cho | 88000 | 2 | 2
+Chen Wei | 72000 | 3 | 3
+Eva Park | 70000 | 4 | 4
+Frank Ito | 65000 | 5 | 5
+Ivy Kim | 62000 | 6 | 6
+Dana Lee | 60000 | 7 | 7
+Gina Sato | 58000 | 8 | 8
+Jack Wu | 58000 | 8 | 8
+Kara Ng | 55000 | 10 | 9
+Quin Hall | 55000 | 10 | 9
+...
+(全部で20行)</div>
+  <p>Gina SatoとJack Wuは同じ給料58000で、どちらも8位です。次のKara Ngは<code>rank()</code>だと10位、<code>dense_rank()</code>だと9位です。</p>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text">順位はそのまま<code>WHERE</code>に書けません。順位を出すクエリを<strong>CTEで包んで</strong>、外側で絞ります。</div>
+  </div>
+  <p class="code-label">▶ 部署ごとに順位をつけて、1位だけ集める</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> ranked <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> d.department_name, e.employee_name, e.salary,</span>
+<span class="cl">           rank() <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> d.department_name</span>
+<span class="cl">                        <span class="kw">ORDER</span> <span class="kw">BY</span> e.salary <span class="kw">DESC</span>) <span class="kw">AS</span> dept_rank</span>
+<span class="cl">    <span class="kw">FROM</span> employees e</span>
+<span class="cl">    <span class="kw">JOIN</span> departments d <span class="kw">ON</span> d.department_id = e.department_id</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> department_name, employee_name, salary</span>
+<span class="cl"><span class="kw">FROM</span> ranked</span>
+<span class="cl"><span class="kw">WHERE</span> dept_rank = <span class="nm">1</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> department_name;</span>
+</pre>
+<div class="output-reveal">department_name | employee_name | salary
+Engineering | Alice Tan | 95000
+Finance | Quin Hall | 55000
+HR | Noah Fox | 50000
+Marketing | Eva Park | 70000
+Sales | Ivy Kim | 62000
+(全部で5行)</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>PARTITION BY 部署</code>を足すと、部署ごとに1位から数え直します。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 同着が2人いたあと、rank()は何位になる？<span class="cp-a">A. 4位（番号を飛ばす）。dense_rank()なら3位。</span></div><div class="cp-q">Q2. 部署ごとに順位をつけるには？<span class="cp-a">A. <code>OVER (PARTITION BY 部署 ORDER BY salary DESC)</code>と書く。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>割合（レート）で比べる</h2><div class="unit-sub">件数ではなく「100あたり」</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>割合 ＝ 部分 ÷ 全体 × 100。</strong>整数どうしの割り算は0になるので、先に<code>100.0</code>を掛けます。</p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🍕</div>
+    <div class="ru-text">たとえば<strong>ピザの1切れ</strong>。「全体の何％か」にすると、大きさがちがうピザどうしでも比べられます。</div>
+  </div>
+  <p class="code-label">▶ 整数どうしで割ると…</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> sum(brooklyn_bridge) / sum(total) <span class="kw">AS</span> share <span class="kw">FROM</span> bikes;</span>
+</pre>
+<div class="output-reveal">share
+0
+(全部で1行)</div>
+  <p>0になってしまいます。<code>sum(brooklyn_bridge) / sum(total)</code>は整数÷整数だからです。</p>
+  <p class="code-label">▶ 100.0 を先に掛ける</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(sum(brooklyn_bridge)     * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> brooklyn_per100,</span>
+<span class="cl">       round(sum(manhattan_bridge)    * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> manhattan_per100,</span>
+<span class="cl">       round(sum(williamsburg_bridge) * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> williamsburg_per100,</span>
+<span class="cl">       round(sum(queensboro_bridge)   * <span class="nm">100.0</span> / sum(total), <span class="nm">1</span>) <span class="kw">AS</span> queensboro_per100</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre>
+<div class="output-reveal">brooklyn_per100 | manhattan_per100 | williamsburg_per100 | queensboro_per100
+15.6 | 27.9 | 33.5 | 23.1
+(全部で1行)</div>
+  <p>Williamsburg Bridgeを使った人が33.5％でいちばん多いです。</p>
+  <div class="note-box">📖 <code>bikes</code>は、講義のCSVが「4月1〜30日の30日分を7回繰り返したもの」なので210行あります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>基準は100や10,000など、読みやすい数を選びます。母数をそろえてから比べるのがコツです。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. sum(a)/sum(b) が0になるのはなぜ？<span class="cp-a">A. 整数÷整数は小数が切り捨てになるから。<code>100.0</code>を先に掛ける。</span></div><div class="cp-q">Q2. レートで比べる理由は？<span class="cp-a">A. 全体の大きさがちがうものを、公平に比べるため。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>ローリング平均</h2><div class="unit-sub">直近7行の平均でギザギザをなだらかに</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong><code>avg(列) OVER (ORDER BY id ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)</code></strong>：今の行と、その前の6行（合計7行）の平均。</p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">📈</div>
+    <div class="ru-text">たとえば<strong>毎日のテストの点</strong>。1週間ぶんの平均点をグラフにすると、上がっているか下がっているかが見えやすくなります。</div>
+  </div>
+  <p class="code-label">▶ 7行ローリング平均（最初の10行）</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> id, date, total,</span>
+<span class="cl">       round(avg(total) <span class="kw">OVER</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> id</span>
+<span class="cl">                              <span class="kw">ROWS</span> <span class="kw">BETWEEN</span> <span class="nm">6</span> <span class="kw">PRECEDING</span> <span class="kw">AND</span> <span class="kw">CURRENT</span> <span class="kw">ROW</span>), <span class="nm">1</span>) <span class="kw">AS</span> avg7</span>
+<span class="cl"><span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> id;</span>
+</pre>
+<div class="output-reveal">id | date | total | avg7
+1 | 2016-04-01 | 11497 | 11497
+2 | 2016-04-02 | 6922 | 9209.5
+3 | 2016-04-03 | 4759 | 7726
+4 | 2016-04-04 | 4335 | 6878.3
+5 | 2016-04-05 | 9471 | 7396.8
+6 | 2016-04-06 | 11919 | 8150.5
+7 | 2016-04-07 | 9596 | 8357
+8 | 2016-04-08 | 12744 | 8535.1
+9 | 2016-04-09 | 4510 | 8190.6
+10 | 2016-04-10 | 9126 | 8814.4
+...
+(全部で210行)</div>
+  <p>id=7の平均は、1〜7行目の合計58499を7で割った8357です。最初の6行は前の行が足りないので、あるぶんだけで平均します。</p>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text">窓は「日付」ではなく<strong>「行」</strong>で数えます。データに抜けがあると、7日のつもりがずれます。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>avg()</code>を<code>sum()</code>に替えると、直近7行の合計になります。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 6 PRECEDING AND CURRENT ROW は何行？<span class="cp-a">A. 今の行＋前の6行で、合計7行。</span></div><div class="cp-q">Q2. 最初の行の平均はどうなる？<span class="cp-a">A. 前の行がないので、自分1行だけの平均（11497）。</span></div></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>相関と r²</h2><div class="unit-sub">どれくらい仲良く動く？</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>corr は -1〜1 の仲良し度。r² は「片方でもう片方のばらつきを何割説明できるか」。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🤝</div>
+    <div class="ru-text">たとえば<strong>気温と自転車の数</strong>。気温が上がると増えるなら正の相関です。r²は、その関係でどれだけ説明がつくかの割合です。</div>
+  </div>
+  <p class="code-label">▶ 気温と、各橋の相関</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(corr(brooklyn_bridge,     high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> brooklyn,</span>
+<span class="cl">       round(corr(manhattan_bridge,    high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> manhattan,</span>
+<span class="cl">       round(corr(williamsburg_bridge, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
+<span class="cl">       round(corr(queensboro_bridge,   high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> queensboro,</span>
+<span class="cl">       round(corr(total,               high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> total</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre>
+<div class="output-reveal">brooklyn | manhattan | williamsburg | queensboro | total
+0.74 | 0.72 | 0.76 | 0.73 | 0.74
+(全部で1行)</div>
+  <p class="code-label">▶ r と r²</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(corr(total, high_temp)::numeric, <span class="nm">2</span>)    <span class="kw">AS</span> r_temp,</span>
+<span class="cl">       round(regr_r2(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> r2_temp,</span>
+<span class="cl">       round(corr(total, precip)::numeric, <span class="nm">2</span>)       <span class="kw">AS</span> r_precip,</span>
+<span class="cl">       round(regr_r2(total, precip)::numeric, <span class="nm">2</span>)    <span class="kw">AS</span> r2_precip</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre>
+<div class="output-reveal">r_temp | r2_temp | r_precip | r2_precip
+0.74 | 0.55 | -0.59 | 0.35
+(全部で1行)</div>
+  <p>気温でtotalの約55％が説明できます。降水量は r = -0.59 ですが、r² = 0.35 では符号（マイナス）が消えます。</p>
+  <div class="big-rule">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text">橋の人数と<code>total</code>の相関はほぼ1になります。<code>total</code>は橋の人数を足したもの（一部と全体）だからで、発見ではありません。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>corr</code>は引数を入れ替えても同じ値。でも<code>regr_slope</code>は入れ替えると変わります。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. r = 0.74 のとき r² は？<span class="cp-a">A. 約0.55。気温で約55％を説明できる。</span></div><div class="cp-q">Q2. r² から向き（正か負）は分かる？<span class="cp-a">A. 分からない。2乗で符号が消えるので、向きは r を見る。</span></div></div>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">⑤</div><div><h2>CASE入りCTE と 再帰CTE</h2><div class="unit-sub">分類してから集計、数列を作る</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>CTEの中で <code>CASE</code> で分類 → 外側で <code>GROUP BY</code> して集計。</strong>CTEは派生テーブルと同じ結果で、読みやすい書き方です。</p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🗂️</div>
+    <div class="ru-text">たとえば<strong>洗濯物の仕分け</strong>。まず「白・色もの」に分けて（CASE）、そのあと枚数を数える（GROUP BY）。</div>
+  </div>
+  <p class="code-label">▶ 気温を Hot / Mild / Cold に分けて平均を出す</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> temp_groups <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> total,</span>
+<span class="cl">           <span class="kw">CASE</span> <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">70</span> <span class="kw">THEN</span> <span class="st">&#x27;Hot&#x27;</span></span>
+<span class="cl">                <span class="kw">WHEN</span> high_temp &gt;= <span class="nm">55</span> <span class="kw">THEN</span> <span class="st">&#x27;Mild&#x27;</span></span>
+<span class="cl">                <span class="kw">ELSE</span> <span class="st">&#x27;Cold&#x27;</span></span>
+<span class="cl">           <span class="kw">END</span> <span class="kw">AS</span> temp_group</span>
+<span class="cl">    <span class="kw">FROM</span> bikes</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> temp_group, count(*) <span class="kw">AS</span> n_rows, round(avg(total), <span class="nm">0</span>) <span class="kw">AS</span> avg_total</span>
+<span class="cl"><span class="kw">FROM</span> temp_groups</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> temp_group</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> avg_total <span class="kw">DESC</span>;</span>
+</pre>
+<div class="output-reveal">temp_group | n_rows | avg_total
+Hot | 49 | 18496
+Mild | 112 | 15606
+Cold | 49 | 8123
+(全部で3行)</div>
+  <p>暑い日（Hot）ほど平均の利用者が多くなっています。同じことを、FROMの中にサブクエリを書く「派生テーブル」でも書けて、結果は同じです。</p>
+  <p class="code-label">▶ 再帰CTE：1から5まで数える</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> <span class="kw">RECURSIVE</span> nums(n) <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="nm">1</span>                      <span class="cm">-- 出発点（アンカー）</span></span>
+<span class="cl">    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span class="cl">    <span class="kw">SELECT</span> n + <span class="nm">1</span> <span class="kw">FROM</span> nums        <span class="cm">-- 自分自身を参照（再帰部）</span></span>
+<span class="cl">    <span class="kw">WHERE</span> n &lt; <span class="nm">5</span>                   <span class="cm">-- 止める条件</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> n <span class="kw">FROM</span> nums;</span>
+</pre>
+<div class="output-reveal">n
+1
+2
+3
+4
+5
+(全部で5行)</div>
+  <div class="big-rule">
+    <div class="ru-arrow">🪜</div>
+    <div class="ru-text">階段を1段ずつ上がるイメージ。最初の段（アンカー）、1段上がる（再帰部）、<code>WHERE n &lt; 5</code>で止まる。止める条件がないと止まりません。</div>
+  </div>
+  <div class="warn-box">⚠️ <code>percentile_cont</code>、<code>crosstab</code>、<code>LATERAL</code>はPostgreSQL専用で、このサイトでは実行できません。本編の⑧で読むだけにしてください。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>CASEは「もし〜なら」、CTEは下書き表に名前をつける、再帰CTEは自分を呼んで行を増やす。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. CTEと派生テーブルの結果はちがう？<span class="cp-a">A. 同じ。CTEのほうが読みやすく、名前をつけて何度も使える。</span></div><div class="cp-q">Q2. 再帰CTEに必ず入れるものは？<span class="cp-a">A. 止める条件の WHERE（例：n &lt; 5）。</span></div></div>
+</div>
+
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m8_plus.html">🧩 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 順位＝rank() OVER (ORDER BY …)、部署ごとはPARTITION BY</p><p style="margin:.4rem 0">• 割合は100.0を先に掛ける</p><p style="margin:.4rem 0">• ローリング平均＝ROWS BETWEEN 6 PRECEDING AND CURRENT ROW</p><p style="margin:.4rem 0">• r²＝rの2乗＝説明できる割合</p><p style="margin:.4rem 0">• CASE入りCTEと再帰CTE（止める条件を忘れずに）</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">ミニ練習と英語MCQクイズは <a href="m8_plus.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：M8+ ウィンドウ関数・レート・再帰CTE — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m8_plus.html">← 本編</a> · <a href="m8_practice.html">M8 演習ハブ</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

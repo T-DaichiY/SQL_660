@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 統計①　相関 corr()</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M8 📊 統計 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main active" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M8 · Statistical Operations — Correlation</div>
+  <h1>📊 統計①：SQLで相関を調べる corr()</h1>
+  <p>平均・合計・件数・最大／最小…ここまでは「基本の統計値」でした。ここからは一歩進んで、<strong>2つの変数の関係の強さと向き</strong>を表す<strong>相関係数</strong>を、たった1つの関数<code>corr(Y, X)</code>で求めます。</p>
+  <p style="font-size:.9rem">📺 講義動画①「Statistical operation」＋ 教科書 <em>Practical SQL</em> 2nd ed. 第11章「Statistical Functions in SQL」（<code>corr(Y, X)</code>）をもとにしています</p>
+  <p style="font-size:.9rem">📦 練習データ <code>bikes</code> は、ニューヨークのイースト川の4つの橋（Brooklyn・Manhattan・Williamsburg・Queensboro）を通った自転車の数を、2016年4月の日ごとにまとめた表です（講義と同じ公開データ。降水量 <code>precip</code> は、痕跡を表す<code>'T'</code>を<code>0</code>に、<code>'0.47 (S)'</code>を<code>0.47</code>にそろえた数値列に整えてあります）</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① なぜSQLで統計？</a><a href="#unit2">② 相関とは</a><a href="#unit3">③ corr() を使う</a><a href="#unit4">④ 応用と注意点</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>なぜSQLで統計をやるのか</h2><div class="unit-sub">基本の集計から、もう一歩先へ</div></div>
+  </div>
+  <p>これまでの<code>AVG</code>・<code>SUM</code>・<code>COUNT</code>・<code>MAX</code>・<code>MIN</code>も立派な統計値ですが、データをもう少し深く眺めたいときは、<strong>相関（correlation）</strong>や<strong>回帰（regression）</strong>、<strong>ばらつき（分散・標準偏差）</strong>といった道具が役に立ちます。M8の前半（統計編）では、この3つをSQLで扱います。</p>
+  <p>ただし講師が強調していたように、<strong>SQLは統計分析のメインの道具ではありません</strong>。本格的なグラフ作成や詳しい分析、モデル作りは、あとで学ぶPythonやRの仕事です。では、なぜSQLで統計をやるのでしょうか。</p>
+  <ul>
+    <li><strong>データを動かさずに</strong>、その場でざっと傾向をつかめる（別のシステムへ移す手間がない）。</li>
+    <li>PythonやRにデータを渡す<strong>前の下調べ</strong>になる（「この2つ、関係ありそうだな」と当たりをつける）。</li>
+    <li>統計関数は<strong>集計関数</strong>なので、<code>GROUP BY</code>や<code>HAVING</code>（M4）とそのまま組み合わせられる。</li>
+  </ul>
+  <div class="teal-box">📌 <strong>この単元の道具：</strong>PostgreSQLの統計関数は<code>corr</code>（相関）・<code>regr_slope</code> / <code>regr_intercept</code> / <code>regr_r2</code>（回帰）・<code>var_samp</code> / <code>stddev_samp</code>（ばらつき）など。どれも「列を入れると1つの数が返る」集計関数です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SQLの統計は「データを調べる最初の一歩」。くわしい分析はPython/Rに任せて、SQLでは<strong>手早く当たりをつける</strong>のが役目です。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>相関係数 r と corr(Y, X)</h2><div class="unit-sub">強さと向きを1つの数で表す</div></div>
+  </div>
+  <p><strong>相関（correlation）</strong>とは、<strong>2つの変数の間の「直線的な関係」の強さと向き</strong>のことです。たとえば「気温が高い日ほど自転車の通行量が多い」なら、気温と通行量には相関があります。数値で表したものが<strong>相関係数 r</strong>（ピアソンの積率相関係数）で、SQLでは次のように書きます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">corr</span>(Y, X) <span class="kw">FROM</span> テーブル名;</span>
+</pre>
+  <p>引数の<code>Y</code>と<code>X</code>には意味があります。講師が強調していたポイントです。</p>
+  <ul>
+    <li><strong>X ＝ 独立変数</strong>（原因っぽい側）：ほかの変数に左右されないと考える変数。</li>
+    <li><strong>Y ＝ 従属変数</strong>（結果っぽい側）：Xの値に応じて変わる（Xに<em>従属</em>する）と考える変数。</li>
+    <li>書く順番は <strong>Y が先、X が後</strong>。「<code>corr(Y, X)</code>」と覚えましょう。</li>
+  </ul>
+  <div class="note-box">💡 実は、相関係数の計算そのものは Y と X を入れ替えても<strong>同じ値</strong>になります（教科書の注意書きにもあります）。それでも「結果（Y）、原因（X）」の順に書く習慣をつけるのは、読む人に意図が伝わるから、そして次の回帰（<code>regr_slope(Y, X)</code>）では<strong>順番が結果を変える</strong>からです。</div>
+  <p>返ってくる<strong>r は −1 から +1 の間</strong>の数です（講義では「0〜1の目盛りが正と負の両方にある」と説明されていました）。<strong>符号が向き</strong>、<strong>絶対値の大きさが強さ</strong>を表します。</p>
+  <div class="viz">
+    <div class="viz-title">散布図のイメージ（点は1日1個、赤い点線は当てはまる直線）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="散布図 強い正の相関 r=0.95"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="19.5" y1="138.0" x2="150.5" y2="4.8" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="56.4" cy="85.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="89.8" cy="67.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="70.8" cy="88.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="96.4" cy="64.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="98.7" cy="66.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="37.5" cy="113.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="31.8" cy="126.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="121.9" cy="24.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="58.7" cy="112.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="56.0" cy="106.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="139.1" cy="28.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="81.8" cy="92.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="121.8" cy="16.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="82.4" cy="95.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="100.2" cy="57.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="46.8" cy="109.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="99.7" cy="39.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="125.2" cy="51.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="87.5" cy="56.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="111.4" cy="52.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="103.7" cy="53.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="37.4" cy="119.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="113.2" cy="36.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="95.0" cy="71.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="63.3" cy="89.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="33.8" cy="112.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="124.9" cy="14.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="82.0" cy="95.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="108.9" cy="31.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="126.4" cy="21.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="108.4" cy="52.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="131.0" cy="23.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="73.5" cy="84.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="117.9" cy="22.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="79.0" cy="72.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="132.6" cy="27.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="126.4" cy="33.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="41.0" cy="111.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="45.2" cy="107.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="54.1" cy="106.4" r="2.6" fill="var(--primary)" opacity=".75"/></svg><div style="font-size:.8rem"><strong>強い正の相関</strong><br>r ≈ 0.95</div></div><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="散布図 強い負の相関 r=-0.91"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="19.5" y1="13.9" x2="150.5" y2="119.6" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="98.4" cy="72.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="111.4" cy="99.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="117.2" cy="102.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="133.3" cy="104.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="111.2" cy="89.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="131.1" cy="105.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="33.6" cy="32.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="81.2" cy="49.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="133.4" cy="90.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="101.3" cy="83.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="128.8" cy="112.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="42.8" cy="25.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="81.6" cy="61.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="57.3" cy="60.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="89.8" cy="80.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="93.1" cy="63.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="31.8" cy="26.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="54.1" cy="48.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="60.9" cy="47.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="130.5" cy="108.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="114.0" cy="94.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="47.8" cy="64.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="117.5" cy="74.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="45.5" cy="34.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="97.8" cy="92.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="44.2" cy="22.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="30.6" cy="20.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="125.6" cy="103.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="53.3" cy="29.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="53.9" cy="14.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="137.7" cy="107.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="125.7" cy="83.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="62.0" cy="22.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="135.4" cy="126.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="89.3" cy="80.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="104.4" cy="76.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="52.8" cy="65.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="133.2" cy="114.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="105.8" cy="70.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="136.0" cy="99.0" r="2.6" fill="var(--primary)" opacity=".75"/></svg><div style="font-size:.8rem"><strong>強い負の相関</strong><br>r ≈ -0.91</div></div><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="散布図 ほぼ相関なし r=0.21"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="19.5" y1="74.9" x2="150.5" y2="51.9" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="55.1" cy="102.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="135.5" cy="85.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="44.2" cy="49.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="107.4" cy="79.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="39.7" cy="98.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="57.4" cy="22.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="139.5" cy="35.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="53.3" cy="31.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="100.5" cy="32.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="80.5" cy="41.9" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="79.9" cy="83.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="84.5" cy="126.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="51.4" cy="47.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="121.1" cy="90.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="40.2" cy="60.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="56.0" cy="50.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="32.6" cy="95.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="59.5" cy="70.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="74.9" cy="14.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="128.9" cy="40.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="71.8" cy="105.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="42.8" cy="66.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="58.6" cy="61.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="138.7" cy="45.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="37.3" cy="41.0" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="98.1" cy="63.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="71.6" cy="67.8" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="102.6" cy="37.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="67.4" cy="100.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="105.9" cy="30.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="84.7" cy="52.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="101.4" cy="75.1" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="128.8" cy="77.4" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="93.9" cy="55.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="45.9" cy="101.7" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="37.4" cy="125.5" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="133.7" cy="51.6" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="83.8" cy="22.3" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="51.6" cy="66.2" r="2.6" fill="var(--primary)" opacity=".75"/><circle cx="133.7" cy="60.8" r="2.6" fill="var(--primary)" opacity=".75"/></svg><div style="font-size:.8rem"><strong>ほぼ相関なし</strong><br>r ≈ 0.21</div></div></div>
+    <div class="viz-cap">相関が強いほど、点が1本の直線にぴったり沿って並びます。ばらけるほど r は0に近づきます（図は説明用に作った人工データです）。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>r の絶対値（目安）</th><th>強さ</th><th>符号</th><th>向き</th></tr>
+    <tr><td>0</td><td>関係なし</td><td rowspan="4">＋</td><td rowspan="4">Xが増えるとYも増える（右上がり）</td></tr>
+    <tr><td>0.01〜0.29</td><td>弱い</td></tr>
+    <tr><td>0.3〜0.59</td><td>中くらい（moderate）</td></tr>
+    <tr><td>0.6〜0.99</td><td>強い〜ほぼ完全</td></tr>
+    <tr><td>1</td><td>完全な直線</td><td>−</td><td>Xが増えるとYは減る（右下がり）</td></tr>
+  </table>
+  <p style="font-size:.85rem">※ 目安は教科書（第11章 Table 11-1）のもの。統計家によって区切りは少し違います。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>corr(Y, X)</code>は「2つの列がどれくらい一緒に動くか」を−1〜+1で返します。<strong>+に近い＝同じ向きに動く、−に近い＝逆向きに動く、0に近い＝関係なし</strong>。</p></div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>bikes データで corr() を使う</h2><div class="unit-sub">最高気温・降水量と通行量の関係</div></div>
+  </div>
+  <p>講義で使う<code>bikes</code>テーブルの列は次のとおりです（練習アリーナのスキーマパネルにも出ます）。</p>
+  <table class="compare-table">
+    <tr><th>列</th><th>意味</th></tr>
+    <tr><td><code>date</code> / <code>day</code></td><td>日付（<code>'2016-04-01'</code>の形の文字列）／曜日名</td></tr>
+    <tr><td><code>high_temp</code> / <code>low_temp</code></td><td>その日の最高気温／最低気温（°F）</td></tr>
+    <tr><td><code>precip</code></td><td>降水量（インチ）。<code>'T'</code>（ごく微量）は<code>0</code>、<code>'0.47 (S)'</code>は<code>0.47</code>にそろえてある</td></tr>
+    <tr><td><code>brooklyn_bridge</code>・<code>manhattan_bridge</code><br><code>williamsburg_bridge</code>・<code>queensboro_bridge</code></td><td>各橋を渡った自転車の数</td></tr>
+    <tr><td><code>total</code></td><td>4つの橋の合計</td></tr>
+  </table>
+  <div class="note-box">📋 講義のCSVは4月1〜30日の30日分が7回繰り返されている（210行）ため、<code>date</code>は30種類しかありません。</div>
+  <p>まず中身を3行だけ見てみましょう（<code>SELECT … FROM bikes LIMIT 3</code>、一部の列のみ）。</p>
+  <div class="output-reveal">id | date       | day      | high_temp | low_temp | precip | total
+---+------------+----------+-----------+----------+--------+------
+ 1 | 2016-04-01 | Friday   |      78.1 |       66 |   0.01 | 11497
+ 2 | 2016-04-02 | Saturday |        55 |     48.9 |   0.15 |  6922
+ 3 | 2016-04-03 | Sunday   |      39.9 |       34 |   0.09 |  4759
+(3 rows)</div>
+  <p>ここで講師は考えます。「<strong>通行量の合計（total）は、何かに左右されそうだ</strong>。たとえば最高気温では？」。つまり<strong>従属変数 Y ＝ total、独立変数 X ＝ high_temp</strong>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">corr</span>(total, high_temp) <span class="kw">AS</span> corr_temp</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">corr_temp         
+------------------
+0.7433437005618628</div>
+  <p>1行1列の、1つの数が返りました。<strong>約0.74</strong>です。桁が長いので、<code>round()</code>で小数第2位に丸めましょう。ここで重要な講師のポイントがあります。</p>
+  <div class="warn-box">⚠️ <strong>PostgreSQLでは、<code>round(値, 桁数)</code>を使うために、先に<code>::numeric</code>でキャストします。</strong><code>corr()</code>は<code>double precision</code>（浮動小数点）を返し、桁数付きの<code>round</code>は<code>numeric</code>型にしか使えないからです。<code>::numeric</code>は<code>CAST(… AS numeric)</code>の短縮形です（M2のCAST）。<br>💡 演習アリーナのSQLiteでは、<code>round</code>が浮動小数点にもそのまま使えるため、<code>::numeric</code>は自動的に変換されます。PostgreSQLの書き方で書けば、どちらでも動きます。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> corr_temp</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">corr_temp
+---------
+     0.74</div>
+  <p><strong>r ＝ 0.74</strong>。教科書の目安（0.6〜0.99）では「<strong>強い正の相関</strong>」です。<strong>気温が上がるほど、通行量の合計も増える</strong>傾向がある、と読めます。夏のほうが冬より走る人が多いはず、という直感とも合いますね。</p>
+  <p>次に、降水量 <code>precip</code> との相関です。「雨が降ると自転車に乗る人は減るのでは？」という仮説を調べます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">corr</span>(total, precip)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> corr_precip</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">corr_precip
+-----------
+      -0.59</div>
+  <p><strong>r ＝ −0.59</strong>。符号がマイナスなので<strong>逆向き</strong>の関係です。講師の言葉では「<strong>中程度の負の相関（moderate negative）</strong>」。<strong>降水量が増えるほど、通行量の合計は減る</strong>傾向があります。気温（同じ向きに動く）と降水量（逆向きに動く）で、符号の意味の違いがはっきり分かります。</p>
+  <div class="note-box">🔁 <strong>引数を入れ替えてみる：</strong><code>corr(high_temp, total)</code>と書いても相関係数は同じ0.74になります。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">corr</span>(high_temp, total)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> swapped</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">swapped
+-------
+   0.74</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>round(corr(Y, X)::numeric, 2)</code>が基本の形。0.74は「気温が高い日は通行量も多い」、−0.59は「雨が多い日は通行量が少ない」。符号は向き、大きさは強さです。</p></div>
+  <div class="practice-card" id="p-m8s-u3">
+    <div class="ptitle">💻 ミニ練習：気温との相関を求める</div>
+    <p class="ptask"><code>bikes</code>テーブルで、<code>total</code>（Y）と<code>low_temp</code>（X）の相関係数を<code>round(…::numeric, 2)</code>で小数第2位まで丸めて求めてください。最高気温より弱い相関（0.49）になります。</p>
+    <textarea class="code-editor" id="p-m8s-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m8s-u3', ['SELECT', 'corr', 'round', 'total', 'low_temp'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m8s-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m8s-u3-result"></div>
+    <div class="answer-reveal" id="p-m8s-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">corr</span>(total, low_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> corr_low</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
+      <p class="answer-note">結果は0.49。教科書の目安では「中くらい（moderate）」の正の相関で、最高気温（0.74）より弱いことが分かります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>応用：橋ごと・グループごと・注意点</h2><div class="unit-sub">GROUP BY / HAVING との組み合わせ</div></div>
+  </div>
+  <p>列を変えれば、いろいろな組み合わせを1つのSELECTで比べられます。橋ごとの気温との相関を一度に並べてみましょう（<code>AS</code>で別名を付けるとスッキリ読めます）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span></span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(brooklyn_bridge,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> brooklyn,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(manhattan_bridge,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> manhattan,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(williamsburg_bridge, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(queensboro_bridge,   high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">brooklyn | manhattan | williamsburg | queensboro
+---------+-----------+--------------+-----------
+    0.74 |      0.72 |         0.76 |       0.73</div>
+  <p>4つの橋すべてで0.7前後の正の相関で、Williamsburg橋がもっとも強く（0.76）、Manhattan橋がもっとも弱い（0.72）という結果です。</p>
+  <p>統計関数は集計関数なので、<strong><code>GROUP BY</code>と組み合わせて「グループごとの相関」</strong>も求められます。曜日（<code>day</code>列）ごとの、気温と通行量の相関を見てみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> r,</span>
+<span class="cl">       <span class="kw">count</span>(*) <span class="kw">AS</span> n</span>
+<span class="cl"><span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span>
+</pre><div class="output-reveal">day       | r    | n 
+----------+------+---
+Friday    | 0.19 | 35
+Monday    | 0.96 | 28
+Saturday  | 0.86 | 35
+Sunday    |    1 | 28
+Thursday  | 0.88 | 28
+Tuesday   |  0.8 | 28
+Wednesday | 0.99 | 28
+(7 rows)</div>
+  <div class="warn-box">⚠️ <strong>データについての注意：</strong>講義のCSVは4月1〜30日の30日分が7回繰り返されています（<code>date</code>は30種類で、それぞれ7回ずつ、同じ値で登場します）。講義の数値（0.74など）はこのデータで再現されます。曜日ごとの行数は28〜35行ですが、実際には4〜5日分の値の繰り返しなので、曜日別の相関（Fridayの0.19、Sundayの1.0など）は<strong>極端な値</strong>になります。ここでは「<code>GROUP BY</code>と<code>corr</code>の組み合わせ方」を練習するための例として読んでください。</div>
+  <p>グループごとの相関に条件を付けるには、<strong><code>WHERE</code>ではなく<code>HAVING</code></strong>を使います（M4：集計後の値で絞るのは<code>HAVING</code>）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> r</span>
+<span class="cl"><span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">corr</span>(total, high_temp) &gt; <span class="nm">0.9</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span>
+</pre><div class="output-reveal">day       | r   
+----------+-----
+Monday    | 0.96
+Sunday    |    1
+Wednesday | 0.99
+(3 rows)</div>
+  <p>最後に、相関を読むときの<strong>注意点</strong>を3つ押さえましょう。</p>
+  <ul>
+    <li><strong>相関は因果関係ではない。</strong>「気温と通行量が一緒に動く」ことは言えても、「気温が上がったから通行量が増えた」とまでは言えません（教科書の注意）。</li>
+    <li><strong>直線的な関係しか測れない。</strong>点がきれいなU字を描いていても、r は0に近くなることがあります。</li>
+    <li><strong>NULLを含む行は無視される。</strong>PostgreSQLの<code>corr(Y, X)</code>は、YまたはXがNULLの行を計算から外します（<code>AVG</code>と同じ考え方）。</li>
+  </ul>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>corr</code>は集計関数。<code>GROUP BY</code>でグループ別の相関、<code>HAVING</code>で「相関が〇〇以上のグループだけ」が取り出せます。ただし<strong>相関があっても原因とは限りません</strong>。</p></div>
+  <div class="practice-card" id="p-m8s-u4">
+    <div class="ptitle">💻 ミニ練習：相関の強いグループだけ残す</div>
+    <p class="ptask"><code>bikes</code>を曜日（<code>day</code>）ごとにグループ化し、<code>total</code>と<code>high_temp</code>の相関が<strong>0.9以上</strong>の曜日だけを、<code>day</code>と丸めた相関<code>r</code>（小数第2位）の2列で、<code>day</code>の昇順に出力してください。</p>
+    <textarea class="code-editor" id="p-m8s-u4-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m8s-u4', ['SELECT', 'corr', 'GROUP BY', 'HAVING', 'day'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m8s-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m8s-u4-result"></div>
+    <div class="answer-reveal" id="p-m8s-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> day,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> r</span>
+<span class="cl"><span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> day</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">corr</span>(total, high_temp) &gt;= <span class="nm">0.9</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> day;</span></pre>
+      <p class="answer-note">Monday（0.96）・Sunday（1.0）・Wednesday（0.99）の3行が残ります。グループ集計後の値で絞るので<code>WHERE</code>ではなく<code>HAVING</code>です。丸めた値ではなく元の<code>corr(...)</code>で比べている点にも注意しましょう。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In the call corr(Y, X), which variable is the dependent variable?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Y — it depends on X</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>X — the variable the result is measured against</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Both — corr treats the two variables as exactly the same thing</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither — corr has no dependent variable at all</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which range can the correlation coefficient r take?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0 to 1 only</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>−1 to +1</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0 to 100</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>−100 to +100</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A query returns r = −0.59 for corr(total, precip). How should it be read?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Total crossings are completely unrelated to precipitation levels</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Precipitation causes exactly 59% fewer crossings every single day</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A moderate negative link: more rain goes with fewer crossings</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A strong positive relationship, because 0.59 is above 0.5</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which statement returns the correlation of total crossings (Y) with high_temp (X) rounded to 2 decimals in PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>SELECT corr(high_temp)::numeric FROM bikes;</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SELECT round(corr(total, high_temp), 2) FROM bikes;</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SELECT round(corr(total, high_temp, 2)::numeric, 2) FROM bikes;</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>SELECT round(corr(total, high_temp)::numeric, 2) FROM bikes;</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why is ::numeric placed before round(…, 2) when rounding the result of corr()?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>corr() gives double precision; round(x, n) needs numeric</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It makes corr() run noticeably faster on very large tables</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It converts every negative value into a positive one</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is required by every aggregate function in PostgreSQL</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">You swap the arguments and run corr(high_temp, total). What happens to the value of r?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It stays the same</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Its sign flips</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It becomes 1 − r</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It becomes r squared</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Points on a scatter plot lie almost perfectly on a line sloping downward from left to right. Which r fits best?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About +0.95</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 0</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About −0.95</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About −0.05</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Which clause keeps only the groups whose correlation is above a threshold?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WHERE corr(Y, X) &gt; 0.75</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>HAVING corr(Y, X) &gt; 0.75</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ORDER BY corr(Y, X) &gt; 0.75</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>LIMIT corr(Y, X) &gt; 0.75</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 2, 3, 0, 0, 2, 1];
+var FEEDBACKS=["Y is the dependent variable (its variation is thought to depend on X); X is the independent variable. Write the dependent variable first.", "r always lies between −1 and +1: the sign gives the direction and the size gives the strength.", "The minus sign means the two move in opposite directions; |r| = 0.59 is in the moderate band. It does not prove that rain is the cause.", "round(x, 2) needs a numeric input in PostgreSQL, so cast with ::numeric first, then round to 2 decimals.", "corr() returns double precision; PostgreSQL's two-argument round works on numeric, hence the ::numeric cast (SQLite in the arena converts it automatically).", "Correlation is symmetric: corr(Y, X) and corr(X, Y) give the same r. The order matters for readability, and for regr_slope in the next lesson.", "A downward line means a negative sign, and points hugging it closely means a strong relationship, so r is close to −1.", "The correlation is an aggregate computed after grouping, so it is filtered with HAVING, not WHERE."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">correlation</div><div class="term-en">相関</div><div class="term-def">2つの変数の直線的な関係の強さと向き。</div></div>
+    <div class="term-item"><div class="term-name">correlation coefficient (r)</div><div class="term-en">相関係数</div><div class="term-def">−1〜+1の値。符号が向き、絶対値が強さ。SQLでは<code>corr(Y, X)</code>。</div></div>
+    <div class="term-item"><div class="term-name">dependent variable (Y)</div><div class="term-en">従属変数</div><div class="term-def">Xに応じて変わると考える側（結果）。<code>corr</code>の第1引数。</div></div>
+    <div class="term-item"><div class="term-name">independent variable (X)</div><div class="term-en">独立変数</div><div class="term-def">ほかの変数に左右されないと考える側（原因）。<code>corr</code>の第2引数。</div></div>
+    <div class="term-item"><div class="term-name">scatter plot</div><div class="term-en">散布図</div><div class="term-def">2変数の値を点で描いた図。相関が強いほど点が直線に沿う。</div></div>
+    <div class="term-item"><div class="term-name">::numeric</div><div class="term-en">numericへのキャスト</div><div class="term-def"><code>round(x, 2)</code>の前に付けるPostgreSQLの型変換。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>相関は<code>corr(結果, 原因)</code>の順に書き、<code>round(…::numeric, 2)</code>で丸めて読みます。符号は向き、大きさは強さ。「相関がある＝原因」ではない点に注意。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 SQLレッスン：M8 統計① 相関 corr()</p>
+  <p style="margin-top:.5rem;"><a href="m7_practice.html">← M7 演習</a> · <a href="m8_regression.html">回帰 regr_* へ →</a> · <a href="m8_practice_stats.html">🏋️ この単元の演習へ</a> · <a href="m8_stats_intro_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

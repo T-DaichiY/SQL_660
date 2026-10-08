@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8演習 回帰 regr_*()</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=10">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ 演習 回帰 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M8演習 · 回帰 regr_slope / regr_intercept / regr_r2</div>
+  <h1>📈 回帰 — SQL演習</h1>
+  <p>実際にSQLを書いて、本物のSQLite上で実行・採点します。基礎5問・中級5問・上級5問の計15問です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="m8_practice.html">🏋️ 演習アリーナへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <p style="margin-top:.5rem">🐘 この演習ではPostgreSQLの書き方（::キャスト、START TRANSACTION、POSITION(x IN y)、ALTER COLUMN … TYPE など）も使えます。内部でSQLiteに自動変換して実行します。</p>
+  <p style="margin-top:.5rem">🚲 使うテーブルは<code>bikes</code>（NYCのEast River橋の自転車通行量。講義のCSVは4月1〜30日の30日分が7回繰り返されていて、210行のまま使います）です。右側のスキーマ表で列名を確認できます。回帰関数は<code>regr_slope(Y, X)</code>のように<strong>Yが先・Xが後</strong>で、<code>round()</code>の前には<code>::numeric</code>へキャストします。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>📈 SQLレッスン：M8演習 — 回帰</p>
+  <p style="margin-top:.5rem;"><a href="m8_regression.html">← レッスンに戻る</a> · <a href="m8_practice.html">🏋️ 演習アリーナ</a> · <a href="index.html">🏠 概要へ</a></p>
+</footer>
+
+<script>window.ARENA_OPTS = { pgCompat: true, schemaGroups: ["bikes"] };</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js?v=13"></script>
+<script>
+var SQL_PROBLEMS = [
+  { id:"rg-b1", tier:"basic", title:"気温から総通行量を予測する直線の傾き",
+    scenario:"<code>bikes</code>テーブルで、<code>total</code>（総通行量）を<code>high_temp</code>（最高気温）で説明する回帰直線の<strong>傾き</strong>を求めます。<code>regr_slope(Y, X)</code>の引数の順は<strong>Y（結果）→ X（原因）</strong>です。<code>round(..., 2)</code>で小数第2位に丸め、<strong>1列だけ</strong>出力してください。結果は1行1列（370.18）になるはずです。",
+    concept:"regr_slope(Y, X) と round(::numeric)", hint:"round(regr_slope(total, high_temp)::numeric, 2)。roundの前に ::numeric へキャストします。",
+    starter:"-- 1行1列 (370.18)\n",
+    solution:"SELECT round(regr_slope(total, high_temp)::numeric, 2) FROM bikes;" },
+  { id:"rg-b2", tier:"basic", title:"回帰直線の切片",
+    scenario:"同じ<code>total</code>と<code>high_temp</code>の回帰直線の<strong>切片</strong>（気温が0度のときの予測値）を、小数第2位に丸めて<strong>1列だけ</strong>出力してください。結果は1行1列（-7891.03）になるはずです。",
+    concept:"regr_intercept(Y, X)", hint:"round(regr_intercept(total, high_temp)::numeric, 2)",
+    starter:"-- 1行1列 (-7891.03)\n",
+    solution:"SELECT round(regr_intercept(total, high_temp)::numeric, 2) FROM bikes;" },
+  { id:"rg-b3", tier:"basic", title:"決定係数 r²",
+    scenario:"<code>total</code>を<code>high_temp</code>で説明する回帰の<strong>決定係数 r²</strong>を、小数第2位に丸めて<strong>1列だけ</strong>出力してください。結果は1行1列（0.55）になるはずです。講義の言葉で言えば「総通行量のばらつきの約55%を気温で説明できる」という意味です。",
+    concept:"regr_r2(Y, X) の読み方", hint:"round(regr_r2(total, high_temp)::numeric, 2)",
+    starter:"-- 1行1列 (0.55)\n",
+    solution:"SELECT round(regr_r2(total, high_temp)::numeric, 2) FROM bikes;" },
+  { id:"rg-b4", tier:"basic", title:"傾き・切片・r²を1回で出す",
+    scenario:"<code>total</code>と<code>high_temp</code>の回帰について、<strong>slope, intercept, r_squared</strong>の順に3列を、すべて小数第2位に丸めて出力してください。列名は指定どおりに別名を付けます。結果は1行3列（370.18, -7891.03, 0.55）になるはずです。",
+    concept:"3つの回帰関数を1つのSELECTに並べる", hint:"regr_slope / regr_intercept / regr_r2 を3つ、AS で別名を付けて並べます。",
+    starter:"-- slope, intercept, r_squared の順で（1行3列）\n",
+    solution:"SELECT round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_intercept(total, high_temp)::numeric, 2) AS intercept, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared FROM bikes;" },
+  { id:"rg-b5", tier:"basic", title:"降水量で説明する回帰（傾きは負）",
+    scenario:"今度は<code>total</code>を<code>precip</code>（降水量）で説明する回帰を作ります。<strong>slope, intercept</strong>の順に、小数第2位に丸めて出力してください。雨が増えるほど通行量が減るので、傾きは<strong>負</strong>になります。結果は1行2列（-32225.98, 16220.99）になるはずです。",
+    concept:"傾きの符号は相関の符号と同じ", hint:"regr_slope(total, precip), regr_intercept(total, precip)",
+    starter:"-- slope, intercept の順で（1行2列）\n",
+    solution:"SELECT round(regr_slope(total, precip)::numeric, 2) AS slope, round(regr_intercept(total, precip)::numeric, 2) AS intercept FROM bikes;" },
+
+  { id:"rg-i1", tier:"intermediate", title:"最高気温80度の日の通行量を予測する",
+    scenario:"回帰直線の式 <code>y = slope * x + intercept</code> を使って、<code>high_temp</code>が<strong>80</strong>のときの<code>total</code>の予測値を求めます。<code>regr_slope</code>と<code>regr_intercept</code>をそのまま掛け算・足し算に使い、<strong>整数に丸めて（小数0桁）</strong>1列だけ出力してください。結果は1行1列（21723）になるはずです。",
+    concept:"回帰関数の戻り値を式の中で使う（予測）", hint:"round((regr_slope(total, high_temp) * 80 + regr_intercept(total, high_temp))::numeric, 0)。かっこ全体に ::numeric を付けます。",
+    starter:"-- 1行1列 (21723)\n",
+    solution:"SELECT round((regr_slope(total, high_temp) * 80 + regr_intercept(total, high_temp))::numeric, 0) FROM bikes;" },
+  { id:"rg-i2", tier:"intermediate", title:"どの説明変数がいちばん効くか（r²の比較）",
+    scenario:"<code>total</code>を、<code>high_temp</code>・<code>low_temp</code>・<code>precip</code>のそれぞれで説明したときの<strong>r²</strong>を、<strong>r2_high, r2_low, r2_precip</strong>の順に小数第2位で出力してください。結果は1行3列（0.55, 0.24, 0.35）になるはずです。r²が大きいほど、その変数で通行量をよく説明できます。",
+    concept:"r²で複数の説明変数を比べる", hint:"regr_r2(total, high_temp), regr_r2(total, low_temp), regr_r2(total, precip) を並べます。",
+    starter:"-- r2_high, r2_low, r2_precip の順で（1行3列）\n",
+    solution:"SELECT round(regr_r2(total, high_temp)::numeric, 2) AS r2_high, round(regr_r2(total, low_temp)::numeric, 2) AS r2_low, round(regr_r2(total, precip)::numeric, 2) AS r2_precip FROM bikes;" },
+  { id:"rg-i3", tier:"intermediate", title:"橋ごとの傾きを比べる",
+    scenario:"4つの橋それぞれの通行量を<code>high_temp</code>で説明する回帰の<strong>傾き</strong>を、<strong>brooklyn, manhattan, williamsburg, queensboro</strong>の順に小数第2位で出力してください。結果は1行4列（64.87, 109.78, 123.98, 71.54）になるはずです。気温が1度上がると増える人数が橋ごとに違うことが分かります。",
+    concept:"橋ごとの回帰（Yだけを替える）", hint:"regr_slope(brooklyn_bridge, high_temp) のようにYの列だけ橋ごとに替えます。",
+    starter:"-- brooklyn, manhattan, williamsburg, queensboro の順で（1行4列）\n",
+    solution:"SELECT round(regr_slope(brooklyn_bridge, high_temp)::numeric, 2) AS brooklyn, round(regr_slope(manhattan_bridge, high_temp)::numeric, 2) AS manhattan, round(regr_slope(williamsburg_bridge, high_temp)::numeric, 2) AS williamsburg, round(regr_slope(queensboro_bridge, high_temp)::numeric, 2) AS queensboro FROM bikes;" },
+  { id:"rg-i4", tier:"intermediate", title:"曜日ごとの回帰（GROUP BY）",
+    scenario:"<code>day</code>（曜日名）ごとに、<code>total</code>を<code>high_temp</code>で説明する回帰の傾きとr²を求めます。<strong>day, slope, r_squared</strong>の順に出力し（傾きとr²は小数第2位）、<code>day</code>のアルファベット順に並べてください。結果は7行になり、最初の行は（'Friday', 40.56, 0.04）、最後の行は（'Wednesday', 461.52, 0.99）です。",
+    concept:"回帰関数は集計関数。GROUP BYでグループ別に使える", hint:"SELECT day, round(regr_slope(total, high_temp)::numeric, 2), ... FROM bikes GROUP BY day ORDER BY day;",
+    starter:"-- day, slope, r_squared の順で（7行、dayの昇順）\n",
+    solution:"SELECT day, round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared FROM bikes GROUP BY day ORDER BY day;", orderSensitive:true },
+  { id:"rg-i5", tier:"intermediate", title:"通行量が10,000人になる気温（式を逆に解く）",
+    scenario:"回帰直線 <code>y = slope * x + intercept</code> を<code>x</code>について解くと <code>x = (y - intercept) / slope</code> です。予測される<code>total</code>が<strong>10000</strong>になる<code>high_temp</code>を、小数第1位に丸めて<strong>1列だけ</strong>出力してください。結果は1行1列（48.3）になるはずです。",
+    concept:"回帰式の変形と計算", hint:"round(((10000 - regr_intercept(total, high_temp)) / regr_slope(total, high_temp))::numeric, 1)",
+    starter:"-- 1行1列 (48.3)\n",
+    solution:"SELECT round(((10000 - regr_intercept(total, high_temp)) / regr_slope(total, high_temp))::numeric, 1) FROM bikes;" },
+
+  { id:"rg-a1", tier:"advanced", title:"雨の日と晴れの日で回帰を分ける",
+    scenario:"<code>precip &gt; 0</code>の日を<code>'rain'</code>、それ以外を<code>'dry'</code>とラベル付けし、<code>total</code>を<code>high_temp</code>で説明する回帰を日の種類ごとに求めます。<strong>kind, slope, r_squared, days</strong>の順に出力し（傾きとr²は小数第2位、daysは日数）、<code>kind</code>の昇順に並べてください。結果は2行（dry: 324.36, 0.66, 126 / rain: 227.29, 0.43, 84）になるはずです。",
+    concept:"CASEで作ったグループごとの回帰", hint:"CASE WHEN precip > 0 THEN 'rain' ELSE 'dry' END AS kind を SELECT に書き、GROUP BY kind。daysは count(*)。",
+    starter:"-- kind, slope, r_squared, days の順で（2行、kindの昇順）\n",
+    solution:"SELECT CASE WHEN precip > 0 THEN 'rain' ELSE 'dry' END AS kind, round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared, count(*) AS days FROM bikes GROUP BY CASE WHEN precip > 0 THEN 'rain' ELSE 'dry' END ORDER BY kind;", orderSensitive:true },
+  { id:"rg-a2", tier:"advanced", title:"ある日の予測値と残差（実測 − 予測）",
+    scenario:"<code>2016-04-20</code>の日について（講義のCSVではこの日の行が7行重複しているので、<code>SELECT DISTINCT</code>で1行にまとめます）、<code>total</code>の実測値、回帰直線による予測値、その差（<strong>残差 = 実測 − 予測</strong>）を求めます。回帰の傾きと切片は<code>bikes</code>全体から計算し、<strong>date, total, predicted, residual</strong>の順に出力してください（predictedとresidualは整数に丸める）。結果は1行4列（'2016-04-20', 22591, 17281, 5310）になるはずです。",
+    concept:"サブクエリで傾き・切片を求めて各行に当てはめる（残差）", hint:"SELECT DISTINCT で重複を除く。FROM bikes, (SELECT regr_slope(total, high_temp) AS m, regr_intercept(total, high_temp) AS b FROM bikes) AS f として、m * high_temp + b を計算します。",
+    starter:"-- date, total, predicted, residual の順で（1行4列）\n",
+    solution:"SELECT DISTINCT date, total, round((m * high_temp + b)::numeric, 0) AS predicted, round((total - (m * high_temp + b))::numeric, 0) AS residual FROM bikes, (SELECT regr_slope(total, high_temp) AS m, regr_intercept(total, high_temp) AS b FROM bikes) AS f WHERE date = '2016-04-20';" },
+  { id:"rg-a3", tier:"advanced", title:"回帰直線より上にある日は何日？",
+    scenario:"実測の<code>total</code>が、回帰直線による予測値（<code>slope * high_temp + intercept</code>）より<strong>大きい</strong>日（残差が正の日）の日数を数え、<strong>1列だけ</strong>出力してください。結果は1行1列（105）になるはずです。全体が210日なので、ちょうど半分です。",
+    concept:"残差の符号で数える", hint:"FROM bikes, (SELECT regr_slope(...) AS m, regr_intercept(...) AS b FROM bikes) AS f WHERE total > m * high_temp + b",
+    starter:"-- 1行1列 (105)\n",
+    solution:"SELECT count(*) FROM bikes, (SELECT regr_slope(total, high_temp) AS m, regr_intercept(total, high_temp) AS b FROM bikes) AS f WHERE total > m * high_temp + b;" },
+  { id:"rg-a4", tier:"advanced", title:"どの橋が気温で最もよく説明できるか",
+    scenario:"4つの橋それぞれについて、橋の通行量を<code>high_temp</code>で説明する回帰の<strong>r²</strong>（小数第3位）を求め、<strong>bridge, r_squared</strong>の順に、r²の大きい順で出力してください。bridgeは<code>'brooklyn'</code>・<code>'manhattan'</code>・<code>'williamsburg'</code>・<code>'queensboro'</code>の文字列です。<code>UNION ALL</code>で4つのSELECTをつなぎます。結果は4行になり、1行目は（'williamsburg', 0.584）、最後の行は（'manhattan', 0.519）です。",
+    concept:"UNION ALLで複数の回帰を縦に並べて比べる", hint:"SELECT 'brooklyn' AS bridge, ... FROM bikes UNION ALL SELECT 'manhattan', ... を4つ作り、全体を外側のSELECTで包んで ORDER BY r_squared DESC。",
+    starter:"-- bridge, r_squared の順で（4行、r_squaredの降順）\n",
+    solution:"SELECT bridge, r_squared FROM (SELECT 'brooklyn' AS bridge, round(regr_r2(brooklyn_bridge, high_temp)::numeric, 3) AS r_squared FROM bikes UNION ALL SELECT 'manhattan', round(regr_r2(manhattan_bridge, high_temp)::numeric, 3) FROM bikes UNION ALL SELECT 'williamsburg', round(regr_r2(williamsburg_bridge, high_temp)::numeric, 3) FROM bikes UNION ALL SELECT 'queensboro', round(regr_r2(queensboro_bridge, high_temp)::numeric, 3) FROM bikes) ORDER BY r_squared DESC;", orderSensitive:true },
+  { id:"rg-a5", tier:"advanced", title:"涼しい日と暑い日で気温の効き方は同じ？",
+    scenario:"<code>high_temp &lt; 60</code>の日を<code>'cool'</code>、<code>60</code>以上の日を<code>'warm'</code>に分け、<code>total</code>を<code>high_temp</code>で説明する回帰を帯ごとに求めます。<strong>band, slope, r_squared, days</strong>の順に出力し（傾きとr²は小数第2位）、<code>band</code>の昇順に並べてください。結果は2行（cool: 384.49, 0.35, 91 / warm: 124.7, 0.04, 119）になるはずです。暑い日は気温だけでは通行量をほとんど説明できないことが分かります。",
+    concept:"条件で分けた回帰を比べて、直線の当てはまりを評価する", hint:"CASE WHEN high_temp < 60 THEN 'cool' ELSE 'warm' END AS band を使い、GROUP BY と ORDER BY に同じCASE（または別名）を書きます。",
+    starter:"-- band, slope, r_squared, days の順で（2行、bandの昇順）\n",
+    solution:"SELECT CASE WHEN high_temp < 60 THEN 'cool' ELSE 'warm' END AS band, round(regr_slope(total, high_temp)::numeric, 2) AS slope, round(regr_r2(total, high_temp)::numeric, 2) AS r_squared, count(*) AS days FROM bikes GROUP BY CASE WHEN high_temp < 60 THEN 'cool' ELSE 'warm' END ORDER BY band;", orderSensitive:true }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+</body></html>

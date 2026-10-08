@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 CTE② 複数のCTE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M8 🧱 CTE <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M8 · Common Table Expressions — Part 2 (Lecture 5)</div>
+  <h1>🧱 CTE②：複数のCTEをつなぐ</h1>
+  <p>CTEは1つだけでなく、<strong>カンマでつないで何個でも</strong>作れます。この単元では、複数のCTEの文法とルール、講義の2つのCTEの例題（部署名と給与合計）、そして3つ目のCTEや前のCTEを使うCTEまでを学びます。</p>
+  <p style="font-size:.9rem">🎥 講義動画5「CTE part 2（multiple CTEs）」 ・ 📖 Practical SQL 第2版 第13章「Advanced Query Techniques」。会社のデータ（departments／employees／employee_projects）は、教材用の<strong>架空</strong>のデータです。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 書き方</a><a href="#unit2">② ルールとミス</a><a href="#unit3">③ 条件ごとにCTE</a><a href="#unit4">④ メインのクエリ</a><a href="#unit5">⑤ 発展</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>複数のCTEの書き方</h2><div class="unit-sub">WITHは1回、CTEの間はカンマ</div></div>
+  </div>
+  <p>複雑な問題では、CTEが1つでは足りません。講師は動画の冒頭で「<strong>複数のCTEの文法は意外と簡単</strong>」と言っています。ポイントは、<strong>CTEとCTEの間をカンマでつなぐ</strong>ことだけです。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> first_cte <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> ...</span>
+<span class="cl">    <span class="kw">FROM</span> ...</span>
+<span class="cl">),                                <span class="cm">-- ← 1つ目の終わりにカンマ</span></span>
+<span class="cl">second_cte <span class="kw">AS</span> (                   <span class="cm">-- ← 2つ目には WITH を付けない</span></span>
+<span class="cl">    <span class="kw">SELECT</span> ...</span>
+<span class="cl">    <span class="kw">FROM</span> ...</span>
+<span class="cl">)                                 <span class="cm">-- ← 最後のCTEの後ろにカンマは付けない</span></span>
+<span class="cl"><span class="kw">SELECT</span> ...                        <span class="cm">-- ← メインのクエリ（両方を表のように使える）</span></span>
+<span class="cl"><span class="kw">FROM</span> first_cte</span>
+<span class="cl"><span class="kw">JOIN</span> second_cte <span class="kw">ON</span> ...;</span>
+</pre>  <p>講師の説明を整理します。</p>
+  <ul>
+    <li><code>WITH</code>は<strong>最初に1回だけ</strong>書きます。2つ目以降の前に<code>WITH</code>は不要です。</li>
+    <li>「テーブルのリストを作っている」と考えると分かりやすいです。<code>WITH</code>は「ここから表の宣言が始まる」という合図で、あとはカンマで区切って<code>名前 AS (...)</code>を並べるだけです。</li>
+    <li><strong>最後のCTEの後ろにはカンマを付けません。</strong>その次に来るのは、次のCTEではなくメインのクエリだからです。</li>
+    <li>それぞれのCTEは、普通のテーブルと同じようにメインのクエリで呼び出せます。</li>
+  </ul>
+  <div class="teal-box">📌 <strong>カンマの法則：</strong>CTEが<strong>N個</strong>あれば、カンマは<strong>N-1個</strong>です。2個ならカンマ1個、3個ならカンマ2個。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>お買いものリストと同じです。「牛乳、卵、パン」とカンマで区切って、最後の「パン」の後ろにはカンマを付けません。CTEもリストのように並べます。</p></div>
+  <div class="practice-card" id="p-c2-u1">
+    <div class="ptitle">💻 ミニ練習：2つのCTEをカンマでつなぐ</div>
+    <p class="ptask">Bankingの<code>loan</code>テーブルから、<code>small_loans</code>（<code>amount</code>が10,000未満）と<code>big_loans</code>（<code>amount</code>が10,000以上）の2つのCTEを作り、メインのクエリで<code>(SELECT COUNT(*) FROM small_loans)</code>と<code>(SELECT COUNT(*) FROM big_loans)</code>の2つを1行で表示してください。</p>
+    <textarea class="code-editor" id="p-c2-u1-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u1', ["WITH", "small_loans", "big_loans", "AS", "COUNT"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u1-result"></div>
+    <div class="answer-reveal" id="p-c2-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> small_loans <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> loan_number <span class="kw">FROM</span> loan <span class="kw">WHERE</span> amount &lt; <span class="nm">10000</span></span>
+<span class="cl">),</span>
+<span class="cl">big_loans <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> loan_number <span class="kw">FROM</span> loan <span class="kw">WHERE</span> amount &gt;= <span class="nm">10000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> (<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> small_loans) <span class="kw">AS</span> n_small,</span>
+<span class="cl">       (<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> big_loans)   <span class="kw">AS</span> n_big;</span></pre>
+      <p class="answer-note">結果は2と2（9,000と5,000が小さい融資、15,000と22,000が大きい融資）。1つ目のCTEの後ろにカンマ、2つ目の後ろにはカンマなしです。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ルールとよくある間違い</h2><div class="unit-sub">構文エラーの原因は、ほぼここ</div></div>
+  </div>
+  <p>講義と、よくある間違いをまとめます。間違えると<strong>構文エラー</strong>になる点ばかりです。</p>
+  <table class="compare-table">
+    <tr><th>ルール</th><th>間違えると…</th></tr>
+    <tr><td>① <code>WITH</code>は文頭に<strong>1回だけ</strong></td><td>2つ目の前にも<code>WITH</code>を書くと、構文エラーになる。</td></tr>
+    <tr><td>② CTEの間は<strong>カンマ</strong>でつなぐ</td><td>カンマを忘れると、次の名前のところで構文エラーになる。</td></tr>
+    <tr><td>③ <strong>最後のCTEの後ろにカンマは付けない</strong></td><td>付けると、メインのSELECTの前でエラーになる（「カンマの後ろに何が続くの？」状態）。</td></tr>
+    <tr><td>④ CTEの名前は<strong>ユニーク</strong></td><td>同じ名前を2つ使うことはできない。エラーになる。</td></tr>
+  </table>
+  <p>よくある間違いの形を、NG例（実行しない）で見ておきましょう。</p>
+  <p class="code-label">▶ NG①：2つ目にもWITHを付けてしまった</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> a <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">1</span> <span class="kw">AS</span> x)</span>
+<span class="cl"><span class="kw">WITH</span> b <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">2</span> <span class="kw">AS</span> y)      <span class="cm">-- ← NG：WITHは1回だけ</span></span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> a, b;</span>
+</pre>  <p class="code-label">▶ NG②：最後のCTEの後ろにカンマ</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> a <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">1</span> <span class="kw">AS</span> x),</span>
+<span class="cl">     b <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">2</span> <span class="kw">AS</span> y),     <span class="cm">-- ← NG：この後ろはメインのSELECT</span></span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> a, b;</span>
+</pre>  <div class="warn-box">⚠️ <strong>名前のかぶりに注意。</strong>講師は「同じ名前のCTEを2つ作ることはできない」と強調しています。たとえば<code>dept_totals</code>という名前を別々の用途で2回使うと、PostgreSQLは「どちらのことか分からない」としてエラー（<code>WITH query name "dept_totals" specified more than once</code>のような内容）を返します。名前は<strong>中身が分かる、重ならないもの</strong>にしましょう（例：<code>top_project_workers</code>、<code>high_salary_departments</code>）。</div>
+  <p>名前は、メインのクエリや他のCTEの中からは<strong>通常のテーブル名と同じように</strong>呼ばれます。そのため、実在するテーブル（<code>employees</code>や<code>loan</code>）と同じ名前を付けると混乱のもとになります。<strong>CTEにはテーブルと違う名前</strong>を付けるのが無難です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>覚えるのは3つ。<strong>WITHは1回、間はカンマ、最後はカンマなし</strong>。そして名前はぜんぶ別々です。</p></div>
+  <div class="practice-card" id="p-c2-u2">
+    <div class="ptitle">💻 ミニ練習：間違いを直す</div>
+    <p class="ptask">次のSQLには間違いが2つあります。直して、3つのCTE <code>a</code>、<code>b</code>、<code>c</code> をすべて正しくつないでください。<br><code>WITH a AS (SELECT 1 AS x)<br>WITH b AS (SELECT 2 AS y),<br>c AS (SELECT 3 AS z),<br>SELECT * FROM a, b, c;</code></p>
+    <textarea class="code-editor" id="p-c2-u2-input" rows="7">WITH a AS (SELECT 1 AS x)
+WITH b AS (SELECT 2 AS y),
+c AS (SELECT 3 AS z),
+SELECT * FROM a, b, c;
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u2', ["WITH", "),", "SELECT"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u2-result"></div>
+    <div class="answer-reveal" id="p-c2-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> a <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">1</span> <span class="kw">AS</span> x),</span>
+<span class="cl">     b <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">2</span> <span class="kw">AS</span> y),</span>
+<span class="cl">     c <span class="kw">AS</span> (<span class="kw">SELECT</span> <span class="nm">3</span> <span class="kw">AS</span> z)</span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> a, b, c;</span></pre>
+      <p class="answer-note">直したのは2か所：①2つ目の<code>WITH</code>を消し、a の後ろにカンマを付ける　②最後の c の後ろのカンマを消す。結果は1 | 2 | 3の1行です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>例題：条件ごとにCTEを作る</h2><div class="unit-sub">最長時間の社員がいる部署 かつ 給与合計200,000超</div></div>
+  </div>
+  <p>講義の練習問題です（課題で出る形とそっくりだと言っています）。会社のデータは<strong>架空</strong>の教材用データで、<code>departments</code>（5部署）、<code>employees</code>（20人）、<code>employee_projects</code>（18行）を使います。</p>
+  <div class="teal-box">📌 <strong>課題文：</strong>2つのCTEを使って、次の<strong>両方</strong>を満たす部署の「<strong>部署名と部署の給与合計</strong>」を出す。<br>(1) どの社員よりも長い時間、1つのプロジェクトで働いた社員（最長時間）が、少なくとも1人いる。<br>(2) 部署全員の給与合計が200,000を超える。</div>
+  <p><strong>課題文の読み方のコツ</strong>（講師より）：箇条書きのように<strong>条件が複数並んでいる</strong>ときは、CTEを使う合図です。さらに「合計」という<strong>集計</strong>も求められているので、条件ごとにCTEに分けると、<code>GROUP BY</code>や<code>HAVING</code>の置き場所で悩まずに済みます。</p>
+  <table class="compare-table">
+    <tr><th>条件</th><th>担当するCTE</th><th>何を出す？</th></tr>
+    <tr><td>(1) 最長時間の社員がいる</td><td><code>top_project_workers</code></td><td>最長時間の社員の<code>employee_id</code>と<code>department_id</code></td></tr>
+    <tr><td>(2) 給与合計が200,000超</td><td><code>high_salary_departments</code></td><td>部署ごとの<code>department_id</code>と<code>total_salary</code>（200,000超のみ）</td></tr>
+  </table>
+  <p class="code-label">▶ CTE① top_project_workers（条件1）</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> ep.employee_id, e.department_id</span>
+<span class="cl"><span class="kw">FROM</span> employee_projects ep</span>
+<span class="cl"><span class="kw">JOIN</span> employees e <span class="kw">ON</span> ep.employee_id = e.employee_id</span>
+<span class="cl"><span class="kw">WHERE</span> ep.hours_worked = (<span class="kw">SELECT</span> <span class="kw">MAX</span>(hours_worked) <span class="kw">FROM</span> employee_projects);</span>
+</pre><div class="output-reveal">employee_id | department_id
+------------+--------------
+          5 |             2
+         14 |             4
+(2 rows)</div>  <p><code>employee_projects</code>には部署IDがないので、<code>employees</code>と<code>employee_id</code>でJOINして<code>department_id</code>を付け足しています。<code>WHERE</code>の中の<code>(SELECT MAX(hours_worked) ...)</code>は、「全体の最長時間」＝160を返すサブクエリです。講師も「ここはサブクエリになる」と述べ、「小さいのでこのままにする」と言っています。最長の160時間は、Eva Park（Marketing、プロジェクトP2）と、Noah Fox（HR、P4）の2人です。</p>
+  <p class="code-label">▶ CTE② high_salary_departments（条件2）</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">AS</span> total_salary</span>
+<span class="cl"><span class="kw">FROM</span> employees</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl"><span class="kw">HAVING</span> <span class="kw">SUM</span>(salary) &gt; <span class="nm">200000</span>;</span>
+</pre><div class="output-reveal">department_id | total_salary
+--------------+-------------
+            1 |       355000
+            2 |       245000
+            3 |       263000
+(3 rows)</div>  <p>こちらはとても簡単です。講師は「<strong>200,000の条件をメインではなくこのCTEの中に置く</strong>」理由を、「メインのクエリで集計を扱うことになるので、給与の話はまとめて給与のCTEに入れた方が混乱しない」と説明しています。</p>
+  <div class="warn-box">⚠️ <strong>単体テストを忘れずに。</strong>それぞれのSELECTを単独で実行して、上のような結果になることを確かめてから、<code>WITH</code>で包みましょう。部品が正しければ、全体も正しく動きます。</div>
+  <div class="practice-card" id="p-c2-u3">
+    <div class="ptitle">💻 ミニ練習：CTE②だけを単独で作る</div>
+    <p class="ptask">部署ごとの<strong>人数が4人以上</strong>の部署を取り出す<code>big_depts</code>というCTEを作ってください。CTEの中で<code>department_id</code>と<code>COUNT(*)</code>（列名は<code>headcount</code>）を出し、<code>GROUP BY</code>と<code>HAVING</code>を使います。メインは<code>SELECT * FROM big_depts</code>です。</p>
+    <textarea class="code-editor" id="p-c2-u3-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u3', ["WITH", "big_depts", "HAVING", "COUNT"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u3-result"></div>
+    <div class="answer-reveal" id="p-c2-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> big_depts <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> headcount</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">    <span class="kw">HAVING</span> <span class="kw">COUNT</span>(*) &gt;= <span class="nm">4</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> big_depts;</span></pre>
+      <p class="answer-note">結果は3行（部署1が5人、部署2が4人、部署3が5人）。条件と集計をCTEの中に入れ、メインはシンプルなままです。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>メインのクエリ：結びつけて完成</h2><div class="unit-sub">JOINで「かつ」を作り、部署名を付け足す</div></div>
+  </div>
+  <p>2つのCTEが完成したら、メインのクエリで<strong>結びつける</strong>だけです。欲しいのは「部署名」と「給与合計」で、給与合計は<code>high_salary_departments</code>にありますが、<strong>部署名はどこにもありません</strong>（あるのは<code>department_id</code>）。そこで<code>departments</code>テーブルにもJOINします。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> top_project_workers <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> ep.employee_id, e.department_id</span>
+<span class="cl">    <span class="kw">FROM</span> employee_projects ep</span>
+<span class="cl">    <span class="kw">JOIN</span> employees e <span class="kw">ON</span> ep.employee_id = e.employee_id</span>
+<span class="cl">    <span class="kw">WHERE</span> ep.hours_worked = (<span class="kw">SELECT</span> <span class="kw">MAX</span>(hours_worked) <span class="kw">FROM</span> employee_projects)</span>
+<span class="cl">),</span>
+<span class="cl">high_salary_departments <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">AS</span> total_salary</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">    <span class="kw">HAVING</span> <span class="kw">SUM</span>(salary) &gt; <span class="nm">200000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> d.department_name, hsd.total_salary</span>
+<span class="cl"><span class="kw">FROM</span> high_salary_departments hsd</span>
+<span class="cl"><span class="kw">JOIN</span> top_project_workers tpw <span class="kw">ON</span> hsd.department_id = tpw.department_id</span>
+<span class="cl"><span class="kw">JOIN</span> departments d <span class="kw">ON</span> d.department_id = hsd.department_id</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> d.department_name, hsd.total_salary;</span>
+</pre><div class="output-reveal">department_name | total_salary
+----------------+-------------
+Marketing       |       245000
+(1 row)</div>  <p>講義でも結果はMarketing 245,000の1行だけでした。なぜそうなるのかを、<strong>JOINの働き</strong>で説明します。</p>
+  <div class="viz">
+    <div class="viz-title">2つのCTEのJOINは「かつ（AND）」になる</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🅰️</span><div class="step-text"><strong>top_project_workers：部署 2、4</strong><span>Marketing（Eva Park）、HR（Noah Fox）</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🅱️</span><div class="step-text"><strong>high_salary_departments：部署 1、2、3</strong><span>Engineering 355,000／Marketing 245,000／Sales 263,000</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🤝</span><div class="step-text"><strong>department_id でJOIN → 両方に出る部署 2 だけ残る</strong><span>HR（4）は給与合計143,000で落ち、Engineering（1）とSales（3）は最長時間の社員がいないので落ちる</span></div></div>
+    </div>
+    <div class="viz-cap">講師の例：「最長時間の社員がいる部署でも、高給与の部署のリストになければ、JOINで除外される」</div>
+  </div>
+  <p>最後の<code>GROUP BY d.department_name, hsd.total_salary</code>は、同じ部署に<strong>最長時間の社員が複数</strong>いたときに、部署が何行も重複して出てしまうのを防ぐ役目です。この例ではMarketingに該当者が1人（Eva Park）だけですが、一般的な安全策になります。</p>
+  <div class="teal-box">📌 <strong>講師のまとめ：</strong>これを1つの巨大なクエリで書いたら「とても複雑になる」ところです。CTEに分けたから、<strong>1つ1つは短くて単純</strong>なクエリになりました。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>条件が2つあるときは、条件ごとに「合格リスト」をCTEで作ります。2つのリストを<code>JOIN</code>すると、<strong>両方のリストに載っている部署だけ</strong>が残ります。最後に部署名を<code>departments</code>から付け足して完成です。</p></div>
+  <div class="practice-card" id="p-c2-u4">
+    <div class="ptitle">💻 ミニ練習：2つのCTEを結びつける</div>
+    <p class="ptask">上の2つのCTEを書き、メインのクエリで<strong>部署名と給与合計</strong>を求めて、Marketing 245000の1行になることを確かめてください（<code>departments</code>へのJOINも忘れずに）。</p>
+    <textarea class="code-editor" id="p-c2-u4-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u4', ["WITH", "top_project_workers", "high_salary_departments", "JOIN", "departments"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u4-result"></div>
+    <div class="answer-reveal" id="p-c2-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> top_project_workers <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> ep.employee_id, e.department_id</span>
+<span class="cl">    <span class="kw">FROM</span> employee_projects ep</span>
+<span class="cl">    <span class="kw">JOIN</span> employees e <span class="kw">ON</span> ep.employee_id = e.employee_id</span>
+<span class="cl">    <span class="kw">WHERE</span> ep.hours_worked = (<span class="kw">SELECT</span> <span class="kw">MAX</span>(hours_worked) <span class="kw">FROM</span> employee_projects)</span>
+<span class="cl">),</span>
+<span class="cl">high_salary_departments <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">AS</span> total_salary</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">    <span class="kw">HAVING</span> <span class="kw">SUM</span>(salary) &gt; <span class="nm">200000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> d.department_name, hsd.total_salary</span>
+<span class="cl"><span class="kw">FROM</span> high_salary_departments hsd</span>
+<span class="cl"><span class="kw">JOIN</span> top_project_workers tpw <span class="kw">ON</span> hsd.department_id = tpw.department_id</span>
+<span class="cl"><span class="kw">JOIN</span> departments d <span class="kw">ON</span> d.department_id = hsd.department_id</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> d.department_name, hsd.total_salary;</span></pre>
+      <p class="answer-note">結果はMarketing | 245000の1行。もし条件(1)だけなら部署2と4（MarketingとHR）、条件(2)だけなら部署1・2・3が残ります。両方を満たすのはMarketingだけです。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>CTEを増やす・つなげる</h2><div class="unit-sub">3つ以上のCTE、前のCTEを使うCTE</div></div>
+  </div>
+  <p>講師は最後に「3つのCTEにもできる」と述べました。CTEの数に上限はなく、<strong>あとのCTEは、前に定義したCTEを参照できます</strong>。2種類の発展を見ましょう。</p>
+  <p class="code-label">▶ ① 「最長時間」を3つ目のCTE（max_hours）に切り出す</p>
+  <p>講師は「最長時間を求めるサブクエリを、<code>max_hours</code>のような別のCTEにすることもできる」と説明しました。<code>top_project_workers</code>が<code>max_hours</code>をJOINして使う形です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> max_hours <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">MAX</span>(hours_worked) <span class="kw">AS</span> mh <span class="kw">FROM</span> employee_projects</span>
+<span class="cl">),</span>
+<span class="cl">top_project_workers <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> ep.employee_id, e.department_id</span>
+<span class="cl">    <span class="kw">FROM</span> employee_projects ep</span>
+<span class="cl">    <span class="kw">JOIN</span> employees e <span class="kw">ON</span> ep.employee_id = e.employee_id</span>
+<span class="cl">    <span class="kw">JOIN</span> max_hours m <span class="kw">ON</span> ep.hours_worked = m.mh</span>
+<span class="cl">),</span>
+<span class="cl">high_salary_departments <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">AS</span> total_salary</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">    <span class="kw">HAVING</span> <span class="kw">SUM</span>(salary) &gt; <span class="nm">200000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> d.department_name, hsd.total_salary</span>
+<span class="cl"><span class="kw">FROM</span> high_salary_departments hsd</span>
+<span class="cl"><span class="kw">JOIN</span> top_project_workers tpw <span class="kw">ON</span> hsd.department_id = tpw.department_id</span>
+<span class="cl"><span class="kw">JOIN</span> departments d <span class="kw">ON</span> d.department_id = hsd.department_id</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> d.department_name, hsd.total_salary;</span>
+</pre><div class="output-reveal">department_name | total_salary
+----------------+-------------
+Marketing       |       245000
+(1 row)</div>  <p>結果は同じです。<code>max_hours</code>は1行1列の「小さなCTE」なので、メモリの心配もありません。カンマはCTEが3つなので<strong>2か所</strong>です。</p>
+  <p class="code-label">▶ ② 前のCTEの結果を使うCTE（CTEの連鎖）</p>
+  <p>「部署の給与合計が、<strong>全部署の合計の平均</strong>より大きい部署」を出します。1つ目のCTEで部署ごとの合計を出し、2つ目のCTEが<strong>1つ目のCTEを集計</strong>します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> dept_salary <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">AS</span> total_salary</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">),</span>
+<span class="cl">avg_dept <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(total_salary) <span class="kw">AS</span> a      <span class="cm">-- ← 前のCTE dept_salary を使っている</span></span>
+<span class="cl">    <span class="kw">FROM</span> dept_salary</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> d.department_name, ds.total_salary</span>
+<span class="cl"><span class="kw">FROM</span> dept_salary ds</span>
+<span class="cl"><span class="kw">JOIN</span> departments d <span class="kw">ON</span> d.department_id = ds.department_id</span>
+<span class="cl"><span class="kw">CROSS</span> <span class="kw">JOIN</span> avg_dept</span>
+<span class="cl"><span class="kw">WHERE</span> ds.total_salary &gt; avg_dept.a</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> ds.total_salary <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">department_name | total_salary
+----------------+-------------
+Engineering     |       355000
+Sales           |       263000
+Marketing       |       245000
+(3 rows)</div>  <p>5部署の合計は355,000／245,000／263,000／143,000／150,000で、その平均は231,200です。これを超えるのがEngineering、Sales、Marketingの3部署です。<strong>集計の集計</strong>（「合計の平均」）は、CTEがないとサブクエリの入れ子になる典型例です。</p>
+  <div class="warn-box">⚠️ <strong>参照できるのは「前に書いたCTE」だけ</strong>です（上から下へ）。<code>avg_dept</code>の中で<code>dept_salary</code>を使えるのは、<code>dept_salary</code>が先に定義されているからです。順番を逆にすると、PostgreSQLは「その名前の表が見つからない」というエラーを返します。</div>
+  <div class="teal-box">📌 <strong>設計のヒント：</strong>(1) まず問題を条件・集計ごとに分ける　(2) 部品を1つずつ単独で実行してテスト　(3) 小さな部品はそのままサブクエリでもよい（講師も、最長時間のサブクエリは小さいのでそのままにしていた）　(4) CTEが多すぎて逆に読みにくくならないよう、ほどほどに。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CTEは何個でも作れて、あとのCTEは前のCTEを部品として使えます。「小さな部品を積み上げて、最後に仕上げる」のがCTEの考え方です。</p></div>
+  <div class="practice-card" id="p-c2-u5">
+    <div class="ptitle">💻 ミニ練習：前のCTEを使うCTE</div>
+    <p class="ptask"><code>dept_salary</code>（部署ごとの給与合計）と、それを使って<strong>最大の合計額</strong>を求める<code>max_total</code>（列名は<code>m</code>）の2つのCTEを作り、メインで<code>dept_salary</code>と<code>max_total</code>を結んで、<strong>合計額が最大の部署のdepartment_idとtotal_salary</strong>を表示してください。</p>
+    <textarea class="code-editor" id="p-c2-u5-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u5', ["WITH", "dept_salary", "max_total", "MAX", "JOIN"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u5-result"></div>
+    <div class="answer-reveal" id="p-c2-u5-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> dept_salary <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">AS</span> total_salary</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">),</span>
+<span class="cl">max_total <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">MAX</span>(total_salary) <span class="kw">AS</span> m</span>
+<span class="cl">    <span class="kw">FROM</span> dept_salary</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> ds.department_id, ds.total_salary</span>
+<span class="cl"><span class="kw">FROM</span> dept_salary ds</span>
+<span class="cl"><span class="kw">JOIN</span> max_total mt <span class="kw">ON</span> ds.total_salary = mt.m;</span></pre>
+      <p class="answer-note">結果は1行（部署1、355000）。max_totalが前のCTE dept_salaryを使っています。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">How many times is the keyword WITH written when you define three CTEs in one statement?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Once, at the start</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Three times, once before each CTE</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Twice, before the second and third CTE</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Zero times, WITH is optional for CTEs</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What separates two CTEs inside one WITH clause?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A semicolon</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The keyword AND</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A comma</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A blank line only</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A student puts a comma after the closing parenthesis of the last CTE, right before the main SELECT. What happens?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The query runs normally because PostgreSQL ignores the extra comma</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the last CTE is skipped</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>PostgreSQL silently removes the last CTE</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A syntax error, since another CTE must follow</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why must the names of CTEs in the same WITH clause be unique?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because a name can be reused only after a semicolon</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SQL would not know which one the query means</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To save memory on the server</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because CTE names must be at least 8 characters</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In the lecture example, why is the condition total salary &gt; 200000 placed inside the second CTE?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>HAVING is not allowed anywhere in the main query of a statement</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It makes the first CTE run faster</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It keeps the salary aggregate in one place</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A CTE is the only place where SUM can be used in PostgreSQL</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In the lecture example, why does the final result contain only Marketing?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Marketing is the only department stored in the employees table</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is the only department in both CTE lists</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Marketing has the largest salary total of all five departments in the data</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>HR was removed by the ORDER BY clause</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">What does the CTE top_project_workers return in the lecture example?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Every employee together with the total of all hours that they worked</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The single department that has the highest total salary of all</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>One row per project with the average hours worked on it</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The employees who worked the maximum hours, with their department</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Which statement about several CTEs is correct?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A later CTE can use an earlier one</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An earlier CTE can use any CTE that is defined further below it</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>You can have at most two CTEs in a single statement</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Each CTE has to be used by every other CTE in the list</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 3, 1, 2, 1, 3, 0];
+var FEEDBACKS=["WITH is written once at the start of the list. The CTEs are then separated by commas.", "A comma goes after the closing parenthesis of every CTE except the last one.", "The last CTE must not be followed by a comma, because the main query comes next.", "Two CTEs with the same name would be ambiguous, so PostgreSQL does not allow it.", "The lecturer keeps the aggregate and its filter together in the CTE so the main query stays simple.", "JOINing two CTEs keeps only departments present in both lists. HR has a top worker but its total is only 143000.", "It selects the employees whose hours_worked equal the overall maximum (160) and adds their department_id.", "CTEs are defined from top to bottom, so a CTE can refer to those written before it. There is no limit to the number of CTEs."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">multiple CTEs</div><div class="term-en">複数のCTE</div><div class="term-def">WITHを1回だけ書き、CTEをカンマで区切って並べる。メインのクエリや後ろのCTEから、どれでも表のように呼べる。</div></div>
+    <div class="term-item"><div class="term-name">comma rule</div><div class="term-en">カンマの規則</div><div class="term-def">CTEの間にカンマ、最後のCTEの後ろにはカンマなし。N個のCTEならカンマはN-1個。</div></div>
+    <div class="term-item"><div class="term-name">unique name</div><div class="term-en">ユニークな名前</div><div class="term-def">同じWITH句の中でCTEの名前は重複できない。重複するとエラー。</div></div>
+    <div class="term-item"><div class="term-name">top_project_workers</div><div class="term-en">最長時間の社員のCTE</div><div class="term-def">講義の例題。全体で最長時間（160）働いた社員と、その所属部署IDを出す。</div></div>
+    <div class="term-item"><div class="term-name">high_salary_departments</div><div class="term-en">高給与部署のCTE</div><div class="term-def">講義の例題。給与合計が200,000を超える部署を、部署ごとのSUMとHAVINGで出す。</div></div>
+    <div class="term-item"><div class="term-name">chained CTE</div><div class="term-en">CTEの連鎖</div><div class="term-def">あとのCTEが、前に定義したCTEを参照する書き方。上から下へだけ参照できる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>CTEが増えたら「まず1つずつ単独で実行して結果を確認」。カンマの数は（CTEの数 − 1）、これで数え間違いを防げます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🧱 SQLレッスン：M8 CTE② 複数のCTE</p>
+  <p style="margin-top:.5rem;"><a href="m8_cte.html">← CTE①</a> · <a href="m8_plus.html">M8+ 教科書の追加内容へ →</a> · <a href="m8_practice_cte.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

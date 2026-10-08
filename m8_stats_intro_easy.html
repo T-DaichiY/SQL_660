@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M8 統計① 相関 corr()</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M8 📊 統計 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M8 · Statistical Operations — Correlation 🍎</div>
+    <h1>🍎 超やさしい版：統計①（相関）</h1>
+  <p>「<strong>2つのものは、いっしょに動く？</strong>」を、<code>corr()</code>という1つの関数で数にします。</p>
+    <div class="unit-nav"><a href="#u1">相関ってなに？</a><a href="#u2">bikesで試す</a><a href="#u3">注意</a><a href="m8_stats_intro.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>相関ってなに？</h2><div class="unit-sub">いっしょに動くかどうかの数</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>corr(Y, X) は −1 〜 +1 の数を返す。＋は同じ向き、−は逆向き、0に近いと関係なし。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🍦</div>
+    <div class="ru-text"><strong>気温が上がると、アイスの売れ行きも上がる</strong>…これが「正の相関」。<br><strong>雨が増えると、公園で遊ぶ子が減る</strong>…これが「負の相関」。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>r</th><th>こんな感じ</th></tr>
+    <tr><td>＋1に近い</td><td>いっしょに増える（強い）</td></tr>
+    <tr><td>0に近い</td><td>関係なし</td></tr>
+    <tr><td>−1に近い</td><td>片方が増えると片方は減る（強い）</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>corr(Y, X)</code>の<strong>Y＝結果（たとえば通行量）、X＝原因っぽいもの（たとえば気温）</strong>。Yを先に書きます。入れ替えても答えは同じですが、読みやすさのために順番を守りましょう。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. r = −0.9 はどんな関係？<span class="cp-a">A. 強い負の相関。片方が増えると、もう片方はほぼ確実に減る。</span></div><div class="cp-q">Q2. <code>corr(Y, X)</code>のYはどっち？<span class="cp-a">A. 結果の側（Xに左右されると考えるほう）。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>bikes で試す</h2><div class="unit-sub">気温と雨で調べよう</div></div>
+  </div>
+  <p><code>bikes</code>は、ニューヨークの橋を通った自転車の数の表です（210日分）。気温（<code>high_temp</code>）や雨（<code>precip</code>）と、通った数（<code>total</code>）の関係を調べます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">corr</span>(total, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> corr_temp</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">corr_temp
+---------
+     0.74</div>
+  <div class="big-rule">
+    <div class="ru-arrow">☀️</div>
+    <div class="ru-text"><strong>0.74</strong> → 気温が高い日ほど、自転車がたくさん通る（強い正の相関）</div>
+  </div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">corr</span>(total, precip)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> corr_precip</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">corr_precip
+-----------
+      -0.59</div>
+  <div class="big-rule down">
+    <div class="ru-arrow">🌧️</div>
+    <div class="ru-text"><strong>−0.59</strong> → 雨が多い日ほど、自転車は少ない（中くらいの負の相関）</div>
+  </div>
+  <div class="warn-box">⚠️ <code>round(…, 2)</code>の前に<code>::numeric</code>を付けるのを忘れずに。（PostgreSQLのルール。<code>corr</code>の答えは小数のままだと丸められないため）</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>丸めた型は <code>round(corr(Y, X)::numeric, 2)</code>。「割り算の前に、数の種類をそろえる」と覚えましょう。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 気温と通行量の相関は？<span class="cp-a">A. 0.74（強い正の相関）。</span></div><div class="cp-q">Q2. 雨と通行量の相関が−0.59なのはなぜ？<span class="cp-a">A. 雨が増えると通行量が減る、逆向きの関係だから。</span></div><div class="cp-q">Q3. なぜ<code>::numeric</code>を付ける？<span class="cp-a">A. <code>round(x, 2)</code>は小数のままの値(double)には使えないので、先にnumericにする。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>注意と応用</h2><div class="unit-sub">相関＝原因、ではない</div></div>
+  </div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>相関があっても、「原因」とは限らない！</strong><br>アイスが売れる日にプールの事故も増えるけれど、アイスが事故の原因ではありませんよね（本当の原因は「暑さ」）。</div>
+  </div>
+  <p>橋ごとの相関も、1つのSELECTで並べて調べられます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span></span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(brooklyn_bridge,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> brooklyn,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(manhattan_bridge,    high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> manhattan,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(williamsburg_bridge, high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">corr</span>(queensboro_bridge,   high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">brooklyn | manhattan | williamsburg | queensboro
+---------+-----------+--------------+-----------
+    0.74 |      0.72 |         0.76 |       0.73</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>どの橋も0.7前後。<code>GROUP BY</code>と<code>HAVING</code>と組み合わせて、「グループごとの相関」も出せます。でも「相関＝原因」ではないので、読みすぎないこと。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 「相関が高い＝原因」と言える？<span class="cp-a">A. 言えない。いっしょに動くだけで、原因かどうかは別の話。</span></div><div class="cp-q">Q2. グループごとの相関で、条件を付けるのは<code>WHERE</code>と<code>HAVING</code>どっち？<span class="cp-a">A. <code>HAVING</code>（グループにした後の値で絞るから）。</span></div></div>
+</div>
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m8_stats_intro.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• <code>corr(Y, X)</code>：−1〜+1</p><p style="margin:.4rem 0">• ＋は同じ向き、−は逆向き、0は関係なし</p><p style="margin:.4rem 0">• 丸めるなら<code>round(…::numeric, 2)</code></p><p style="margin:.4rem 0">• 相関≠原因</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">散布図のイラストや英語MCQクイズは <a href="m8_stats_intro.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：M8 統計① 相関 corr() — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m8_stats_intro.html">← 本編</a> · <a href="m8_regression.html">回帰へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

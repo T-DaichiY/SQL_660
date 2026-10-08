@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 統計②　回帰 regr_*()</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🔎 準備・探索 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main active" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M8 · Statistics in SQL — Regression (Lecture video 2 · Practical SQL Ch.11)</div>
+  <h1>📈 統計②：回帰 regr_slope / regr_intercept / regr_r2</h1>
+  <p>相関が「関係の強さ」なら、<strong>回帰</strong>は「関係を表す直線」です。<code>y = mx + b</code>の<strong>傾き・切片・r²</strong>をSQLで取り出し、気温から自転車の通行量を予測します。講義動画②と教科書『Practical SQL 第2版』11章に対応します。</p>
+  <p style="font-size:.9rem">🚲 使うデータは前ページと同じ<code>bikes</code>（NYC East River橋の自転車通行量、講義のCSV：4月の30日分が7回繰り返され、210行）です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 回帰とは</a><a href="#unit2">② 傾きと切片</a><a href="#unit3">③ r²と予測</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>回帰とは？ 直線で関係を表す</h2><div class="unit-sub">y = mx + b と、傾き・切片・r²</div></div>
+  </div>
+  <p>前のページの<code>corr()</code>（相関係数）は、2つの変数が「どれくらい一緒に動くか」を<strong>-1〜1の1つの数字</strong>で教えてくれました。でも、それだけでは「気温が1度上がると、通行量は何人増えるのか？」「気温が80度のとき通行量はいくつ？」には答えられません。そこで登場するのが<strong>線形回帰（linear regression）</strong>です。</p>
+  <p><strong>線形回帰</strong>とは、従属変数<code>y</code>（説明される側。ここでは通行量）と、1つ以上の独立変数<code>x</code>（説明する側。ここでは気温）の関係を、<strong>1本の直線</strong>で表すモデルです。データの真ん中を通る直線を引いて、関係を数式にします。もちろんデータは直線の周りに散らばるので完璧ではありませんが、関係を<strong>より具体的に</strong>説明できます。</p>
+  <div class="compare-table-wrap"><table class="compare-table">
+    <tr><th></th><th>相関 <code>corr()</code></th><th>回帰 <code>regr_*()</code></th></tr>
+    <tr><td>答えること</td><td>関係の<strong>強さと向き</strong></td><td>関係を表す<strong>直線の式</strong></td></tr>
+    <tr><td>出てくる数字</td><td>r（-1〜1）の1つ</td><td>傾き・切片・r²の3つ</td></tr>
+    <tr><td>できること</td><td>「強い／弱い」と言える</td><td>「xがこの値のときyはいくつ」と<strong>予測</strong>できる</td></tr>
+  </table></div>
+  <p>直線の式は、中学で習う <code>y = mx + b</code> そのものです。統計の授業では <code>y = b₀ + b₁x + ε</code> のように書き、最後の<code>ε</code>（誤差項）が「直線からのズレ」を表します。SQLで取り出す部品は次の3つです。</p>
+  <div class="viz">
+    <div class="viz-title">直線 y = m·x + b の部品とSQL関数</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">📐</span><div class="step-text"><strong>m ＝ 傾き（slope）</strong><span><code>regr_slope(Y, X)</code>：xが1増えるとyがいくつ増えるか</span></div></div>
+      <div class="flow-arrow-v">＋</div>
+      <div class="flow-step"><span class="step-icon">📍</span><div class="step-text"><strong>b ＝ 切片（intercept）</strong><span><code>regr_intercept(Y, X)</code>：x＝0のときのyの値</span></div></div>
+      <div class="flow-arrow-v">＋</div>
+      <div class="flow-step"><span class="step-icon">🎯</span><div class="step-text"><strong>r² ＝ 決定係数</strong><span><code>regr_r2(Y, X)</code>：直線がデータのばらつきをどれだけ説明できるか（0〜1）</span></div></div>
+    </div>
+    <div class="viz-cap">この3つがそろえば、直線の式と、その直線の「信頼度」が分かります。</div>
+  </div>
+  <p>講義では「幸福度は収入の関数」というグラフが例に出ました。直線は <code>y = 0.2 + 0.71x</code> で、傾きの<strong>0.71が正</strong>なので、収入が増えると幸福度も増える傾向があります。ただし傾きが1未満なので「収入が1増えても幸福度は1までは増えない」。しかも点は直線の上下にかなりばらついていて、<strong>外れ値</strong>も目立ちます。つまり「傾向はあるが、相関は中くらい以下」だというわけです。<strong>線を引けること</strong>と、<strong>その線がデータによく合っていること</strong>は別の話で、だから傾きとは別にr²も見る必要があります。</p>
+  <div class="teal-box">📌 この授業の回帰は<strong>直線だけ</strong>を扱います（<strong>単回帰</strong>）。曲線など別の形の線が合うデータもありますが、それは統計の授業の範囲です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>相関は「仲がいいかどうか」、回帰は「仲のよさを式にしたもの」です。式（直線）ができれば、気温を入れるだけで通行量を<strong>予想</strong>できます。部品は傾き・切片・r²の3つです。</p></div>
+  <div class="practice-card" id="p-rg-u1">
+    <div class="ptitle">💻 ミニ練習：部品の名前と関数をつなぐ</div>
+    <p class="ptask">次の3つに合うPostgreSQL関数名を、コメントで書いてください：①傾き、②切片、③決定係数r²。答え合わせは関数名がそろっているかを見ます。</p>
+    <textarea class="code-editor" id="p-rg-u1-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rg-u1', ['regr_slope', 'regr_intercept', 'regr_r2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rg-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rg-u1-result"></div>
+    <div class="answer-reveal" id="p-rg-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="cm">-- ① 傾き　　 regr_slope(Y, X)</span></span>
+<span class="cl"><span class="cm">-- ② 切片　　 regr_intercept(Y, X)</span></span>
+<span class="cl"><span class="cm">-- ③ 決定係数 regr_r2(Y, X)</span></span></pre>
+      <p class="answer-note">3つとも名前が<code>regr_</code>で始まり、引数は<code>(Y, X)</code>の2つです（Yが先）。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>傾きと切片を取り出す</h2><div class="unit-sub">regr_slope(Y, X) と regr_intercept(Y, X)</div></div>
+  </div>
+  <p>ここからは、前のページと同じ<code>bikes</code>テーブル（NYCのEast River橋を渡った自転車の数。210行）を使います。<code>total</code>が1日の総通行量、<code>high_temp</code>が最高気温（華氏）です。相関が高かった<code>high_temp</code>を使い、<code>total</code>を<code>high_temp</code>で説明する直線を作りましょう。</p>
+  <p>最初に最重要ルールです。<strong>引数の順番は <code>(Y, X)</code>、つまり「説明される側（結果）が先、説明する側（原因）が後」</strong>です。</p>
+  <div class="warn-box">⚠️ <strong>順番を逆にしても、エラーは出ません。</strong>ただし答えがまったく別の数字になります。たとえば<code>regr_slope(high_temp, total)</code>と書くと「通行量が1人増えると気温が何度上がるか」という意味になり、結果は<strong>0.0015</strong>といった意味のない数字になります。<code>corr()</code>と違って、回帰は引数の順番で答えが変わる、と覚えましょう。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> regr_slope(total, high_temp) <span class="kw">AS</span> slope,</span>
+<span class="cl">       regr_intercept(total, high_temp) <span class="kw">AS</span> intercept</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">slope             | intercept
+------------------+-------------------
+370.1804037848244 | -7891.028861284664
+(1 row)</div>
+  <p>小数点以下が長すぎて読みにくいので、<code>round(値, 桁数)</code>で丸めます。講義の注意点は<strong>「PostgreSQLでは、roundの前に<code>::numeric</code>でキャストする」</strong>ことです。<code>regr_slope</code>などの結果は<code>double precision</code>（浮動小数点）で、PostgreSQLの<code>round(値, 桁数)</code>は<code>numeric</code>型にしか2引数で使えないからです。<code>::numeric</code>を付け忘れるとエラーになります。<code>round</code>は大文字でも小文字でも構いません（講義では小文字で統一）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(regr_slope(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> slope,</span>
+<span class="cl">       round(regr_intercept(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> intercept</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">slope  | intercept
+-------+----------
+370.18 | -7891.03
+(1 row)</div>
+  <p>これで直線の式が決まりました。<code>y = 370.18·x − 7891.03</code>、つまり<strong>通行量 ≒ 370.18 × 最高気温 − 7891.03</strong>です。読み方は次のとおりです。</p>
+  <ul>
+    <li><strong>傾き 370.18</strong>：最高気温が<strong>1度上がるごとに、1日の総通行量が約370人増える</strong>。正の傾きなので、気温と通行量は「同じ向きに動く」（前ページの<code>corr = 0.74</code>の正の相関と一致）。</li>
+    <li><strong>切片 −7891.03</strong>：最高気温が<strong>0度</strong>のときの予測値。通行量がマイナスになることはありえないので、切片は「直線を延ばしたときの数学上の値」と割り切ります。この教材のデータは最低でも30度台の日しかなく、0度の予測は<strong>データの範囲の外</strong>です。講義でも「Excelでグラフにすると、直線が下に大きくずれているのが見える」と説明されました。</li>
+  </ul>
+  <div class="teal-box">📌 <strong>データの注意：</strong>講義のCSVは4月1〜30日の30日分が7回繰り返されている（行数210行のまま使う）。そのため日付は30種類だけで、同じ日付の行が7行ずつあります。傾きやr²の値は、どの繰り返し回数でも変わりません。</div>
+  <div class="teal-box">📌 <strong>このテーブルの注意：</strong><code>precip</code>（降水量）は元のデータに <code>T</code>（trace＝ごく微量）や <code>0.47 (S)</code>（雪）のような文字が混ざっていたため、<code>T</code>→0、<code>0.47 (S)</code>→0.47に直して数値の列にしてあります（M7のデータ整形と同じ発想です）。</div>
+  <p>降水量でも同じ形で書けます。<code>precip</code>は「降水量(インチ)」なので、傾きは<strong>雨が1インチ増えたときの通行量の変化</strong>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(regr_slope(total, precip)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> slope,</span>
+<span class="cl">       round(regr_intercept(total, precip)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> intercept</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">slope     | intercept
+----------+----------
+-32225.98 | 16220.99
+(1 row)</div>
+  <p>傾きが<strong>負</strong>（−32225.98）なのは、雨が降るほど通行量が減るから（前ページの<code>corr = −0.59</code>の「中程度の負の相関」と同じ向き）。切片16220.99は「降水量0のときの直線上の通行量」です。なお、このデータの降水量は最大でも0.47インチで、1インチ降る日は1日もありません。「1インチ増えると約32,000人減る」を文字どおりに受け取らず、<strong>傾きは「向きと大きさの目安」</strong>として読みましょう（0.1インチなら約3,200人減）。</p>
+  <div class="warn-box">⚠️ <strong>PostgreSQLとこの演習アリーナの違い：</strong>💡 PostgreSQLでは、<code>round(regr_slope(...), 2)</code>を<code>::numeric</code>なしで書くとエラーになります。演習アリーナのSQLiteでは<code>::numeric</code>なしでも動きますが、<strong>課題や本番のPostgreSQLに備えて、必ず<code>::numeric</code>を付ける習慣</strong>にしましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>regr_slope(Y, X)</code>と<code>regr_intercept(Y, X)</code>は「直線の傾き」と「直線がy軸を切る高さ」を返します。<strong>Yが先、Xが後</strong>。長い小数は<code>round(…::numeric, 2)</code>で整えます。</p></div>
+  <div class="practice-card" id="p-rg-u2">
+    <div class="ptitle">💻 ミニ練習：気温から通行量への傾きと切片</div>
+    <p class="ptask"><code>bikes</code>で、<code>total</code>を<code>high_temp</code>で説明する回帰の<strong>傾き</strong>と<strong>切片</strong>を、それぞれ小数第2位に丸めて、1回のSELECTで出力してください。Yが先、<code>::numeric</code>を忘れずに。</p>
+    <textarea class="code-editor" id="p-rg-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rg-u2', ['SELECT', 'regr_slope', 'regr_intercept', 'round', 'numeric'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rg-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rg-u2-result"></div>
+    <div class="answer-reveal" id="p-rg-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> round(regr_slope(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> slope,</span>
+<span class="cl">       round(regr_intercept(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> intercept</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
+      <p class="answer-note">結果は<code>370.18 | -7891.03</code>です。引数は<code>(total, high_temp)</code>、つまりY（結果）が先です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>r²と予測、変数の比較</h2><div class="unit-sub">regr_r2(Y, X) を読み、直線から予測する</div></div>
+  </div>
+  <p>3つ目の部品が<strong>決定係数 r²（r-squared）</strong>、関数は<code>regr_r2(Y, X)</code>です。値は<strong>0〜1</strong>で、「<strong>Yのばらつきのうち、Xで説明できる割合</strong>」を表します。0に近ければ直線はほとんど役に立たず、1に近ければ点が直線の上にほぼ乗っています。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(regr_slope(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> slope,</span>
+<span class="cl">       round(regr_intercept(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> intercept,</span>
+<span class="cl">       round(regr_r2(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> r_squared</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">slope  | intercept | r_squared
+-------+-----------+----------
+370.18 | -7891.03  |      0.55
+(1 row)</div>
+  <p><code>r_squared = 0.55</code>は、<strong>総通行量の変動のおよそ55%が、最高気温で説明できる</strong>という意味です。講義では「半分を少し超える、かなり高い数字」と評価しています。残りの約45%は、天気以外（曜日、イベント、風、季節など）が関わっているということです。</p>
+  <div class="teal-box">📌 <strong>相関係数との関係：</strong>単回帰では <strong>r² ＝ r × r</strong> です。前ページで求めた<code>corr(total, high_temp) = 0.74</code>を2乗すると<code>0.74 × 0.74 ≒ 0.55</code>。実際に<code>regr_r2</code>は0.55を返します（0.5525…）。つまり「相関係数の2乗」が「説明できる割合」です。</div>
+  <h3>直線に気温を代入して「予測」する</h3>
+  <p>回帰の最大の使い道は予測です。関数の戻り値は普通の数値なので、<code>傾き × x ＋ 切片</code>をSELECT内で計算できます。最高気温が<strong>70度</strong>の日の予想通行量は、次のとおりです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round((regr_slope(total, high_temp) * <span class="nm">70</span> + regr_intercept(total, high_temp))::numeric, <span class="nm">0</span>) <span class="kw">AS</span> predicted_70</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">predicted_70
+------------
+       18022
+(1 row)</div>
+  <p>計算は <code>370.18 × 70 − 7891.03 ≒ 18022</code> です。<strong>かっこ全体</strong>に<code>::numeric</code>を付けている点に注目してください（式全体をnumericにしてからroundします）。80度なら21723、50度なら10618です。</p>
+  <p>ただし、これは<strong>平均的な予想</strong>であり、実際の日の通行量は直線の上下にばらつきます（r²が1でないぶん）。予測は<strong>データの範囲（このデータでは約40〜81度）の内側</strong>で使いましょう。</p>
+  <h3>どの説明変数がよく効くか（r²の比較）</h3>
+  <p>講義の最後のポイントです。r²は「どの変数がYをよく説明するか」を比べる物差しにもなります。気温と降水量を比べてみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="st">'high_temp'</span> <span class="kw">AS</span> x, round(regr_r2(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> r_squared <span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">UNION ALL</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="st">'low_temp'</span>, round(regr_r2(total, low_temp)::numeric, <span class="nm">2</span>) <span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">UNION ALL</span></span>
+<span class="cl"><span class="kw">SELECT</span> <span class="st">'precip'</span>, round(regr_r2(total, precip)::numeric, <span class="nm">2</span>) <span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">x         | r_squared
+----------+----------
+high_temp |      0.55
+low_temp  |      0.24
+precip    |      0.35
+(3 rows)</div>
+  <p>最高気温(0.55)が最強で、降水量(0.35)、最低気温(0.24)の順です。講義では「降水量でも計算すれば、80〜90%くらい説明できるかもしれない」と予想していましたが、実際に計算すると<strong>降水量のr²は0.35</strong>で、気温より低い結果でした。<strong>予想ではなく、SQLで計算して確かめる</strong>ことが大切、という良い例です。</p>
+  <div class="warn-box">⚠️ <strong>r²が高い ≠ 原因である：</strong>r²は「同じ方向にそろって動く割合」を示すだけで、「気温が通行量を<strong>引き起こす</strong>」と証明するものではありません（相関は因果ではない）。また、直線以外の形（曲線）の関係は、r²が低く出ることもあります。さらに、同じ変数でも暑すぎる日は通行量が頭打ちになるため、気温が高い日だけで回帰を作ると、r²がぐっと下がります（演習で確かめましょう）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>regr_r2</code>は「この直線は、どれくらい当たるか」の点数（0〜1）です。0.55なら55点くらい、つまり「半分ちょっと当たる」。点数が高い変数ほど、予想に使いやすい説明役です。</p></div>
+  <div class="practice-card" id="p-rg-u3">
+    <div class="ptitle">💻 ミニ練習：降水量のr²と、気温70度の予測</div>
+    <p class="ptask"><code>bikes</code>から、<code>total</code>を<code>precip</code>で説明する回帰の<strong>r²</strong>を小数第2位で出力してください（0.35になります）。</p>
+    <textarea class="code-editor" id="p-rg-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-rg-u3', ['SELECT', 'regr_r2', 'round', 'numeric'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-rg-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-rg-u3-result"></div>
+    <div class="answer-reveal" id="p-rg-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> round(regr_r2(total, precip)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> r_squared</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
+      <p class="answer-note">結果は<code>0.35</code>です。気温の0.55より低いので、降水量は気温ほど通行量を説明できていません。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does regr_slope(total, high_temp) = 370.18 mean for the bikes data?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Crossings rise by about 370 per extra degree</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Temperature explains 370.18 percent of the variation in total crossings</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The average high temperature across all days in the data set is 370.18 degrees</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Total crossings are always exactly 370 on a day when the temperature is zero</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In regr_slope(Y, X), which variable comes first?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Whichever column holds the larger numbers, so that the division comes out positive</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The explanatory column (X), because SQL always lists causes before effects</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The column being explained (Y)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither; the order never changes the answer, just as in corr()</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why is ::numeric written before round(..., 2) in PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>round(value, digits) needs numeric; regr_* returns double precision</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It converts the result to text</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It makes the regression run faster on large tables</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It adds two decimal places automatically to every number in the result set</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">regr_intercept(total, high_temp) = -7891.03. What is the most sensible reading?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The data contains many days with negative crossings, which should be deleted</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Crossings drop by 7891 on every cold day of the year</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The line's height at 0 degrees, far outside the observed range</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The model is clearly wrong, so regression cannot be used on this table</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">regr_r2(total, high_temp) is 0.55. What does this say?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>55 percent of days are warmer than the average day</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The slope of the line equals 0.55 crossings per degree</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Temperature causes exactly 55 percent of all bike trips on the bridges</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 55 percent of the variation in crossings is explained</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">corr(total, high_temp) is 0.74. What should regr_r2 for the same pair be (single linear regression)?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About 0.74, because the two are always identical</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 0.86, the square root of 0.74, because r-squared undoes the correlation</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 0.55, since r-squared is r times r</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 1.48, which is the correlation doubled to cover both variables</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which expression predicts total crossings when high_temp is 80?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>regr_r2(total, high_temp) * 80, because r-squared scales the temperature</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>regr_slope(total, high_temp) * 80 + regr_intercept(total, high_temp)</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>regr_intercept(total, high_temp) / 80 + corr(total, high_temp)</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>corr(total, high_temp) * 80</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">regr_r2 gives 0.55 for temperature and 0.35 for precipitation. What follows?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Rain causes 35 percent of all crossings to disappear</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Precipitation has a bigger slope than temperature</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Temperature explains more of the variation in crossings</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Precipitation is completely unrelated to crossings, so it should be ignored</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 0, 2, 3, 2, 1, 2];
+var FEEDBACKS=["The slope is the change in Y (total) per one-unit increase in X (high_temp): about +370 crossings per degree.", "The dependent variable Y comes first and the independent variable X second. Swapping them still runs but answers a different question.", "PostgreSQL's two-argument round works on numeric, while regr_* functions return double precision, so you cast first.", "The intercept is the line's height at x = 0. Zero degrees is outside the observed range, so it is just a mathematical anchor, not a real prediction.", "r-squared is the share of the variation in Y explained by X; the rest comes from other factors.", "For one X variable, r-squared equals the square of the correlation coefficient: 0.74 squared is about 0.55.", "Use y = slope * x + intercept; for x = 80 this gives about 21,723 crossings.", "A higher r-squared means the single variable explains more of Y. This says nothing about causation or slope size."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">linear regression</div><div class="term-en">線形回帰</div><div class="term-def">変数xとyの関係を1本の直線で表すモデル。予測に使える。</div></div>
+    <div class="term-item"><div class="term-name">regr_slope(Y, X)</div><div class="term-en">回帰直線の傾き</div><div class="term-def">xが1増えたときのyの変化量。引数はYが先、Xが後。</div></div>
+    <div class="term-item"><div class="term-name">regr_intercept(Y, X)</div><div class="term-en">回帰直線の切片</div><div class="term-def">x＝0のときの直線の高さ。データ範囲外のこともあり、数学上の値。</div></div>
+    <div class="term-item"><div class="term-name">regr_r2(Y, X)</div><div class="term-en">決定係数 r²</div><div class="term-def">Yのばらつきのうち、Xで説明できる割合（0〜1）。単回帰では相関係数の2乗。</div></div>
+    <div class="term-item"><div class="term-name">::numeric</div><div class="term-en">numericキャスト</div><div class="term-def">double precisionをnumeric型に変換する。round(値, 桁数)の前に必要。</div></div>
+    <div class="term-item"><div class="term-name">dependent / independent variable</div><div class="term-en">従属変数／独立変数</div><div class="term-def">説明される側(Y)と、説明する側(X)。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>回帰は<strong>(Y, X)の順</strong>、丸めるときは<strong>::numeric</strong>。この2つを書く前に毎回声に出して確認しましょう。傾き＝向きと大きさ、r²＝当たり具合、と覚えると読みやすくなります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📈 SQLレッスン：M8 統計② 回帰 regr_*()</p>
+  <p style="margin-top:.5rem;"><a href="m8_stats_intro.html">← 統計① 相関 corr()</a> · <a href="m8_variance.html">統計③ 分散・標準偏差へ →</a> · <a href="m8_practice_regression.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

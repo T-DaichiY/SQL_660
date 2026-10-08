@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 CTE① WITH句の基本</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M8 🧱 CTE <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M8 · Common Table Expressions — Part 1 (Lecture 4)</div>
+  <h1>🧱 CTE①：WITH句で「下書き」を作る</h1>
+  <p>サブクエリが何重にも入った式は、書くのも読むのも大変です。<strong>CTE（共通テーブル式）</strong>は、途中の答えに名前を付けて文の先頭に取り出し、あとから普通のテーブルのように使える仕組みです。この単元では、CTEとは何か、<code>WITH ... AS</code>の書き方、Bankingの例題、そしてサブクエリとの違いと性能の注意を学びます。</p>
+  <p style="font-size:.9rem">🎥 講義動画4「CTE part 1」 ・ 📖 Practical SQL 第2版 第13章「Advanced Query Techniques」（サブクエリ・CTE）。教科書だけの追加内容は<a href="m8_plus.html" style="color:inherit;text-decoration:underline">M8+</a>にあります。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① CTEとは？</a><a href="#unit2">② 書き方</a><a href="#unit3">③ 例題 loan_totals</a><a href="#unit4">④ サブクエリとの比較</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>CTE（共通テーブル式）とは？</h2><div class="unit-sub">一時的な結果セットに名前を付けて使う</div></div>
+  </div>
+  <p>講義の言葉でいうと、<strong>CTE（Common Table Expression、共通テーブル式）</strong>は「SQL文の中で使う<strong>一時的な結果セット</strong>」です。一時的なテーブル、変数、リストのようなもので、<strong>操作をしている間だけデータを手元に置いておくための入れ物</strong>だと考えてください。</p>
+  <div class="viz">
+    <div class="viz-title">CTEのイメージ</div>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-icon">🧩</span><div class="step-text"><strong>① 部品を作る（WITH ... AS）</strong><span>複雑な問題の「第1段階の答え」に名前を付けて、小さな一時テーブルとして用意する</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🔧</span><div class="step-text"><strong>② 部品を使う（メインのSELECT）</strong><span>名前を呼ぶだけで、普通のテーブルと同じように列を選んだりJOINしたりできる</span></div></div>
+      <div class="flow-arrow-v">↓</div>
+      <div class="flow-step"><span class="step-icon">🧹</span><div class="step-text"><strong>③ 文が終わると消える</strong><span>CTEはそのSQL文の間だけ存在する。テーブルとして保存されるわけではない</span></div></div>
+    </div>
+    <div class="viz-cap">M6のサブクエリでは、こうした部品を<code>FROM (...)</code>や<code>WHERE (...)</code>の中に埋め込みました。CTEは、それを<strong>文の先頭に名前付きで取り出す</strong>書き方です。</div>
+  </div>
+  <p>講師が強調していたCTEの利点は次の4つです。</p>
+  <ul>
+    <li><strong>読みやすさ・保守しやすさ</strong>：直したい部分を見つけて、そこだけ直せばよい。入り組んだサブクエリをたどる必要がない。</li>
+    <li><strong>モジュール化</strong>：大きな問題を小さな部品に分けられる。</li>
+    <li><strong>単体テストがしやすい</strong>：部品ごとに単独で実行して、結果を確かめてから全体を組み立てられる。</li>
+    <li><strong>再利用</strong>：一度定義すれば、同じ文の中で何回でも参照できる。しかもテーブルのように列も値も参照できる。</li>
+  </ul>
+  <div class="teal-box">📌 <strong>講師の強調：</strong>CTEの目的は、速さよりも<strong>「複雑なクエリを書きやすく、読みやすくすること」</strong>です。サブクエリを詰め込んで、順番をあれこれ確認する必要がなくなります。</div>
+  <p>もう1つ、講義で名前だけ紹介された機能に<strong>再帰CTE（recursive CTE）</strong>があります。再帰とは「自分自身を呼び出して、同じ処理を繰り返す」ことで、<strong>社長 → 副社長 → 部長 → …</strong>のような親子関係（階層データ）をたどるときに使います。普通なら何度もJOINが必要な場面を、「次へ、次へ」と順に進める形で書けます。この授業の課題では使いませんが、<code>m8_plus</code>で詳しく扱います。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CTEは「問題を解くための下書きメモ」です。いきなり1つの巨大な式を書かず、<strong>途中の答えに名前を付けてメモしておき</strong>、最後にそのメモを組み合わせます。メモはその問題を解いている間だけ使えます。</p></div>
+  <div class="practice-card" id="p-c1-u1">
+    <div class="ptitle">💻 ミニ練習：CTEを1つ作ってみる</div>
+    <p class="ptask"><code>branch</code>テーブルから、<code>assets</code>が4,000,000より大きい支店を取り出す<code>big_branches</code>というCTEを作り、メインのSELECTでそのCTEの全列を表示してください。</p>
+    <textarea class="code-editor" id="p-c1-u1-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c1-u1', ["WITH", "big_branches", "AS", "SELECT"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c1-u1-result"></div>
+    <div class="answer-reveal" id="p-c1-u1-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> big_branches <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> branch_name, branch_city, assets</span>
+<span class="cl">    <span class="kw">FROM</span> branch</span>
+<span class="cl">    <span class="kw">WHERE</span> assets &gt; <span class="nm">4000000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> * <span class="kw">FROM</span> big_branches;</span></pre>
+      <p class="answer-note">結果は3行（Brooklyn Bank、Midtown Bank、Downtown Bank）。CTEの中身は普通のSELECT文で、メインのSELECTからは普通のテーブルのように呼び出せます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>CTEの書き方：WITH ... AS</h2><div class="unit-sub">かっこの中で一時テーブルを作り、外で使う</div></div>
+  </div>
+  <p>CTEは<strong><code>WITH</code>句</strong>で作ります。基本の形は次のとおりです（講義のスライドと同じ構造です）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> cte_name <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> col1, col2        <span class="cm">-- CTEの中身：普通のSELECT</span></span>
+<span class="cl">    <span class="kw">FROM</span> some_table</span>
+<span class="cl">    <span class="kw">WHERE</span> ...</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> *                     <span class="cm">-- メインのクエリ：CTEを表のように使う</span></span>
+<span class="cl"><span class="kw">FROM</span> cte_name;</span>
+</pre>  <p>読み方の順番は、<strong>(1) <code>WITH</code>で始める → (2) 名前を付ける → (3) <code>AS</code> → (4) かっこの中に、その一時テーブルを作るクエリを書く → (5) かっこの外で使う</strong>です。<code>AS</code>はM4のエイリアス（別名）で見慣れた形で、「この結果セットを〇〇と呼ぶ」という意味です。</p>
+  <p>覚えておきたいルールを整理します。</p>
+  <table class="compare-table">
+    <tr><th>ルール</th><th>内容</th></tr>
+    <tr><td>名前は自由</td><td><code>cte_name</code>は<code>employee_salaries</code>でも<code>loan_totals</code>でもよい。<strong>中身が分かる名前</strong>にするのが良い。</td></tr>
+    <tr><td>テーブルと同じに使える</td><td>列を選ぶ、<code>WHERE</code>で絞る、他のテーブルと<code>JOIN</code>する、<code>GROUP BY</code>する、エイリアスを付ける、など全部できる。</td></tr>
+    <tr><td>何回でも参照できる</td><td>同じ文の中なら、メインのクエリで複数回呼んでも、他のCTEから呼んでもよい。</td></tr>
+    <tr><td>中身に集計もJOINも書ける</td><td><code>SUM</code>や<code>GROUP BY</code>を含むSELECTでも、複数テーブルのJOINでもよい。CTEが別のCTEを参照することもできる（次のページ）。</td></tr>
+    <tr><td>その文の間だけ</td><td>セミコロンで文が終わると消える。次の文では使えない（保存されない）。</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>CTEは「テーブルを作る」わけではありません。</strong><code>WITH ... SELECT ...;</code>を実行して、結果を取り出したら、CTEは役目を終えて消えます。あとで同じ名前を使いたければ、その文の先頭にもう一度<code>WITH</code>を書く必要があります。</div>
+  <p>まず、いちばん簡単な例で動きを確かめましょう。Bankingデータベースの<code>loan</code>テーブル（融資）から、金額が15,000以上のものだけをCTEに入れます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> big_loans <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> loan_number, branch_name, amount</span>
+<span class="cl">    <span class="kw">FROM</span> loan</span>
+<span class="cl">    <span class="kw">WHERE</span> amount &gt;= <span class="nm">15000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> loan_number, amount</span>
+<span class="cl"><span class="kw">FROM</span> big_loans</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> amount <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">loan_number | amount
+------------+-------
+L-203       | 22000
+L-201       | 15000
+(2 rows)</div>  <p>この例では<code>big_loans</code>を1回しか使っていないので、CTEにする必要はあまりありません（ただ<code>WHERE</code>を書けば済みます）。CTEの本当の力は、<strong>集計した結果をもう一度絞ったり、他のテーブルとJOINしたりする</strong>ときに出てきます。次の単元で見ましょう。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>WITH 名前 AS ( ... )</code>で「下書きメモ」を作り、そのあとのSELECTで<code>FROM 名前</code>と書けば、普通のテーブルのように使えます。メモはその文が終わると消えます。</p></div>
+  <div class="practice-card" id="p-c1-u2">
+    <div class="ptitle">💻 ミニ練習：CTEからORDER BYで取り出す</div>
+    <p class="ptask"><code>loan</code>テーブルから<code>amount</code>が10,000以上の融資を取り出す<code>mid_loans</code>というCTEを作り、メインのSELECTで<code>loan_number</code>と<code>amount</code>を<code>amount</code>の小さい順に表示してください。</p>
+    <textarea class="code-editor" id="p-c1-u2-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c1-u2', ["WITH", "mid_loans", "AS", "ORDER BY"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c1-u2-result"></div>
+    <div class="answer-reveal" id="p-c1-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> mid_loans <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> loan_number, amount</span>
+<span class="cl">    <span class="kw">FROM</span> loan</span>
+<span class="cl">    <span class="kw">WHERE</span> amount &gt;= <span class="nm">10000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> loan_number, amount</span>
+<span class="cl"><span class="kw">FROM</span> mid_loans</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> amount;</span></pre>
+      <p class="answer-note">結果は2行（L-201の15000、L-203の22000）。ORDER BYはCTEの中ではなく、メインのクエリ側に書いています。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>例題：loan_totals CTE（Banking）</h2><div class="unit-sub">お客さんごとの融資合計 → 20,000ドル超を選ぶ</div></div>
+  </div>
+  <p>講義の例題です。<strong>「すべての支店をあわせた融資の合計額が20,000ドルを超えるお客さんの一覧を出す」</strong>。使うのはBankingデータベースの<code>customer</code>、<code>borrower</code>、<code>loan</code>です（講義のDDLと全く同じではありませんが、似た構造です）。</p>
+  <ul>
+    <li><code>customer</code>：お客さん（<code>customer_id</code>、<code>customer_name</code>など）</li>
+    <li><code>borrower</code>：誰がどの融資を借りているか（<code>customer_id</code>、<code>loan_number</code>）</li>
+    <li><code>loan</code>：融資そのもの（<code>loan_number</code>、<code>branch_name</code>、<code>amount</code>）</li>
+  </ul>
+  <p>課題文を見て、<strong>論理的な第1歩</strong>を探します。「お客さんごとの融資の合計額」が分からないと、20,000ドルを超えたかどうか判断できません。つまり<strong>第1段階＝お客さんごとの合計融資額</strong>で、これを最初のCTEにします。</p>
+  <p class="code-label">▶ ステップ1：CTEだけを単独で動かして確かめる（単体テスト）</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> b.customer_id, <span class="kw">SUM</span>(l.amount) <span class="kw">AS</span> total_loans</span>
+<span class="cl"><span class="kw">FROM</span> borrower b</span>
+<span class="cl"><span class="kw">JOIN</span> loan l <span class="kw">ON</span> b.loan_number = l.loan_number</span>
+<span class="cl"><span class="kw">GROUP</span> <span class="kw">BY</span> b.customer_id;</span>
+</pre><div class="output-reveal">customer_id | total_loans
+------------+------------
+10002       |       24000
+10003       |       15000
+10006       |       22000
+(3 rows)</div>  <p><code>customer_id</code>は<code>borrower</code>から、<code>amount</code>は<code>loan</code>から来るので、<code>loan_number</code>でJOINして、<code>customer_id</code>ごとにGROUP BYで合計しています。融資を借りているのは3人だけです。これが<code>loan_totals</code>というCTEの中身になります。</p>
+  <p class="code-label">▶ ステップ2：CTEにして、メインのクエリで20,000ドル超を選ぶ</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> loan_totals <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> b.customer_id, <span class="kw">SUM</span>(l.amount) <span class="kw">AS</span> total_loans</span>
+<span class="cl">    <span class="kw">FROM</span> borrower b</span>
+<span class="cl">    <span class="kw">JOIN</span> loan l <span class="kw">ON</span> b.loan_number = l.loan_number</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> b.customer_id</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> c.customer_id, c.customer_name, lt.total_loans</span>
+<span class="cl"><span class="kw">FROM</span> loan_totals lt</span>
+<span class="cl"><span class="kw">JOIN</span> customer c <span class="kw">ON</span> lt.customer_id = c.customer_id</span>
+<span class="cl"><span class="kw">WHERE</span> lt.total_loans &gt; <span class="nm">20000</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> lt.total_loans <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer_id | customer_name | total_loans
+------------+---------------+------------
+10002       | Hank Irwin    |       24000
+10006       | Omar Diaz     |       22000
+(2 rows)</div>  <p>メインのクエリが何をしているかを順に見ます。</p>
+  <ul>
+    <li><code>loan_totals</code>に<code>lt</code>という短いエイリアスを付けています（講師も「短くするため」と説明）。</li>
+    <li>課題は「お客さんの<strong>一覧</strong>」なので、名前が必要です。ところが<code>loan_totals</code>には<code>customer_id</code>しかなく、<code>customer_name</code>は<code>customer</code>テーブルにあります。そこで<code>customer_id</code>でJOINします。</li>
+    <li>集計の結果を絞る条件<code>total_loans &gt; 20000</code>は、メイン側の<code>WHERE</code>に書けます。CTEが集計を終わらせているので、<code>HAVING</code>は要りません。</li>
+    <li>最後に金額の大きい順に並べて完成です。</li>
+  </ul>
+  <div class="teal-box">📌 <strong>講師のポイント：</strong>CTEの側は「単一のJOIN＋集計」、メインの側は「単一のJOIN＋WHERE」と、<strong>どちらも単純なクエリ</strong>です。これを1つの文に押し込むと、「リストに入っているか」というようなややこしい書き方が必要になります。分けて書くから簡単になるのです。</div>
+  <div class="warn-box">⚠️ 融資を借りていないお客さん（10001、10004など）は<code>borrower</code>に出てこないので、<code>loan_totals</code>にも載りません。この例題は「20,000超」を探すので問題になりませんが、<strong>「融資のない人も0として載せたい」</strong>場面では<code>LEFT JOIN</code>が必要になります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>① まず「お客さんごとの合計」を<code>loan_totals</code>としてメモ → ② そのメモから「20,000を超えた人」を選び、名前を<code>customer</code>から付け足す。2回に分けるだけで、1つ1つはとても簡単になります。</p></div>
+  <div class="practice-card" id="p-c1-u3">
+    <div class="ptitle">💻 ミニ練習：合計が15,000以下の人を探す</div>
+    <p class="ptask"><code>loan_totals</code>というCTE（上の例と同じ定義）を作り、メインのクエリで<strong>合計が15,000以下</strong>のお客さんの<code>customer_name</code>と<code>total_loans</code>を表示してください。</p>
+    <textarea class="code-editor" id="p-c1-u3-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c1-u3', ["WITH", "loan_totals", "SUM", "JOIN", "15000"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c1-u3-result"></div>
+    <div class="answer-reveal" id="p-c1-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> loan_totals <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> b.customer_id, <span class="kw">SUM</span>(l.amount) <span class="kw">AS</span> total_loans</span>
+<span class="cl">    <span class="kw">FROM</span> borrower b</span>
+<span class="cl">    <span class="kw">JOIN</span> loan l <span class="kw">ON</span> b.loan_number = l.loan_number</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> b.customer_id</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> c.customer_name, lt.total_loans</span>
+<span class="cl"><span class="kw">FROM</span> loan_totals lt</span>
+<span class="cl"><span class="kw">JOIN</span> customer c <span class="kw">ON</span> lt.customer_id = c.customer_id</span>
+<span class="cl"><span class="kw">WHERE</span> lt.total_loans &lt;= <span class="nm">15000</span>;</span></pre>
+      <p class="answer-note">結果は1行（Maria Chen、15000）。CTEの定義は同じで、メイン側の条件だけを変えました。CTEは部品なので、条件の変更がとても簡単です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>CTE と サブクエリ、そして性能の注意</h2><div class="unit-sub">基本はCTE、ただし巨大なCTEには注意</div></div>
+  </div>
+  <p>講師は「<strong>一般的には、性能の問題が出そうな場合を除いて、サブクエリよりCTEを使う</strong>」と言っています。まず、同じ結果になるサブクエリ版（M6の書き方）と比べてみましょう。</p>
+  <p class="code-label">▶ サブクエリ版（FROMの中に集計を埋め込む）</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> c.customer_id, c.customer_name, t.total_loans</span>
+<span class="cl"><span class="kw">FROM</span> customer c</span>
+<span class="cl"><span class="kw">JOIN</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> b.customer_id, <span class="kw">SUM</span>(l.amount) <span class="kw">AS</span> total_loans</span>
+<span class="cl">    <span class="kw">FROM</span> borrower b</span>
+<span class="cl">    <span class="kw">JOIN</span> loan l <span class="kw">ON</span> b.loan_number = l.loan_number</span>
+<span class="cl">    <span class="kw">GROUP</span> <span class="kw">BY</span> b.customer_id</span>
+<span class="cl">) t <span class="kw">ON</span> t.customer_id = c.customer_id</span>
+<span class="cl"><span class="kw">WHERE</span> t.total_loans &gt; <span class="nm">20000</span></span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> t.total_loans <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">customer_id | customer_name | total_loans
+------------+---------------+------------
+10002       | Hank Irwin    |       24000
+10006       | Omar Diaz     |       22000
+(2 rows)</div>  <p>結果はCTE版とまったく同じ（Hank Irwin 24000、Omar Diaz 22000）です。違いは書き方だけです。</p>
+  <table class="compare-table">
+    <tr><th></th><th>サブクエリ</th><th>CTE（WITH）</th></tr>
+    <tr><td>置き場所</td><td>FROM／WHEREの<strong>中</strong>に埋め込む</td><td>文の<strong>先頭</strong>に取り出す</td></tr>
+    <tr><td>名前</td><td>エイリアス（<code>t</code>など）が必要な場合がある</td><td>最初から意味のある名前が付く（<code>loan_totals</code>）</td></tr>
+    <tr><td>読み方</td><td>内側から外側へたどる</td><td>上から下へ、書いた順に読める</td></tr>
+    <tr><td>再利用</td><td>同じ式をもう一度書く必要がある</td><td>名前を呼ぶだけで何回でも使える</td></tr>
+    <tr><td>テスト</td><td>切り出して単独で動かす作業が必要</td><td>かっこの中をそのまま単独で実行できる</td></tr>
+    <tr><td>向いている場面</td><td>短い・1回しか使わない部品</td><td>複雑・複数回使う・手順を分けたいとき</td></tr>
+  </table>
+  <p>では、CTEに弱点はないのでしょうか。講師が挙げた<strong>性能（パフォーマンス）の注意点</strong>があります。</p>
+  <ul>
+    <li>PostgreSQLでは、CTEは<strong>既定でマテリアライズ（materialized）</strong>されます。つまり、CTEを作ると、その結果が<strong>ハードディスクではなく、一時的なメモリ</strong>に実際に作られて保持されます。</li>
+    <li>CTEが<strong>小さい</strong>（1つの値、短いリスト）なら、メモリに置いても負担は軽く、後続の処理がむしろ効率的になることもあります。</li>
+    <li>CTEが<strong>巨大</strong>（テーブルの大部分を丸ごと入れるなど）だと、メモリを大量に使い、かえって遅くなることがあります。CTEの中身は<strong>クエリが終わるまで</strong>メモリに残ります。</li>
+    <li>PostgreSQL 12以降には<strong>インライン化</strong>（<code>NOT MATERIALIZED</code>）という最適化があります。CTEを別のテーブルとして作らず、メインのクエリに埋め込んで実行する仕組みです。講師は「この課題では使わない」と言っているので、「そういうものがある」と知っていれば十分です。</li>
+  </ul>
+  <div class="teal-box">📌 <strong>選び方の目安：</strong>① 読みやすさ・分かりやすさを重視するならCTE。② 部品が巨大でメモリが心配なら、サブクエリやJOINに戻すことも考える。③ 迷ったらCTEで書いて、遅いと分かったときに見直す。</div>
+  <div class="warn-box">⚠️ 💡 PostgreSQLでは上の「メモリに保持」の動きが重要ですが、この演習アリーナのSQLite（実行エンジン）は内部で独自に最適化します。<strong>学習のうえでは、結果が同じになること、書き方の違い</strong>を押さえてください。性能の違いを体感するための環境ではありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>サブクエリは「式の中に埋めた下書き」、CTEは「式の前に置いた下書き」。結果は同じですが、CTEの方が読みやすく、名前も付きます。ただし、大きすぎる下書きはメモリを食うので気をつけましょう。</p></div>
+  <div class="practice-card" id="p-c1-u4">
+    <div class="ptitle">💻 ミニ練習：サブクエリをCTEに書き直す</div>
+    <p class="ptask">次のサブクエリ版を、<code>avg_salary</code>というCTEを使う形に書き直してください：<br><code>SELECT employee_name, salary FROM employees WHERE salary &gt; (SELECT AVG(salary) FROM employees);</code><br>CTEには<code>AVG(salary)</code>を<code>avg_sal</code>という列名で入れ、メインでは<code>employees</code>とCTEをカンマ区切りで結び（CROSS JOIN）ます。</p>
+    <textarea class="code-editor" id="p-c1-u4-input" rows="7">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c1-u4', ["WITH", "avg_salary", "AS", "AVG", "FROM employees"])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c1-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c1-u4-result"></div>
+    <div class="answer-reveal" id="p-c1-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">WITH</span> avg_salary <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> <span class="kw">AVG</span>(salary) <span class="kw">AS</span> avg_sal</span>
+<span class="cl">    <span class="kw">FROM</span> employees</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> e.employee_name, e.salary</span>
+<span class="cl"><span class="kw">FROM</span> employees e, avg_salary a</span>
+<span class="cl"><span class="kw">WHERE</span> e.salary &gt; a.avg_sal</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> e.salary <span class="kw">DESC</span>, e.employee_name;</span></pre>
+      <p class="answer-note">平均給与は57,800で、それを超える9人が出ます。1行1列のCTEは「定数」のように使えて、メインのクエリの<code>WHERE</code>が読みやすくなります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is a CTE (common table expression) in PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A permanent table stored on disk so that other users can query it in later sessions</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A temporary named result set that exists only while one statement runs</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A constraint that automatically checks every value when new rows are inserted</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An index that PostgreSQL builds to speed up searches on a single column</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which keyword starts the definition of a CTE?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>WITH</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>HAVING</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>UNION</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>WINDOW</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which is the correct skeleton for a single CTE?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>CTE name AS (SELECT ...) SELECT * FROM name;</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>WITH name = (SELECT ...) SELECT * FROM name;</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>WITH name AS (SELECT ...) SELECT * FROM name;</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>SELECT * FROM name WITH AS (SELECT ...) name;</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In the loan_totals example, why does the main query JOIN the customer table?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The name column is missing from the CTE</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because every CTE must be joined to a second table before it can be used</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To calculate SUM(amount) for each customer a second time in the main query</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To remove customers whose total is below 20000 from the result</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">According to the lecture, what is the main reason to prefer a CTE over a subquery?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It always runs faster than the equivalent subquery on large tables</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It uses no memory at all while the query is running</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Readability: complex logic becomes small, named pieces</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It lets you skip the GROUP BY clause when you aggregate</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why can a very large CTE hurt performance in PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is first written to the hard disk and then deleted when the query ends</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Its result is held in temporary memory until the query finishes</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>PostgreSQL refuses to run it more than once inside the same query</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It locks the underlying tables so other users cannot read them</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Can the main query reference the same CTE more than once?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>No, a CTE may be used only one time per statement</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Yes, but only after declaring it a second time with another WITH</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only inside a subquery, never in the FROM clause</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Yes, it behaves like a table</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">After the statement ends with a semicolon, what happens to the CTE?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It becomes a view that you can reuse in the next statement automatically</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is saved as a normal table inside the current schema</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It is gone; the next statement must define it again</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It stays in memory until you disconnect from the database</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 2, 0, 2, 1, 3, 2];
+var FEEDBACKS=["A CTE is a temporary result set defined by WITH name AS (...). It is not saved; it disappears when the statement finishes.", "A CTE always begins with WITH, followed by a name and AS ( ... ).", "The pattern is WITH name AS ( query ) followed by the main query that uses the name like a table.", "customer_name lives in customer. loan_totals contributes customer_id, which is the join key.", "The lecturer stresses readability and modularity; performance is only a possible trade-off, and a large CTE can even be slower.", "By default the CTE is materialized: its result is built and kept in memory ahead of time, so a huge one uses a lot of memory.", "Within the same statement a CTE can be referenced as many times as you like, just like a table.", "A CTE lives only inside the single statement that defines it. Use CREATE VIEW or a table if you need something permanent."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">CTE</div><div class="term-en">共通テーブル式（Common Table Expression）</div><div class="term-def">WITH句で作る、そのSQL文の間だけ存在する一時的な結果セット。名前を付けて、テーブルのように参照できる。</div></div>
+    <div class="term-item"><div class="term-name">WITH clause</div><div class="term-en">WITH句</div><div class="term-def">CTEを定義する句。WITH 名前 AS ( クエリ ) の形で書く。</div></div>
+    <div class="term-item"><div class="term-name">modularity</div><div class="term-en">モジュール化</div><div class="term-def">大きな問題を、名前の付いた小さな部品（CTE）に分けて組み立てること。部品ごとにテストできる。</div></div>
+    <div class="term-item"><div class="term-name">materialized</div><div class="term-en">マテリアライズ（実体化）</div><div class="term-def">PostgreSQLの既定では、CTEの結果を先にメモリ上へ作って保持する。巨大なCTEだとメモリ負担になる。</div></div>
+    <div class="term-item"><div class="term-name">inline CTE</div><div class="term-en">インラインCTE</div><div class="term-def">PostgreSQL 12以降の最適化。CTEを別に実体化せず、メインのクエリへ埋め込んで実行する（NOT MATERIALIZED）。</div></div>
+    <div class="term-item"><div class="term-name">recursive CTE</div><div class="term-en">再帰CTE</div><div class="term-def">自分自身を参照して繰り返し処理するCTE。親子関係などの階層データをたどるときに使う。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>「小さい部品を単独で動かして確かめてから、WITHで包む」と、間違いが少なくなります。まずかっこの中のSELECTだけを実行してみましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🧱 SQLレッスン：M8 CTE① WITH句の基本</p>
+  <p style="margin-top:.5rem;"><a href="m8_variance.html">← 分散・標準偏差</a> · <a href="m8_cte_multi.html">CTE②（複数のCTE）へ →</a> · <a href="m8_practice_cte.html">🏋️ この単元の演習へ</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

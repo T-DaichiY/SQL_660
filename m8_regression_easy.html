@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超やさしい版：M8 統計② 回帰 regr_*()</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M7 🔎 準備・探索 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy active" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M8 · Statistics in SQL — Regression 🍎</div>
+    <h1>🍎 超やさしい版：統計②（回帰）</h1>
+    <p>点の真ん中に<strong>1本の線</strong>を引いて、気温から自転車の数を<strong>予想</strong>します。使う部品は<strong>傾き・切片・r²</strong>の3つだけです。</p>
+    <div class="unit-nav"><a href="#u1">回帰ってなに</a><a href="#u2">傾きと切片</a><a href="#u3">r²と予想</a><a href="m8_regression.html" class="easy-toplink">📈 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>回帰ってなに？</h2><div class="unit-sub">点の真ん中に1本の線</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>回帰は「点の真ん中を通る1本の直線」を引くこと。直線の式は <code>y = m·x + b</code>。m＝傾き、b＝切片。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🍎</div>
+    <div class="ru-text">相関は「<strong>仲よしかどうか</strong>」、回帰は「<strong>仲よしぶりを式にしたもの</strong>」。式があれば、気温から自転車の数を<strong>予想</strong>できます。</div>
+  </div>
+  <p class="code-label">▶ SQLで取り出す3つの部品（どれも <code>(Y, X)</code> の順）</p>
+  <table class="compare-table">
+    <tr><th>部品</th><th>意味</th><th>関数</th></tr>
+    <tr><td>傾き m</td><td>xが1増えるとyはいくつ増える？</td><td><code>regr_slope(Y, X)</code></td></tr>
+    <tr><td>切片 b</td><td>xが0のときのyの高さ</td><td><code>regr_intercept(Y, X)</code></td></tr>
+    <tr><td>r²</td><td>直線の当たり具合（0〜1）</td><td><code>regr_r2(Y, X)</code></td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>すべり台を思い浮かべてください。<strong>傾き</strong>は坂のきつさ、<strong>切片</strong>はスタート地点の高さです。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 傾き・切片・r²の関数名は？<span class="cp-a">A. <code>regr_slope</code>、<code>regr_intercept</code>、<code>regr_r2</code>。</span></div><div class="cp-q">Q2. 回帰の引数は何の順？<span class="cp-a">A. <code>(Y, X)</code>。結果（Y）が先、原因（X）が後。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>傾きと切片を出す</h2><div class="unit-sub">regr_slope と regr_intercept</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong><code>regr_slope(total, high_temp)</code>：Yが先、Xが後。丸めるときは <code>::numeric</code> を先に付ける。</strong></p></div>
+  <p class="code-label">▶ 気温（high_temp）から通行量（total）への直線</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(regr_slope(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> slope,</span>
+<span class="cl">       round(regr_intercept(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> intercept</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">slope  | intercept
+-------+----------
+370.18 | -7891.03</div>
+  <div class="big-rule">
+    <div class="ru-arrow">📐</div>
+    <div class="ru-text"><strong>傾き370.18</strong>＝気温が<strong>1度</strong>上がると、自転車が<strong>約370台（人）</strong>増える。<br><strong>切片−7891.03</strong>＝0度の直線の高さ。マイナスは変だけど、データは40度以上なので気にしなくてOK。</div>
+  </div>
+  <div class="warn-box">⚠️ <code>(Y, X)</code>の順を逆にしても<strong>エラーは出ません</strong>。でも答えが別物になります（<code>regr_slope(high_temp, total)</code>は0.0015！）。<code>::numeric</code>がないと、PostgreSQLの<code>round(値, 2)</code>はエラーです。</div>
+  <div class="teal-box">📌 講義のCSVは4月1〜30日の30日分が7回繰り返されている（行数210行のまま使う）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「<strong>Yが先</strong>」と「<strong>roundの前に::numeric</strong>」。この2つだけ守れば大丈夫です。（<code>precip</code>の<code>T</code>や<code>(S)</code>は、あらかじめ数字に直してあります。）</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. regr_slope(total, high_temp) の total は X？ Y？<span class="cp-a">A. Y（結果）。先に書く。</span></div><div class="cp-q">Q2. 傾き370.18は何を表す？<span class="cp-a">A. 最高気温が1度上がると、総通行量が約370増えること。</span></div><div class="cp-q">Q3. ::numeric はなぜ必要？<span class="cp-a">A. regr_*の結果は浮動小数点で、PostgreSQLのround(値, 桁数)はnumericにしか使えないから。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>r²と予想</h2><div class="unit-sub">当たり具合の点数</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>r²は「直線がどれくらい当たるか」の点数（0〜1）。0.55なら、通行量のばらつきの約55%を気温で説明できる。</strong></p></div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round(regr_r2(total, high_temp)::numeric, <span class="nm">2</span>) <span class="kw">AS</span> r_squared</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">r_squared
+---------
+     0.55</div>
+  <div class="big-rule">
+    <div class="ru-arrow">🔮</div>
+    <div class="ru-text"><strong>予想のしかた</strong>：<code>傾き × 気温 ＋ 切片</code>。<br>70度なら 370.18 × 70 − 7891.03 ≒ <strong>18022</strong>。</div>
+  </div>
+  <p class="code-label">▶ 気温70度の予想通行量</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> round((regr_slope(total, high_temp) * <span class="nm">70</span> + regr_intercept(total, high_temp))::numeric, <span class="nm">0</span>)</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">round
+-----
+18022</div>
+  <p class="code-label">▶ どの変数が一番よく当たる？（r²の比べっこ）</p>
+  <div class="output-reveal">high_temp (最高気温) | 0.55
+low_temp  (最低気温) | 0.24
+precip    (降水量)   | 0.35</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>テストの点数と同じで、<strong>r²が高いほど「よく当たる説明役」</strong>です。最高気温が一番。ただし「当たる」と「原因」は別。r²が高くても、気温が通行量を<strong>引き起こした</strong>とは言い切れません。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. r²が0.55とは？<span class="cp-a">A. 総通行量の変動の約55%を、最高気温で説明できるということ。</span></div><div class="cp-q">Q2. 相関係数が0.74のとき、r²はいくつ？<span class="cp-a">A. 0.74×0.74 ≒ 0.55。r²は相関係数の2乗。</span></div><div class="cp-q">Q3. 気温80度のときの予想を出す式は？<span class="cp-a">A. <code>regr_slope(total, high_temp) * 80 + regr_intercept(total, high_temp)</code>（約21723）。</span></div></div>
+</div>
+<div class="page-nav"><a href="m8_stats_intro_easy.html">← 前：相関（やさしい版）</a><a href="m8_regression.html">📈 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 直線 y = m·x + b：m＝傾き、b＝切片</p><p style="margin:.4rem 0">• <code>regr_slope / regr_intercept / regr_r2 (Y, X)</code></p><p style="margin:.4rem 0">• Yが先。丸めるなら <code>::numeric</code> を先に</p><p style="margin:.4rem 0">• r²＝相関係数の2乗（0.74² ≒ 0.55）</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">月別・橋別の回帰や英語MCQクイズは <a href="m8_regression.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 SQLレッスン：M8 統計② 回帰 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m8_regression.html">← 本編</a> · <a href="m8_variance_easy.html">統計③ 分散・標準偏差（やさしい版）へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

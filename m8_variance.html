@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M8 統計③　分散と標準偏差</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M8 📊 統計 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M8 · Statistical Operations — Variance &amp; Standard Deviation</div>
+  <h1>📏 統計③：分散と標準偏差（ばらつき）</h1>
+  <p>平均が「真ん中」を教えてくれるなら、<strong>分散</strong>と<strong>標準偏差</strong>は「<strong>データがその真ん中のまわりにどれだけ散らばっているか</strong>」を教えてくれます。この単元では<code>var_samp</code>・<code>stddev_samp</code>（標本）と<code>var_pop</code>・<code>stddev_pop</code>（母集団）の使い分けと、「±1標準偏差」の読み方を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画（分散と標準偏差）＋ 教科書 <em>Practical SQL</em> 2nd ed. 第11章「Finding Variance and Standard Deviation」をもとにしています</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ばらつきとは</a><a href="#unit2">② SQLで計算</a><a href="#unit3">③ ±1標準偏差の読み方</a><a href="#unit4">④ 橋どうしを比べる</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>分散と標準偏差とは</h2><div class="unit-sub">平均のまわりの「散らばり」を測る</div></div>
+  </div>
+  <p>データの「中心」を表すのが平均なら、「<strong>ばらつき（dispersion）</strong>」を表すのが<strong>分散（variance）</strong>と<strong>標準偏差（standard deviation, SD）</strong>です。どちらも「データが平均からどれだけ離れているか」を測りますが、役割が少し違います。</p>
+  <table class="compare-table">
+    <tr><th></th><th>分散 (variance)</th><th>標準偏差 (standard deviation)</th></tr>
+    <tr><td>定義</td><td>各値と平均との距離を<strong>2乗</strong>して、その平均をとったもの</td><td>分散の<strong>平方根</strong></td></tr>
+    <tr><td>単位</td><td>元の単位の<strong>2乗</strong>（大きな数になり、元の値と同じ尺度では読めない）</td><td><strong>元のデータと同じ単位</strong>（気温なら°F）</td></tr>
+    <tr><td>使いどころ</td><td>データが全体としてどれくらい変動するかを知りたいとき</td><td>釣り鐘型（正規分布）と比べて「平均から何SD離れているか」を読みたいとき</td></tr>
+  </table>
+  <p>2乗する理由は、平均より大きい値（＋）と小さい値（−）が打ち消し合わないようにするためです。ごく小さな例で確かめてみましょう。8個の数 <code>2, 4, 4, 4, 5, 5, 7, 9</code> は、平均が5です。平均からの距離は <code>−3, −1, −1, −1, 0, 0, 2, 4</code>、その2乗は <code>9, 1, 1, 1, 0, 0, 4, 16</code>、合計は32。</p>
+  <ul>
+    <li>母集団の分散 ＝ 32 ÷ 8 ＝ <strong>4</strong>、標準偏差 ＝ √4 ＝ <strong>2</strong></li>
+    <li>標本の分散 ＝ 32 ÷ (8 − 1) ＝ <strong>4.571…</strong>、標準偏差 ＝ √4.571… ＝ <strong>2.138…</strong></li>
+  </ul>
+  <p>SQLでも同じ数が出ます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">var_pop</span>(x)::<span class="kw">numeric</span>, <span class="nm">3</span>)    <span class="kw">AS</span> <span class="kw">var_pop</span>,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">var_samp</span>(x)::<span class="kw">numeric</span>, <span class="nm">3</span>)   <span class="kw">AS</span> <span class="kw">var_samp</span>,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_pop</span>(x)::<span class="kw">numeric</span>, <span class="nm">3</span>)  <span class="kw">AS</span> sd_pop,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(x)::<span class="kw">numeric</span>, <span class="nm">3</span>) <span class="kw">AS</span> sd_samp</span>
+<span class="cl"><span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="nm">2</span> <span class="kw">AS</span> x <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">4</span> <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">4</span> <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">4</span></span>
+<span class="cl">      <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">5</span> <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">5</span> <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">7</span> <span class="kw">UNION</span> <span class="kw">ALL</span> <span class="kw">SELECT</span> <span class="nm">9</span>) <span class="kw">AS</span> t;</span>
+</pre><div class="output-reveal">var_pop | var_samp | sd_pop | sd_samp
+--------+----------+--------+--------
+      4 |    4.571 |      2 |   2.138</div>
+  <div class="note-box">📖 講師は「ここは統計の授業ではないので、数式の詳細は統計の授業で学びます。<strong>SQLを実行するとこの式が計算されている</strong>、という理解で十分です」と言っていました。数式を暗記するより、<strong>「平均のまわりの散らばり」</strong>というイメージをつかむことが大切です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>分散は「平均からの距離の2乗の平均」、標準偏差はその平方根。<strong>標準偏差のほうが元のデータと同じ単位なので読みやすい</strong>です。値が散らばるほど、どちらも大きくなります。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>SQLで計算する：var_samp と stddev_samp</h2><div class="unit-sub">標本か母集団かで関数を選ぶ</div></div>
+  </div>
+  <div class="note-box">📋 講義のCSVは4月1〜30日の30日分が7回繰り返されている（210行）ため、同じ値が何度も登場します。講義の数値（125.06・11.18など）はこのデータで再現されます。</div>
+  <p>ここからは<code>bikes</code>で実際に計算します。講師は、前の単元で独立変数（X）だった<strong>最高気温<code>high_temp</code></strong>のばらつきを調べました。使う関数は次の4つです。</p>
+  <table class="compare-table">
+    <tr><th>関数</th><th>意味</th><th>使う場面</th></tr>
+    <tr><td><code>var_samp(列)</code></td><td>標本分散（n−1で割る）</td><td>データが<strong>大きな母集団の一部（標本）</strong>のとき</td></tr>
+    <tr><td><code>stddev_samp(列)</code></td><td>標本標準偏差</td><td>同上</td></tr>
+    <tr><td><code>var_pop(列)</code></td><td>母集団分散（nで割る）</td><td>データが<strong>対象の全部</strong>のとき</td></tr>
+    <tr><td><code>stddev_pop(列)</code></td><td>母集団標準偏差</td><td>同上</td></tr>
+  </table>
+  <p>講師は「このデータは、長い期間にわたる自転車の通行量という<strong>大きな母集団の標本</strong>だから、<code>_samp</code>を使う」と選びました。まず分散です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">var_samp</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> var_temp</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">var_temp
+--------
+  125.06</div>
+  <p><strong>125.06</strong>。ここで講師の注意が入ります。「<strong>この値は気温と同じ尺度ではないので、そのまま『125度』とは読めません</strong>」（分散は°Fの2乗の単位だから）。分かるのは「気温にはそれなりのばらつきがある」ということです。1年を通せば気温が大きく変わるのは当然ですね。</p>
+  <p>標準偏差も並べて出してみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">var_samp</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> var_temp,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> sd_temp</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">var_temp | sd_temp
+---------+--------
+  125.06 |   11.18</div>
+  <p><strong>11.18</strong>。標準偏差は°Fのままなので、「<strong>気温は平均から約±11度の範囲で散らばっている</strong>」と読めます。実は、<code>stddev_samp</code>は<code>sqrt(var_samp)</code>です（√125.06 ≒ 11.18）。</p>
+  <div class="teal-box">📌 <strong>_samp と _pop の違い：</strong>標本版は分母が<strong>n − 1</strong>、母集団版は分母が<strong>n</strong>。そのため同じデータでは標本版のほうが<strong>少しだけ大きく</strong>なります。行数が多いほど差は小さくなります。なお、PostgreSQLの<code>variance()</code>は<code>var_samp</code>と、<code>stddev()</code>は<code>stddev_samp</code>と同じです。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">var_samp</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> <span class="kw">var_samp</span>,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">var_pop</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)     <span class="kw">AS</span> <span class="kw">var_pop</span>,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> sd_samp,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_pop</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)  <span class="kw">AS</span> sd_pop</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">var_samp | var_pop | sd_samp | sd_pop
+---------+---------+---------+-------
+  125.06 |  124.47 |   11.18 |  11.16</div>
+  <p>4つを並べると、標本版（125.06、11.18）は母集団版（124.47、11.16）よりわずかに大きいことが分かります。210行あるので差はほんの少しです。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>全部のデータなら<code>_pop</code>、一部（サンプル）なら<code>_samp</code>。迷ったら<code>_samp</code>（<code>variance</code>/<code>stddev</code>と同じ）。分散は読みにくく、標準偏差は元の単位で読めます。</p></div>
+  <div class="practice-card" id="p-m8v-u2">
+    <div class="ptitle">💻 ミニ練習：最低気温のばらつきを求める</div>
+    <p class="ptask"><code>bikes</code>の<code>low_temp</code>の標本分散と標本標準偏差を、それぞれ<code>round(…::numeric, 2)</code>で丸めて、<code>var_low</code>・<code>sd_low</code>の2列で求めてください。</p>
+    <textarea class="code-editor" id="p-m8v-u2-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m8v-u2', ['SELECT', 'var_samp', 'stddev_samp', 'round', 'low_temp'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m8v-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m8v-u2-result"></div>
+    <div class="answer-reveal" id="p-m8v-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">var_samp</span>(low_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> var_low,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(low_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> sd_low</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
+      <p class="answer-note">結果は90.68と9.52。最高気温（125.06／11.18）よりばらつきが小さいことが分かります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>±1標準偏差の読み方</h2><div class="unit-sub">平均のまわりの「ふつうの範囲」</div></div>
+  </div>
+  <p>標準偏差の一番の使い道は、<strong>「平均 ± 1 SD」</strong>という範囲でデータを眺めることです。データが釣り鐘型（正規分布）なら、<strong>約3分の2（約68%）の値が平均±1SDの中に入り</strong>、2SD、3SDと離れるほど、値は少なくなります。</p>
+  <div class="note-box">📖 <strong>講師の例：</strong>「平均が65°Fで標準偏差が約11なら、1SDの範囲は54〜76°F。講師の住む地域なら、平均はもっと高く（70〜80°F台）、夏には90°F台に上がり、60°F台後半〜70°F台にもよく留まる。これは標準偏差の大きさに合っていて意外ではない」。</div>
+  <p>実際に<code>bikes</code>で「平均−1SD」と「平均+1SD」をSQLで計算してみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">avg</span>(high_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)                           <span class="kw">AS</span> mean_temp,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">avg</span>(high_temp) - <span class="kw">stddev_samp</span>(high_temp))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> lower_1sd,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">avg</span>(high_temp) + <span class="kw">stddev_samp</span>(high_temp))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> upper_1sd</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">mean_temp | lower_1sd | upper_1sd
+----------+-----------+----------
+    60.58 |      49.4 |     71.76</div>
+  <p>平均は60.58°Fで、<strong>約49.4〜71.76°F</strong>が1SDの範囲です。では実際に、何日分がこの範囲に入っているでしょうか。サブクエリ（M6）で上限と下限を計算して数えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">count</span>(*) <span class="kw">AS</span> days_within_1sd,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="nm">100.0</span> * <span class="kw">count</span>(*) / (<span class="kw">SELECT</span> <span class="kw">count</span>(*) <span class="kw">FROM</span> bikes), <span class="nm">1</span>) <span class="kw">AS</span> pct</span>
+<span class="cl"><span class="kw">FROM</span> bikes</span>
+<span class="cl"><span class="kw">WHERE</span> high_temp <span class="kw">BETWEEN</span></span>
+<span class="cl">      (<span class="kw">SELECT</span> <span class="kw">avg</span>(high_temp) - <span class="kw">stddev_samp</span>(high_temp) <span class="kw">FROM</span> bikes)</span>
+<span class="cl">  <span class="kw">AND</span> (<span class="kw">SELECT</span> <span class="kw">avg</span>(high_temp) + <span class="kw">stddev_samp</span>(high_temp) <span class="kw">FROM</span> bikes);</span>
+</pre><div class="output-reveal">days_within_1sd | pct 
+----------------+-----
+            133 | 63.3</div>
+  <p>210日のうち133日（<strong>63.3%</strong>）が範囲内でした。「約3分の2」の目安にほぼ合っています。このデータは「ほぼ釣り鐘型」と考えてよさそうです。</p>
+  <p>講師は最後に、標準偏差の大きさの読み方も紹介しました。</p>
+  <ul>
+    <li>気温のようなデータで標準偏差が<strong>20〜30度</strong>もあれば、釣り鐘が<strong>平らにつぶれている</strong>状態。データに<strong>大きな問題（異常値や入力ミス）</strong>があるかもしれません。</li>
+    <li>標準偏差が<strong>とても小さい</strong>なら、釣り鐘は<strong>とがっている</strong>（ほとんどが平均付近に固まっている）。</li>
+  </ul>
+  <div class="warn-box">⚠️ <strong>標準偏差は「単独」では判断できません。</strong>標準偏差11.18が「大きい」か「小さい」かは、平均の大きさや、その列が何を表すかに依存します。次の単元④のように、<em>同じ尺度のもの同士</em>で比べるときに力を発揮します。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「平均 ± 1標準偏差」の中に、だいたい3分の2のデータが入ります。広がり（SD）が大きすぎる・小さすぎるときは、データの中身を疑いましょう。</p></div>
+  <div class="practice-card" id="p-m8v-u3">
+    <div class="ptitle">💻 ミニ練習：平均±1SDの範囲を作る</div>
+    <p class="ptask"><code>bikes</code>の<code>low_temp</code>について、平均<code>mean_low</code>と、平均−1SD<code>lower_1sd</code>・平均+1SD<code>upper_1sd</code>（<code>stddev_samp</code>を使用）を、すべて<code>round(…::numeric, 2)</code>で丸めて1行で出力してください。</p>
+    <textarea class="code-editor" id="p-m8v-u3-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m8v-u3', ['SELECT', 'avg', 'stddev_samp', 'round', 'low_temp'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m8v-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m8v-u3-result"></div>
+    <div class="answer-reveal" id="p-m8v-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">avg</span>(low_temp)::<span class="kw">numeric</span>, <span class="nm">2</span>)                           <span class="kw">AS</span> mean_low,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">avg</span>(low_temp) - <span class="kw">stddev_samp</span>(low_temp))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> lower_1sd,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">avg</span>(low_temp) + <span class="kw">stddev_samp</span>(low_temp))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> upper_1sd</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
+      <p class="answer-note">結果は46.41、36.89、55.93。平均46.41°Fのまわり、約±9.5°Fが1SDの範囲です。足し算・引き算した後で<code>::numeric</code>にしている（かっこの位置）点に注意。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>橋どうしのばらつきを比べる</h2><div class="unit-sub">標準偏差と変動係数</div></div>
+  </div>
+  <p>標準偏差は「どの列のばらつきが大きいか」を比べるのにも使えます。4つの橋の通行量のばらつきを並べてみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">stddev_samp</span>(brooklyn_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> brooklyn,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(manhattan_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> manhattan,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(williamsburg_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> williamsburg,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(queensboro_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)   <span class="kw">AS</span> queensboro</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">brooklyn | manhattan | williamsburg | queensboro
+---------+-----------+--------------+-----------
+  981.24 |   1704.73 |      1814.04 |    1099.25</div>
+  <p>標準偏差が最も大きいのは<strong>Williamsburg橋（1814）</strong>、最も小さいのは<strong>Brooklyn橋（981）</strong>です。ただし橋ごとに平均の通行量が違う（Williamsburg橋のほうがずっと多い）ので、標準偏差だけの比較は不公平です。そこで「<strong>標準偏差 ÷ 平均</strong>」（変動係数）という、平均に対する相対的なばらつきも見てみます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">avg</span>(brooklyn_bridge)::<span class="kw">numeric</span>, <span class="nm">1</span>)   <span class="kw">AS</span> avg_brooklyn,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">avg</span>(williamsburg_bridge)::<span class="kw">numeric</span>, <span class="nm">1</span>) <span class="kw">AS</span> avg_williamsburg,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">stddev_samp</span>(brooklyn_bridge)    / <span class="kw">avg</span>(brooklyn_bridge))::<span class="kw">numeric</span>, <span class="nm">2</span>)    <span class="kw">AS</span> cv_brooklyn,</span>
+<span class="cl">       <span class="kw">round</span>((<span class="kw">stddev_samp</span>(williamsburg_bridge) / <span class="kw">avg</span>(williamsburg_bridge))::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> cv_williamsburg</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">avg_brooklyn | avg_williamsburg | cv_brooklyn | cv_williamsburg
+-------------+------------------+-------------+----------------
+      2269.6 |           4862.5 |        0.43 |            0.37</div>
+  <p>平均が大きいWilliamsburg橋は、標準偏差も大きいものの、<strong>平均に対する割合で見るとBrooklyn橋のほうがばらつきが大きい</strong>（0.43 vs 0.37）ことが分かります。「標準偏差が大きい＝不安定」と決めつけないことが大切です。</p>
+  <div class="note-box">💡 <strong>PostgreSQLとアリーナの違い：</strong>PostgreSQLでは<code>stddev_samp(...) / avg(...)</code>は小数のまま割れます。SQLiteでは「整数÷整数」が切り捨てになりますが、ここでは<code>stddev_samp</code>が小数を返すので問題ありません。整数同士を割るときは<code>* 1.0</code>を掛けるか、<code>::numeric</code>にキャストします。</div>
+  <p>最後に、分散が「元の単位とは別の尺度」であることを<code>total</code>で確かめます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">var_samp</span>(total)::<span class="kw">numeric</span>, <span class="nm">0</span>)    <span class="kw">AS</span> var_total,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(total)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> sd_total</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span>
+</pre><div class="output-reveal">var_total | sd_total
+----------+---------
+ 31015693 |  5569.17</div>
+  <p>分散は約3100万という巨大な数、標準偏差は約5569（人／日）。平均14534.5と並べて読めるのは標準偏差のほうです。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ばらつきを比べるときは標準偏差。ただし平均が違うなら「標準偏差÷平均」で相対的に比べると公平です。分散は大きな数になりがちで、直接は読みにくい。</p></div>
+  <div class="practice-card" id="p-m8v-u4">
+    <div class="ptitle">💻 ミニ練習：橋ごとの標準偏差を並べる</div>
+    <p class="ptask"><code>bikes</code>で<code>manhattan_bridge</code>と<code>queensboro_bridge</code>の標本標準偏差を、<code>round(…::numeric, 2)</code>で丸めて<code>manhattan</code>・<code>queensboro</code>の2列で出力してください。</p>
+    <textarea class="code-editor" id="p-m8v-u4-input" rows="5">-- ここにSQLを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m8v-u4', ['SELECT', 'stddev_samp', 'manhattan_bridge', 'queensboro_bridge'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m8v-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m8v-u4-result"></div>
+    <div class="answer-reveal" id="p-m8v-u4-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">SELECT</span> <span class="kw">round</span>(<span class="kw">stddev_samp</span>(manhattan_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>)  <span class="kw">AS</span> manhattan,</span>
+<span class="cl">       <span class="kw">round</span>(<span class="kw">stddev_samp</span>(queensboro_bridge)::<span class="kw">numeric</span>, <span class="nm">2</span>) <span class="kw">AS</span> queensboro</span>
+<span class="cl"><span class="kw">FROM</span> bikes;</span></pre>
+      <p class="answer-note">結果は1704.73と1099.25。Manhattan橋のほうがばらつきが大きいと分かります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">How is the variance of a set of numbers defined?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The square root of the standard deviation of the whole column</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The difference between the largest and the smallest value in the set</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean of each value's squared distance from the mean</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The most frequent value found in the whole set of numbers</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the relationship between standard deviation and variance?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The standard deviation is the variance multiplied by exactly two</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SD is the square root of the variance</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They are always equal to each other for any given column</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The variance is the square root of the standard deviation</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why is the standard deviation easier to read than the variance?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is always smaller than 1 for every kind of data</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It always ranges between 0 and 100 whatever the column is</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It uses the data's own units; variance uses squared units</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It ignores any values that are far away from the mean</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">The bikes rows are treated as a sample of a much longer history of bridge crossings. Which function should be used for the spread of high_temp?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>stddev_samp(high_temp)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>stddev_pop(high_temp), as it is the population</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>avg(high_temp) divided by the row count</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>corr(high_temp, total) with the totals</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A column has mean 65 and standard deviation 11. Roughly what is the range of one standard deviation around the mean?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0 to 65</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>11 to 65</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>54 to 76</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>32 to 98</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">If the data are roughly bell-shaped, about what share of the values lie within one standard deviation of the mean?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About two-thirds</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About one-tenth</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About half of them exactly</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Practically all of them</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A temperature column has a standard deviation of 25 degrees. What does this suggest?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The bell curve is very narrow and tall, so the data is tidy</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The data is perfectly clean and needs no checking at all</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean must be equal to zero for the column</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A very flat curve; check the data</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Compared with var_samp, the population variance var_pop on the same data is:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Smaller, since it divides by n, not n − 1</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Larger, since it divides by n − 1 instead of n</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Exactly twice as large as the sample variance</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Always exactly equal on any data</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 1, 2, 0, 2, 0, 3, 0];
+var FEEDBACKS=["Variance squares each value's distance from the mean (so + and − do not cancel) and then averages these squared distances.", "Standard deviation = sqrt(variance). In the lecture, var_samp(high_temp) = 125.06 and stddev_samp(high_temp) = 11.18.", "Squaring changes the units (degrees squared), so a variance cannot be read on the same scale as the data; the standard deviation can.", "The data is a sample of a larger population, so the sample versions (_samp) are used.", "mean ± 1 SD = 65 − 11 to 65 + 11 = 54 to 76, the example the lecturer gave.", "For a normal (bell-shaped) distribution about 68% of the values lie within one standard deviation of the mean.", "A very large standard deviation means a flat bell curve; for something like daily temperatures that can indicate outliers or entry errors.", "var_pop divides by n and var_samp by n − 1, so the population value is always slightly smaller on the same data (124.47 vs 125.06)."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">variance</div><div class="term-en">分散</div><div class="term-def">各値と平均との距離を2乗して平均したもの。<code>var_samp</code> / <code>var_pop</code>。単位は元の単位の2乗。</div></div>
+    <div class="term-item"><div class="term-name">standard deviation</div><div class="term-en">標準偏差</div><div class="term-def">分散の平方根。元のデータと同じ単位。<code>stddev_samp</code> / <code>stddev_pop</code>。</div></div>
+    <div class="term-item"><div class="term-name">sample vs population</div><div class="term-en">標本と母集団</div><div class="term-def">標本は一部のデータ（n−1で割る＝<code>_samp</code>）、母集団は全部のデータ（nで割る＝<code>_pop</code>）。</div></div>
+    <div class="term-item"><div class="term-name">±1 SD</div><div class="term-en">平均±1標準偏差</div><div class="term-def">正規分布なら約3分の2のデータが入る範囲。</div></div>
+    <div class="term-item"><div class="term-name">normal distribution</div><div class="term-en">正規分布</div><div class="term-def">平均を中心とした左右対称の釣り鐘型の分布。</div></div>
+    <div class="term-item"><div class="term-name">coefficient of variation</div><div class="term-en">変動係数</div><div class="term-def">標準偏差÷平均。平均の違うもの同士のばらつきを比べるときに使う。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>ばらつきを聞かれたら、まず<code>stddev_samp</code>。平均と並べて「平均±SD」で読み、平均の違う列同士は「SD÷平均」で比べましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📏 SQLレッスン：M8 統計③ 分散と標準偏差</p>
+  <p style="margin-top:.5rem;"><a href="m8_regression.html">← 回帰</a> · <a href="m8_cte.html">CTE（WITH）へ →</a> · <a href="m8_practice_stats.html">🏋️ この単元の演習へ</a> · <a href="m8_variance_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -132,6 +132,14 @@ MCQ は**正解が常に一番長い選択肢にならないよう**にする(�
 - コミットメッセージ末尾: `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`
 - push はユーザーが「push」「yes」等で承認してから。
 
+## 8.5 M8（統計・CTE）で追加したもの
+- **データ**: `bikes`（NYC East River の自転車通行量、210行。講義のCSV＝4月1〜30日の30日分が7回繰り返されている）、`departments/employees/employee_projects`（架空・5部署20人）、銀行DB。`M8/bikes.csv`・`M8/M8_transcripts_whisper.txt` に素材を保存。
+- **統計関数**: sql.js は集計関数を自作できないので `pgRewriteStats` が `corr / regr_slope / regr_intercept / regr_r2 / var_* / stddev_* / covar_*` を `SUM(CASE…)` の式に書き換える（NULLの組は無視＝PostgreSQLと同じ）。`pg_sqrt` を登録。講義の数値（0.74 / 370.18 / −7891.03 / 0.55 / 125.06 / 11.18）がそのまま再現される。
+- **採点**: 小数は有効10桁で比較（`normalizeRows`）。CTE・ウィンドウ関数はSQLite標準で動く。`percentile_cont` / crosstab / LATERAL は未対応＝概念のみ。
+- **注意**: SQLiteは整数÷整数が切り捨て（`::numeric` でも直らない）→ `* 100.0` を先に掛ける。
+- **ナビ**: M8 の行は `M8 統計・CTE`（クラス `nav-row m7`）。ページ名は m8_stats_intro / m8_regression / m8_variance / m8_cte / m8_cte_multi / m8_plus / m8_practice(_stats/_regression/_cte/_m8_plus)。
+- 並列エージェントは**自分専用の一時ファイル（タグ付き）**を使うこと。共有の一時HTMLだと互いの結果を上書きする。
+
 ## 9. ハマりどころ(過去の不具合)
 
 | 症状 | 原因 / 対策 |
