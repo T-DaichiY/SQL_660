@@ -38,6 +38,15 @@
 <div class="page-layout">
 <main>
 
+<div class="teal-box">📖 <strong>教科書対応（Practical SQL 第2版 第13章「Advanced Query Techniques」）</strong>
+  <ul>
+    <li>単元①②：<strong>Using Common Table Expressions</strong>のListing 13-14（PDF p.337）。<code>WITH</code>のあとに<strong>2つのCTE</strong>（<code>counties</code>と<code>establishments</code>）をカンマで並べ、メインのクエリでJOINする形で、本文の「カンマでつなぐ」と同じ構造です。</li>
+    <li>単元③④：同じく p.337 の説明「結果は派生テーブルをJOINしたListing 13-4（p.325）と同じだが、CTEの方が読みやすい」が、講義の「巨大な1文より、CTEに分けた方が簡単」に対応します。</li>
+    <li>単元⑤：Listing 13-15（p.337–338）は、同じサブクエリを2か所に書く代わりにCTEで1回だけ定義する例（重複の削減）。<code>CASE</code>をCTEの中で使う例はListing 13-21（p.347–349）で、<a href="m8_plus.html">M8+</a>で扱います。</li>
+  </ul>
+  <small>（ページ番号は教科書PDF「ebin.pub_practical-sql-2nd-edition…pdf」のPDFページ番号。本文テキストには印刷ページ番号が出ないため）</small>
+</div>
+
 <div class="unit" id="unit1">
   <div class="unit-header">
     <div class="unit-num">①</div>
@@ -63,7 +72,24 @@
     <li><strong>最後のCTEの後ろにはカンマを付けません。</strong>その次に来るのは、次のCTEではなくメインのクエリだからです。</li>
     <li>それぞれのCTEは、普通のテーブルと同じようにメインのクエリで呼び出せます。</li>
   </ul>
-  <div class="teal-box">📌 <strong>カンマの法則：</strong>CTEが<strong>N個</strong>あれば、カンマは<strong>N-1個</strong>です。2個ならカンマ1個、3個ならカンマ2個。</div>
+  <p>教科書の例（Listing 13-14、p.337）も同じ形です。<code>WITH</code>のあとに「<code>counties (st, pop_est_2018) AS (...)</code>」「<code>establishments (st, establishment_count) AS (...)</code>」を<strong>カンマで区切って</strong>並べ、最後の閉じかっこの後ろ（メインのSELECTの前）にはカンマがありません。各CTEには、前の単元で紹介した<strong>列名リスト</strong>を付けることもできます。この教材のデータで同じ形を書くとこうなります。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> ds (dept, total) <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">SUM</span>(salary) <span class="kw">FROM</span> employees <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">),</span>
+<span class="cl">hc (dept, n) <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> department_id, <span class="kw">COUNT</span>(*) <span class="kw">FROM</span> employees <span class="kw">GROUP</span> <span class="kw">BY</span> department_id</span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> ds.dept, ds.total, hc.n</span>
+<span class="cl"><span class="kw">FROM</span> ds <span class="kw">JOIN</span> hc <span class="kw">ON</span> ds.dept = hc.dept</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> ds.dept;</span>
+</pre><div class="output-reveal">dept | total  | n
+-----+--------+---
+   1 | 355000 | 5
+   2 | 245000 | 4
+   3 | 263000 | 5
+   4 | 143000 | 3
+   5 | 150000 | 3</div>  <div class="teal-box">📌 <strong>カンマの法則：</strong>CTEが<strong>N個</strong>あれば、カンマは<strong>N-1個</strong>です。2個ならカンマ1個、3個ならカンマ2個。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>お買いものリストと同じです。「牛乳、卵、パン」とカンマで区切って、最後の「パン」の後ろにはカンマを付けません。CTEもリストのように並べます。</p></div>
   <div class="practice-card" id="p-c2-u1">
     <div class="ptitle">💻 ミニ練習：2つのCTEをカンマでつなぐ</div>
@@ -327,6 +353,7 @@ Engineering     |       355000
 Sales           |       263000
 Marketing       |       245000
 (3 rows)</div>  <p>5部署の合計は355,000／245,000／263,000／143,000／150,000で、その平均は231,200です。これを超えるのがEngineering、Sales、Marketingの3部署です。<strong>集計の集計</strong>（「合計の平均」）は、CTEがないとサブクエリの入れ子になる典型例です。</p>
+  <p>教科書（Listing 13-15、p.337–338）も、同じサブクエリを2回書くことを避けるためにCTEを使っています。<strong>「1回定義して、何回も参照する」</strong>のがCTEの強みで、中央値の割合を.5から.9に変えたいときも、直す場所が1か所で済む、と説明されています。</p>
   <div class="warn-box">⚠️ <strong>参照できるのは「前に書いたCTE」だけ</strong>です（上から下へ）。<code>avg_dept</code>の中で<code>dept_salary</code>を使えるのは、<code>dept_salary</code>が先に定義されているからです。順番を逆にすると、PostgreSQLは「その名前の表が見つからない」というエラーを返します。</div>
   <div class="teal-box">📌 <strong>設計のヒント：</strong>(1) まず問題を条件・集計ごとに分ける　(2) 部品を1つずつ単独で実行してテスト　(3) 小さな部品はそのままサブクエリでもよい（講師も、最長時間のサブクエリは小さいのでそのままにしていた）　(4) CTEが多すぎて逆に読みにくくならないよう、ほどほどに。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CTEは何個でも作れて、あとのCTEは前のCTEを部品として使えます。「小さな部品を積み上げて、最後に仕上げる」のがCTEの考え方です。</p></div>

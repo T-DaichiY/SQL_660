@@ -38,6 +38,15 @@
 <div class="page-layout">
 <main>
 
+<div class="teal-box">📖 <strong>教科書対応（Practical SQL 第2版 第13章「Advanced Query Techniques」）</strong>
+  <ul>
+    <li>単元①②③：<strong>Using Common Table Expressions</strong>（PDF p.335–338）。Listing 13-13（<code>large_counties</code>：<code>WITH 名前 (列名リスト) AS (...)</code>で郡数を数える単純なCTE）が、この単元の「単一のCTE」に当たります。</li>
+    <li>単元④：<strong>Using Subqueries</strong>（p.320〜）の<strong>Creating Derived Tables with Subqueries</strong>（p.323）と<strong>Joining Derived Tables</strong>（p.325、Listing 13-4）と、CTE版の書き直し（Listing 13-14、p.337）を比べる節に対応します。</li>
+    <li>再帰CTE（<code>RECURSIVE</code>）は教科書では「本書の範囲外」として名前だけ紹介（p.338）。CTEの利点は「読みやすいコード・重複の削減・修正のしやすさ」とまとめられています。</li>
+  </ul>
+  <small>（ページ番号は教科書PDF「ebin.pub_practical-sql-2nd-edition…pdf」のPDFページ番号。本文テキストには印刷ページ番号が出ないため）</small>
+</div>
+
 <div class="unit" id="unit1">
   <div class="unit-header">
     <div class="unit-num">①</div>
@@ -110,6 +119,25 @@
     <tr><td>中身に集計もJOINも書ける</td><td><code>SUM</code>や<code>GROUP BY</code>を含むSELECTでも、複数テーブルのJOINでもよい。CTEが別のCTEを参照することもできる（次のページ）。</td></tr>
     <tr><td>その文の間だけ</td><td>セミコロンで文が終わると消える。次の文では使えない（保存されない）。</td></tr>
   </table>
+  <p>教科書（Listing 13-13、p.335–336）のCTEは、名前のあとに<strong>列名リスト</strong>を書く形でした。<code>WITH 名前 (列名1, 列名2) AS (...)</code>です。列名リストの要点は次のとおりです。</p>
+  <ul>
+    <li>CREATE TABLEのような<strong>データ型の指定は不要</strong>。型は中のSELECTから引き継がれます。</li>
+    <li>中のSELECTは、リストと<strong>同じ数の列</strong>を返す必要があります（列名は一致しなくてよい）。</li>
+    <li>列名を付け替えないなら、<strong>列名リストは省略可能</strong>です（講義の書き方）。</li>
+  </ul>
+<pre class="code-block">
+<span class="cl"><span class="kw">WITH</span> big_loans (loan_no, amt) <span class="kw">AS</span> (</span>
+<span class="cl">    <span class="kw">SELECT</span> loan_number, amount</span>
+<span class="cl">    <span class="kw">FROM</span> loan</span>
+<span class="cl">    <span class="kw">WHERE</span> amount &gt;= <span class="nm">15000</span></span>
+<span class="cl">)</span>
+<span class="cl"><span class="kw">SELECT</span> loan_no, amt</span>
+<span class="cl"><span class="kw">FROM</span> big_loans</span>
+<span class="cl"><span class="kw">ORDER</span> <span class="kw">BY</span> amt <span class="kw">DESC</span>;</span>
+</pre><div class="output-reveal">loan_no | amt
+--------+------
+L-203   | 22000
+L-201   | 15000</div>  <p>教科書は、CTEを「1つ以上のSELECTで<strong>一時テーブルをあらかじめ定義</strong>し、メインのクエリで必要なだけ参照する」もので、非公式には<strong>WITH query</strong>とも呼ばれる、と説明しています。</p>
   <div class="warn-box">⚠️ <strong>CTEは「テーブルを作る」わけではありません。</strong><code>WITH ... SELECT ...;</code>を実行して、結果を取り出したら、CTEは役目を終えて消えます。あとで同じ名前を使いたければ、その文の先頭にもう一度<code>WITH</code>を書く必要があります。</div>
   <p>まず、いちばん簡単な例で動きを確かめましょう。Bankingデータベースの<code>loan</code>テーブル（融資）から、金額が15,000以上のものだけをCTEに入れます。</p>
 <pre class="code-block">
@@ -249,6 +277,7 @@ L-201       | 15000
 10002       | Hank Irwin    |       24000
 10006       | Omar Diaz     |       22000
 (2 rows)</div>  <p>結果はCTE版とまったく同じ（Hank Irwin 24000、Omar Diaz 22000）です。違いは書き方だけです。</p>
+  <div class="teal-box">📖 <strong>教科書では：</strong>FROMの中に置いたサブクエリを<strong>派生テーブル（derived table）</strong>と呼びます（p.323）。上の<code>t</code>がまさにそれです。教科書のListing 13-4（p.325）は、2つの派生テーブルをJOINして州ごとの比率を出しますが、Listing 13-14（p.337）は<strong>同じ処理を2つのCTEで書き直し</strong>、「結果はまったく同じだが、CTEの方が理解しやすい」と述べています。つまり<strong>派生テーブルとCTEは結果が同じ</strong>で、違いは読みやすさです。</div>
   <table class="compare-table">
     <tr><th></th><th>サブクエリ</th><th>CTE（WITH）</th></tr>
     <tr><td>置き場所</td><td>FROM／WHEREの<strong>中</strong>に埋め込む</td><td>文の<strong>先頭</strong>に取り出す</td></tr>
@@ -258,6 +287,7 @@ L-201       | 15000
     <tr><td>テスト</td><td>切り出して単独で動かす作業が必要</td><td>かっこの中をそのまま単独で実行できる</td></tr>
     <tr><td>向いている場面</td><td>短い・1回しか使わない部品</td><td>複雑・複数回使う・手順を分けたいとき</td></tr>
   </table>
+  <p>教科書がCTEを使う理由としてあげるのは、<strong>① 読みやすいコード、② 重複の削減、③ 修正のしやすさ</strong>です。②の例（Listing 13-15、p.337–338）では、中央値を出すサブクエリを2か所に書いていたものを、CTE（<code>us_median</code>）として<strong>1回だけ</strong>書き、<code>CROSS JOIN</code>で全行に使えるようにしています。1行1列のCTEを<code>CROSS JOIN</code>する形は、このページの練習④の形と同じです。</p>
   <p>では、CTEに弱点はないのでしょうか。講師が挙げた<strong>性能（パフォーマンス）の注意点</strong>があります。</p>
   <ul>
     <li>PostgreSQLでは、CTEは<strong>既定でマテリアライズ（materialized）</strong>されます。つまり、CTEを作ると、その結果が<strong>ハードディスクではなく、一時的なメモリ</strong>に実際に作られて保持されます。</li>

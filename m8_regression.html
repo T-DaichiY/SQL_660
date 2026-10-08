@@ -38,6 +38,14 @@
 <div class="page-layout">
 <main>
 
+<div class="teal-box">📖 <strong>教科書対応（Practical SQL 第2版 Ch.11 Statistics、PDFのページ番号）</strong>
+<ul>
+<li>① 回帰とは → <em>Predicting Values with Regression Analysis</em>（p.274〜275）。相関の背景は <em>Measuring Correlation with corr(Y, X)</em>（p.269〜272）と <em>Checking Additional Correlations</em>（p.272〜274）</li>
+<li>② 傾きと切片 → <em>Predicting Values with Regression Analysis</em>（Listing 11-4、p.276〜277）</li>
+<li>③ r²と予測 → <em>Finding the Effect of an Independent Variable with r-Squared</em>（Listing 11-5、p.277〜278）</li>
+</ul>
+<p style="margin:.3rem 0 0">教科書の例は、米国の郡ごとの「学士号以上の割合 pct_bachelors_higher（X）」と「世帯所得の中央値 median_hh_income（Y）」です（r ≒ 0.70、傾き1016.55、切片29651.42、r² ＝ 0.490）。このページではサイクリング（bikes）のデータで同じ手順を行います。</p></div>
+
 <div class="unit" id="unit1">
   <div class="unit-header">
     <div class="unit-num">①</div>
@@ -52,6 +60,7 @@
     <tr><td>できること</td><td>「強い／弱い」と言える</td><td>「xがこの値のときyはいくつ」と<strong>予測</strong>できる</td></tr>
   </table></div>
   <p>直線の式は、中学で習う <code>y = mx + b</code> そのものです。統計の授業では <code>y = b₀ + b₁x + ε</code> のように書き、最後の<code>ε</code>（誤差項）が「直線からのズレ」を表します。SQLで取り出す部品は次の3つです。</p>
+  <p>教科書では、この直線を<strong>最小二乗回帰直線（least squares regression line）</strong>、つまり「データにいちばんよく合う直線」と呼び、式を <code>Y = bX + a</code> と書きます（Yは予測値＝従属変数、bは傾き、Xは独立変数の値、aはX＝0のときの高さ＝y切片）。文字は違いますが、<code>y = mx + b</code>と同じ式です。教科書の問いは「学士号を持つ人が30%の郡では、世帯所得の中央値はいくつと予想できるか？ 学士号の割合が1ポイント増えると所得はいくら増えるか？」で、まさに<strong>データにない値を、直線上で予測する</strong>ために回帰を使います。</p>
   <div class="viz">
     <div class="viz-title">直線 y = m·x + b の部品とSQL関数</div>
     <div class="flow-steps">
@@ -64,6 +73,7 @@
     <div class="viz-cap">この3つがそろえば、直線の式と、その直線の「信頼度」が分かります。</div>
   </div>
   <p>講義では「幸福度は収入の関数」というグラフが例に出ました。直線は <code>y = 0.2 + 0.71x</code> で、傾きの<strong>0.71が正</strong>なので、収入が増えると幸福度も増える傾向があります。ただし傾きが1未満なので「収入が1増えても幸福度は1までは増えない」。しかも点は直線の上下にかなりばらついていて、<strong>外れ値</strong>も目立ちます。つまり「傾向はあるが、相関は中くらい以下」だというわけです。<strong>線を引けること</strong>と、<strong>その線がデータによく合っていること</strong>は別の話で、だから傾きとは別にr²も見る必要があります。</p>
+  <p>相関の強さの目安は、教科書の Table 11-1（p.270）では次のとおりです：0＝関係なし、0.01〜0.29＝弱い、0.3〜0.59＝中程度、0.6〜0.99＝強い〜ほぼ完全、1＝完全。bikesの<code>corr = 0.74</code>は「強い」、<code>precip</code>の<code>−0.59</code>は「中程度」の上端です。</p>
   <div class="teal-box">📌 この授業の回帰は<strong>直線だけ</strong>を扱います（<strong>単回帰</strong>）。曲線など別の形の線が合うデータもありますが、それは統計の授業の範囲です。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>相関は「仲がいいかどうか」、回帰は「仲のよさを式にしたもの」です。式（直線）ができれば、気温を入れるだけで通行量を<strong>予想</strong>できます。部品は傾き・切片・r²の3つです。</p></div>
   <div class="practice-card" id="p-rg-u1">
@@ -115,6 +125,7 @@
     <li><strong>傾き 370.18</strong>：最高気温が<strong>1度上がるごとに、1日の総通行量が約370人増える</strong>。正の傾きなので、気温と通行量は「同じ向きに動く」（前ページの<code>corr = 0.74</code>の正の相関と一致）。</li>
     <li><strong>切片 −7891.03</strong>：最高気温が<strong>0度</strong>のときの予測値。通行量がマイナスになることはありえないので、切片は「直線を延ばしたときの数学上の値」と割り切ります。この教材のデータは最低でも30度台の日しかなく、0度の予測は<strong>データの範囲の外</strong>です。講義でも「Excelでグラフにすると、直線が下に大きくずれているのが見える」と説明されました。</li>
   </ul>
+  <div class="teal-box">📖 <strong>教科書の例（Listing 11-4）：</strong><code>regr_slope(median_hh_income, pct_bachelors_higher)</code>は<strong>1016.55</strong>、<code>regr_intercept(...)</code>は<strong>29651.42</strong>。「学士号の割合が1ポイント増えるごとに、郡の所得の中央値が約1016.55ドル増える」と読み、切片は「割合が0のときに直線がy軸を切る高さ」と説明されています。ここでも引数は<strong>(Y, X)</strong>の順です。なお教科書はcorr()について「入れ替えても同じ結果」と注記していますが、<code>regr_slope</code>などは入れ替えると別の数字になります。</div>
   <div class="teal-box">📌 <strong>データの注意：</strong>講義のCSVは4月1〜30日の30日分が7回繰り返されている（行数210行のまま使う）。そのため日付は30種類だけで、同じ日付の行が7行ずつあります。傾きやr²の値は、どの繰り返し回数でも変わりません。</div>
   <div class="teal-box">📌 <strong>このテーブルの注意：</strong><code>precip</code>（降水量）は元のデータに <code>T</code>（trace＝ごく微量）や <code>0.47 (S)</code>（雪）のような文字が混ざっていたため、<code>T</code>→0、<code>0.47 (S)</code>→0.47に直して数値の列にしてあります（M7のデータ整形と同じ発想です）。</div>
   <p>降水量でも同じ形で書けます。<code>precip</code>は「降水量(インチ)」なので、傾きは<strong>雨が1インチ増えたときの通行量の変化</strong>です。</p>
@@ -165,6 +176,7 @@
 (1 row)</div>
   <p><code>r_squared = 0.55</code>は、<strong>総通行量の変動のおよそ55%が、最高気温で説明できる</strong>という意味です。講義では「半分を少し超える、かなり高い数字」と評価しています。残りの約45%は、天気以外（曜日、イベント、風、季節など）が関わっているということです。</p>
   <div class="teal-box">📌 <strong>相関係数との関係：</strong>単回帰では <strong>r² ＝ r × r</strong> です。前ページで求めた<code>corr(total, high_temp) = 0.74</code>を2乗すると<code>0.74 × 0.74 ≒ 0.55</code>。実際に<code>regr_r2</code>は0.55を返します（0.5525…）。つまり「相関係数の2乗」が「説明できる割合」です。</div>
+  <p>教科書(p.277)の定義も同じです。「rを2乗した<strong>決定係数（coefficient of determination）＝r²</strong>は、<strong>独立変数によって説明される変動の割合</strong>で、0〜1の値」。たとえばr²が0.1なら「独立変数は従属変数の変動の10%を説明する、つまりほとんど説明していない」。教科書の例では<code>r² = 0.490</code>で、<strong>郡の所得のばらつきの約49%が学士号の割合で説明でき</strong>、残りの51%は別の要因（たとえば地域にある仕事の種類）で決まる、と述べています。</p>
   <h3>直線に気温を代入して「予測」する</h3>
   <p>回帰の最大の使い道は予測です。関数の戻り値は普通の数値なので、<code>傾き × x ＋ 切片</code>をSELECT内で計算できます。最高気温が<strong>70度</strong>の日の予想通行量は、次のとおりです。</p>
   <pre class="code-block">
@@ -175,6 +187,7 @@
        18022
 (1 row)</div>
   <p>計算は <code>370.18 × 70 − 7891.03 ≒ 18022</code> です。<strong>かっこ全体</strong>に<code>::numeric</code>を付けている点に注目してください（式全体をnumericにしてからroundします）。80度なら21723、50度なら10618です。</p>
+  <p>教科書(p.277)も同じ方法で予測しています。<code>Y = 1016.55(30) + 29651.42 = 60147.92</code>、つまり「学士号の割合が30%の郡の所得の中央値は約$60,148と予想できる」。実際の郡はこの値の上にも下にも散らばります。点が直線上に完全には並ばない（r ＝ 0.70は強いが完全ではない）からで、教科書も「他の要因が所得のばらつきに関わっている」と書いています。</p>
   <p>ただし、これは<strong>平均的な予想</strong>であり、実際の日の通行量は直線の上下にばらつきます（r²が1でないぶん）。予測は<strong>データの範囲（このデータでは約40〜81度）の内側</strong>で使いましょう。</p>
   <h3>どの説明変数がよく効くか（r²の比較）</h3>
   <p>講義の最後のポイントです。r²は「どの変数がYをよく説明するか」を比べる物差しにもなります。気温と降水量を比べてみましょう。</p>
@@ -191,6 +204,7 @@ low_temp  |      0.24
 precip    |      0.35
 (3 rows)</div>
   <p>最高気温(0.55)が最強で、降水量(0.35)、最低気温(0.24)の順です。講義では「降水量でも計算すれば、80〜90%くらい説明できるかもしれない」と予想していましたが、実際に計算すると<strong>降水量のr²は0.35</strong>で、気温より低い結果でした。<strong>予想ではなく、SQLで計算して確かめる</strong>ことが大切、という良い例です。</p>
+  <div class="warn-box">⚠️ <strong>教科書の注意点（p.278）：</strong>①<strong>相関は因果を証明しない</strong>（教科書は「離婚率とマーガリン消費量」のような無意味な相関の例に触れています）。また相関の節（p.274）でも「強い相関があっても、一方が他方の原因とは言えない。一緒に動くだけ」とあります。②統計の専門家は、結果が偶然でないかを調べる<strong>有意性検定</strong>や、データが正規分布に従うかなどの確認を、回帰の結果を受け入れる前に行います（本書の範囲外）。<br><strong>この教材の補足（教科書の記述ではありません）：</strong>直線以外の形の関係はr²が低く出ること、また直線から離れた範囲（このデータなら気温40〜81度の外）の予測は<strong>外挿（extrapolation）</strong>で信頼できないことにも注意しましょう。気温が高い日だけで回帰を作るとr²がぐっと下がる点は演習で確かめます。</div>
   <div class="warn-box">⚠️ <strong>r²が高い ≠ 原因である：</strong>r²は「同じ方向にそろって動く割合」を示すだけで、「気温が通行量を<strong>引き起こす</strong>」と証明するものではありません（相関は因果ではない）。また、直線以外の形（曲線）の関係は、r²が低く出ることもあります。さらに、同じ変数でも暑すぎる日は通行量が頭打ちになるため、気温が高い日だけで回帰を作ると、r²がぐっと下がります（演習で確かめましょう）。</div>
   <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>regr_r2</code>は「この直線は、どれくらい当たるか」の点数（0〜1）です。0.55なら55点くらい、つまり「半分ちょっと当たる」。点数が高い変数ほど、予想に使いやすい説明役です。</p></div>
   <div class="practice-card" id="p-rg-u3">
@@ -326,6 +340,8 @@ function handleQ(btn){
     <div class="term-item"><div class="term-name">regr_slope(Y, X)</div><div class="term-en">回帰直線の傾き</div><div class="term-def">xが1増えたときのyの変化量。引数はYが先、Xが後。</div></div>
     <div class="term-item"><div class="term-name">regr_intercept(Y, X)</div><div class="term-en">回帰直線の切片</div><div class="term-def">x＝0のときの直線の高さ。データ範囲外のこともあり、数学上の値。</div></div>
     <div class="term-item"><div class="term-name">regr_r2(Y, X)</div><div class="term-en">決定係数 r²</div><div class="term-def">Yのばらつきのうち、Xで説明できる割合（0〜1）。単回帰では相関係数の2乗。</div></div>
+    <div class="term-item"><div class="term-name">least squares regression line</div><div class="term-en">最小二乗回帰直線</div><div class="term-def">教科書の言う「最もよく合う直線」。Y = bX + a。bが傾き、aがy切片。</div></div>
+    <div class="term-item"><div class="term-name">coefficient of determination</div><div class="term-en">決定係数（r²）</div><div class="term-def">rを2乗した値。独立変数で説明できる従属変数の変動の割合（0〜1）。</div></div>
     <div class="term-item"><div class="term-name">::numeric</div><div class="term-en">numericキャスト</div><div class="term-def">double precisionをnumeric型に変換する。round(値, 桁数)の前に必要。</div></div>
     <div class="term-item"><div class="term-name">dependent / independent variable</div><div class="term-en">従属変数／独立変数</div><div class="term-def">説明される側(Y)と、説明する側(X)。</div></div>
   </div>
