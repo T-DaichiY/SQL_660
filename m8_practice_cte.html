@@ -68,7 +68,7 @@
 
 <script>window.ARENA_OPTS = { pgCompat: true, schemaGroups: ["banking","company","bikes"] };</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
-<script src="sql-engine.js?v=14"></script>
+<script src="sql-engine.js?v=15"></script>
 <script>
 var SQL_PROBLEMS = [
   {"id": "cte-b1", "tier": "basic", "title": "お客さんごとの融資合計（loan_totals）", "scenario": "Bankingデータベースで、<code>borrower</code>と<code>loan</code>を<code>loan_number</code>でJOINし、お客さんごとの融資合計を出す<code>loan_totals</code>というCTEを作ってください。メインのクエリでは<code>customer_id, total_loans</code>の順に全行を出し、<code>customer_id</code>の昇順に並べます。結果は3行2列になります。", "concept": "単一のCTEと集計", "hint": "WITH loan_totals AS (SELECT ... SUM(l.amount) ... GROUP BY b.customer_id) SELECT * FROM loan_totals ORDER BY ...", "starter": "-- customer_id, total_loans の順で（3行2列）\nWITH loan_totals AS (\n  \n)\nSELECT ", "solution": "WITH loan_totals AS (\n  SELECT b.customer_id, SUM(l.amount) AS total_loans\n  FROM borrower b\n  JOIN loan l ON b.loan_number = l.loan_number\n  GROUP BY b.customer_id\n)\nSELECT customer_id, total_loans FROM loan_totals ORDER BY customer_id;", "orderSensitive": true},

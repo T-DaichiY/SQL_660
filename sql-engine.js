@@ -596,6 +596,7 @@ var SCHEMA_COLUMNS = (function () {
 })();
 
 function escapeHtmlSQL(s) {
+  s = s === null || s === undefined ? "" : String(s);
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
@@ -894,7 +895,7 @@ function buildPracticeCard(p) {
   card.innerHTML =
     '<div class="ptitle">' + escapeHtmlSQL(p.title) + ' <span class="ptier">' + p.tier + "</span></div>" +
     '<p class="ptask">' + p.scenario + "</p>" +
-    '<p class="pconcept">🎯 <strong>スキル:</strong> ' + escapeHtmlSQL(p.concept) + "</p>" +
+    (p.concept ? '<p class="pconcept">🎯 <strong>スキル:</strong> ' + escapeHtmlSQL(p.concept) + "</p>" : "") +
     (p.mode === "mutate"
       ? '<p class="pmode">🧪 <strong>更新系の問題：</strong>▶実行で更新後のテーブルの状態を確認でき、✅採点は「更新後のテーブルの状態」を模範解答と比べます。</p>'
       : "") +
