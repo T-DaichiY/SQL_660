@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M9 Python×SQL① つなぐ理由と準備</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M9 🐍 Python <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m8"><span class="nav-mod">M9 Python×SQL</span><span class="navg"><a class="n-main active" href="m9_setup.html">🔌 つなぐ準備</a><a class="n-easy" href="m9_setup_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_connect.html">🔗 接続</a><a class="n-easy" href="m9_connect_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_execute.html">▶️ 実行</a><a class="n-easy" href="m9_execute_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M9 · Python and SQL — Part 1</div>
+  <h1>🔌 Python×SQL①：つなぐ理由と準備</h1>
+  <p>PythonからPostgreSQLを使う全体像、使う理由、必要なもの、そして<strong>pip</strong>でのインストールまでを学びます。</p>
+  <p style="font-size:.9rem">🎥 講義動画「Python and SQL」part 1 ・ 講義で使う接続用のサンプルは、講師が配るファイルです。このページのコードは講義の説明に沿った<strong>標準的な形</strong>で、講師のファイルそのものではありません。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 全体像</a><a href="#unit2">② なぜ使う</a><a href="#unit3">③ 準備</a><a href="#unit4">④ pip</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>PythonとSQLをつなぐ全体像</h2><div class="unit-sub">接続 → カーソル → コマンド → 閉じる</div></div>
+  </div>
+<p>講義の冒頭で、講師はまず「連携の見た目」を説明します。PythonのパッケージでSQLデータベースへの<strong>接続（connection）</strong>を作り、その上で<strong>カーソル（cursor）</strong>というオブジェクトを作ります。カーソルに、実行したいコマンドを1つ、または複数渡していきます。最後に接続を閉じると、コマンドが確定します。</p><p>ただし<strong>データを変更するとき</strong>と<strong>検索だけするとき</strong>で手順が少し違います。</p><table class="compare-table"><thead><tr><th></th><th>データを変更（CREATE・INSERT など）</th><th>検索だけ（SELECT）</th></tr></thead><tbody><tr><td>使うもの</td><td>接続 → <strong>カーソル</strong></td><td>接続 → <strong>pandas のDataFrame</strong></td></tr><tr><td>流れ</td><td>カーソルにコマンドを渡す → <code>commit</code> → 閉じる</td><td>クエリを実行して結果をDataFrameに保存</td></tr><tr><td>講義の扱い</td><td>Part 2・3で実習</td><td>次の講義で詳しく（まだ録音なし）</td></tr></tbody></table><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>PythonからSQLの先生に電話をかけるイメージです。電話をつなぐ（接続）→ 話す窓口を開く（カーソル）→ お願いを伝える（コマンド）→ 切る（close）。</p></div><div class="practice-card" id="p-m9-u1">
+    <div class="ptitle">💻 ミニ練習：流れを並べる</div>
+    <p class="ptask">変更の手順を、順番どおりに書き出してください（日本語でも英語でもOK。<code>connect</code>、<code>cursor</code>、<code>execute</code>、<code>commit</code>、<code>close</code> の5語を使います）。</p>
+    <textarea class="code-editor" id="p-m9-u1-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m9-u1", ["connect", "cursor", "execute", "commit", "close"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m9-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m9-u1-result"></div>
+    <div class="answer-reveal" id="p-m9-u1-answer" hidden>
+      <pre class="code-block"><span class="cl">connect  →  cursor  →  execute（何回でも）  →  commit  →  close</span></pre>
+      <p class="answer-note">順番は 接続 → カーソル → execute → commit → close。<code>commit</code>は「変更を確定する」、<code>close</code>で接続を終えます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>なぜPythonからSQLを使うのか</h2><div class="unit-sub">データサイエンスでよく使う連携</div></div>
+  </div>
+<p>講師が挙げる理由を整理します。</p><ul><li><strong>Pythonはデータサイエンスで人気の言語</strong>。だから、SQLデータベースから情報を取り出したり、データを足したりしたくなります。</li><li>データを<strong>集計・絞り込み・並べ替え</strong>する場面が多く、ここまで学んだSQLの知識をそのまま活かせます。</li><li>Pythonで作った<strong>入力フォーム</strong>のデータをSQLデータベースに入れる、といったアプリ開発にも使えます。</li><li><strong>Jupyter NotebookやGoogle Colab</strong>の中にいたまま、データベースから取り出してDataFrameとして加工できます。CSVをいちいち書き出す必要がありません。</li><li>データベースが日々更新されるなら、CSVを作るより「データベースから直接取る・更新する」方が理にかなっています。</li></ul><div class="teal-box">🔐 講師は「SQLインジェクションなどのセキュリティ問題を避ける一歩にもなり得る」とも述べています。ただし、そのためにはコードの書き方にも注意が必要です（講義では詳しく触れていません）。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SQLの勉強で身につけた「取り出す・集計する」力を、Pythonのノートブックの中で使えるようにする、というのがこの連携の目的です。</p></div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>必要なものと準備</h2><div class="unit-sub">Pythonのユーザーに注意</div></div>
+  </div>
+<p>連携には次のものが必要です。</p><ol><li><strong>Python</strong>がインストールされていること（インストール手順は別の動画）。</li><li><strong>psycopg2</strong>：PythonとPostgreSQLをつなぐパッケージ（接続の仲介役）。</li><li><strong>pandas</strong>：クエリの結果をDataFrameに入れるために使う。変更コマンドには使いません。</li><li>（任意）<strong>IDE</strong>：VS Code、PyCharm、Anaconda、Jupyter Notebook、Google Colab など。</li></ol><div class="warn-box">⚠️ <strong>Pythonはユーザーごとにインストールされます。</strong>講師は何度か強調しています。Pythonを入れたユーザーアカウントでログインしたまま、あとの手順（<code>pip</code>など）をやる必要があります。</div><p>混乱しやすい点を講師が説明しています。これまでは、データベースが読むファイルを「public」フォルダに置いてきました。それは、データベース側にWindowsのファイル権限がないからです。いっぽうPythonからの接続は、<strong>ユーザー名とパスワードを渡して</strong>ログインする別の仕組みなので、publicフォルダにいる必要はありません。Pythonのファイルも、どこに置いても構いません。</p><p>エディタについて：メモ帳でも書けますが、講師は勧めません。Pythonは<strong>インデント（字下げ）</strong>が命で、コピペでずれるとエラーになります。VS Code・PyCharm・Anaconda・Jupyter Notebookを強く勧めています。Google Colabは<strong>ローカルのデータベースにつなぐのが難しい</strong>（有料版なら可）ので注意。Notepad++ は構文の色分けが少しあり、選択肢のひとつです。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>用意するのは4つ。Python、psycopg2（つなぐ人）、pandas（検索結果を表にする人）、書きやすいエディタ。</p></div><div class="practice-card" id="p-m9-u3">
+    <div class="ptitle">💻 ミニ練習：必要なものを書き出す</div>
+    <p class="ptask">PythonとPostgreSQLをつなぐのに必要なパッケージ2つの名前を、コメントで書いてください。</p>
+    <textarea class="code-editor" id="p-m9-u3-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m9-u3", ["psycopg2", "pandas"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m9-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m9-u3-result"></div>
+    <div class="answer-reveal" id="p-m9-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="cm"># psycopg2（接続）と pandas（検索結果のDataFrame）</span></span></pre>
+      <p class="answer-note">接続を作るのが<code>psycopg2</code>、検索結果を表にするのが<code>pandas</code>です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>パッケージのインストール（pip）</h2><div class="unit-sub">コマンドプロンプトで2行</div></div>
+  </div>
+<p>Pythonを入れたユーザーでコマンドプロンプト（PowerShellでもOK）を開き、<strong>pip</strong>でパッケージを入れます。講師は pip を「Pythonのパッケージを自動で取ってきて入れてくれる仕組み」と説明しています。</p><pre class="code-block">
+<span class="cl">pip install psycopg2</span>
+<span class="cl">pip install pandas</span>
+</pre><ul><li>すでに入っていれば、キャッシュを使ってすぐ終わります。「successfully installed」と出れば成功です。</li><li>pandas は NumPy などもいっしょに入れるので、少し時間がかかります。</li><li>「pipを更新してください」という警告は、<strong>出ても動きます</strong>。更新したいときは <code>pip install --upgrade pip</code>（講師は <code>--user</code> のオプションにも触れています）。</li><li>画面をきれいにするには Windows のコマンドプロンプトで <code>cls</code>。<strong>このコマンドプロンプトは開いたままにしておく</strong>と、あとでPythonファイルの実行にも使えます。</li></ul><div class="warn-box">📝 <strong>講義外の補足：</strong>環境によっては <code>pip install psycopg2</code> がビルドに失敗することがあります。その場合は、ビルド済みの <code>psycopg2-binary</code>（<code>pip install psycopg2-binary</code>）を入れると、同じように <code>import psycopg2</code> で使えます。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>pip install 名前</code> だけで、インターネットから部品を取ってきて入れてくれます。</p></div><div class="practice-card" id="p-m9-u4">
+    <div class="ptitle">💻 ミニ練習：pipでインストール</div>
+    <p class="ptask">psycopg2 と pandas を入れるコマンドを2行書いてください。</p>
+    <textarea class="code-editor" id="p-m9-u4-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m9-u4", ["pip install", "psycopg2", "pandas"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m9-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m9-u4-result"></div>
+    <div class="answer-reveal" id="p-m9-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pip install psycopg2</span>
+<span class="cl">pip install pandas</span>
+</pre>
+      <p class="answer-note"><code>pip install パッケージ名</code>。Pythonを入れたユーザーで実行するのがポイントです。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">To change data (for example CREATE or INSERT) from Python, which object receives the commands?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A cursor</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A pandas DataFrame</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A CSV file that the lecturer provides</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The pgAdmin query tool</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which package acts as the connection broker between Python and PostgreSQL?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pandas, which also runs the INSERT commands</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>pgAdmin, which is installed with pip</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>psycopg2</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>NumPy, which opens the database port</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why does the lecturer stress which Windows user you are logged in as when you run pip?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Each user has a separate PostgreSQL server</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>pip works only for administrator accounts</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Python is installed per user</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>pandas refuses to install on shared computers</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why were files in a public folder needed for the database earlier, but not for Python?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Python files always have to be saved on the desktop</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Python logs in with a user name and password</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The public folder is much slower when pip downloads packages</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Python is not able to read anything from public folders</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is the main reason the lecturer gives for avoiding Notepad for Python?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Pasted code can lose its indentation</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Notepad is not able to save files that end in .py</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Notepad does not allow any comments inside the code</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Notepad cannot open a command prompt window</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does a warning that "pip needs to be updated" mean?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The install failed and the whole setup must be repeated</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The install works, and updating is optional</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>psycopg2 must be removed before anything else is done</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Python has to be completely reinstalled from scratch</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 2, 1, 0, 1];
+var FEEDBACKS=["The cursor is created from the connection, and commands are fed to it. pandas is used for queries.", "psycopg2 is the connection broker. pip is only the installer, and pgAdmin is a separate application.", "Python is user-specific. Use the same profile where Python was installed.", "The database server may lack Windows permission to read user folders. A Python connection is a separate login with credentials.", "Python depends on indentation. Copy and paste into a plain editor can change it and cause errors.", "It is only a notice. The packages are installed, and updating is optional."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">connection</div><div class="term-en">接続</div><div class="term-def">PythonからデータベースにつなぐためのObject。dbname・user・passwordなどを渡して作る。</div></div>
+    <div class="term-item"><div class="term-name">cursor</div><div class="term-en">カーソル</div><div class="term-def">接続の上で作る、コマンドを渡すための窓口。executeはカーソルに対して呼ぶ。</div></div>
+    <div class="term-item"><div class="term-name">psycopg2</div><div class="term-en">接続用パッケージ</div><div class="term-def">PythonとPostgreSQLをつなぐ「接続の仲介役」。pipでインストールする。</div></div>
+    <div class="term-item"><div class="term-name">pandas</div><div class="term-en">パンダス</div><div class="term-def">検索結果をDataFrameとして扱うパッケージ。変更コマンドには使わない。</div></div>
+    <div class="term-item"><div class="term-name">pip</div><div class="term-en">パッケージ管理</div><div class="term-def">Pythonのパッケージを自動でダウンロード・インストールするコマンド。</div></div>
+    <div class="term-item"><div class="term-name">IDE</div><div class="term-en">開発環境</div><div class="term-def">VS Code・PyCharm・Jupyterなど。メモ帳より書きやすく、インデントや色分けを助ける。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>各ステップを1つずつ。まず「接続→カーソル→execute→commit→close」の順番を頭に入れましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐍 SQLレッスン：M9 Python×SQL</p>
+  <p style="margin-top:.5rem;"><a href="m9_connect.html">接続 →</a> · <a href="m9_practice.html">🏋️ M9演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

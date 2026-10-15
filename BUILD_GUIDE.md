@@ -155,3 +155,11 @@ MCQ は**正解が常に一番長い選択肢にならないよう**にする(�
 ## 10. 並列化のコツ
 
 大きい作業(複数ページの執筆)は、共通ブリーフ(骨格ファイル、CSSクラス、問題書式、採点ルール、検証手順)を渡して Sonnet サブエージェントに分担させ、統合後に §7 を通す。
+
+## 8.6 M9（Python × SQL）で追加したもの
+- **録音**: Voice Memos の "M9 - Python and SQL part 1/2/3"（2026-10-15、6:24 / 6:03 / 15:48）を Whisper で文字起こし。録音は part 4（pandas でクエリ）がまだ無い。同日に 5:44 の録音がもう1本あったが中身は無音（"Thank you." の繰り返し）なので不採用。素材は `M9/M9_transcripts_whisper.txt`。
+- **ページ**: `m9_setup`（準備・pip）/ `m9_connect`（接続・.ini）/ `m9_execute`（execute・実行・確認）＋各 `_easy`、`m9_practice`（演習10問、`executeに渡すSQL`を mutate 採点）。生成スクリプトは作業用（再生成が必要なら `m9lib.py` 方式＝コード→HTML のヘルパー）。
+- **注意**: 講義の配布ファイル（full file / .ini / config / connect）は見ていないので、コードは公式ドキュメントに沿った標準形。ページにその旨を明記済み。講義外の補足（psycopg2-binary、よくあるエラー、pandas の read_sql_query）には「講義外」と表示。part 4 の録音が来たら pandas の単元を足す。
+- **ナビ**: M9 の行は `nav-row m8`（色は CSS `.nav-row.m8 .nav-mod`）。全 HTML の M8 行の直後に挿入。`.nav-groups.open` の高さを 480px に。
+- **演習**: SQLite では `SERIAL` の自動採番が動かないので、verify は id を除く（`num`,`data`）。
+- **index**: 全59レッスン / 演習280問。

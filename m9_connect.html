@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M9 Python×SQL② 接続</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M9 🐍 Python <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m8"><span class="nav-mod">M9 Python×SQL</span><span class="navg"><a class="n-main" href="m9_setup.html">🔌 つなぐ準備</a><a class="n-easy" href="m9_setup_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m9_connect.html">🔗 接続</a><a class="n-easy" href="m9_connect_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_execute.html">▶️ 実行</a><a class="n-easy" href="m9_execute_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M9 · Python and SQL — Part 2</div>
+  <h1>🔗 Python×SQL②：データベースに接続する</h1>
+  <p><strong>1ファイル版</strong>の接続（import→connect→cursor）と、変える3か所、本番向けの<strong>3ファイル版</strong>（.ini）を学びます。</p>
+  <p style="font-size:.9rem">🎥 講義動画「Python and SQL」part 2 ・ 講義で使う接続用のサンプルは、講師が配るファイルです。このページのコードは講義の説明に沿った<strong>標準的な形</strong>で、講師のファイルそのものではありません。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 2つの書き方</a><a href="#unit2">② 4ステップ</a><a href="#unit3">③ 変える3か所</a><a href="#unit4">④ 3ファイル版</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>2つの書き方</h2><div class="unit-sub">1ファイル版（これで十分）と、3ファイル版（本番向け）</div></div>
+  </div>
+<p>講師は接続の書き方を2つ見せます。</p><ul><li><strong>full file（1ファイル版）</strong>：接続・カーソル・コマンドを1つのファイルに全部書く。いちばん簡単で、始めやすい。</li><li><strong>3ファイル版</strong>：設定ファイル（.ini）・設定を読むファイル・接続のファイルに分け、<code>try/except</code>でエラー処理もする。<strong>本番向け</strong>。</li></ul><div class="teal-box">📌 講師は「<strong>必須なのは full file だけ</strong>。3ファイル版は見せるだけ」と明言しています。課題では full file を書き換えて、自分のコマンドを入れて使います。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>お店で言うと、1ファイル版は「全部ひとりで作るキッチン」、3ファイル版は「分業する大きな厨房」。まずは1人で十分です。</p></div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>1ファイル版の4ステップ</h2><div class="unit-sub">import → connect → cursor → execute</div></div>
+  </div>
+<p>講師が示すのは、psycopg2の公式ドキュメントにある基本の使い方の例とほぼ同じです。流れは4ステップ＋締めです。</p><pre class="code-block">
+<span class="cl"><span class="kw">import</span> psycopg2</span>
+<span class="cl"></span>
+<span class="cl">conn = psycopg2.connect(</span>
+<span class="cl">    dbname=<span class="st">"module9"</span>,</span>
+<span class="cl">    user=<span class="st">"postgres"</span>,</span>
+<span class="cl">    password=<span class="st">"your_password"</span></span>
+<span class="cl">)</span>
+<span class="cl">cur = conn.cursor()</span>
+<span class="cl"></span>
+<span class="cl">cur.execute(<span class="st">"SELECT version();"</span>)   <span class="cm"># ← ここにコマンドを書く（何回でも）</span></span>
+<span class="cl"></span>
+<span class="cl">conn.commit()</span>
+<span class="cl">cur.close()</span>
+<span class="cl">conn.close()</span>
+</pre><ol><li><strong>import</strong>：このファイルでpsycopg2を使うと宣言する（インストールしただけでは足りません）。</li><li><strong>connect</strong>：データベース名・ユーザー・パスワードを渡して、接続を作る。</li><li><strong>cursor</strong>：接続の上でカーソルを開く。「接続を開いて、データベースにアクセスさせて」の意味。</li><li><strong>execute</strong>：カーソルに対してコマンドを実行。何回呼んでもよい。</li><li>最後に<strong>commit</strong>（変更を確定）→ カーソルを閉じる → 接続を閉じる。</li></ol><div class="warn-box">📝 変数名（<code>conn</code>・<code>cur</code> など）は自由です。講義の音声では名前が聞き取りにくいため、ここでは公式ドキュメントで一般的な名前にしています。</div><div class="practice-card" id="p-m9-u2">
+    <div class="ptitle">💻 ミニ練習：接続を作る</div>
+    <p class="ptask">データベース名<code>module9</code>、ユーザー<code>postgres</code>、パスワード<code>pw123</code>で接続を作り、カーソルを開く2行以上を書いてください（<code>import</code>も含める）。</p>
+    <textarea class="code-editor" id="p-m9-u2-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m9-u2", ["import psycopg2", "connect", "dbname", "user", "password", "cursor"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m9-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m9-u2-result"></div>
+    <div class="answer-reveal" id="p-m9-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">import</span> psycopg2</span>
+<span class="cl"></span>
+<span class="cl">conn = psycopg2.connect(dbname=<span class="st">"module9"</span>, user=<span class="st">"postgres"</span>, password=<span class="st">"pw123"</span>)</span>
+<span class="cl">cur = conn.cursor()</span>
+</pre>
+      <p class="answer-note">接続は<code>psycopg2.connect(...)</code>、カーソルは<code>conn.cursor()</code>で作ります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で変える3か所</h2><div class="unit-sub">dbname・user・password</div></div>
+  </div>
+<p>講師が「変えるのはここだけ」と強調した部分です。</p><table class="compare-table"><thead><tr><th>変える</th><th>変えない</th></tr></thead><tbody><tr><td><code>dbname</code>（自分のデータベース名）</td><td><code>conn = ...connect(...)</code> の形</td></tr><tr><td><code>user</code>（データベースのユーザー）</td><td><code>cur = conn.cursor()</code></td></tr><tr><td><code>password</code>（そのパスワード）</td><td><code>execute</code>の呼び方（引用符の中のSQLだけ変わる）</td></tr></tbody></table><ul><li><code>=</code>の<strong>右側</strong>の文字列を、自分のデータベースに合わせて書き換えます。</li><li>ホストを指定しなければ、<strong>localhost（自分のPC）</strong>につなぎます。別のサーバーなら、URLまたはIPアドレスを指定します。</li></ul><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>住所（データベース名）、名前（ユーザー）、鍵（パスワード）の3つを自分用に変えれば、あとはそのままです。</p></div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>3ファイル版を見てみよう</h2><div class="unit-sub">.ini と config と connect</div></div>
+  </div>
+<p>見せるだけの例ですが、仕組みを知っておくと読めます。<strong>設定は.iniファイルに集める</strong>ので、ユーザー名やホストを変えるときは、このファイルだけを直せば済みます。</p><p class="code-label">▶ ① database.ini（設定ファイル）</p><pre class="code-block">
+<span class="cl">[postgres]</span>
+<span class="cl">host=localhost</span>
+<span class="cl">database=module9</span>
+<span class="cl">user=postgres</span>
+<span class="cl">password=your_password</span>
+</pre><p><code>[postgres]</code>はセクション名。講師の説明では、ここで<strong>host</strong>（localhost）が増えるだけで、あとはdbname・user・passwordと同じ3つです。</p><p class="code-label">▶ ② config.py（設定を読む）</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> configparser <span class="kw">import</span> ConfigParser</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> config(filename=<span class="st">"database.ini"</span>, section=<span class="st">"postgres"</span>):</span>
+<span class="cl">    parser = ConfigParser()</span>
+<span class="cl">    parser.read(filename)</span>
+<span class="cl">    db = {}</span>
+<span class="cl">    <span class="kw">if</span> parser.has_section(section):</span>
+<span class="cl">        <span class="kw">for</span> param <span class="kw">in</span> parser.items(section):</span>
+<span class="cl">            db[param[<span class="nm">0</span>]] = param[<span class="nm">1</span>]</span>
+<span class="cl">    <span class="kw">else</span>:</span>
+<span class="cl">        <span class="kw">raise</span> Exception(<span class="st">"Section "</span> + section + <span class="st">" not found in "</span> + filename)</span>
+<span class="cl">    <span class="kw">return</span> db</span>
+</pre><p>ファイル名とセクション名を受け取り、そのセクションのパラメータを辞書に読み込みます。ファイル名は<code>database.ini</code>、セクション名は<code>postgres</code>と、<strong>.iniの中身と一致している必要があります</strong>。</p><p class="code-label">▶ ③ connect.py（接続）</p><pre class="code-block">
+<span class="cl"><span class="kw">import</span> psycopg2</span>
+<span class="cl"><span class="kw">from</span> config <span class="kw">import</span> config</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> connect():</span>
+<span class="cl">    conn = <span class="kw">None</span></span>
+<span class="cl">    <span class="kw">try</span>:</span>
+<span class="cl">        params = config()</span>
+<span class="cl">        conn = psycopg2.connect(**params)</span>
+<span class="cl">        cur = conn.cursor()</span>
+<span class="cl">        cur.execute(<span class="st">"SELECT version();"</span>)</span>
+<span class="cl">        <span class="kw">print</span>(cur.fetchone())</span>
+<span class="cl">        cur.close()</span>
+<span class="cl">    <span class="kw">except</span> (Exception, psycopg2.DatabaseError) <span class="kw">as</span> error:</span>
+<span class="cl">        <span class="kw">print</span>(error)</span>
+<span class="cl">    <span class="kw">finally</span>:</span>
+<span class="cl">        <span class="kw">if</span> conn <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:</span>
+<span class="cl">            conn.close()</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:</span>
+<span class="cl">    connect()</span>
+</pre><ul><li><code>try / except / finally</code>がエラー処理（講師の言う「try-catch」）。</li><li><code>if __name__ == "__main__":</code>は、このファイルを直接実行したときだけ<code>connect()</code>を呼ぶ決まり文句。</li><li>バージョンを<code>print</code>しているのは、接続できたかどうかを確かめるためのおまけです。</li></ul><div class="warn-box">📝 このコードは、講義の説明（config→connectの流れ）に沿った<strong>典型的な形</strong>です。講師が配る実際のファイルとは細部が違う場合があります。配布ファイルがあればそちらを優先してください。</div><div class="teal-box">🔑 まとめ：full file でも3ファイル版でも、やることは同じ。<strong>import → 接続 → カーソル → execute（何回でも）→ commit → カーソルと接続を閉じる</strong>。</div><div class="practice-card" id="p-m9-u4">
+    <div class="ptitle">💻 ミニ練習：iniファイルを書く</div>
+    <p class="ptask"><code>localhost</code>のデータベース<code>module9</code>に、ユーザー<code>postgres</code>、パスワード<code>pw123</code>でつなぐ設定を、<code>[postgres]</code>セクションで書いてください。</p>
+    <textarea class="code-editor" id="p-m9-u4-input" rows="7">; ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m9-u4", ["[postgres]", "host", "database", "user", "password"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m9-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m9-u4-result"></div>
+    <div class="answer-reveal" id="p-m9-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">[postgres]</span>
+<span class="cl">host=localhost</span>
+<span class="cl">database=module9</span>
+<span class="cl">user=postgres</span>
+<span class="cl">password=pw123</span>
+</pre>
+      <p class="answer-note">セクション名<code>[postgres]</code>の下に、4つのキーを書きます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which method do you need to master for the assignment, according to the lecturer?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The full file approach</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The three-file approach with error handling</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only the .ini file approach</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Writing the connection in SQL</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the correct order of the steps in the full file?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>cursor, import, connect, execute</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>execute, connect, cursor, import</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>import, connect, cursor, execute</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>connect, import, execute, cursor</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which three values do you change to point the full file at your own database?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>import, cursor and execute</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>dbname, user and password</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>host, commit and close</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>psycopg2, pandas and pip</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">If you do not specify a host, where does the connection go by default?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A remote server in the cloud</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The Python download site</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>localhost, your own computer</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Nowhere, an error is always raised</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In the three-file version, what is the purpose of the .ini file?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To store the SQL commands</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To hold connection settings</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To install psycopg2 for the user</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To replace the cursor object</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">At the end of the full file, which step makes the data changes permanent?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>cursor()</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>import</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>close() on the cursor</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>commit()</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 1, 2, 1, 3];
+var FEEDBACKS=["The lecturer says the full file is the only expectation. The three-file version is shown as a production-style example.", "Import the package, create the connection, create the cursor, then execute commands.", "The database name, user and password change. The rest of the connection lines stay the same.", "By default it assumes localhost. For another server you give a URL or an IP address.", "Settings such as host, database, user and password live in one file, so changing the user does not touch the code.", "commit makes changes permanent, as with transactions earlier in the course. Then the cursor and connection are closed."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">full file</div><div class="term-en">1ファイル版</div><div class="term-def">接続・カーソル・コマンドを1つのPythonファイルに書く方法。課題で使うのはこれ。</div></div>
+    <div class="term-item"><div class="term-name">connect()</div><div class="term-en">接続を作る</div><div class="term-def">dbname・user・passwordを渡してデータベースにつなぐ。hostを省くとlocalhost。</div></div>
+    <div class="term-item"><div class="term-name">execute()</div><div class="term-en">コマンド実行</div><div class="term-def">カーソルに対して呼ぶ。引用符の中にSQLを書く。何回でも呼べる。</div></div>
+    <div class="term-item"><div class="term-name">commit()</div><div class="term-en">確定</div><div class="term-def">変更を永続化する。M7のトランザクションのCOMMITと同じ考え方。</div></div>
+    <div class="term-item"><div class="term-name">.ini file</div><div class="term-en">設定ファイル</div><div class="term-def">[セクション名]の下にhost・database・user・passwordを書く。3ファイル版で使う。</div></div>
+    <div class="term-item"><div class="term-name">try / except</div><div class="term-en">エラー処理</div><div class="term-def">エラーが起きても落ちずに処理する書き方。本番向けの3ファイル版で使う。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>1ファイル版で、dbname・user・passwordを自分用に書き換えるところから始めましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐍 SQLレッスン：M9 Python×SQL</p>
+  <p style="margin-top:.5rem;"><a href="m9_setup.html">← 準備</a> · <a href="m9_execute.html">実行 →</a> · <a href="m9_practice.html">🏋️ M9演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

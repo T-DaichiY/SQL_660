@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M9 Python×SQL② 接続</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 M9 🐍 Python <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m8"><span class="nav-mod">M9 Python×SQL</span><span class="navg"><a class="n-main" href="m9_setup.html">🔌 つなぐ準備</a><a class="n-easy" href="m9_setup_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m9_connect.html">🔗 接続</a><a class="n-easy" href="m9_connect_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_execute.html">▶️ 実行</a><a class="n-easy" href="m9_execute_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M9 · Python and SQL — Part 2 🍎</div>
+  <h1>🍎 超やさしい版：接続する</h1>
+  <p>1ファイル版の接続の書き方です。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#u1">1ファイル版</a><a href="#u2">3ファイル版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>1ファイル版の中身</h2><div class="unit-sub">4ステップ</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong><strong>import → connect → cursor → execute</strong>。最後に commit と close。</strong></p></div><pre class="code-block">
+<span class="cl"><span class="kw">import</span> psycopg2</span>
+<span class="cl"></span>
+<span class="cl">conn = psycopg2.connect(</span>
+<span class="cl">    dbname=<span class="st">"module9"</span>,</span>
+<span class="cl">    user=<span class="st">"postgres"</span>,</span>
+<span class="cl">    password=<span class="st">"your_password"</span></span>
+<span class="cl">)</span>
+<span class="cl">cur = conn.cursor()</span>
+<span class="cl"></span>
+<span class="cl">cur.execute(<span class="st">"SELECT version();"</span>)   <span class="cm"># ← ここにコマンドを書く（何回でも）</span></span>
+<span class="cl"></span>
+<span class="cl">conn.commit()</span>
+<span class="cl">cur.close()</span>
+<span class="cl">conn.close()</span>
+</pre><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>変えるのは <code>dbname</code>・<code>user</code>・<code>password</code> の3つだけ。ホストを書かなければ自分のPC（localhost）につなぎます。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 自分で変える3つは？<span class="cp-a">A. dbname、user、password。</span></div><div class="cp-q">Q2. executeは何回呼べる？<span class="cp-a">A. 何回でも。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>3ファイル版は見るだけ</h2><div class="unit-sub">本番向け</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>課題で必要なのは<strong>1ファイル版だけ</strong>。3ファイル版は「設定を.iniに分ける」本番向けの書き方。</strong></p></div><pre class="code-block">
+<span class="cl">[postgres]</span>
+<span class="cl">host=localhost</span>
+<span class="cl">database=module9</span>
+<span class="cl">user=postgres</span>
+<span class="cl">password=your_password</span>
+</pre><p>設定（host・database・user・password）を<strong>.iniにまとめる</strong>ので、変えるときはこのファイルだけ直せば済みます。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>1ファイル版は1人で作るキッチン、3ファイル版は分業する厨房。まずは1人でOK。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. .iniファイルに書くものは？<span class="cp-a">A. 接続の設定（host・database・user・password）。</span></div></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しい説明と英語MCQクイズは <a href="m9_connect.html">本編</a> へ。</p>
+  </div>
+</aside>
+
+</div>
+
+<footer><p>🍎 SQLレッスン：M9 Python×SQL — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m9_connect.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>
