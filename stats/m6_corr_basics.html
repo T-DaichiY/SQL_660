@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 相関①　散布図と相関係数</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 📈 相関の基本 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main active" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Correlation ① — Scatterplots &amp; the Correlation Coefficient</div>
+  <h1>📈 相関①：散布図と相関係数 r</h1>
+  <p>2つの量的変数の関係は、まず<strong>散布図</strong>で見て、<strong>向き・形・強さ・特異な特徴</strong>を言葉にします。そのあと、<strong>強さと向きを1つの数で表す相関係数 r</strong> を学び、実データ（donors）で探索し、<strong>相関行列・散布図行列</strong>で多くの変数を一度に眺めます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Correlation 1 (Scatterplots) ／ Correlation 2 (Correlation) ／ Correlation 3 (Exploring with Scatter plots) ／ Correlation 4 (Correlation Matrices and scatterplot matrices)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 散布図</a><a href="#unit2">② 相関係数 r</a><a href="#unit3">③ 散布図で探索する</a><a href="#unit4">④ 相関行列・散布図行列</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 散布図：Correlation 1 (Scatterplots)</li><li>② 相関係数 r（性質・目安・外れ値の影響）：Correlation 2 (Correlation)</li><li>③ 散布図で探索する（donors データ、Your turn）：Correlation 3 (Exploring with Scatter plots)</li><li>④ 相関行列・散布図行列：Correlation 4 (Correlation Matrices and scatterplot matrices)</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>散布図：2つの量的変数を見る</h2><div class="unit-sub">向き・形・強さ・特異な特徴</div></div>
+  </div>
+  <p>統計学者 <strong>John Tukey</strong>（箱ひげ図を考案した人）は「絵（図）のいちばんの価値は、<strong>予想もしていなかったものに気づかせてくれること</strong>」と言いました。平均・中央値・標準偏差・範囲といった要約統計量だけで済ませたくなりますが、<strong>必ず可視化（visualize）</strong>しましょう。数値を眺めているだけでは見えない発見があります。</p>
+  <p>これまで学んだ基本のグラフを、「どんなデータか」で整理しておきます（講義の復習）。そして今回は最後の行、<strong>量的変数が2つ</strong>のときの<strong>散布図（scatterplot）</strong>です。</p>
+  <table class="compare-table">
+    <tr><th>データ</th><th>使うグラフ</th></tr>
+    <tr><td>量的変数 1つ</td><td>dotplot・stemplot・boxplot・histogram</td></tr>
+    <tr><td>カテゴリ変数 1つ</td><td>bar graph（pie chart は統計家はあまり使わない）</td></tr>
+    <tr><td>量的変数 1つ × 複数グループ（例：カナダ・メキシコ・アメリカ）</td><td>parallel boxplots／side-by-side stemplot（2グループのときだけ）</td></tr>
+    <tr><td>カテゴリ変数 2つ</td><td>mosaic plot・segmented bar graph・side-by-side bar graph</td></tr>
+    <tr><td><strong>量的変数 2つ（同じ個体で測定）</strong></td><td><strong>scatterplot（散布図）</strong></td></tr>
+  </table>
+  <h3>例：検索順位とクリック率</h3>
+  <p>企業は自社サイトを検索結果の上位に出そうと努力します。<strong>検索結果での順位（position：1位が最初のリンク、2位が2番目…）</strong>と、<strong>そのリンクをクリックした人の割合（click-through rate）</strong>には関係があるでしょうか。モバイル検索の上位10位のクリック率が下のデータです（1位は23.5%の人がクリック、2位は14.94%…）。</p>
+  <table class="compare-table">
+    <tr><th>position</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+    <tr><td>rate（%）</td><td>23.53</td><td>14.94</td><td>11.19</td><td>7.47</td><td>5.29</td><td>3.8</td><td>2.79</td><td>2.11</td><td>1.57</td><td>1.18</td></tr>
+  </table>
+  <p>2つとも数値（量的変数）なので、基本の <code>plot()</code> で散布図が描けます。1つ目に書いたものが <strong>x軸</strong>、2つ目が <strong>y軸</strong>です。</p>
+<pre class="code-block">
+<span class="cl">position &lt;- <span class="nm">1</span>:<span class="nm">10</span></span>
+<span class="cl">rate &lt;- <span class="kw">c</span>(<span class="nm">23.53</span>, <span class="nm">14.94</span>, <span class="nm">11.19</span>, <span class="nm">7.47</span>, <span class="nm">5.29</span>, <span class="nm">3.8</span>, <span class="nm">2.79</span>, <span class="nm">2.11</span>, <span class="nm">1.57</span>, <span class="nm">1.18</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">plot</span>(position,                    <span class="cm"># variable on x-axis</span></span>
+<span class="cl">     rate,                        <span class="cm"># variable on y-axis</span></span>
+<span class="cl">     pch = <span class="nm">16</span>,                    <span class="cm"># filled-in circles</span></span>
+<span class="cl">     cex = <span class="nm">2</span>,                     <span class="cm"># larger circle size</span></span>
+<span class="cl">     las = <span class="nm">1</span>,                     <span class="cm"># rotate numbers on y-axis</span></span>
+<span class="cl">     xlab = <span class="st">"Position"</span>,           <span class="cm"># x-axis label</span></span>
+<span class="cl">     ylab = <span class="st">"Click-through Rate"</span>) <span class="cm"># y-axis label</span></span>
+</pre>
+  <table class="compare-table">
+    <tr><th>引数</th><th>意味（講義より）</th></tr>
+    <tr><td><code>pch = 16</code></td><td>plotting character。16 = <strong>塗りつぶしの丸</strong>（既定は白抜きの丸）。数字を変えると形が変わるので試してみよう</td></tr>
+    <tr><td><code>cex = 2</code></td><td>点の<strong>大きさ</strong>。講義は画面で教えるので大きくしている</td></tr>
+    <tr><td><code>las = 1</code></td><td>y軸の<strong>数字の向き</strong>を読みやすく回転する</td></tr>
+    <tr><td><code>xlab / ylab</code></td><td>x軸／y軸の<strong>ラベル</strong>。軸には必ずラベルを付ける</td></tr>
+  </table>
+  <p>変数がデータフレーム <code>df</code> の列のときは <code>plot(df$col1, df$col2)</code> と書きます（次の動画で使います）。</p>
+  <div class="viz">
+    <div class="viz-title">位置とクリック率の散布図（上のデータをそのまま描画）</div>
+    <div style="text-align:center"><svg viewBox="0 0 360 240" width="360" height="240" role="img" aria-label="散布図 位置とクリック率" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="359" height="239" fill="none" stroke="#cbd5e1"/><line x1="30" y1="216" x2="350" y2="216" stroke="#64748b"/><line x1="30" y1="10" x2="30" y2="216" stroke="#64748b"/><line x1="88.2" y1="216" x2="88.2" y2="219" stroke="#64748b"/><text x="88.2" y="228" font-size="9" text-anchor="middle" fill="#475569">2</text><line x1="146.4" y1="216" x2="146.4" y2="219" stroke="#64748b"/><text x="146.4" y="228" font-size="9" text-anchor="middle" fill="#475569">4</text><line x1="204.5" y1="216" x2="204.5" y2="219" stroke="#64748b"/><text x="204.5" y="228" font-size="9" text-anchor="middle" fill="#475569">6</text><line x1="262.7" y1="216" x2="262.7" y2="219" stroke="#64748b"/><text x="262.7" y="228" font-size="9" text-anchor="middle" fill="#475569">8</text><line x1="320.9" y1="216" x2="320.9" y2="219" stroke="#64748b"/><text x="320.9" y="228" font-size="9" text-anchor="middle" fill="#475569">10</text><line x1="27" y1="216.0" x2="30" y2="216.0" stroke="#64748b"/><text x="25" y="219.0" font-size="9" text-anchor="end" fill="#475569">0</text><line x1="27" y1="136.8" x2="30" y2="136.8" stroke="#64748b"/><text x="25" y="139.8" font-size="9" text-anchor="end" fill="#475569">10</text><line x1="27" y1="57.5" x2="30" y2="57.5" stroke="#64748b"/><text x="25" y="60.5" font-size="9" text-anchor="end" fill="#475569">20</text><circle cx="59.1" cy="29.6" r="4" fill="var(--primary)" opacity=".85"/><circle cx="88.2" cy="97.6" r="4" fill="var(--primary)" opacity=".85"/><circle cx="117.3" cy="127.3" r="4" fill="var(--primary)" opacity=".85"/><circle cx="146.4" cy="156.8" r="4" fill="var(--primary)" opacity=".85"/><circle cx="175.5" cy="174.1" r="4" fill="var(--primary)" opacity=".85"/><circle cx="204.5" cy="185.9" r="4" fill="var(--primary)" opacity=".85"/><circle cx="233.6" cy="193.9" r="4" fill="var(--primary)" opacity=".85"/><circle cx="262.7" cy="199.3" r="4" fill="var(--primary)" opacity=".85"/><circle cx="291.8" cy="203.6" r="4" fill="var(--primary)" opacity=".85"/><circle cx="320.9" cy="206.7" r="4" fill="var(--primary)" opacity=".85"/><text x="190.0" y="238" font-size="10" text-anchor="middle" fill="#334155">Position</text><text x="9" y="113.0" font-size="10" text-anchor="middle" fill="#334155" transform="rotate(-90 9 113.0)">Click-through Rate (%)</text></svg></div>
+    <div class="viz-cap">数字の表だけでは気づきにくいが、図にすると「右下がりで曲がった形」がすぐ見える。</div>
+  </div>
+  <h3>散布図を説明する4つの観点</h3>
+  <p>散布図を見たら、<strong>direction（向き）・form（形）・strength（強さ）・unusual features（特異な特徴）</strong>の4つを述べられるようにします。</p>
+  <table class="compare-table">
+    <tr><th>観点</th><th>見かた</th><th>この例</th></tr>
+    <tr><td>direction 向き</td><td><strong>左から右へ</strong>読む。下がる＝negative（スキーヤーが滑り降りるイメージ）、上がる＝positive、平ら＝向きなし</td><td>negative</td></tr>
+    <tr><td>form 形</td><td>linear（直線的）か non-linear（曲線など）か</td><td>non-linear（曲がっている）</td></tr>
+    <tr><td>strength 強さ</td><td>点が傾向（trend）にどれだけ<strong>近く</strong>沿うか。weak／moderate／strong の区別は次の動画（②）</td><td>strong（点が曲線にぴったり沿う）</td></tr>
+    <tr><td>unusual features</td><td><strong>outlier</strong>（傾向から外れた点。たとえば図の上の方にぽつんとある点）や <strong>cluster</strong>（点のかたまり）</td><td>なし</td></tr>
+  </table>
+  <div class="note-box">✍️ 模範文：<em>There is a strong negative non-linear association between position and click-through rate.</em>（位置とクリック率の間には、強い負の非線形の関連がある。）</div>
+  <p>数値の表だけを見て、形・強さ・外れ値を見抜くのはとても難しい。これも<strong>可視化の利点</strong>です。</p>
+  <div class="warn-box">⚠️ <strong>講師の注意（最後のコメント）</strong><ul style="margin:.4rem 0 0 1.2rem">
+    <li>散布図が示すのは<strong>傾向（trend）</strong>であって、絶対的・<strong>決定的（deterministic）な関係ではない</strong>。点が曲線や直線の上に完全に乗る必要はない（この例はかなりきれいな部類で、今後はもっと乱れた散布図が出てくる）。</li>
+    <li>散布図は<strong>量的データ</strong>用。順序尺度（ordinal）は工夫すれば描ける（この「順位」も ordinal とみなしてよい）が、<strong>名義尺度（nominal）</strong>では何をしているのか十分注意すること。</li>
+  </ul></div>
+  <h3>correlation・association・relationship</h3>
+  <p>この3つはほぼ同じ意味で使われます（講師の考えでは大きな違いはない）。ただし <strong>correlation（相関）と言ってよいのは量的変数どうしのときだけ</strong>。カテゴリ変数なら association か relationship を使います。</p>
+  <table class="compare-table">
+    <tr><th>変数の種類</th><th>使ってよい言葉</th></tr>
+    <tr><td>量的 × 量的</td><td>correlation／association／relationship のどれでもOK</td></tr>
+    <tr><td>カテゴリ変数を含む</td><td>association／relationship（correlation は使わない）</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>散布図は「2つの数が一緒にどう動くか」を点で見る図。見たら<strong>向き・形・強さ・変わった点</strong>の4つを言葉にする。表の数字だけでは気づけないことが、図だとすぐ分かる。</p></div>
+  <div class="practice-card" id="p-m6a-u1">
+    <div class="ptitle">💻 ミニ練習：散布図を描く</div>
+    <p class="ptask"><code>x</code> を横軸、<code>y</code> を縦軸にして、<strong>塗りつぶしの丸（pch=16）</strong>・大きさ <code>cex=2</code>・y軸の数字を回転（<code>las=1</code>）・軸ラベル <code>"Position"</code> と <code>"Click-through Rate"</code> を付けた散布図を描く <code>plot()</code> を書いてください（変数名は <code>position</code> と <code>rate</code>）。</p>
+    <textarea class="code-editor" id="p-m6a-u1-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6a-u1', ['plot', 'position', 'rate', 'pch', 'cex', 'las', 'xlab', 'ylab'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6a-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6a-u1-result"></div>
+    <div class="answer-reveal" id="p-m6a-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(position, rate,</span>
+<span class="cl">     pch = <span class="nm">16</span>, cex = <span class="nm">2</span>, las = <span class="nm">1</span>,</span>
+<span class="cl">     xlab = <span class="st">"Position"</span>, ylab = <span class="st">"Click-through Rate"</span>)</span>
+</pre>
+      <p class="answer-note">1つ目の変数が x軸、2つ目が y軸。pch=16 で塗りつぶし、cex で大きさ、las=1 で y軸の数字の向き、xlab/ylab でラベル。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>相関係数 r</h2><div class="unit-sub">強さと向きを1つの数で</div></div>
+  </div>
+  <p>散布図の「強さ」と「向き」を、<strong>1つの数</strong>で表したのが<strong>相関係数（correlation coefficient）</strong>です。①の例は曲線的で線形ではありませんが、計算した相関は <strong>r = −0.9</strong> でした。符号のマイナスは、①で見た「右下がり」とまったく同じ意味です。</p>
+<pre class="code-block">
+<span class="cl">position &lt;- <span class="nm">1</span>:<span class="nm">10</span></span>
+<span class="cl">rate &lt;- <span class="kw">c</span>(<span class="nm">23.53</span>, <span class="nm">14.94</span>, <span class="nm">11.19</span>, <span class="nm">7.47</span>, <span class="nm">5.29</span>, <span class="nm">3.8</span>, <span class="nm">2.79</span>, <span class="nm">2.11</span>, <span class="nm">1.57</span>, <span class="nm">1.18</span>)</span>
+<span class="cl"><span class="kw">cor</span>(position, rate)</span>
+</pre><div class="output-reveal">[1] -0.9024191</div>
+  <h3>Pearson の相関係数 r</h3>
+  <p>講義で扱うのは <strong>Pearson's correlation coefficient（ピアソンの積率相関係数）r</strong> です。<strong>2つの量的変数の「線形な（直線的な）関連」の強さと向き</strong>を表す統計量です。</p>
+  <ul>
+    <li><strong>−1 ≤ r ≤ 1</strong>（−1 と +1 を含む）。同じことを <strong>|r| ≤ 1</strong> とも書く。絶対値 |r| は符号を無視した大きさのこと。</li>
+    <li><strong>r &gt; 0</strong>：正の関連（右上がり、positive association）。例 r = +0.9。</li>
+    <li><strong>r &lt; 0</strong>：負の関連（右下がり、negative association）。例 r = −0.97。</li>
+    <li><strong>r = 0</strong>：<strong>線形の関連がない（no <em>linear</em> association）</strong>。講義では「linear」が太字で強調されていた。</li>
+  </ul>
+  <div class="viz">
+    <div class="viz-title">r のいろいろ（講義の R データ。赤い点線なしの素の散布図）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="正の相関" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="8" y1="132" x2="162" y2="132" stroke="#64748b"/><line x1="8" y1="8" x2="8" y2="132" stroke="#64748b"/><circle cx="17.6" cy="126.4" r="3" fill="var(--primary)" opacity=".85"/><circle cx="17.6" cy="115.1" r="3" fill="var(--primary)" opacity=".85"/><circle cx="36.9" cy="70.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="56.1" cy="58.7" r="3" fill="var(--primary)" opacity=".85"/><circle cx="56.1" cy="53.1" r="3" fill="var(--primary)" opacity=".85"/><circle cx="75.4" cy="47.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="113.9" cy="36.2" r="3" fill="var(--primary)" opacity=".85"/><circle cx="152.4" cy="13.6" r="3" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.8rem"><strong>正の相関</strong><br>r = 0.897</div></div><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="負の相関" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="8" y1="132" x2="162" y2="132" stroke="#64748b"/><line x1="8" y1="8" x2="8" y2="132" stroke="#64748b"/><circle cx="17.6" cy="13.6" r="3" fill="var(--primary)" opacity=".85"/><circle cx="17.6" cy="24.9" r="3" fill="var(--primary)" opacity=".85"/><circle cx="36.9" cy="70.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="56.1" cy="81.3" r="3" fill="var(--primary)" opacity=".85"/><circle cx="56.1" cy="86.9" r="3" fill="var(--primary)" opacity=".85"/><circle cx="75.4" cy="92.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="113.9" cy="103.8" r="3" fill="var(--primary)" opacity=".85"/><circle cx="152.4" cy="126.4" r="3" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.8rem"><strong>負の相関</strong><br>r = −0.897</div></div><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="U字型" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="8" y1="132" x2="162" y2="132" stroke="#64748b"/><line x1="8" y1="8" x2="8" y2="132" stroke="#64748b"/><circle cx="17.6" cy="20.4" r="3" fill="var(--primary)" opacity=".85"/><circle cx="36.9" cy="70.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="56.1" cy="94.8" r="3" fill="var(--primary)" opacity=".85"/><circle cx="75.4" cy="107.2" r="3" fill="var(--primary)" opacity=".85"/><circle cx="94.6" cy="107.2" r="3" fill="var(--primary)" opacity=".85"/><circle cx="113.9" cy="92.3" r="3" fill="var(--primary)" opacity=".85"/><circle cx="133.1" cy="70.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="152.4" cy="20.4" r="3" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.8rem"><strong>U字型</strong><br>r = 0.006（線形の関連なし）</div></div><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="r=1" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="8" y1="132" x2="162" y2="132" stroke="#64748b"/><line x1="8" y1="8" x2="8" y2="132" stroke="#64748b"/><circle cx="27.2" cy="116.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="46.5" cy="101.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="65.8" cy="85.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="85.0" cy="70.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="104.2" cy="54.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="123.5" cy="39.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="142.8" cy="23.5" r="3" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.8rem"><strong>完全な正の直線</strong><br>r = 1</div></div><div style="text-align:center"><svg viewBox="0 0 170 140" width="170" height="140" role="img" aria-label="r=-1" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="169" height="139" fill="none" stroke="#cbd5e1"/><line x1="8" y1="132" x2="162" y2="132" stroke="#64748b"/><line x1="8" y1="8" x2="8" y2="132" stroke="#64748b"/><circle cx="27.2" cy="23.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="46.5" cy="39.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="65.8" cy="54.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="85.0" cy="70.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="104.2" cy="85.5" r="3" fill="var(--primary)" opacity=".85"/><circle cx="123.5" cy="101.0" r="3" fill="var(--primary)" opacity=".85"/><circle cx="142.8" cy="116.5" r="3" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.8rem"><strong>完全な負の直線</strong><br>r = −1</div></div></div>
+    <div class="viz-cap">左2つは hours と score の例（0.897 と −0.897）。真ん中はU字型で r はほぼ 0。右2つは完全に一直線の場合（r = 1, −1）。</div>
+  </div>
+  <h3>r = 0 でもパターンはある（U字型の例）</h3>
+  <p>講師は「r = 0 の例」として2つのグラフを見せました。左は<strong>ただの点の塊</strong>（上がりか下がりか分からない＝線形の関連なし）。右は<strong>放物線（U字）</strong>のパターンがあるのに、r は −0.12 で 0 にとても近い（講師の作った架空データの値）。つまり <strong>線形の関連はないが、二次（曲線）の関連は存在しうる</strong>のです。下は同じ考えを、U字型の別データで R で確かめたものです（r = 0.006）。</p>
+<pre class="code-block">
+<span class="cl">hours &lt;- <span class="nm">1</span>:<span class="nm">8</span></span>
+<span class="cl">score &lt;- <span class="kw">c</span>(<span class="nm">100</span>, <span class="nm">80</span>, <span class="nm">70</span>, <span class="nm">65</span>, <span class="nm">65</span>, <span class="nm">71</span>, <span class="nm">80</span>, <span class="nm">100</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">plot</span>(hours, score, pch = <span class="nm">16</span>, cex = <span class="nm">2</span>, main = <span class="st">"No 'linear' association, but..."</span>)</span>
+<span class="cl"><span class="kw">cor</span>(hours, score)</span>
+</pre><div class="output-reveal">[1] 0.006140287</div>
+  <h3>±1 になるのは「完全な直線」だけ</h3>
+  <p>r = +1 や r = −1 になるのは、<strong>すべての点がぴったり直線上に乗る</strong>ときだけです。講師は2枚のグラフを横に並べるために <code>par(mfrow = c(1, 2))</code>（1行2列）を使いました。</p>
+<pre class="code-block">
+<span class="cl">fake_x &lt;- <span class="nm">1</span>:<span class="nm">7</span></span>
+<span class="cl"><span class="kw">par</span>(mfrow = <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>))      <span class="cm"># one row, two columns of plots</span></span>
+<span class="cl"><span class="kw">plot</span>(fake_x, fake_x, pch = <span class="nm">16</span>, main = <span class="st">"r = 1"</span>)</span>
+<span class="cl"><span class="kw">plot</span>(fake_x, -fake_x, pch = <span class="nm">16</span>, main = <span class="st">"r = -1"</span>)</span>
+<span class="cl"><span class="kw">cor</span>(fake_x, fake_x)</span>
+<span class="cl"><span class="kw">cor</span>(fake_x, -fake_x)</span>
+</pre><div class="output-reveal">[1] 1
+[1] -1</div>
+  <h3>強さの目安（この授業の基準）</h3>
+  <p>強さは <strong>|r| が 1 に近いほど strong、0 に近いほど weak</strong>。符号ではなく絶対値で判断します（−1 も +1 も強い）。この授業（と多くの入門統計）では次の区分を使います。</p>
+  <table class="compare-table">
+    <tr><th>strong</th><th>moderate</th><th>weak</th><th>moderate</th><th>strong</th></tr>
+    <tr><td>−1 〜 −0.8</td><td>−0.8 〜 −0.5</td><td>−0.5 〜 0.5</td><td>0.5 〜 0.8</td><td>0.8 〜 1</td></tr>
+  </table>
+  <div class="note-box">💡 つまり「−0.5 から +0.5 の間は weak、0.8 より大きいか −0.8 より小さければ strong、その間が moderate」。<strong>「strong」の基準は分野によって違います</strong>（エンジニアと、社会学者・人類学者などの社会科学者とでは、強いと感じる値が違う）。でもこの授業では上の表で十分です。</div>
+  <h3>外れ値に弱い：r は resistant ではない</h3>
+  <p>r は<strong>外れ値（outlier）に対して頑健ではありません（not resistant）</strong>。ここでの外れ値は、見た目で「<strong>データの傾向（trend）から外れた点</strong>」のこと（後の回帰の動画で、残差 residual が大きい点として出てきます）。</p>
+<pre class="code-block">
+<span class="cl"><span class="cm"># Scatterplot with outlier</span></span>
+<span class="cl">hours &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">7</span>)</span>
+<span class="cl">score &lt;- <span class="kw">c</span>(<span class="nm">100</span>, <span class="nm">80</span>, <span class="nm">70</span>, <span class="nm">65</span>, <span class="nm">60</span>, <span class="nm">50</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl"><span class="kw">cor</span>(hours, score)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># Scatterplot without the outlier (the last point removed)</span></span>
+<span class="cl">hoursNoOutlier &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">5</span>)</span>
+<span class="cl">scoreNoOutlier &lt;- <span class="kw">c</span>(<span class="nm">100</span>, <span class="nm">80</span>, <span class="nm">70</span>, <span class="nm">65</span>, <span class="nm">60</span>, <span class="nm">50</span>, <span class="nm">10</span>)</span>
+<span class="cl"><span class="kw">cor</span>(hoursNoOutlier, scoreNoOutlier)</span>
+</pre><div class="output-reveal">[1] -0.2351088
+[1] -0.9676547</div>
+  <div class="viz">
+    <div class="viz-title">たった1点で r が −0.235 から −0.968 に</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
+      <div style="text-align:center"><svg viewBox="0 0 240 190" width="240" height="190" role="img" aria-label="外れ値あり" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="239" height="189" fill="none" stroke="#cbd5e1"/><line x1="30" y1="166" x2="230" y2="166" stroke="#64748b"/><line x1="30" y1="10" x2="30" y2="166" stroke="#64748b"/><line x1="42.5" y1="166" x2="42.5" y2="169" stroke="#64748b"/><text x="42.5" y="178" font-size="9" text-anchor="middle" fill="#475569">0</text><line x1="92.5" y1="166" x2="92.5" y2="169" stroke="#64748b"/><text x="92.5" y="178" font-size="9" text-anchor="middle" fill="#475569">2</text><line x1="142.5" y1="166" x2="142.5" y2="169" stroke="#64748b"/><text x="142.5" y="178" font-size="9" text-anchor="middle" fill="#475569">4</text><line x1="192.5" y1="166" x2="192.5" y2="169" stroke="#64748b"/><text x="192.5" y="178" font-size="9" text-anchor="middle" fill="#475569">6</text><line x1="27" y1="166.0" x2="30" y2="166.0" stroke="#64748b"/><text x="25" y="169.0" font-size="9" text-anchor="end" fill="#475569">0</text><line x1="27" y1="95.1" x2="30" y2="95.1" stroke="#64748b"/><text x="25" y="98.1" font-size="9" text-anchor="end" fill="#475569">50</text><line x1="27" y1="24.2" x2="30" y2="24.2" stroke="#64748b"/><text x="25" y="27.2" font-size="9" text-anchor="end" fill="#475569">100</text><circle cx="42.5" cy="24.2" r="4" fill="var(--primary)" opacity=".85"/><circle cx="42.5" cy="52.5" r="4" fill="var(--primary)" opacity=".85"/><circle cx="67.5" cy="66.7" r="4" fill="var(--primary)" opacity=".85"/><circle cx="92.5" cy="73.8" r="4" fill="var(--primary)" opacity=".85"/><circle cx="92.5" cy="80.9" r="4" fill="var(--primary)" opacity=".85"/><circle cx="117.5" cy="95.1" r="4" fill="var(--primary)" opacity=".85"/><circle cx="167.5" cy="151.8" r="4" fill="var(--primary)" opacity=".85"/><circle cx="217.5" cy="24.2" r="4" fill="#ef4444" opacity=".85"/><text x="130.0" y="188" font-size="10" text-anchor="middle" fill="#334155">hours</text><text x="9" y="88.0" font-size="10" text-anchor="middle" fill="#334155" transform="rotate(-90 9 88.0)">score</text></svg><div style="font-size:.8rem"><strong>外れ値あり（赤い点）</strong><br>r = −0.235</div></div>
+      <div style="text-align:center"><svg viewBox="0 0 240 190" width="240" height="190" role="img" aria-label="外れ値なし" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="239" height="189" fill="none" stroke="#cbd5e1"/><line x1="30" y1="166" x2="230" y2="166" stroke="#64748b"/><line x1="30" y1="10" x2="30" y2="166" stroke="#64748b"/><line x1="42.5" y1="166" x2="42.5" y2="169" stroke="#64748b"/><text x="42.5" y="178" font-size="9" text-anchor="middle" fill="#475569">0</text><line x1="92.5" y1="166" x2="92.5" y2="169" stroke="#64748b"/><text x="92.5" y="178" font-size="9" text-anchor="middle" fill="#475569">2</text><line x1="142.5" y1="166" x2="142.5" y2="169" stroke="#64748b"/><text x="142.5" y="178" font-size="9" text-anchor="middle" fill="#475569">4</text><line x1="192.5" y1="166" x2="192.5" y2="169" stroke="#64748b"/><text x="192.5" y="178" font-size="9" text-anchor="middle" fill="#475569">6</text><line x1="27" y1="166.0" x2="30" y2="166.0" stroke="#64748b"/><text x="25" y="169.0" font-size="9" text-anchor="end" fill="#475569">0</text><line x1="27" y1="95.1" x2="30" y2="95.1" stroke="#64748b"/><text x="25" y="98.1" font-size="9" text-anchor="end" fill="#475569">50</text><line x1="27" y1="24.2" x2="30" y2="24.2" stroke="#64748b"/><text x="25" y="27.2" font-size="9" text-anchor="end" fill="#475569">100</text><line x1="42.5" y1="31.3" x2="167.5" y2="144.7" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="42.5" cy="24.2" r="4" fill="var(--primary)" opacity=".85"/><circle cx="42.5" cy="52.5" r="4" fill="var(--primary)" opacity=".85"/><circle cx="67.5" cy="66.7" r="4" fill="var(--primary)" opacity=".85"/><circle cx="92.5" cy="73.8" r="4" fill="var(--primary)" opacity=".85"/><circle cx="92.5" cy="80.9" r="4" fill="var(--primary)" opacity=".85"/><circle cx="117.5" cy="95.1" r="4" fill="var(--primary)" opacity=".85"/><circle cx="167.5" cy="151.8" r="4" fill="var(--primary)" opacity=".85"/><text x="130.0" y="188" font-size="10" text-anchor="middle" fill="#334155">hoursNoOutlier</text><text x="9" y="88.0" font-size="10" text-anchor="middle" fill="#334155" transform="rotate(-90 9 88.0)">scoreNoOutlier</text></svg><div style="font-size:.8rem"><strong>外れ値を除く</strong><br>r = −0.968</div></div>
+    </div>
+    <div class="viz-cap">残りの7点は左右のグラフでまったく同じ点（右は軸が 0〜6 に変わって少しずれて見えるだけ）。点線は目安の直線。</div>
+  </div>
+  <p>外れ値ありの r = −0.235 は、点の大半がほぼ一直線上に並んでいるのに「弱い」と出てしまう<strong>見かけにだまされやすい値</strong>です。外れ値を1つ除くと、r = <strong>−0.968</strong>。−1 にとても近い（完全な直線ではないので −1 ではない）<strong>非常に強い負の関連</strong>です。1つの外れ値が相関を「弱めて」いたわけです。</p>
+  <div class="warn-box">⚠️ <strong>試験について（講師の予告）</strong>：講義の資料にある「Matching Correlations」などの可視化サイトで、いろいろな強さ・向きの相関を当てる練習をしておくこと。<strong>試験では、そうした散布図の「スクリーンショット」を見せて、相関（r）を推定したり対応づけたりする問題を出す</strong>、と講師は言っています。r が 1 や 0 にどれくらい近いと strong／weak なのか、基準を覚えておきましょう。</div>
+  <div class="warn-box">⚠️ <strong>r は「直線」だけを見ている</strong>：r = 0 は「線形の関連なし」であって、「関連なし」ではありません。必ず先に散布図を描いてから r を見ること。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>r は −1〜+1。<strong>符号＝向き、絶対値＝強さ</strong>。目安は |r| ≤ 0.5 が弱い、0.8 超が強い、その間が中くらい。外れ値1つで大きく変わる（−0.235 → −0.968）ので、散布図とセットで見る。</p></div>
+  <div class="practice-card" id="p-m6a-u2a">
+    <div class="ptitle">💻 ミニ練習：r を計算する</div>
+    <p class="ptask"><code>hours &lt;- c(0, 0, 1, 2, 2, 3, 5, 7)</code> と <code>score &lt;- c(0, 10, 50, 60, 65, 70, 80, 100)</code> の相関係数を R で求めるコードを書いてください（結果は約 0.897 で「強い正の相関」になります）。</p>
+    <textarea class="code-editor" id="p-m6a-u2a-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6a-u2a', ['cor', 'hours', 'score'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6a-u2a', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6a-u2a-result"></div>
+    <div class="answer-reveal" id="p-m6a-u2a-answer" hidden>
+      <pre class="code-block">
+<span class="cl">hours &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">7</span>)</span>
+<span class="cl">score &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">50</span>, <span class="nm">60</span>, <span class="nm">65</span>, <span class="nm">70</span>, <span class="nm">80</span>, <span class="nm">100</span>)</span>
+<span class="cl"><span class="kw">cor</span>(hours, score)</span>
+</pre>
+      <p class="answer-note">[1] 0.897376。0.8 より大きいので strong、符号が正なので右上がり。散布図 plot(hours, score) も合わせて描いてみよう。</p>
+    </div>
+  </div>
+  <div class="practice-card" id="p-m6a-u2b">
+    <div class="ptitle">💻 ミニ練習：外れ値を除いた r</div>
+    <p class="ptask">外れ値あり（<code>score &lt;- c(100, 80, 70, 65, 60, 50, 10, 100)</code>、<code>hours</code> は上と同じ）のとき r = −0.235 でした。<strong>最後の1点（8番目）を取り除いて</strong>相関を求めるコードを書いてください（<code>hours[-8]</code> のようにインデックスで除く書き方でもOK）。</p>
+    <textarea class="code-editor" id="p-m6a-u2b-input" rows="7"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6a-u2b', ['cor', 'hours', 'score', '-8'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6a-u2b', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6a-u2b-result"></div>
+    <div class="answer-reveal" id="p-m6a-u2b-answer" hidden>
+      <pre class="code-block">
+<span class="cl">hours &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">7</span>)</span>
+<span class="cl">score &lt;- <span class="kw">c</span>(<span class="nm">100</span>, <span class="nm">80</span>, <span class="nm">70</span>, <span class="nm">65</span>, <span class="nm">60</span>, <span class="nm">50</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl"><span class="kw">cor</span>(hours[-<span class="nm">8</span>], score[-<span class="nm">8</span>])</span>
+</pre>
+      <p class="answer-note">[1] -0.9676547。マイナスのインデックス [-8] は「8番目を除く」。外れ値を1点除くだけで r が −0.235 から −0.968 に変わる。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>donors データで散布図を使って探索する</h2><div class="unit-sub">summary → 散布図 → cor</div></div>
+  </div>
+  <p>実データで復習します。<strong>donors データセット</strong>は『Practical Machine Learning with R』という本に由来するもので、ある退役軍人団体（national veterans organization）が、既存・見込みの寄付者に<strong>ダイレクトメールで寄付を募った</strong>テスト発送の結果です。<code>donors.csv</code> とノートブック（.Rmd）は<strong>同じフォルダ</strong>に置いておくと読み込めます。</p>
+<pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl"><span class="kw">dim</span>(donors)</span>
+</pre><div class="output-reveal">[1] 95412    22</div>
+  <p>環境に <code>donors</code> が現れ、約95,000 件の観測と多数の変数があります。まず<strong>初期探索</strong>として <code>summary()</code> を見ます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(donors$wealthRating)</span>
+</pre><div class="output-reveal">   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NA's 
+  0.000   3.000   6.000   5.346   8.000   9.000   44732 </div>
+  <p><code>summary(donors)</code> は各変数の<strong>五数要約（five-number summary）と平均、NA（欠損値）の数</strong>を出します。このデータには NA がたくさんあり、たとえば <code>wealthRating</code> は<strong>約半数</strong>（95,412 件中 44,732 件）が欠けています。</p>
+  <ul>
+    <li><strong>codebook（コードブック）が欲しい</strong>：変数名・水準・どう集めたかを書いた「辞書」。今回はないので、そのまま進める。（<code>mailOrderPurchases</code> や <code>incomeRating</code> が何を意味するかも分からない）</li>
+    <li><strong>変な値に注意</strong>：<code>age</code> の最小値が <strong>1</strong>（1歳の人が寄付？ 1歳の人を記念しての寄付か、入力ミスか）→ 必ず調べる。</li>
+    <li><strong>カテゴリ変数</strong>には五数要約が出ない（別の形式の要約になる）。</li>
+  </ul>
+  <h3>問い①：寄付回数と平均寄付額は相関する？</h3>
+  <p>たくさん寄付した人ほど、1回あたりの金額も大きい？（正の関連かも？）散布図を描いてみます。まず<strong>エラーになる書き方</strong>：</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(averageGiftAmount, numberGifts)</span>
+</pre><div class="output-reveal">Error : object 'averageGiftAmount' not found</div>
+  <p>「列は目の前にあるのに？」と思いますが、R は<strong>どのデータセットの話なのか分からない</strong>のです。環境にあるものだけでなく、R には<strong>内蔵データセットが山ほど</strong>入っているので、ひとつしかなくても推測してくれません。<strong>データフレーム名と <code>$</code> で列を指定</strong>して直します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(donors$averageGiftAmount, donors$numberGifts)</span>
+</pre>
+  <p>白抜きの丸の、簡単な散布図ができます。これだけでも多くのことが分かります。一人の寄付者は<strong>平均 $1,000</strong> ですが、寄付はおそらく1回（実際に <code>numberGifts</code> は 1）。別の人は平均額は低い（$10 程度）が<strong>200回以上</strong>寄付しており、合計すると約 $2,000 以上。組織にとって素晴らしい寄付者です。次に見た目を整えます（点を小さく：<code>cex</code> を 1 より小さく、y軸の数字を回転、丸を塗りつぶし、ラベルを付ける）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(donors$averageGiftAmount,</span>
+<span class="cl">     donors$numberGifts,</span>
+<span class="cl">     cex = <span class="nm">0.5</span>,                      <span class="cm"># smaller points</span></span>
+<span class="cl">     las = <span class="nm">1</span>,                        <span class="cm"># rotate numbers on y axis</span></span>
+<span class="cl">     pch = <span class="nm">16</span>,                       <span class="cm"># solid circle dots</span></span>
+<span class="cl">     xlab = <span class="st">"Average Gift amount"</span>,</span>
+<span class="cl">     ylab = <span class="st">"Number of Gifts"</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">cor</span>(donors$averageGiftAmount, donors$numberGifts)</span>
+</pre><div class="output-reveal">[1] -0.2569922</div>
+  <p>r は<strong>負</strong>です（散布図が「上がり」より「下がり」に見えることと合う）。ただし <strong>weak</strong>（|r| = 0.26 &lt; 0.5）。しかも、そもそも線形ではなく<strong>曲がった（non-linear）</strong>形です。講義の4観点でまとめると：</p>
+  <table class="compare-table">
+    <tr><th>観点</th><th>donors：平均寄付額 × 寄付回数</th></tr>
+    <tr><td>direction</td><td>negative</td></tr>
+    <tr><td>form</td><td>non-linear（曲線的）</td></tr>
+    <tr><td>strength</td><td>weak（r = −0.257）</td></tr>
+    <tr><td>unusual features</td><td>大多数の寄付者は<strong>平均寄付額 $100 未満・寄付回数 100 回未満</strong>の大きなかたまり。そこから離れて、(a) 寄付回数は多いが平均額は高くない人たち、(b) 平均額は非常に高いが寄付回数は少ない人たち、がいる</td></tr>
+  </table>
+  <p>組織はこの2つのグループに、それぞれ「たくさん寄付してくれてありがとう」「大口の寄付をありがとう」と連絡できます。<code>donors</code> の数字を眺めるだけでは、これは<strong>とても難しい</strong>。ここが可視化の利点です。</p>
+  <h3>問い②：寄付回数と「最後の寄付からの月数」は相関する？</h3>
+  <p><code>monthsSinceLastDonation</code> が 0 なら、今月寄付した人。5 なら最後の寄付から5か月。データでは 0〜23 の値をとります。点が同じ位置に重なると数が分かりません。そこで <strong>jitter（ジッター）</strong>＝<strong>ランダムにほんの少しだけ点をずらす</strong>と、重なった点の<strong>密度（density）</strong>が見えます。</p>
+<pre class="code-block">
+<span class="cl"><span class="cm"># Without jitter</span></span>
+<span class="cl"><span class="kw">plot</span>(donors$monthsSinceLastDonation,</span>
+<span class="cl">     donors$numberGifts,</span>
+<span class="cl">     cex = <span class="nm">0.5</span>, las = <span class="nm">1</span>, pch = <span class="nm">16</span>,</span>
+<span class="cl">     xlab = <span class="st">"Months since last donation"</span>,</span>
+<span class="cl">     ylab = <span class="st">"Number of Gifts"</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># With jitter: points are shaken a little so they overlap less</span></span>
+<span class="cl"><span class="kw">plot</span>(<span class="kw">jitter</span>(donors$monthsSinceLastDonation, <span class="nm">0.5</span>),</span>
+<span class="cl">     donors$numberGifts,</span>
+<span class="cl">     cex = <span class="nm">0.5</span>, las = <span class="nm">1</span>, pch = <span class="nm">16</span>,</span>
+<span class="cl">     xlab = <span class="st">"Months since last donation"</span>,</span>
+<span class="cl">     ylab = <span class="st">"Number of Gifts"</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">cor</span>(donors$monthsSinceLastDonation, donors$numberGifts)</span>
+</pre><div class="output-reveal">[1] -0.1496668</div>
+  <p>散布図から読めること：「20か月前に最後に寄付した」人たち／「今月寄付した（0）」人たち。たとえば<strong>「最後の寄付から16か月たっているが、これまでの寄付回数はとても多い」</strong>人は、「長いあいだ寄付がないけれど、いつも寄付してくれた方。またお願いできませんか？」と<strong>連絡する価値のある相手</strong>です。r = −0.15 は weak な負の相関。</p>
+  <div class="warn-box">⚠️ jitter は<strong>見やすくするための表示だけ</strong>の工夫です。点が少しずれるだけで、データそのもの（や相関）は変わりません。</div>
+  <div class="note-box">🎯 <strong>Your turn（講師からの宿題）</strong>：<code>donors</code> から<strong>好きな2変数</strong>を選び、散布図を描き、相関を計算する（コードチャンクが用意されています）。さらに、<strong>自分で探したデータ</strong>で練習して LinkedIn で共有したり、ポートフォリオにするのもおすすめ。<strong>向き・特徴・含意（implications）・相関</strong>を短い分析にまとめてみよう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データを手に入れたら<strong>summary → 散布図 → cor</strong> の順に。列は <code>donors$列名</code> で指定（<code>$</code> がないと R はどのデータか分からない）。散布図で、数字だけでは見えない「特別な寄付者」が見つかる。</p></div>
+  <div class="practice-card" id="p-m6a-u3">
+    <div class="ptitle">💻 ミニ練習：donors で散布図と相関</div>
+    <p class="ptask"><code>donors</code> データフレームの <code>numberGifts</code>（x軸）と <code>totalGivingAmount</code>（y軸）の散布図を、<code>pch = 16</code>・<code>cex = 0.5</code> で描き、続けて2変数の相関を <code>cor()</code> で求めるコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6a-u3-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6a-u3', ['plot', 'donors$numberGifts', 'donors$totalGivingAmount', 'pch', 'cex', 'cor'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6a-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6a-u3-result"></div>
+    <div class="answer-reveal" id="p-m6a-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(donors$numberGifts, donors$totalGivingAmount,</span>
+<span class="cl">     pch = <span class="nm">16</span>, cex = <span class="nm">0.5</span>, las = <span class="nm">1</span>,</span>
+<span class="cl">     xlab = <span class="st">"Number of Gifts"</span>, ylab = <span class="st">"Total Giving Amount"</span>)</span>
+<span class="cl"><span class="kw">cor</span>(donors$numberGifts, donors$totalGivingAmount)</span>
+</pre>
+      <p class="answer-note">列は donors$列名 で指定する。結果は [1] 0.5997817。0.5〜0.8 なので moderate な正の相関（寄付回数が多い人ほど合計額も大きい傾向）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>相関行列と散布図行列</h2><div class="unit-sub">複数の変数を一度に</div></div>
+  </div>
+  <p>2変数ずつ相関を計算するのは大変です。<strong>複数の変数どうしの相関を一度に計算</strong>したものが<strong>相関行列（correlation matrix）</strong>、複数の散布図を一度に並べたものが<strong>散布図行列（scatterplot matrix）</strong>です。変数が多いときにとても効率的で、データの中にどんな関係があるかを見渡せます。</p>
+  <h3>準備：長い変数名を短くする（必須ではない）</h3>
+  <p><code>yearsSinceFirstDonation</code> は名前が長いので、出力がきれいになるよう短くします。<code>names(donors)</code> は列名のベクトルで、<strong>11番目</strong>の名前がこの変数です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">names</span>(donors)[<span class="nm">11</span>]</span>
+<span class="cl"><span class="kw">names</span>(donors)[<span class="nm">11</span>] &lt;- <span class="st">"yrsFirstDon"</span>   <span class="cm"># rename the 11th column</span></span>
+<span class="cl"><span class="kw">names</span>(donors)[<span class="nm">11</span>]</span>
+</pre><div class="output-reveal">[1] "yearsSinceFirstDonation"
+[1] "yrsFirstDon"</div>
+  <div class="note-box">💡 環境をクリアして <code>donors</code> を読み込み直せば、元の名前に戻ります（必須の作業ではありません）。</div>
+  <h3>量的変数だけを選ぶ</h3>
+  <p><code>cor()</code> にデータフレーム全体を渡すと、<strong>カテゴリ変数が含まれるのでエラーになります</strong>。相関は量的データにしか使えません。そこで <code>donors[ , c(列名)]</code> のように<strong>列を選びます</strong>。角かっこの<strong>カンマの前＝行、後ろ＝列</strong>。行を空欄にすると<strong>「全部の行」</strong>（1行目〜95,412行目を書かなくてよい）。ここでは5つの量的変数を選びました（もっと多くても少なくてもよい）。</p>
+<pre class="code-block">
+<span class="cl">donorsNumeric &lt;- donors[ , <span class="kw">c</span>(<span class="st">"numberChildren"</span>,</span>
+<span class="cl">                             <span class="st">"incomeRating"</span>,</span>
+<span class="cl">                             <span class="st">"wealthRating"</span>,</span>
+<span class="cl">                             <span class="st">"smallestGiftAmount"</span>,</span>
+<span class="cl">                             <span class="st">"yrsFirstDon"</span>)]</span>
+</pre>
+  <h3>相関行列と NA の問題</h3>
+  <p>選んだデータフレームを <code>cor()</code> に渡し、<code>round(…, 2)</code> で小数第2位に丸めます。ところが、最初の結果は<strong>NA だらけ</strong>で使えません。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(donorsNumeric), <span class="nm">2</span>)</span>
+</pre><div class="output-reveal">                   numberChildren incomeRating wealthRating smallestGiftAmount
+numberChildren                  1           NA           NA                 NA
+incomeRating                   NA            1           NA                 NA
+wealthRating                   NA           NA            1                 NA
+smallestGiftAmount             NA           NA           NA               1.00
+yrsFirstDon                    NA           NA           NA              -0.41
+                   yrsFirstDon
+numberChildren              NA
+incomeRating                NA
+wealthRating                NA
+smallestGiftAmount       -0.41
+yrsFirstDon               1.00</div>
+  <ul>
+    <li><strong>対角線はいつも 1</strong>：変数と<strong>自分自身</strong>の相関だから（完全な直線＝r = 1）。役に立たない値。</li>
+    <li>欠損値（NA）が列に含まれると、<code>cor()</code> は計算できず NA を返します。</li>
+  </ul>
+  <p>理由は <code>?cor</code> のドキュメントの <code>use</code> 引数にあります。<code>use</code> は「欠損値があるとき共分散（相関）をどう計算するか」を指定する文字列で、<strong>既定値は <code>"everything"</code></strong>（NA も含めて計算＝問題）。選択肢は <code>"everything"</code>・<code>"all.obs"</code>・<code>"complete.obs"</code>・<code>"na.or.complete"</code>・<code>"pairwise.complete.obs"</code>。ここでは <strong><code>use = "complete.obs"</code></strong>（すべて揃っている行だけを使い、NA のある行は無視）を使います。</p>
+<pre class="code-block">
+<span class="cl">?cor</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(donorsNumeric, use = <span class="st">"complete.obs"</span>), <span class="nm">2</span>)</span>
+</pre><div class="output-reveal">                   numberChildren incomeRating wealthRating smallestGiftAmount
+numberChildren               1.00         0.02         0.03              -0.01
+incomeRating                 0.02         1.00         0.45               0.11
+wealthRating                 0.03         0.45         1.00               0.06
+smallestGiftAmount          -0.01         0.11         0.06               1.00
+yrsFirstDon                 -0.04        -0.06        -0.02              -0.46
+                   yrsFirstDon
+numberChildren           -0.04
+incomeRating             -0.06
+wealthRating             -0.02
+smallestGiftAmount       -0.46
+yrsFirstDon               1.00</div>
+  <table class="compare-table">
+    <tr><th></th><th>numberChildren</th><th>incomeRating</th><th>wealthRating</th><th>smallestGiftAmount</th><th>yrsFirstDon</th></tr>
+    <tr><th>numberChildren</th><td>1.00</td><td>0.02</td><td>0.03</td><td>−0.01</td><td>−0.04</td></tr>
+    <tr><th>incomeRating</th><td>0.02</td><td>1.00</td><td style="background:#d1fae5"><strong>0.45</strong></td><td>0.11</td><td>−0.06</td></tr>
+    <tr><th>wealthRating</th><td>0.03</td><td style="background:#d1fae5"><strong>0.45</strong></td><td>1.00</td><td>0.06</td><td>−0.02</td></tr>
+    <tr><th>smallestGiftAmount</th><td>−0.01</td><td>0.11</td><td>0.06</td><td>1.00</td><td style="background:#fee2e2"><strong>−0.46</strong></td></tr>
+    <tr><th>yrsFirstDon</th><td>−0.04</td><td>−0.06</td><td>−0.02</td><td style="background:#fee2e2"><strong>−0.46</strong></td><td>1.00</td></tr>
+  </table>
+  <h3>相関行列の読みかた</h3>
+  <ul>
+    <li><strong>最も強い正の相関</strong>：incomeRating と wealthRating（0.45）。</li>
+    <li>ただし<strong>絶対値で最大</strong>なのは yrsFirstDon（初回寄付からの年数）と smallestGiftAmount（最小の寄付額）の <strong>−0.46</strong>（講師の言葉：「technically the strongest」）。どちらも |r| &lt; 0.5 なので、この授業の基準では<strong>weak</strong>。</li>
+    <li><strong>対角線に関して対称（symmetric）</strong>：折り返すと同じ値。2変数の相関は<strong>順序に関係ない</strong>から。たとえば「numberChildren と incomeRating」＝「incomeRating と numberChildren」（0.02）。</li>
+  </ul>
+  <div class="note-box">🔍 補足（R で確認）：NA を含む行をすべて外すため、この行列は5変数がすべて揃った 8,338 行（95,412 行のうち）から計算されています。欠損の数は numberChildren が 83,026、incomeRating が 21,286、wealthRating が 44,732 で、smallestGiftAmount と yrsFirstDon にはありません。</div>
+  <h3>散布図行列：pairs()</h3>
+  <p>複数の散布図を一度に見るには <code>pairs()</code> を使います（他の方法は DTSC 650 で学びます）。画面に出る数を抑えるため3変数だけ選びます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">pairs</span>(donors[ , <span class="kw">c</span>(<span class="st">"wealthRating"</span>, <span class="st">"smallestGiftAmount"</span>, <span class="st">"yrsFirstDon"</span>)])</span>
+</pre>
+  <p>1行にまとめて書くと構文が分かりやすくなります。<strong>カンマを忘れずに</strong>（行を空欄＝全行）。次の書き方でも同じ散布図行列ができ、データフレームを別に作らなくてよい上、欠損値を除く別の引数 <code>na.action</code> も使えます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">pairs</span>(~ wealthRating + smallestGiftAmount + yrsFirstDon,</span>
+<span class="cl">      data = donors,</span>
+<span class="cl">      na.action = na.omit)</span>
+</pre>
+  <div class="warn-box">⚠️ <strong>散布図行列の読みかた</strong>：行と列の変数名が交わるマスに、その2変数の散布図がある。たとえば <code>wealthRating</code> は、その<strong>行にある2つのグラフでは y軸</strong>、<strong>列にある2つのグラフでは x軸</strong>。<code>yrsFirstDon</code> は列のグラフで x軸、行のグラフで y軸。また <code>wealthRating</code> は整数の評価値なので、同じ値に<strong>たくさんの点が重なって</strong>あまり役に立たない散布図になります（jitter の出番）。</div>
+  <div class="note-box">🎯 <strong>この単元の学習目標</strong>：相関行列と散布図行列が何か、どう作り、どう読むか、そして欠損値をどう扱って相関を計算するか。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>相関行列</strong>＝全部の組み合わせの r を表にしたもの（対角線は1、折り返すと同じ）。NA があるなら <code>use = "complete.obs"</code>。<strong>散布図行列</strong>＝<code>pairs()</code> で散布図を一気に並べたもの。</p></div>
+  <div class="practice-card" id="p-m6a-u4a">
+    <div class="ptitle">💻 ミニ練習：相関行列を作る</div>
+    <p class="ptask"><code>donors</code> の中の量的変数 <code>numberChildren</code>・<code>incomeRating</code>・<code>wealthRating</code> の3列だけを選んだ <code>donorsNumeric</code> を作り、<strong>欠損値のある行を除いて</strong>（<code>use = "complete.obs"</code>）相関行列を<strong>小数第2位</strong>で表示するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6a-u4a-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6a-u4a', ['donors', 'c(', 'cor', 'complete.obs', 'round'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6a-u4a', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6a-u4a-result"></div>
+    <div class="answer-reveal" id="p-m6a-u4a-answer" hidden>
+      <pre class="code-block">
+<span class="cl">donorsNumeric &lt;- donors[ , <span class="kw">c</span>(<span class="st">"numberChildren"</span>, <span class="st">"incomeRating"</span>, <span class="st">"wealthRating"</span>)]</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(donorsNumeric, use = <span class="st">"complete.obs"</span>), <span class="nm">2</span>)</span>
+</pre>
+      <p class="answer-note">行を空欄（カンマの前）にすると全行。use = "complete.obs" がないと NA が返る。3×3 の行列で、対角線は 1、折り返すと同じ値になる。</p>
+    </div>
+  </div>
+  <div class="practice-card" id="p-m6a-u4b">
+    <div class="ptitle">💻 ミニ練習：散布図行列</div>
+    <p class="ptask"><code>pairs()</code> を使い、<code>donors</code> から <code>wealthRating</code>・<code>smallestGiftAmount</code>・<code>yrsFirstDon</code> の散布図行列を、<strong>チルダ（~）を使う書き方</strong>で、NA を除く引数も付けて描くコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6a-u4b-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6a-u4b', ['pairs', '~', 'data', 'donors', 'na.action'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6a-u4b', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6a-u4b-result"></div>
+    <div class="answer-reveal" id="p-m6a-u4b-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">pairs</span>(~ wealthRating + smallestGiftAmount + yrsFirstDon,</span>
+<span class="cl">      data = donors,</span>
+<span class="cl">      na.action = na.omit)</span>
+</pre>
+      <p class="answer-note">~ の後ろに変数を + でつなぎ、data = でデータフレームを指定。na.action = na.omit で欠損値のある行を除く。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which plot is used to show the relationship between two quantitative variables measured on the same individuals?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Bar graph</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Scatterplot</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Pie chart</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Parallel boxplots</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">The scatterplot of search position (1 to 10) against click-through rate goes downhill from left to right and is curved. Which description is best?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Positive and linear</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Negative and linear</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Positive and non-linear</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Negative and non-linear</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A scatterplot of a U-shaped pattern has r = −0.12, very close to 0. What does this tell us?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>There is no linear association, although a curved association may exist</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>There is no association of any kind between the two variables</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is a moderate negative linear association between them</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The data must contain an error, because r cannot be this small</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Using the class guidelines, which value of r represents a moderate association?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>r = 0.35</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>r = −0.45</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>r = −0.65</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>r = 0.92</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">One outlier changed r from −0.235 to −0.968 when it was removed. What does this show?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The remaining points were not close to a line</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>r is calculated only from the largest value</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Outliers always make a correlation stronger</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>r is not resistant to outliers</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In R, plot(averageGiftAmount, numberGifts) gives "object not found". What is the best fix?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Reinstall R</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Use donors$averageGiftAmount and donors$numberGifts</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Write the column names in capital letters</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Put use = "complete.obs" inside plot()</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">cor(donorsNumeric) returns NA for most pairs because some columns contain missing values. Which change fixes this?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>cor(donorsNumeric, use = "complete.obs")</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>cor(donorsNumeric, pch = 16)</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>cor(donorsNumeric, las = 1)</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>cor(jitter(donorsNumeric))</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In a correlation matrix of five variables, which statement is true?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Every value on the diagonal is 0</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Each pair of variables appears only once, so there is no repetition</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The diagonal is always 1, and values mirror across the diagonal</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The matrix shows scatterplots rather than numbers</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 3, 1, 0, 2];
+var FEEDBACKS=["A scatterplot shows two quantitative variables measured on the same individuals. A bar graph and a pie chart are for one categorical variable; parallel boxplots compare one quantitative variable across groups.", "Reading left to right the points go downhill (negative), and they follow a curve, so the form is non-linear. The points also hug the curve closely, so the association is strong.", "r = 0 means no LINEAR association. A U-shaped (quadratic) pattern can still exist, which is why you should always draw the scatterplot first.", "In this class |r| below 0.5 is weak, above 0.8 is strong, and anything in between (0.5 to 0.8, or −0.8 to −0.5) is moderate. So −0.65 is moderate.", "Correlation is not resistant to outliers: a single point away from the trend weakened r to −0.235, and removing it gave r = −0.968, very close to −1.", "R does not know which data frame you mean (it has many built-in datasets), so name the data frame and use $ to pick the column.", "The default use = \"everything\" includes the NAs. use = \"complete.obs\" ignores rows with missing values. pch and las are plotting arguments, not cor() arguments.", "A variable correlated with itself gives 1, so the diagonal is always 1. The order of the two variables does not matter, so the matrix is symmetric and each value appears twice."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">scatterplot</div><div class="term-en">散布図</div><div class="term-def">量的変数2つを点で描いた図。同じ個体で測定した値の組。</div></div>
+    <div class="term-item"><div class="term-name">direction / form / strength</div><div class="term-en">向き・形・強さ</div><div class="term-def">散布図の記述の3観点。ほかに unusual features（outlier, cluster）。</div></div>
+    <div class="term-item"><div class="term-name">positive / negative association</div><div class="term-en">正／負の関連</div><div class="term-def">右上がり（r&gt;0）／右下がり（r&lt;0）。左から右へ読む。</div></div>
+    <div class="term-item"><div class="term-name">Pearson's correlation coefficient (r)</div><div class="term-en">ピアソンの相関係数</div><div class="term-def">線形な関連の強さと向き。−1 ≤ r ≤ 1、|r| ≤ 1。</div></div>
+    <div class="term-item"><div class="term-name">absolute value |r|</div><div class="term-en">絶対値</div><div class="term-def">符号を無視した大きさ。強さの判断に使う。</div></div>
+    <div class="term-item"><div class="term-name">outlier</div><div class="term-en">外れ値</div><div class="term-def">傾向（trend）から外れた点。r は外れ値に resistant でない。</div></div>
+    <div class="term-item"><div class="term-name">cluster</div><div class="term-en">クラスター</div><div class="term-def">点のかたまり（グループ）。</div></div>
+    <div class="term-item"><div class="term-name">jitter</div><div class="term-en">ジッター</div><div class="term-def">重なった点をランダムに少しずらして密度を見やすくする。</div></div>
+    <div class="term-item"><div class="term-name">codebook</div><div class="term-en">コードブック</div><div class="term-def">変数と水準、収集方法を説明した辞書。</div></div>
+    <div class="term-item"><div class="term-name">correlation matrix</div><div class="term-en">相関行列</div><div class="term-def">複数変数のすべての組み合わせの r の表。対角線は1。</div></div>
+    <div class="term-item"><div class="term-name">scatterplot matrix</div><div class="term-en">散布図行列</div><div class="term-def"><code>pairs()</code> で散布図を一度に並べたもの。</div></div>
+    <div class="term-item"><div class="term-name">complete.obs</div><div class="term-en">完全な観測のみ</div><div class="term-def"><code>use = "complete.obs"</code>：NA のある行を除いて計算。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>まず散布図、次に r。散布図は<strong>向き・形・強さ・特異な特徴</strong>の順に説明し、r は符号が向き・|r| が強さ（≤0.5 weak、&gt;0.8 strong）。試験では<strong>散布図の画像から r を推定</strong>する問題が出ます。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📈 統計レッスン：M6 相関① 散布図と相関係数</p>
+  <p style="margin-top:.5rem;"><a href="m5_chi_two.html">← χ²②</a> · <a href="index.html">🏠 概要</a> · <a href="m6_corr_calc.html">相関②：計算と注意 →</a> · <a href="m6_corr_basics_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

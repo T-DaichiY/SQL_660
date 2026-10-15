@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 NumPy⑤ 並べ替えと構造化配列</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · NumPy — Sorting & Structured Arrays</div>
+  <h1>🗂️ NumPy⑤：並べ替えと構造化配列</h1>
+  <p>sort・argsort、行・列ごとの並べ替え、名前付きの列を持つ構造化配列を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① sort</a><a href="#unit2">② 行・列</a><a href="#unit3">③ 構造化</a><a href="#quiz">📝 Quiz</a><a href="np_sort_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 2.08 Sorting Arrays</li><li>Handbook 2.09 Structured Data: NumPy's Structured Arrays</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>並べ替える：sort と argsort</h2><div class="unit-sub">元の配列は変えない？変える？</div></div>
+  </div>
+<p>配列を小さい順に並べるには<code>np.sort</code>を使います。<strong>元の配列は変わらず</strong>、並べ替えた新しい配列が返ります。</p><pre class="code-block">
+<span class="cl">x = np.array([<span class="nm">2</span>, <span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">5</span>])</span>
+<span class="cl"><span class="kw">print</span>(np.sort(x))</span>
+<span class="cl">x          <span class="cm"># 元はそのまま</span></span>
+</pre><div class="output-reveal">[1 2 3 4 5]
+array([2, 1, 4, 3, 5])</div><p>配列自身を並べ替えたいときは、メソッド<code>x.sort()</code>です（<strong>その場で変更</strong>）。</p><pre class="code-block">
+<span class="cl">x.sort()</span>
+<span class="cl">x</span>
+</pre><div class="output-reveal">array([1, 2, 3, 4, 5])</div><p><code>np.argsort</code>は、並べ替えた<strong>あとの順番を表す「位置」</strong>を返します。「何番目の要素が一番小さいか」を知りたいときに使います。</p><pre class="code-block">
+<span class="cl">y = np.array([<span class="nm">2</span>, <span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">5</span>])</span>
+<span class="cl">i = np.argsort(y)</span>
+<span class="cl"><span class="kw">print</span>(i)</span>
+<span class="cl">y[i]       <span class="cm"># この位置で取り出すと並べ替え済み</span></span>
+</pre><div class="output-reveal">[1 0 3 2 4]
+array([1, 2, 3, 4, 5])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>sort</code>は「並べ替えた結果」、<code>argsort</code>は「並べ替えるための番号」。番号があれば、別の配列も同じ順に並べ替えられます。</p></div><div class="practice-card" id="p-n5-u1">
+    <div class="ptitle">💻 ミニ練習：argsort</div>
+    <p class="ptask">配列 <code>y = np.array([30, 10, 20])</code> を小さい順に並べたときの「位置」の配列を求めてください。</p>
+    <textarea class="code-editor" id="p-n5-u1-input" rows="7">y = np.array([30, 10, 20])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n5-u1", ["np.argsort"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n5-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n5-u1-result"></div>
+    <div class="answer-reveal" id="p-n5-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">np.argsort(y)   <span class="cm"># array([1, 2, 0])</span></span>
+</pre>
+      <p class="answer-note">10は位置1、20は位置2、30は位置0にあるので[1, 2, 0]です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>行・列ごとに並べ替える</h2><div class="unit-sub">axis で方向を指定</div></div>
+  </div>
+<p>2次元配列では、<code>axis</code>で「どの方向に」並べ替えるかを選びます。</p><pre class="code-block">
+<span class="cl">np.random.seed(<span class="nm">42</span>)</span>
+<span class="cl">R = np.random.randint(<span class="nm">0</span>, <span class="nm">10</span>, (<span class="nm">3</span>, <span class="nm">4</span>))</span>
+<span class="cl"><span class="kw">print</span>(R)</span>
+<span class="cl"><span class="kw">print</span>(np.sort(R, axis=<span class="nm">0</span>))   <span class="cm"># 各列を縦に並べ替え</span></span>
+<span class="cl">np.sort(R, axis=<span class="nm">1</span>)          <span class="cm"># 各行を横に並べ替え</span></span>
+</pre><div class="output-reveal">[[6 3 7 4]
+ [6 9 2 6]
+ [7 4 3 7]]
+[[6 3 2 4]
+ [6 4 3 6]
+ [7 9 7 7]]
+array([[3, 4, 6, 7],
+       [2, 6, 6, 9],
+       [3, 4, 7, 7]])</div><div class="warn-box">⚠️ 行どうしの関係は崩れます。<code>axis=1</code>で各行を別々に並べ替えると、元の「行の組み合わせ」は保たれません。</div><p>「小さいほうからk個だけ」知りたいときは<code>np.partition</code>が速いです（順序は保証されません）。</p><pre class="code-block">
+<span class="cl">z = np.array([<span class="nm">7</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">1</span>, <span class="nm">6</span>, <span class="nm">5</span>, <span class="nm">4</span>])</span>
+<span class="cl">np.partition(z, <span class="nm">3</span>)    <span class="cm"># 小さい3個が左側に集まる（左側内の順序は不定）</span></span>
+</pre><div class="output-reveal">array([2, 1, 3, 4, 6, 5, 7])</div><div class="practice-card" id="p-n5-u2">
+    <div class="ptitle">💻 ミニ練習：行ごとに並べ替え</div>
+    <p class="ptask">2次元配列 <code>R</code> の<strong>各行</strong>を小さい順に並べ替えてください。</p>
+    <textarea class="code-editor" id="p-n5-u2-input" rows="7">R = np.array([[3, 1, 2], [9, 7, 8]])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n5-u2", ["np.sort", "axis=1"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n5-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n5-u2-result"></div>
+    <div class="answer-reveal" id="p-n5-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">np.sort(R, axis=<span class="nm">1</span>)</span>
+</pre>
+      <p class="answer-note">各行を横方向に並べ替えるので<code>axis=1</code>です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>構造化配列（名前付きの列を持つ配列）</h2><div class="unit-sub">Pandasにつながる考え方</div></div>
+  </div>
+<p>NumPyの普通の配列は1種類の型しか持てません。<strong>構造化配列</strong>は、<strong>名前と型が違う列</strong>を1つの配列に持てます。表のようなデータが扱えます。</p><pre class="code-block">
+<span class="cl">data = np.zeros(<span class="nm">3</span>, dtype={<span class="st">'names'</span>: (<span class="st">'name'</span>, <span class="st">'age'</span>, <span class="st">'weight'</span>),</span>
+<span class="cl">                              <span class="st">'formats'</span>: (<span class="st">'U10'</span>, <span class="st">'i4'</span>, <span class="st">'f8'</span>)})</span>
+<span class="cl"><span class="kw">print</span>(data.dtype)</span>
+<span class="cl">data[<span class="st">'name'</span>] = [<span class="st">'Alice'</span>, <span class="st">'Bob'</span>, <span class="st">'Cathy'</span>]</span>
+<span class="cl">data[<span class="st">'age'</span>] = [<span class="nm">25</span>, <span class="nm">45</span>, <span class="nm">37</span>]</span>
+<span class="cl">data[<span class="st">'weight'</span>] = [<span class="nm">55.0</span>, <span class="nm">85.5</span>, <span class="nm">68.0</span>]</span>
+<span class="cl">data</span>
+</pre><div class="output-reveal">[('name', '&lt;U10'), ('age', '&lt;i4'), ('weight', '&lt;f8')]
+array([('Alice', 25, 55. ), ('Bob', 45, 85.5), ('Cathy', 37, 68. )],
+      dtype=[('name', '&lt;U10'), ('age', '&lt;i4'), ('weight', '&lt;f8')])</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(data[<span class="st">'name'</span>])</span>
+<span class="cl"><span class="kw">print</span>(data[<span class="nm">0</span>])</span>
+<span class="cl">data[data[<span class="st">'age'</span>] &lt; <span class="nm">40</span>][<span class="st">'name'</span>]</span>
+</pre><div class="output-reveal">['Alice' 'Bob' 'Cathy']
+('Alice', 25, 55.)
+array(['Alice', 'Cathy'], dtype='&lt;U10')</div><p>名前で列を取り出し、条件で行を選べます。これは<strong>Pandasのデータフレーム</strong>とよく似ています。実際の分析ではPandasのほうが便利で、構造化配列は「Pandasの原型」として知っておけば十分です。</p><div class="teal-box">📌 型コード：<code>U10</code>＝最大10文字の文字列、<code>i4</code>＝4バイト整数、<code>f8</code>＝8バイト小数。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>構造化配列は「列に名前と型を付けられる配列」。次の章のPandasがそれをもっと使いやすくしたものです。</p></div><div class="practice-card" id="p-n5-u3">
+    <div class="ptitle">💻 ミニ練習：構造化配列</div>
+    <p class="ptask"><code>data</code>から<strong>age列</strong>だけを取り出してください。</p>
+    <textarea class="code-editor" id="p-n5-u3-input" rows="7"># data は name, age, weight を持つ構造化配列
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n5-u3", ["data['age']"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n5-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n5-u3-result"></div>
+    <div class="answer-reveal" id="p-n5-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">data[<span class="st">'age'</span>]</span>
+</pre>
+      <p class="answer-note">列名を文字列で指定して取り出します。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does np.sort(x) do to the original array x?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It returns a sorted copy and leaves x unchanged</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It sorts x in place and returns nothing at all</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes the duplicate values from x first</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It returns only the positions of the sorted values</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does np.argsort([30, 10, 20]) return?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>[10, 20, 30], the sorted values themselves</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>[1, 2, 0]</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>[0, 1, 2], the original positions in order</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>[2, 0, 1], the positions in reverse order</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you sort each row of a 2-D array independently?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>np.sort(R, axis=1)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>np.sort(R, axis=0), which sorts every column instead</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>R.sort(axis=2), which needs a third dimension</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>np.partition(R, 1), which only splits at one place</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What is np.partition mainly useful for?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Splitting a string into a list of words</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Finding the k smallest values without a full sort</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Joining two separate arrays into one array</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Rounding all of the values to whole integers</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What can a structured array hold that a plain NumPy array cannot?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only whole numbers and no text</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Columns with names and different types</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Arrays that have more than two dimensions</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Numbers that are larger than 64 bits wide</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In a structured dtype, what does U10 stand for?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A 10-byte integer value</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An unsigned floating point number</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A Unicode string of up to 10 characters</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A unit vector with a length of 10</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 0, 1, 1, 2];
+var FEEDBACKS=["np.sort returns a new sorted array. The method x.sort() sorts in place.", "It returns the indices that would sort the array: 10 is at position 1, 20 at 2, 30 at 0.", "axis=1 sorts along each row. axis=0 would sort each column.", "A partial sort places the k smallest values on the left without fully ordering everything.", "It has named fields with their own types, like a simple table.", "U means Unicode string, and 10 is the maximum number of characters."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">np.sort</div><div class="term-en">並べ替え</div><div class="term-def">並べ替えたコピーを返す。元は変わらない。x.sort()はその場で変更。</div></div>
+    <div class="term-item"><div class="term-name">argsort</div><div class="term-en">並べ替えの位置</div><div class="term-def">並べ替えたときの順番を表すインデックスを返す。</div></div>
+    <div class="term-item"><div class="term-name">partition</div><div class="term-en">部分的な並べ替え</div><div class="term-def">k個の小さい値を左に集める。完全な並べ替えより速い。</div></div>
+    <div class="term-item"><div class="term-name">structured array</div><div class="term-en">構造化配列</div><div class="term-def">名前と型を持つ列からなる配列。Pandasの原型。</div></div>
+    <div class="term-item"><div class="term-name">dtype names/formats</div><div class="term-en">型の定義</div><div class="term-def">{'names': …, 'formats': …}で列名と型を指定する。</div></div>
+    <div class="term-item"><div class="term-name">axis</div><div class="term-en">軸</div><div class="term-def">axis=0は列ごと、axis=1は行ごとに処理する。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>sortは「コピーを返す」、x.sort()は「その場で並べ替える」。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：NumPy⑤ 並べ替えと構造化配列</p>
+  <p style="margin-top:.5rem;"><a href="np_masks.html">← ④ マスク</a> · <a href="pd_objects.html">① Series・DataFrame →</a> · <a href="np_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 t手順①　1標本の平均の推測</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 📐 t① 1標本 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main active" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · T Procedures ① — Inference for One Mean</div>
+  <h1>🧪 t手順①：1標本の平均の推測</h1>
+  <p>標本の平均から、未知の母平均について何が言えるか。<strong>信頼区間（confidence interval）</strong>で範囲を推定し、<strong>有意性検定（significance test）</strong>で仮説を確かめる、推測統計の入口です。</p>
+  <p style="font-size:.9rem">📺 講義動画: T procedure 1 (Overview inference for Means) ／ T procedure 2 (One sample T interval for a population mean) ／ T procedure 3 (Example: One sample T interval) ／ T procedure 4 (What do we mean by 95% confidence) ／ T procedure 5 (Significant test for a population mean)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 推測統計の全体像</a><a href="#unit2">② 1標本t区間</a><a href="#unit3">③ 例：コールセンター</a><a href="#unit4">④ 95%信頼とは</a><a href="#unit5">⑤ 平均の有意性検定</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 推測統計の全体像：T procedure 1（Overview inference for Means）</li><li>② 1標本t区間：T procedure 2（One sample T interval for a population mean）</li><li>③ 例：コールセンター：T procedure 3（Example: One sample T interval）</li><li>④ 95%信頼とは：T procedure 4（What do we mean by 95% confidence）</li><li>⑤ 平均の有意性検定：T procedure 5（Significant test for a population mean）</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>推測統計の全体像</h2><div class="unit-sub">記述から推測へ、区間と検定</div></div>
+  </div>
+  <p>統計には2つの枝があります。<strong>記述統計（descriptive statistics）</strong>は手元のデータを説明すること（中心＝平均、ばらつき＝標準偏差、グラフ）。<strong>推測統計（inferential statistics）</strong>は、その平均から<strong>未知の母集団・未知の母数（parameter）</strong>について何が言えるかを考えることです。このモジュールは推測統計です。</p>
+  <p>推測が必要なのは、<strong>全数調査（census）</strong>が現実的でないことが多いからです。米国全人口を調べるのは大変ですし、小さな工場のPCなら全数調査できるかもしれません。多くの場合は時間もお金もかかりすぎるので、<strong>代表的な標本（representative sample）</strong>を取ります。ただし標本を取る以上、<strong>標本のばらつき（sampling variability）</strong>があります。「この標本をどこまで信頼できるか」が問題です。</p>
+  <h3>2本柱：信頼区間と有意性検定</h3>
+  <table class="compare-table">
+    <tr><th></th><th>confidence interval 信頼区間</th><th>significance test 有意性検定（hypothesis test 仮説検定）</th></tr>
+    <tr><td>目的</td><td>未知の平均を<strong>範囲</strong>で推定する</td><td>ある<strong>仮説</strong>を検証する（結果は偶然か、別の何かか）</td></tr>
+    <tr><td>航空券の例</td><td>1つの値「$300」より、「$250〜$450」という区間のほうが情報が多い</td><td>去年の平均 $300 に対し今年 $350。これは有意か、たまたまの標本か</td></tr>
+    <tr><td>仮説</td><td>なし（未知の母数を推定）</td><td>帰無仮説（null）と対立仮説（alternative）</td></tr>
+  </table>
+<div class="viz"><div class="viz-title">点推定と区間推定（航空券の例）</div><div style="text-align:center"><svg viewBox="0 0 380 150" width="380" height="150" role="img" aria-label="点推定と区間推定" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="379" height="149" fill="none" stroke="#cbd5e1"/><line x1="40" y1="115" x2="340" y2="115" stroke="#64748b"/><line x1="40.0" y1="115" x2="40.0" y2="119" stroke="#64748b"/><text x="40.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$200</text><line x1="90.0" y1="115" x2="90.0" y2="119" stroke="#64748b"/><text x="90.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$250</text><line x1="140.0" y1="115" x2="140.0" y2="119" stroke="#64748b"/><text x="140.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$300</text><line x1="190.0" y1="115" x2="190.0" y2="119" stroke="#64748b"/><text x="190.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$350</text><line x1="240.0" y1="115" x2="240.0" y2="119" stroke="#64748b"/><text x="240.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$400</text><line x1="290.0" y1="115" x2="290.0" y2="119" stroke="#64748b"/><text x="290.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$450</text><line x1="340.0" y1="115" x2="340.0" y2="119" stroke="#64748b"/><text x="340.0" y="132" font-size="10" text-anchor="middle" fill="#475569">$500</text><circle cx="140.0" cy="40" r="6" fill="#ef4444"/><text x="152.0" y="44" font-size="11" fill="#334155">点推定 $300（x̄）</text><line x1="90.0" y1="80" x2="290.0" y2="80" stroke="#2563eb" stroke-width="4"/><line x1="90.0" y1="72" x2="90.0" y2="88" stroke="#2563eb" stroke-width="2"/><line x1="290.0" y1="72" x2="290.0" y2="88" stroke="#2563eb" stroke-width="2"/><text x="190.0" y="68" font-size="11" text-anchor="middle" fill="#334155">区間推定 ($250, $450)</text><line x1="140.0" y1="46" x2="140.0" y2="112" stroke="#94a3b8" stroke-dasharray="3 3"/></svg></div><div class="viz-cap">点推定は1つの値。区間推定は「この範囲にありそう」という幅を持つので、情報が多い。</div></div>
+  <div class="note-box">📌 <strong>このモジュールの前提</strong><ul style="margin:.4rem 0 0 1.2rem"><li>解釈は<strong>頻度論（frequentist）</strong>の立場で、ベイズ（Bayesian）ではありません。</li><li>扱うのは<strong>量的データ（quantitative）</strong>（航空券の価格など）。航空会社名のような<strong>質的データ（categorical）</strong>は別の章です。量的か質的かの区別は、この章と後の章の検定・区間を取り違えないために大切です。</li><li>公式がたくさん出ますが、暗記よりも<strong>「数字がどこから来るか」</strong>を理解すること。実務ではデータを入力すればRが区間も検定結果も出してくれますが、公式を見る価値は教育上とても大きいです。</li></ul></div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「標本の平均」は1つの数字にすぎません。そこで、①<strong>幅をつけて</strong>真の平均を当てにいく（信頼区間）、②<strong>「変わった」と言ってよいか</strong>を確かめる（有意性検定）の2つを学びます。</p></div>
+  <div class="practice-card" id="p-t1-u1">
+    <div class="ptitle">💻 ミニ練習：標本の平均・標準偏差・標準誤差</div>
+    <p class="ptask"><code>mtcars</code>の<code>mpg</code>（32台の燃費）を標本とみなし、標本平均 <code>xbar</code>、標準偏差 <code>s</code>、標準誤差 <code>se = s/√n</code> を求めてください（<code>n</code>は<code>length()</code>で）。</p>
+    <textarea class="code-editor" id="p-t1-u1-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-t1-u1', '['mean','sd','sqrt','length']')">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-t1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-t1-u1-result"></div>
+    <div class="answer-reveal" id="p-t1-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x &lt;- mtcars$mpg</span>
+<span class="cl">xbar &lt;- <span class="kw">mean</span>(x)           <span class="cm"># 20.09062</span></span>
+<span class="cl">s    &lt;- <span class="kw">sd</span>(x)             <span class="cm"># 6.026948</span></span>
+<span class="cl">n    &lt;- <span class="kw">length</span>(x)         <span class="cm"># 32</span></span>
+<span class="cl">se   &lt;- s / <span class="kw">sqrt</span>(n)       <span class="cm"># 1.065424</span></span>
+<span class="cl">se</span>
+</pre>
+      <p class="answer-note">平均 20.09、標準偏差 6.03、n = 32 なので SE = 6.026948/√32 ≈ 1.065。この SE が、後で区間の幅や検定統計量の分母になります。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>1標本のt区間</h2><div class="unit-sub">estimate ± ME と臨界値 qt()</div></div>
+  </div>
+  <p>名前を分解すると、<strong>one-sample t interval for a population mean</strong>。<strong>1標本</strong>（one sample。2標本は後で）、<strong>t</strong>（別の分布を使う手法と区別するための名前）、<strong>interval</strong>（検定ではなく区間）、<strong>母平均</strong>（比率ではなく平均）です。</p>
+  <h3>一般形：推定値 ± 誤差の幅</h3>
+  <p>どんな信頼区間も形は同じです。</p>
+  <div class="note-box" style="text-align:center;font-size:1.05rem"><strong>estimate ± margin of error</strong>　（ME ＝ critical value × standard error）</div>
+  <ul>
+    <li><strong>estimate（推定値）</strong>：統計量。多くの場合、標本平均 x̄。</li>
+    <li><strong>standard error（標準誤差）</strong>：その統計量が標本ごとにどれだけ変わるか。</li>
+    <li><strong>critical value（臨界値）</strong>：区間が望みの幅になるようにする倍率。</li>
+  </ul>
+  <p>「±」は短縮表記です。(統計量 − 臨界値 × SE, 統計量 ＋ 臨界値 × SE) の、左が下限（lower bound）、右が上限（upper bound）。<strong>区間は角括弧ではなく丸括弧 ( , ) で書きます。</strong>最初の例では、点推定 $300、ME $10 なら ($290, $310) です。</p>
+  <h3>1標本のt区間</h3>
+  <div class="note-box" style="text-align:center;font-size:1.05rem"><strong>x̄ ± t*<sub>(1−α/2, df)</sub> · s/√n</strong>　　df ＝ n − 1</div>
+  <ul>
+    <li><strong>x̄</strong>：標本平均（統計量）　<strong>s/√n</strong>：標準誤差（s は変数 x の標本標準偏差、n は標本サイズ）</li>
+    <li><strong>t*</strong>：臨界値（分位点 quantile ともいう）。t* × SE ＝ ME。</li>
+  </ul>
+  <p>参考書では単に「x̄ ± t × SE」と書かれることもありますが、t* を求めるには<strong>分位点（1 − α/2）と自由度 df の両方</strong>が必要です。</p>
+  <h3>t* の決め方：qt()</h3>
+  <p>信頼水準が95%なら 1 − 0.95 ＝ α ＝ 0.05、その半分 α/2 ＝ 0.025。中央の95%を塗った曲線の左右に2.5%ずつ残るので、必要なのは <strong>0.95 ＋ 0.025 ＝ 0.975 番目の分位点（97.5th quantile）</strong>です。</p>
+  <div class="viz"><div class="viz-title">中央95%と、左右の2.5%（イメージ）</div><div style="text-align:center"><svg viewBox="0 0 360 150" width="360" height="150" role="img" aria-label="t分布の中央95%" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="359" height="149" fill="none" stroke="#cbd5e1"/><path d="M40 120 C100 118 130 20 180 20 C230 20 260 118 320 120 Z" fill="#dbeafe" stroke="#2563eb"/><path d="M40 120 C60 119.6 72 108 82 92 L82 120 Z" fill="#fca5a5"/><path d="M320 120 C300 119.6 288 108 278 92 L278 120 Z" fill="#fca5a5"/><line x1="40" y1="120" x2="320" y2="120" stroke="#64748b"/><text x="180" y="75" font-size="13" text-anchor="middle" fill="#1e3a8a">中央 95%</text><text x="60" y="84" font-size="10" text-anchor="middle" fill="#b91c1c">2.5%</text><text x="300" y="84" font-size="10" text-anchor="middle" fill="#b91c1c">2.5%</text><text x="82" y="136" font-size="10" text-anchor="middle" fill="#475569">−t*</text><text x="278" y="136" font-size="10" text-anchor="middle" fill="#475569">+t*</text></svg></div><div class="viz-cap">t* は「右側に2.5%残る点」＝ 0.975 の分位点。左右対称なので −t* と +t* で挟む。</div></div>
+  <p><strong>練習問題：</strong>n ＝ 10 の標本で90%信頼区間を作るときの t*。1 − 0.90 ＝ 0.10、半分で 0.05。必要な分位点は 0.90 ＋ 0.05 ＝ <strong>0.95</strong>。df ＝ 10 − 1 ＝ <strong>9</strong>。Rでは <strong>q</strong>（quantile）＋ <strong>t</strong>（分布）＝ <code>qt()</code> です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">qt</span>(p = <span class="nm">0.9</span> + <span class="nm">0.05</span>, df = <span class="nm">10</span> - <span class="nm">1</span>)   <span class="cm"># p = 0.95, df = 9</span></span>
+<span class="cl"><span class="kw">qt</span>(<span class="nm">0.95</span>, df = <span class="nm">9</span>)                 <span class="cm"># 同じ</span></span>
+<span class="cl"><span class="kw">qt</span>(<span class="nm">1</span> - <span class="nm">0.10</span>/<span class="nm">2</span>, <span class="nm">9</span>)                <span class="cm"># 同じ（引数名は省略してよい）</span></span>
+</pre><div class="output-reveal">[1] 1.833113
+[1] 1.833113
+[1] 1.833113</div>
+  <p>どの書き方でも答えは同じ <strong>1.833113</strong> です。<code>p =</code>、<code>df =</code> は省略可（Rが数の位置で判断できるとき）で、足し算を使わず <code>1 - 0.10/2</code> と書いても構いません。</p>
+  <h3>t表（Table B）との対応</h3>
+  <p>表を使う人もいます。表の下側で信頼水準（90%）、左側で df（9）を選ぶと <strong>1.833</strong>。Rと同じ値ですが、表は小数の桁が少ないだけです。表の最上段の <em>t</em> に付いた添字 <strong>t<sub>0.95</sub></strong> が、Rで使った 0.95 に対応します。90%なら t<sub>0.95</sub>、よく使う95%なら <strong>t<sub>0.975</sub></strong> です。</p>
+  <table class="compare-table">
+    <tr><th>信頼水準</th><th>α</th><th>qt に入れる p</th><th>n = 10 (df = 9) の t*</th></tr>
+    <tr><td>90%</td><td>0.10</td><td>0.95</td><td>1.833</td></tr>
+    <tr><td>95%</td><td>0.05</td><td>0.975</td><td>2.262</td></tr>
+  </table>
+  <p>df が大きいほど t* は小さくなり、正規分布の1.96に近づきます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">qt</span>(<span class="nm">0.975</span>, df = <span class="kw">c</span>(<span class="nm">4</span>, <span class="nm">9</span>, <span class="nm">19</span>, <span class="nm">29</span>, <span class="nm">49</span>, <span class="nm">99</span>))</span>
+</pre><div class="output-reveal">[1] 2.776445 2.262157 2.093024 2.045230 2.009575 1.984217</div>
+  <div class="warn-box">⚠️ <strong>講師の注意：</strong>実務で「この臨界値は？」と聞かれることはまずありません。求められるのは<strong>区間を作り、解釈し、前提（条件）を確認し、結論を述べる</strong>ことです。ここで臨界値を丁寧にやるのは、ME と区間の数字がどこから来るかを理解するためです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>信頼区間 ＝ <strong>平均 ± （倍率 t*）×（ぶれの大きさ SE）</strong>。倍率は <code>qt(1 - α/2, df = n - 1)</code>。95%なら <code>qt(0.975, ...)</code>、90%なら <code>qt(0.95, ...)</code>。</p></div>
+  <div class="practice-card" id="p-t1-u2">
+    <div class="ptitle">💻 ミニ練習：臨界値 t*</div>
+    <p class="ptask">標本サイズ <code>n = 25</code> の標本で<strong>95%信頼区間</strong>を作るときの臨界値 t* を、<code>qt()</code> で求めてください（df は <code>n - 1</code>）。</p>
+    <textarea class="code-editor" id="p-t1-u2-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-t1-u2', '['qt','0.975']')">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-t1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-t1-u2-result"></div>
+    <div class="answer-reveal" id="p-t1-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">n &lt;- <span class="nm">25</span></span>
+<span class="cl"><span class="kw">qt</span>(<span class="nm">0.975</span>, df = n - <span class="nm">1</span>)</span>
+</pre>
+      <p class="answer-note">95%なので p = 0.975、df = 24。結果は 2.063899。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>例：コールセンターの応答時間</h2><div class="unit-sub">平均18.353秒、s = 11.761、n = 50</div></div>
+  </div>
+  <p><strong>状況：</strong>銀行のマネージャーは、コールセンターの担当者が電話に<strong>30秒以内</strong>で出ているかを知りたい。アナリストが無作為に<strong>50件</strong>の通話を調べたところ、標本平均 x̄ ＝ <strong>18.353 秒</strong>、標本標準偏差 s ＝ <strong>11.761 秒</strong>でした。95%信頼区間を作ります。</p>
+  <h3>質問に順に答える</h3>
+  <table class="compare-table">
+    <tr><th>質問</th><th>答え</th></tr>
+    <tr><td>推定したい<strong>母数</strong>は？</td><td>未知の<strong>母平均</strong>＝担当者が電話に出るまでの平均時間（秒）</td></tr>
+    <tr><td><strong>母集団</strong>は？</td><td>担当者が受けるすべての通話（母集団は「～のすべて」であることが多い）</td></tr>
+    <tr><td><strong>標本</strong>は？</td><td>無作為に選んだ50件の通話（問題文で与えられる部分）</td></tr>
+    <tr><td>母数の推定に使う<strong>統計量</strong>は？</td><td>標本平均 18.353 秒</td></tr>
+    <tr><td>標本平均は母平均の<strong>不偏推定</strong>（unbiased）といえる？</td><td>無作為抽出なので標本は母集団を代表すると考えられ、yes。全数調査は難しいので標本を取る</td></tr>
+    <tr><td>どの区間？なぜ？</td><td><strong>1標本のt区間</strong>：標本が1つ、量的データ、母標準偏差は不明で標本の s だけ分かる</td></tr>
+  </table>
+  <div class="note-box">🎯 <strong>実務で一番大事なこと：</strong>計算の手順よりも、データを見て「ここは1標本のt区間が必要」と<strong>正しい区間を選べること</strong>です。この先、区間の種類が増えると選ぶのが難しくなります。</div>
+  <h3>標準誤差・臨界値・誤差の幅・区間</h3>
+  <p>「標本平均は標本ごとにどれくらい変わるか」とは、<strong>標準誤差（SE, SEM）</strong>のことです。SE ＝ s/√n ＝ 11.761/√50 ≈ 1.66 秒。別の50件を取れば平均は同じにならず、1.66秒ほどのばらつきがあります（18秒の次に17分が出たら驚きますよね）。</p>
+<pre class="code-block">
+<span class="cl">xbar &lt;- <span class="nm">18.353</span></span>
+<span class="cl">s    &lt;- <span class="nm">11.761</span></span>
+<span class="cl">n    &lt;- <span class="nm">50</span></span>
+<span class="cl"></span>
+<span class="cl">se &lt;- s / <span class="kw">sqrt</span>(n)                 <span class="cm"># 標準誤差</span></span>
+<span class="cl">se</span>
+<span class="cl">t_star &lt;- <span class="kw">qt</span>(<span class="nm">0.975</span>, df = n - <span class="nm">1</span>)   <span class="cm"># 95%の臨界値</span></span>
+<span class="cl">t_star</span>
+<span class="cl">me &lt;- t_star * se                 <span class="cm"># 誤差の幅</span></span>
+<span class="cl">me</span>
+<span class="cl"><span class="kw">c</span>(xbar - me, xbar + me)           <span class="cm"># 95%信頼区間</span></span>
+</pre><div class="output-reveal">[1] 1.663257
+[1] 2.009575
+[1] 3.342439
+[1] 15.01056 21.69544</div>
+  <ul>
+    <li><strong>ME ＝ 3.34 秒</strong>。定義：「推定値が真の母集団の値から、<strong>高々どれだけ離れうるか</strong>」。</li>
+    <li>区間 ＝ x̄ ± ME ＝ <strong>(15.0, 21.7) 秒</strong>（小数第1位に丸め。丸括弧）。</li>
+    <li><strong>解釈（文脈つき）：</strong><em>We are 95% confident that the interval (15.0, 21.7) seconds captures the unknown mean time that agents take to answer calls.</em></li>
+  </ul>
+<div class="viz"><div class="viz-title">95%区間と99%区間（目標の30秒との比較）</div><div style="text-align:center"><svg viewBox="0 0 420 190" width="420" height="190" role="img" aria-label="95%と99%の信頼区間と30秒の目標" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="419" height="189" fill="none" stroke="#cbd5e1"/><line x1="40" y1="150" x2="400" y2="150" stroke="#64748b"/><line x1="40.0" y1="150" x2="40.0" y2="154" stroke="#64748b"/><text x="40.0" y="167" font-size="10" text-anchor="middle" fill="#475569">10</text><line x1="72.72727272727272" y1="150" x2="72.72727272727272" y2="154" stroke="#64748b"/><text x="72.72727272727272" y="167" font-size="10" text-anchor="middle" fill="#475569">12</text><line x1="105.45454545454545" y1="150" x2="105.45454545454545" y2="154" stroke="#64748b"/><text x="105.45454545454545" y="167" font-size="10" text-anchor="middle" fill="#475569">14</text><line x1="138.1818181818182" y1="150" x2="138.1818181818182" y2="154" stroke="#64748b"/><text x="138.1818181818182" y="167" font-size="10" text-anchor="middle" fill="#475569">16</text><line x1="170.9090909090909" y1="150" x2="170.9090909090909" y2="154" stroke="#64748b"/><text x="170.9090909090909" y="167" font-size="10" text-anchor="middle" fill="#475569">18</text><line x1="203.63636363636363" y1="150" x2="203.63636363636363" y2="154" stroke="#64748b"/><text x="203.63636363636363" y="167" font-size="10" text-anchor="middle" fill="#475569">20</text><line x1="236.36363636363635" y1="150" x2="236.36363636363635" y2="154" stroke="#64748b"/><text x="236.36363636363635" y="167" font-size="10" text-anchor="middle" fill="#475569">22</text><line x1="269.0909090909091" y1="150" x2="269.0909090909091" y2="154" stroke="#64748b"/><text x="269.0909090909091" y="167" font-size="10" text-anchor="middle" fill="#475569">24</text><line x1="301.8181818181818" y1="150" x2="301.8181818181818" y2="154" stroke="#64748b"/><text x="301.8181818181818" y="167" font-size="10" text-anchor="middle" fill="#475569">26</text><line x1="334.54545454545456" y1="150" x2="334.54545454545456" y2="154" stroke="#64748b"/><text x="334.54545454545456" y="167" font-size="10" text-anchor="middle" fill="#475569">28</text><line x1="367.27272727272725" y1="150" x2="367.27272727272725" y2="154" stroke="#64748b"/><text x="367.27272727272725" y="167" font-size="10" text-anchor="middle" fill="#475569">30</text><line x1="400.0" y1="150" x2="400.0" y2="154" stroke="#64748b"/><text x="400.0" y="167" font-size="10" text-anchor="middle" fill="#475569">32</text><text x="220.0" y="183" font-size="10" text-anchor="middle" fill="#475569">平均応答時間（秒）</text><line x1="367.27272727272725" y1="14" x2="367.27272727272725" y2="150" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="5 3"/><text x="363.27272727272725" y="24" font-size="10" text-anchor="end" fill="#dc2626">目標 30秒</text><line x1="121.9981818181818" y1="70" x2="231.37272727272727" y2="70" stroke="#2563eb" stroke-width="5"/><line x1="121.9981818181818" y1="63" x2="121.9981818181818" y2="77" stroke="#2563eb" stroke-width="2"/><line x1="231.37272727272727" y1="63" x2="231.37272727272727" y2="77" stroke="#2563eb" stroke-width="2"/><circle cx="176.68545454545458" cy="70" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="176.68545454545458" y="58" font-size="10" text-anchor="middle" fill="#334155">95%: (15.0, 21.7)</text><line x1="103.75272727272728" y1="115" x2="249.61818181818177" y2="115" stroke="#0d9488" stroke-width="5"/><line x1="103.75272727272728" y1="108" x2="103.75272727272728" y2="122" stroke="#0d9488" stroke-width="2"/><line x1="249.61818181818177" y1="108" x2="249.61818181818177" y2="122" stroke="#0d9488" stroke-width="2"/><circle cx="176.68545454545458" cy="115" r="4.5" fill="#fff" stroke="#0d9488" stroke-width="2"/><text x="176.68545454545458" y="103" font-size="10" text-anchor="middle" fill="#334155">99%: (13.9, 22.8)</text></svg></div><div class="viz-cap">白丸が標本平均 18.353。区間全体が30秒の左にあるので、目標を満たしているという説得力のある証拠。99%のほうが幅が広い。</div></div>
+  <div class="warn-box">⚠️ <strong>R の落とし穴（講義）：</strong><code>qt(0.975, df = 49)</code> は、引数名を省いて <code>qt(0.975, 49)</code> と書いても動きます。しかし順番を逆にした <code>qt(49, 0.975)</code> は、最初の数（49）をパーセンタイルとして扱い、<strong>パーセンタイルは1以下のはず</strong>なので <strong>NaN</strong> になります。<br>また、ここまでの書き方は「数字の出どころを見せる」ための学習用。実務ではやりません。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">qt</span>(<span class="nm">49</span>, <span class="nm">0.975</span>)</span>
+</pre><div class="output-reveal">[1] NaN
+Warning message:
+In qt(49, 0.975) : NaNs produced</div>
+  <h3>目標（30秒以内）を満たしているか？</h3>
+  <p>区間 (15.0, 21.7) は<strong>全体が30秒を下回っている</strong>ので、<strong>yes、説得力のある証拠（convincing evidence）がある</strong>。マネージャーは、担当者が推奨の30秒以内で応答していると自信を持てます。</p>
+  <p>もし<strong>99%信頼区間</strong>にすると、臨界値（倍率）が大きくなるので区間は<strong>広がります</strong>が、それでも30秒未満です。</p>
+<pre class="code-block">
+<span class="cl">t99 &lt;- <span class="kw">qt</span>(<span class="nm">0.995</span>, df = n - <span class="nm">1</span>)</span>
+<span class="cl">t99</span>
+<span class="cl">me99 &lt;- t99 * se</span>
+<span class="cl">me99</span>
+<span class="cl"><span class="kw">c</span>(xbar - me99, xbar + me99)</span>
+</pre><div class="output-reveal">[1] 2.679952
+[1] 4.457448
+[1] 13.89555 22.81045</div>
+  <div class="note-box">📌 <strong>補足（講義）：</strong>区間や検定には<strong>満たすべき条件（conditions）</strong>があり、ここでは扱っていません（後の動画で学習）。もし<strong>生データ</strong>があれば、Rのショートカット <code>t.test()</code> で区間が出せます（次のユニットで使う）。今回は要約統計量（平均と標準偏差）しかないので使えませんでした。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>① SE ＝ s/√n（ぶれの大きさ）→ ② t* ＝ qt(0.975, n−1)（倍率）→ ③ ME ＝ t* × SE → ④ 区間 ＝ x̄ ± ME。「18秒ぐらいだけど、15〜21.7秒の間に真の平均がありそう（95%）。全部30秒より下！」</p></div>
+  <div class="practice-card" id="p-t1-u3">
+    <div class="ptitle">💻 ミニ練習：95%信頼区間を作る</div>
+    <p class="ptask">要約統計量 <code>xbar = 18.353</code>、<code>s = 11.761</code>、ただし標本サイズが <code>n = 100</code> のとき、<strong>95%信頼区間</strong>の下限・上限を <code>c(下限, 上限)</code> で求めてください。</p>
+    <textarea class="code-editor" id="p-t1-u3-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-t1-u3', '['qt','sqrt','0.975']')">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-t1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-t1-u3-result"></div>
+    <div class="answer-reveal" id="p-t1-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">xbar &lt;- <span class="nm">18.353</span></span>
+<span class="cl">s &lt;- <span class="nm">11.761</span></span>
+<span class="cl">n &lt;- <span class="nm">100</span></span>
+<span class="cl">me &lt;- <span class="kw">qt</span>(<span class="nm">0.975</span>, df = n - <span class="nm">1</span>) * s / <span class="kw">sqrt</span>(n)</span>
+<span class="cl"><span class="kw">c</span>(xbar - me, xbar + me)</span>
+</pre>
+      <p class="answer-note">ME = 2.333638、区間は (16.01936, 20.68664) ≈ (16.0, 20.7)。n が増えると SE が小さくなり、n = 50 のときの (15.0, 21.7) より狭くなります。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>「95%信頼」とは何か</h2><div class="unit-sub">アプレットとシミュレーション</div></div>
+  </div>
+  <p>(15.0, 21.7) を「95%信頼」と解釈しました。この「95%」は何を意味するのでしょう。講義では Rossman-Chance の「Simulating confidence intervals」アプレットで、<strong>頻度論（frequentist）</strong>の意味を確かめました（ベイズ派はこの解釈に同意しませんが、このモジュールは頻度論です）。</p>
+  <h3>アプレットの設定</h3>
+  <p>統計量：mean、分布：normal、方法：t。<strong>母平均 μ ＝ 25、母標準偏差 σ ＝ 4、標本サイズ n ＝ 30、信頼水準 95%</strong>。本物の調査では μ は未知ですが、ここでは<strong>既知</strong>なので区間が当たったか確認できます（黒い縦線が μ ＝ 25）。</p>
+  <ul>
+    <li>1回目：標本平均 <strong>24.8</strong>、区間は 25 を<strong>含む</strong>（緑）。</li>
+    <li>2回目：標本平均 <strong>25.9</strong>、これも含む（緑）。</li>
+    <li>何度も標本を取ると、<strong>赤</strong>の区間が出る。例：標本平均 27、幅4 → 約 (25, 29) となり、区間全体が25より大きく、<strong>含まない</strong>。</li>
+  </ul>
+  <h3>回数を増やすとどうなるか</h3>
+  <table class="compare-table">
+    <tr><th>設定</th><th>回数</th><th>25 を含んだ区間</th><th>捕捉率</th></tr>
+    <tr><td>95%</td><td>50回（途中経過）</td><td>—</td><td>約90%</td></tr>
+    <tr><td>95%</td><td>100</td><td>94（赤は6本）</td><td>94%</td></tr>
+    <tr><td>95%</td><td>1000</td><td>955</td><td>95.5%</td></tr>
+    <tr><td>70%（区間は狭くなる）</td><td>100</td><td>—</td><td>62%</td></tr>
+    <tr><td>70%</td><td>1000</td><td>—</td><td>68.3%</td></tr>
+  </table>
+  <p><strong>捕捉率（capture rate）は信頼水準に近づきます。</strong>回数を増やすほど近づく――これが<strong>頻度論的</strong>と呼ばれる理由です。70%にすると臨界値が小さくなるため区間は狭くなり、捕捉率も下がります。アプレットで標本サイズ・平均・標準偏差・回数・信頼水準を変えて、区間と捕捉率の変化を体感することが勧められています。</p>
+  <h3>Rでも区間をシミュレートできる</h3>
+  <p>講師は「おもしろいから」と、Rで区間を作る例も紹介しました（授業で使う教科書から）。同じ設定（μ ＝ 25, σ ＝ 4, n ＝ 30）で自分でも書いてみましょう。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2024</span>)</span>
+<span class="cl">mu &lt;- <span class="nm">25</span>; sigma &lt;- <span class="nm">4</span>; n &lt;- <span class="nm">30</span></span>
+<span class="cl"></span>
+<span class="cl">captured &lt;- <span class="kw">replicate</span>(<span class="nm">1000</span>, {</span>
+<span class="cl">  x  &lt;- <span class="kw">rnorm</span>(n, mu, sigma)                       <span class="cm"># 標本を1つ取る</span></span>
+<span class="cl">  ci &lt;- <span class="kw">mean</span>(x) + <span class="kw">c</span>(-<span class="nm">1</span>, <span class="nm">1</span>) * <span class="kw">qt</span>(<span class="nm">0.975</span>, n - <span class="nm">1</span>) * <span class="kw">sd</span>(x) / <span class="kw">sqrt</span>(n)</span>
+<span class="cl">  ci[<span class="nm">1</span>] &lt;= mu &amp; mu &lt;= ci[<span class="nm">2</span>]                       <span class="cm"># μ を含んだか？</span></span>
+<span class="cl">})</span>
+<span class="cl"><span class="kw">sum</span>(captured)</span>
+<span class="cl"><span class="kw">mean</span>(captured)</span>
+</pre><div class="output-reveal">[1] 954
+[1] 0.954</div>
+  <p>1000本の区間のうち954本がμを含みました（95.4%、95%に近い）。次の図は、最初の40本です（緑＝含む、赤＝外れ）。</p>
+<div class="viz"><div class="viz-title">シミュレーションした40本の95%信頼区間（上のコードの最初の40回）</div><div style="text-align:center"><svg viewBox="0 0 430 342" width="430" height="342" role="img" aria-label="シミュレーションした40本の95%信頼区間" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="429" height="341" fill="none" stroke="#cbd5e1"/><line x1="40" y1="302.0" x2="400" y2="302.0" stroke="#64748b"/><line x1="40.0" y1="302.0" x2="40.0" y2="306.0" stroke="#64748b"/><text x="40.0" y="318.0" font-size="10" text-anchor="middle" fill="#475569">20</text><line x1="112.0" y1="302.0" x2="112.0" y2="306.0" stroke="#64748b"/><text x="112.0" y="318.0" font-size="10" text-anchor="middle" fill="#475569">22</text><line x1="184.0" y1="302.0" x2="184.0" y2="306.0" stroke="#64748b"/><text x="184.0" y="318.0" font-size="10" text-anchor="middle" fill="#475569">24</text><line x1="256.0" y1="302.0" x2="256.0" y2="306.0" stroke="#64748b"/><text x="256.0" y="318.0" font-size="10" text-anchor="middle" fill="#475569">26</text><line x1="328.0" y1="302.0" x2="328.0" y2="306.0" stroke="#64748b"/><text x="328.0" y="318.0" font-size="10" text-anchor="middle" fill="#475569">28</text><line x1="400.0" y1="302.0" x2="400.0" y2="306.0" stroke="#64748b"/><text x="400.0" y="318.0" font-size="10" text-anchor="middle" fill="#475569">30</text><line x1="220.0" y1="10" x2="220.0" y2="302.0" stroke="#111827" stroke-width="1.4"/><text x="224.0" y="18" font-size="10" fill="#111827">μ = 25</text><line x1="127.7" y1="21.6" x2="250.7" y2="21.6" stroke="#16a34a" stroke-width="2.4"/><line x1="168.1" y1="28.8" x2="263.7" y2="28.8" stroke="#16a34a" stroke-width="2.4"/><line x1="180.9" y1="36.0" x2="290.6" y2="36.0" stroke="#16a34a" stroke-width="2.4"/><line x1="149.3" y1="43.2" x2="265.8" y2="43.2" stroke="#16a34a" stroke-width="2.4"/><line x1="168.3" y1="50.4" x2="266.0" y2="50.4" stroke="#16a34a" stroke-width="2.4"/><line x1="187.6" y1="57.6" x2="310.3" y2="57.6" stroke="#16a34a" stroke-width="2.4"/><line x1="204.0" y1="64.8" x2="298.3" y2="64.8" stroke="#16a34a" stroke-width="2.4"/><line x1="183.3" y1="72.0" x2="269.0" y2="72.0" stroke="#16a34a" stroke-width="2.4"/><line x1="182.5" y1="79.2" x2="288.7" y2="79.2" stroke="#16a34a" stroke-width="2.4"/><line x1="181.1" y1="86.4" x2="286.5" y2="86.4" stroke="#16a34a" stroke-width="2.4"/><line x1="174.5" y1="93.6" x2="295.6" y2="93.6" stroke="#16a34a" stroke-width="2.4"/><line x1="157.6" y1="100.8" x2="272.2" y2="100.8" stroke="#16a34a" stroke-width="2.4"/><line x1="189.6" y1="108.0" x2="278.1" y2="108.0" stroke="#16a34a" stroke-width="2.4"/><line x1="186.2" y1="115.2" x2="288.3" y2="115.2" stroke="#16a34a" stroke-width="2.4"/><line x1="178.1" y1="122.4" x2="291.8" y2="122.4" stroke="#16a34a" stroke-width="2.4"/><line x1="183.9" y1="129.6" x2="284.6" y2="129.6" stroke="#16a34a" stroke-width="2.4"/><line x1="166.1" y1="136.8" x2="264.8" y2="136.8" stroke="#16a34a" stroke-width="2.4"/><line x1="127.7" y1="144.0" x2="232.2" y2="144.0" stroke="#16a34a" stroke-width="2.4"/><line x1="168.5" y1="151.2" x2="269.8" y2="151.2" stroke="#16a34a" stroke-width="2.4"/><line x1="152.9" y1="158.4" x2="264.6" y2="158.4" stroke="#16a34a" stroke-width="2.4"/><line x1="151.8" y1="165.6" x2="264.0" y2="165.6" stroke="#16a34a" stroke-width="2.4"/><line x1="142.3" y1="172.8" x2="247.6" y2="172.8" stroke="#16a34a" stroke-width="2.4"/><line x1="171.3" y1="180.0" x2="264.0" y2="180.0" stroke="#16a34a" stroke-width="2.4"/><line x1="189.7" y1="187.2" x2="287.1" y2="187.2" stroke="#16a34a" stroke-width="2.4"/><line x1="161.9" y1="194.4" x2="261.7" y2="194.4" stroke="#16a34a" stroke-width="2.4"/><line x1="134.4" y1="201.6" x2="251.3" y2="201.6" stroke="#16a34a" stroke-width="2.4"/><line x1="190.4" y1="208.8" x2="303.1" y2="208.8" stroke="#16a34a" stroke-width="2.4"/><line x1="141.9" y1="216.0" x2="222.5" y2="216.0" stroke="#16a34a" stroke-width="2.4"/><line x1="177.3" y1="223.2" x2="305.4" y2="223.2" stroke="#16a34a" stroke-width="2.4"/><line x1="208.3" y1="230.4" x2="320.2" y2="230.4" stroke="#16a34a" stroke-width="2.4"/><line x1="188.9" y1="237.6" x2="277.1" y2="237.6" stroke="#16a34a" stroke-width="2.4"/><line x1="183.3" y1="244.8" x2="294.5" y2="244.8" stroke="#16a34a" stroke-width="2.4"/><line x1="100.7" y1="252.0" x2="203.2" y2="252.0" stroke="#dc2626" stroke-width="2.4"/><line x1="110.7" y1="259.2" x2="204.9" y2="259.2" stroke="#dc2626" stroke-width="2.4"/><line x1="136.6" y1="266.4" x2="245.0" y2="266.4" stroke="#16a34a" stroke-width="2.4"/><line x1="176.3" y1="273.6" x2="282.2" y2="273.6" stroke="#16a34a" stroke-width="2.4"/><line x1="170.2" y1="280.8" x2="275.2" y2="280.8" stroke="#16a34a" stroke-width="2.4"/><line x1="198.9" y1="288.0" x2="280.0" y2="288.0" stroke="#16a34a" stroke-width="2.4"/><line x1="153.7" y1="295.2" x2="258.4" y2="295.2" stroke="#16a34a" stroke-width="2.4"/><line x1="225.7" y1="302.4" x2="319.9" y2="302.4" stroke="#dc2626" stroke-width="2.4"/><text x="220.0" y="334.0" font-size="10" text-anchor="middle" fill="#475569">標本平均の値（40回の標本）</text></svg></div><div class="viz-cap">黒線が μ＝25。40本中37本が含み、3本（赤）が外れた。長く繰り返すと含む割合が95%に近づく。</div></div>
+  <h3>信頼水準の正しい解釈</h3>
+  <div class="note-box">✅ <strong>多数回標本を取れば、約 C%（95%や90%など、信頼水準）の区間が未知の母数（平均でも比率でも）を捕捉する。</strong></div>
+  <div class="warn-box">⚠️ <strong>level（水準）と interval（個別の区間）を混同しない。</strong>interval は端点のある<strong>特定の</strong>区間。「95%信頼水準」は、区間を作る<strong>前</strong>の<strong>手続き</strong>についての話で、<strong>多数の区間</strong>のうち何割が捕捉するかを指します。ある1本の区間について述べるときは「We are 95% confident that this interval captures …」と言います。</div>
+  <h3>誤差の幅（ME）に関する3つの質問</h3>
+  <table class="compare-table">
+    <tr><th>質問</th><th>答え</th><th>理由</th></tr>
+    <tr><td>標本サイズ n を増やすと ME は？</td><td><strong>小さくなる</strong></td><td>SE ＝ s/√n の分母が大きくなる。標本が大きいほど母集団について多く知っている</td></tr>
+    <tr><td>信頼水準を上げると ME は？</td><td><strong>大きくなる</strong></td><td>臨界値 t* が大きくなり、SE にかける倍率が増える</td></tr>
+    <tr><td>ME は標本の偏りや質問文の悪さを補正する？</td><td><strong>しない</strong></td><td>ME は<strong>標本ごとのばらつき（sampling variability）だけ</strong>を扱う。non-sampling の問題は別の方法で直す</td></tr>
+  </table>
+  <p>最初の2つは「<strong>他の条件を一定として（holding everything else constant）</strong>」成り立ちます。複数を同時に変えると簡単には言えません。「error」は「間違い」という意味ではなく、標本ごとのばらつきから生じる幅のことです。</p>
+  <p>コールセンターの例（s ＝ 11.761 のままと仮定）で数字を確かめましょう。</p>
+<pre class="code-block">
+<span class="cl">s &lt;- <span class="nm">11.761</span></span>
+<span class="cl"><span class="cm"># 信頼水準だけを変える（n = 50）</span></span>
+<span class="cl">cl &lt;- <span class="kw">c</span>(<span class="nm">0.70</span>, <span class="nm">0.90</span>, <span class="nm">0.95</span>, <span class="nm">0.99</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">qt</span>(<span class="nm">1</span> - (<span class="nm">1</span> - cl) / <span class="nm">2</span>, df = <span class="nm">49</span>) * s / <span class="kw">sqrt</span>(<span class="nm">50</span>), <span class="nm">2</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 標本サイズだけを変える（95%）</span></span>
+<span class="cl">n &lt;- <span class="kw">c</span>(<span class="nm">25</span>, <span class="nm">50</span>, <span class="nm">100</span>, <span class="nm">200</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">qt</span>(<span class="nm">0.975</span>, df = n - <span class="nm">1</span>) * s / <span class="kw">sqrt</span>(n), <span class="nm">2</span>)</span>
+</pre><div class="output-reveal">[1] 1.74 2.79 3.34 4.46
+[1] 4.85 3.34 2.33 1.64</div>
+  <p>信頼水準が上がるほど ME は増え（1.74 → 4.46）、n が増えるほど減ります（4.85 → 1.64）。なお n を4倍にしても ME は半分程度にしかなりません（√n の効果）。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「95%信頼」＝ 同じやり方で区間を何回も作ると、<strong>約95回（100回中）は本当の平均を捕まえる</strong>。1本の区間について「95%の確率で入っている」というより、<strong>やり方が95%の割合で成功する</strong>という意味。n を増やすと狭く、自信を上げると広くなる。</p></div>
+  <div class="practice-card" id="p-t1-u4">
+    <div class="ptitle">💻 ミニ練習：区間を1本シミュレートする</div>
+    <p class="ptask"><code>set.seed(1)</code> のあと、<code>rnorm(30, 25, 4)</code> で標本 <code>x</code> を取り、95%信頼区間 <code>c(下限, 上限)</code> を作って、<code>μ = 25</code> を含むか確かめてください。</p>
+    <textarea class="code-editor" id="p-t1-u4-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-t1-u4', '['rnorm','mean','sd','qt']')">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-t1-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-t1-u4-result"></div>
+    <div class="answer-reveal" id="p-t1-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">x  &lt;- <span class="kw">rnorm</span>(<span class="nm">30</span>, <span class="nm">25</span>, <span class="nm">4</span>)</span>
+<span class="cl">me &lt;- <span class="kw">qt</span>(<span class="nm">0.975</span>, df = <span class="nm">29</span>) * <span class="kw">sd</span>(x) / <span class="kw">sqrt</span>(<span class="nm">30</span>)</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(x) - me, <span class="kw">mean</span>(x) + me)</span>
+</pre>
+      <p class="answer-note">区間は約 (23.95, 26.71) で、25 を含みます（x̄ = 25.33, s = 3.70, ME = 1.38）。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>母平均の有意性検定</h2><div class="unit-sub">マイアミ空港の評価</div></div>
+  </div>
+  <p>信頼区間の次は<strong>有意性検定（significance test）</strong>です。公式を先に並べず、例を通して部品を学びます。</p>
+  <p><strong>状況：</strong>マイアミ国際空港（MIA）について、無作為に選んだ<strong>50人の出張客</strong>に0〜10で評価（rating）してもらいました。前年の調査の平均は <strong>5.1</strong>。空港が改善策を導入し、FAAは平均評価が上がったと考えています。有意水準 <strong>α ＝ 0.05</strong>。</p>
+<pre class="code-block">
+<span class="cl">ratings &lt;- <span class="kw">c</span>(<span class="nm">6</span>, <span class="nm">4</span>, <span class="nm">6</span>, <span class="nm">8</span>, <span class="nm">7</span>, <span class="nm">7</span>, <span class="nm">6</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">8</span>, <span class="nm">10</span>, <span class="nm">4</span>, <span class="nm">8</span>, <span class="nm">7</span>, <span class="nm">8</span>, <span class="nm">7</span>, <span class="nm">5</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">8</span>,</span>
+<span class="cl">             <span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">8</span>, <span class="nm">5</span>, <span class="nm">5</span>, <span class="nm">4</span>, <span class="nm">4</span>, <span class="nm">4</span>, <span class="nm">8</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>, <span class="nm">2</span>, <span class="nm">5</span>, <span class="nm">9</span>, <span class="nm">9</span>, <span class="nm">8</span>, <span class="nm">4</span>, <span class="nm">8</span>, <span class="nm">9</span>,</span>
+<span class="cl">             <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">9</span>, <span class="nm">7</span>, <span class="nm">8</span>, <span class="nm">3</span>, <span class="nm">10</span>, <span class="nm">8</span>, <span class="nm">9</span>, <span class="nm">6</span>)</span>
+<span class="cl"><span class="kw">mean</span>(ratings)</span>
+<span class="cl"><span class="kw">sd</span>(ratings)</span>
+<span class="cl"><span class="kw">hist</span>(ratings)</span>
+<span class="cl"><span class="kw">boxplot</span>(ratings, horizontal = <span class="kw">TRUE</span>)</span>
+</pre><div class="output-reveal">[1] 6.34
+[1] 2.162859</div>
+  <p>平均 6.34、標準偏差 2.16。この検定でも信頼区間と同じく<strong>平均と標準偏差</strong>が必要です。グラフは<strong>ヒストグラム・箱ひげ図・ドットプロット・茎葉図</strong>が適切。<strong>棒グラフ（bar graph）と円グラフ（pie chart）は質的データ用</strong>なので不適切です。</p>
+<div class="viz"><div class="viz-title">ratings のヒストグラム（上のデータ）</div><div style="text-align:center"><svg viewBox="0 0 400 210" width="400" height="210" role="img" aria-label="ratingsのヒストグラム" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="399" height="209" fill="none" stroke="#cbd5e1"/><line x1="40" y1="170" x2="380" y2="170" stroke="#64748b"/><line x1="40" y1="20" x2="40" y2="170" stroke="#64748b"/><line x1="37" y1="170.0" x2="40" y2="170.0" stroke="#64748b"/><text x="34" y="173.0" font-size="9" text-anchor="end" fill="#475569">0</text><line x1="37" y1="120.0" x2="40" y2="120.0" stroke="#64748b"/><text x="34" y="123.0" font-size="9" text-anchor="end" fill="#475569">4</text><line x1="37" y1="70.0" x2="40" y2="70.0" stroke="#64748b"/><text x="34" y="73.0" font-size="9" text-anchor="end" fill="#475569">8</text><line x1="37" y1="20.0" x2="40" y2="20.0" stroke="#64748b"/><text x="34" y="23.0" font-size="9" text-anchor="end" fill="#475569">12</text><text x="57.0" y="184" font-size="10" text-anchor="middle" fill="#475569">1</text><text x="91.0" y="184" font-size="10" text-anchor="middle" fill="#475569">2</text><text x="125.0" y="184" font-size="10" text-anchor="middle" fill="#475569">3</text><text x="159.0" y="184" font-size="10" text-anchor="middle" fill="#475569">4</text><text x="193.0" y="184" font-size="10" text-anchor="middle" fill="#475569">5</text><text x="227.0" y="184" font-size="10" text-anchor="middle" fill="#475569">6</text><text x="261.0" y="184" font-size="10" text-anchor="middle" fill="#475569">7</text><text x="295.0" y="184" font-size="10" text-anchor="middle" fill="#475569">8</text><text x="329.0" y="184" font-size="10" text-anchor="middle" fill="#475569">9</text><text x="363.0" y="184" font-size="10" text-anchor="middle" fill="#475569">10</text><rect x="75.0" y="157.5" width="32.0" height="12.5" fill="#93c5fd" stroke="#2563eb"/><text x="91.0" y="154.5" font-size="9" text-anchor="middle" fill="#334155">1</text><rect x="109.0" y="120.0" width="32.0" height="50.0" fill="#93c5fd" stroke="#2563eb"/><text x="125.0" y="117.0" font-size="9" text-anchor="middle" fill="#334155">4</text><rect x="143.0" y="70.0" width="32.0" height="100.0" fill="#93c5fd" stroke="#2563eb"/><text x="159.0" y="67.0" font-size="9" text-anchor="middle" fill="#334155">8</text><rect x="177.0" y="82.5" width="32.0" height="87.5" fill="#93c5fd" stroke="#2563eb"/><text x="193.0" y="79.5" font-size="9" text-anchor="middle" fill="#334155">7</text><rect x="211.0" y="107.5" width="32.0" height="62.5" fill="#93c5fd" stroke="#2563eb"/><text x="227.0" y="104.5" font-size="9" text-anchor="middle" fill="#334155">5</text><rect x="245.0" y="107.5" width="32.0" height="62.5" fill="#93c5fd" stroke="#2563eb"/><text x="261.0" y="104.5" font-size="9" text-anchor="middle" fill="#334155">5</text><rect x="279.0" y="32.5" width="32.0" height="137.5" fill="#93c5fd" stroke="#2563eb"/><text x="295.0" y="29.5" font-size="9" text-anchor="middle" fill="#334155">11</text><rect x="313.0" y="82.5" width="32.0" height="87.5" fill="#93c5fd" stroke="#2563eb"/><text x="329.0" y="79.5" font-size="9" text-anchor="middle" fill="#334155">7</text><rect x="347.0" y="145.0" width="32.0" height="25.0" fill="#93c5fd" stroke="#2563eb"/><text x="363.0" y="142.0" font-size="9" text-anchor="middle" fill="#334155">2</text><line x1="196.4" y1="20" x2="196.4" y2="170" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="5 3"/><line x1="238.6" y1="20" x2="238.6" y2="170" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5 3"/><text x="192.4" y="30" font-size="10" text-anchor="end" fill="#dc2626">帰無値 5.1</text><text x="242.6" y="44" font-size="10" fill="#16a34a">x̄ = 6.34</text><text x="210.0" y="200" font-size="10" text-anchor="middle" fill="#475569">rating（0〜10）</text><text x="12" y="95.0" font-size="10" fill="#475569" transform="rotate(-90 12 95.0)" text-anchor="middle">人数</text></svg></div><div class="viz-cap">目立つ歪み（skew）も外れ値もない。これは後で検定の前提を確認するときに大事になる。</div></div>
+  <h3>仮説を立てる</h3>
+  <p>ここまでは記述統計。ここから検定です（significance test ＝ hypothesis test、同じもの）。</p>
+  <ul>
+    <li><strong>帰無仮説 H0：μ ＝ 5.1</strong>（null：現状のまま、特に面白いことは起きていない）</li>
+    <li><strong>対立仮説 HA：μ &gt; 5.1</strong>（alternative：本当に知りたい主張。「上がった」だけでなく<strong>値（5.1）を明記</strong>する）</li>
+    <li>μ は、標本の旅行者だけでなく<strong>空港を使うすべての旅行者</strong>の未知の母平均評価。</li>
+  </ul>
+  <h3>2つの説明（教えるための道具）</h3>
+  <p>標本平均 6.34 は5.1より大きく、対立仮説の証拠にはなっています。ただし全数調査ではないので、標本のばらつきがあります。この証拠には2つの説明があります。</p>
+  <table class="compare-table">
+    <tr><th>説明</th><th>内容</th><th>対応</th></tr>
+    <tr><td>① 偶然</td><td>母平均は今も5.1。たまたま標本の人が高く評価しただけ（sampling variability）</td><td>H0</td></tr>
+    <tr><td>② 本当に上がった</td><td>人々が本当に空港をよく思っている</td><td>HA</td></tr>
+  </table>
+  <p>※この「2つの説明」は理解のための道具で、実務や他の授業ではこの言い方をしないかもしれません。</p>
+  <p>検定が答える問いは、「<strong>説明①（H0が真）のもとで、6.34以上の平均が偶然出る確率は？</strong>」。それが p値です。</p>
+  <h3>検定統計量とp値</h3>
+  <p>6.34 が帰無値 5.1 から<strong>標準誤差いくつ分</strong>離れているか、標準化します。z得点（観測値 − 平均）/標準偏差 と形がそっくりです。</p>
+  <div class="note-box" style="text-align:center;font-size:1.05rem"><strong>t ＝ (x̄ − μ<sub>0</sub>) / (s/√n)</strong>　　df ＝ n − 1 ＝ 49</div>
+<pre class="code-block">
+<span class="cl">xbar &lt;- <span class="kw">mean</span>(ratings)</span>
+<span class="cl">s    &lt;- <span class="kw">sd</span>(ratings)</span>
+<span class="cl">n    &lt;- <span class="kw">length</span>(ratings)</span>
+<span class="cl">se   &lt;- s / <span class="kw">sqrt</span>(n)                  <span class="cm"># 標準誤差</span></span>
+<span class="cl">se</span>
+<span class="cl">t_stat &lt;- (xbar - <span class="nm">5.1</span>) / se          <span class="cm"># 検定統計量</span></span>
+<span class="cl">t_stat</span>
+<span class="cl"><span class="kw">pt</span>(t_stat, df = n - <span class="nm">1</span>, lower.tail = <span class="kw">FALSE</span>)   <span class="cm"># 右片側のp値</span></span>
+</pre><div class="output-reveal">[1] 0.3058745
+[1] 4.053951
+[1] 8.986953e-05</div>
+  <p>t ≈ <strong>4.05</strong>（4標準誤差ほども離れていて、とても多い）。p値 ＝ 8.99 × 10<sup>−5</sup> ≈ <strong>0.00009</strong>（<code>df = n − 1 = 50 − 1 = 49</code>）。</p>
+  <div class="warn-box">⚠️ <strong>lower.tail の使い分け（講義）：</strong>対立仮説が <strong>「より大きい」（右側）→ <code>lower.tail = FALSE</code></strong>、<strong>「より小さい」（左側）→ <code>lower.tail = TRUE</code></strong>（左が下側）。</div>
+  <p><strong>p値の定義：</strong>帰無仮説のもとで、標本のばらつきだけで、この検定統計量と<strong>同じかそれ以上に極端</strong>な値が出る確率。</p>
+  <h3>結論の書き方（3点セット）</h3>
+  <ol>
+    <li><strong>p値とαの比較：</strong>p ≈ 0.00009 ＜ α ＝ 0.05</li>
+    <li><strong>H0 を reject（棄却）する</strong></li>
+    <li><strong>対立仮説の証拠がある（文脈で）：</strong>MIAの母平均評価は5.1より大きいという証拠がある（「ちょうど6.34」とは限らない）。</li>
+  </ol>
+  <p>解釈文：「H0（母平均 5.1）のもとで、標本のばらつきだけで6.34以上（t ＝ 4.05以上）になる確率は<strong>約0.00009</strong>（0.009%）と極めて小さい」→ 説明①を捨て、説明②（対立仮説）の証拠があると結論します。</p>
+  <div class="warn-box">⚠️ <strong>言葉づかい：</strong>p値がαより<strong>大きい</strong>ときは「H0を<strong>棄却しない</strong>（do not reject）」で、対立仮説の証拠は見つからない。<strong>H0を「受け入れる（accept）」とは言わない</strong>し、H0の証拠を見つけるとも言わない。見つけるのは<strong>対立仮説の証拠</strong>だけ。「棄却する／しない」の2通りだけです。</div>
+  <h3>ショートカット：t.test()</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(ratings, mu = <span class="nm">5.1</span>, alternative = <span class="st">"greater"</span>)</span>
+</pre><div class="output-reveal">	One Sample t-test
+
+data:  ratings
+t = 4.054, df = 49, p-value = 8.987e-05
+alternative hypothesis: true mean is greater than 5.1
+95 percent confidence interval:
+ 5.827186      Inf
+sample estimates:
+mean of x
+     6.34 </div>
+  <ul>
+    <li>データ、帰無値 <code>mu</code>、対立仮説の向き <code>alternative</code>（"greater"）を渡すと、検定統計量・自由度・p値が出ます。</li>
+    <li>p値だけ欲しいときは <code>t.test(...)$p.value</code>。他の引数は <code>?t.test</code> で確認。</li>
+    <li>出力の信頼区間は<strong>片側（one-sided）</strong>の区間（上限が Inf）。通常は<strong>両側</strong>の区間を使います。</li>
+  </ul>
+  <p>両側の対立仮説（<code>alternative</code>を指定しない）にすると、p値は2倍の 0.0001797、区間は両側の (5.725322, 6.954678) です。</p>
+  <div class="note-box">🎯 <strong>講師のまとめ：</strong>一番大事なのは、「<strong>p値とは何か</strong>」と「<strong>検定をどう結論づけるか（3つの部品）</strong>」をまず理解すること。計算はRが助けてくれます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「本当は変わっていない（H0）のに、こんなに高い平均がたまたま出る確率」がp値。それが0.00009と<strong>めちゃくちゃ小さい</strong>ので、「たまたま」とは考えにくく、「本当に上がった」と言ってよい。</p></div>
+  <div class="practice-card" id="p-t1-u5">
+    <div class="ptitle">💻 ミニ練習：両側検定とその区間</div>
+    <p class="ptask"><code>ratings</code> を使い、<strong>両側</strong>の検定（H0：μ ＝ 5.1）を <code>t.test()</code> で行ってください。出力の p値と95%信頼区間を読み取ります。</p>
+    <textarea class="code-editor" id="p-t1-u5-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-t1-u5', '['t.test','mu']')">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-t1-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-t1-u5-result"></div>
+    <div class="answer-reveal" id="p-t1-u5-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(ratings, mu = <span class="nm">5.1</span>)</span>
+</pre>
+      <p class="answer-note">t = 4.054、df = 49、p = 0.0001797（片側の2倍）。95%信頼区間は (5.725, 6.955) で、5.1 を含まないので、検定の結果（H0棄却）と一致します。</p>
+    </div>
+  </div>
+
+</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the main difference between a confidence interval and a significance test?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A confidence interval is only for categorical data, and a test only for quantitative data</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A confidence interval requires a census, whereas a test can use a sample</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An interval estimates an unknown parameter; a test checks a claim about it</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They are the same procedure under two different names</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which R call gives the critical value t* for a 90% confidence interval from a sample of n = 10?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>qt(0.95, df = 9)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>qt(0.90, df = 10)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>qt(0.90, df = 9)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>qt(0.05, df = 10)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A call-centre sample has s = 11.761 and n = 50. What is the standard error of the sample mean?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About 0.24</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 11.76</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 83.2</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 1.66</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A 95% t interval for the mean answer time is (15.0, 21.7) seconds. Which interpretation is correct?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>95% of individual calls last between 15.0 and 21.7 seconds</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>We are 95% confident that this interval captures the mean time</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The next sample mean will fall inside (15.0, 21.7) with 95% probability</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The sample mean equals the population mean with 95% probability</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does a 95% confidence level mean in the frequentist view?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Once computed, a given interval holds the parameter with probability 0.95 exactly</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 95% of intervals from many repeated samples capture the parameter</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>95% of the data values lie inside the interval</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The sample mean is within 5% of the true mean</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Holding everything else constant, which change makes the margin of error smaller?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Raising the confidence level from 95% to 99%</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Taking a smaller sample</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Using a larger critical value</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Increasing the sample size</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Last year's mean rating was 5.1 and the FAA believes it has increased. Which hypotheses are correct?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>H0: μ = 5.1, HA: μ > 5.1</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>H0: μ > 5.1, HA: μ = 5.1</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>H0: x̄ = 5.1, HA: x̄ > 5.1</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>H0: μ = 6.34, HA: μ > 6.34</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">For HA: μ > 5.1 the test gives p ≈ 0.00009 with α = 0.05. What is the correct conclusion?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Do not reject H0; conclude that μ = 5.1 exactly</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Reject H0; conclude that the mean rating is exactly 6.34</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Reject H0; there is evidence that μ > 5.1</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Do not reject H0, since p is much smaller than 1</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 1, 3, 0, 2];
+var FEEDBACKS=["A confidence interval estimates an unknown parameter with a range; a significance test evaluates a hypothesis about it. Both here are for quantitative data and both use a sample.", "A 90% interval leaves 5% in each tail, so the quantile is 0.95; df = n − 1 = 9. qt(0.95, df = 9) = 1.833113.", "SE = s/√n = 11.761/√50 ≈ 1.66 seconds: how much the sample mean varies from sample to sample.", "The 95% refers to the method; the statement is about the interval capturing the unknown mean. It is not about individual calls or the next sample mean.", "Frequentist: if we sampled many times, about C% of the intervals would capture the parameter (the applet: 94 of 100 and 955 of 1000 for 95%). It is about the procedure before the interval exists.", "ME = t* × s/√n. A larger n shrinks the standard error; a higher confidence level or a larger critical value widens the interval.", "The null states the status quo with a specific value (μ = 5.1); the alternative is what we want evidence for (μ > 5.1). Hypotheses are about the population mean μ, not x̄.", "p < α, so reject H0 and find evidence for HA. We never say we 'accept' H0, and the evidence does not say the mean is exactly 6.34."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">inferential statistics</div><div class="term-en">推測統計</div><div class="term-def">標本から、未知の母集団・母数について推測する。</div></div><div class="term-item"><div class="term-name">descriptive statistics</div><div class="term-en">記述統計</div><div class="term-def">データの中心・ばらつき・グラフで、手元のデータを説明する。</div></div><div class="term-item"><div class="term-name">census</div><div class="term-en">全数調査</div><div class="term-def">母集団の全員を調べること。非現実的なことが多い。</div></div><div class="term-item"><div class="term-name">sampling variability</div><div class="term-en">標本のばらつき</div><div class="term-def">標本を取り直すたびに統計量が変わること。</div></div><div class="term-item"><div class="term-name">point / interval estimate</div><div class="term-en">点推定／区間推定</div><div class="term-def">1つの値（$300）で推定／範囲（$250〜$450）で推定。</div></div><div class="term-item"><div class="term-name">confidence interval</div><div class="term-en">信頼区間</div><div class="term-def">未知の母数を範囲で推定する。丸括弧 ( , ) で書く。</div></div><div class="term-item"><div class="term-name">margin of error (ME)</div><div class="term-en">誤差の幅</div><div class="term-def">臨界値 × 標準誤差。推定が真値から高々どれだけ離れうるか。</div></div><div class="term-item"><div class="term-name">standard error (SE)</div><div class="term-en">標準誤差</div><div class="term-def">統計量が標本ごとにどれだけ変わるか。平均なら s/√n。</div></div><div class="term-item"><div class="term-name">critical value (t*)</div><div class="term-en">臨界値</div><div class="term-def">区間の幅を決める倍率。<code>qt()</code>で求める。</div></div><div class="term-item"><div class="term-name">degrees of freedom (df)</div><div class="term-en">自由度</div><div class="term-def">1標本のt手順では n − 1。</div></div><div class="term-item"><div class="term-name">confidence level</div><div class="term-en">信頼水準</div><div class="term-def">区間を作る手続きが母数を捕まえる長期的な割合（95%など）。</div></div><div class="term-item"><div class="term-name">null / alternative hypothesis</div><div class="term-en">帰無仮説／対立仮説</div><div class="term-def">H0：現状のまま。HA：本当に知りたい主張。</div></div><div class="term-item"><div class="term-name">test statistic</div><div class="term-en">検定統計量</div><div class="term-def">(x̄ − μ0)/SE。帰無値から何SE離れているか。</div></div><div class="term-item"><div class="term-name">p-value</div><div class="term-en">p値</div><div class="term-def">H0が真のとき、この検定統計量以上に極端な値が出る確率。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>区間は <strong>x̄ ± t* × s/√n</strong>、t* は <code>qt(1 - α/2, df = n - 1)</code>。検定は <strong>t ＝ (x̄ − μ0)/SE</strong> → <code>pt()</code> で p値 → 3点で結論。「95%」は手続きの成功率であって、1本の区間の確率ではありません。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🧪 統計レッスン：M5 t手順① 1標本の平均の推測</p>
+  <p style="margin-top:.5rem;"><a href="m3_estimation.html">← 推定（M3）</a> · <a href="m5_t_two.html">t手順②へ →</a> · <a href="m5_t_intro_easy.html">🍎 やさしい版</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

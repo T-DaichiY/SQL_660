@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 回帰③　傾きの推測（信頼区間と検定）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 🎯 傾きの推測 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Linear Regression — Inference for the Slope</div>
+  <h1>🎯 回帰③：傾きの推測（信頼区間と検定）</h1>
+  <p>標本から求めた傾き b は、標本が変われば変わります。では<strong>母集団の本当の傾き β</strong>について、何が言えるでしょうか。<strong>信頼区間</strong>で「どのあたりか」を推定し、<strong>有意性検定</strong>で「関連があると言えるか」を判断します。</p>
+  <p style="font-size:.9rem">📺 講義動画: Linear Regression 8 - Inference for Slope - CI ／ Linear Regression 9 - Inference for Slope - ST（Significance Test）</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 標本の傾きは推定値</a><a href="#unit2">② 信頼区間</a><a href="#unit3">③ 有意性検定</a><a href="#unit4">④ summary の読み方</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>対応する講義動画</strong>
+  <ul style="margin:.4rem 0 0 1.2rem">
+    <li>① 標本の傾きは推定値：<strong>Linear Regression 8</strong>（Inference for Slope - CI）の前半、および Linear Regression 9 の導入（標本の作り方）</li>
+    <li>② 傾きの信頼区間：<strong>Linear Regression 8</strong>（Inference for Slope - CI）</li>
+    <li>③ 傾きの有意性検定：<strong>Linear Regression 9</strong>（Inference for Slope - ST）</li>
+    <li>④ summary(lm) の読み方：Linear Regression 8・9 に共通の係数表</li>
+  </ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>標本の傾きは推定値</h2><div class="unit-sub">標本分布・標準誤差・t 分布（df = n − 2）</div></div>
+  </div>
+  <p>これまで学んだ推測の考え方を思い出しましょう。<strong>標本から計算した統計量（statistic）</strong>で、<strong>わからない母集団の母数（parameter）</strong>を推し量るのでした。標本平均 x̄ で母平均 μ を、標本比率 p̂ で母比率 p を推定したのと同じように、今回は<strong>標本の傾き b（b₁、β̂₁ とも書く）</strong>で、<strong>母集団の回帰直線の傾き β（ベータ）</strong>を推定します。</p>
+  <table class="compare-table">
+    <tr><th></th><th>標本（わかっている）</th><th>母集団（わからない）</th></tr>
+    <tr><td>平均</td><td>x̄</td><td>μ</td></tr>
+    <tr><td>比率</td><td>p̂</td><td>p</td></tr>
+    <tr><td>回帰直線の傾き</td><td><strong>b</strong>（b₁, β̂₁）</td><td><strong>β</strong></td></tr>
+  </table>
+  <div class="note-box">💡 傾きは<strong>量的データ（quantitative）</strong>から作る統計量です。平均と同じ仲間（t 分布を使う）で、比率のようなカテゴリカルデータの仲間（z を使う）ではありません。</div>
+  <p>この講義では、これまで何度も使ってきた<strong>寄付者データ</strong>で、<strong>最大寄付額 largestGiftAmount（x）</strong>から<strong>総寄付額 totalGivingAmount（y）</strong>を予測する回帰を扱います。母集団は<strong>95,412人</strong>（9万人を超える寄付者）で、そこから<strong>無作為に50人（n = 50）</strong>を取り出したのが標本です。</p>
+  <pre class="code-block">
+<span class="cl">donors &lt;- read.csv('donors.csv')</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl"><span class="cm"># 母集団の行番号から50個を無作為に選ぶ</span></span>
+<span class="cl">sampleIDs &lt;- <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">95412</span>, size = <span class="nm">50</span>, replace = <span class="kw">FALSE</span>)</span>
+<span class="cl">myColumns &lt;- <span class="kw">c</span>(<span class="st">"age"</span>, <span class="st">"incomeRating"</span>, <span class="st">"totalGivingAmount"</span>, <span class="st">"largestGiftAmount"</span>,</span>
+<span class="cl">               <span class="st">"isHomeowner"</span>, <span class="st">"gender"</span>, <span class="st">"urbanicity"</span>, <span class="st">"respondedMailing"</span>)</span>
+<span class="cl">sampleDonors &lt;- donors[sampleIDs, myColumns]</span>
+<span class="cl"></span>
+<span class="cl">model &lt;- <span class="kw">lm</span>(sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)</span>
+<span class="cl"><span class="kw">summary</span>(model)</span>
+</pre><div class="output-reveal">Call:
+lm(formula = sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-448.26  -62.28  -33.37   41.97  478.22
+
+Coefficients:
+                               Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)                      51.817     27.292   1.899   0.0636 .
+sampleDonors$largestGiftAmount    3.910      0.782   5.000 8.07e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 138.8 on 48 degrees of freedom
+Multiple R-squared:  0.3424,	Adjusted R-squared:  0.3287
+F-statistic:    25 on 1 and 48 DF,  p-value: 8.075e-06</div>
+  <p><code>set.seed(1)</code> を付けると乱数が固定され、誰が実行しても<strong>同じ50人</strong>が選ばれて同じ結果になります。標本の傾きは <strong>b = 3.910</strong> です。</p>
+  <div class="viz">
+    <div class="viz-title">標本の50人（点）と最小二乗直線（赤）</div>
+    <svg viewBox="0 0 560 330" width="100%" style="max-width:560px" role="img" aria-label="largestGiftAmountとtotalGivingAmountの散布図（n=50）と回帰直線"><rect x="0.5" y="0.5" width="559" height="329" fill="none" stroke="#cbd5e1"/><line x1="62.0" y1="14" x2="62.0" y2="278" stroke="#e2e8f0"/><text x="62.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">0</text><line x1="183.0" y1="14" x2="183.0" y2="278" stroke="#e2e8f0"/><text x="183.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">40</text><line x1="304.0" y1="14" x2="304.0" y2="278" stroke="#e2e8f0"/><text x="304.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">80</text><line x1="425.0" y1="14" x2="425.0" y2="278" stroke="#e2e8f0"/><text x="425.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">120</text><line x1="546.0" y1="14" x2="546.0" y2="278" stroke="#e2e8f0"/><text x="546.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">160</text><line x1="62" y1="278.0" x2="546" y2="278.0" stroke="#e2e8f0"/><text x="56" y="282.0" font-size="11" text-anchor="end" fill="currentColor">0</text><line x1="62" y1="208.5" x2="546" y2="208.5" stroke="#e2e8f0"/><text x="56" y="212.5" font-size="11" text-anchor="end" fill="currentColor">250</text><line x1="62" y1="139.1" x2="546" y2="139.1" stroke="#e2e8f0"/><text x="56" y="143.1" font-size="11" text-anchor="end" fill="currentColor">500</text><line x1="62" y1="69.6" x2="546" y2="69.6" stroke="#e2e8f0"/><text x="56" y="73.6" font-size="11" text-anchor="end" fill="currentColor">750</text><line x1="62" y1="278" x2="546" y2="278" stroke="currentColor"/><line x1="62" y1="14" x2="62" y2="278" stroke="currentColor"/><text x="304" y="320" font-size="12" text-anchor="middle" fill="currentColor">Largest Gift Amount（最大寄付額 x）</text><text transform="translate(14 146) rotate(-90)" font-size="12" text-anchor="middle" fill="currentColor">Total Giving（総寄付額 y）</text><circle cx="83.2" cy="267.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="213.2" cy="250.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="264.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="176.9" cy="252.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="364.5" cy="22.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="250.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="271.3" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="248.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="125.5" cy="257.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="203.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="183.0" cy="232.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="259.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="252.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="273.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="167.9" cy="232.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="241.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="271.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="110.4" cy="270.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="77.1" cy="255.5" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="264.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="98.3" cy="260.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="244.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="77.1" cy="251.6" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="258.3" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="269.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="204.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="201.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="254.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="219.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="197.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="218.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="182.7" cy="138.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="98.3" cy="238.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="304.0" cy="93.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="98.3" cy="262.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="262.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="262.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="89.2" cy="237.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="176.6" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="267.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="80.2" cy="257.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="213.2" cy="191.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="271.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="86.2" cy="269.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="243.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="515.8" cy="225.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="255.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="116.5" cy="249.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="269.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="269.9" r="3.2" fill="var(--primary)" opacity=".7"/><line x1="62.0" y1="263.6" x2="546.0" y2="89.8" stroke="#ef4444" stroke-width="2.2"/><rect x="76" y="22" width="200" height="24" fill="var(--bg,#fff)" fill-opacity=".85" stroke="#cbd5e1"/><line x1="84" y1="35" x2="110" y2="35" stroke="#ef4444" stroke-width="2.2"/><text x="116" y="39" font-size="12" fill="currentColor">標本の直線 b = 3.91</text></svg>
+    <div class="viz-cap">点は寄付者1人ずつ（データは R の donors から）。右上に飛び抜けた点や、x が大きい点があり、傾きを引っ張っている可能性があります。</div>
+  </div>
+  <h3>標本が変わると傾きも変わる（sampling variability）</h3>
+  <p>講師は<strong>4つの異なる無作為標本（各 n = 50）</strong>でそれぞれ最小二乗直線を引いて見せました。散布図が違えば<strong>傾き b も相関 r も違います</strong>。たとえばある標本では相関が低く（<strong>0.35</strong>）、別の標本では高い（<strong>0.78</strong>、飛び抜けた点が2つあるため）という具合です。別の標本を取れば別の統計量が出る。これが<strong>標本変動</strong>です。</p>
+  <p>知りたいのは「母集団の傾き β の真の値」ですが、b は標本ごとにゆれます。そこで、<strong>どれくらいゆれるか</strong>を数にしたものが<strong>傾きの標準誤差 SE(b)（standard error of the slope）</strong>です。</p>
+  <ul>
+    <li>SE(b) が<strong>小さい</strong> → 標本が変わっても b はあまりゆれない → 推定がしっかりしている。</li>
+    <li>SE(b) が<strong>大きい</strong> → b が大きくゆれる → 推定があいまい。</li>
+    <li>標本の傾き b を SE(b) で割ると、<strong>t 分布（自由度 df = n − 2）</strong>に従う統計量になる。</li>
+  </ul>
+  <div class="warn-box">⚠️ 自由度は <strong>n − 2 = 50 − 2 = 48</strong> です。n − 1 ではありません。直線を決めるために<strong>切片と傾きの2つ</strong>をデータから推定しているからです（講師が「あとの計算で大事」と強調した点）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>50人を選び直すたびに、引ける直線は少しずつ違います。「本当の傾き β」は1つだけなのに、手元の b は毎回ゆれる。だから b を<strong>ゆれの大きさ SE(b)</strong>と一緒に読む、というのが傾きの推測です。</p></div>
+  <div class="practice-card" id="p-m6inf-u1">
+    <div class="ptitle">💻 ミニ練習：標本を取って回帰する</div>
+    <p class="ptask"><code>set.seed(1)</code> で乱数を固定し、1〜95412 から50個を重複なしで選んで <code>sampleIDs</code> に入れてください。そのあと <code>sampleDonors</code> を使って、<code>totalGivingAmount</code> を <code>largestGiftAmount</code> で予測する線形モデルを <code>model</code> に作り、<code>summary()</code> で表示します（<code>sampleDonors</code> は作成済みとしてかまいません）。</p>
+    <textarea class="code-editor" id="p-m6inf-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6inf-u1', ['set.seed', 'sample', 'size', 'lm', 'summary'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6inf-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6inf-u1-result"></div>
+    <div class="answer-reveal" id="p-m6inf-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">sampleIDs &lt;- <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">95412</span>, size = <span class="nm">50</span>, replace = <span class="kw">FALSE</span>)</span>
+<span class="cl"></span>
+<span class="cl">model &lt;- <span class="kw">lm</span>(sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)</span>
+<span class="cl"><span class="kw">summary</span>(model)</span>
+</pre>
+      <p class="answer-note"><code>lm(y ~ x)</code> は「y を x で説明する」モデル。<code>summary()</code> の係数表で傾きの行を見ると、Estimate = 3.910、Std. Error = 0.782 です。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>傾きの信頼区間</h2><div class="unit-sub">b ± t* × SE(b)、qt() と confint()</div></div>
+  </div>
+  <p>未知の母集団の傾き β を<strong>区間</strong>で推定するのが<strong>信頼区間（confidence interval, CI）</strong>です。作り方は、これまでの信頼区間とそっくりです。</p>
+  <table class="compare-table">
+    <tr><th>何の信頼区間か</th><th>式</th></tr>
+    <tr><td>母平均 μ</td><td>x̄ ± t* × SE(x̄)</td></tr>
+    <tr><td><strong>母集団の傾き β</strong></td><td><strong>b ± t* × SE(b)</strong>（t* は自由度 df = n − 2 の t 分布の臨界値）</td></tr>
+  </table>
+  <p>「<strong>統計量 ± 臨界値 × 標準誤差</strong>」という形は同じで、<strong>b を中心に、前後に誤差の幅（margin of error）</strong>を取ります。必要な数字は <code>summary(model)</code> の係数表（傾きの行）にあります：<strong>Estimate = 3.910（b）</strong>、<strong>Std. Error = 0.782（SE(b)）</strong>。</p>
+  <div class="viz">
+    <div class="viz-title">t 分布（df = 48）と臨界値 t* = 2.01</div>
+    <svg viewBox="0 0 560 210" width="100%" style="max-width:560px" role="img" aria-label="自由度48のt分布"><rect x="0.5" y="0.5" width="559" height="209" fill="none" stroke="#cbd5e1"/><polygon points="196.2,160.0 196.2,141.8 193.5,143.9 190.7,145.9 187.9,147.7 185.1,149.3 182.4,150.7 179.6,151.9 176.8,153.0 174.1,154.0 171.3,154.9 168.5,155.6 165.7,156.3 163.0,156.8 160.2,157.3 157.4,157.7 154.7,158.1 151.9,158.4 149.1,158.6 146.4,158.9 143.6,159.1 140.8,159.2 138.0,159.3 135.3,159.5 132.5,159.5 129.7,159.6 127.0,159.7 124.2,159.7 121.4,159.8 118.7,159.8 115.9,159.9 113.1,159.9 110.3,159.9 107.6,159.9 104.8,159.9 102.0,160.0 99.3,160.0 96.5,160.0 93.7,160.0 90.9,160.0 88.2,160.0 85.4,160.0 82.6,160.0 79.9,160.0 77.1,160.0 74.3,160.0 71.6,160.0 68.8,160.0 66.0,160.0 63.2,160.0 60.5,160.0 57.7,160.0 54.9,160.0 52.2,160.0 49.4,160.0 46.6,160.0 43.9,160.0 41.1,160.0 38.3,160.0 35.5,160.0 32.8,160.0 30.0,160.0 30.0,160.0" fill="#ef4444" opacity=".45"/><polygon points="363.8,160.0 363.8,141.8 366.5,143.9 369.3,145.9 372.1,147.7 374.9,149.3 377.6,150.7 380.4,151.9 383.2,153.0 385.9,154.0 388.7,154.9 391.5,155.6 394.3,156.3 397.0,156.8 399.8,157.3 402.6,157.7 405.3,158.1 408.1,158.4 410.9,158.6 413.6,158.9 416.4,159.1 419.2,159.2 422.0,159.3 424.7,159.5 427.5,159.5 430.3,159.6 433.0,159.7 435.8,159.7 438.6,159.8 441.3,159.8 444.1,159.9 446.9,159.9 449.7,159.9 452.4,159.9 455.2,159.9 458.0,160.0 460.7,160.0 463.5,160.0 466.3,160.0 469.1,160.0 471.8,160.0 474.6,160.0 477.4,160.0 480.1,160.0 482.9,160.0 485.7,160.0 488.4,160.0 491.2,160.0 494.0,160.0 496.8,160.0 499.5,160.0 502.3,160.0 505.1,160.0 507.8,160.0 510.6,160.0 513.4,160.0 516.1,160.0 518.9,160.0 521.7,160.0 524.5,160.0 527.2,160.0 530.0,160.0 530.0,160.0" fill="#ef4444" opacity=".45"/><polyline points="30.0,160.0 34.2,160.0 38.3,160.0 42.5,160.0 46.7,160.0 50.8,160.0 55.0,160.0 59.2,160.0 63.3,160.0 67.5,160.0 71.7,160.0 75.8,160.0 80.0,160.0 84.2,160.0 88.3,160.0 92.5,160.0 96.7,160.0 100.8,160.0 105.0,159.9 109.2,159.9 113.3,159.9 117.5,159.8 121.7,159.8 125.8,159.7 130.0,159.6 134.2,159.5 138.3,159.3 142.5,159.1 146.7,158.8 150.8,158.5 155.0,158.0 159.2,157.5 163.3,156.8 167.5,155.9 171.7,154.8 175.8,153.4 180.0,151.8 184.2,149.8 188.3,147.4 192.5,144.6 196.7,141.4 200.8,137.6 205.0,133.3 209.2,128.4 213.3,123.0 217.5,116.9 221.7,110.4 225.8,103.3 230.0,95.9 234.2,88.1 238.3,80.2 242.5,72.2 246.7,64.4 250.8,56.9 255.0,49.8 259.2,43.5 263.3,38.1 267.5,33.6 271.7,30.4 275.8,28.4 280.0,27.7 284.2,28.4 288.3,30.4 292.5,33.6 296.7,38.1 300.8,43.5 305.0,49.8 309.2,56.9 313.3,64.4 317.5,72.2 321.7,80.2 325.8,88.1 330.0,95.9 334.2,103.3 338.3,110.4 342.5,116.9 346.7,123.0 350.8,128.4 355.0,133.3 359.2,137.6 363.3,141.4 367.5,144.6 371.7,147.4 375.8,149.8 380.0,151.8 384.2,153.4 388.3,154.8 392.5,155.9 396.7,156.8 400.8,157.5 405.0,158.0 409.2,158.5 413.3,158.8 417.5,159.1 421.7,159.3 425.8,159.5 430.0,159.6 434.2,159.7 438.3,159.8 442.5,159.8 446.7,159.9 450.8,159.9 455.0,159.9 459.2,160.0 463.3,160.0 467.5,160.0 471.7,160.0 475.8,160.0 480.0,160.0 484.2,160.0 488.3,160.0 492.5,160.0 496.7,160.0 500.8,160.0 505.0,160.0 509.2,160.0 513.3,160.0 517.5,160.0 521.7,160.0 525.8,160.0 530.0,160.0" fill="none" stroke="var(--primary)" stroke-width="2.2"/><line x1="30" y1="160.0" x2="530" y2="160.0" stroke="currentColor"/><line x1="30.0" y1="160.0" x2="30.0" y2="165.0" stroke="currentColor"/><text x="30.0" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">-6</text><line x1="113.3" y1="160.0" x2="113.3" y2="165.0" stroke="currentColor"/><text x="113.3" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">-4</text><line x1="196.7" y1="160.0" x2="196.7" y2="165.0" stroke="currentColor"/><text x="196.7" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">-2</text><line x1="280.0" y1="160.0" x2="280.0" y2="165.0" stroke="currentColor"/><text x="280.0" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">0</text><line x1="363.3" y1="160.0" x2="363.3" y2="165.0" stroke="currentColor"/><text x="363.3" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">2</text><line x1="446.7" y1="160.0" x2="446.7" y2="165.0" stroke="currentColor"/><text x="446.7" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">4</text><line x1="530.0" y1="160.0" x2="530.0" y2="165.0" stroke="currentColor"/><text x="530.0" y="178.0" font-size="11" text-anchor="middle" fill="currentColor">6</text><text x="196.2" y="192.0" font-size="11" text-anchor="middle" fill="#dc2626">−2.01</text><text x="363.8" y="192.0" font-size="11" text-anchor="middle" fill="#dc2626">+2.01</text><text x="280.0" y="50" font-size="12" text-anchor="middle" fill="currentColor">中央の 95%</text><text x="88.3" y="130.0" font-size="11" text-anchor="middle" fill="currentColor">両端あわせて 5%</text><line x1="88.3" y1="134.0" x2="171.7" y2="156.0" stroke="currentColor" stroke-dasharray="3 2"/><text x="488.3" y="130.0" font-size="11" text-anchor="middle" fill="#2563eb">t = 5 はさらに右</text><line x1="488.3" y1="134.0" x2="488.3" y2="160.0" stroke="#2563eb" stroke-width="2"/></svg>
+    <div class="viz-cap">中央 95% をはさむ境目が ±2.01。95% の信頼区間では、両端の赤い部分（合計5%、片側2.5%ずつ）を除いた中央の幅を使います。</div>
+  </div>
+  <h3>手順1：臨界値 t* を求める</h3>
+  <p>95% 信頼 → 両側に 2.5% ずつ残す → <strong>0.975 のパーセンタイル</strong>、自由度は 50 − 2 = 48。</p>
+  <pre class="code-block">
+<span class="cl">tcrit &lt;- <span class="kw">qt</span>(p = <span class="nm">0.975</span>, df = <span class="nm">50</span> - <span class="nm">2</span>)</span>
+<span class="cl">tcrit</span>
+</pre><div class="output-reveal">[1] 2.010635</div>
+  <h3>手順2：下限と上限を計算する</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 下限 (lower bound)</span></span>
+<span class="cl"><span class="nm">3.910</span> - tcrit * <span class="nm">0.782</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 上限 (upper bound)</span></span>
+<span class="cl"><span class="nm">3.910</span> + tcrit * <span class="nm">0.782</span></span>
+</pre><div class="output-reveal">[1] 2.337292
+[1] 5.481925</div>
+  <p>誤差の幅（margin of error）は t* × SE(b) = 2.01 × 0.782 ≈ <strong>1.57</strong>。つまり <strong>3.91 ± 1.57</strong> で、区間は <strong>(2.34, 5.48)</strong> です（講義の画面では 2.33 〜 5.48 と表示。下限 2.337… の表示の違いです）。</p>
+  <h3>手順3：confint() で確認する</h3>
+  <p>R には、モデルとレベルを渡すだけで区間を返す関数 <code>confint()</code> があります。パーセンタイルを自分で考える必要はなく、<code>level</code> に信頼水準をそのまま書きます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">confint</span>(model, level = <span class="nm">0.95</span>)</span>
+</pre><div class="output-reveal">                                   2.5 %     97.5 %
+(Intercept)                    -3.056523 106.690339
+sampleDonors$largestGiftAmount  2.337298   5.481919</div>
+  <p><strong>2行目が傾きの区間</strong>です。手計算との小さな差は、手計算で b と SE を丸めた値（3.910、0.782）を使ったためです。</p>
+  <div class="note-box">💡 信頼水準を変えると幅が変わります（同じ標本で）：<strong>90%</strong> は (2.60, 5.22)、<strong>95%</strong> は (2.34, 5.48)、<strong>99%</strong> は (1.81, 6.01)。「より確実に」と望むほど、区間は広くなります。</div>
+  <h3>解釈：区間は母集団の傾きを捕まえたか？</h3>
+  <p>通常、母集団の傾きは未知です。でもこの例では、<strong>95,412人全員のデータ（母集団）</strong>があるので、答え合わせができます。母集団全体で回帰直線を引くと、<strong>母集団の傾き β = 2.64</strong>（黒い線）。標本の傾きは b = 3.91（赤い線）です。標本の直線は、標本変動のぶんだけ母集団の直線とずれています。</p>
+  <pre class="code-block">
+<span class="cl">popLine &lt;- <span class="kw">lm</span>(donors$totalGivingAmount ~ donors$largestGiftAmount)</span>
+<span class="cl">popLine$coefficients[<span class="nm">2</span>]</span>
+</pre><div class="output-reveal">donors$largestGiftAmount
+                2.636853 </div>
+  <div class="viz">
+    <div class="viz-title">標本の直線（赤）と母集団の直線（黒）</div>
+    <svg viewBox="0 0 560 330" width="100%" style="max-width:560px" role="img" aria-label="largestGiftAmountとtotalGivingAmountの散布図（n=50）と回帰直線"><rect x="0.5" y="0.5" width="559" height="329" fill="none" stroke="#cbd5e1"/><line x1="62.0" y1="14" x2="62.0" y2="278" stroke="#e2e8f0"/><text x="62.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">0</text><line x1="183.0" y1="14" x2="183.0" y2="278" stroke="#e2e8f0"/><text x="183.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">40</text><line x1="304.0" y1="14" x2="304.0" y2="278" stroke="#e2e8f0"/><text x="304.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">80</text><line x1="425.0" y1="14" x2="425.0" y2="278" stroke="#e2e8f0"/><text x="425.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">120</text><line x1="546.0" y1="14" x2="546.0" y2="278" stroke="#e2e8f0"/><text x="546.0" y="294" font-size="11" text-anchor="middle" fill="currentColor">160</text><line x1="62" y1="278.0" x2="546" y2="278.0" stroke="#e2e8f0"/><text x="56" y="282.0" font-size="11" text-anchor="end" fill="currentColor">0</text><line x1="62" y1="208.5" x2="546" y2="208.5" stroke="#e2e8f0"/><text x="56" y="212.5" font-size="11" text-anchor="end" fill="currentColor">250</text><line x1="62" y1="139.1" x2="546" y2="139.1" stroke="#e2e8f0"/><text x="56" y="143.1" font-size="11" text-anchor="end" fill="currentColor">500</text><line x1="62" y1="69.6" x2="546" y2="69.6" stroke="#e2e8f0"/><text x="56" y="73.6" font-size="11" text-anchor="end" fill="currentColor">750</text><line x1="62" y1="278" x2="546" y2="278" stroke="currentColor"/><line x1="62" y1="14" x2="62" y2="278" stroke="currentColor"/><text x="304" y="320" font-size="12" text-anchor="middle" fill="currentColor">Largest Gift Amount（最大寄付額 x）</text><text transform="translate(14 146) rotate(-90)" font-size="12" text-anchor="middle" fill="currentColor">Total Giving（総寄付額 y）</text><circle cx="83.2" cy="267.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="213.2" cy="250.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="264.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="176.9" cy="252.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="364.5" cy="22.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="250.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="271.3" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="248.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="125.5" cy="257.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="203.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="183.0" cy="232.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="259.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="252.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="273.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="167.9" cy="232.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="241.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="271.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="110.4" cy="270.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="77.1" cy="255.5" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="264.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="98.3" cy="260.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="244.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="77.1" cy="251.6" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="258.3" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="269.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="204.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="201.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="254.9" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="219.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="197.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="218.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="182.7" cy="138.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="98.3" cy="238.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="304.0" cy="93.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="98.3" cy="262.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="262.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="262.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="89.2" cy="237.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="113.4" cy="176.6" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="107.4" cy="267.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="80.2" cy="257.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="213.2" cy="191.0" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="137.6" cy="271.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="86.2" cy="269.1" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="243.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="515.8" cy="225.2" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="122.5" cy="255.8" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="116.5" cy="249.7" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="269.4" r="3.2" fill="var(--primary)" opacity=".7"/><circle cx="92.2" cy="269.9" r="3.2" fill="var(--primary)" opacity=".7"/><line x1="62.0" y1="263.6" x2="546.0" y2="146.4" stroke="#111" stroke-width="2.2"/><line x1="62.0" y1="263.6" x2="546.0" y2="89.8" stroke="#ef4444" stroke-width="2.2"/><rect x="76" y="22" width="235" height="44" fill="var(--bg,#fff)" fill-opacity=".85" stroke="#cbd5e1"/><line x1="84" y1="35" x2="110" y2="35" stroke="#ef4444" stroke-width="2.2"/><text x="116" y="39" font-size="12" fill="currentColor">標本の直線 b = 3.91</text><line x1="84" y1="53" x2="110" y2="53" stroke="#111" stroke-width="2.2"/><text x="116" y="57" font-size="12" fill="currentColor">母集団の直線 β = 2.64（N=95,412）</text></svg>
+    <div class="viz-cap">点は標本の50人のみ。黒の線は95,412人全員の回帰直線で、標本の赤い線よりゆるやかです。</div>
+  </div>
+  <div class="viz">
+    <div class="viz-title">傾きの95%信頼区間（数直線）</div>
+    <svg viewBox="0 0 560 150" width="100%" style="max-width:560px" role="img" aria-label="傾きの95%信頼区間の数直線"><rect x="0.5" y="0.5" width="559" height="149" fill="none" stroke="#cbd5e1"/><line x1="30" y1="100" x2="530" y2="100" stroke="currentColor"/><line x1="30.0" y1="95" x2="30.0" y2="105" stroke="currentColor"/><text x="30.0" y="120" font-size="11" text-anchor="middle" fill="currentColor">0</text><line x1="101.4" y1="95" x2="101.4" y2="105" stroke="currentColor"/><text x="101.4" y="120" font-size="11" text-anchor="middle" fill="currentColor">1</text><line x1="172.9" y1="95" x2="172.9" y2="105" stroke="currentColor"/><text x="172.9" y="120" font-size="11" text-anchor="middle" fill="currentColor">2</text><line x1="244.3" y1="95" x2="244.3" y2="105" stroke="currentColor"/><text x="244.3" y="120" font-size="11" text-anchor="middle" fill="currentColor">3</text><line x1="315.7" y1="95" x2="315.7" y2="105" stroke="currentColor"/><text x="315.7" y="120" font-size="11" text-anchor="middle" fill="currentColor">4</text><line x1="387.1" y1="95" x2="387.1" y2="105" stroke="currentColor"/><text x="387.1" y="120" font-size="11" text-anchor="middle" fill="currentColor">5</text><line x1="458.6" y1="95" x2="458.6" y2="105" stroke="currentColor"/><text x="458.6" y="120" font-size="11" text-anchor="middle" fill="currentColor">6</text><line x1="530.0" y1="95" x2="530.0" y2="105" stroke="currentColor"/><text x="530.0" y="120" font-size="11" text-anchor="middle" fill="currentColor">7</text><text x="280" y="140" font-size="12" text-anchor="middle" fill="currentColor">傾き（Total Giving が Largest Gift 1あたりに増える量）</text><rect x="196.9" y="62" width="224.6" height="18" rx="3" fill="#ef4444" opacity=".35" stroke="#ef4444"/><text x="196.9" y="55" font-size="11" text-anchor="middle" fill="currentColor">2.34</text><text x="421.6" y="55" font-size="11" text-anchor="middle" fill="currentColor">5.48</text><circle cx="309.3" cy="71" r="5" fill="#ef4444"/><text x="309.3" y="35" font-size="12" text-anchor="middle" fill="currentColor">b = 3.91（標本）</text><line x1="309.3" y1="40" x2="309.3" y2="64" stroke="#ef4444" stroke-dasharray="3 2"/><line x1="218.3" y1="68" x2="218.3" y2="100" stroke="#111" stroke-width="2.4"/><text x="214.3" y="92" font-size="12" text-anchor="end" fill="currentColor">β = 2.64</text><line x1="30.0" y1="68" x2="30.0" y2="100" stroke="#2563eb" stroke-width="2.4" stroke-dasharray="4 3"/><text x="36.0" y="82" font-size="12" fill="currentColor">H₀: β = 0</text></svg>
+    <div class="viz-cap">区間 (2.34, 5.48) の中に母集団の傾き 2.64 が入っています。0 は区間の外です。</div>
+  </div>
+  <p><strong>結論の書き方：</strong>「私たちは、最大寄付額で総寄付額を予測する、この団体の全寄付者の回帰直線の<strong>母集団の傾きを、区間 2.3 〜 5.5 が捕まえていると 95% 確信している</strong>。」</p>
+  <p>そして実際、母集団の傾きは <strong>2.64</strong> なので、<strong>この区間は母数を捕まえました（captured）</strong>。</p>
+  <div class="warn-box">⚠️ 「95%」の意味：<strong>この1本の区間が当たる確率が95%</strong>ではなく、<strong>別々の標本から同じ手順で何度も区間を作ると、その約95%が母数を含む</strong>ということです。現実では母集団の傾きは未知なので、「捕まえたかどうか」は確かめられません。だからこそ、区間の意味と捕まえたかどうかの確かめ方（この例では母集団の β と比べる）を理解しておきましょう。</div>
+  <div class="warn-box">⚠️ <strong>この区間は信頼できるか？</strong> 散布図には怪しい点（右上の飛び抜けた点や、x が大きい点）があります。極端な値が傾きを動かしているかもしれないので、区間を使うときは慎重に。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>信頼区間は「真の傾きはこのあたりにあるはず」という幅つきの推測です。b = 3.91 を中心に前後 1.57 → 2.34 〜 5.48。真の値 2.64 はちゃんとその中にありました。</p></div>
+  <div class="practice-card" id="p-m6inf-u2a">
+    <div class="ptitle">💻 ミニ練習：t* を求める</div>
+    <p class="ptask">自由度 48 の t 分布で、95% 信頼区間に使う臨界値 t* を <code>qt()</code> で求め、<code>tcrit</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-m6inf-u2a-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6inf-u2a', ['qt', '0.975', '48'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6inf-u2a', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6inf-u2a-result"></div>
+    <div class="answer-reveal" id="p-m6inf-u2a-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tcrit &lt;- <span class="kw">qt</span>(p = <span class="nm">0.975</span>, df = <span class="nm">50</span> - <span class="nm">2</span>)</span>
+<span class="cl">tcrit</span>
+</pre>
+      <p class="answer-note">結果は 2.010635。<code>qt(0.975, 48)</code> と書いても同じです。0.975 は「両側 5% → 片側 2.5% を除いた」下から 97.5% の位置です。</p>
+    </div>
+  </div>
+  <div class="practice-card" id="p-m6inf-u2b">
+    <div class="ptitle">💻 ミニ練習：confint で区間を出す</div>
+    <p class="ptask">モデル <code>model</code> に対し、傾きの <strong>90%</strong> 信頼区間を <code>confint()</code> で求めてください。95% の区間と比べて、広がりますか、狭まりますか。</p>
+    <textarea class="code-editor" id="p-m6inf-u2b-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6inf-u2b', ['confint', 'model', 'level', '0.90'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6inf-u2b', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6inf-u2b-result"></div>
+    <div class="answer-reveal" id="p-m6inf-u2b-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">confint</span>(model, level = <span class="nm">0.90</span>)</span>
+</pre>
+      <p class="answer-note">傾きの行は 2.598 〜 5.221。95% の (2.337, 5.482) より<strong>狭く</strong>なります（確信の度合いを下げると区間は狭くなる）。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>傾きの有意性検定</h2><div class="unit-sub">H₀: β = 0、t 統計量、p 値、結論の書き方</div></div>
+  </div>
+  <p>信頼区間が「<strong>未知の傾き β はいくつ？</strong>」を推定するのに対し、<strong>有意性検定（significance test = 仮説検定 hypothesis test）</strong>は「<strong>この標本の傾きは、2つの変数に関連があるという証拠になるか？</strong>」に答えます。</p>
+  <p>標本ごとに傾きは違うので、b ≠ 0 でも、(a) 標本がたまたまそうなっただけ、(b) 母集団に本当に関連がある、のどちらかです。検定は「(a) だとしたらこんな傾きがどれくらい起こりうるか」を調べます。</p>
+  <p>回帰モデルの目標は、<strong>各説明変数（predictor）の p 値が小さい</strong>こと、そしてモデル全体の <strong>R² が高い（1 に近い）</strong>ことです。</p>
+  <h3>ステップ1：仮説を立てる（α = 0.05）</h3>
+  <table class="compare-table">
+    <tr><th>帰無仮説 H₀（null）</th><td><strong>β = 0</strong>（2つの変数に関連はない。母集団の回帰直線の傾きは 0）</td></tr>
+    <tr><th>対立仮説 Hₐ（alternative）</th><td><strong>β ≠ 0</strong>（関連がある。傾きは 0 ではない）</td></tr>
+  </table>
+  <p>β は<strong>母集団の回帰直線の傾き</strong>です（標本の b ではありません）。</p>
+  <div class="note-box">💡 <strong>統計的に有意（statistically significant）</strong>とは、慣例として <strong>p 値が 5% より小さい</strong>こと。p 値は「帰無仮説が正しいと仮定したとき、今回の標本傾き以上に極端な値が、標本変動だけで起こる確率」です。</div>
+  <h3>ステップ2：summary(model) から読む</h3>
+  <p>先ほどの出力の<strong>傾きの行</strong>に注目します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model)$coefficients[<span class="nm">2</span>, ]</span>
+</pre><div class="output-reveal">  Estimate Std. Error    t value   Pr(&gt;|t|)
+3.909609e+00 7.819973e-01 4.999517e+00 8.074946e-06 </div>
+  <ul>
+    <li><strong>t value = 5.000</strong>（検定統計量）</li>
+    <li><strong>Pr(&gt;|t|) = 8.07e-06</strong>。<code>e-06</code> は ×10⁻⁶ のこと。つまり <strong>約 8 × 10⁻⁶</strong>（0.000008）で、8 の前にゼロがたくさん並ぶ非常に小さい数です。</li>
+    <li>右端の <strong>***</strong> は「p 値は実質 0 に近い」という目印で、統計的に有意と数えます。</li>
+  </ul>
+  <h3>ステップ3：判断する</h3>
+  <p>p 値 ≈ 8 × 10⁻⁶ ＜ α = 0.05 → <strong>帰無仮説 H₀ を棄却（reject）</strong>します。偶然では起こりにくい。</p>
+  <p><strong>結論の書き方：</strong>「p 値が α = 0.05 より小さいので、この団体の全寄付者について、<strong>最大寄付額で総寄付額を予測する母集団の回帰直線の傾きは 0 ではない</strong>という<strong>説得力のある証拠（convincing evidence）</strong>がある。言いかえると、最大寄付額と総寄付額の間に<strong>関連（association）</strong>がある。」</p>
+  <div class="note-box">💡 前の動画で、母集団の傾きは <strong>2.64</strong>（≠ 0）でした。検定の結論と合っています。ただし現実では母集団の傾きは知らないので、検定で判断します。</div>
+  <div class="warn-box">⚠️ p ≥ 0.05 のときは「H₀ を<strong>棄却できない</strong>（fail to reject）」と言います。「H₀ が正しい」とは言いません。</div>
+  <h3>t と p を手計算で確かめる</h3>
+  <p>検定統計量の式は、これまでの検定と同じ形です：<strong>（統計量 − 帰無仮説の値）÷ 標準誤差</strong>。</p>
+  <p style="text-align:center;font-size:1.1rem"><strong>t = (b − 0) ÷ SE(b) = 3.910 ÷ 0.782 = 5.00</strong>　（df = n − 2 = 48）</p>
+  <pre class="code-block">
+<span class="cl">(<span class="nm">3.910</span> - <span class="nm">0</span>) / <span class="nm">0.782</span></span>
+</pre><div class="output-reveal">[1] 5</div>
+  <p>表の t value と一致します。p 値は、右側の面積を <code>pt()</code> で求めます。t = +5 と正なので、<code>lower.tail = FALSE</code>（右側が欲しい）。対立仮説が両側（β ≠ 0）なので、<strong>2 倍</strong>します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">pt</span>(<span class="nm">5</span>, df = <span class="nm">50</span> - <span class="nm">2</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(<span class="nm">5</span>, df = <span class="nm">50</span> - <span class="nm">2</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(-<span class="nm">5</span>, df = <span class="nm">48</span>)   <span class="cm"># 左側の面積を2倍しても同じ</span></span>
+</pre><div class="output-reveal">[1] 4.030833e-06
+[1] 8.061665e-06
+[1] 8.061665e-06</div>
+  <p>右側だけだと 4.03 × 10⁻⁶（表の値の半分）なので、<strong>2 倍して 8.06 × 10⁻⁶</strong>。これが回帰出力の p 値（約 8 × 10⁻⁶）と一致します。（出力の 8.07e-06 は、丸める前の t = 4.9995 から計算した値のため、わずかに違います。）</p>
+  <div class="note-box">💡 <strong>信頼区間との関係：</strong>95% の信頼区間 (2.34, 5.48) は <strong>0 を含みません</strong>。α = 0.05 の検定で H₀: β = 0 を棄却したことと一致します。</div>
+  <h3>統計的有意と実質的有意は別物</h3>
+  <p>p 値が小さくても、<strong>効果の大きさ（effect size）</strong>が小さければ実務上は重要でないことがあります。たとえば「欠席数が説明変数、授業の成績が応答変数」で p 値が極端に小さくても、<strong>欠席1回あたり成績が 1% 下がる</strong>だけなら、成績に目立つ差が出るほど何日も休まなければなりません。<strong>p 値が小さい ≠ 実質的に重要</strong>。「p 値が小さいから論文になる！」と喜ぶ前に、効果の大きさを考えましょう。もっと役に立つのは<strong>モデルがどれくらい当てはまるか（R²）</strong>です。</p>
+  <div class="note-box">💡 この例の R² は <strong>0.3424</strong>（総寄付額の変動の約34%を最大寄付額で説明）。p 値は極めて小さいのに、説明できているのは約3分の1です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>H₀ は「本当は傾き 0（関係なし）」という仮説。そう仮定すると、b = 3.91 のような傾きが偶然出る確率（p 値）は約 0.0008%。ほぼあり得ないので「関係なし」は疑わしい、と判断します。</p></div>
+  <div class="note-box">🎯 <strong>課題（講師から）：</strong>同じ個体について<strong>2つの量的変数</strong>を選び、傾きの<strong>信頼区間</strong>と<strong>有意性検定</strong>を行ってみましょう。donors データには今回使っていない量的データがたくさんあります。興味のあるデータを探して、データの出どころを書き、検定と区間を解釈する<strong>ポートフォリオ作品</strong>にするのもおすすめです。</div>
+  <div class="practice-card" id="p-m6inf-u3a">
+    <div class="ptitle">💻 ミニ練習：検定統計量 t を計算する</div>
+    <p class="ptask">傾きの検定統計量 t を、b = 3.910、帰無仮説の値 0、SE(b) = 0.782 から R で計算してください。</p>
+    <textarea class="code-editor" id="p-m6inf-u3a-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6inf-u3a', ['3.910', '0.782'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6inf-u3a', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6inf-u3a-result"></div>
+    <div class="answer-reveal" id="p-m6inf-u3a-answer" hidden>
+      <pre class="code-block">
+<span class="cl">(<span class="nm">3.910</span> - <span class="nm">0</span>) / <span class="nm">0.782</span></span>
+</pre>
+      <p class="answer-note">結果は 5（t = 5.00）。<code>summary(model)</code> の t value と一致します。</p>
+    </div>
+  </div>
+  <div class="practice-card" id="p-m6inf-u3b">
+    <div class="ptitle">💻 ミニ練習：両側の p 値を求める</div>
+    <p class="ptask">t = 5、自由度 n − 2（n = 50）の t 分布で、両側検定の p 値を <code>pt()</code> で求めてください。右側の面積を取り、両側なので 2 倍します。</p>
+    <textarea class="code-editor" id="p-m6inf-u3b-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6inf-u3b', ['pt', '5', 'lower.tail', 'FALSE', '2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6inf-u3b', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6inf-u3b-result"></div>
+    <div class="answer-reveal" id="p-m6inf-u3b-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(<span class="nm">5</span>, df = <span class="nm">50</span> - <span class="nm">2</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre>
+      <p class="answer-note">結果は 8.061665e-06。2 を掛け忘れると 4.03e-06 になってしまいます。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>summary(lm) 出力の読み方</h2><div class="unit-sub">係数表のどこを使うか</div></div>
+  </div>
+  <p>R の <code>summary(lm)</code> の出力は、信頼区間と検定の材料がすべて載っている「回帰の成績表」です。上から順に見ていきましょう（標本の n = 50 の例）。</p>
+  <pre class="code-block">
+<span class="cl">Call:</span>
+<span class="cl"><span class="kw">lm</span>(formula = sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)</span>
+<span class="cl"></span>
+<span class="cl">Residuals:</span>
+<span class="cl">    Min      1Q  Median      3Q     Max</span>
+<span class="cl">-<span class="nm">448.26</span>  -<span class="nm">62.28</span>  -<span class="nm">33.37</span>   <span class="nm">41.97</span>  <span class="nm">478.22</span></span>
+<span class="cl"></span>
+<span class="cl">Coefficients:</span>
+<span class="cl">                               Estimate Std. Error t value Pr(&gt;|t|)</span>
+<span class="cl">(Intercept)                      <span class="nm">51.817</span>     <span class="nm">27.292</span>   <span class="nm">1.899</span>   <span class="nm">0.0636</span> .</span>
+<span class="cl">sampleDonors$largestGiftAmount    <span class="nm">3.910</span>      <span class="nm">0.782</span>   <span class="nm">5.000</span> <span class="nm">8.07e-06</span> ***</span>
+<span class="cl">---</span>
+<span class="cl">Signif. codes:  <span class="nm">0</span> '***' <span class="nm">0.001</span> '**' <span class="nm">0.01</span> '*' <span class="nm">0.05</span> '.' <span class="nm">0.1</span> ' ' <span class="nm">1</span></span>
+<span class="cl"></span>
+<span class="cl">Residual standard error: <span class="nm">138.8</span> on <span class="nm">48</span> degrees of freedom</span>
+<span class="cl">Multiple R-squared:  <span class="nm">0.3424</span>,	Adjusted R-squared:  <span class="nm">0.3287</span></span>
+<span class="cl">F-statistic:    <span class="nm">25</span> on <span class="nm">1</span> and <span class="nm">48</span> DF,  p-value: <span class="nm">8.075e-06</span></span>
+</pre>
+  <table class="compare-table">
+    <tr><th>出力の部分</th><th>意味</th><th>この例</th></tr>
+    <tr><td>Call</td><td>どのモデルか（y ~ x）</td><td>totalGivingAmount ~ largestGiftAmount</td></tr>
+    <tr><td>Residuals</td><td>残差（実測 − 予測）の五数要約</td><td>最小 −448.26、最大 478.22</td></tr>
+    <tr><td><strong>Estimate</strong></td><td>推定値。(Intercept) は切片 b₀、下の行が<strong>傾き b</strong></td><td>51.817 / <strong>3.910</strong></td></tr>
+    <tr><td><strong>Std. Error</strong></td><td>推定値の標準誤差（ゆれの大きさ）。傾きの行が SE(b)</td><td>27.292 / <strong>0.782</strong></td></tr>
+    <tr><td><strong>t value</strong></td><td>Estimate ÷ Std. Error。H₀: 係数 = 0 の検定統計量</td><td>1.899 / <strong>5.000</strong></td></tr>
+    <tr><td><strong>Pr(&gt;|t|)</strong></td><td>両側 p 値（df = n − 2）</td><td>0.0636 / <strong>8.07e-06</strong></td></tr>
+    <tr><td>*** など</td><td>有意性のしるし。*** ＝ p ＜ 0.001、** ＝ 0.01、* ＝ 0.05</td><td>傾きは ***</td></tr>
+    <tr><td>Residual standard error</td><td>残差の標準的な大きさと自由度</td><td>138.8、48 degrees of freedom</td></tr>
+    <tr><td><strong>Multiple R-squared</strong></td><td>R²：y の変動のうち x で説明できる割合</td><td>0.3424（約34%）</td></tr>
+  </table>
+  <div class="note-box">💡 <strong>傾きの行を3ステップで使う：</strong>
+  <br>① <strong>Estimate</strong> が b、<strong>Std. Error</strong> が SE(b)。これで<strong>信頼区間</strong> b ± t* × SE(b)。
+  <br>② <strong>t value ＝ b ÷ SE(b)</strong>、<strong>Pr(&gt;|t|)</strong> が両側 p 値。これで <strong>H₀: β = 0 の検定</strong>。
+  <br>③ <strong>Multiple R-squared</strong> で、モデルの当てはまり（実質的な意味）を確認する。</div>
+  <p>切片の行の p 値（0.0636）は、「切片 = 0 か」の検定です。この例では 5% より大きいですが、今回の主役は<strong>傾き</strong>です。</p>
+  <p>数値だけを取り出して使うこともできます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model)$coefficients[<span class="nm">2</span>, <span class="nm">3</span>]   <span class="cm"># 傾きの t value</span></span>
+<span class="cl"><span class="kw">summary</span>(model)$coefficients[<span class="nm">2</span>, <span class="nm">4</span>]   <span class="cm"># 傾きの p 値</span></span>
+<span class="cl"><span class="kw">summary</span>(model)$r.squared            <span class="cm"># R-squared</span></span>
+</pre><div class="output-reveal">[1] 4.999517
+[1] 8.074946e-06
+[1] 0.3424222</div>
+  <div class="note-box">📌 <strong>補足（講義外）：</strong>出力の最後の行 F-statistic: 25 on 1 and 48 DF, p-value: 8.075e-06 は、モデル全体の検定です。説明変数が1つだけの単回帰では、F = t² = 5² = 25 で p 値も傾きの p 値と同じになります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>出力の傾きの行を横に読むと「推定 3.91、ゆれ 0.78、だから 3.91 ÷ 0.78 = 5、それが偶然で起こる確率は約 8×10⁻⁶」。この1行から、区間と検定の両方が作れます。</p></div>
+  <div class="practice-card" id="p-m6inf-u4">
+    <div class="ptitle">💻 ミニ練習：傾きの p 値を取り出す</div>
+    <p class="ptask"><code>summary(model)</code> の係数表から、傾きの行（2行目）の <code>Pr(&gt;|t|)</code>（4列目）だけを取り出す R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6inf-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6inf-u4', ['summary', 'model', 'coefficients', '2', '4'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6inf-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6inf-u4-result"></div>
+    <div class="answer-reveal" id="p-m6inf-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model)$coefficients[<span class="nm">2</span>, <span class="nm">4</span>]</span>
+</pre>
+      <p class="answer-note">結果は 8.074946e-06。<code>[2, 3]</code> なら t value（4.999517）、<code>[2, 2]</code> なら SE(b)（0.7819973）になります。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">The sample slope b (also written b₁ or β̂₁) is used in this lesson to estimate which unknown quantity?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The sample mean of the response variable, total giving</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The correlation coefficient r computed from the same sample</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The population slope β</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The y-intercept of the sample regression line (b₀)</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">With a sample of n = 50 donors and one predictor, how many degrees of freedom does the t distribution for the slope have?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>48</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>49</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>50</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>2</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which formula gives a confidence interval for the population slope?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>b ± z* × SD of the response variable y</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>b ± t* × (n − 2) × r</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>b ± t* × r² / SE(b)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>b ± t* × SE(b)</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which R call returns the t critical value for a 95% confidence interval for the slope when n = 50?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>qt(0.95, df = 50)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>qt(0.975, 48)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>pt(0.975, df = 48)</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>qnorm(0.975, df = 48)</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">The 95% CI for the slope is about (2.34, 5.48). The population slope is 2.64. What is the correct statement?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The interval contains the slopes of 95% of all individual donors</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>We are 95% confident it captures β; 2.64 is inside, so it did</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is a 95% probability that the next sample slope falls in this interval</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The interval must be wrong, because the sample slope 3.91 is not equal to β = 2.64</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What are the null and alternative hypotheses for the significance test of the slope?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>H₀: β ≠ 0 versus Hₐ: β = 0 (no evidence needed)</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>H₀: b = 0 versus Hₐ: b ≠ 0 (about the sample slope)</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>H₀: β = 3.91 versus Hₐ: β ≠ 3.91 (the sample value)</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>H₀: β = 0 versus Hₐ: β ≠ 0</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">The test statistic is t = 5 with 48 df. Which R command gives the two-sided p-value?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>2 * pt(5, 48, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>2 * pt(5, df = 50, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>pt(5, df = 48, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>2 * pt(5, df = 48, lower.tail = TRUE)</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">A very small p-value shows that each extra absence lowers a course grade by only 1%. What should you conclude?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The effect must be large, because the p-value is so small</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>There is no association between absences and the grade</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Significant, but a 1% effect is small in practice; check R² too</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The null hypothesis has been proven true by this one sample</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 1, 3, 0, 2];
+var FEEDBACKS=["A statistic from the sample is used to learn about an unknown parameter: x̄ for μ, p̂ for p, and the sample slope b for the population slope β.", "df = n − 2 = 48, because two parameters (the intercept and the slope) were estimated from the data.", "Like every confidence interval in the course: statistic ± critical value × standard error. Here the statistic is b and the standard error is the SE of the slope, with a t critical value on n − 2 df.", "A 95% interval leaves 2.5% in each tail, so we need the 0.975 percentile of a t distribution with 48 df: qt(0.975, 48) = 2.01.", "A 95% confidence interval is a procedure: about 95% of intervals built from different random samples capture the parameter. Here 2.64 lies between 2.34 and 5.48, so this one captured it.", "H₀ says there is no linear association in the population (β = 0). Hypotheses are about the parameter β, not the sample statistic b.", "The alternative is two-sided (β ≠ 0), so double the right-tail area: 2 × pt(5, 48, lower.tail = FALSE) ≈ 8.06 × 10⁻⁶ (the same as 2 × pt(−5, 48)).", "Statistical significance is not practical significance. A tiny p-value can come with a tiny effect size, so also look at the size of the slope and at R²."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">slope (b, β̂₁)</div><div class="term-en">標本の傾き</div><div class="term-def">標本の回帰直線の傾き。母集団の傾き β を推定する統計量。</div></div>
+    <div class="term-item"><div class="term-name">population slope (β)</div><div class="term-en">母集団の傾き</div><div class="term-def">母集団全体の回帰直線の傾き（母数）。通常は未知。</div></div>
+    <div class="term-item"><div class="term-name">standard error of the slope SE(b)</div><div class="term-en">傾きの標準誤差</div><div class="term-def">標本が変わったときの b のゆれの大きさ。summary の Std. Error。</div></div>
+    <div class="term-item"><div class="term-name">sampling variability</div><div class="term-en">標本変動</div><div class="term-def">標本が変わるたびに統計量の値が変わること。</div></div>
+    <div class="term-item"><div class="term-name">degrees of freedom (df)</div><div class="term-en">自由度</div><div class="term-def">傾きの推測では n − 2（切片と傾きを推定するため）。</div></div>
+    <div class="term-item"><div class="term-name">critical value (t*)</div><div class="term-en">臨界値</div><div class="term-def">信頼水準で決まる t 分布の値。95% なら <code>qt(0.975, 48)</code> = 2.01。</div></div>
+    <div class="term-item"><div class="term-name">confidence interval</div><div class="term-en">信頼区間</div><div class="term-def">b ± t* × SE(b)。母数を捕まえる区間を作る手順。</div></div>
+    <div class="term-item"><div class="term-name">margin of error</div><div class="term-en">誤差の幅</div><div class="term-def">t* × SE(b)。この例では約 1.57。</div></div>
+    <div class="term-item"><div class="term-name">null / alternative hypothesis</div><div class="term-en">帰無仮説／対立仮説</div><div class="term-def">H₀: β = 0（関連なし）／Hₐ: β ≠ 0（関連あり）。</div></div>
+    <div class="term-item"><div class="term-name">test statistic</div><div class="term-en">検定統計量</div><div class="term-def">t = (b − 0) ÷ SE(b)。この例では 5.00。</div></div>
+    <div class="term-item"><div class="term-name">p-value</div><div class="term-en">p 値</div><div class="term-def">H₀ のもとで、今回以上に極端な傾きが偶然起こる確率。この例は約 8 × 10⁻⁶。</div></div>
+    <div class="term-item"><div class="term-name">practical significance</div><div class="term-en">実質的有意性</div><div class="term-def">効果の大きさが現実に意味を持つか。p 値が小さくても別問題。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>傾きの行を読む順番：Estimate（b）→ Std. Error（SE）→ t value（= b ÷ SE）→ Pr(&gt;|t|)（p 値）。区間は b ± t* × SE、検定は H₀: β = 0。df はいつも n − 2。p 値が小さいだけでなく、効果の大きさと R² も見ること。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📈 統計レッスン：M6 回帰③ 傾きの推測（信頼区間と検定）</p>
+  <p style="margin-top:.5rem;"><a href="m6_reg_interpret.html">← 係数・残差・R²</a> · <a href="m6_reg_more.html">カテゴリ・重回帰 →</a> · <a href="m6_reg_inference_easy.html">🍎 やさしい版</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

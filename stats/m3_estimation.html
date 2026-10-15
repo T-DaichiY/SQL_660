@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 推測の基礎③　標準誤差・信頼区間・効果量と検出力</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 📏 SE・信頼区間・検出力 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Foundations of Inference ③ — Standard Error, Confidence Interval, Effect Size &amp; Power</div>
+  <h1>📏 推測の基礎③：標準誤差・信頼区間・効果量と検出力</h1>
+  <p>標本は母集団そのものではないので、取るたびに結果がゆれます。このレッスンでは、そのゆれを測る<strong>標準誤差（SE）</strong>と<strong>中心極限定理（CLT）</strong>、ゆれを考慮して母平均の範囲を示す<strong>信頼区間（CI）</strong>、そして p 値だけでは分からない<strong>効果量</strong>と<strong>検出力</strong>を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Standard error ／ Confidence interval ／ Effect size and power</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 標準誤差とCLT</a><a href="#unit2">② 信頼区間</a><a href="#unit3">③ 効果量</a><a href="#unit4">④ 検出力</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 標本のばらつき・標本分布・標準誤差・中心極限定理：Standard error</li><li>② 信頼区間（z = 1.96 からの導出、正しい読み方）：Confidence interval</li><li>③ 効果量（nと有意性、Cohen's d・r・オッズ比、目安）：Effect size and power 前半</li><li>④ 検出力（power）と、効果量・n・α・検出力の関係：Effect size and power 後半</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>標本のばらつきと標準誤差（SE）・中心極限定理（CLT）</h2><div class="unit-sub">標本平均はどれくらいゆれる？</div></div>
+  </div>
+
+  <p>データ分析では、母集団（population）のすべてを調べられないので<strong>標本（sample）</strong>を取ります。ところが、たとえ大学の学生名簿から乱数で選んでも、たまたま特定のグループの学生が多く選ばれることがあります。つまり標本は<strong>母集団を代表している（representative）かもしれないし、していないかもしれません</strong>。しかも同じ手順でもう一度抽出すれば、ほぼ確実に<strong>別の標本</strong>になります。</p>
+  <p>だからこそ「<strong>この標本は母集団をどれくらい代表しているのか</strong>」を数で知る必要があります。伝統的な道具の1つが<strong>標準誤差（standard error, SE）</strong>です。SE は標準偏差（standard deviation, SD）と<strong>別のもの</strong>ですが、深く関係しています。</p>
+  <h3>標本のばらつき（sampling variation）と標本分布（sampling distribution）</h3>
+  <p>母平均が 10 の母集団から何度も標本を取るとします。標本平均は 10 の近くに集まりますが、ときには 5・6・7 や 13・14・15 のような値も出ます。これが<strong>標本のばらつき（sampling variation）</strong>です。現実のデータで人を取り替えれば、必ず起こる自然な現象です。</p>
+  <p>たくさんの標本の<strong>平均</strong>を求めてそれを並べると、1つの分布ができます。これが<strong>標本分布（sampling distribution）</strong>、つまり「<strong>1つの母集団から取った標本平均の分布</strong>」です。1つの標本で平均とSDを求めたのと同じことを、今度は「標本平均たち」に対して行います。</p>
+  <div class="teal-box">📌 <strong>標準誤差（SE）の定義：</strong>標本分布（標本平均の分布）の<strong>標準偏差</strong>。「標本平均がどれくらいばらつくか」を表す。</div>
+  <h3>実際には何度も標本を取らない：中心極限定理（CLT）</h3>
+  <p>現実には同じ母集団から何百回も標本を取ることはできません（お金も時間もかかり非現実的）。しかし統計学者は、<strong>標本が十分に大きいとき</strong>標本分布には決まった性質があることを見つけました。これが<strong>中心極限定理（Central Limit Theorem, CLT）</strong>です。</p>
+  <table class="compare-table">
+    <tr><th>CLT の3つの事実（標本が十分大きいとき）</th><th>意味</th></tr>
+    <tr><td>① 標本分布は<strong>正規分布</strong>（normal）に近い</td><td>母集団が歪んでいても、標本平均の山は左右対称の釣り鐘形になる</td></tr>
+    <tr><td>② 標本分布の<strong>平均 ＝ 母平均 μ</strong></td><td>標本平均は、母平均を中心にばらつく（かたよらない）</td></tr>
+    <tr><td>③ 標本分布の<strong>SD ＝ 標準誤差 SE</strong></td><td>SE ＝ σ / √n。実際は σ の代わりに標本のSD <em>s</em> を使って <strong>SE ＝ s / √n</strong></td></tr>
+  </table>
+  <div class="formula-box" style="text-align:center;font-size:1.1rem;margin:.8rem 0"><strong>SE ＝ s / √n</strong>　（s：標本の標準偏差、n：標本サイズ）</div>
+  <p>実際にシミュレーションで確かめてみましょう。右に大きく歪んだ母集団（平均 10、SD ≈ 10）から、n = 25 の標本を1万回取って平均を調べます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">pop &lt;- <span class="kw">rexp</span>(<span class="nm">100000</span>, rate = <span class="nm">1</span>/<span class="nm">10</span>)</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(pop), <span class="kw">sd</span>(pop))</span>
+<span class="cl">means &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, mean(<span class="kw">sample</span>(pop, <span class="nm">25</span>)))</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(mea<span class="kw">n</span>s), <span class="kw">sd</span>(mea<span class="kw">n</span>s))</span>
+<span class="cl"><span class="kw">sd</span>(pop) / <span class="kw">sqrt</span>(<span class="nm">25</span>)</span>
+<span class="cl">means<span class="nm">1</span><span class="nm">0</span><span class="nm">0</span> &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, mean(<span class="kw">sample</span>(pop, <span class="nm">100</span>)))</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(mea<span class="kw">n</span>s<span class="nm">1</span><span class="nm">0</span><span class="nm">0</span>), <span class="kw">sd</span>(mea<span class="kw">n</span>s<span class="nm">1</span><span class="nm">0</span><span class="nm">0</span>))</span>
+<span class="cl">x &lt;- <span class="kw">sample</span>(pop, <span class="nm">25</span>)</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(x), <span class="kw">sd</span>(x), <span class="kw">sd</span>(x) / <span class="kw">sqrt</span>(<span class="nm">25</span>))</span>
+</pre>
+  <div class="output-reveal">[1] 10.02698 10.02038
+[1] 10.035030  2.008706
+[1] 2.004075
+[1] 10.0263301  0.9999798
+[1] 9.534888 8.951860 1.790372</div>
+  <p>標本平均の分布の平均は 10.04（≈ μ = 10）、SD は 2.01。SE の式 σ/√n = 10/√25 = <strong>2.00</strong> とほぼ一致します。n を 100 にすると SD は 1.00（= 10/√100）まで小さくなりました。最後の行は、現実の「1回だけ取った標本」の場合で、平均 9.53、s = 8.95 から SE = 8.95/√25 = <strong>1.79</strong> と推定しています（標本が1つでも SE は計算できる、という点がポイントです）。</p>
+  <div class="viz"><div class="viz-title">同じ母集団から n = 25 の標本を1万回取り、平均を並べると…（R のシミュレーション結果をそのまま描画）</div><div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 340 200" width="340" height="200" role="img" aria-label="母集団のヒストグラム（右に歪む）"><rect x="40" y="10" width="290" height="150" fill="none" stroke="#cbd5e1"/><g transform="translate(40,10)"><rect x="0.5" y="0.0" width="11.1" height="150.0" fill="#94a3b8" opacity=".8"/><rect x="12.6" y="33.6" width="11.1" height="116.4" fill="#94a3b8" opacity=".8"/><rect x="24.7" y="59.4" width="11.1" height="90.6" fill="#94a3b8" opacity=".8"/><rect x="36.8" y="80.1" width="11.1" height="69.9" fill="#94a3b8" opacity=".8"/><rect x="48.8" y="94.1" width="11.1" height="55.9" fill="#94a3b8" opacity=".8"/><rect x="60.9" y="106.9" width="11.1" height="43.1" fill="#94a3b8" opacity=".8"/><rect x="73.0" y="116.4" width="11.1" height="33.6" fill="#94a3b8" opacity=".8"/><rect x="85.1" y="124.4" width="11.1" height="25.6" fill="#94a3b8" opacity=".8"/><rect x="97.2" y="130.1" width="11.1" height="19.9" fill="#94a3b8" opacity=".8"/><rect x="109.2" y="134.1" width="11.1" height="15.9" fill="#94a3b8" opacity=".8"/><rect x="121.3" y="137.3" width="11.1" height="12.7" fill="#94a3b8" opacity=".8"/><rect x="133.4" y="140.2" width="11.1" height="9.8" fill="#94a3b8" opacity=".8"/><rect x="145.5" y="142.5" width="11.1" height="7.5" fill="#94a3b8" opacity=".8"/><rect x="157.6" y="144.5" width="11.1" height="5.5" fill="#94a3b8" opacity=".8"/><rect x="169.7" y="145.3" width="11.1" height="4.7" fill="#94a3b8" opacity=".8"/><rect x="181.8" y="146.4" width="11.1" height="3.6" fill="#94a3b8" opacity=".8"/><rect x="193.8" y="147.2" width="11.1" height="2.8" fill="#94a3b8" opacity=".8"/><rect x="205.9" y="147.7" width="11.1" height="2.3" fill="#94a3b8" opacity=".8"/><rect x="218.0" y="148.2" width="11.1" height="1.8" fill="#94a3b8" opacity=".8"/><rect x="230.1" y="148.7" width="11.1" height="1.3" fill="#94a3b8" opacity=".8"/><rect x="242.2" y="149.1" width="11.1" height="0.9" fill="#94a3b8" opacity=".8"/><rect x="254.2" y="149.2" width="11.1" height="0.8" fill="#94a3b8" opacity=".8"/><rect x="266.3" y="149.4" width="11.1" height="0.6" fill="#94a3b8" opacity=".8"/><rect x="278.4" y="149.5" width="11.1" height="0.5" fill="#94a3b8" opacity=".8"/></g><line x1="40.0" y1="160" x2="40.0" y2="165" stroke="#64748b"/><text x="40.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="136.7" y1="160" x2="136.7" y2="165" stroke="#64748b"/><text x="136.7" y="178" font-size="11" text-anchor="middle" fill="#64748b">20</text><line x1="233.3" y1="160" x2="233.3" y2="165" stroke="#64748b"/><text x="233.3" y="178" font-size="11" text-anchor="middle" fill="#64748b">40</text><line x1="330.0" y1="160" x2="330.0" y2="165" stroke="#64748b"/><text x="330.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">60</text><line x1="88.3" y1="10" x2="88.3" y2="160" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><text x="92.3" y="24" font-size="11" fill="#ef4444">μ = 10</text><text x="185" y="194" font-size="11" text-anchor="middle" fill="#64748b">値（母集団）</text></svg><div style="font-size:.8rem"><strong>母集団</strong>（右に歪んだ分布）<br>μ ≈ 10, σ ≈ 10</div></div><div style="text-align:center"><svg viewBox="0 0 340 200" width="340" height="200" role="img" aria-label="標本平均の分布（ほぼ左右対称）"><rect x="40" y="10" width="290" height="150" fill="none" stroke="#cbd5e1"/><g transform="translate(40,10)"><rect x="39.2" y="148.9" width="8.7" height="1.1" fill="var(--primary)" opacity=".8"/><rect x="48.8" y="142.1" width="8.7" height="7.9" fill="var(--primary)" opacity=".8"/><rect x="58.5" y="117.9" width="8.7" height="32.1" fill="var(--primary)" opacity=".8"/><rect x="68.2" y="72.9" width="8.7" height="77.1" fill="var(--primary)" opacity=".8"/><rect x="77.8" y="21.9" width="8.7" height="128.1" fill="var(--primary)" opacity=".8"/><rect x="87.5" y="0.0" width="8.7" height="150.0" fill="var(--primary)" opacity=".8"/><rect x="97.2" y="14.0" width="8.7" height="136.0" fill="var(--primary)" opacity=".8"/><rect x="106.8" y="45.9" width="8.7" height="104.1" fill="var(--primary)" opacity=".8"/><rect x="116.5" y="84.5" width="8.7" height="65.5" fill="var(--primary)" opacity=".8"/><rect x="126.2" y="113.1" width="8.7" height="36.9" fill="var(--primary)" opacity=".8"/><rect x="135.8" y="134.6" width="8.7" height="15.4" fill="var(--primary)" opacity=".8"/><rect x="145.5" y="144.8" width="8.7" height="5.2" fill="var(--primary)" opacity=".8"/><rect x="155.2" y="147.5" width="8.7" height="2.5" fill="var(--primary)" opacity=".8"/><rect x="164.8" y="149.1" width="8.7" height="0.9" fill="var(--primary)" opacity=".8"/><rect x="174.5" y="149.8" width="8.7" height="0.2" fill="var(--primary)" opacity=".8"/></g><line x1="40.0" y1="160" x2="40.0" y2="165" stroke="#64748b"/><text x="40.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="88.3" y1="160" x2="88.3" y2="165" stroke="#64748b"/><text x="88.3" y="178" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="136.7" y1="160" x2="136.7" y2="165" stroke="#64748b"/><text x="136.7" y="178" font-size="11" text-anchor="middle" fill="#64748b">10</text><line x1="185.0" y1="160" x2="185.0" y2="165" stroke="#64748b"/><text x="185.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">15</text><line x1="233.3" y1="160" x2="233.3" y2="165" stroke="#64748b"/><text x="233.3" y="178" font-size="11" text-anchor="middle" fill="#64748b">20</text><line x1="281.7" y1="160" x2="281.7" y2="165" stroke="#64748b"/><text x="281.7" y="178" font-size="11" text-anchor="middle" fill="#64748b">25</text><line x1="330.0" y1="160" x2="330.0" y2="165" stroke="#64748b"/><text x="330.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">30</text><line x1="136.7" y1="10" x2="136.7" y2="160" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><text x="140.7" y="24" font-size="11" fill="#ef4444">μ = 10</text><text x="185" y="194" font-size="11" text-anchor="middle" fill="#64748b">標本平均 x̄（n = 25, 10000回）</text></svg><div style="font-size:.8rem"><strong>標本平均の分布</strong>（sampling distribution）<br>平均 ≈ 10.04, SD ≈ 2.01</div></div></div><div class="viz-cap">母集団は右に大きく歪んでいるのに、標本平均の分布はほぼ左右対称の山形になり、中心は母平均 10、広がり（SD）は SE = σ/√n = 10/5 = 2 にほぼ一致します。</div></div>
+  <h3>SD と SE の違い</h3>
+  <table class="compare-table">
+    <tr><th></th><th>標準偏差 SD (s)</th><th>標準誤差 SE</th></tr>
+    <tr><td>何のばらつき？</td><td>標本の<strong>個々のデータ</strong>のばらつき</td><td>標本<strong>平均</strong>のばらつき</td></tr>
+    <tr><td>n を増やすと</td><td>ほぼ変わらない</td><td><strong>小さくなる</strong>（1/√n）</td></tr>
+    <tr><td>この回の使い道</td><td>データの散らばりの記述</td><td>標本が母集団をどれだけ代表するかの指標、信頼区間・検定の材料</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>講師が強調した「覚えること」：</strong>(1) SE と CLT の定義、(2) SE の式、(3) CLT の3つの事実。SE は信頼区間などでこれから<strong>何度も出てくる</strong>が、CLT は「CLT のおかげでこれができる」と<strong>ときどき顔を出す程度</strong>。深い証明までは不要だが、後で説明なしに出てくるので、今のうちに意味を押さえておこう。</div>
+  <div class="note-box">💡 補足：母集団そのものが正規分布なら、標本分布は n が小さくても正規分布になります。CLT が役に立つのは、母集団が歪んでいる（上の図のような）ときでも「n が十分大きければ標本平均は正規分布に近づく」という点です。「十分大きい」の目安は母集団の形によって変わります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>標本平均は取るたびにゆれる。そのゆれの大きさ（標本平均のSD）が<strong>標準誤差 SE</strong>。式は <strong>s ÷ √n</strong>。人数が多いほどゆれは小さくなる。CLT は「n が大きければ、標本平均のゆれは<strong>正規分布</strong>の形で、<strong>中心は μ</strong>、<strong>広がりは SE</strong>」という約束。</p></div>
+  <div class="practice-card" id="p-m3e-u1">
+    <div class="ptitle">💻 ミニ練習：標準誤差を計算する</div>
+    <p class="ptask">8人の小テストの得点が <code>x &lt;- c(12, 9, 11, 14, 10, 8, 13, 11)</code> です。標本平均の標準誤差（SE ＝ s/√n）を、<code>sd()</code>・<code>sqrt()</code>・<code>length()</code> を使って求めるRコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m3e-u1-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3e-u1', ['sd', 'sqrt', 'length'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3e-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3e-u1-result"></div>
+    <div class="answer-reveal" id="p-m3e-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x &lt;- <span class="kw">c</span>(<span class="nm">12</span>, <span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">14</span>, <span class="nm">10</span>, <span class="nm">8</span>, <span class="nm">13</span>, <span class="nm">11</span>)</span>
+<span class="cl"><span class="kw">sd</span>(x) / <span class="kw">sqrt</span>(<span class="kw">length</span>(x))</span>
+</pre>
+      <p class="answer-note">結果は 0.7071068（s = 2、n = 8 なので 2/√8 ≈ 0.707）。<code>length(x)</code> で n を数える点がコツ。</p>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>信頼区間（CI）</h2><div class="unit-sub">1.96 × SE で範囲を作る</div></div>
+  </div>
+
+  <p>標準誤差と並んで、標本の正確さを調べる方法が<strong>信頼区間（confidence interval, CI）</strong>です。論文ではこちらを目にする機会がずっと多く、統計の計算の途中では SE が使われる場面が多い、と覚えておきましょう。CI は標本平均のまわりに<strong>境界</strong>を作り、「母平均はこの範囲にありそうだ」という<strong>範囲</strong>で示します。</p>
+  <h3>例：GPA の研究</h3>
+  <p>母集団の GPA の平均は本当は <strong>3.0</strong>（ただし研究者には<strong>未知</strong>）。取った標本の平均は <strong>2.75</strong> でした。SE を計算して代表性を見るのもよいですが、「母平均はおそらく ○ と △ の間」と範囲で言えたほうが役に立ちます。では境界をどう決めるか。</p>
+  <ul>
+    <li>適当に ±0.2 とすると 2.55〜2.95。<strong>理由がない</strong>うえに、（本当の平均 3.0 を外してしまう。）</li>
+    <li>±1 とすると 1.75〜3.75。<strong>広すぎて無意味</strong>（標本平均が 1.75〜3.75 に入るのは当たり前）。</li>
+  </ul>
+  <p>そこで、z スコアで学んだ<strong>1.96</strong>を使います。</p>
+  <h3>なぜ 1.96 なのか</h3>
+  <p>標準正規分布（平均0、SD1）では、<strong>真ん中の 95% が −1.96 から +1.96 の間</strong>に入ります（残り 5% は両端に 2.5% ずつ）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">0.975</span>)</span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">1.96</span>) - <span class="kw">pnorm</span>(-<span class="nm">1.96</span>)</span>
+</pre>
+  <div class="output-reveal">[1] 1.959964
+[1] 0.9500042</div>
+  <p>標本分布は正規分布（CLT）で、平均は μ、SD は SE でした。そこで標本平均 x̄ を標準化した値 <strong>z ＝ (x̄ − μ) / SE</strong> は標準正規分布に従います。したがって</p>
+  <div class="formula-box" style="text-align:center;margin:.8rem 0;line-height:2">
+    −1.96 ≤ (x̄ − μ) / SE ≤ 1.96 となる確率が約 95%<br>
+    ⇒ x̄ − 1.96 × SE ≤ μ ≤ x̄ + 1.96 × SE<br>
+    <strong>95% CI ＝ x̄ ± 1.96 × SE</strong>
+  </div>
+  <p>z スコアの式では分母が「個々のデータのSD」ですが、ここで見たいのは<strong>標本平均のばらつき</strong>なので、SD の代わりに <strong>SE</strong> を使います。これが CI の式のポイントです。</p>
+  <p>GPA の例で計算します。標本の n = 36、s = 0.6 とすると SE = 0.6/√36 = 0.1 なので、</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">0.975</span>)</span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">1.96</span>) - <span class="kw">pnorm</span>(-<span class="nm">1.96</span>)</span>
+<span class="cl">xbar &lt;- <span class="nm">2.75</span>; s &lt;- <span class="nm">0.6</span>; n &lt;- <span class="nm">36</span></span>
+<span class="cl">se &lt;- s / <span class="kw">sqrt</span>(n)</span>
+<span class="cl">se</span>
+<span class="cl">xbar + <span class="kw">c</span>(-<span class="nm">1</span>, <span class="nm">1</span>) * <span class="nm">1.96</span> * se</span>
+<span class="cl"><span class="nm">2</span> * <span class="nm">1.96</span> * <span class="nm">0.6</span> / <span class="kw">sqrt</span>(<span class="kw">c</span>(<span class="nm">9</span>, <span class="nm">36</span>, <span class="nm">144</span>))</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">replicate</span>(<span class="nm">10000</span>, {</span>
+<span class="cl">  xb &lt;- <span class="kw">mean</span>(<span class="kw">rnorm</span>(<span class="nm">36</span>, mea<span class="kw">n</span> = <span class="nm">3</span>, sd = <span class="nm">0.6</span>))</span>
+<span class="cl">  <span class="kw">abs</span>(xb - <span class="nm">3</span>) &lt;= <span class="nm">1.96</span> * <span class="nm">0.1</span></span>
+<span class="cl">}))</span>
+</pre>
+  <div class="output-reveal">[1] 1.959964
+[1] 0.9500042
+[1] 0.1
+[1] 2.554 2.946
+[1] 0.784 0.392 0.196
+[1] 0.9506</div>
+  <p>95% CI は <strong>[2.554, 2.946]</strong>（上限 2.75 ＋ 0.196、下限 2.75 − 0.196）。この1回の標本では、区間が真の平均 3.0 を<strong>含んでいません</strong>。これは異常ではなく、95% の手順でも約 5% は外れる、ということです（次の図）。コードの最後の行は、「σ = 0.6, n = 36 の母集団から1万回標本を取って 95% CI を作ると、約 95% が μ を含む」ことの確認です（結果 0.9506）。</p>
+  <div class="viz"><div class="viz-title">同じ母集団から20回標本を取って作った20本の95%信頼区間（n = 36, σ = 0.6, SE = 0.1）</div><div style="text-align:center"><svg viewBox="0 0 450 300" width="450" height="300" role="img" aria-label="20本の95%信頼区間と母平均3.0"><line x1="233.8" y1="14.0" x2="362.1" y2="14.0" stroke="var(--primary)" stroke-width="2"/><circle cx="297.9" cy="14.0" r="2.6" fill="var(--primary)"/><line x1="146.4" y1="26.5" x2="274.7" y2="26.5" stroke="var(--primary)" stroke-width="2"/><circle cx="210.5" cy="26.5" r="2.6" fill="var(--primary)"/><line x1="206.3" y1="39.0" x2="334.6" y2="39.0" stroke="var(--primary)" stroke-width="2"/><circle cx="270.4" cy="39.0" r="2.6" fill="var(--primary)"/><line x1="205.0" y1="51.5" x2="333.3" y2="51.5" stroke="var(--primary)" stroke-width="2"/><circle cx="269.1" cy="51.5" r="2.6" fill="var(--primary)"/><line x1="175.2" y1="64.0" x2="303.5" y2="64.0" stroke="var(--primary)" stroke-width="2"/><circle cx="239.3" cy="64.0" r="2.6" fill="var(--primary)"/><line x1="238.4" y1="76.5" x2="366.7" y2="76.5" stroke="var(--primary)" stroke-width="2"/><circle cx="302.5" cy="76.5" r="2.6" fill="var(--primary)"/><line x1="173.6" y1="89.0" x2="301.9" y2="89.0" stroke="var(--primary)" stroke-width="2"/><circle cx="237.7" cy="89.0" r="2.6" fill="var(--primary)"/><line x1="162.8" y1="101.5" x2="291.1" y2="101.5" stroke="var(--primary)" stroke-width="2"/><circle cx="226.9" cy="101.5" r="2.6" fill="var(--primary)"/><line x1="246.5" y1="114.0" x2="374.8" y2="114.0" stroke="var(--primary)" stroke-width="2"/><circle cx="310.7" cy="114.0" r="2.6" fill="var(--primary)"/><line x1="104.8" y1="126.5" x2="233.1" y2="126.5" stroke="#ef4444" stroke-width="2"/><circle cx="169.0" cy="126.5" r="2.6" fill="#ef4444"/><line x1="238.0" y1="139.0" x2="366.3" y2="139.0" stroke="var(--primary)" stroke-width="2"/><circle cx="302.2" cy="139.0" r="2.6" fill="var(--primary)"/><line x1="157.5" y1="151.5" x2="285.8" y2="151.5" stroke="var(--primary)" stroke-width="2"/><circle cx="221.7" cy="151.5" r="2.6" fill="var(--primary)"/><line x1="235.7" y1="164.0" x2="364.0" y2="164.0" stroke="var(--primary)" stroke-width="2"/><circle cx="299.9" cy="164.0" r="2.6" fill="var(--primary)"/><line x1="159.2" y1="176.5" x2="287.5" y2="176.5" stroke="var(--primary)" stroke-width="2"/><circle cx="223.3" cy="176.5" r="2.6" fill="var(--primary)"/><line x1="240.7" y1="189.0" x2="368.9" y2="189.0" stroke="var(--primary)" stroke-width="2"/><circle cx="304.8" cy="189.0" r="2.6" fill="var(--primary)"/><line x1="178.5" y1="201.5" x2="306.8" y2="201.5" stroke="var(--primary)" stroke-width="2"/><circle cx="242.6" cy="201.5" r="2.6" fill="var(--primary)"/><line x1="212.5" y1="214.0" x2="340.8" y2="214.0" stroke="var(--primary)" stroke-width="2"/><circle cx="276.7" cy="214.0" r="2.6" fill="var(--primary)"/><line x1="244.6" y1="226.5" x2="372.9" y2="226.5" stroke="var(--primary)" stroke-width="2"/><circle cx="308.7" cy="226.5" r="2.6" fill="var(--primary)"/><line x1="174.9" y1="239.0" x2="303.2" y2="239.0" stroke="var(--primary)" stroke-width="2"/><circle cx="239.0" cy="239.0" r="2.6" fill="var(--primary)"/><line x1="247.2" y1="251.5" x2="375.5" y2="251.5" stroke="var(--primary)" stroke-width="2"/><circle cx="311.3" cy="251.5" r="2.6" fill="var(--primary)"/><line x1="256.4" y1="4" x2="256.4" y2="268" stroke="#334155" stroke-width="1.4" stroke-dasharray="4 3"/><text x="256.4" y="282" font-size="11" text-anchor="middle" fill="#334155">母平均 μ = 3.0</text><line x1="60" y1="268" x2="420" y2="268" stroke="#94a3b8"/><text x="92.7" y="296" font-size="10" text-anchor="middle" fill="#64748b">2.5</text><text x="256.4" y="296" font-size="10" text-anchor="middle" fill="#64748b">3.0</text><text x="420.0" y="296" font-size="10" text-anchor="middle" fill="#64748b">3.5</text></svg></div><div class="viz-cap">点が各標本の平均、線が x̄ ± 1.96×SE。破線が本当の母平均 3.0。20本中19本が3.0を含み、赤い1本（10番目）だけが外れました。長い目で見ると約95%が含み、約5%が外れる——これが「95%信頼区間」の意味です。</div></div>
+  <h3>95% 信頼区間の正しい読み方</h3>
+  <table class="compare-table">
+    <tr><th>正しい読み方</th><th>よくある誤解</th></tr>
+    <tr><td>「同じ方法で標本を取って区間を作る作業を何度も繰り返すと、そのうち<strong>約 95% の区間が母平均を含む</strong>」。95% は<strong>手順の長期的な成功率</strong>。</td><td>「この区間に母平均が入っている<strong>確率が 95%</strong>」「個々のデータの 95% がこの範囲に入る」「標本平均の 95% がこの範囲に入る」</td></tr>
+  </table>
+  <p>母平均 μ は未知でも<strong>決まった1つの値</strong>です。手元の1本の区間は、μ を含むか含まないかのどちらか。ゆれているのは区間のほう（標本によって変わる）です。「95% の確信（confidence）」とは、<strong>この方法をうまく使えている自信</strong>と読みます。</p>
+  <h3>区間の幅から何が分かるか</h3>
+  <ul>
+    <li><strong>区間が狭い</strong> → 標本平均が母平均の近くにあると期待でき、推定の精度が高い（標本が代表的）。</li>
+    <li><strong>区間が広い</strong> → 精度が低い、確信が持ちにくい。</li>
+    <li>幅は 2 × 1.96 × s/√n。n を 4 倍にすると幅は半分になる。</li>
+  </ul>
+  <div class="note-box">📊 幅の例（s = 0.6）：n = 9 → 0.784、n = 36 → 0.392、n = 144 → 0.196（コードの <code>2 * 1.96 * 0.6 / sqrt(c(9, 36, 144))</code> の出力）。</div>
+  <div class="warn-box">⚠️ <strong>注意：</strong>ここでは母集団のSDが分かっている（または n が十分大きい）として z = 1.96 を使いました。実際には s で σ を推定するので、n が小さいときは 1.96 より少し大きな <strong>t 値</strong>を使います（次のレッスン「t 分布」で扱います）。なお z = 1.96 は 95% の場合の値で、90% や 99% ならこの数は変わります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>CI は「標本平均 ± 1.96 × SE」。1.96 は正規分布の真ん中 95% を囲む数。<strong>区間が狭いほどくわしく分かっている</strong>。「95%」は、同じやり方を何度も繰り返したとき約 95% の区間が本当の平均をつかまえる、という意味。</p></div>
+  <div class="practice-card" id="p-m3e-u2">
+    <div class="ptitle">💻 ミニ練習：95%信頼区間を計算する</div>
+    <p class="ptask">標本平均 <code>xbar &lt;- 3.10</code>、標本のSD <code>s &lt;- 0.8</code>、<code>n &lt;- 64</code> のとき、<code>qnorm(0.975)</code> を使って 95% 信頼区間（下限と上限）を求めるRコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m3e-u2-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3e-u2', ['qnorm', 'sqrt', 'xbar'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3e-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3e-u2-result"></div>
+    <div class="answer-reveal" id="p-m3e-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">xbar &lt;- <span class="nm">3.10</span>; s &lt;- <span class="nm">0.8</span>; n &lt;- <span class="nm">64</span></span>
+<span class="cl">se &lt;- s / <span class="kw">sqrt</span>(n)</span>
+<span class="cl">xbar + <span class="kw">c</span>(-<span class="nm">1</span>, <span class="nm">1</span>) * <span class="kw">qnorm</span>(<span class="nm">0.975</span>) * se</span>
+</pre>
+      <p class="answer-note">SE ＝ 0.8/8 ＝ 0.1。結果は 2.904 と 3.296（下限 2.904、上限 3.296）。<code>c(-1, 1)</code> で下限と上限を一度に出せる。</p>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>効果量（effect size）</h2><div class="unit-sub">p 値だけでは分からないこと</div></div>
+  </div>
+
+  <p>仮説検定でわかるのは「<strong>効果があるかどうか</strong>」だけです。効果が<strong>どれくらい大きいか</strong>や、それが<strong>重要か</strong>どうかは、p 値からはわかりません。さらに、p 値は<strong>標本サイズ n</strong>に強く左右されます。</p>
+  <h3>n が大きいと「有意」になりやすい</h3>
+  <p>2群の t 検定の式を見ると、n₁・n₂ は<strong>分母側</strong>にあります。</p>
+  <div class="formula-box" style="text-align:center;margin:.8rem 0"><strong>t ＝ (x̄₁ − x̄₂) / ( s<sub>p</sub> × √(1/n₁ + 1/n₂) )</strong>　（s<sub>p</sub>：2群をまとめた標準偏差）</div>
+  <p>平均の差とばらつきが同じでも、n が増えると分母が小さくなり、<strong>t が大きく（p が小さく）</strong>なります。実際に確かめてみましょう（1群あたり n、平均の差 2、SD 10）。</p>
+  <pre class="code-block">
+<span class="cl">tt &lt;- <span class="kw">function</span>(diff, sd, n) {</span>
+<span class="cl">  t &lt;- diff / (sd * <span class="kw">sqrt</span>(<span class="nm">2</span> / n))</span>
+<span class="cl">  df &lt;- <span class="nm">2</span> * n - <span class="nm">2</span></span>
+<span class="cl">  <span class="kw">round</span>(<span class="kw">c</span>(<span class="kw">d</span> = <span class="kw">d</span>iff / s<span class="kw">d</span>, t = t, <span class="kw">d</span>f = <span class="kw">d</span>f, p = <span class="nm">2</span> * <span class="kw">pt</span>(-<span class="kw">abs</span>(t), <span class="kw">d</span>f)), <span class="nm">4</span>)</span>
+<span class="cl">}</span>
+<span class="cl"><span class="kw">tt</span>(<span class="nm">2</span>, <span class="nm">10</span>, <span class="nm">20</span>)</span>
+<span class="cl"><span class="kw">tt</span>(<span class="nm">2</span>, <span class="nm">10</span>, <span class="nm">80</span>)</span>
+<span class="cl"><span class="kw">tt</span>(<span class="nm">2</span>, <span class="nm">10</span>, <span class="nm">500</span>)</span>
+<span class="cl"><span class="kw">tt</span>(<span class="nm">8</span>, <span class="nm">10</span>, <span class="nm">12</span>)</span>
+<span class="cl">d &lt;- <span class="kw">c</span>(<span class="nm">0.2</span>, <span class="nm">0.5</span>, <span class="nm">0.8</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">d</span> / <span class="kw">sqrt</span>(<span class="kw">d</span>^<span class="nm">2</span> + <span class="nm">4</span>), <span class="nm">3</span>)</span>
+</pre>
+  <div class="output-reveal">      d       t      df       p 
+ 0.2000  0.6325 38.0000  0.5309 
+       d        t       df        p 
+  0.2000   1.2649 158.0000   0.2078 
+       d        t       df        p 
+  0.2000   3.1623 998.0000   0.0016 
+      d       t      df       p 
+ 0.8000  1.9596 22.0000  0.0628 
+[1] 0.100 0.243 0.371</div>
+  <table class="compare-table">
+    <tr><th>1群あたり n</th><th>平均の差</th><th>SD</th><th>d</th><th>t</th><th>df</th><th>p</th></tr>
+    <tr><td>10</td><td>2</td><td>10</td><td>0.2</td><td>0.447</td><td>18</td><td>0.660</td></tr>
+    <tr><td>20</td><td>2</td><td>10</td><td>0.2</td><td>0.632</td><td>38</td><td>0.531</td></tr>
+    <tr><td>80</td><td>2</td><td>10</td><td>0.2</td><td>1.265</td><td>158</td><td>0.208</td></tr>
+    <tr><td>160</td><td>2</td><td>10</td><td>0.2</td><td>1.789</td><td>318</td><td>0.075</td></tr>
+    <tr><td><strong>500</strong></td><td>2</td><td>10</td><td>0.2</td><td><strong>3.162</strong></td><td>998</td><td><strong>0.0016</strong></td></tr>
+  </table>
+  <p>どの行も「平均の差 2、SD 10」という同じ状況ですが、n を増やしただけで p が 0.66 から 0.0016 に変わりました。一方、右から2列目の効果の大きさ d は <strong>0.2 のまま</strong>です。</p>
+  <div class="warn-box">⚠️ <strong>p-hacking に注意：</strong>効果が見つからなかったときに、有意になるまで参加者を足し続けるのは<strong>やってはいけません</strong>。それは「重要だ」という幻想を作っているだけです。n に左右されにくい指標が必要で、それが<strong>効果量</strong>です。</div>
+  <h3>効果量（effect size）とは</h3>
+  <p><strong>効果量</strong>は「効果の大きさ」を表す<strong>標準化された</strong>指標です。単位に依存しないので、<strong>研究どうしを比べられます</strong>。代表的なものは次の3つ。</p>
+  <ul>
+    <li><strong>Cohen's d</strong>：平均の差を SD で割った値（2群の比較）。d ＝ (x̄₁ − x̄₂) / s<sub>p</sub>。</li>
+    <li><strong>Pearson's r</strong>：相関係数。</li>
+    <li><strong>オッズ比（odds ratio）</strong>：2値の結果（あり／なし）の比較。</li>
+  </ul>
+  <h3>目安（ベンチマーク）：d と r は別のものさし</h3>
+  <table class="compare-table">
+    <tr><th>効果量</th><th>small（小）</th><th>medium（中）</th><th>large（大）</th></tr>
+    <tr><td><strong>Cohen's d</strong></td><td>0.2</td><td>0.5</td><td>0.8</td></tr>
+    <tr><td><strong>Pearson's r</strong></td><td>0.1</td><td>0.3</td><td>0.5</td></tr>
+  </table>
+  <p>d と r は<strong>同じ数字でも意味が違います</strong>。たとえば d ＝ 0.5（中）は、等しいサイズの2群なら r ≒ 0.24 に相当します（r ＝ d/√(d²＋4)）。</p>
+  <pre class="code-block">
+<span class="cl">d &lt;- <span class="kw">c</span>(<span class="nm">0.2</span>, <span class="nm">0.5</span>, <span class="nm">0.8</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">d</span> / <span class="kw">sqrt</span>(<span class="kw">d</span>^<span class="nm">2</span> + <span class="nm">4</span>), <span class="nm">3</span>)</span>
+</pre>
+  <div class="output-reveal">[1] 0.100 0.243 0.371</div>
+  <p>つまり d ＝ 0.2, 0.5, 0.8 は r にすると約 0.10, 0.24, 0.37。「0.3 や 0.5」を d の目安として使うのは誤りです。なお、これらの目安自体にも疑問が出されています。講師の方針は「<strong>効果量の数値を報告して、判断は読む人に任せる</strong>」（効果量自身に語らせる）です。</p>
+  <h3>p 値の大小は「重要度」ではない</h3>
+  <ul>
+    <li>p ＝ 0.01 は p ＝ 0.02 より「重要」とは限らない。</li>
+    <li>p ＝ 0.06（有意でない）でも、人数が足りないだけで<strong>効果量はむしろ大きい</strong>ことがある。</li>
+  </ul>
+  <pre class="code-block">
+<span class="cl"><span class="kw">tt</span>(<span class="nm">8</span>, <span class="nm">10</span>, <span class="nm">12</span>)   <span class="cm"># 平均の差8、SD10、1群n=12</span></span>
+</pre>
+  <div class="output-reveal">      d       t      df       p 
+ 0.8000  1.9596 22.0000  0.0628 </div>
+  <p>この研究は p ＝ 0.063 で有意ではありませんが、d ＝ 0.8（大）です。逆に先ほどの n ＝ 500 の研究は p ＝ 0.0016 で「高度に有意」ですが d ＝ 0.2（小）。<strong>「有意だから重要」と言われたら、「それで、効果量は？（What's the effect size?）」と返しましょう。</strong></p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>p 値は「差があるかも？」の目安、効果量は「差はどれくらい大きい？」のものさし。p 値は人数を増やすと小さくなってしまうが、効果量は人数にあまり左右されない。<strong>d の目安は 0.2/0.5/0.8、r の目安は 0.1/0.3/0.5</strong>（別物！）。</p></div>
+  <div class="practice-card" id="p-m3e-u3">
+    <div class="ptitle">💻 ミニ練習：t 値と p 値を計算する</div>
+    <p class="ptask">1群あたり <code>n &lt;- 40</code>、平均の差 5、SD 10 の2標本 t 検定について、t ＝ 差 / (SD × √(2/n))、自由度 df ＝ 2n − 2、両側 p 値（<code>pt()</code> を使う）を求めるRコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m3e-u3-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3e-u3', ['sqrt', 'pt', 'abs'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3e-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3e-u3-result"></div>
+    <div class="answer-reveal" id="p-m3e-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">n &lt;- <span class="nm">40</span></span>
+<span class="cl">t &lt;- <span class="nm">5</span> / (<span class="nm">10</span> * <span class="kw">sqrt</span>(<span class="nm">2</span> / n))</span>
+<span class="cl">df &lt;- <span class="nm">2</span> * n - <span class="nm">2</span></span>
+<span class="cl">t</span>
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(-<span class="kw">abs</span>(<span class="kw">t</span>), df)</span>
+</pre>
+      <p class="answer-note">t ≈ 2.2361、df ＝ 78、両側 p ≈ 0.0282。このとき d ＝ 5/10 ＝ 0.5（中）。n を 10 にすると有意でなくなる点を、上の表と比べて確認しよう。</p>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>検出力（power）</h2><div class="unit-sub">見つけたい効果を見つけられる確率</div></div>
+  </div>
+
+  <p>効果量・標本サイズ・有意水準・検出力は、互いにつながっています。ここで重要になるのが<strong>検出力（statistical power）</strong>です。</p>
+  <h3>検出力（power）とは</h3>
+  <p><strong>検出力</strong>は、「<strong>本当に効果があるとき、それを検出できる確率</strong>」です。前のレッスン（<a href="m3_testing.html">仮説検定の考え方</a>）の言葉でいうと、<strong>検出力 ＝ 1 − β</strong>（β は第二種過誤、本当は効果があるのに見逃す確率）です。<strong>慣習としては 0.8</strong>（Cohen の推奨）が使われますが、この値には議論もあります。</p>
+  <h3>4つの量：3つ決まれば残り1つが決まる</h3>
+  <table class="compare-table">
+    <tr><th>量</th><th>意味</th></tr>
+    <tr><td>効果量（effect size）</td><td>見つけたい効果の大きさ（例：d）</td></tr>
+    <tr><td>標本サイズ n</td><td>集める人数</td></tr>
+    <tr><td>有意水準 α（alpha）</td><td>本当は効果がないのに「ある」と言ってしまう確率の上限（慣習 0.05）</td></tr>
+    <tr><td>検出力（power）</td><td>本当にある効果を見つける確率（慣習 0.8）</td></tr>
+  </table>
+  <p>この<strong>4つのうち3つが分かれば、残り1つが計算できます</strong>。たとえば「効果量・α・検出力から必要な n」を求めるのが<strong>検出力分析（power analysis）</strong>です。R では <code>power.t.test()</code>（2標本 t 検定）を使います。調べたい量だけ省いて（NULL にして）渡します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">power.t.test</span>(delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>, power = <span class="nm">0.8</span>)</span>
+</pre>
+  <div class="output-reveal">     Two-sample t test power calculation 
+
+              n = 63.76576
+          delta = 0.5
+             sd = 1
+      sig.level = 0.05
+          power = 0.8
+    alternative = two.sided
+NOTE: n is number in *each* group</div>
+  <p><code>delta</code> は平均の差、<code>sd</code> は SD なので、<code>sd = 1</code> と置くと delta がそのまま Cohen's d になります。d ＝ 0.5 の効果を α ＝ 0.05 で 80% の確率で見つけるには、<strong>1群あたり 64 人</strong>（63.77 を切り上げ）必要です。</p>
+  <h3>効果量が小さいほど、たくさんの人が必要</h3>
+  <table class="compare-table">
+    <tr><th>効果量 d</th><th>目安</th><th>必要な n（1群、α＝0.05、power＝0.8）</th></tr>
+    <tr><td>0.2</td><td>small</td><td>394（393.4）</td></tr>
+    <tr><td>0.5</td><td>medium</td><td>64（63.8）</td></tr>
+    <tr><td>0.8</td><td>large</td><td>26（25.5）</td></tr>
+  </table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">power.t.test</span>(n = <span class="nm">20</span>, delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>)$power</span>
+<span class="cl"><span class="kw">power.t.test</span>(delta = <span class="nm">0.2</span>, sd = <span class="nm">1</span>, power = <span class="nm">0.8</span>)$n</span>
+<span class="cl"><span class="kw">power.t.test</span>(delta = <span class="nm">0.8</span>, sd = <span class="nm">1</span>, power = <span class="nm">0.8</span>)$n</span>
+<span class="cl"><span class="kw">power.t.test</span>(n = <span class="nm">64</span>, delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.01</span>)$power</span>
+</pre>
+  <div class="output-reveal">[1] 0.3377084
+[1] 393.4067
+[1] 25.52463
+[1] 0.585251</div>
+  <p>n ＝ 20 では d ＝ 0.5 の効果を見つける確率は 34% にすぎず、「効果を見逃しやすい（underpowered）」状態です。同じ n ＝ 64 でも、α を 0.01 に厳しくすると検出力は 0.80 から 0.59 に下がります（α・検出力・n・効果量の関係の例）。</p>
+  <div class="viz"><div class="viz-title">効果量 d = 0.5, α = 0.05（両側）の2標本 t 検定：n と検出力</div><div style="text-align:center"><svg viewBox="0 0 450 240" width="450" height="240" role="img" aria-label="n と検出力の関係"><line x1="50" y1="190.0" x2="420" y2="190.0" stroke="#e2e8f0"/><text x="44" y="193.0" font-size="10" text-anchor="end" fill="#64748b">0.0</text><line x1="50" y1="155.0" x2="420" y2="155.0" stroke="#e2e8f0"/><text x="44" y="158.0" font-size="10" text-anchor="end" fill="#64748b">0.2</text><line x1="50" y1="120.0" x2="420" y2="120.0" stroke="#e2e8f0"/><text x="44" y="123.0" font-size="10" text-anchor="end" fill="#64748b">0.4</text><line x1="50" y1="85.0" x2="420" y2="85.0" stroke="#e2e8f0"/><text x="44" y="88.0" font-size="10" text-anchor="end" fill="#64748b">0.6</text><line x1="50" y1="50.0" x2="420" y2="50.0" stroke="#e2e8f0"/><text x="44" y="53.0" font-size="10" text-anchor="end" fill="#64748b">0.8</text><line x1="50" y1="15.0" x2="420" y2="15.0" stroke="#e2e8f0"/><text x="44" y="18.0" font-size="10" text-anchor="end" fill="#64748b">1.0</text><line x1="50" y1="50.0" x2="420" y2="50.0" stroke="#ef4444" stroke-dasharray="4 3"/><text x="350" y="46.0" font-size="10" fill="#ef4444">power = 0.8</text><polyline fill="none" stroke="var(--primary)" stroke-width="2" points="50.0,157.8 83.6,130.8 117.3,106.4 150.9,85.4 184.5,68.0 218.2,54.4 251.8,43.7 285.5,35.7 319.1,29.7 352.7,25.5 386.4,22.3 420.0,20.1"/><circle cx="50.0" cy="157.8" r="2.8" fill="var(--primary)"/><circle cx="83.6" cy="130.8" r="2.8" fill="var(--primary)"/><circle cx="117.3" cy="106.4" r="2.8" fill="var(--primary)"/><circle cx="150.9" cy="85.4" r="2.8" fill="var(--primary)"/><circle cx="184.5" cy="68.0" r="2.8" fill="var(--primary)"/><circle cx="218.2" cy="54.4" r="2.8" fill="var(--primary)"/><circle cx="251.8" cy="43.7" r="2.8" fill="var(--primary)"/><circle cx="285.5" cy="35.7" r="2.8" fill="var(--primary)"/><circle cx="319.1" cy="29.7" r="2.8" fill="var(--primary)"/><circle cx="352.7" cy="25.5" r="2.8" fill="var(--primary)"/><circle cx="386.4" cy="22.3" r="2.8" fill="var(--primary)"/><circle cx="420.0" cy="20.1" r="2.8" fill="var(--primary)"/><text x="50.0" y="206" font-size="10" text-anchor="middle" fill="#64748b">10</text><text x="150.9" y="206" font-size="10" text-anchor="middle" fill="#64748b">40</text><text x="251.8" y="206" font-size="10" text-anchor="middle" fill="#64748b">70</text><text x="352.7" y="206" font-size="10" text-anchor="middle" fill="#64748b">100</text><text x="420.0" y="206" font-size="10" text-anchor="middle" fill="#64748b">120</text><text x="235" y="226" font-size="11" text-anchor="middle" fill="#64748b">1群あたりの n</text><text x="12" y="105" font-size="11" fill="#64748b" transform="rotate(-90 12 105)" text-anchor="middle">検出力 power</text></svg></div><div class="viz-cap">n を増やすほど検出力は上がる。0.8 に届くのは n ≈ 64（1群あたり）あたり。数値は power.t.test(n = ..., delta = 0.5, sd = 1) の結果です。</div></div>
+  <div class="warn-box">⚠️ <strong>この回のまとめ（講師の主張）：</strong>(1) <strong>有意性（significance）は、現代の統計ではささいな要素</strong>の1つ。(2) 効果量を、検出力・標本サイズとあわせて見る、成熟した理解が必要。「有意だから重要」と言うと、これから多くの間違いをする。</div>
+  <div class="note-box">💡 検出力不足の研究で「有意でなかった」ことは、「効果がない」ことの証明にはなりません。n を決める前に検出力分析をしておく（後から n を足さない）のが、p-hacking を避ける正しい順番です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>検出力は「本当にある効果を、ちゃんと見つけられる確率」。<strong>0.8</strong> が目安。効果量・人数 n・α・検出力のうち<strong>3つが決まれば残り1つが決まる</strong>。小さな効果を見つけたいなら、たくさんの人が必要。</p></div>
+  <div class="practice-card" id="p-m3e-u4">
+    <div class="ptitle">💻 ミニ練習：必要な標本サイズを求める</div>
+    <p class="ptask">効果量 d ＝ 0.8（大）の差を、α ＝ 0.05・検出力 0.8 で検出するのに必要な1群あたりの人数を、<code>power.t.test()</code> で求めるRコードを書いてください（<code>sd = 1</code> とする）。</p>
+    <textarea class="code-editor" id="p-m3e-u4-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3e-u4', ['power.t.test', 'delta', 'power'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3e-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3e-u4-result"></div>
+    <div class="answer-reveal" id="p-m3e-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">power.t.test</span>(delta = <span class="nm">0.8</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>, power = <span class="nm">0.8</span>)</span>
+</pre>
+      <p class="answer-note">結果は n ＝ 25.52463。人数は整数なので<strong>1群あたり 26 人</strong>に切り上げる（n ＝ 26 での検出力は 0.807）。</p>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which statement best defines the standard error of the mean (SE)?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The average distance between each individual score and the sample mean</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The SD of the sample means in a sampling distribution</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The largest difference between any two scores found in the sample</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The sample mean divided by the square root of the sample size</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">A sample of n = 25 has s = 10. If the sample size is increased to n = 100 (same s), what happens to the SE?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It doubles, from 2 to 4</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It stays at 2, because s did not change</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It becomes four times smaller, from 2 to 0.5</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is halved, from 2 to 1</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which of the following is NOT one of the three facts given by the Central Limit Theorem?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The population itself becomes normal as we sample more</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>With a large enough n, the sampling distribution is approximately normal</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean of the sampling distribution equals the population mean</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The SD of the sampling distribution equals the standard error</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why is the value 1.96 used to build a 95% confidence interval?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because 1.96 is the standard error of every possible sample</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because the sample mean is always exactly 1.96 units away from μ</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because 95% of a normal curve lies within ±1.96 SDs</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because the 5% of samples that look unusual must be discarded</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A study reports a 95% CI for a mean of [2.55, 2.95]. Which interpretation is correct?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>There is a 95% probability that any single future score will lie in [2.55, 2.95]</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>95% of the individual scores in the whole population lie in [2.55, 2.95]</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The sample mean itself has a 95% chance of lying in [2.55, 2.95]</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The method captures the true mean in about 95% of repeated samples</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Two studies have the same group means and the same SDs, but study B has many more participants. Which result is expected for B?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A larger t and smaller p, with d unchanged</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A smaller t and a larger p-value than study A</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Exactly the same t, p and d values as study A</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A larger Cohen's d together with a larger p-value</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which pair of 'medium' benchmarks is correct?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Cohen's d = 0.3 and r = 0.5</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Cohen's d = 0.5 and r = 0.5</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Cohen's d = 0.5 and r = 0.3</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Cohen's d = 0.8 and r = 0.3</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">With α = 0.05 and a true effect of d = 0.5, about how many participants per group does a two-sample t test need for power = 0.8?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About 26</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 64</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 394</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 120</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 3, 0, 2, 1];
+var FEEDBACKS=["The SE is the standard deviation of the sampling distribution of the mean. In practice it is estimated by s/√n, not by repeating the study many times.", "SE = s/√n. With n = 25, SE = 10/5 = 2; with n = 100, SE = 10/10 = 1. Quadrupling n only halves the SE.", "The CLT is about the distribution of sample means: approximately normal, centred on the population mean μ, with SD = SE. The population itself does not change shape.", "qnorm(0.975) = 1.96, so P(−1.96 ≤ Z ≤ 1.96) ≈ 0.95. Rearranging Z = (x̄ − μ)/SE gives x̄ ± 1.96 × SE.", "The 95% describes the long-run success rate of the procedure. Any one interval either contains μ or it does not; the interval is not a range for individual scores or for x̄.", "n sits in the denominator of the t formula, so more data means a larger |t| and smaller p for the same difference. Cohen's d uses the SD, not n, so it does not change.", "Cohen's d: 0.2 / 0.5 / 0.8 (small / medium / large). Pearson's r: 0.1 / 0.3 / 0.5. The two scales must not be mixed up.", "power.t.test(delta = 0.5, sd = 1, sig.level = 0.05, power = 0.8) gives n = 63.8, so 64 per group. d = 0.8 needs about 26, and d = 0.2 about 394."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">sampling variation</div><div class="term-en">標本のばらつき</div><div class="term-def">同じ母集団から標本を取るたびに、標本平均が変わる自然なゆれ。</div></div>
+    <div class="term-item"><div class="term-name">sampling distribution</div><div class="term-en">標本分布</div><div class="term-def">1つの母集団から取った多数の標本平均の分布。</div></div>
+    <div class="term-item"><div class="term-name">standard error (SE)</div><div class="term-en">標準誤差</div><div class="term-def">標本分布のSD。標本平均のゆれの大きさ。SE ＝ s/√n。</div></div>
+    <div class="term-item"><div class="term-name">Central Limit Theorem (CLT)</div><div class="term-en">中心極限定理</div><div class="term-def">n が十分大きいとき、標本分布は正規分布・平均＝μ・SD＝SE。</div></div>
+    <div class="term-item"><div class="term-name">confidence interval (CI)</div><div class="term-en">信頼区間</div><div class="term-def">標本平均 ± 1.96×SE（95%）。母平均がありそうな範囲を示す。</div></div>
+    <div class="term-item"><div class="term-name">confidence level</div><div class="term-en">信頼水準</div><div class="term-def">手順の長期的な成功率（例：95%）。1本の区間が当たる確率ではない。</div></div>
+    <div class="term-item"><div class="term-name">z = 1.96</div><div class="term-en">臨界値</div><div class="term-def">標準正規分布の真ん中95%を囲む境界（qnorm(0.975)）。</div></div>
+    <div class="term-item"><div class="term-name">effect size</div><div class="term-en">効果量</div><div class="term-def">効果の大きさの標準化指標（Cohen's d, r, odds ratio）。nに左右されにくい。</div></div>
+    <div class="term-item"><div class="term-name">Cohen's d</div><div class="term-en">コーエンのd</div><div class="term-def">平均の差÷SD。目安 0.2/0.5/0.8（小/中/大）。</div></div>
+    <div class="term-item"><div class="term-name">Pearson's r</div><div class="term-en">ピアソンの相関係数</div><div class="term-def">効果量としての目安は 0.1/0.3/0.5（小/中/大）。d とは別。</div></div>
+    <div class="term-item"><div class="term-name">statistical power</div><div class="term-en">検出力</div><div class="term-def">本当にある効果を検出する確率 ＝ 1 − β。慣習 0.8。</div></div>
+    <div class="term-item"><div class="term-name">p-hacking</div><div class="term-en">p値ハッキング</div><div class="term-def">有意になるまでデータを足すなど、見かけの有意性を作る行為。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>SE ＝ s/√n、95% CI ＝ x̄ ± 1.96×SE、CLT の3事実（正規・平均＝μ・SD＝SE）を暗記。効果量の目安は <strong>d：0.2/0.5/0.8</strong>、<strong>r：0.1/0.3/0.5</strong> と別々に覚える。95% CI は「方法の成功率」と読む。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📏 統計レッスン：M3 推測の基礎③ 標準誤差・信頼区間・効果量と検出力</p>
+  <p style="margin-top:.5rem;"><a href="m3_testing.html">← M3 推測の基礎②</a> · <a href="m5_t_intro.html">M5 t検定の入口 →</a> · <a href="m3_estimation_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

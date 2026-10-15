@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 回帰④　カテゴリ変数と重回帰</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 🧩 カテゴリ・重回帰 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Correlation &amp; Linear Regression — Categorical Predictors &amp; Multiple Regression</div>
+  <h1>🧩 回帰④：カテゴリ変数と重回帰</h1>
+  <p>ここまでの回帰は「数値の説明変数 1 つ」でした。この回では 2 つ拡張します。<strong>①性別や居住地のような「カテゴリ」でも予測できる</strong>こと、<strong>②説明変数を複数入れる「重回帰」</strong>です。最後に M6 全体（相関 → 回帰 → 推測 → 拡張）を振り返ります。</p>
+  <p style="font-size:.9rem">📺 講義動画: Linear Regression 10「Regression with Categorical Predictors」／ Linear Regression 11「Multiple regression」</p>
+  <p style="font-size:.9rem">📦 データ: ①②は寄付者データ <code>donors.csv</code> から無作為に取り出した 50 人（<code>set.seed(1)</code>、<code>sampleDonors</code>）。③は米国西部の公立大学 9 校の卒業率・支出・SAT（講義と同じデータ）。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ダミー変数</a><a href="#unit2">② 多カテゴリ</a><a href="#unit3">③ 重回帰</a><a href="#unit4">④ M6 のまとめ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>
+<ul style="margin:.4rem 0 0 1.2rem">
+<li>① ダミー変数（基準カテゴリ、係数の意味）：Linear Regression 10（前半：数値の説明変数の復習 → 性別 <code>model_gender</code>）</li>
+<li>② 多カテゴリの場合：Linear Regression 10（後半：<code>urbanicity</code>）</li>
+<li>③ 重回帰（調整済み R²、「他を一定にしたとき」の解釈）：Linear Regression 11</li>
+<li>④ まとめ：M6 全体の振り返り（動画 Correlation 1〜7 と Linear Regression 1〜11 の流れ）</li>
+</ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ダミー変数：カテゴリを説明変数にする</h2><div class="unit-sub">基準カテゴリと、係数の意味</div></div>
+  </div>
+  <p>まず復習です。<strong>応答変数（response）</strong>は連続値の <code>totalGivingAmount</code>（総寄付額）、<strong>説明変数（explanatory variable）</strong>は数値の <code>largestGiftAmount</code>（最大の 1 回の寄付額）。ここまでと同じ回帰です。</p>
+<pre class="code-block">
+<span class="cl">model_largest &lt;- <span class="kw">lm</span>(totalGivingAmount ~ largestGiftAmount, data = sampleDonors)</span>
+<span class="cl"><span class="kw">summary</span>(model_largest)</span>
+</pre><div class="output-reveal">Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         51.817     27.292   1.899   0.0636 .  
+largestGiftAmount    3.910      0.782   5.000 8.07e-06 ***
+
+Residual standard error: 138.8 on 48 degrees of freedom
+Multiple R-squared:  0.3424,	Adjusted R-squared:  0.3287 </div>
+  <p>切片 51.817、傾き 3.910、標準誤差、t 値、p 値、R² は、これまでの推測の回で見たものです。このモデルで<strong>予測（prediction）</strong>するには <code>predict()</code> を使います。モデルの名前と、<strong>説明変数と完全に同じ名前の列</strong>を持つデータフレームを渡します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">predict</span>(model_largest, <span class="kw">data.frame</span>(largestGiftAmount = <span class="nm">50</span>))</span>
+</pre><div class="output-reveal">       1 
+247.2973 </div>
+  <p>R は 50 に傾き 3.910 を掛けて切片 51.817 を足します（51.817 + 3.910 × 50 ≈ 247.3）。最大寄付額が $50 の人の総寄付額は<strong>約 $247</strong> と予測されます。</p>
+  <div class="warn-box">⚠️ <code>data.frame(largestGiftAmount = 50)</code> の列名は、モデルに使った変数名と<strong>完全に一致</strong>させます。綴りや大文字小文字が違うとエラーになります。</div>
+  <h3 style="margin:1.5rem 0 .5rem">カテゴリ変数（categorical variable）を説明変数にする</h3>
+  <p>同じことが<strong>カテゴリ変数</strong>でもできます。しかもとてもよく使われます。ここで大切なのは、<strong>応答変数は連続値のまま</strong>、説明変数だけがカテゴリになることです。例として <code>gender</code>（性別）で総寄付額を予測します。標本の内訳を <code>table()</code> で確認しましょう。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">table</span>(sampleDonors$gender)</span>
+<span class="cl">model_gender &lt;- <span class="kw">lm</span>(totalGivingAmount ~ gender, data = sampleDonors)</span>
+<span class="cl"><span class="kw">summary</span>(model_gender)</span>
+</pre><div class="output-reveal">female   male 
+    27     22 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   139.17      33.05   4.211 0.000114 ***
+gendermale     22.08      49.32   0.448 0.656465    
+
+Residual standard error: 171.7 on 47 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.004245,	Adjusted R-squared:  -0.01694 </div>
+  <p>標本には女性 27 人、男性 22 人。出力の説明変数名が <code>gendermale</code> になっている点が、これまでとの大きな違いです。回帰式は次のとおりです。</p>
+  <p style="text-align:center;font-size:1.1rem"><strong>ŷ = 139.17 + 22.08 × male</strong>　（male = 0 は「男性ではない」、male = 1 は「男性」）</p>
+  <p>この <code>male</code> のように 0 と 1 だけを取る変数を<strong>ダミー変数（dummy variable / indicator variable）</strong>と呼びます。R が自動で作ってくれます。ダミー変数が 0 のグループ（ここでは女性）を<strong>基準カテゴリ（reference group / baseline）</strong>と言い、R が自動で選びます（通常はアルファベット順で最初の水準。ここでは <code>female</code>）。どちらが基準になるかは本質ではありません。基準が male なら変数名は <code>genderfemale</code> になり、同じ内容を逆の言い方で表すだけです。</p>
+  <div class="viz">
+    <div class="viz-title">性別ごとの総寄付額（点は寄付者 1 人、赤線は平均）</div>
+    <div style="text-align:center"><svg viewBox="0 0 380 270" width="380" height="270" role="img" aria-label="性別ごとの総寄付額（totalGivingAmount）の散布図と平均" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="379" height="269" fill="#fff" stroke="#cbd5e1"/><line x1="60" y1="220.0" x2="360" y2="220.0" stroke="#e2e8f0"/><text x="54" y="224.0" font-size="10" text-anchor="end" fill="#64748b">0</text><line x1="60" y1="170.0" x2="360" y2="170.0" stroke="#e2e8f0"/><text x="54" y="174.0" font-size="10" text-anchor="end" fill="#64748b">250</text><line x1="60" y1="120.0" x2="360" y2="120.0" stroke="#e2e8f0"/><text x="54" y="124.0" font-size="10" text-anchor="end" fill="#64748b">500</text><line x1="60" y1="70.0" x2="360" y2="70.0" stroke="#e2e8f0"/><text x="54" y="74.0" font-size="10" text-anchor="end" fill="#64748b">750</text><line x1="60" y1="20.0" x2="360" y2="20.0" stroke="#e2e8f0"/><text x="54" y="24.0" font-size="10" text-anchor="end" fill="#64748b">1000</text><circle cx="259.0" cy="212.4" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="275.8" cy="200.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="292.6" cy="210.2" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="119.0" cy="201.4" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="263.2" cy="35.8" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="135.8" cy="200.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="152.6" cy="199.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="123.2" cy="205.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="140.0" cy="166.1" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="156.8" cy="187.4" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="127.4" cy="206.8" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="144.2" cy="201.4" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="280.0" cy="217.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="161.0" cy="187.4" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="296.8" cy="194.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="131.6" cy="215.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="267.4" cy="214.8" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="284.2" cy="203.8" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="301.0" cy="210.6" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="148.4" cy="207.6" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="119.0" cy="196.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="135.8" cy="201.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="271.6" cy="205.8" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="152.6" cy="213.6" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="288.4" cy="167.4" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="259.0" cy="164.9" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="123.2" cy="203.4" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="140.0" cy="177.8" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="156.8" cy="162.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="127.4" cy="176.8" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="275.8" cy="119.2" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="144.2" cy="191.2" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="161.0" cy="87.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="292.6" cy="209.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="263.2" cy="208.8" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="131.6" cy="208.8" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="148.4" cy="190.8" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="280.0" cy="147.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="296.8" cy="212.6" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="267.4" cy="205.2" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="119.0" cy="157.4" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="284.2" cy="215.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="135.8" cy="213.6" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="301.0" cy="195.4" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="271.6" cy="182.0" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="152.6" cy="204.0" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="288.4" cy="199.6" r="3.6" fill="#2563eb" fill-opacity=".55"/><circle cx="123.2" cy="213.8" r="3.6" fill="#7c3aed" fill-opacity=".55"/><circle cx="140.0" cy="214.2" r="3.6" fill="#7c3aed" fill-opacity=".55"/><line x1="95" y1="192.2" x2="185" y2="192.2" stroke="#dc2626" stroke-width="3"/><line x1="235" y1="187.8" x2="325" y2="187.8" stroke="#dc2626" stroke-width="3"/><line x1="140" y1="192.2" x2="280" y2="187.8" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4"/><text x="140" y="238" font-size="11" text-anchor="middle" fill="#1e293b">female（male = 0）</text><text x="280" y="238" font-size="11" text-anchor="middle" fill="#1e293b">male（male = 1）</text><text x="92" y="208.2" font-size="10" text-anchor="end" fill="#dc2626">平均 139.17</text><text x="232" y="181.8" font-size="10" text-anchor="end" fill="#dc2626">平均 161.25</text><text x="210.0" y="154.0" font-size="11" text-anchor="middle" fill="#dc2626">差 = 傾き 22.08</text><text x="12" y="120.0" font-size="10" fill="#64748b" transform="rotate(-90 12 120.0)" text-anchor="middle">totalGivingAmount ($)</text></svg></div>
+    <div class="viz-cap">横軸は 0/1 のダミー変数。2 つの平均を結んだ直線の傾きが、そのまま 22.08 です（<code>sampleDonors</code> の 49 人、性別が欠損の 1 人は除く）。</div>
+  </div>
+  <p>講義が示した<strong>押さえるべき 3 点</strong>は次のとおりです。</p>
+  <ol>
+    <li>カテゴリ変数も予測変数（predictor）として使える（実際にとても一般的）。</li>
+    <li>予測値の出し方：<code>predict()</code> に <code>gender = "male"</code> のように水準を渡す。</li>
+    <li>22.08 の解釈。</li>
+  </ol>
+<pre class="code-block">
+<span class="cl"><span class="kw">predict</span>(model_gender, <span class="kw">data.frame</span>(gender = <span class="st">"male"</span>))</span>
+<span class="cl"><span class="kw">predict</span>(model_gender, <span class="kw">data.frame</span>(gender = <span class="kw">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)))</span>
+</pre><div class="output-reveal">       1 
+161.2455 
+
+       1        2 
+161.2455 139.1667 </div>
+  <p><strong>男性：</strong> 139.17 + 22.08 × 1 = 161.25 → 約 $161。<strong>女性：</strong> 139.17 + 22.08 × 0 = 139.17 → 約 $139。つまり<strong>切片 139.17 は基準カテゴリ（女性）の予測値</strong>です。</p>
+  <div class="note-box">🔑 <strong>係数の意味（解釈）：</strong>「寄付者が男性なら、女性より総寄付額が <strong>22.08 多い</strong>と予測される」。<strong>ダミー変数の係数は、そのカテゴリと基準カテゴリの「差」</strong>です（男 161.25 − 女 139.17 = 22.08）。</div>
+  <div class="warn-box">⚠️ <strong>講師の注意：</strong>この性別の係数は<strong>統計的に有意ではありません</strong>（p = 0.656、とても高い）。観察された男女差は<strong>偶然（random sampling）かもしれず</strong>、「一般に男性のほうが多く寄付する」と受け取ってはいけません。理由は 2 つ。①これは特定の団体の<strong>限られた標本</strong>であること、②<strong>p 値がとても高い</strong>こと。R² も 0.004（0.4%）しかありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>カテゴリは「0 か 1 のスイッチ」に直して使います。スイッチが 0 の人（基準）が切片、1 の人は「切片 ＋ 係数」。係数は<strong>基準とのちがい</strong>です。ただし p 値が高いときは、そのちがいを信用しすぎないこと。</p></div>
+  <div class="practice-card" id="p-m6e-u1">
+    <div class="ptitle">💻 ミニ練習：男性の予測値を出す</div>
+    <p class="ptask"><code>model_gender</code> を使って、男性の寄付者の総寄付額の予測値を求める R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6e-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6e-u1', ['predict', 'model_gender', 'data.frame', 'gender', 'male'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6e-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6e-u1-result"></div>
+    <div class="answer-reveal" id="p-m6e-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">predict</span>(model_gender, <span class="kw">data.frame</span>(gender = <span class="st">"male"</span>))</span>
+</pre>
+      <p class="answer-note">結果は 161.2455（約 $161）。139.17 + 22.08 × 1 の計算を R が代わりにやってくれます。列名 <code>gender</code> と水準 <code>"male"</code> は、データに入っている綴りどおりに書きます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>多カテゴリの場合：水準が増えると 0/1 の項が増える</h2><div class="unit-sub">urbanicity の 5 水準</div></div>
+  </div>
+  <p>カテゴリが 3 つ以上でも考え方は同じです。<code>urbanicity</code>（居住地域）の水準は <strong>city・rural・suburb・town・urban の 5 つ</strong>。標本での人数は次のとおりです。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">table</span>(sampleDonors$urbanicity)</span>
+<span class="cl">model_urbanicity &lt;- <span class="kw">lm</span>(totalGivingAmount ~ urbanicity, data = sampleDonors)</span>
+<span class="cl">model_urbanicity</span>
+</pre><div class="output-reveal">  city  rural suburb   town  urban 
+     9     14      7      8     11 
+
+Coefficients:
+     (Intercept)   urbanicityrural  urbanicitysuburb    urbanicitytown  
+          199.28           -113.63             18.72            -84.47  
+ urbanicityurban  
+          -60.47  </div>
+  <p>係数がたくさん出ました。回帰式は次のとおりです。</p>
+  <p style="text-align:center;font-size:1.05rem"><strong>ŷ = 199.28 − 113.63 (rural) + 18.72 (suburb) − 84.47 (town) − 60.47 (urban)</strong></p>
+  <p>各カッコは 0/1 のダミー変数です。<strong>5 水準なら基準を除いた 4 個のダミー変数</strong>（水準の数 − 1）が入り、基準は <code>city</code> です。</p>
+  <ul>
+    <li><strong>rural</strong>（rural = 1、他は 0）：199.28 − 113.63 × 1 = 85.65 → <strong>約 $85</strong></li>
+    <li><strong>suburb</strong>：199.28 + 18.72 × 1 = 218.00 → <strong>$218</strong></li>
+    <li><strong>city</strong>：式に city が見当たらず戸惑いますが、基準カテゴリなので<strong>切片そのもの</strong>です（他の項はすべて 0 を掛けるだけ）。→ <strong>$199.28</strong></li>
+  </ul>
+  <div class="viz">
+    <div class="viz-title">居住地域ごとの総寄付額の平均 ＝ 各水準の予測値</div>
+    <div style="text-align:center"><svg viewBox="0 0 380 200" width="380" height="200" role="img" aria-label="居住地域ごとの総寄付額の平均" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="379" height="199" fill="#fff" stroke="#cbd5e1"/><text x="92" y="33" font-size="11" text-anchor="end" fill="#1e293b">city（基準）</text><rect x="100" y="18" width="199.3" height="22" fill="#059669" fill-opacity=".8"/><text x="304.3" y="33" font-size="11" fill="#1e293b">199.28</text><text x="92" y="63" font-size="11" text-anchor="end" fill="#1e293b">rural</text><rect x="100" y="48" width="85.6" height="22" fill="#2563eb" fill-opacity=".8"/><text x="190.6" y="63" font-size="11" fill="#1e293b">85.64</text><text x="92" y="93" font-size="11" text-anchor="end" fill="#1e293b">suburb</text><rect x="100" y="78" width="218.0" height="22" fill="#2563eb" fill-opacity=".8"/><text x="323.0" y="93" font-size="11" fill="#1e293b">218.00</text><text x="92" y="123" font-size="11" text-anchor="end" fill="#1e293b">town</text><rect x="100" y="108" width="114.8" height="22" fill="#2563eb" fill-opacity=".8"/><text x="219.8" y="123" font-size="11" fill="#1e293b">114.81</text><text x="92" y="153" font-size="11" text-anchor="end" fill="#1e293b">urban</text><rect x="100" y="138" width="138.8" height="22" fill="#2563eb" fill-opacity=".8"/><text x="243.8" y="153" font-size="11" fill="#1e293b">138.81</text><line x1="299.3" y1="10" x2="299.3" y2="170" stroke="#059669" stroke-dasharray="4 3"/><text x="240.0" y="190" font-size="10" text-anchor="middle" fill="#64748b">平均 totalGivingAmount ($)　緑の点線 = 切片 199.28</text></svg></div>
+    <div class="viz-cap">カテゴリだけの回帰の予測値は、その水準の標本平均に一致します。基準 city の高さが切片、他の棒は「切片 ＋ 係数」です。</div>
+  </div>
+<pre class="code-block">
+<span class="cl"><span class="kw">predict</span>(model_urbanicity, <span class="kw">data.frame</span>(urbanicity = <span class="kw">c</span>(<span class="st">"city"</span>, <span class="st">"rural"</span>, <span class="st">"suburb"</span>, <span class="st">"town"</span>, <span class="st">"urban"</span>)))</span>
+</pre><div class="output-reveal">        1         2         3         4         5 
+199.27778  85.64286 218.00000 114.81250 138.80909 </div>
+  <p>2 水準との違いは、<strong>0 と 1 を入れる項が増えるだけ</strong>という点です。ただし、この回帰でも係数の p 値は大きく（最小でも rural の 0.12）、R² も約 0.09 と小さいので、性別のときと同じく「地域でこれだけ寄付が違う」と言い切ることはできません。</p>
+  <div class="note-box">💡 <strong>覚え方：</strong>k 個の水準のカテゴリ変数 → ダミー変数 k − 1 個 ＋ 切片（＝基準カテゴリ）。予測したい水準の項に 1、残りに 0 を入れて足し算します。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>5 つの地域のうち 1 つ（city）を「ものさしの 0 地点」にして、残りの 4 つは「city よりいくら多い／少ない」で表します。city の予測値は切片そのままです。</p></div>
+  <div class="practice-card" id="p-m6e-u2">
+    <div class="ptitle">💻 ミニ練習：rural の予測値</div>
+    <p class="ptask"><code>model_urbanicity</code> で、rural に住む寄付者の総寄付額の予測値を求める R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6e-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6e-u2', ['predict', 'model_urbanicity', 'data.frame', 'urbanicity', 'rural'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6e-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6e-u2-result"></div>
+    <div class="answer-reveal" id="p-m6e-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">predict</span>(model_urbanicity, <span class="kw">data.frame</span>(urbanicity = <span class="st">"rural"</span>))</span>
+</pre>
+      <p class="answer-note">結果は 85.64286（約 $85）。199.28 − 113.63 に相当します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>重回帰：複数の説明変数と調整済み R²</h2><div class="unit-sub">「他を一定にしたとき」の読み方</div></div>
+  </div>
+  <p>データは<strong>米国西部の公立大学 9 校</strong>。1 行が 1 つの大学で、<strong>卒業率 <code>rate</code>（%）、学生 1 人あたり支出 <code>expend</code>（ドル）、SAT の中央値 <code>SAT</code></strong> が入っています（例：卒業率 75%、支出 6960 ドル、SAT 1242）。</p>
+  <table class="compare-table">
+    <tr><th>大学</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+    <tr><td>rate (%)</td><td>75</td><td>71.5</td><td>59.3</td><td>56.4</td><td>52.4</td><td>48</td><td>45.8</td><td>42.7</td><td>41.1</td></tr>
+    <tr><td>expend ($)</td><td>6960</td><td>7274</td><td>5361</td><td>5374</td><td>5070</td><td>5226</td><td>5927</td><td>5600</td><td>5073</td></tr>
+    <tr><td>SAT</td><td>1242</td><td>1114</td><td>1014</td><td>1070</td><td>920</td><td>888</td><td>970</td><td>937</td><td>871</td></tr>
+  </table>
+  <p>問いは「卒業率を何で予測するのがよいか」。1 つ目は「1 人あたりの支出を増やせば卒業率は上がるか」（大学にとって切実な問い）、2 つ目は「SAT の中央値が高ければ卒業率は上がるか」。まず<strong>単回帰を 2 本</strong>作って比べます。</p>
+<pre class="code-block">
+<span class="cl">model_expend &lt;- <span class="kw">lm</span>(rate ~ expend)</span>
+<span class="cl">model_SAT &lt;- <span class="kw">lm</span>(rate ~ SAT)</span>
+<span class="cl"><span class="kw">summary</span>(model_expend)</span>
+<span class="cl"><span class="kw">summary</span>(model_SAT)</span>
+</pre><div class="output-reveal"># model_expend
+              Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept) -12.648243  20.183306  -0.627    0.551  
+expend        0.011685   0.003472   3.366    0.012 *
+Multiple R-squared:  0.6181,	Adjusted R-squared:  0.5635 
+
+# model_SAT
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -37.20052   15.54075  -2.394  0.04790 *  
+SAT           0.09162    0.01540   5.951  0.00057 ***
+Multiple R-squared:  0.835,	Adjusted R-squared:  0.8114 </div>
+  <p>どちらも p 値は有意ですが、<strong>R² は支出が約 62%、SAT が約 84%</strong>（0.618 と 0.835）です。出力から必要な値だけ取り出すには <code>$</code> を使います。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model_expend)$r.squared</span>
+<span class="cl"><span class="kw">summary</span>(model_SAT)$r.squared</span>
+<span class="cl"><span class="kw">summary</span>(model_SAT)$coefficients</span>
+</pre><div class="output-reveal">[1] 0.6180944
+[1] 0.8349573
+                Estimate  Std. Error   t value     Pr(&gt;|t|)
+(Intercept) -37.20052444 15.54075280  -2.393740 0.0479047636
+SAT           0.09162472  0.01539677   5.950904 0.0005695496</div>
+  <div class="warn-box">⚠️ 2 つのモデルの<strong>傾きどうしは直接比べられません</strong>。支出の傾きは「1 ドルあたり」(0.0117)、SAT の傾きは「1 点あたり」(0.0916) と単位が違うからです。選ぶ基準は<strong>低い p 値と高い R²</strong> です。</div>
+  <div class="viz">
+    <div class="viz-title">SAT の中央値と卒業率（9 校）と回帰直線</div>
+    <div style="text-align:center"><svg viewBox="0 0 380 270" width="380" height="270" role="img" aria-label="SATの中央値と卒業率の散布図と回帰直線" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="379" height="269" fill="#fff" stroke="#cbd5e1"/><line x1="55" y1="220.0" x2="360" y2="220.0" stroke="#e2e8f0"/><text x="49" y="224.0" font-size="10" text-anchor="end" fill="#64748b">30</text><line x1="55" y1="180.0" x2="360" y2="180.0" stroke="#e2e8f0"/><text x="49" y="184.0" font-size="10" text-anchor="end" fill="#64748b">40</text><line x1="55" y1="140.0" x2="360" y2="140.0" stroke="#e2e8f0"/><text x="49" y="144.0" font-size="10" text-anchor="end" fill="#64748b">50</text><line x1="55" y1="100.0" x2="360" y2="100.0" stroke="#e2e8f0"/><text x="49" y="104.0" font-size="10" text-anchor="end" fill="#64748b">60</text><line x1="55" y1="60.0" x2="360" y2="60.0" stroke="#e2e8f0"/><text x="49" y="64.0" font-size="10" text-anchor="end" fill="#64748b">70</text><line x1="55" y1="20.0" x2="360" y2="20.0" stroke="#e2e8f0"/><text x="49" y="24.0" font-size="10" text-anchor="end" fill="#64748b">80</text><text x="88.9" y="234" font-size="10" text-anchor="middle" fill="#64748b">900</text><text x="156.7" y="234" font-size="10" text-anchor="middle" fill="#64748b">1000</text><text x="224.4" y="234" font-size="10" text-anchor="middle" fill="#64748b">1100</text><text x="292.2" y="234" font-size="10" text-anchor="middle" fill="#64748b">1200</text><text x="360.0" y="234" font-size="10" text-anchor="middle" fill="#64748b">1300</text><line x1="55.0" y1="177.3" x2="346.4" y2="19.7" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4"/><circle cx="320.7" cy="40.0" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="233.9" cy="54.0" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="166.2" cy="102.8" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="204.1" cy="114.4" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="102.4" cy="130.4" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="80.8" cy="148.0" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="136.3" cy="156.8" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="114.0" cy="169.2" r="4.5" fill="#2563eb" fill-opacity=".8"/><circle cx="69.2" cy="175.6" r="4.5" fill="#2563eb" fill-opacity=".8"/><text x="207.5" y="254" font-size="11" text-anchor="middle" fill="#1e293b">SAT（median SAT score）</text><text x="12" y="120.0" font-size="11" fill="#1e293b" transform="rotate(-90 12 120.0)" text-anchor="middle">rate（graduation rate, %）</text></svg></div>
+    <div class="viz-cap">ŷ = −37.20 + 0.0916 × SAT。点が直線の近くに並び、R² = 0.835 です。</div>
+  </div>
+  <p>結論は、<strong>SAT のほうがよい予測変数</strong>。大学へのメッセージは「<strong>ただお金を投入すればよいわけではない。SAT の高い学生を引きつけることが大切</strong>（そうした学生ほど卒業しやすい）」です。</p>
+  <h3 style="margin:1.5rem 0 .5rem">重回帰（multiple regression）</h3>
+  <p>2 つの変数を別々のモデルに入れず、<strong>1 つのモデルに両方入れる</strong>のが重回帰です。一般形は単回帰と似ていますが、変数の数だけ係数が増えます。</p>
+  <p style="text-align:center;font-size:1.05rem"><strong>ŷ = b₀ + b₁x₁ + b₂x₂ + … + bₖxₖ</strong>　（例：x₁ = SAT、x₂ = expenditure）</p>
+  <p>R では <code>lm(y ~ x1 + x2)</code> のように、説明変数を <strong>+ でつなぐ</strong>だけです。</p>
+<pre class="code-block">
+<span class="cl">model_mult &lt;- <span class="kw">lm</span>(rate ~ expend + SAT)</span>
+<span class="cl"><span class="kw">summary</span>(model_mult)</span>
+</pre><div class="output-reveal">Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept) -37.777476  16.503961  -2.289   0.0620 .
+expend        0.002011   0.004115   0.489   0.6425  
+SAT           0.080646   0.027766   2.905   0.0272 *
+
+Residual standard error: 5.579 on 6 degrees of freedom
+Multiple R-squared:  0.8413,	Adjusted R-squared:  0.7884 
+F-statistic:  15.9 on 2 and 6 DF,  p-value: 0.003999</div>
+  <p>切片のほかに、<code>expend</code> と <code>SAT</code> それぞれの傾きが 1 つのモデルに入りました。<strong>SAT は有意（p = 0.027）、expenditure は有意ではありません</strong>（p = 0.64）。</p>
+  <h3 style="margin:1.5rem 0 .5rem">調整済み R²（adjusted R²）</h3>
+  <p>重回帰では普通の R² ではなく<strong>調整済み R²</strong> でモデルを評価します。変数を足せば（役に立たなくても）R² は下がりません。そこで<strong>無駄な説明変数が多いモデルにペナルティを課す</strong>のが調整済み R² です。<strong>新しい変数が「偶然で期待される以上」にモデルを改善したときだけ上がります</strong>（計算式もありますが、講義では省略されました）。R² を人工的に大きく見せるために手当たりしだいに変数を入れてはいけません。</p>
+  <table class="compare-table">
+    <tr><th>モデル</th><th>R²</th><th>調整済み R²</th></tr>
+    <tr><td>支出のみ <code>rate ~ expend</code></td><td>0.618</td><td>0.564</td></tr>
+    <tr><td>SAT のみ <code>rate ~ SAT</code></td><td>0.835</td><td>0.811</td></tr>
+    <tr><td>重回帰 <code>rate ~ expend + SAT</code></td><td>0.841</td><td>0.788</td></tr>
+  </table>
+  <p>SAT のみの R² は 0.835 で、重回帰の R² 0.841 は<strong>わずかに高い</strong>だけです。しかし<strong>調整済み R² は 0.788 に下がります</strong>。役に立たない expenditure を入れたぶん、罰を受けたのです。つまり<strong>変数を増やして複雑にするより、SAT だけのほうがよい</strong>モデルです（SAT 単独の調整済み R² は 0.811 で、重回帰の 0.788 より高い）。</p>
+  <h3 style="margin:1.5rem 0 .5rem">重回帰の係数の解釈：「他を一定にしたとき」</h3>
+  <p>解釈の言い方は単回帰の傾きとほぼ同じですが、<strong>重要な一言</strong>が加わります。重回帰の SAT の係数は 0.0806（≈ 0.081）なので、次のように言います。</p>
+  <div class="note-box">🔑 「median SAT が <strong>1 点</strong>増えるごとに、卒業率は <strong>0.081%</strong> 増えると予測される。<strong>ただし expenditure は一定（holding expenditure constant）としたとき</strong>。」<br>支出が同じ（またはとても近い）2 つの大学なら、SAT が 1 点高いと卒業率が 0.081% 高い、という意味です。</div>
+  <p>1 点の増加は実務ではあまりにも小さいので、<strong>意味のある単位に直して</strong>述べます。0.081 に 100 を掛けると小数点が動いて、「median SAT が <strong>100 点</strong>増えるごとに、卒業率は <strong>8.1%</strong> 増えると予測される（expenditure を一定にしたとき）」。SAT が 1 点上がることは実質的に意味がない一方、100 点の差は十分に大きく、卒業率の 8.1% という数字も読みやすくなります。</p>
+  <div class="warn-box">⚠️ SAT の傾きは、単回帰では 0.0916、重回帰では 0.0806 と<strong>値が変わります</strong>。重回帰の係数は「他の変数の影響を差し引いたあとの効果」だからです。係数を読むときは必ず「他を一定にしたとき」を付けましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>重回帰は「いくつもの理由を 1 つのモデルに入れる」こと。調整済み R² は「入れすぎたら減点」の採点で、係数は「ほかの条件をそろえたとき、この変数だけ 1 つ増えたら予測がいくつ変わるか」を表します。</p></div>
+  <div class="practice-card" id="p-m6e-u3a">
+    <div class="ptitle">💻 ミニ練習：重回帰モデルを作る</div>
+    <p class="ptask">卒業率 <code>rate</code> を <code>expend</code> と <code>SAT</code> の両方で予測するモデルを <code>model_mult</code> に保存し、その要約を表示する R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6e-u3a-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6e-u3a', ['lm', 'rate', 'expend', 'SAT', '+', 'summary'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6e-u3a', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6e-u3a-result"></div>
+    <div class="answer-reveal" id="p-m6e-u3a-answer" hidden>
+      <pre class="code-block">
+<span class="cl">model_mult &lt;- <span class="kw">lm</span>(rate ~ expend + SAT)</span>
+<span class="cl"><span class="kw">summary</span>(model_mult)</span>
+</pre>
+      <p class="answer-note">説明変数は <code>+</code> でつなぎます。<code>summary()</code> の出力で、SAT は有意、expenditure は有意でないことが確認できます。</p>
+    </div>
+  </div>
+  <div class="practice-card" id="p-m6e-u3b">
+    <div class="ptitle">💻 ミニ練習：調整済み R² を取り出す</div>
+    <p class="ptask"><code>model_mult</code> の調整済み R² の値（0.788）だけを取り出す R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6e-u3b-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6e-u3b', ['summary', 'model_mult', 'adj.r.squared'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6e-u3b', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6e-u3b-result"></div>
+    <div class="answer-reveal" id="p-m6e-u3b-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model_mult)$adj.r.squared</span>
+</pre>
+      <p class="answer-note">結果は 0.788363。普通の R² は <code>summary(model_mult)$r.squared</code>（0.8412723）で、取り出し方は同じです。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>まとめ：M6 の全体像</h2><div class="unit-sub">相関 → 回帰 → 推測 → 拡張</div></div>
+  </div>
+  <p>M6 は「2 つの変数の関係を、まず見て、次に式にして、最後に偶然かどうかを確かめる」流れでした。最後の拡張の回で、その道具を<strong>カテゴリ変数</strong>と<strong>複数の説明変数</strong>に広げました。</p>
+<div style="display:flex;flex-wrap:wrap;gap:.6rem;align-items:stretch;margin:1rem 0">
+  <div style="flex:1 1 150px;background:var(--primary-light);border-radius:10px;padding:.8rem"><strong>1. 相関</strong><br><span style="font-size:.85rem">散布図と相関係数 r で「関係の強さと向き」を見る。r は −1〜+1。相関 ≠ 因果。</span></div>
+  <div style="align-self:center;font-size:1.4rem">→</div>
+  <div style="flex:1 1 150px;background:var(--green-light);border-radius:10px;padding:.8rem"><strong>2. 回帰</strong><br><span style="font-size:.85rem">最小二乗法の直線 ŷ = b₀ + b₁x、残差、係数の解釈、残差プロット、R²。</span></div>
+  <div style="align-self:center;font-size:1.4rem">→</div>
+  <div style="flex:1 1 150px;background:var(--yellow-light);border-radius:10px;padding:.8rem"><strong>3. 推測</strong><br><span style="font-size:.85rem">傾きの信頼区間と有意性検定（t 検定、p 値）で、標本から母集団を語る。</span></div>
+  <div style="align-self:center;font-size:1.4rem">→</div>
+  <div style="flex:1 1 150px;background:var(--secondary-light);border-radius:10px;padding:.8rem"><strong>4. 拡張</strong><br><span style="font-size:.85rem">カテゴリ変数（ダミー）と重回帰（調整済み R²、他を一定に）。</span></div>
+</div>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>R のコード</th><th>この M6 で見た数字の例（donors, n = 50）</th></tr>
+    <tr><td>見る・相関</td><td><code>plot()</code>、<code>cor()</code></td><td>散布図を描いてから r を計算する</td></tr>
+    <tr><td>回帰</td><td><code>lm(y ~ x)</code></td><td>ŷ = 51.817 + 3.910 × largestGiftAmount、R² = 0.3424</td></tr>
+    <tr><td>推測</td><td><code>summary()</code>、<code>confint()</code></td><td>傾き 3.910、SE 0.782、t = 5.000、p = 8.07e-06</td></tr>
+    <tr><td>予測</td><td><code>predict()</code></td><td>最大寄付 $50 → 約 $247</td></tr>
+    <tr><td>カテゴリ</td><td><code>lm(y ~ gender)</code></td><td>切片 139.17（女性）、gendermale 22.08、p = 0.656</td></tr>
+    <tr><td>重回帰</td><td><code>lm(y ~ x1 + x2)</code></td><td>rate ~ expend + SAT：R² 0.841、調整済み R² 0.788</td></tr>
+  </table>
+  <div class="note-box">✅ <strong>回帰結果を読むときのチェックリスト</strong>
+    <ol style="margin:.4rem 0 0 1.2rem">
+      <li>p 値は低いか（係数は偶然ではなさそうか）。標本が限られ p が高ければ、一般化しない。</li>
+      <li>R²（重回帰では<strong>調整済み R²</strong>）は高いか。</li>
+      <li>係数を、意味のある単位で、変数の単位つきで言えるか（重回帰なら「他を一定にしたとき」）。</li>
+      <li>カテゴリ変数なら、基準カテゴリはどれか。係数は基準との「差」。</li>
+      <li>相関・回帰は関連を示すだけで、原因を証明しない。</li>
+    </ol></div>
+  <div class="note-box">📝 <strong>課題（portfolio）：</strong>自分の興味のあるデータを見つけ、自分で重回帰モデルを（1 つでも複数でも）作りましょう。R² と調整済み R² を比べ、各説明変数が有意かどうかを確認し、そのデータとプロジェクトを portfolio に入れます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>M6 は「関係を見る（相関）→ 式にする（回帰）→ 偶然かどうか確かめる（推測）→ 使える範囲を広げる（カテゴリ・重回帰）」の 4 ステップ。最後は、p 値・R²・単位つきの言い方をセットで確認する習慣が大切です。</p></div>
+  <div class="practice-card" id="p-m6e-u4">
+    <div class="ptitle">💻 ミニ練習：まとめの練習：寄付データで重回帰</div>
+    <p class="ptask"><code>sampleDonors</code> で、<code>totalGivingAmount</code> を <code>largestGiftAmount</code> と <code>gender</code> の 2 つで予測するモデルを <code>model_two</code> に保存し、調整済み R² を取り出す R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6e-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6e-u4', ['lm', 'totalGivingAmount', 'largestGiftAmount', 'gender', 'summary', 'adj.r.squared'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6e-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6e-u4-result"></div>
+    <div class="answer-reveal" id="p-m6e-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">model_two &lt;- <span class="kw">lm</span>(totalGivingAmount ~ largestGiftAmount + gender, data = sampleDonors)</span>
+<span class="cl"><span class="kw">summary</span>(model_two)$adj.r.squared</span>
+</pre>
+      <p class="answer-note">数値の説明変数とカテゴリ変数も <code>+</code> でつなげて同じモデルに入れられます。実際に走らせて、gendermale の係数の p 値が有意かどうかも確認しましょう（課題の練習です）。</p>
+    </div>
+  </div>
+</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In model_gender, the coefficient for gendermale is 22.08. What does it mean?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The average total giving of male donors in the sample is exactly 22.08 dollars</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Males are predicted to give 22.08 more than females</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The correlation between gender and total giving, which equals 22.08</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>22.08 percent of the donors in the sample are male</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">For a female donor, what total giving does model_gender predict (ŷ = 139.17 + 22.08 × male)?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>22.08</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>161.25</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>117.09</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>139.17</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">The gender coefficient has p = 0.656. Which conclusion is most appropriate?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It may be chance, so do not generalize</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Men give $22.08 more than women in the whole population of donors</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Gender is the cause of the difference in total giving</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The model fits perfectly because the coefficient is positive</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">urbanicity has 5 levels (city, rural, suburb, town, urban). How many dummy variables appear in lm(totalGivingAmount ~ urbanicity)?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>5</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>3</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>4</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>1</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In the urbanicity model the intercept is 199.28. What does it represent?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The average total giving of the rural donors in the sample</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The predicted giving of a city donor (reference group)</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The overall average of all donors in the sample</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The extra giving of a suburb donor compared with city</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why do we use adjusted R² rather than plain R² to assess a multiple regression model?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It penalizes predictors that add nothing</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is always larger than plain R² for any model</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes the need to check p-values entirely</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It only works when the model has a single predictor</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which R command fits a multiple regression predicting rate from both expend and SAT?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>lm(rate, expend, SAT)</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>lm(rate ~ expend ~ SAT)</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>lm(rate | expend + SAT)</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>lm(rate ~ expend + SAT)</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In the multiple model, the SAT coefficient is 0.081 (rate in %). Which statement is correct?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Each extra dollar of expenditure raises the graduation rate by 0.081% at every school</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SAT explains 8.1% of the variation in graduation rate across schools</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Per 100 SAT points, rate rises 8.1%, holding expenditure constant</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A 100-point rise in median SAT lowers the rate by 8.1% for every school</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 0, 3, 2];
+var FEEDBACKS=["A dummy-variable coefficient is the difference between that category and the reference category: 161.25 − 139.17 = 22.08. The intercept (139.17) is the prediction for the reference group, females.", "For a female, male = 0, so ŷ = 139.17 + 22.08 × 0 = 139.17. The intercept is the prediction for the reference group.", "The p-value is very high and the sample is small and from one organization, so the observed difference may be just random sampling. We should not generalize it.", "A categorical variable with k levels gives k − 1 dummy variables; the remaining level (city) is the reference group and is absorbed in the intercept.", "City is the reference group, so every dummy variable is 0 for a city donor and the prediction is just the intercept, 199.28. Rural is 199.28 − 113.63 ≈ 85.65 and suburb is 199.28 + 18.72 = 218.00.", "Plain R² never decreases when a variable is added. Adjusted R² penalizes useless predictors and rises only if a new variable improves the model more than chance would.", "Put the response on the left of ~ and join the explanatory variables with +: lm(rate ~ expend + SAT).", "The coefficient is per 1 SAT point; multiplying by 100 gives 8.1 percentage points per 100 SAT points, and the interpretation must say that the other variable (expenditure) is held constant."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">categorical variable</div><div class="term-en">カテゴリ変数</div><div class="term-def">性別・居住地のように、いくつかの水準を持つ質的な変数。</div></div>
+    <div class="term-item"><div class="term-name">dummy variable</div><div class="term-en">ダミー変数</div><div class="term-def">0 と 1 だけを取る変数。1 つの水準に 1 つ対応する。</div></div>
+    <div class="term-item"><div class="term-name">reference group</div><div class="term-en">基準カテゴリ</div><div class="term-def">ダミー変数がすべて 0 のグループ。その予測値が切片。</div></div>
+    <div class="term-item"><div class="term-name">level</div><div class="term-en">水準</div><div class="term-def">カテゴリ変数が取る値（city, rural など）。</div></div>
+    <div class="term-item"><div class="term-name">predict()</div><div class="term-en">予測</div><div class="term-def">モデルと新しいデータから予測値を出す関数。列名は完全一致。</div></div>
+    <div class="term-item"><div class="term-name">multiple regression</div><div class="term-en">重回帰</div><div class="term-def">説明変数を複数入れた回帰。<code>lm(y ~ x1 + x2)</code>。</div></div>
+    <div class="term-item"><div class="term-name">adjusted R²</div><div class="term-en">調整済み R²</div><div class="term-def">無駄な説明変数にペナルティを課した R²。</div></div>
+    <div class="term-item"><div class="term-name">holding constant</div><div class="term-en">他を一定にして</div><div class="term-def">他の説明変数の値を固定したときの効果、という重回帰の係数の読み方。</div></div>
+    <div class="term-item"><div class="term-name">predictor</div><div class="term-en">予測変数</div><div class="term-def">応答を予測するために使う説明変数。</div></div>
+    <div class="term-item"><div class="term-name">response variable</div><div class="term-en">応答変数</div><div class="term-def">予測したい連続値の変数（totalGivingAmount, rate）。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>カテゴリの係数は「基準との差」、重回帰の係数は「他を一定にしたときの 1 単位あたりの効果」。p 値が高いときは一般化しない、調整済み R² で変数の入れすぎをチェック。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：M6 回帰④ カテゴリ変数と重回帰</p>
+  <p style="margin-top:.5rem;"><a href="m6_reg_inference.html">← 回帰③ 推測</a> · <a href="index.html">🏠 概要</a> · <a href="r4_assumptions.html">650 M4 仮定の検定 →</a> · <a href="m6_reg_more_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

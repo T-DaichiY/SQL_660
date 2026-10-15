@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 t手順②　2標本と対応あり</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 👥 t② 2標本・対応 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · t Procedures ② — Two Samples &amp; Paired Data</div>
+  <h1>⚖️ t手順②：2標本の区間・検定と対応ありデータ</h1>
+  <p>2つのグループの<strong>平均の差</strong>を、信頼区間（Welch の自由度）と有意性検定で調べます。最後に、同じ個体を2回測る<strong>対応あり（paired）</strong>データでは、差を作って1標本 t にする、という考え方を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: T procedure 6 (Two-sample T interval for the difference in means) ／ T procedure 7 (Two-sample T interval example) ／ T procedure 8 (Significance test for difference in means) ／ T procedure 9 (Two-sample T test manual calculation) ／ T procedure 10 (Paired T interval and Test for a Mean difference)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 2標本 t 区間と df</a><a href="#unit2">② 小麦価格の例</a><a href="#unit3">③ 2標本 t 検定</a><a href="#unit4">④ 対応あり</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 2標本 t 区間・自由度（Welch）・自作関数：T procedure 6</li><li>② 99% 信頼区間の例（小麦価格）：T procedure 7</li><li>③ 2標本 t 検定（R のショートカットと手計算）：T procedure 8, 9</li><li>④ 対応あり t 区間・検定：T procedure 10</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>2標本 t 区間と自由度</h2><div class="unit-sub">差 ± t*×SE、そして Welch の df</div></div>
+  </div>
+  <p>これまでは「1つの母集団の平均 μ」を推定していました。ここからは<strong>2つの標本</strong>から<strong>母平均の差</strong>を推定します。たとえば「新生児の男の子と女の子で、平均の身長（長さ）に差はあるか」。推定したいパラメータ（<strong>parameter</strong>）は <strong>μ₁ − μ₂</strong>（または μ_boy − μ_girl）です。<strong>引く順番はどちらでもよい</strong>が、式の中では<strong>一貫させる</strong>こと。</p>
+  <p>区間の一般形（<strong>ほぼ暗記</strong>してほしい形）はいつも同じです。</p>
+  <div class="note-box"><p style="margin:0"><strong>estimate ± margin of error</strong> ＝ (x̄₁ − x̄₂) ± t* × SE</p></div>
+  <table class="compare-table">
+    <tr><th>要素</th><th>2標本の場合</th></tr>
+    <tr><td>statistic（推定量）</td><td>x̄₁ − x̄₂（標本平均の差）</td></tr>
+    <tr><td>standard error 標準誤差</td><td>SE = √( s₁²/n₁ + s₂²/n₂ )</td></tr>
+    <tr><td>critical value 臨界値</td><td>t*（1 − α/2 の分位点、自由度 df）</td></tr>
+  </table>
+  <p>今回の主題は<strong>自由度 df の決め方</strong>です。3通りの考え方があります。</p>
+  <table class="compare-table">
+    <tr><th>方法</th><th>df</th><th>特徴</th></tr>
+    <tr><td>lower estimate（下限）</td><td>min(n₁ − 1, n₂ − 1)</td><td>入門書でよく使う。保守的（区間が広め）</td></tr>
+    <tr><td>upper estimate（上限）</td><td>n₁ + n₂ − 2</td><td>大きすぎる見積もり</td></tr>
+    <tr><td>Welch の近似</td><td>下の式</td><td><strong>最も正確</strong>。R の t.test() が使う</td></tr>
+  </table>
+  <p>例：n₁ = 10、n₂ = 20 なら、lower = 9、upper = 28。本当の df はその間のどこかに入ります。</p>
+  <div class="note-box"><p style="margin:0">Welch：<strong>df = (A + B)² ÷ ( A²/(n₁ − 1) + B²/(n₂ − 1) )</strong>　ただし A = s₁²/n₁、B = s₂²/n₂<br><span style="font-size:.9rem">（式の暗記は不要。「R に任せられる」ことが大事です）</span></p></div>
+  <p>この式を R の<strong>自作関数（user-defined function）</strong>にしてみます。A と B を先に定義し、分子（numerator）と分母（denominator）に分けると読みやすくなります。</p>
+<pre class="code-block">
+<span class="cl">welch_df &lt;- <span class="kw">function</span>(n1, n2, sd1, sd2) {</span>
+<span class="cl">  A &lt;- sd1^<span class="nm">2</span> / n1</span>
+<span class="cl">  B &lt;- sd2^<span class="nm">2</span> / n2</span>
+<span class="cl">  numerator   &lt;- (A + B)^<span class="nm">2</span></span>
+<span class="cl">  denominator &lt;- A^<span class="nm">2</span> / (n1 - <span class="nm">1</span>) + B^<span class="nm">2</span> / (n2 - <span class="nm">1</span>)</span>
+<span class="cl">  numerator / denominator</span>
+<span class="cl">}</span>
+<span class="cl"></span>
+<span class="cl">n1 &lt;- <span class="nm">10</span>;  n2 &lt;- <span class="nm">15</span></span>
+<span class="cl">sd1 &lt;- <span class="nm">4.5</span>; sd2 &lt;- <span class="nm">3.2</span></span>
+<span class="cl"></span>
+<span class="cl">lower &lt;- <span class="kw">min</span>(n1 - <span class="nm">1</span>, n2 - <span class="nm">1</span>)</span>
+<span class="cl">upper &lt;- n1 + n2 - <span class="nm">2</span></span>
+<span class="cl">welch &lt;- welch_df(n1, n2, sd1, sd2)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">&quot;lower:&quot;</span>, lower, <span class="st">&quot;\n&quot;</span>)</span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">&quot;upper:&quot;</span>, upper, <span class="st">&quot;\n&quot;</span>)</span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">&quot;Welch:&quot;</span>, welch, <span class="st">&quot;\n&quot;</span>)</span>
+</pre><div class="output-reveal">lower: 9 
+upper: 23 
+Welch: 14.99542 </div>  <p><code>cat()</code> は文字と値をつないで表示する関数で、<code>"\n"</code> は改行です。Welch の df は<strong>lower と upper の間</strong>（9 &lt; 14.995 &lt; 23）に入っています。</p>
+  <h3>df が小さいと t* は大きい（Goldilocks）</h3>
+  <p>df が小さい分布は裾が重いので、同じ 95% をカバーするには t* を大きくする必要があります。lower（9）は t* が大きすぎ、upper（23）は小さすぎ、Welch がちょうどよい値を与えます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">qt</span>(<span class="nm">0.975</span>, df = <span class="kw">c</span>(<span class="nm">9</span>, <span class="nm">14.99542</span>, <span class="nm">23</span>))</span>
+</pre><div class="output-reveal">[1] 2.262157 2.131506 2.068658</div>  <table class="compare-table">
+    <tr><th>df</th><th>t*（95%）</th><th>評価</th></tr>
+    <tr><td>9（lower）</td><td>2.262</td><td>必要以上に広い区間になる</td></tr>
+    <tr><td>14.995（Welch）</td><td>2.132</td><td>ちょうどよい</td></tr>
+    <tr><td>23（upper）</td><td>2.069</td><td>狭すぎる（過信）</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>講師の注意</strong>：データそのものがあるなら <code>t.test(x, y)</code> が Welch の df も区間も自動で出します。手計算・自作関数が必要なのは<strong>要約統計量（n, x̄, s）しかない</strong>ときだけです。</div>
+  <div class="note-box">✍️ チャレンジ課題（講義より）：データから直接 df を返す関数、さらに critical value（<code>qt()</code>）まで返す関数に拡張してみよう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>2標本の区間は「差 ± t* × SE」。SE は2つの標本のばらつきを足して √ を取る。自由度は <strong>Welch</strong> が一番正確で、R が自動でやってくれる。要約値だけのときは自作関数 <code>welch_df()</code> を使う。</p></div>
+  <div class="practice-card" id="p-m5t2-u1">
+    <div class="ptitle">💻 ミニ練習：Welch の自由度</div>
+    <p class="ptask">n₁ = 12、n₂ = 18、sd₁ = 5、sd₂ = 3 のとき、<code>welch_df()</code> を呼び出し（関数は定義済みとします）、lower estimate（<code>min</code> を使う）も計算してください。</p>
+    <textarea class="code-editor" id="p-m5t2-u1-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5t2-u1', ['welch_df', '12', '18', 'min'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5t2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5t2-u1-result"></div>
+    <div class="answer-reveal" id="p-m5t2-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">welch_df(<span class="nm">12</span>, <span class="nm">18</span>, <span class="nm">5</span>, <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">min</span>(<span class="nm">12</span> - <span class="nm">1</span>, <span class="nm">18</span> - <span class="nm">1</span>)</span>
+</pre>
+      <p class="answer-note">引数の順番は (n1, n2, sd1, sd2)。lower は min(n₁−1, n₂−1)。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>例：小麦価格の99%信頼区間</h2><div class="unit-sub">9月 − 7月を手順どおりに</div></div>
+  </div>
+  <p>例題（USDA の調査）：9月と7月の小麦価格（ドル／ブッシェル）を、それぞれ独立なランダム標本で調べました。<strong>99% 信頼区間</strong>で「9月 − 7月」の平均価格差を推定します。</p>
+  <table class="compare-table">
+    <tr><th>月</th><th>n</th><th>x̄</th><th>s</th></tr>
+    <tr><td>September</td><td>45</td><td>3.61</td><td>0.19</td></tr>
+    <tr><td>July</td><td>90</td><td>2.95</td><td>0.22</td></tr>
+  </table>
+  <p><strong>パラメータ</strong>：9月と7月の<strong>母平均価格の真の差</strong>（μ_Sep − μ_Jul）。<strong>統計量</strong>：3.61 − 2.95 = 0.66。差がなければ統計量は 0 に近いはず。0.66 が出た説明は2つ：①本当は差がなく<strong>偶然</strong>（サンプリングのばらつき）／②価格が<strong>本当に上がった</strong>。</p>
+  <div class="note-box">✍️ 順序のコツ：Sep − Jul にすると差は正の数（価格が上がった）で、統計の専門家でない人にも分かりやすい。Jul − Sep だと負の数になり意味が伝わりにくい。どちらでもよいが、<strong>各所で順序を揃える</strong>（sd も n も Sep が先）。</div>
+<pre class="code-block">
+<span class="cl">wheat_stat &lt;- <span class="nm">3.61</span> - <span class="nm">2.95</span></span>
+<span class="cl">wheat_stat</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># degrees of freedom: lower / upper / Welch</span></span>
+<span class="cl"><span class="nm">45</span> - <span class="nm">1</span></span>
+<span class="cl"><span class="nm">90</span> + <span class="nm">45</span> - <span class="nm">2</span></span>
+<span class="cl">wheat_df &lt;- welch_df(<span class="nm">45</span>, <span class="nm">90</span>, <span class="nm">0.19</span>, <span class="nm">0.22</span>)</span>
+<span class="cl">wheat_df</span>
+<span class="cl"></span>
+<span class="cl">wheat_SE &lt;- <span class="kw">sqrt</span>(<span class="nm">0.19</span>^<span class="nm">2</span> / <span class="nm">45</span> + <span class="nm">0.22</span>^<span class="nm">2</span> / <span class="nm">90</span>)</span>
+<span class="cl">wheat_SE</span>
+<span class="cl"></span>
+<span class="cl">t_crit &lt;- <span class="kw">qt</span>(<span class="nm">1</span> - <span class="nm">0.01</span> / <span class="nm">2</span>, df = wheat_df)</span>
+<span class="cl">t_crit</span>
+<span class="cl"></span>
+<span class="cl">wheat_ME &lt;- t_crit * wheat_SE</span>
+<span class="cl">wheat_ME</span>
+<span class="cl"></span>
+<span class="cl">wheat_stat - wheat_ME</span>
+<span class="cl">wheat_stat + wheat_ME</span>
+</pre><div class="output-reveal">[1] 0.66
+[1] 44
+[1] 133
+[1] 100.4483
+[1] 0.03660601
+[1] 2.625663
+[1] 0.09611505
+[1] 0.5638849
+[1] 0.7561151</div>  <p>SE ≈ 0.037 ドル（約3.7セント）：別の標本を取り直すと差の標本平均は<strong>約4セント</strong>ぶれる、という意味です。99% 信頼なので tail は 1% を半分にした 0.005 を足して <code>1 - 0.01/2</code> を <code>qt()</code> に渡します。ME ≈ 0.096 ドル（約10セント）。</p>
+  <div class="note-box"><p style="margin:0">99% CI ＝ 0.66 ± 0.096 ＝ <strong>(0.56, 0.76)</strong> ドル（セントに丸めて 56〜76セント）</p></div>
+  <p><strong>解釈</strong>：「9月と7月の小麦の母平均価格の差（September − July）を、私たちは 99% の確信で 0.56 ドルから 0.76 ドルの区間が捉えていると言える。」区間は<strong>丸括弧 ( , )</strong> で書き、<strong>順序（Sep − Jul）を必ず明記</strong>します。Markdown では $ が崩れるので、バッククォート <code>`$0.56`</code> で囲むとよい。</p>
+  <h3>区間で「差があるか」を判断する</h3>
+  <table class="compare-table">
+    <tr><th>区間</th><th>0 を含むか</th><th>結論</th></tr>
+    <tr><td>(0.56, 0.76)</td><td>含まない</td><td>差の証拠あり（区間が全部正 → 9月の方が高い）</td></tr>
+    <tr><td>(−0.20, 0.30)</td><td>含む</td><td>0 も妥当な値 → 差の証拠なし</td></tr>
+    <tr><td>順序を逆にした (−0.76, −0.56)</td><td>含まない</td><td>符号が反転するだけで結論は同じ</td></tr>
+  </table>
+  <p>データがあるときのショートカットは <code>t.test(x, y, conf.level = 0.99)$conf.int</code>。<code>$conf.int</code> を外すと検定名が <strong>Welch Two Sample t-test</strong> と出ます。Welch の df は、100 ではなく標本によって（例では 8 のように）小さくなることもあります。</p>
+  <div class="warn-box">⚠️ 要約統計量しかない（生データがない）ため、この例では <code>t.test()</code> は使えません。だから式を一つずつ計算しています。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>流れは「統計量（差）→ df（Welch）→ SE → t* → ME → 差 ± ME」。区間に <strong>0 が入っていなければ「差がある」</strong>と言える。</p></div>
+  <div class="practice-card" id="p-m5t2-u2">
+    <div class="ptitle">💻 ミニ練習：99% 信頼区間を計算する</div>
+    <p class="ptask"><code>wheat_stat</code>（0.66）、<code>wheat_SE</code>、<code>wheat_df</code> が定義済みとして、99% の臨界値 <code>t_crit</code>、誤差 <code>wheat_ME</code>、区間の下限・上限を求めるコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m5t2-u2-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5t2-u2', ['qt', 't_crit', 'wheat_ME', 'wheat_stat', 'wheat_SE'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5t2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5t2-u2-result"></div>
+    <div class="answer-reveal" id="p-m5t2-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">t_crit &lt;- <span class="kw">qt</span>(<span class="nm">1</span> - <span class="nm">0.01</span> / <span class="nm">2</span>, df = wheat_df)</span>
+<span class="cl">wheat_ME &lt;- t_crit * wheat_SE</span>
+<span class="cl">wheat_stat - wheat_ME</span>
+<span class="cl">wheat_stat + wheat_ME</span>
+</pre>
+      <p class="answer-note">99% なので α = 0.01、両側なので α/2 = 0.005 を引いた 0.995 の分位点。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>2標本 t 検定：出生体重と喫煙</h2><div class="unit-sub">t.test() と手計算</div></div>
+  </div>
+  <p>問い：<strong>喫煙する母親から生まれた新生児と、喫煙しない母親から生まれた新生児で、出生体重に差があるか</strong>（有意水準 α = 0.05）。差の大きさを推定するのではなく、<strong>有意性検定（significance test）</strong>を行います。データは <em>Intro to Modern Statistics</em> の <code>births14</code>（<code>openintro</code> パッケージ）。今回は要約値ではなく<strong>生データ</strong>から統計量を自分で求めます。</p>
+  <h3>データの読み込みと2グループへの分割</h3>
+<pre class="code-block">
+<span class="cl"><span class="cm"># install.packages(&quot;openintro&quot;)   # 初回のみ。入っていればコメントアウト</span></span>
+<span class="cl"><span class="kw">library</span>(openintro)</span>
+<span class="cl"></span>
+<span class="cl">births &lt;- births14</span>
+<span class="cl">dim(births)</span>
+<span class="cl"><span class="kw">head</span>(births, <span class="nm">5</span>)</span>
+</pre><div class="output-reveal">[1] 1000   13
+  fage mage      mature weeks    premie visits gained weight lowbirthweight
+1   34   34 younger mom    37 full term     14     28   6.96        not low
+2   36   31 younger mom    41 full term     12     41   8.86        not low
+3   37   36  mature mom    37 full term     10     28   7.51        not low
+4   NA   16 younger mom    38 full term     NA     29   6.19        not low
+5   32   31 younger mom    36    premie     12     48   6.75        not low
+     sex     habit     marital  whitemom
+1   male nonsmoker     married     white
+2 female nonsmoker     married     white
+3 female nonsmoker     married not white
+4   male nonsmoker not married     white
+5 female nonsmoker     married     white</div>  <p>2群に分けるには <code>subset()</code> を使います（今後はもっと便利な方法も出てきます）。<strong>代入は <code>=</code> ではなく、「等しい」を調べるのは <code>==</code></strong>（イコール2つ）に注意。</p>
+<pre class="code-block">
+<span class="cl">weights_non   &lt;- <span class="kw">subset</span>(births$weight, births$habit == <span class="st">&quot;nonsmoker&quot;</span>)</span>
+<span class="cl">weights_smoke &lt;- <span class="kw">subset</span>(births$weight, births$habit == <span class="st">&quot;smoker&quot;</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">boxplot</span>(weight ~ habit, data = births, horizontal = <span class="kw">TRUE</span>, las = <span class="nm">1</span>,</span>
+<span class="cl">        xlab = <span class="st">&quot;Birth weight (pounds)&quot;</span>)</span>
+</pre>  <p>重さは gram ではなく<strong>pound</strong>です。箱ひげ図では、非喫煙の中央値が喫煙よりやや大きく、<strong>両群とも外れ値が多い</strong>ことが分かります。</p>
+  <h3>仮説と統計量</h3>
+  <div class="note-box"><p style="margin:0">H₀：μₙ − μₛ = 0（出生体重に差はない）<br>Hₐ：μₙ − μₛ ≠ 0（差がある。大きい／小さいの向きは決めない＝<strong>両側</strong>）</p></div>
+  <p>μₙ、μₛ は<strong>母集団の平均</strong>（標本平均ではない）。統計量は mean(non) − mean(smoke) です。</p>
+<pre class="code-block">
+<span class="cl">big_stat &lt;- <span class="kw">mean</span>(weights_non) - <span class="kw">mean</span>(weights_smoke)</span>
+<span class="cl">big_stat</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">mean</span>(births)            <span class="cm"># data frame 全体の平均は取れない</span></span>
+<span class="cl"><span class="kw">mean</span>(births$weight)     <span class="cm"># 列（$weight）の平均なら OK</span></span>
+</pre><div class="output-reveal">[1] 0.5926801</div>  <div class="warn-box">⚠️ <code>mean(births)</code> のようにデータフレーム丸ごとの平均は <code>NA</code> になる落とし穴があります。<code>$weight</code> のように<strong>列を指定</strong>すること。<code>na.rm = TRUE</code> が要るかどうかは、NA の有無を確認して判断します。</div>
+  <p>差は約 0.59 ポンドです。その説明は2つ：①<strong>本当は差がない</strong>のに偶然 0.59 になった（サンプリングのばらつき）／②母集団でも<strong>本当に差がある</strong>。有意性検定でどちらが妥当かを調べます。</p>
+  <h3>R のショートカット t.test()</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(weights_non, weights_smoke, conf.level = <span class="nm">0.95</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">t.test</span>(weights_non, weights_smoke)$p.value</span>
+</pre><div class="output-reveal">	Welch Two Sample t-test
+
+data:  weights_non and weights_smoke
+t = 3.8166, df = 131.31, p-value = 0.0002075
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.2854852 0.8998751
+sample estimates:
+mean of x mean of y 
+ 7.269873  6.677193 
+
+[1] 0.0002075401</div>  <p>α = 5% は<strong>両側</strong>の 95% 信頼水準に対応します。出力の読み方：<strong>t = 3.8</strong>（平均の差が H₀ から標準誤差何個分離れているか。3.8 はかなり遠い）、<strong>df ≈ 131</strong>（Welch）、<strong>p = 0.0002075（0.02%）</strong>、95% CI = (0.29, 0.90) ポンド。</p>
+  <div class="note-box"><p style="margin:0"><strong>p 値の解釈</strong>：「喫煙・非喫煙の母親の子の平均出生体重に差がない（H₀）と仮定すると、標本平均の差が <strong>0.59 ポンド以上（どちら向きでも）</strong>になる確率は 0.0002075（約 0.02%）。」</p></div>
+  <p>この確率は非常に小さいので、「偶然だった」という説明①は不自然。①を捨てて②を採用します。結論は<strong>3点セット</strong>で書きます：</p>
+  <ol style="margin:.4rem 0 .8rem 1.4rem"><li>p 値 &lt; α（0.0002075 &lt; 0.05）</li><li>H₀ を<strong>棄却（reject）</strong></li><li>非喫煙・喫煙の母親の子の<strong>母平均出生体重に差があるという説得力のある証拠（convincing evidence）</strong>がある</li></ol>
+  <div class="warn-box">⚠️ <strong>起こりうるエラー</strong>：H₀ を棄却したので、誤っているとすれば <strong>Type I error</strong>（本当は差がないのに差があると結論）。その結果は、たとえば「妊娠中の喫煙は出生体重に影響する」という広告に<strong>お金を無駄に使う</strong>ことです（医学的には禁煙が推奨されている点は別の話）。</div>
+  <p><strong>区間で判断</strong>：95% CI (0.29, 0.90) に <strong>0 が含まれない</strong> → 差の証拠あり。含まれていれば証拠なし。</p>
+  <h3>手計算（要約統計量から）</h3>
+  <p>検定統計量の一般形は <strong>(statistic − null parameter) ÷ SE</strong>。1標本は (x̄ − μ₀) ÷ (s/√n)、2標本は次のとおりです。</p>
+  <div class="note-box"><p style="margin:0"><strong>t = ( (x̄₁ − x̄₂) − 0 ) ÷ √( s₁²/n₁ + s₂²/n₂ )</strong></p></div>
+  <p>要約値（2桁に丸め）：非喫煙 x̄ = 7.27、s = 1.23、n = 867／喫煙 x̄ = 6.68、s = 1.60、n = 114。<strong>分子は 7.27 − 6.68 = 0.59</strong>（H₀ の差 0 を引く）。</p>
+<pre class="code-block">
+<span class="cl">n_non   &lt;- <span class="kw">length</span>(weights_non)      <span class="cm"># 867</span></span>
+<span class="cl">n_smoke &lt;- <span class="kw">length</span>(weights_smoke)    <span class="cm"># 114</span></span>
+<span class="cl"></span>
+<span class="cl">numerator   &lt;- <span class="nm">7.27</span> - <span class="nm">6.68</span></span>
+<span class="cl">denominator &lt;- <span class="kw">sqrt</span>(<span class="nm">1.23</span>^<span class="nm">2</span> / n_non + <span class="nm">1.60</span>^<span class="nm">2</span> / n_smoke)</span>
+<span class="cl">t_manual    &lt;- numerator / denominator</span>
+<span class="cl"><span class="kw">c</span>(numerator, denominator, t_manual)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 両側 p 値：t は正 → 上側確率を 2 倍。df は lower estimate（小さい方の n − 1）</span></span>
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(t_manual, df = n_smoke - <span class="nm">1</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 比較：Welch の df（約131）を使うと</span></span>
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(t_manual, df = <span class="nm">131.31</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 0.5900000 0.1555670 3.7925760
+[1] 0.0002411
+[1] 0.0002265</div>  <p>手計算の t（3.79）と <code>t.test()</code> の t（3.8166）は、平均と標準偏差を<strong>2桁に丸めた</strong>ため少しずれます（精度が高いのは t.test 側）。それでも小数1桁では<strong>どちらも 3.8</strong> です。p 値の差は、丸めよりも<strong>自由度</strong>が主因です。手計算では安全側の lower estimate（小さい方の n − 1）を使うため p は<strong>少し大きめ（保守的）</strong>、t.test は Welch の df ≈ 131 を使います。</p>
+  <table class="compare-table">
+    <tr><th>関数</th><th>返すもの</th><th>用途</th></tr>
+    <tr><td><code>qt(p, df)</code></td><td>分位点（critical value）</td><td>信頼区間の t*</td></tr>
+    <tr><td><code>pt(t, df)</code></td><td>確率（p 値の材料）</td><td>検定の p 値</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <code>qt</code> と <code>pt</code> を<strong>混同しない</strong>こと。接頭辞 p = probability、q = quantile。両側検定なので <code>pt(..., lower.tail = FALSE)</code> を <strong>2倍</strong>します。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>検定は「差が 0 だとしたら、こんな差が偶然出る確率は？」を調べる。p が α より小さければ H₀ を捨てて「差がある証拠あり」。生データがあれば <code>t.test(x, y)</code> の一行で終わり。</p></div>
+  <div class="practice-card" id="p-m5t2-u3a">
+    <div class="ptitle">💻 ミニ練習：2標本の t 検定</div>
+    <p class="ptask">2つの数値ベクトル <code>weights_non</code> と <code>weights_smoke</code> について、両側の Welch 二標本 t 検定（95%）を実行し、p 値だけを取り出すコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m5t2-u3a-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5t2-u3a', ['t.test', 'weights_non', 'weights_smoke', 'p.value'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5t2-u3a', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5t2-u3a-result"></div>
+    <div class="answer-reveal" id="p-m5t2-u3a-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(weights_non, weights_smoke, conf.level = <span class="nm">0.95</span>)</span>
+<span class="cl"><span class="kw">t.test</span>(weights_non, weights_smoke)$p.value</span>
+</pre>
+      <p class="answer-note"><code>$p.value</code> で p 値だけを取り出せる。</p>
+    </div>
+  </div>
+  <div class="practice-card" id="p-m5t2-u3b">
+    <div class="ptitle">💻 ミニ練習：手計算の p 値</div>
+    <p class="ptask">検定統計量 <code>t_manual</code> が正、自由度の下限推定が <code>n_smoke - 1</code> のとき、両側 p 値を <code>pt()</code> で求めてください。</p>
+    <textarea class="code-editor" id="p-m5t2-u3b-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5t2-u3b', ['2', 'pt', 't_manual', 'n_smoke', 'lower.tail'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5t2-u3b', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5t2-u3b-result"></div>
+    <div class="answer-reveal" id="p-m5t2-u3b-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="nm">2</span> * <span class="kw">pt</span>(t_manual, df = n_smoke - <span class="nm">1</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre>
+      <p class="answer-note">t が正なので右の裾（lower.tail = FALSE）、両側なので ×2。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>対応あり t 区間・検定</h2><div class="unit-sub">差を作って1標本 t</div></div>
+  </div>
+  <p>2標本 t は<strong>2つの標本が独立</strong>であることを前提に SE を計算します。しかし<strong>対応のあるデータ（paired data）</strong>――1人の個体に2回測定した、あるいは2人をペアにして別々の処理を与えた――では独立ではありません。x₁ と x₂ は通常<strong>正の相関</strong>をもつので、独立を仮定すると<strong>差の標準誤差を過大評価</strong>してしまいます。</p>
+  <p>パラメータは μ₁ − μ₂ の2つではなく、<strong>差の母平均 μ_diff 1つ</strong>。式は1標本とまったく同じで、データが「各個体の差」になるだけです。</p>
+  <div class="note-box"><p style="margin:0">paired t 区間：<strong>d̄ ± t* × s_d/√n_d</strong>（df = n_d − 1）<br>paired t 検定：<strong>t = (d̄ − 0) ÷ (s_d/√n_d)</strong></p></div>
+  <h3>例：カフェイン離脱とうつ症状</h3>
+  <p>カフェイン依存の11人のボランティアが、2日間ずつ「通常量のカフェイン」と「プラセボ」のカプセルを<strong>ランダムな順序</strong>で服用し、終了時にうつ症状のテストを受けました（高得点ほど症状が強い）。カフェインを断つとうつ症状が増すか？</p>
+  <table class="compare-table">
+    <tr><th>Subject</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr>
+    <tr><td>caffeine</td><td>5</td><td>5</td><td>4</td><td>3</td><td>8</td><td>5</td><td>0</td><td>0</td><td>2</td><td>11</td><td>1</td></tr>
+    <tr><td>placebo</td><td>16</td><td>23</td><td>5</td><td>7</td><td>14</td><td>24</td><td>6</td><td>3</td><td>15</td><td>12</td><td>0</td></tr>
+    <tr><td>差（placebo − caffeine）</td><td>11</td><td>18</td><td>1</td><td>4</td><td>6</td><td>19</td><td>6</td><td>3</td><td>13</td><td>1</td><td>−1</td></tr>
+  </table>
+  <p><strong>なぜ paired か</strong>：1人の被験者に2つのデータがあるので、独立な2群ではありません。「11人にカフェイン、別の11人にプラセボ」という設計もありえますが、<strong>1人が両方の処理を受ける（順序はランダム）</strong>方が個人差が除かれてよい設計です（良い実験デザインの原則は掲示板で議論してみよう）。</p>
+<pre class="code-block">
+<span class="cl">caff    &lt;- <span class="kw">c</span>(<span class="nm">5</span>, <span class="nm">5</span>, <span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">8</span>, <span class="nm">5</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">2</span>, <span class="nm">11</span>, <span class="nm">1</span>)</span>
+<span class="cl">placebo &lt;- <span class="kw">c</span>(<span class="nm">16</span>, <span class="nm">23</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">14</span>, <span class="nm">24</span>, <span class="nm">6</span>, <span class="nm">3</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">0</span>)</span>
+<span class="cl"></span>
+<span class="cl">xdiffs &lt;- placebo - caff      <span class="cm"># 差は正の数が多くなる向きに</span></span>
+<span class="cl">xdiffs</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">boxplot</span>(xdiffs, horizontal = <span class="kw">TRUE</span>,</span>
+<span class="cl">        xlab = <span class="st">&quot;Difference in depression score (placebo - caffeine)&quot;</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">mean</span>(xdiffs); <span class="kw">sd</span>(xdiffs); <span class="kw">length</span>(xdiffs)</span>
+</pre><div class="output-reveal"> [1] 11 18  1  4  6 19  6  3 13  1 -1
+[1] 7.363636
+[1] 6.917698
+[1] 11</div>  <div style="text-align:center"><svg viewBox="0 0 360 150" width="360" height="150" role="img" aria-label="11人の差（placebo − caffeine）のドットプロット" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="359" height="149" fill="none" stroke="#cbd5e1"/><line x1="40" y1="115" x2="330" y2="115" stroke="#475569"/><line x1="66.36363636363636" y1="115" x2="66.36363636363636" y2="120" stroke="#475569"/><text x="66.36363636363636" y="134" font-size="11" text-anchor="middle" fill="#475569">0</text><line x1="132.27272727272725" y1="115" x2="132.27272727272725" y2="120" stroke="#475569"/><text x="132.27272727272725" y="134" font-size="11" text-anchor="middle" fill="#475569">5</text><line x1="198.1818181818182" y1="115" x2="198.1818181818182" y2="120" stroke="#475569"/><text x="198.1818181818182" y="134" font-size="11" text-anchor="middle" fill="#475569">10</text><line x1="264.0909090909091" y1="115" x2="264.0909090909091" y2="120" stroke="#475569"/><text x="264.0909090909091" y="134" font-size="11" text-anchor="middle" fill="#475569">15</text><line x1="330.0" y1="115" x2="330.0" y2="120" stroke="#475569"/><text x="330.0" y="134" font-size="11" text-anchor="middle" fill="#475569">20</text><line x1="66.36363636363636" y1="25" x2="66.36363636363636" y2="115" stroke="#dc2626" stroke-dasharray="4 3"/><text x="70.36363636363636" y="30" font-size="10" fill="#dc2626">0（H₀）</text><circle cx="211.36363636363637" cy="106" r="5.5" fill="#0d9488"/><circle cx="303.6363636363636" cy="106" r="5.5" fill="#0d9488"/><circle cx="79.54545454545455" cy="106" r="5.5" fill="#0d9488"/><circle cx="119.0909090909091" cy="106" r="5.5" fill="#0d9488"/><circle cx="145.45454545454544" cy="106" r="5.5" fill="#0d9488"/><circle cx="316.8181818181818" cy="106" r="5.5" fill="#0d9488"/><circle cx="145.45454545454544" cy="92" r="5.5" fill="#0d9488"/><circle cx="105.9090909090909" cy="106" r="5.5" fill="#0d9488"/><circle cx="237.72727272727272" cy="106" r="5.5" fill="#0d9488"/><circle cx="79.54545454545455" cy="92" r="5.5" fill="#0d9488"/><circle cx="53.18181818181818" cy="106" r="5.5" fill="#0d9488"/><polygon points="163.42927272727272,112 157.42927272727272,124 169.42927272727272,124" fill="#2563eb"/><text x="163.42927272727272" y="146" font-size="10" text-anchor="middle" fill="#2563eb">d̄ = 7.36</text><text x="185" y="14" font-size="11" text-anchor="middle" fill="#334155">差 d = placebo − caffeine（11人）</text></svg></div>
+  <div class="warn-box">⚠️ 変数名に <code>diff</code> を使うと R 組み込みの <code>diff()</code> を上書きしてしまうので、<code>xdiffs</code> のような名前にしましょう。</div>
+  <p>差の大半は正です。<strong>パラメータ</strong>は差の母平均 μ_diff、<strong>推定量</strong>は d̄ = 7.36。仮説は H₀：μ_diff = 0（カフェインとプラセボでうつ得点に差はない）、Hₐ：μ_diff ≠ 0。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(xdiffs, conf.level = <span class="nm">0.95</span>, alt = <span class="st">&quot;two.sided&quot;</span>)</span>
+</pre><div class="output-reveal">	One Sample t-test
+
+data:  xdiffs
+t = 3.5304, df = 10, p-value = 0.005443
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+  2.716264 12.011009
+sample estimates:
+mean of x 
+ 7.363636 </div>  <p>これは1標本 t 検定そのものです。方向を指定しないときは両側で、大小の向きを検討するなら <code>alt =</code> で <code>"less"</code> / <code>"greater"</code> を指定しないと p 値を自分で調整することになります。<code>?t.test</code> を見ると <code>alternative</code> と <code>paired = TRUE</code> という引数があります。2つのデータを別々に入れるときは <code>paired = TRUE</code> でペアだと R に教えます（今回は自分で引き算したので不要）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(placebo, caff, paired = <span class="kw">TRUE</span>)$p.value</span>
+</pre><div class="output-reveal">[1] 0.005442944</div>  <div class="warn-box">⚠️ 研究の問いは「プラセボ時の方がうつ得点が高い」という<strong>方向つき</strong>なので、厳密には<strong>片側</strong>の検定・区間が必要です。授業では両側の区間のみを扱うので、ここでは両側検定にしています。</div>
+  <p>手計算の確認：SE = s_d/√n = 6.92/√11 = 2.086、t* = qt(0.975, 10) = 2.228、<strong>t = 7.36 ÷ 2.086 = 3.53</strong>、<strong>95% CI = 7.36 ± 2.228 × 2.086 = (2.72, 12.01)</strong>、両側 p ＝ <code>2 * pt(3.53, 10, lower.tail = FALSE)</code> ≈ 0.0054。</p>
+  <div class="note-box"><p style="margin:0"><strong>p 値の解釈</strong>：「カフェインとプラセボで（個人のうつ得点に）差がないと仮定すると、標本の平均差が 7.36 以上（どちら向きでも）になる確率は 0.005443。つまり、順序がランダムだったことによる偶然だけで起こる可能性は非常に低い。」</p></div>
+  <p>結論（3点）：p 値（0.005443）&lt; α（0.05）→ H₀ を棄却 → 平均の差（placebo − caffeine）が 0 ではないという説得力のある証拠がある。<strong>区間</strong>(2.72, 12.01) に 0 が含まれないので、同じ結論になります。</p>
+  <div class="note-box">✍️ 「p 値とは何か／どう解釈するか」は面接でもよく聞かれる質問です。<strong>H₀ が正しいと仮定して、観測した結果以上に極端な結果が偶然で出る確率</strong>と言えるようにしておきましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>対応ありデータは<strong>「差」を作って1標本 t</strong>にすればよい。df = 人数 − 1。独立を仮定する2標本 t を使うと SE を大きく見積もってしまうので、ペアだと分かったら paired を使う。</p></div>
+  <div class="practice-card" id="p-m5t2-u4">
+    <div class="ptitle">💻 ミニ練習：対応ありの検定</div>
+    <p class="ptask">ベクトル <code>before</code> と <code>after</code> の対応ありデータについて、差 <code>xdiffs</code>（before − after）を作り、両側の t 検定（95%）を実行するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m5t2-u4-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5t2-u4', ['xdiffs', 'before', 'after', 't.test'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5t2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5t2-u4-result"></div>
+    <div class="answer-reveal" id="p-m5t2-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">xdiffs &lt;- before - after</span>
+<span class="cl"><span class="kw">t.test</span>(xdiffs, conf.level = <span class="nm">0.95</span>, alt = <span class="st">&quot;two.sided&quot;</span>)</span>
+</pre>
+      <p class="answer-note">差を作って1標本 t。または <code>t.test(before, after, paired = TRUE)</code> でも同じ結果。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A researcher compares the mean lengths of newborn boys and girls using two independent samples. Which parameter is being estimated?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The difference in sample means, x̄₁ − x̄₂</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The mean of the paired differences, μ_diff</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The difference in population means, μ₁ − μ₂</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The ratio of the two sample standard deviations</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">For n₁ = 10 and n₂ = 20, which pair gives the lower and upper estimates of the degrees of freedom?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>lower 10, upper 30</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>lower 9, upper 28</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>lower 19, upper 28</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>lower 9, upper 30 minus 1 each</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">With n₁ = 10, n₂ = 15, s₁ = 4.5 and s₂ = 3.2, Welch's df is 14.995. Compared with the lower estimate (9), the critical value t* from Welch's df is</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>larger</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>exactly the same</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>impossible to compare without the data</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>smaller</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In the wheat example, a 99% interval for (September − July) mean price is (0.56, 0.76) dollars. What is the correct conclusion?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>There is convincing evidence of a difference, because 0 is not in the interval</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>There is no evidence of a difference, because the interval is narrow</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is convincing evidence that July prices were higher</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The result is inconclusive because the interval uses 99% rather than 95% confidence</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In R, which call gives the critical value for a 99% two-sided t interval with df = wheat_df?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pt(0.99, wheat_df)</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>qt(0.99, df = wheat_df, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>qt(1 - 0.01 / 2, df = wheat_df)</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>2 * pt(0.01, wheat_df)</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">For the smoking and birth weight test, t.test gave p-value = 0.0002075 (α = 0.05). Which statement is correct?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The probability that H₀ is true is 0.02%</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The test proves smoking causes lower birth weights</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>We fail to reject H₀, because a p-value this small shows the data are consistent with equal means</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>If mean weights were equal, a gap of 0.59 lb or more (either way) has probability about 0.02%</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">In the manual calculation of the two-sample t statistic, the numerator is</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>(7.27 − 6.68) − 0 = 0.59</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>7.27 − 0, the non-smoker mean minus the null value</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>7.27 + 6.68</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>1.23 − 1.60</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Eleven subjects each took both a placebo and caffeine, and differences (placebo − caffeine) gave d̄ = 7.36, s_d = 6.92, n = 11, p = 0.005443. Which analysis is appropriate and what is the df?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Two-sample t with independent groups, df = 20</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Paired t, one-sample on differences, df = 10</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Paired t, df = 11</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Two-sample t, df = 22</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 1, 3, 0, 2, 3, 0, 1];
+var FEEDBACKS=["The parameter is always about the populations: μ₁ − μ₂. The sample difference x̄₁ − x̄₂ is the statistic used to estimate it.", "Lower = min(n₁ − 1, n₂ − 1) = 9; upper = n₁ + n₂ − 2 = 28. Welch's df lies between them.", "A smaller df gives a larger t*. Welch's df (14.995) is bigger than 9, so t* is smaller (2.132 versus 2.262), and the interval is narrower but still correct.", "Zero is not inside the interval and every value is positive, so September's mean price is higher than July's. Reversing the order would give (−0.76, −0.56) with the same conclusion.", "A critical value is a quantile, so use qt. For 99% confidence, 0.5% is left in each tail, so the probability is 1 − 0.01/2 = 0.995. pt returns probabilities, not quantiles.", "The p-value assumes H₀ is true and is a two-sided probability. Since p < α we reject H₀; but this is an observational comparison, so it does not prove causation.", "The numerator is (x̄₁ − x̄₂) − the null value 0 = 7.27 − 6.68 = 0.59. The standard error then goes in the denominator.", "Each person gives two measurements, so the data are paired. Take the differences and run a one-sample t procedure with df = n − 1 = 10; the 95% CI is (2.72, 12.01) and does not contain 0."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">two-sample t interval</div><div class="term-en">二標本 t 区間</div><div class="term-def">2つの独立な標本から μ₁ − μ₂ を推定する区間。(x̄₁−x̄₂) ± t*·SE。</div></div>
+    <div class="term-item"><div class="term-name">Welch's degrees of freedom</div><div class="term-en">ウェルチの自由度</div><div class="term-def">2標本で最も正確な df の近似。R の t.test() が使う。</div></div>
+    <div class="term-item"><div class="term-name">lower / upper estimate</div><div class="term-en">自由度の下限／上限</div><div class="term-def">min(n₁−1, n₂−1)／n₁+n₂−2。手計算では下限が保守的。</div></div>
+    <div class="term-item"><div class="term-name">standard error (SE)</div><div class="term-en">標準誤差</div><div class="term-def">差の SE = √(s₁²/n₁ + s₂²/n₂)。</div></div>
+    <div class="term-item"><div class="term-name">critical value t*</div><div class="term-en">臨界値</div><div class="term-def">qt() で求める分位点。df が小さいほど大きい。</div></div>
+    <div class="term-item"><div class="term-name">significance test</div><div class="term-en">有意性検定</div><div class="term-def">H₀ のもとで観測結果がどれだけ珍しいかを p 値で判断する。</div></div>
+    <div class="term-item"><div class="term-name">p-value</div><div class="term-en">p 値</div><div class="term-def">H₀ が正しいとして、観測以上に極端な結果が偶然で出る確率。</div></div>
+    <div class="term-item"><div class="term-name">Type I error</div><div class="term-en">第一種の誤り</div><div class="term-def">本当は H₀ が正しいのに棄却してしまう誤り。</div></div>
+    <div class="term-item"><div class="term-name">paired data</div><div class="term-en">対応のあるデータ</div><div class="term-def">同じ個体の2測定、またはペアにした2個体。独立ではない。</div></div>
+    <div class="term-item"><div class="term-name">μ_diff</div><div class="term-en">差の母平均</div><div class="term-def">対応ありの t 手続きのパラメータ。差を1標本として扱う。</div></div>
+    <div class="term-item"><div class="term-name">convincing evidence</div><div class="term-en">説得力のある証拠</div><div class="term-def">p &lt; α、または区間が 0 を含まないときに使う結論の言葉。</div></div>
+    <div class="term-item"><div class="term-name">qt() vs pt()</div><div class="term-en">分位点と確率</div><div class="term-def">qt は臨界値、pt は p 値の確率を返す。混同しない。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>2標本は「<strong>差 ± t*×SE</strong>」と「<strong>差 ÷ SE</strong>」。生データがあれば <code>t.test(x, y)</code>、要約値だけなら手計算。ペアの時は<strong>差を作って1標本 t</strong>。結論は <strong>p と α の比較 → H₀ の棄却 → 文脈つきの結論</strong>の3点セットで書きましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>⚖️ 統計レッスン：M5 t手順② 2標本と対応あり</p>
+  <p style="margin-top:.5rem;"><a href="m5_t_intro.html">← t手順①</a> · <a href="m5_t_cond.html">t手順③：条件とブートストラップ →</a> · <a href="m5_t_two_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

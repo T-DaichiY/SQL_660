@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：650 M6 ロジスティック回帰：モデルの評価</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M6 📊 モデル評価 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy active" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">650 M6 · Logistic Regression — Assessing the Model 🍎</div>
+    <h1>🍎 超やさしい版：モデルの評価（ロジスティック）</h1>
+  <p>「<strong>このモデル、全体としてどれくらい良いの？</strong>」を測る道具（逸脱度・AIC・z値）を、やさしく学びます。</p>
+    <div class="unit-nav"><a href="#u1">逸脱度</a><a href="#u2">差を検定</a><a href="#u3">AIC</a><a href="#u4">z値とR²</a><a href="r6_logit_assess.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①②は「Assessing the model: Deviance」、③は「Assessing the model: AIC」と「Using AIC in R」、④は「Assessing the Model: z value and R squared」です。データはアワビ <code>abalone</code>（オス M = 1 とメス F = 0 の 2835 匹）で、<code>Type ~ Diameter</code> のモデル（<code>model1</code>）を評価します。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>逸脱度（deviance）</h2><div class="unit-sub">予測のはずれ具合の点数</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>逸脱度（deviance）= −2 × 対数尤度。小さいほど良い。Null deviance は「予測変数なし」、Residual deviance は「予測変数あり」の点数。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">📉</div>
+    <div class="ru-text"><strong>逸脱度は「予測のはずれ具合」の点数。</strong>低いほど、予測が観測に近い。</div>
+  </div>
+  <p><code>summary(model1)</code> の下のほうに、もう点数が出ています。</p>
+  <table class="compare-table">
+    <tr><th>名前</th><th>意味</th><th>値</th></tr>
+    <tr><td>Null deviance</td><td>定数項だけ（予測変数なし）</td><td>3912.9</td></tr>
+    <tr><td>Residual deviance</td><td>Diameter を入れたモデル</td><td>3885.6</td></tr>
+  </table>
+  <p>3912.9 → 3885.6 と<strong>点数が下がった</strong>ので、Diameter を入れる意味がありそうです。中身は <code>$</code> で取り出せます。</p>
+  <pre class="code-block">
+<span class="cl">model1$null.deviance</span>
+<span class="cl">model1$deviance</span>
+</pre><div class="output-reveal">[1] 3912.899
+[1] 3885.57</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>入れる前の点数（Null）より、入れたあとの点数（Residual）が低ければ、予測変数は役に立っています。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 逸脱度は何の何倍？<span class="cp-a">A. 対数尤度の −2 倍（−2LL）。</span></div><div class="cp-q">Q2. 逸脱度は大きいほうが良い？小さいほうが良い？<span class="cp-a">A. 小さいほうが良い。</span></div><div class="cp-q">Q3. Null deviance は何のモデル？<span class="cp-a">A. 予測変数が1つもない（定数項だけの）モデル。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>点数の差を検定する</h2><div class="unit-sub">カイ二乗検定</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>逸脱度の差 = 27.3、自由度の差 = 1。<code>pchisq(差, 自由度, lower.tail = FALSE)</code> で p値 = 1.7e-7 → Diameter は有意に改善した。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🧪</div>
+    <div class="ru-text"><strong>「点数の下がり方」が偶然でないかをカイ二乗で調べる。</strong></div>
+  </div>
+  <pre class="code-block">
+<span class="cl">chi_diff &lt;- model1$null.deviance - model1$deviance   <span class="cm"># 27.32896</span></span>
+<span class="cl">df_diff  &lt;- model1$df.null - model1$df.residual      <span class="cm"># 1</span></span>
+<span class="cl"><span class="kw">pchisq</span>(chi_diff, df_diff, lower.tail = FALSE)</span>
+</pre><div class="output-reveal">[1] 1.716213e-07</div>
+  <div class="big-rule">
+    <div class="ru-arrow">👍</div>
+    <div class="ru-text">p ≈ 1.7×10⁻⁷ とても小さい → <strong>Diameter を入れたモデルは、入れないモデルより有意によく当てはまる</strong>。</div>
+  </div>
+  <p>1つ足しても有意に良くならない予測変数は、かなりダメな予測変数です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「点数が下がった差」が大きくて、p値が小さければ、入れた意味があった、ということです。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 差が大きいと p値はどうなる？<span class="cp-a">A. 小さくなる（有意に改善した）。</span></div><div class="cp-q">Q2. 自由度の差はどう求める？<span class="cp-a">A. <code>df.null − df.residual</code>（足した変数の数）。</span></div><div class="cp-q">Q3. この例の結論は？<span class="cp-a">A. Diameter を入れたモデルは定数項だけのモデルより有意に良い。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>AIC：点数＋罰金</h2><div class="unit-sub">変数を増やすコスト</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>AIC = −2LL + 2k。変数を増やすとペナルティが増える。小さいほど良い。R の <code>AIC()</code> の引数 k は「ペナルティ」（既定 2）。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">⚖️</div>
+    <div class="ru-text"><strong>AIC = 点数（逸脱度）＋ 罰金（2k）</strong>。変数を足すと点数は良くなるが、罰金も増える。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>モデル</th><th>k</th><th>逸脱度</th><th>罰金 2k</th><th>AIC</th></tr>
+    <tr><td>model1（Diameter）</td><td>2</td><td>3885.57</td><td>4</td><td>3889.57</td></tr>
+    <tr><td>model2（+ Rings）</td><td>3</td><td>3881.425</td><td>6</td><td>3887.425</td></tr>
+  </table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">AIC</span>(model1)</span>
+<span class="cl"><span class="kw">AIC</span>(model2)</span>
+</pre><div class="output-reveal">[1] 3889.57
+[1] 3887.425</div>
+  <p>Rings はぎりぎり有意（p = 0.042）で、AIC はほとんど変わりません（差 2.1）。罰金が改善をほぼ打ち消すからです。</p>
+  <div class="warn-box">⚠️ <strong>2つの k に注意</strong>：式の k は「パラメータの数」（R が自動で数える）。R の <code>AIC(model, k = 2)</code> の k は「1つあたりのペナルティ」で、既定は 2。普段は書かなくてOK。<code>AIC(delay_reg, k = 3)</code> にすると、2,728,944 が 2,728,949 になります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>AIC は「点数＋罰金」。小さいほど良いモデル。罰金のおかげで、役に立たない変数を入れすぎるのを防げます。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. AIC の式は？<span class="cp-a">A. −2 × 対数尤度 ＋ 2k（k = パラメータの数）。</span></div><div class="cp-q">Q2. 変数を足すと AIC のペナルティはどうなる？<span class="cp-a">A. 増える（2k が大きくなる）。</span></div><div class="cp-q">Q3. R の <code>AIC(model, k = 2)</code> の k は何？<span class="cp-a">A. パラメータの数ではなく、1つあたりのペナルティ（既定は 2）。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>z値と、無い R²</h2><div class="unit-sub">1つ1つの変数の評価</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>個々の予測変数は z = 推定値 ÷ 標準誤差。ロジスティック回帰に R² は無いので、AIC と逸脱度を使う。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">➗</div>
+    <div class="ru-text"><strong>z = b ÷ SE</strong>。Diameter なら −2.5332 ÷ 0.4902 = <strong>−5.168</strong>。</div>
+  </div>
+  <pre class="code-block">
+<span class="cl">b  &lt;- <span class="kw">summary</span>(model1)$coefficients[<span class="nm">2</span>, <span class="nm">1</span>]</span>
+<span class="cl">se &lt;- <span class="kw">summary</span>(model1)$coefficients[<span class="nm">2</span>, <span class="nm">2</span>]</span>
+<span class="cl">b / se</span>
+</pre><div class="output-reveal">[1] -5.167795</div>
+  <p>これは <code>summary()</code> の z value（−5.168）と同じです。p値（2.37e-07）は標準正規分布から求めます。</p>
+  <div class="big-rule down">
+    <div class="ru-arrow">🚫</div>
+    <div class="ru-text"><strong>ロジスティック回帰には、ふつうの R² がありません。</strong>モデルの良さは、逸脱度と AIC で見ます。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>見るもの</th><th>答えること</th></tr>
+    <tr><td>逸脱度・AIC</td><td>モデル全体の良さ</td></tr>
+    <tr><td>z値</td><td>1つ1つの予測変数が有意か</td></tr>
+    <tr><td>R²</td><td>（無い）</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>全体は「逸脱度とAIC」、1つ1つは「z値」。R² は使えません。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. z値の計算式は？<span class="cp-a">A. 推定値 ÷ 標準誤差（b ÷ SE）。</span></div><div class="cp-q">Q2. Diameter の z値は？<span class="cp-a">A. −2.5332 ÷ 0.4902 ≒ −5.168。</span></div><div class="cp-q">Q3. ロジスティック回帰で R² の代わりに何を使う？<span class="cp-a">A. AIC と逸脱度（deviance）。</span></div></div>
+</div>
+<div class="page-nav"><a href="r6_logit_intro.html">← 前の回</a><a href="r6_logit_assess.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 逸脱度 = −2LL（小さいほど良い）</p><p style="margin:.4rem 0">• 差を <code>pchisq()</code> で検定</p><p style="margin:.4rem 0">• AIC = −2LL + 2k</p><p style="margin:.4rem 0">• z = b ÷ SE、R² は無い</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">出力の全文、<code>AIC()</code> の2つの k、英語MCQクイズ、練習問題は <a href="r6_logit_assess.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：650 M6 ロジスティック回帰：モデルの評価 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="r6_logit_assess.html">← 本編</a> · <a href="r6_logit_examples.html">実例・Shiny へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

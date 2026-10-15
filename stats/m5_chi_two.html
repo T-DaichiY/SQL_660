@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 χ²②　二元表と独立性の検定</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 📋 χ²② 独立性 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Chi-square ② — Two-way Tables &amp; Test of Independence</div>
+  <h1>📋 χ²②：二元表と独立性の検定</h1>
+  <p>カテゴリ変数が<strong>2つ</strong>になったら二元表。<strong>怒りと心臓病</strong>の実データで、期待度数の計算から <code>chisq.test()</code>、条件の確認、結論と Type I error までを通して学び、<strong>生データからの検定</strong>と3つのχ²検定のまとめまでやります。</p>
+  <p style="font-size:.9rem">📺 講義動画: Chi Sq 6 (introducing Chi Square tests with two-way tables) ／ Chi Sq 7 (Example: Anger and Heart diseases pt1) ／ Chi Sq 8 (Example: Anger and Heart diseases pt2) ／ Chi Sq 9 (Chi Square test with Raw Data, not table) ／ Chi Sq 10 (Recap of Chi-square tests)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 二元表と3つの検定</a><a href="#unit2">② データの入力</a><a href="#unit3">③ 条件付き分布</a><a href="#unit4">④ 検定の実行</a><a href="#unit5">⑤ 生データ・まとめ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 二元表と3つの検定の違い：Chi Sq 6</li><li>② 研究デザイン・R への入力：Chi Sq 7（前半）</li><li>③ 条件付き分布（％）：Chi Sq 7（後半）</li><li>④ 仮説・期待度数・chisq.test・条件・結論・Type I error：Chi Sq 8</li><li>⑤ 生データからの検定：Chi Sq 9 ／ 3つの検定のまとめ：Chi Sq 10</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>二元表（two-way table）と3つのχ²検定</h2><div class="unit-sub">変数が2つ → 検定の選び方</div></div>
+  </div>
+  <p>これまでの適合度検定（goodness of fit, GOF）は、<strong>カテゴリ変数が1つ</strong>の<strong>一元表（one-way table）</strong>が相手でした（NHL選手の生まれた四半期、CMに出てくる人種…）。今回は<strong>カテゴリ変数が2つ</strong>。1つを表の上（列）に、もう1つを表の横（行）に並べた<strong>二元表（two-way table）</strong>を使います。</p>
+  <p>どのχ²検定を使うかは、次の質問で決めます。講師が最初に挙げたのは、この3つです。</p>
+  <ul>
+    <li><strong>データの種類は？</strong>　本当にカテゴリデータか。量的データなら、GOF検定も二元表の検定も使うべきではありません。</li>
+    <li><strong>変数はいくつ？</strong>（1つなら GOF、2つなら二元表）</li>
+    <li><strong>グループ（標本）はいくつ？</strong>　例：NHLは80人の標本1つ、CMの例は404件の標本1つ。</li>
+  </ul>
+  <h3>二元表の検定は2種類</h3>
+  <p><strong>① 均質性の検定（test of homogeneity, TOH）</strong>：同じカテゴリ変数の<strong>分布が、複数の母集団（または処置群）で同じか</strong>を調べます。例：薬A・薬B・プラセボの3群で実験し、「副作用あり／なし」（カテゴリ変数）の割合が3群で同じかどうか。</p>
+  <p><strong>② 関連（独立性）の検定（test of association, TOA ／ test of independence, TOI）</strong>：<strong>1つの母集団</strong>で、2つのカテゴリ変数が<strong>関連しているか、それとも互いに独立か</strong>を調べます。例：髪の色と目の色は関連しているか。髪の色を知っていれば目の色をかなり当てられる（関連あり）のか、髪の色は何の手がかりにもならない（独立）のか。</p>
+  <div class="note-box">💡 教科書や授業によっては、この2つを区別せず「二元表のχ²検定」とひとまとめにします。<strong>実際の計算は全く同じ</strong>です。それでも区別して考えるのは、<strong>データがどう集められたか</strong>を意識できるからだ、と講師は説明しています。</div>
+  <table class="compare-table">
+    <tr><th></th><th>適合度検定（GOF）</th><th>均質性の検定</th><th>関連（独立性）の検定</th></tr>
+    <tr><td>グループ（標本）</td><td>1つ</td><td>2つ以上（母集団・処置群）</td><td>1つ（1母集団から1標本）</td></tr>
+    <tr><td>カテゴリ変数</td><td>1つ</td><td>2つ</td><td>2つ</td></tr>
+    <tr><td>例</td><td>NHL選手の誕生四半期</td><td>グミの会社（A社・B社・C社）× 色の分布</td><td>怒りのレベル × 心臓病の有無</td></tr>
+    <tr><td>仮説</td><td>各カテゴリの割合が指定どおり</td><td>分布がどの群でも同じ</td><td>2変数は独立（関連なし）</td></tr>
+    <tr><td>自由度 df</td><td>k − 1</td><td colspan="2">(行数 − 1) × (列数 − 1)</td></tr>
+    <tr><td>期待度数 E</td><td>n × 割合</td><td colspan="2">行合計 × 列合計 ÷ 表の総計</td></tr>
+  </table>
+  <p>グミの例（講師が教室でやるもの）：2〜3社のグミを用意して色の分布を数えます。<strong>グループは2〜3つの母集団</strong>（会社ごと）で、<strong>変数は「製造会社」と「色」の2つ</strong>。「色の分布は会社が違っても同じか」を調べるので、均質性の検定です。</p>
+  <h3>3つの検定で共通なもの</h3>
+  <ul>
+    <li><strong>検定統計量の公式</strong>：χ² = Σ (O − E)² ／ E　（O ＝ observed 観測度数、E ＝ expected 期待度数。全セルで足し合わせる）</li>
+    <li><strong>χ²分布</strong>（自由度 df で形が決まる）を使って p 値を求める方法</li>
+    <li><strong>結論の書き方</strong>：p 値 &lt; α なら帰無仮説を棄却し、対立仮説の証拠がある、と述べる</li>
+  </ul>
+  <p>違うのは、<strong>仮説の言い方・自由度の公式・期待度数の公式</strong>の3点だけです。均質性と関連の2つは、この3点も含めて<strong>完全に同じ式</strong>になります。</p>
+    <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>検定を選ぶコツは「変数がいくつ？」。1つなら適合度、2つなら二元表。二元表は、グループが複数なら均質性、1つの集団で2変数の関係を見るなら関連（独立性）。計算はどちらも同じで、χ² の公式も p 値の求め方も結論の書き方も3つの検定で共通です。</p></div>
+
+  <div class="practice-card" id="p-c2-u1">
+    <div class="ptitle">💻 ミニ練習：自由度と期待度数の計算</div>
+    <p class="ptask">行が2（yes/no）、列が3（low/moderate/high）の二元表の自由度を、<code>(行数 − 1) × (列数 − 1)</code> の形で R に計算させてください。続けて、行合計 190・列合計 3110・総計 8474 のセルの期待度数も計算してください。</p>
+    <textarea class="code-editor" id="p-c2-u1-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u1', ['(', '-', '*', '/'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u1-result"></div>
+    <div class="answer-reveal" id="p-c2-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df &lt;- (<span class="nm">2</span> - <span class="nm">1</span>) * (<span class="nm">3</span> - <span class="nm">1</span>)</span>
+<span class="cl">df                       <span class="cm"># 2</span></span>
+<span class="cl"><span class="nm">190</span> * <span class="nm">3110</span> / <span class="nm">8474</span>        <span class="cm"># 69.73094</span></span>
+</pre>
+      <p class="answer-note">自由度は (2−1)×(3−1) = 2。期待度数は「行合計 × 列合計 ÷ 表の総計」で 69.73094（約 69.7）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>例：怒りと心臓病 ― 研究デザインとデータの入力</h2><div class="unit-sub">prospective observational study / matrix()</div></div>
+  </div>
+  <p>本物の研究にもとづく例です。<strong>怒りっぽい人は、冠動脈性心疾患（coronary heart disease, CHD）になりやすいのか</strong>。</p>
+  <h3>研究デザイン</h3>
+  <ul>
+    <li><strong>前向き観察研究（prospective observational study）</strong>：最初（ベースライン）に人を登録し、そのあと毎月・毎年の追跡調査で<strong>将来</strong>に何か起こるかを記録します。過去を振り返る<strong>後ろ向き研究（retrospective）</strong>とは対照的です。</li>
+    <li><strong>なぜ実験ではなく観察研究か</strong>：「今日はすぐキレるように」「今日はとても穏やかに」といった<strong>怒りの傾向は処置として割り当てられません</strong>（性格・生まれ育ちの問題）。心臓病を人に割り当てることもできません。割り当てられないので観察するしかありません。</li>
+    <li><strong>説明変数（explanatory variable）</strong>：Spielberger 特性怒り尺度（trait anger scale）テストの結果＝ <strong>low ／ moderate ／ high</strong> の3段階。</li>
+    <li><strong>応答変数（response variable）</strong>：CHD の出来事（event）が<strong>あったか（yes）なかったか（no）</strong>。</li>
+  </ul>
+  <p>データは、1つの無作為標本（N = 8474 人）を2変数で分類した二元表です。</p>
+  <table class="compare-table">
+    <tr><th></th><th>low</th><th>moderate</th><th>high</th></tr>
+    <tr><td>CHD あり（yes）</td><td>53</td><td>110</td><td>27</td></tr>
+    <tr><td>CHD なし（no）</td><td>3057</td><td>4621</td><td>606</td></tr>
+  </table>
+  <h3>どの検定？</h3>
+  <p>変数が2つなので<strong>GOF検定は使えません</strong>。標本は<strong>1つの無作為標本</strong>で、その1集団の中で「怒りと心臓病は関連しているか」を知りたい。つまり<strong>グループ1つ＋カテゴリ変数2つ</strong>なので、<strong>関連（独立性）のχ²検定</strong>です。</p>
+  <h3>R に二元表を入れる（matrix）</h3>
+  <p>R では、まず<strong>matrix（行列＝長方形に並んだ数）</strong>を作ります。R の table と matrix は厳密には別物ですが、この授業ではほぼ同じものと考えて構いません。1ステップずつ進めます。</p>
+  <div class="warn-box">⚠️ <strong>合計（Total）の行・列は入力しない！</strong>数えた度数（counts）だけを入れます。合計を入れると、R はそれを新しい群（「超・怒りっぽい群」のようなもの）だと思い込み、χ² が狂います。</div>
+<pre class="code-block">
+<span class="cl">anger_counts &lt;- <span class="kw">c</span>(<span class="nm">53</span>, <span class="nm">110</span>, <span class="nm">27</span>, <span class="nm">3057</span>, <span class="nm">4621</span>, <span class="nm">606</span>)   <span class="cm"># 合計は入れない</span></span>
+<span class="cl">CHD_anger &lt;- <span class="kw">matrix</span>(anger_counts, nrow = <span class="nm">2</span>, ncol = <span class="nm">3</span>, byrow = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">rownames</span>(CHD_anger) &lt;- <span class="kw">c</span>(<span class="st">&quot;yes&quot;</span>, <span class="st">&quot;no&quot;</span>)</span>
+<span class="cl"><span class="kw">colnames</span>(CHD_anger) &lt;- <span class="kw">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;moderate&quot;</span>, <span class="st">&quot;high&quot;</span>)</span>
+<span class="cl">CHD_anger</span>
+</pre><div class="output-reveal">     low moderate high
+yes   53      110   27
+no  3057     4621  606</div>
+  <ul>
+    <li><code>nrow = 2, ncol = 3</code>：合計を除いて2行・3列。</li>
+    <li><code>byrow = TRUE</code>：数字を<strong>行ごとに</strong>横に並べて入力したので、行ごとに詰める指定（列ごとに打ったなら <code>byrow = FALSE</code>）。</li>
+    <li>名前は必須ではないが、<strong>どの数がどの変数か</strong>を見失わないために付けると便利。</li>
+  </ul>
+  <p><strong>別の作り方：rbind()</strong>。行ごとにベクトルを束ねます（<code>c()</code> を忘れずに）。列ごとに束ねる <code>cbind()</code> もあります。</p>
+<pre class="code-block">
+<span class="cl">data_by_rows &lt;- <span class="kw">rbind</span>(<span class="kw">c</span>(<span class="nm">53</span>, <span class="nm">110</span>, <span class="nm">27</span>), <span class="kw">c</span>(<span class="nm">3057</span>, <span class="nm">4621</span>, <span class="nm">606</span>))</span>
+<span class="cl"><span class="kw">rownames</span>(data_by_rows) &lt;- <span class="kw">c</span>(<span class="st">&quot;yes&quot;</span>, <span class="st">&quot;no&quot;</span>)</span>
+<span class="cl"><span class="kw">colnames</span>(data_by_rows) &lt;- <span class="kw">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;moderate&quot;</span>, <span class="st">&quot;high&quot;</span>)</span>
+<span class="cl">data_by_rows</span>
+</pre><div class="output-reveal">     low moderate high
+yes   53      110   27
+no  3057     4621  606</div>
+  <p>同じ値・同じ構造の表ができます（以降はどちらを使っても同じです）。</p>
+    <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>二元表は <code>matrix(度数, nrow, ncol, byrow = TRUE)</code> で作る。<strong>合計は入れない</strong>のが大事。行名・列名を付けておくと結果が読みやすい。<code>rbind()</code> で行を束ねても同じ表になる。</p></div>
+
+  <div class="practice-card" id="p-c2-u2">
+    <div class="ptitle">💻 ミニ練習：二元表を作る</div>
+    <p class="ptask"><code>c(12, 30, 18, 40)</code> の度数を、<strong>2行2列</strong>・<strong>行ごと</strong>に詰めた行列 <code>tab</code> にしてください（合計は入れません）。</p>
+    <textarea class="code-editor" id="p-c2-u2-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u2', ['matrix', 'nrow', 'ncol', 'byrow'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u2-result"></div>
+    <div class="answer-reveal" id="p-c2-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tab &lt;- <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="nm">12</span>, <span class="nm">30</span>, <span class="nm">18</span>, <span class="nm">40</span>), nrow = <span class="nm">2</span>, ncol = <span class="nm">2</span>, byrow = <span class="kw">TRUE</span>)</span>
+<span class="cl">tab</span>
+</pre>
+      <p class="answer-note">byrow = TRUE なので、1行目は 12, 30、2行目は 18, 40 になります。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>まず記述統計：条件付き分布で見る</h2><div class="unit-sub">counts と percentages</div></div>
+  </div>
+  <p>カテゴリデータなので、平均・標準偏差・中央値は使えません。<strong>度数（counts）と割合（percentages）</strong>を見ます。</p>
+  <p>ここで注意：<strong>「CHD になった人は moderate の群が一番多いから、moderate の人は心臓病になりやすい」と言ってはいけません。</strong>群ごとの人数が大きく違うからです。そこで、<strong>各怒りレベルの中で、何％が CHD になったか</strong>＝<strong>条件付き分布（conditional distribution）</strong>を計算します（条件付き確率に似た考え方です）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">proportions</span>(CHD_anger, margin = <span class="nm">2</span>)</span>
+</pre><div class="output-reveal">          low  moderate       high
+yes 0.0170418 0.0232509 0.04265403
+no  0.9829582 0.9767491 0.95734597</div>
+  <p><code>margin = 2</code> は<strong>列に沿って</strong>（各列の合計が1＝100%になるように）割合を出す指定です。出力の各列は足すと 1 になっています。小数が多いので、3桁に丸めて100倍します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(CHD_anger, margin = <span class="nm">2</span>), <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(CHD_anger, margin = <span class="nm">2</span>), <span class="nm">3</span>) * <span class="nm">100</span></span>
+</pre><div class="output-reveal">      low moderate  high
+yes 0.017    0.023 0.043
+no  0.983    0.977 0.957
+
+     low moderate high
+yes  1.7      2.3  4.3
+no  98.3     97.7 95.7</div>
+  <p>CHD になった割合は、<strong>low 1.7% ／ moderate 2.3% ／ high 4.3%</strong>。</p>
+  <div class="viz">
+    <div class="viz-title">怒りレベル別の CHD 発症割合（縦軸は実際の割合に比例）</div>
+    <div style="text-align:center"><svg viewBox="0 0 420 230" width="420" height="230" role="img" aria-label="怒りレベル別のCHD発症割合 1.7% 2.3% 4.3%" style="max-width:100%;height:auto"><line x1="60" y1="190.0" x2="400" y2="190.0" stroke="#e2e8f0"/><text x="52" y="194.0" font-size="11" text-anchor="end" fill="#475569">0</text><line x1="60" y1="156.0" x2="400" y2="156.0" stroke="#e2e8f0"/><text x="52" y="160.0" font-size="11" text-anchor="end" fill="#475569">1</text><line x1="60" y1="122.0" x2="400" y2="122.0" stroke="#e2e8f0"/><text x="52" y="126.0" font-size="11" text-anchor="end" fill="#475569">2</text><line x1="60" y1="88.0" x2="400" y2="88.0" stroke="#e2e8f0"/><text x="52" y="92.0" font-size="11" text-anchor="end" fill="#475569">3</text><line x1="60" y1="54.0" x2="400" y2="54.0" stroke="#e2e8f0"/><text x="52" y="58.0" font-size="11" text-anchor="end" fill="#475569">4</text><line x1="60" y1="20.0" x2="400" y2="20.0" stroke="#e2e8f0"/><text x="52" y="24.0" font-size="11" text-anchor="end" fill="#475569">5</text><line x1="60" y1="190" x2="400" y2="190" stroke="#475569"/><line x1="60" y1="190" x2="60" y2="20" stroke="#475569"/><rect x="90" y="132.2" width="70" height="57.8" fill="var(--primary)" opacity=".85"/><text x="125" y="126.2" font-size="13" font-weight="bold" text-anchor="middle" fill="#1e293b">1.7%</text><text x="125" y="206" font-size="12" text-anchor="middle" fill="#334155">low</text><rect x="205" y="111.8" width="70" height="78.2" fill="var(--primary)" opacity=".85"/><text x="240" y="105.8" font-size="13" font-weight="bold" text-anchor="middle" fill="#1e293b">2.3%</text><text x="240" y="206" font-size="12" text-anchor="middle" fill="#334155">moderate</text><rect x="320" y="43.8" width="70" height="146.2" fill="#ef4444" opacity=".85"/><text x="355" y="37.8" font-size="13" font-weight="bold" text-anchor="middle" fill="#1e293b">4.3%</text><text x="355" y="206" font-size="12" text-anchor="middle" fill="#334155">high</text><text x="230.0" y="224" font-size="12" text-anchor="middle" fill="#334155">怒りレベル（anger level）</text><text transform="translate(14 110) rotate(-90)" font-size="12" text-anchor="middle" fill="#334155">CHD発症の割合（%）</text></svg></div>
+    <div class="viz-cap">度数は moderate（110人）が最多でも、<strong>割合は high（4.3%）が最大</strong>。moderate（2.3%）の2倍弱です。</div>
+  </div>
+  <p><strong>初期的な（予備的な）証拠はあります。</strong>この研究の高怒りの人は、低・中の人より CHD になりやすいように見えます。けれども、この差が「本当に関連があるから」なのか、「たまたまの標本のばらつき（sampling variability）」なのか、まだ分かりません。それを判定するのが次のχ²検定です。</p>
+    <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>人数が違う群を比べるときは、<strong>度数ではなく割合</strong>で比べる。<code>proportions(表, margin = 2)</code> で「列ごとに100%」の条件付き分布が出る。1.7% → 2.3% → 4.3% と増えているが、これが偶然か本物かは検定で決める。</p></div>
+
+  <div class="practice-card" id="p-c2-u3">
+    <div class="ptitle">💻 ミニ練習：列ごとの割合を出す</div>
+    <p class="ptask"><code>CHD_anger</code> について、<strong>列ごとに</strong>割合を出し、小数第3位に丸めて100倍（％表示）するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-c2-u3-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u3', ['proportions', 'margin', 'round'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u3-result"></div>
+    <div class="answer-reveal" id="p-c2-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(CHD_anger, margin = <span class="nm">2</span>), <span class="nm">3</span>) * <span class="nm">100</span></span>
+</pre>
+      <p class="answer-note">margin = 2 は列方向。結果は yes の行が 1.7, 2.3, 4.3（%）。margin = 1 にすると行ごとに100%になるので注意。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>χ²検定を最後まで：仮説・期待度数・chisq.test()</h2><div class="unit-sub">仮説 → E → χ² → 条件 → 結論 → Type I</div></div>
+  </div>
+  <h3>Step 1　データの差を説明する2つのモデル</h3>
+  <ul>
+    <li><strong>モデル1（偶然）</strong>：怒りのレベルと CHD に関連はなく、観察された 1.7 → 2.3 → 4.3% の差は<strong>標本のばらつきだけ</strong>で生じた。たまたま怒りが強い人に CHD の出来事が多く入っただけ。</li>
+    <li><strong>モデル2（関連あり）</strong>：差が出たのは、怒りのレベルと CHD に<strong>本当に関連がある</strong>から。</li>
+  </ul>
+  <h3>Step 2　仮説</h3>
+  <table class="compare-table">
+    <tr><th></th><th>言葉の表現（関連）</th><th>言葉の表現（独立）</th></tr>
+    <tr><td><strong>H₀ 帰無仮説</strong></td><td>怒りのレベルと CHD の出来事の間に関連はない</td><td>2変数は<strong>独立（independent）</strong>。怒りのレベルを知っても、CHD になる確率について新しい情報は得られない</td></tr>
+    <tr><td><strong>Hₐ 対立仮説</strong></td><td>怒りのレベルと CHD の出来事の間に関連がある</td><td>2変数は<strong>独立でない</strong>。たとえば high と分かれば CHD になる確率が高いと予想できる</td></tr>
+  </table>
+  <h3>Step 3　期待度数（expected count）</h3>
+  <p><strong>H₀（関連なし）が正しいとしたら、各セルに何人入るはずか。</strong>公式は</p>
+  <div class="note-box">📐 <strong>E = 行合計 × 列合計 ÷ 表の総計 n</strong>　（E₁₁ は 1行目・1列目のセル）</div>
+  <p>「yes・low」のセルは、行合計 190、列合計 3110、総計 8474 なので：</p>
+<pre class="code-block">
+<span class="cl"><span class="nm">190</span> * <span class="nm">3110</span> / <span class="nm">8474</span></span>
+</pre><div class="output-reveal">[1] 69.73094</div>
+  <p><strong>E₁₁ ≈ 69.7</strong>。怒りと CHD が無関係なら、このセルには約70人が入るはず。実際の観測は <strong>53人</strong>で、期待より少なめです。<strong>全セルの観測と期待のずれを合算すると、関連があると言えるほど大きいか？</strong>それを検定します（もしかしたら割合の差は偶然の範囲かもしれません）。</p>
+  <h3>Step 4　chisq.test()</h3>
+  <p>適合度検定では lsr パッケージの <code>goodnessOfFit()</code> を使いましたが、二元表では<strong>base R の <code>chisq.test()</code></strong> を使います（<code>?chisq.test</code> でヘルプが読めます）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">chisq.test</span>(CHD_anger)</span>
+</pre><div class="output-reveal">	Pearson&#x27;s Chi-squared test
+
+data:  CHD_anger
+X-squared = 16.077, df = 2, p-value = 0.0003228</div>
+  <div class="warn-box">⚠️ <strong>合計入りの表を渡さない</strong>こと。R は合計行・合計列を「新しい群」だと勘違いします。渡すのは、合計を入れていない <code>CHD_anger</code>（または <code>data_by_rows</code>）です。</div>
+  <p>出力は短く、<strong>χ² ≈ 16.08（X-squared = 16.077）、df = 2、p 値 = 0.0003228（とても小さい）</strong>。知りたいのはまさに p 値です。（lsr の関連検定はもう少し詳しい出力を返します。講師が教科書のリンクを紹介しています）</p>
+  <p>期待度数は結果に保存されているので、手計算しなくても <code>$expected</code> で全セル分を取り出せます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">chisq.test</span>(CHD_anger)$expected</span>
+</pre><div class="output-reveal">           low  moderate      high
+yes   69.73094  106.0762  14.19283
+no  3040.26906 4624.9238 618.80717</div>
+  <p>手計算の E₁₁ = 69.7 と一致しています。</p>
+  <div class="viz">
+    <div class="viz-title">各セルの χ² への寄与 (O − E)² / E（合計 16.077）</div>
+    <div style="text-align:center"><svg viewBox="0 0 460 240" width="460" height="240" role="img" aria-label="各セルのχ²への寄与 合計16.077" style="max-width:100%;height:auto"><line x1="60" y1="195.0" x2="445" y2="195.0" stroke="#e2e8f0"/><text x="52" y="199.0" font-size="11" text-anchor="end" fill="#475569">0</text><line x1="60" y1="136.7" x2="445" y2="136.7" stroke="#e2e8f0"/><text x="52" y="140.7" font-size="11" text-anchor="end" fill="#475569">4</text><line x1="60" y1="78.3" x2="445" y2="78.3" stroke="#e2e8f0"/><text x="52" y="82.3" font-size="11" text-anchor="end" fill="#475569">8</text><line x1="60" y1="20.0" x2="445" y2="20.0" stroke="#e2e8f0"/><text x="52" y="24.0" font-size="11" text-anchor="end" fill="#475569">12</text><line x1="60" y1="195" x2="445" y2="195" stroke="#475569"/><line x1="60" y1="195" x2="60" y2="20" stroke="#475569"/><rect x="74" y="136.5" width="44" height="58.5" fill="var(--primary)" opacity=".85"/><text x="96" y="131.5" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e293b">4.014</text><text x="96" y="210" font-size="10" text-anchor="middle" fill="#334155">yes・low</text><rect x="138" y="192.9" width="44" height="2.1" fill="var(--primary)" opacity=".85"/><text x="160" y="187.9" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e293b">0.145</text><text x="160" y="210" font-size="10" text-anchor="middle" fill="#334155">yes・mod</text><rect x="202" y="26.5" width="44" height="168.5" fill="#ef4444" opacity=".85"/><text x="224" y="21.5" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e293b">11.557</text><text x="224" y="210" font-size="10" text-anchor="middle" fill="#334155">yes・high</text><rect x="266" y="193.7" width="44" height="1.3" fill="var(--primary)" opacity=".85"/><text x="288" y="188.7" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e293b">0.092</text><text x="288" y="210" font-size="10" text-anchor="middle" fill="#334155">no・low</text><rect x="330" y="195.0" width="44" height="1.0" fill="var(--primary)" opacity=".85"/><text x="352" y="190.0" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e293b">0.003</text><text x="352" y="210" font-size="10" text-anchor="middle" fill="#334155">no・mod</text><rect x="394" y="191.1" width="44" height="3.9" fill="var(--primary)" opacity=".85"/><text x="416" y="186.1" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e293b">0.265</text><text x="416" y="210" font-size="10" text-anchor="middle" fill="#334155">no・high</text><text x="252.5" y="234" font-size="12" text-anchor="middle" fill="#334155">セル（行・列）</text><text transform="translate(14 125) rotate(-90)" font-size="12" text-anchor="middle" fill="#334155">(O−E)²/E</text></svg></div>
+    <div class="viz-cap">一番大きいのは「yes・high」（観測27 に対し期待14.2）の 11.557。全体のおよそ72%を占めます。</div>
+  </div>
+<pre class="code-block">
+<span class="cl"><span class="cm"># 各セルの (O - E)^2 / E</span></span>
+<span class="cl"><span class="kw">round</span>((CHD_anger - <span class="kw">chisq.test</span>(CHD_anger)$expected)^<span class="nm">2</span> /</span>
+<span class="cl">        <span class="kw">chisq.test</span>(CHD_anger)$expected, <span class="nm">3</span>)</span>
+</pre><div class="output-reveal">      low moderate   high
+yes 4.014    0.145 11.557
+no  0.092    0.003  0.265</div>
+  <p>この6個を合計すると 16.077 です。</p>
+  <h3>Step 5　条件の確認（3つ）</h3>
+  <ul>
+    <li><strong>ランダム（Random）</strong>：無作為標本であること。母集団に一般化できる。無作為でなければ標本が代表的でない恐れがある。</li>
+    <li><strong>期待度数がすべて 5 以上</strong>：χ²分布で p 値を出してよい条件。<code>$expected</code> を見ると<strong>最小は 14.2</strong>（yes・high）なので、全部 5 より大きい。</li>
+    <li><strong>独立性（10% 条件）</strong>：母集団が標本の10倍以上あるとみなせること。N = 8474 なので、母集団は <strong>84,740 人</strong>超と仮定する。</li>
+  </ul>
+<pre class="code-block">
+<span class="cl"><span class="kw">min</span>(<span class="kw">chisq.test</span>(CHD_anger)$expected)</span>
+<span class="cl"><span class="nm">10</span> * <span class="nm">8474</span></span>
+</pre><div class="output-reveal">[1] 14.19283
+[1] 84740</div>
+  <h3>Step 6　自由度の導出</h3>
+  <p>GOF の df は「カテゴリ数 − 1」でした。二元表では<strong>2つの変数それぞれから1を引いて掛けます</strong>：</p>
+  <div class="note-box">📐 df = (怒りレベルの数 − 1) × (CHD の水準数 − 1) = (3 − 1) × (2 − 1) = <strong>2</strong></div>
+  <h3>Step 7　p 値の解釈と結論</h3>
+  <p>p 値は、検定統計量から <code>pchisq()</code> で求められます（<strong>自由度 df を指定し、右側の面積なので <code>lower.tail = FALSE</code></strong>）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">pchisq</span>(<span class="nm">16.077</span>, df = <span class="nm">2</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 0.0003227928</div>
+  <ul>
+    <li><strong>p 値の解釈</strong>：H₀（関連なし）が正しいと仮定したとき、標本のばらつきだけで<strong>これ以上に極端な結果が出る確率は約 0.0003</strong>（非常に小さい）。</li>
+    <li>それは「偶然」説の説明として<strong>ありそうにない</strong>ので、その説明は捨てて、新しいモデル「<strong>怒りと CHD には関連がありそうだ</strong>」を採ります。</li>
+    <li><strong>結論（α = 0.10 などで）</strong>：p 値が α より小さいので H₀ を棄却。<strong>怒りのレベルと CHD の出来事の間に関連があるという、説得力のある証拠がある</strong>（convincing evidence of an association）。</li>
+  </ul>
+  <div class="warn-box">⚠️ <strong>言い切りすぎない</strong>：講義の画面の文章を講師自身が「断定的（deterministic）すぎる、証明のようだ」と指摘しました。検定には Type I / Type II のエラーの可能性があるので、「関連が<strong>証明された</strong>」ではなく「<strong>説得力のある証拠がある</strong>」と書きます。</div>
+  <h3>Step 8　どんな誤りの可能性があるか（Type I error）</h3>
+  <p>ここでは H₀ を棄却したので、起こり得る誤りは<strong>第1種の過誤（Type I error）</strong>です。</p>
+  <ul>
+    <li><strong>内容</strong>：「怒りと CHD に関連がある」という証拠を見つけたが、<strong>実際には関連はない</strong>。</li>
+    <li><strong>結果の例</strong>（講師の想像）：医療界が怒りのレベルが高い人への教育や治療を始め、心臓への危険を説くが、<strong>実際は危険などない</strong>。時間とお金をかけて怒りの問題を「治そう」としても、CHD になる確率には何の効果もない。</li>
+  </ul>
+  <div class="note-box">💡 p 値の解釈、結論の書き方、検定統計量と p 値の求め方など、多くの部分は<strong>χ²検定だけでなく、これまでやったほかの有意性検定とも共通</strong>です。</div>
+    <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>手順は「仮説 → 期待度数 → <code>chisq.test()</code> → 条件（無作為・E ≥ 5・10%）→ p 値で結論 → 誤りの可能性」。今回は χ² = 16.08、df = 2、p = 0.0003。H₀（独立）を棄却して、関連があるという説得力のある証拠あり。ただし「証明」とは書かず、誤り（Type I）の可能性も添える。</p></div>
+
+  <div class="practice-card" id="p-c2-u4">
+    <div class="ptitle">💻 ミニ練習：検定と期待度数を取り出す</div>
+    <p class="ptask"><code>CHD_anger</code> に χ² 検定をかけて結果を <code>res</code> に保存し、続けて期待度数の表と、その最小値を出すコードを書いてください。</p>
+    <textarea class="code-editor" id="p-c2-u4-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u4', ['chisq.test', '$expected', 'min'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u4-result"></div>
+    <div class="answer-reveal" id="p-c2-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">res &lt;- <span class="kw">chisq.test</span>(CHD_anger)</span>
+<span class="cl">res</span>
+<span class="cl">res$expected</span>
+<span class="cl"><span class="kw">min</span>(res$expected)   <span class="cm"># 14.19283</span></span>
+</pre>
+      <p class="answer-note">最小値は 14.19283 で 5 より大きいので、χ²分布を使う条件を満たします。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>生データ（raw data）から検定する・3つの検定のまとめ</h2><div class="unit-sub">table() → chisq.test() / 総復習</div></div>
+  </div>
+  <h3>表ではなく生データから</h3>
+  <p>これまでは度数表（counts）が与えられました。でも<strong>データサイエンスの現場では、生データから度数表を作るのは自分の仕事</strong>です。例は教科書 <em>Introduction to Modern Statistics</em>（OpenIntro）の <code>diabetes2</code>：10〜17歳の2型糖尿病の臨床試験で、<strong>治療法（treatment：lifestyle／met／rosi）</strong>と<strong>結果（outcome：success／failure）</strong>が1人1行で入っています。（<code>?diabetes2</code> でヘルプが読めます。CodeGrade では <code>install.packages()</code> をしないこと）</p>
+<pre class="code-block">
+<span class="cl"><span class="cm"># install.packages(&quot;openintro&quot;)   # 初回だけ</span></span>
+<span class="cl"><span class="kw">library</span>(openintro)</span>
+<span class="cl"><span class="kw">table</span>(diabetes2)</span>
+</pre><div class="output-reveal">         treatment
+outcome   lifestyle met rosi
+  failure       109 120   90
+  success       125 112  143</div>
+  <p>列が2つしかないので、R は迷わず2変数の度数表を作ります。<strong>この表をそのまま <code>chisq.test()</code> に渡す</strong>だけで検定できます。</p>
+<pre class="code-block">
+<span class="cl">res2 &lt;- <span class="kw">chisq.test</span>(<span class="kw">table</span>(diabetes2))</span>
+<span class="cl">res2</span>
+</pre><div class="output-reveal">	Pearson&#x27;s Chi-squared test
+
+data:  table(diabetes2)
+X-squared = 8.1645, df = 2, p-value = 0.01687</div>
+  <p><strong>χ² = 8.1645、df = 2、p = 0.01687</strong>。df = (2−1)×(3−1) = 2。α = 0.05 なら棄却できます。（講義では p 値が「小さい」ことまで確認し、詳しい結論は演習に残されました。仮説・条件・p 値の解釈・結論を、自分で書いてみましょう）</p>
+  <p>観測・期待・残差も取り出せます。</p>
+<pre class="code-block">
+<span class="cl">res2$observed    <span class="cm"># 観測度数</span></span>
+<span class="cl">res2$expected    <span class="cm"># 期待度数（条件の確認用）</span></span>
+<span class="cl">res2$residuals   <span class="cm"># 残差 (O - E) / sqrt(E)</span></span>
+</pre><div class="output-reveal">         treatment
+outcome   lifestyle met rosi
+  failure       109 120   90
+  success       125 112  143
+
+         treatment
+outcome   lifestyle    met   rosi
+  failure    106.79 105.88 106.33
+  success    127.21 126.12 126.67
+
+         treatment
+outcome   lifestyle    met   rosi
+  failure     0.214  1.373 -1.584
+  success    -0.196 -1.258  1.451</div>
+  <ul>
+    <li><code>$expected</code> は全部 5 より大きい（最小 105.88）→ 条件OK。</li>
+    <li><code>$residuals</code> = <strong>(O − E) ／ √E</strong>。<strong>どのセルが一番「おもしろい」か</strong>（期待からのずれが大きいか）を教え、追加の分析の手がかりになります。ここでは <strong>rosi の failure（−1.584）</strong>が期待より少なく、rosi の success（+1.451）が期待より多い。</li>
+  </ul>
+  <h3>別の方法：lsr::associationTest()</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(lsr)</span>
+<span class="cl"><span class="kw">associationTest</span>(~ outcome + treatment, data = <span class="kw">as.data.frame</span>(diabetes2))</span>
+</pre>
+  <p>観測度数・期待度数（丸め）・χ² 統計量・df・p 値に加えて、<strong>Cramér の V</strong> も出力されます。ただし、そのままだと <code>treatment is not a factor</code> のエラーになることがあります。<code>as.factor()</code> を使っても直らず、原因は <code>diabetes2</code> が <strong>tibble</strong> で、この関数は <strong>data.frame</strong> を要求すること。<code>as.data.frame()</code> で変換すれば動きます。</p>
+  <div class="note-box">💡 Cramér の V や<strong>連続性補正（continuity correction）</strong>は教科書にあります。この授業では範囲外ですが、もっと深く知りたい人は教科書で。</div>
+  <h3>3つのχ²検定の総復習</h3>
+  <table class="compare-table">
+    <tr><th></th><th>適合度（GOF）</th><th>均質性</th><th>関連／独立性</th></tr>
+    <tr><td>グループ</td><td>1つ（母集団・標本1つ）</td><td>2つ以上の群・母集団</td><td>1つの母集団</td></tr>
+    <tr><td>カテゴリ変数</td><td>1つ</td><td>2つ</td><td>2つ</td></tr>
+    <tr><td>期待度数 E</td><td>n × そのカテゴリの割合（各カテゴリで）</td><td colspan="2">行合計 × 列合計 ÷ 表の総計（<strong>全セル</strong>で。計算は技術に任せる）</td></tr>
+    <tr><td>自由度 df</td><td>k − 1</td><td colspan="2">(行数 − 1) × (列数 − 1)（これも R が出してくれる）</td></tr>
+    <tr><td>検定統計量</td><td colspan="3" style="text-align:center">χ² = Σ (O − E)² ／ E （全セルで合計）</td></tr>
+  </table>
+  <p><strong>自由度が重要なのは、χ²分布の形が df で変わる</strong>から。p 値も結論も3つ共通です。</p>
+    <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>生データなら <code>table()</code> で度数表にして <code>chisq.test()</code> へ。<code>$expected</code> で条件チェック、<code>$residuals</code> でどのセルが目立つか。3つの検定は「E と df の公式」と「仮説の言い方」が違うだけで、χ² の公式・分布・結論の流れは同じ。</p></div>
+
+  <div class="practice-card" id="p-c2-u5">
+    <div class="ptitle">💻 ミニ練習：生データから検定</div>
+    <p class="ptask">データフレーム <code>df</code> に、<code>group</code> と <code>result</code> の2つのカテゴリ列があります。度数表を作り、χ² 検定をかけ、期待度数と残差を表示するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-c2-u5-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-c2-u5', ['table', 'chisq.test', '$expected', '$residuals'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-c2-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-c2-u5-result"></div>
+    <div class="answer-reveal" id="p-c2-u5-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tab &lt;- <span class="kw">table</span>(df$group, df$result)</span>
+<span class="cl">res &lt;- <span class="kw">chisq.test</span>(tab)</span>
+<span class="cl">res</span>
+<span class="cl">res$expected</span>
+<span class="cl">res$residuals</span>
+</pre>
+      <p class="answer-note"><code>table(df$group, df$result)</code> のように2つの列を渡すと二元表が作れます。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A random sample of 8474 adults is classified by anger level (low, moderate, high) and by whether a CHD event occurred. Which test answers whether the two variables are associated?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Chi-square goodness-of-fit test</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>One-way ANOVA</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Chi-square test of association (independence)</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Chi-square test of homogeneity across several populations</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What are the degrees of freedom for the chi-square test on the 2 × 3 anger/CHD table?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>(2 − 1) × (3 − 1) = 2</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>6 cells − 1 = 5, as for a one-way table</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>8474 − 1 = 8473</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>2 + 3 = 5</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In the anger data the row total for CHD = yes is 190, the column total for low anger is 3110 and n = 8474. What is the expected count for the yes/low cell?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>53.0</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>190 × 3110 = 590,900</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>8474 ÷ 190 ≈ 44.6</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 69.7</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why does the lecturer use proportions(tbl, margin = 2) instead of just comparing the counts of CHD events?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It converts the data frame into a matrix and removes the totals from it</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Group sizes differ, so within-group percentages are needed</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It calculates the chi-square statistic and the p-value in a single step</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It re-orders the rows so that the largest count is always at the top</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">chisq.test() gives X-squared = 16.077, df = 2, p-value = 0.0003228. Which conclusion is best?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Anger causes heart disease, and this is now proven beyond doubt</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Fail to reject H0, because such a small p-value supports it</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Convincing evidence that anger and CHD are associated</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The expected counts must be wrong, so the test cannot be trusted</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which condition is checked with chisq.test(tbl)$expected, and what is the result for the anger data?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>All expected counts exceed 5; the smallest is about 14.2</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All observed counts must exceed 100; the smallest observed count is 27</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The expected counts must add up to 1; here they actually add to 8474</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The row totals must be equal to each other; here they are 190 and 8284</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Here H0 was rejected. What would a Type I error mean in the anger/CHD study?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>We miss a real association between anger and CHD in the population</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>We choose the wrong degrees of freedom for the chi-square distribution</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>We mistakenly include the totals when we build the matrix of counts</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Concluding there is an association when there is none</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">You have raw data (one row per patient) with columns treatment and outcome in a data frame called diabetes2. What is the simplest way to run the chi-square test?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>chisq.test(diabetes2$treatment)</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>chisq.test(table(diabetes2))</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>goodnessOfFit(diabetes2)</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>t.test(treatment ~ outcome, data = diabetes2)</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 2, 0, 3, 1];
+var FEEDBACKS=["One sample, one population, two categorical variables: this is a test of association (independence). GOF has only one variable, and homogeneity compares several groups or populations.", "For a two-way table df = (rows − 1) × (columns − 1) = 1 × 2 = 2. The sample size does not enter the formula.", "Expected = row total × column total ÷ table total = 190 × 3110 ÷ 8474 ≈ 69.7. The observed count of 53 is lower than expected under no association.", "Moderate anger has the most CHD events simply because it is the biggest group. The conditional distribution by column (1.7%, 2.3%, 4.3%) is the fair comparison.", "A small p-value means the data would be very unlikely if the variables were independent, so reject H0 and report convincing evidence of an association. Because this is an observational study and errors are possible, avoid words like proven or causes.", "The chi-square distribution can be used for the p-value when every expected count is at least 5. The smallest expected count is 14.19, so the condition holds.", "A Type I error is rejecting a true H0. Here that means concluding anger is associated with CHD when it is not, which could lead to wasted money and effort on anger education and treatment.", "Turn the raw data into a table of counts with table(), then pass it to chisq.test(). For diabetes2 this gives X-squared = 8.1645, df = 2, p = 0.01687."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">two-way table</div><div class="term-en">二元表（分割表）</div><div class="term-def">カテゴリ変数2つを行と列に並べた度数表。</div></div>
+    <div class="term-item"><div class="term-name">one-way table</div><div class="term-en">一元表</div><div class="term-def">カテゴリ変数1つの度数表（GOF検定で使用）。</div></div>
+    <div class="term-item"><div class="term-name">test of homogeneity</div><div class="term-en">均質性の検定</div><div class="term-def">複数の母集団・処置群で、カテゴリ変数の分布が同じかを調べる。</div></div>
+    <div class="term-item"><div class="term-name">test of association / independence</div><div class="term-en">関連（独立性）の検定</div><div class="term-def">1つの母集団で2つのカテゴリ変数が関連するか（独立か）を調べる。</div></div>
+    <div class="term-item"><div class="term-name">observed / expected count</div><div class="term-en">観測度数／期待度数</div><div class="term-def">O は実際の度数。E は H₀ が正しいときの度数（行合計×列合計÷総計）。</div></div>
+    <div class="term-item"><div class="term-name">conditional distribution</div><div class="term-en">条件付き分布</div><div class="term-def">各群の中での割合。<code>proportions(tbl, margin = 2)</code>。</div></div>
+    <div class="term-item"><div class="term-name">degrees of freedom (df)</div><div class="term-en">自由度</div><div class="term-def">二元表では (行数−1)×(列数−1)。分布の形を決める。</div></div>
+    <div class="term-item"><div class="term-name">residual</div><div class="term-en">残差</div><div class="term-def">(O − E)／√E。どのセルが期待から離れているかを示す。</div></div>
+    <div class="term-item"><div class="term-name">prospective observational study</div><div class="term-en">前向き観察研究</div><div class="term-def">人を追跡して将来の出来事を記録する研究。処置の割り当てはしない。</div></div>
+    <div class="term-item"><div class="term-name">Type I error</div><div class="term-en">第1種の過誤</div><div class="term-def">本当は H₀ が正しいのに棄却してしまう誤り。</div></div>
+    <div class="term-item"><div class="term-name">matrix</div><div class="term-en">行列</div><div class="term-def">長方形に並べた数。<code>matrix(x, nrow, ncol, byrow = TRUE)</code>。</div></div>
+    <div class="term-item"><div class="term-name">Cramér's V</div><div class="term-en">クラメールのV</div><div class="term-def">関連の強さを表す指標（範囲外の発展）。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>まず「変数はいくつ？グループはいくつ？」で検定を選ぶ。二元表は <code>matrix()</code>（合計は入れない）か <code>table()</code> で作り、<code>chisq.test()</code> → <code>$expected</code> で条件確認 → p 値で結論。結論は「証明」ではなく「説得力のある証拠」と書く。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📋 統計レッスン：M5 χ²② 二元表と独立性の検定</p>
+  <p style="margin-top:.5rem;"><a href="m5_chi_gof.html">← χ²① 適合度</a> · <a href="m6_corr_basics.html">相関① 散布図と相関係数 →</a> · <a href="m5_chi_two_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Matplotlib⑤ スタイル・棒グラフ・3D</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Matplotlib — Styles, Bars, 3D</div>
+  <h1>🎛️ Matplotlib⑤：スタイル・棒グラフ・3D</h1>
+  <p>スタイルシート、棒グラフと円グラフ、3Dのグラフを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① スタイル</a><a href="#unit2">② 棒・円</a><a href="#unit3">③ 3D</a><a href="#quiz">📝 Quiz</a><a href="mpl_style3d_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 4.11 Customization: Configurations and Stylesheets</li><li>Handbook 4.12 Three-Dimensional Plotting in Matplotlib</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>見た目を一括で変える：スタイルシート</h2><div class="unit-sub">plt.style.use</div></div>
+  </div>
+<p>色やフォントなど見た目の設定をまとめて変えるのが<strong>スタイルシート</strong>です。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(plt.style.available[:<span class="nm">6</span>])</span>
+</pre><div class="output-reveal">['Solarize_Light2', 'bmh', 'classic', 'dark_background', 'fast', 'fivethirtyeight']</div><pre class="code-block">
+<span class="cl">x = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl"><span class="kw">with</span> plt.style.context(<span class="st">'ggplot'</span>):</span>
+<span class="cl">    plt.plot(x, np.sin(x))</span>
+<span class="cl">    plt.plot(x, np.cos(x))</span>
+</pre><div class="plot-out"><img src="images/m5_style.png" alt="ggplotスタイル" loading="lazy"></div><p><code>plt.style.use('名前')</code>はそれ以降すべてに、<code>with plt.style.context('名前'):</code>はそのブロックの中だけに適用されます。</p><p>個別の設定は<code>plt.rcParams</code>で変えられます。</p><pre class="code-block">
+<span class="cl">plt.rcParams[<span class="st">'lines.linewidth'</span>] = <span class="nm">2</span></span>
+<span class="cl">plt.rcParams[<span class="st">'axes.grid'</span>] = <span class="kw">True</span></span>
+<span class="cl">plt.rcParams[<span class="st">'lines.linewidth'</span>]</span>
+</pre><div class="output-reveal">2.0</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「全体の見た目」はスタイルシート、「1か所だけ」は引数、というふうに使い分けます。</p></div><div class="practice-card" id="p-m5-u1">
+    <div class="ptitle">💻 ミニ練習：スタイル</div>
+    <p class="ptask"><code>with</code>文で<code>'seaborn-v0_8'</code>スタイルを一時的に使って、線を1本描くコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m5-u1-input" rows="7">import matplotlib.pyplot as plt
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m5-u1", ["plt.style.context", "plt.plot"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5-u1-result"></div>
+    <div class="answer-reveal" id="p-m5-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">with</span> plt.style.context(<span class="st">'seaborn-v0_8'</span>):</span>
+<span class="cl">    plt.plot([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>])</span>
+</pre>
+      <p class="answer-note">withを抜けると元の設定に戻ります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>棒グラフ・円グラフ</h2><div class="unit-sub">bar と pie</div></div>
+  </div>
+<p>カテゴリごとの大きさを比べるには<strong>棒グラフ</strong>（<code>plt.bar</code>）、割合を見るには<strong>円グラフ</strong>（<code>plt.pie</code>）です。</p><pre class="code-block">
+<span class="cl">cats = [<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span>]</span>
+<span class="cl">vals = [<span class="nm">23</span>, <span class="nm">17</span>, <span class="nm">35</span>, <span class="nm">29</span>]</span>
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.bar(cats, vals, color=<span class="st">'steelblue'</span>)</span>
+<span class="cl">ax.set_ylabel(<span class="st">'count'</span>)</span>
+</pre><div class="plot-out"><img src="images/m5_bar.png" alt="棒グラフ" loading="lazy"></div><pre class="code-block">
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.barh(cats, vals, color=<span class="st">'tomato'</span>)     <span class="cm"># 横向き</span></span>
+<span class="cl">ax.set_xlabel(<span class="st">'count'</span>)</span>
+</pre><div class="plot-out"><img src="images/m5_barh.png" alt="横棒" loading="lazy"></div><pre class="code-block">
+<span class="cl">fig, ax = plt.subplots(figsize=(<span class="nm">4</span>, <span class="nm">4</span>))</span>
+<span class="cl">ax.pie(vals, labels=cats, autopct=<span class="st">'%1.0f%%'</span>, startangle=<span class="nm">90</span>)</span>
+</pre><div class="plot-out"><img src="images/m5_pie.png" alt="円グラフ" loading="lazy"></div><div class="warn-box">⚠️ 円グラフは、項目が多い・値が近いときには比べにくくなります。迷ったら棒グラフです。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>大きさの比較は棒、全体の中の割合は円。</p></div><div class="practice-card" id="p-m5-u2">
+    <div class="ptitle">💻 ミニ練習：棒グラフ</div>
+    <p class="ptask"><code>cats</code>と<code>vals</code>の棒グラフを描き、y軸ラベルを <code>count</code> にしてください。</p>
+    <textarea class="code-editor" id="p-m5-u2-input" rows="7">import matplotlib.pyplot as plt
+cats = ['A', 'B']
+vals = [3, 5]
+fig, ax = plt.subplots()
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m5-u2", ["ax.bar", "ax.set_ylabel"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5-u2-result"></div>
+    <div class="answer-reveal" id="p-m5-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">ax.bar(cats, vals)</span>
+<span class="cl">ax.set_ylabel(<span class="st">'count'</span>)</span>
+</pre>
+      <p class="answer-note">barにカテゴリと値を渡します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>3Dのグラフ</h2><div class="unit-sub">projection='3d'</div></div>
+  </div>
+<p>3次元の図は、<code>projection='3d'</code>を指定して軸を作ります。</p><pre class="code-block">
+<span class="cl">fig = plt.figure()</span>
+<span class="cl">ax = fig.add_subplot(projection=<span class="st">'3d'</span>)</span>
+<span class="cl">z = np.linspace(<span class="nm">0</span>, <span class="nm">15</span>, <span class="nm">200</span>)</span>
+<span class="cl">ax.plot3D(np.sin(z), np.cos(z), z, <span class="st">'gray'</span>)</span>
+<span class="cl">ax.scatter3D(np.sin(z[::<span class="nm">10</span>]), np.cos(z[::<span class="nm">10</span>]), z[::<span class="nm">10</span>], c=z[::<span class="nm">10</span>], cmap=<span class="st">'viridis'</span>)</span>
+</pre><div class="plot-out"><img src="images/m5_3d.png" alt="3D線と点" loading="lazy"></div><pre class="code-block">
+<span class="cl">X, Y = np.meshgrid(np.linspace(-<span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">30</span>), np.linspace(-<span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">30</span>))</span>
+<span class="cl">Z = np.sin(np.sqrt(X ** <span class="nm">2</span> + Y ** <span class="nm">2</span>))</span>
+<span class="cl">fig = plt.figure()</span>
+<span class="cl">ax = fig.add_subplot(projection=<span class="st">'3d'</span>)</span>
+<span class="cl">ax.plot_surface(X, Y, Z, cmap=<span class="st">'viridis'</span>)</span>
+<span class="cl">ax.view_init(elev=<span class="nm">40</span>, azim=<span class="nm">30</span>)</span>
+</pre><div class="plot-out"><img src="images/m5_surface.png" alt="曲面" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>3Dは、見る角度（<code>view_init</code>）で印象が変わります。読み取りやすさのため、使いすぎないのも大事です。</p></div><div class="practice-card" id="p-m5-u3">
+    <div class="ptitle">💻 ミニ練習：3D</div>
+    <p class="ptask">3D用の軸を作ってください（<code>ax</code>に入れる）。</p>
+    <textarea class="code-editor" id="p-m5-u3-input" rows="7">import matplotlib.pyplot as plt
+fig = plt.figure()
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m5-u3", ["projection='3d'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5-u3-result"></div>
+    <div class="answer-reveal" id="p-m5-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">ax = fig.add_subplot(projection=<span class="st">'3d'</span>)</span>
+</pre>
+      <p class="answer-note">projectionを指定します。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">How do you apply a style only inside a code block?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>with plt.style.context('ggplot'):</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>plt.style.use('ggplot') at the top of the file</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>plt.style.reset('ggplot')</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>style.apply('ggplot', temporary)</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Where do you change an individual default such as line width?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>plt.rcParams</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>plt.defaults, a module with the default values</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>plt.config(), a function that reads a file</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>plt.settings, an object for the user interface</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which function draws a vertical bar chart?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>plt.pie</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>plt.bar</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>plt.hist2d</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>plt.contour</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which chart is best for comparing sizes of many similar categories?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A pie chart</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A 3-D surface</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A bar chart</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A contour plot</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">How do you create 3-D axes?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>fig.add_subplot(projection='3d')</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>plt.axes(dim=3), which is not a real argument</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>plt.subplots(3), which makes three plots in a row</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>fig.add_3d(True), which is not a method of figure</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which function changes the viewing angle of a 3-D plot?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ax.set_angle</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ax.rotate_axes</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ax.view_init</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>ax.camera</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 1, 2, 0, 2];
+var FEEDBACKS=["The context manager restores the previous settings when the block ends.", "plt.rcParams is a dictionary of runtime configuration defaults.", "bar draws bars; barh draws horizontal bars.", "Bars are easier to compare than angles, especially when values are close.", "Passing projection='3d' creates an Axes3D object.", "view_init(elev, azim) sets the elevation and azimuth angles."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">style</div><div class="term-en">スタイルシート</div><div class="term-def">見た目の設定をまとめて変える。plt.style.use / context。</div></div>
+    <div class="term-item"><div class="term-name">rcParams</div><div class="term-en">個別設定</div><div class="term-def">plt.rcParamsで線の太さなどの既定値を変える。</div></div>
+    <div class="term-item"><div class="term-name">bar / barh</div><div class="term-en">棒グラフ</div><div class="term-def">縦／横の棒グラフ。カテゴリの比較に。</div></div>
+    <div class="term-item"><div class="term-name">pie</div><div class="term-en">円グラフ</div><div class="term-def">割合を表す。項目が多いと読みにくい。</div></div>
+    <div class="term-item"><div class="term-name">projection="3d"</div><div class="term-en">3D軸</div><div class="term-def">3次元のグラフを描くための指定。</div></div>
+    <div class="term-item"><div class="term-name">view_init</div><div class="term-en">視点</div><div class="term-def">3Dグラフの見る角度（elev・azim）を指定する。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>見た目の全体はスタイル、個別は引数、と使い分けます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Matplotlib⑤ スタイル・棒グラフ・3D</p>
+  <p style="margin-top:.5rem;"><a href="mpl_layout.html">← ④ 複数グラフ・注釈</a> · <a href="mpl_seaborn.html">⑥ Seaborn →</a> · <a href="mpl_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

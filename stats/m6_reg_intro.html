@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 回帰①　回帰直線と最小二乗法</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 📉 回帰入門 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Linear Regression — Line of Best Fit</div>
+  <h1>📉 回帰①：回帰直線と最小二乗法</h1>
+  <p>相関 r は2つの変数の関係の強さを1つの数にしました。ここからは一歩進んで、<strong>x から y を予測する直線</strong>を引きます。「なぜその直線が最良なのか？」を、<strong>残差</strong>と<strong>最小二乗法</strong>で説明します。</p>
+  <p style="font-size:.9rem">📺 講義動画: Linear Regression 1「intro to Regression」・Linear Regression 2「The Line of Best Fit」・Linear Regression 3「Residual」・Linear Regression 4「Why is the least-squares regression line the best fitting line?」</p>
+  <p style="font-size:.9rem">📦 練習データ：donors（退役軍人団体の寄付者データ、全 95,412 行）から <code>set.seed(1)</code> で取り出した50人の標本 <code>sampleDonors</code></p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 回帰とは</a><a href="#unit2">② 最良の直線</a><a href="#unit3">③ 残差</a><a href="#unit4">④ なぜ最小二乗法か</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 回帰とは（予測・説明変数／応答変数）：<strong>Linear Regression 1「intro to Regression」</strong></li><li>② 最良の直線 ŷ = b₀ + b₁x：<strong>Linear Regression 2「The Line of Best Fit」</strong></li><li>③ 残差 (residual = y − ŷ)：<strong>Linear Regression 3「Residual」</strong></li><li>④ なぜ最小二乗法か（残差の二乗和を最小に）：<strong>Linear Regression 4「Why is the least-squares regression line the best fitting line?」</strong></li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>回帰とは</h2><div class="unit-sub">予測と関連、説明変数と応答変数</div></div>
+  </div>
+  <p>これまで学んだ<strong>相関 r</strong>は、2つの量的変数の関係を1つの数で表しました。このモジュールの主役は<strong>回帰（regression）</strong>です。じつは相関の記号 <strong>r</strong> は、<strong>regression（回帰）の頭文字</strong>から来ています。それくらい両者は近い関係です。</p>
+  <p>回帰でできることは大きく2つです。</p>
+  <ul>
+    <li><strong>予測（prediction）</strong>：ある値 x を決めたとき、それに対応する y を予測する。データから予測できることは、多くの企業やビジネスで役に立ちます。</li>
+    <li><strong>関連（association）の確認</strong>：2つの変数に関連があるか。「一方が増えると他方も増える（または減る）か」を調べる。確率の単元の二元表（two-way table）では<em>カテゴリ変数</em>の独立・関連を扱いましたが、ここでは<strong>量的変数（quantitative variable）</strong>どうしを調べます。</li>
+  </ul>
+  <h3>散布図と time series</h3>
+  <p>散布図（scatterplot）は、<strong>同じ個体</strong>の2つの量的変数の関係を見せる図です。講義では、ビジネス分析の教科書のデータ（バスの年数 age と年間維持費 cost）を使いました。なお、<strong>time series（時系列）</strong>とは、<strong>x軸に時間（秒・月・年・十年など）をとった散布図</strong>のことで、このバスの図もそうです。</p>
+<pre class="code-block">
+<span class="cl">age &lt;- <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">5</span>)</span>
+<span class="cl">cost &lt;- <span class="kw">c</span>(<span class="nm">350</span>, <span class="nm">370</span>, <span class="nm">480</span>, <span class="nm">520</span>, <span class="nm">590</span>, <span class="nm">550</span>, <span class="nm">750</span>, <span class="nm">800</span>, <span class="nm">790</span>, <span class="nm">950</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">plot</span>(age, cost, pch = <span class="nm">16</span>, las = <span class="nm">1</span>, cex = <span class="nm">1</span>,</span>
+<span class="cl">     xlab = <span class="st">&quot;Age of Bus (years)&quot;</span>, ylab = <span class="st">&quot;Annual Maintenance Cost ($)&quot;</span>)</span>
+</pre>
+  <div class="viz">
+    <div class="viz-title">バスの年数と年間維持費（左：傾向をとらえた直線 / 右：点を全部つなぐ「過学習」）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><svg viewBox="0 0 300 250" width="100%" style="max-width:300px" role="img" aria-label="バスの年数と年間維持費の散布図"><rect x="0.5" y="0.5" width="299" height="249" fill="none" stroke="#cbd5e1"/><line x1="52" y1="210" x2="290" y2="210" stroke="#64748b"/><line x1="52" y1="12" x2="52" y2="210" stroke="#64748b"/><line x1="75.8" y1="210" x2="75.8" y2="214" stroke="#64748b"/><text x="75.8" y="226" font-size="11" text-anchor="middle" fill="#64748b">1</text><line x1="123.4" y1="210" x2="123.4" y2="214" stroke="#64748b"/><text x="123.4" y="226" font-size="11" text-anchor="middle" fill="#64748b">2</text><line x1="171.0" y1="210" x2="171.0" y2="214" stroke="#64748b"/><text x="171.0" y="226" font-size="11" text-anchor="middle" fill="#64748b">3</text><line x1="218.6" y1="210" x2="218.6" y2="214" stroke="#64748b"/><text x="218.6" y="226" font-size="11" text-anchor="middle" fill="#64748b">4</text><line x1="266.2" y1="210" x2="266.2" y2="214" stroke="#64748b"/><text x="266.2" y="226" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="48" y1="181.7" x2="52" y2="181.7" stroke="#64748b"/><line x1="52" y1="181.7" x2="290" y2="181.7" stroke="#e2e8f0"/><text x="45" y="185.7" font-size="11" text-anchor="end" fill="#64748b">400</text><line x1="48" y1="125.1" x2="52" y2="125.1" stroke="#64748b"/><line x1="52" y1="125.1" x2="290" y2="125.1" stroke="#e2e8f0"/><text x="45" y="129.1" font-size="11" text-anchor="end" fill="#64748b">600</text><line x1="48" y1="68.6" x2="52" y2="68.6" stroke="#64748b"/><line x1="52" y1="68.6" x2="290" y2="68.6" stroke="#e2e8f0"/><text x="45" y="72.6" font-size="11" text-anchor="end" fill="#64748b">800</text><line x1="48" y1="12.0" x2="52" y2="12.0" stroke="#64748b"/><line x1="52" y1="12.0" x2="290" y2="12.0" stroke="#e2e8f0"/><text x="45" y="16.0" font-size="11" text-anchor="end" fill="#64748b">1000</text><text x="171" y="245" font-size="12" text-anchor="middle" fill="#334155">バスの年数 age（年）</text><text x="13" y="111" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 13 111)">年間維持費 cost（$）</text><line x1="61.5" y1="206.6" x2="280.5" y2="35.2" stroke="#ef4444" stroke-width="2"/><circle cx="75.8" cy="195.9" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="190.2" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="159.1" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="147.8" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="128.0" r="4" fill="var(--primary)" opacity=".8"/><circle cx="171.0" cy="139.3" r="4" fill="var(--primary)" opacity=".8"/><circle cx="218.6" cy="82.7" r="4" fill="var(--primary)" opacity=".8"/><circle cx="218.6" cy="68.6" r="4" fill="var(--primary)" opacity=".8"/><circle cx="266.2" cy="71.4" r="4" fill="var(--primary)" opacity=".8"/><circle cx="266.2" cy="26.1" r="4" fill="var(--primary)" opacity=".8"/></svg><svg viewBox="0 0 300 250" width="100%" style="max-width:300px" role="img" aria-label="バスの年数と年間維持費の散布図"><rect x="0.5" y="0.5" width="299" height="249" fill="none" stroke="#cbd5e1"/><line x1="52" y1="210" x2="290" y2="210" stroke="#64748b"/><line x1="52" y1="12" x2="52" y2="210" stroke="#64748b"/><line x1="75.8" y1="210" x2="75.8" y2="214" stroke="#64748b"/><text x="75.8" y="226" font-size="11" text-anchor="middle" fill="#64748b">1</text><line x1="123.4" y1="210" x2="123.4" y2="214" stroke="#64748b"/><text x="123.4" y="226" font-size="11" text-anchor="middle" fill="#64748b">2</text><line x1="171.0" y1="210" x2="171.0" y2="214" stroke="#64748b"/><text x="171.0" y="226" font-size="11" text-anchor="middle" fill="#64748b">3</text><line x1="218.6" y1="210" x2="218.6" y2="214" stroke="#64748b"/><text x="218.6" y="226" font-size="11" text-anchor="middle" fill="#64748b">4</text><line x1="266.2" y1="210" x2="266.2" y2="214" stroke="#64748b"/><text x="266.2" y="226" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="48" y1="181.7" x2="52" y2="181.7" stroke="#64748b"/><line x1="52" y1="181.7" x2="290" y2="181.7" stroke="#e2e8f0"/><text x="45" y="185.7" font-size="11" text-anchor="end" fill="#64748b">400</text><line x1="48" y1="125.1" x2="52" y2="125.1" stroke="#64748b"/><line x1="52" y1="125.1" x2="290" y2="125.1" stroke="#e2e8f0"/><text x="45" y="129.1" font-size="11" text-anchor="end" fill="#64748b">600</text><line x1="48" y1="68.6" x2="52" y2="68.6" stroke="#64748b"/><line x1="52" y1="68.6" x2="290" y2="68.6" stroke="#e2e8f0"/><text x="45" y="72.6" font-size="11" text-anchor="end" fill="#64748b">800</text><line x1="48" y1="12.0" x2="52" y2="12.0" stroke="#64748b"/><line x1="52" y1="12.0" x2="290" y2="12.0" stroke="#e2e8f0"/><text x="45" y="16.0" font-size="11" text-anchor="end" fill="#64748b">1000</text><text x="171" y="245" font-size="12" text-anchor="middle" fill="#334155">バスの年数 age（年）</text><text x="13" y="111" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 13 111)">年間維持費 cost（$）</text><polyline points="75.8,195.9 123.4,190.2 123.4,159.1 123.4,147.8 123.4,128.0 171.0,139.3 218.6,82.7 218.6,68.6 266.2,71.4 266.2,26.1" fill="none" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="5 3"/><circle cx="75.8" cy="195.9" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="190.2" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="159.1" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="147.8" r="4" fill="var(--primary)" opacity=".8"/><circle cx="123.4" cy="128.0" r="4" fill="var(--primary)" opacity=".8"/><circle cx="171.0" cy="139.3" r="4" fill="var(--primary)" opacity=".8"/><circle cx="218.6" cy="82.7" r="4" fill="var(--primary)" opacity=".8"/><circle cx="218.6" cy="68.6" r="4" fill="var(--primary)" opacity=".8"/><circle cx="266.2" cy="71.4" r="4" fill="var(--primary)" opacity=".8"/><circle cx="266.2" cy="26.1" r="4" fill="var(--primary)" opacity=".8"/></svg></div>
+    <div class="viz-cap">左は「全体として右上がり」という<strong>傾向（trend）</strong>を表す直線。右の「connect-the-dots」は点にぴったり合わせた線で、新しいバスのデータが来ると合いません。</div>
+  </div>
+  <p>x軸は年数（1〜5）、y軸は維持費（400未満〜900超）。<strong>説明変数（explanatory variable）= バスの年数</strong>、<strong>応答変数（response variable）= 年間維持費</strong>で、どちらも量的変数です。このバスの例で、年数が増えるほど維持費も増える右上がりの傾向があり、<strong>関連がある</strong>と言えます。車を持ったことがあれば納得ですね。古い車ほど維持にお金がかかります。</p>
+  <p>講師はここで、こんな場面を例に挙げました。たとえば<strong>2.5年のバス</strong>の維持費を、この関係から予測できるでしょうか。この関係がなければ、どれくらいが妥当か見当もつきません。また、もし<strong>3.5年のバスの費用が傾向よりずっと上</strong>にあったら、他のバスの傾向から外れているので「ちょっと気になる（concerning）」点になります。</p>
+  <h3>Outcome = Model + Error と過学習</h3>
+  <p>図を見ると、点は右上がりの傾向の<strong>まわりにばらついて</strong>います。このばらつき（variability）は<strong>悪いことではなく、そういうものです</strong>。同じ年数のバスでも維持費はバスごとに違います。</p>
+  <div class="warn-box">⚠️ <strong>統計の「error」は「間違い」ではありません。</strong>期待（モデル）からのずれ（deviation）、つまり<strong>ばらつき</strong>のことです。<br>回帰の基本の考え方は <strong>Outcome = Model + Error</strong>（結果 = モデル + 誤差）です。</div>
+  <p>機械学習でよく聞く<strong>過学習（overfitting）</strong>とは、点を全部つなぐ「connect-the-dots」のように、モデルをデータにぴったり合わせすぎることです。2つの変数の間に完全な関係があるとは限らないのに「完全な関係」を無理に作ってしまうので、<strong>新しいデータはそのモデルに合いません</strong>。過学習はerrorの存在を認めたがらない考え方で、私たちは「errorがあってよい」と割り切って、<strong>傾向（trend）をとらえる</strong>モデルを作ります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>回帰は「x から y を予想する」道具。点は直線の周りにばらつくけれど、それは<strong>間違いではなく自然なばらつき</strong>。点を全部つなぐのではなく、<strong>全体の傾向</strong>をとらえます。</p></div>
+  <h3>回帰の種類</h3>
+  <p>回帰モデルにはいろいろな種類があります。このモジュールで学ぶのは<strong>線形回帰</strong>と<strong>重回帰</strong>です。ほかの種類は今後の授業で出てきます。選び方は<strong>データの型</strong>しだいで、<strong>結果が二値（binary）ならロジスティック、連続（continuous）なら線形・重回帰</strong>を使います。</p>
+  <table class="compare-table">
+    <tr><th>モデル（Model）</th><th>データ（Data）</th></tr>
+    <tr><td>Linear regression（線形回帰）</td><td>予測変数 1 つ、結果は連続</td></tr>
+    <tr><td>Multiple regression（重回帰）</td><td>予測変数が複数、結果は連続（例：バスの年数に加えて走行距離）</td></tr>
+    <tr><td>Logistic regression（ロジスティック回帰）</td><td>予測変数 1 つ、結果は二値</td></tr>
+    <tr><td>Multiple logistic regression</td><td>予測変数が複数、結果は二値</td></tr>
+    <tr><td>Polynomial regression（多項式回帰）</td><td>予測変数と連続の結果の関係が直線ではない</td></tr>
+  </table>
+  <h3>用語を整理する</h3>
+  <table class="compare-table">
+    <tr><th>役割</th><th>英語の別名</th><th>バスの例</th></tr>
+    <tr><td><strong>応答変数</strong> response variable（y）</td><td>dependent variable（従属変数）、outcome（結果）</td><td>年間維持費</td></tr>
+    <tr><td><strong>説明変数</strong> explanatory variable（x）</td><td>independent variable（独立変数）、predictor（予測変数）、feature（特徴量）</td><td>バスの年数</td></tr>
+  </table>
+  <p>※ <strong>feature</strong> は機械学習の文脈でよく使う言い方で、predictor と同じ意味です。</p>
+  <p><strong>関連（association）</strong>：一方の変数の値を知ると他方の値を予測しやすくなるとき、2つの変数には関連があると言います。また、<strong>「年間維持費を年数に回帰する」</strong>を英語では <strong>“regressing Y on X”</strong>（y を x に回帰する）と言います。</p>
+  <div class="note-box">🚗 講義の用語練習として、Rに最初から入っているデータ <code>mtcars</code> の散布図（馬力 horsepower と燃費 mpg）が出ました。「関連はあるか？ 応答・説明・独立・従属変数はどれ？ 関連の様子を説明できるか？」を自分で考えてみましょう。</div>
+  <div class="practice-card" id="p-m6ri-u1">
+    <div class="ptitle">💻 ミニ練習：mtcars の散布図を描く</div>
+    <p class="ptask"><code>mtcars</code>の馬力<code>hp</code>（説明変数）と燃費<code>mpg</code>（応答変数）の散布図を、点を塗りつぶし（<code>pch = 16</code>）で描いてください。</p>
+    <textarea class="code-editor" id="p-m6ri-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6ri-u1', ['plot', 'mtcars', 'hp', 'mpg'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6ri-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6ri-u1-result"></div>
+    <div class="answer-reveal" id="p-m6ri-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(mtcars$hp, mtcars$mpg, pch = <span class="nm">16</span>, las = <span class="nm">1</span>, cex = <span class="nm">1</span>,</span>
+<span class="cl">     main = <span class="st">&quot;Terminology Practice&quot;</span>, xlab = <span class="st">&quot;Horsepower&quot;</span>, ylab = <span class="st">&quot;Miles Per Gallon&quot;</span>)</span>
+</pre>
+      <p class="answer-note">応答変数（y）は燃費 mpg、説明変数（x）は馬力 hp。馬力が大きい車ほど燃費が悪くなる右下がりの傾向（負の関連）があります。相関を<code>cor(mtcars$hp, mtcars$mpg)</code>で調べると −0.776 です（強い負の相関）。</p>
+    </div>
+  </div>
+  <h3>次回に向けた準備：donors データ</h3>
+  <p>この後の動画では、これまでのモジュールで使ってきた<strong>donors</strong>データ（全国組織の退役軍人団体が、ダイレクトメールで寄付を募った見込み寄付者のデータ）を使います。講義の最後の課題は、データを読み込み（<code>donors</code>と名付ける）、中身を確認・要約し、次のコードで<strong>50人の標本</strong>を取り出すことでした。全体の95,412行すべてではなく標本を分析します。<code>set.seed(1)</code>は、自分のランダム標本が講師のものと<strong>同じ</strong>になるようにするためです。気になる列だけを選んでいる点にも注目しましょう。</p>
+<pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(&#x27;donors.csv&#x27;)</span>
+<span class="cl"><span class="kw">nrow</span>(donors)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 再現性のため</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl"><span class="cm"># 行番号を50個、ランダムに選ぶ(標本 n = 50、母集団 N = 95,412)</span></span>
+<span class="cl">sampleIDs &lt;- <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">95412</span>, size = <span class="nm">50</span>, replace = FALSE)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 興味のある列を選ぶ</span></span>
+<span class="cl">myColumns &lt;- <span class="kw">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;incomeRating&quot;</span>, <span class="st">&quot;totalGivingAmount&quot;</span>, <span class="st">&quot;largestGiftAmount&quot;</span>,</span>
+<span class="cl">               <span class="st">&quot;isHomeowner&quot;</span>, <span class="st">&quot;gender&quot;</span>, <span class="st">&quot;urbanicity&quot;</span>, <span class="st">&quot;respondedMailing&quot;</span>)</span>
+<span class="cl">sampleDonors &lt;- donors[sampleIDs, myColumns]</span>
+<span class="cl"><span class="kw">dim</span>(sampleDonors)</span>
+</pre>
+<div class="output-reveal">[1] 95412
+
+[1] 50  8</div>
+  <p>最後に、NA（欠損値）があるとき／ないときの<strong>相関行列（correlation matrix）</strong>の復習も課題に含まれていました。次の動画で使う2変数の相関は次のとおりです。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(sampleDonors$largestGiftAmount, sampleDonors$totalGivingAmount)</span>
+</pre>
+<div class="output-reveal">[1] 0.5851685</div>
+
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>最良の直線 ŷ = b₀ + b₁x</h2><div class="unit-sub">lm() で直線の式を求める</div></div>
+  </div>
+  <p>いちばん基本的な回帰モデルが<strong>線形回帰モデル</strong>、別名「<strong>最良の直線（line of best fit）</strong>」です。これまで同様、<strong>結果 = モデル + 誤差</strong>で、誤差は間違いではなく「完全な関係はなく、ばらつきがある」ことを表しています。</p>
+  <p>使うのは donors の標本50人の<strong>最高寄付額 largestGiftAmount（説明変数 x）</strong>と<strong>総寄付額 totalGivingAmount（応答変数 y）</strong>です。この2つの相関は<strong>0.59</strong>（上で計算した 0.5851685 を丸めた値）。散布図を見て、関係を言葉で説明してみましょう（右上がりで、最高寄付額が大きい人ほど総額も多い）。点を全部つなぐ過学習は避け、<strong>ざっくり1本の直線</strong>で表します。</p>
+  <h3>直線のいろいろな名前</h3>
+  <p>この直線にはたくさんの名前があります。略称が出てくるので、何の略か必ず覚えておきましょう。</p>
+  <table class="compare-table">
+    <tr><th>英語</th><th>日本語</th></tr>
+    <tr><td>trend line</td><td>傾向線</td></tr>
+    <tr><td>line of best fit</td><td>最良の直線</td></tr>
+    <tr><td><strong>least squares regression line（LSRL）</strong></td><td>最小二乗回帰直線</td></tr>
+    <tr><td><strong>ordinary least squares regression（OLSR）</strong></td><td>通常の最小二乗回帰</td></tr>
+  </table>
+  <h3>Rで直線の式を求める：lm()</h3>
+  <p>Rでは<code>lm()</code>（linear model）を使います。書き方は<code>lm(y ~ x)</code>で、<strong>応答変数 y が先、説明変数 x が後</strong>。<code>~</code>（チルダ）は「〜に回帰する／given」と読みます。</p>
+  <div class="warn-box">⚠️ <strong>順番に注意：</strong>グラフを見るときはx軸（横）を先に見がちですが、<code>lm()</code>では<strong>予測したい y が先</strong>、予測に使う x（グラフの横軸の変数）が2番目です。</div>
+<pre class="code-block">
+<span class="cl">model &lt;- <span class="kw">lm</span>(sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)</span>
+<span class="cl">model</span>
+</pre>
+<div class="output-reveal">
+Call:
+lm(formula = sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)
+
+Coefficients:
+                   (Intercept)  sampleDonors$largestGiftAmount  
+                         51.82                            3.91  
+</div>
+  <p>係数（coefficients）は <strong>51.82</strong> と <strong>3.91</strong>。最初が<strong>y切片（intercept、直線がy軸と交わるところ）</strong>、次が<strong>傾き（slope、直線の急さ）</strong>です。</p>
+  <div class="note-box">💡 <code>model</code>という名前は実はあまりよくありません。何のモデルかが分かる<strong>もっと具体的な名前</strong>を付けるのが望ましいと講師は述べています（ここでは簡単のため model としています）。</div>
+  <h3>式の書き方：y = mx + b から ŷ = b₀ + b₁x へ</h3>
+  <p>中学・高校の数学では<strong>y = mx + b</strong>（m = 傾き、b = y切片）の形を習いました。統計では文字も順番も少し違い、次のように書きます。</p>
+  <table class="compare-table">
+    <tr><th>書き方</th><th>y切片</th><th>傾き</th></tr>
+    <tr><td>数学：y = mx + b</td><td>b</td><td>m</td></tr>
+    <tr><td>統計：ŷ = a + bx</td><td>a</td><td>b</td></tr>
+    <tr><td><strong>統計（添字版）：ŷ = b₀ + b₁x</strong></td><td>b₀</td><td>b₁</td></tr>
+  </table>
+  <p>講師は「数学の y = mx + b は忘れて、a + bx（aが切片、bが傾き）と考えるとよい」と話しています。<strong>x の位置が違う</strong>ことに注意してください。<code>a + bx</code>の<code>bx</code>は<code>b·x</code>（かけ算）で、括弧は特に必要ありません。</p>
+  <p>添字の<strong>b₀・b₁</strong>の形が最も便利です。<strong>重回帰</strong>になると係数がいくつも出てくるので、a, b, c, d, e…とアルファベットを使い切らないよう、1, 2, 3, 4…と番号を増やせるからです。b₀, b₁は<strong>パラメータ（parameters）</strong>と呼び、教科書やサイトによっては <strong>θ₀, θ₁</strong> や <strong>β₀, β₁</strong> と書かれることもあります。</p>
+  <h3>ŷ の「ハット」の意味</h3>
+  <p>なぜ y ではなく<strong>ŷ（y-hat）</strong>と書くのでしょうか。教科書やサイトによっては <strong>y = a + bx + ε</strong>（ε＝イプシロン、error の頭文字）と、誤差の項を付けて書きます。この講義では誤差を<strong>ハット（^）の中に含めて</strong>表します。ハットは「誤差と同じ考え方」です。</p>
+  <div class="warn-box">⚠️ <strong>ε かハットを必ず付ける理由：</strong>これは「直線は傾向（trend）にすぎず、保証ではない」と伝えるためです。点が直線の上にぴったり並ぶわけではなく、直線は<strong>決定論的（deterministic）ではありません</strong>。「最高寄付額がちょうどこの額の人は、総額が必ずこの額になる」とは言っていません。人にはばらつきがあります。言えるのは「最高寄付額が大きい人ほど、総額も大きくなる傾向がある」ことだけです。</div>
+  <h3>係数の取り出しと、直線を描く</h3>
+  <p>係数は<code>model$coefficients</code>で取り出せます。1番目がy切片、2番目が傾きです。</p>
+<pre class="code-block">
+<span class="cl">model$coefficients</span>
+<span class="cl">model$coefficients[<span class="nm">1</span>]   <span class="cm"># y切片</span></span>
+<span class="cl">model$coefficients[<span class="nm">2</span>]   <span class="cm"># 傾き</span></span>
+</pre>
+<div class="output-reveal">                   (Intercept) sampleDonors$largestGiftAmount 
+                     51.816908                       3.909609 
+(Intercept) 
+   51.81691 
+sampleDonors$largestGiftAmount 
+                      3.909609 </div>
+  <p>講義のプロットのコードは、係数を丸めて保存し、散布図を描いて、<code>abline()</code>で直線（太さ2、赤）を重ねるものでした。タイトルには<code>paste()</code>で式そのものを入れています。</p>
+<pre class="code-block">
+<span class="cl">b0 &lt;- <span class="kw">round</span>(model$coefficients[<span class="nm">1</span>], <span class="nm">1</span>)</span>
+<span class="cl">b1 &lt;- <span class="kw">round</span>(model$coefficients[<span class="nm">2</span>], <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">plot</span>(sampleDonors$largestGiftAmount, sampleDonors$totalGivingAmount,</span>
+<span class="cl">     pch = <span class="nm">16</span>, las = <span class="nm">1</span>, cex = <span class="nm">1</span>,</span>
+<span class="cl">     xlab = <span class="st">&quot;Largest Gift Amount ($)&quot;</span>, ylab = <span class="st">&quot;Total Giving ($)&quot;</span>,</span>
+<span class="cl">     main = <span class="kw">paste</span>(<span class="st">&quot;y-hat =&quot;</span>, b0, <span class="st">&quot;+&quot;</span>, b1, <span class="st">&quot;x&quot;</span>))</span>
+<span class="cl"><span class="kw">abline</span>(model, lwd = <span class="nm">2</span>, col = <span class="st">&quot;red&quot;</span>)</span>
+</pre>
+  <div class="viz">
+    <div class="viz-title">donors の標本50人：最高寄付額 x と総寄付額 y（赤線が最小二乗直線）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><svg viewBox="0 0 640 360" width="100%" style="max-width:640px" role="img" aria-label="寄付データの散布図と最小二乗直線"><rect x="0.5" y="0.5" width="639" height="359" fill="none" stroke="#cbd5e1"/><line x1="62" y1="316" x2="624" y2="316" stroke="#64748b"/><line x1="62" y1="14" x2="62" y2="316" stroke="#64748b"/><line x1="62.0" y1="316" x2="62.0" y2="320" stroke="#64748b"/><text x="62.0" y="332" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="149.8" y1="316" x2="149.8" y2="320" stroke="#64748b"/><text x="149.8" y="332" font-size="11" text-anchor="middle" fill="#64748b">25</text><line x1="237.6" y1="316" x2="237.6" y2="320" stroke="#64748b"/><text x="237.6" y="332" font-size="11" text-anchor="middle" fill="#64748b">50</text><line x1="325.4" y1="316" x2="325.4" y2="320" stroke="#64748b"/><text x="325.4" y="332" font-size="11" text-anchor="middle" fill="#64748b">75</text><line x1="413.2" y1="316" x2="413.2" y2="320" stroke="#64748b"/><text x="413.2" y="332" font-size="11" text-anchor="middle" fill="#64748b">100</text><line x1="501.1" y1="316" x2="501.1" y2="320" stroke="#64748b"/><text x="501.1" y="332" font-size="11" text-anchor="middle" fill="#64748b">125</text><line x1="588.9" y1="316" x2="588.9" y2="320" stroke="#64748b"/><text x="588.9" y="332" font-size="11" text-anchor="middle" fill="#64748b">150</text><line x1="58" y1="316.0" x2="62" y2="316.0" stroke="#64748b"/><line x1="62" y1="316.0" x2="624" y2="316.0" stroke="#e2e8f0"/><text x="55" y="320.0" font-size="11" text-anchor="end" fill="#64748b">0</text><line x1="58" y1="240.5" x2="62" y2="240.5" stroke="#64748b"/><line x1="62" y1="240.5" x2="624" y2="240.5" stroke="#e2e8f0"/><text x="55" y="244.5" font-size="11" text-anchor="end" fill="#64748b">250</text><line x1="58" y1="165.0" x2="62" y2="165.0" stroke="#64748b"/><line x1="62" y1="165.0" x2="624" y2="165.0" stroke="#e2e8f0"/><text x="55" y="169.0" font-size="11" text-anchor="end" fill="#64748b">500</text><line x1="58" y1="89.5" x2="62" y2="89.5" stroke="#64748b"/><line x1="62" y1="89.5" x2="624" y2="89.5" stroke="#e2e8f0"/><text x="55" y="93.5" font-size="11" text-anchor="end" fill="#64748b">750</text><line x1="58" y1="14.0" x2="62" y2="14.0" stroke="#64748b"/><line x1="62" y1="14.0" x2="624" y2="14.0" stroke="#e2e8f0"/><text x="55" y="18.0" font-size="11" text-anchor="end" fill="#64748b">1000</text><text x="343" y="355" font-size="12" text-anchor="middle" fill="#334155">largestGiftAmount（最高寄付額 $）= x</text><text x="13" y="165" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 13 165)">totalGivingAmount（総寄付額 $）= y</text><line x1="62.0" y1="300.4" x2="624.0" y2="111.4" stroke="#ef4444" stroke-width="2.2"/><circle cx="86.6" cy="304.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="237.6" cy="285.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="301.2" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="195.5" cy="287.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="413.2" cy="37.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="285.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="308.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="284.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="135.8" cy="293.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="234.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="202.5" cy="266.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="296.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="287.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="311.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="184.9" cy="266.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="276.7" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="308.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="118.2" cy="308.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="79.6" cy="291.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="301.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="104.2" cy="297.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="279.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="79.6" cy="287.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="294.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="306.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="236.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="232.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="290.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="252.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="228.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="250.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="202.1" cy="163.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="104.2" cy="272.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="343.0" cy="115.2" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="104.2" cy="299.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="299.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="299.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="93.6" cy="271.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="205.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="304.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="83.1" cy="293.7" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="237.6" cy="221.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="308.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="90.1" cy="306.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="278.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="588.9" cy="258.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="291.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="125.2" cy="285.2" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="306.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="307.2" r="3.6" fill="var(--primary)" opacity=".85" /><text x="620" y="103" font-size="12" text-anchor="end" fill="#ef4444">ŷ = 51.8 + 3.9x</text></svg></div>
+    <div class="viz-cap">赤い線が最良の直線 ŷ = 51.8 + 3.9x。これは donors のデータが示す「最高寄付額と総寄付額の関連」を表すモデルです。</div>
+  </div>
+  <p>求まった式は <strong>ŷ = 51.8 + 3.9x</strong>。赤い線がこのデータの「最良の直線」で、<strong>y切片 51.8 は x = 0 のときの予測 ŷ</strong> です。このモデルは完璧ではなく、すべての点を通りません。直線と点の間にはずれ（error）があり、それで構いません。新しいデータが加わったときにうまくいかない過学習モデルより、<strong>傾向をとらえる良いモデル</strong>のほうがよいからです。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>lm(y ~ x)</code>は「x から y を予想する直線」を作る呪文。<strong>yが先、xが後</strong>。出てきた2つの数は、<strong>1つ目がy切片（b₀）、2つ目が傾き（b₁）</strong>。式は <strong>ŷ = b₀ + b₁x</strong> で、ŷ は「予測値」です。</p></div>
+  <div class="practice-card" id="p-m6ri-u2">
+    <div class="ptitle">💻 ミニ練習：標本データで直線を求める</div>
+    <p class="ptask"><code>sampleDonors</code>を使い、総寄付額<code>totalGivingAmount</code>を最高寄付額<code>largestGiftAmount</code>に回帰する線形モデルを<code>lm()</code>で作ってください。<code>data =</code>引数を使って構いません。</p>
+    <textarea class="code-editor" id="p-m6ri-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6ri-u2', ['lm', '~', 'totalGivingAmount', 'largestGiftAmount'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6ri-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6ri-u2-result"></div>
+    <div class="answer-reveal" id="p-m6ri-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">donorModel &lt;- <span class="kw">lm</span>(totalGivingAmount ~ largestGiftAmount, data = sampleDonors)</span>
+<span class="cl">donorModel</span>
+</pre>
+      <p class="answer-note">結果は (Intercept) 51.82、largestGiftAmount 3.91。<code>$</code>を使った書き方と同じ係数になります。応答 y（totalGivingAmount）が<code>~</code>の左、説明 x（largestGiftAmount）が右です。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>残差 residual</h2><div class="unit-sub">実際の y − 予測された y</div></div>
+  </div>
+  <p>最小二乗法がなぜ最良なのかを理解する前に、まず<strong>残差（residual）</strong>を理解します。次の散布図（直線付き）で考えましょう。</p>
+  <ul>
+    <li><strong>質問①：</strong>この直線にもとづくと、最高寄付額から予想されるより<strong>多く</strong>寄付した人は？ 直線の<strong>上</strong>にいる人は全員そうです。たとえば最高寄付額 $100 の人を、直線は総額およそ $400 と予測します。ところが実際は<strong>約 $900</strong>寄付しています。この人は直線からの縦の距離（上向き）が最大です。</li>
+    <li><strong>質問②：</strong>予想より<strong>少なく</strong>寄付した人は？ 直線の<strong>下</strong>にいる人です。最高寄付額 $150 の人は、直線の予測ではここまでに約 $600 になるはずなのに、実際はずっと少なく、直線は総額を<strong>過大に予測（over-predict）</strong>しました。この人が下向きの縦距離が最大です。</li>
+  </ul>
+  <p>こうした上向き・下向きの縦の距離が<strong>残差</strong>です。</p>
+  <div class="teal-box">📌 <strong>残差（residual）＝ 実際の y − 予測された y ＝ y − ŷ</strong><br>実際の y は「黒い点」、予測された y は「直線上の点」の高さです。</div>
+  <div class="warn-box">⚠️ <strong>引き算の順番がとても重要：</strong>「実際 − 予測」です。順番を逆にすると、正負の符号が逆になってしまいます。</div>
+  <table class="compare-table">
+    <tr><th>残差</th><th>点の位置</th><th>直線の予測</th></tr>
+    <tr><td>正（＋）</td><td>直線の<strong>上</strong></td><td>under-predict（過小予測）</td></tr>
+    <tr><td>負（−）</td><td>直線の<strong>下</strong></td><td>over-predict（過大予測）</td></tr>
+    <tr><td>0</td><td>直線の<strong>ちょうど上</strong></td><td>ぴったり当たり（予測 6、実際 6：6 − 6 = 0）</td></tr>
+  </table>
+  <p>また、最小二乗直線（最良の直線）では<strong>残差の合計は必ず 0</strong> になります。正の残差と負の残差が打ち消し合うからです（理由は後の動画で出てきます）。</p>
+  <div class="viz">
+    <div class="viz-title">最小二乗直線と全部の残差（青い縦線）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><svg viewBox="0 0 640 360" width="100%" style="max-width:640px" role="img" aria-label="寄付データの散布図と最小二乗直線"><rect x="0.5" y="0.5" width="639" height="359" fill="none" stroke="#cbd5e1"/><line x1="62" y1="316" x2="624" y2="316" stroke="#64748b"/><line x1="62" y1="14" x2="62" y2="316" stroke="#64748b"/><line x1="62.0" y1="316" x2="62.0" y2="320" stroke="#64748b"/><text x="62.0" y="332" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="149.8" y1="316" x2="149.8" y2="320" stroke="#64748b"/><text x="149.8" y="332" font-size="11" text-anchor="middle" fill="#64748b">25</text><line x1="237.6" y1="316" x2="237.6" y2="320" stroke="#64748b"/><text x="237.6" y="332" font-size="11" text-anchor="middle" fill="#64748b">50</text><line x1="325.4" y1="316" x2="325.4" y2="320" stroke="#64748b"/><text x="325.4" y="332" font-size="11" text-anchor="middle" fill="#64748b">75</text><line x1="413.2" y1="316" x2="413.2" y2="320" stroke="#64748b"/><text x="413.2" y="332" font-size="11" text-anchor="middle" fill="#64748b">100</text><line x1="501.1" y1="316" x2="501.1" y2="320" stroke="#64748b"/><text x="501.1" y="332" font-size="11" text-anchor="middle" fill="#64748b">125</text><line x1="588.9" y1="316" x2="588.9" y2="320" stroke="#64748b"/><text x="588.9" y="332" font-size="11" text-anchor="middle" fill="#64748b">150</text><line x1="58" y1="316.0" x2="62" y2="316.0" stroke="#64748b"/><line x1="62" y1="316.0" x2="624" y2="316.0" stroke="#e2e8f0"/><text x="55" y="320.0" font-size="11" text-anchor="end" fill="#64748b">0</text><line x1="58" y1="240.5" x2="62" y2="240.5" stroke="#64748b"/><line x1="62" y1="240.5" x2="624" y2="240.5" stroke="#e2e8f0"/><text x="55" y="244.5" font-size="11" text-anchor="end" fill="#64748b">250</text><line x1="58" y1="165.0" x2="62" y2="165.0" stroke="#64748b"/><line x1="62" y1="165.0" x2="624" y2="165.0" stroke="#e2e8f0"/><text x="55" y="169.0" font-size="11" text-anchor="end" fill="#64748b">500</text><line x1="58" y1="89.5" x2="62" y2="89.5" stroke="#64748b"/><line x1="62" y1="89.5" x2="624" y2="89.5" stroke="#e2e8f0"/><text x="55" y="93.5" font-size="11" text-anchor="end" fill="#64748b">750</text><line x1="58" y1="14.0" x2="62" y2="14.0" stroke="#64748b"/><line x1="62" y1="14.0" x2="624" y2="14.0" stroke="#e2e8f0"/><text x="55" y="18.0" font-size="11" text-anchor="end" fill="#64748b">1000</text><text x="343" y="355" font-size="12" text-anchor="middle" fill="#334155">largestGiftAmount（最高寄付額 $）= x</text><text x="13" y="165" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 13 165)">totalGivingAmount（総寄付額 $）= y</text><line x1="86.6" y1="304.5" x2="86.6" y2="292.1" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="237.6" y1="285.8" x2="237.6" y2="241.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="301.2" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="195.5" y1="287.9" x2="195.5" y2="255.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="413.2" y1="37.9" x2="413.2" y2="182.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="285.8" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="308.8" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="284.3" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="135.8" y1="293.4" x2="135.8" y2="275.6" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="234.6" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="202.5" y1="266.8" x2="202.5" y2="253.1" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="296.1" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="287.9" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="114.7" y1="311.5" x2="114.7" y2="282.6" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="184.9" y1="266.8" x2="184.9" y2="259.0" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="276.7" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="149.8" y1="308.4" x2="149.8" y2="270.8" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="118.2" y1="308.1" x2="118.2" y2="281.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="79.6" y1="291.5" x2="79.6" y2="294.4" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="301.8" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="104.2" y1="297.3" x2="104.2" y2="286.2" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="149.8" y1="279.8" x2="149.8" y2="270.8" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="79.6" y1="287.3" x2="79.6" y2="294.4" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="149.8" y1="294.6" x2="149.8" y2="270.8" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="306.3" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="236.6" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="114.7" y1="232.8" x2="114.7" y2="282.6" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="114.7" y1="290.9" x2="114.7" y2="282.6" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="149.8" y1="252.3" x2="149.8" y2="270.8" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="149.8" y1="228.4" x2="149.8" y2="270.8" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="121.7" y1="250.8" x2="121.7" y2="280.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="202.1" y1="163.8" x2="202.1" y2="253.2" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="104.2" y1="272.5" x2="104.2" y2="286.2" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="343.0" y1="115.2" x2="343.0" y2="205.9" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="104.2" y1="299.4" x2="104.2" y2="286.2" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="121.7" y1="299.1" x2="121.7" y2="280.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="121.7" y1="299.1" x2="121.7" y2="280.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="93.6" y1="271.9" x2="93.6" y2="289.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="121.7" y1="205.8" x2="121.7" y2="280.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="114.7" y1="304.8" x2="114.7" y2="282.6" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="83.1" y1="293.7" x2="83.1" y2="293.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="237.6" y1="221.5" x2="237.6" y2="241.3" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="149.8" y1="308.4" x2="149.8" y2="270.8" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="90.1" y1="306.3" x2="90.1" y2="290.9" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="278.9" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="588.9" y1="258.6" x2="588.9" y2="123.2" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="132.2" y1="291.8" x2="132.2" y2="276.7" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="125.2" y1="285.2" x2="125.2" y2="279.1" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="306.6" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="97.1" y1="307.2" x2="97.1" y2="288.5" stroke="#2563eb" stroke-width="1.2" opacity=".55"/><line x1="62.0" y1="300.4" x2="624.0" y2="111.4" stroke="#ef4444" stroke-width="2.2"/><circle cx="86.6" cy="304.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="237.6" cy="285.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="301.2" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="195.5" cy="287.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="413.2" cy="37.9" r="5.5" fill="#f59e0b" opacity=".85" stroke="#92400e"/><circle cx="132.2" cy="285.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="308.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="284.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="135.8" cy="293.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="234.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="202.5" cy="266.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="296.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="287.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="311.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="184.9" cy="266.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="276.7" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="308.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="118.2" cy="308.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="79.6" cy="291.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="301.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="104.2" cy="297.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="279.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="79.6" cy="287.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="294.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="306.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="132.2" cy="236.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="232.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="290.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="252.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="228.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="250.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="202.1" cy="163.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="104.2" cy="272.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="343.0" cy="115.2" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="104.2" cy="299.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="299.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="299.1" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="93.6" cy="271.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="121.7" cy="205.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="114.7" cy="304.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="83.1" cy="293.7" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="237.6" cy="221.5" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="149.8" cy="308.4" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="90.1" cy="306.3" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="278.9" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="588.9" cy="258.6" r="5.5" fill="#f59e0b" opacity=".85" stroke="#92400e"/><circle cx="132.2" cy="291.8" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="125.2" cy="285.2" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="306.6" r="3.6" fill="var(--primary)" opacity=".85" /><circle cx="97.1" cy="307.2" r="3.6" fill="var(--primary)" opacity=".85" /><text x="422" y="42" font-size="12" fill="#92400e">(100, 921) 残差 ＋478.2</text><text x="581" y="279" font-size="12" text-anchor="end" fill="#92400e">(150, 190) 残差 −448.3</text></svg></div>
+    <div class="viz-cap">縦線の長さが残差。オレンジの2点が、最大の正の残差（＋478.2）と最大の負の残差（−448.3）です。</div>
+  </div>
+  <h3>手計算：$150 の人の残差を求める</h3>
+  <p>最高寄付額が $150 の寄付者の残差を計算してみましょう（点が直線の下なので、<strong>負の答え</strong>になるはずです）。まず標本の中から探します。</p>
+<pre class="code-block">
+<span class="cl">sampleDonors[sampleDonors$largestGiftAmount == <span class="nm">150</span>, ]</span>
+</pre>
+<div class="output-reveal">      age incomeRating totalGivingAmount largestGiftAmount isHomeowner gender
+13602  37            7               190               150          NA   male
+      urbanicity respondedMailing
+13602      urban            FALSE</div>
+  <p>この人は元の donors データの <strong>13,602 行目</strong>（95,412 行中。講義では約13,600番目）です。標本の中で何番目かは<code>which()</code>で調べられます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">which</span>(sampleDonors$largestGiftAmount == <span class="nm">150</span>)</span>
+<span class="cl">sampleDonors[<span class="nm">46</span>, <span class="kw">c</span>(<span class="st">&quot;largestGiftAmount&quot;</span>, <span class="st">&quot;totalGivingAmount&quot;</span>)]</span>
+</pre>
+<div class="output-reveal">[1] 46
+      largestGiftAmount totalGivingAmount
+13602               150               190</div>
+  <p>標本の<strong>46番目</strong>で、実際の総寄付額（actual y）は <strong>$190</strong>。予測は直線の式 <strong>ŷ = 51.8 + 3.9 × 150</strong> に x = 150 を入れて求めます（x は説明変数、横軸の最高寄付額 $150）。</p>
+<pre class="code-block">
+<span class="cl"><span class="nm">190</span> - (<span class="nm">51.8</span> + <span class="nm">3.9</span> * <span class="nm">150</span>)    <span class="cm"># 実際 - 予測</span></span>
+</pre>
+<div class="output-reveal">[1] -446.8</div>
+  <p>残差は <strong>−446.8</strong>。点が直線の下にあるので負です（予測 ŷ = 51.8 + 585 = 636.8、実際 190）。</p>
+  <div class="note-box">✍️ <strong>残差の解釈の書き方：</strong>「最高寄付額が $150 のこの寄付者について、最小二乗直線は総寄付額を <strong>$446.80 だけ過大に予測した</strong>（over-predicted）」。または短く「この寄付者は予測より <strong>$446 少なく</strong>寄付した」。<strong>どちらも「−」は書きません</strong>。over-predicted や「より少ない」という言葉が、すでに残差の向き（負）を表しているからです。</div>
+  <h3>Rに残差を計算させる</h3>
+  <p>モデルを作れば、Rが残差を全部保存しています。<code>model$residuals</code>で全員の残差が見られます。46番目の人は次のようになります。</p>
+<pre class="code-block">
+<span class="cl">model$residuals[<span class="nm">46</span>]</span>
+<span class="cl"><span class="kw">sum</span>(model$residuals)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">sum</span>(model$residuals), <span class="nm">6</span>)</span>
+</pre>
+<div class="output-reveal">       46 
+-448.2582 
+[1] -4.334311e-13
+[1] 0</div>
+  <p>手計算の −446.8 とRの −448.26 が少し違うのは、手計算で係数を 51.8・3.9 に<strong>丸めた</strong>からです（丸めない係数なら −448.26）。残差の合計は、コンピュータの計算誤差を除けば 0 です。</p>
+  <div class="warn-box">⚠️ 講義では、この図の残差を青い線で描いたあと、<strong>残差プロット（residual plot）</strong>の予告もありました。残差を別のグラフ（説明変数、または予測値に対して）にしたものです。詳しくは後の動画で扱います。Rでは<code>plot(model)</code>とすると標準の残差プロット（赤い水平線付き）が最初の図として出ます。今は、「残差とは何か」「正負の違い」「計算のしかた」「解釈のしかた」を理解すれば十分です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>残差 = 実際 − 予測</strong>。点が線の上なら＋（線が低く見積もった）、下なら−（線が高く見積もった）。説明は「$○○過大に予測した／$○○少なかった」と、マイナス記号は書かずに言葉で向きを表します。</p></div>
+  <div class="practice-card" id="p-m6ri-u3">
+    <div class="ptitle">💻 ミニ練習：残差を計算する</div>
+    <p class="ptask">最高寄付額 $100、総寄付額 $921 の寄付者がいます。丸めた式 ŷ = 51.8 + 3.9x を使い、<strong>残差（実際 − 予測）を返すRコード</strong>を1行で書いてください（数値の計算式でOK）。</p>
+    <textarea class="code-editor" id="p-m6ri-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6ri-u3', ['921', '51.8', '3.9', '100', '-'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6ri-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6ri-u3-result"></div>
+    <div class="answer-reveal" id="p-m6ri-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="nm">921</span> - (<span class="nm">51.8</span> + <span class="nm">3.9</span> * <span class="nm">100</span>)</span>
+</pre>
+      <p class="answer-note">結果は <code>[1] 479.2</code>（丸めない係数なら 478.2582）。正の残差なので、この人は直線の上にいて、直線は総額を<strong>$479.20 だけ過小に予測（under-predict）</strong>した、または「予測より約$479 多く寄付した」と解釈します。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>なぜ最小二乗法か</h2><div class="unit-sub">残差の二乗和を最小にする直線</div></div>
+  </div>
+  <p>では、なぜ<strong>最小二乗回帰直線</strong>が「最良」の直線なのでしょうか。講義では、GeoGebra のアプリ（squared residuals）で、散布図に手で直線を合わせてみました。明らかに傾向に合っていない直線は、点から遠く、<strong>残差が大きい</strong>。傾向に近い直線は、正負の残差はあっても点に近く、残差が小さいのです。</p>
+  <p>ここで残差を<strong>二乗</strong>します。残差（縦の距離）が1単位なら1×1の正方形、距離が大きければ大きな正方形を作ります。直線が点から遠いほど<strong>正方形は巨大</strong>に、近いほど小さくなります。</p>
+  <div class="teal-box">📌 <strong>最良の直線 ＝ これらの正方形の面積の合計（残差の二乗和）が最小になる直線</strong><br>この合計を SSE（sum of squared errors：誤差の二乗和）と呼びます。</div>
+  <p>講義のアプリでは、手で引いた直線がほぼ平行で、残差の二乗和は <strong>3.23</strong>（ほとんど最小）でした。講義のこの例で、最小二乗直線の傾きは 0.66、手で引いた直線は 0.50 でした。講師は「傾きが 0.66 でした（アプリの別データ）。偶然、同じ数字が並んだだけで、いつもそうなるわけではない」と述べています。</p>
+  <h3>小さな例で確かめる（4点）</h3>
+  <p>講義のアプリと同じ考え方を、4点 (1, 2), (2, 4), (3, 3), (4, 6) で確かめます。最小二乗直線は ŷ = 1.0 + 1.1x で、各残差は −0.1, 0.8, −1.3, 0.6（合計 0）、二乗の合計は 0.01 + 0.64 + 1.69 + 0.36 = <strong>2.7</strong> です。別の直線 ŷ = 0.5 + 1.5x を引くと、残差は 0, 0.5, −2, −0.5 で、二乗和は 0 + 0.25 + 4 + 0.25 = <strong>4.5</strong>。最小二乗直線のほうが小さくなります。</p>
+  <div class="viz">
+    <div class="viz-title">残差の二乗を「正方形」で表す（オレンジの正方形の面積の合計 = SSE）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><svg viewBox="0 0 300 290" width="100%" style="max-width:300px" role="img" aria-label="最小二乗直線 ŷ = 1.0 + 1.1x"><rect x="0.5" y="0.5" width="299" height="289" fill="none" stroke="#cbd5e1"/><line x1="40" y1="252" x2="290" y2="252" stroke="#64748b"/><line x1="40" y1="28" x2="40" y2="252" stroke="#64748b"/><line x1="40.0" y1="252" x2="40.0" y2="256" stroke="#64748b"/><text x="40.0" y="268" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="75.7" y1="252" x2="75.7" y2="256" stroke="#64748b"/><text x="75.7" y="268" font-size="11" text-anchor="middle" fill="#64748b">1</text><line x1="111.4" y1="252" x2="111.4" y2="256" stroke="#64748b"/><text x="111.4" y="268" font-size="11" text-anchor="middle" fill="#64748b">2</text><line x1="147.1" y1="252" x2="147.1" y2="256" stroke="#64748b"/><text x="147.1" y="268" font-size="11" text-anchor="middle" fill="#64748b">3</text><line x1="182.9" y1="252" x2="182.9" y2="256" stroke="#64748b"/><text x="182.9" y="268" font-size="11" text-anchor="middle" fill="#64748b">4</text><line x1="218.6" y1="252" x2="218.6" y2="256" stroke="#64748b"/><text x="218.6" y="268" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="254.3" y1="252" x2="254.3" y2="256" stroke="#64748b"/><text x="254.3" y="268" font-size="11" text-anchor="middle" fill="#64748b">6</text><line x1="36" y1="252.0" x2="40" y2="252.0" stroke="#64748b"/><line x1="40" y1="252.0" x2="290" y2="252.0" stroke="#e2e8f0"/><text x="33" y="256.0" font-size="11" text-anchor="end" fill="#64748b">0</text><line x1="36" y1="220.0" x2="40" y2="220.0" stroke="#64748b"/><line x1="40" y1="220.0" x2="290" y2="220.0" stroke="#e2e8f0"/><text x="33" y="224.0" font-size="11" text-anchor="end" fill="#64748b">1</text><line x1="36" y1="188.0" x2="40" y2="188.0" stroke="#64748b"/><line x1="40" y1="188.0" x2="290" y2="188.0" stroke="#e2e8f0"/><text x="33" y="192.0" font-size="11" text-anchor="end" fill="#64748b">2</text><line x1="36" y1="156.0" x2="40" y2="156.0" stroke="#64748b"/><line x1="40" y1="156.0" x2="290" y2="156.0" stroke="#e2e8f0"/><text x="33" y="160.0" font-size="11" text-anchor="end" fill="#64748b">3</text><line x1="36" y1="124.0" x2="40" y2="124.0" stroke="#64748b"/><line x1="40" y1="124.0" x2="290" y2="124.0" stroke="#e2e8f0"/><text x="33" y="128.0" font-size="11" text-anchor="end" fill="#64748b">4</text><line x1="36" y1="92.0" x2="40" y2="92.0" stroke="#64748b"/><line x1="40" y1="92.0" x2="290" y2="92.0" stroke="#e2e8f0"/><text x="33" y="96.0" font-size="11" text-anchor="end" fill="#64748b">5</text><line x1="36" y1="60.0" x2="40" y2="60.0" stroke="#64748b"/><line x1="40" y1="60.0" x2="290" y2="60.0" stroke="#e2e8f0"/><text x="33" y="64.0" font-size="11" text-anchor="end" fill="#64748b">6</text><text x="165" y="285" font-size="12" text-anchor="middle" fill="#334155">x</text><text x="13" y="140" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 13 140)">y</text><text x="150.0" y="17" font-size="13" text-anchor="middle" fill="#334155" font-weight="700">最小二乗直線 ŷ = 1.0 + 1.1x</text><line x1="40.0" y1="220.0" x2="261.4" y2="1.8" stroke="#ef4444" stroke-width="2"/><rect x="75.7" y="184.8" width="3.6" height="3.2" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="75.7" cy="188.0" r="4.5" fill="var(--primary)"/><rect x="111.4" y="124.0" width="28.6" height="25.6" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="111.4" cy="124.0" r="4.5" fill="var(--primary)"/><rect x="147.1" y="114.4" width="46.4" height="41.6" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="147.1" cy="156.0" r="4.5" fill="var(--primary)"/><rect x="182.9" y="60.0" width="21.4" height="19.2" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="182.9" cy="60.0" r="4.5" fill="var(--primary)"/><text x="288" y="240" font-size="12" text-anchor="end" fill="#92400e">SSE = 2.7</text></svg><svg viewBox="0 0 300 290" width="100%" style="max-width:300px" role="img" aria-label="別の直線 ŷ = 0.5 + 1.5x"><rect x="0.5" y="0.5" width="299" height="289" fill="none" stroke="#cbd5e1"/><line x1="40" y1="252" x2="290" y2="252" stroke="#64748b"/><line x1="40" y1="28" x2="40" y2="252" stroke="#64748b"/><line x1="40.0" y1="252" x2="40.0" y2="256" stroke="#64748b"/><text x="40.0" y="268" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="75.7" y1="252" x2="75.7" y2="256" stroke="#64748b"/><text x="75.7" y="268" font-size="11" text-anchor="middle" fill="#64748b">1</text><line x1="111.4" y1="252" x2="111.4" y2="256" stroke="#64748b"/><text x="111.4" y="268" font-size="11" text-anchor="middle" fill="#64748b">2</text><line x1="147.1" y1="252" x2="147.1" y2="256" stroke="#64748b"/><text x="147.1" y="268" font-size="11" text-anchor="middle" fill="#64748b">3</text><line x1="182.9" y1="252" x2="182.9" y2="256" stroke="#64748b"/><text x="182.9" y="268" font-size="11" text-anchor="middle" fill="#64748b">4</text><line x1="218.6" y1="252" x2="218.6" y2="256" stroke="#64748b"/><text x="218.6" y="268" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="254.3" y1="252" x2="254.3" y2="256" stroke="#64748b"/><text x="254.3" y="268" font-size="11" text-anchor="middle" fill="#64748b">6</text><line x1="36" y1="252.0" x2="40" y2="252.0" stroke="#64748b"/><line x1="40" y1="252.0" x2="290" y2="252.0" stroke="#e2e8f0"/><text x="33" y="256.0" font-size="11" text-anchor="end" fill="#64748b">0</text><line x1="36" y1="220.0" x2="40" y2="220.0" stroke="#64748b"/><line x1="40" y1="220.0" x2="290" y2="220.0" stroke="#e2e8f0"/><text x="33" y="224.0" font-size="11" text-anchor="end" fill="#64748b">1</text><line x1="36" y1="188.0" x2="40" y2="188.0" stroke="#64748b"/><line x1="40" y1="188.0" x2="290" y2="188.0" stroke="#e2e8f0"/><text x="33" y="192.0" font-size="11" text-anchor="end" fill="#64748b">2</text><line x1="36" y1="156.0" x2="40" y2="156.0" stroke="#64748b"/><line x1="40" y1="156.0" x2="290" y2="156.0" stroke="#e2e8f0"/><text x="33" y="160.0" font-size="11" text-anchor="end" fill="#64748b">3</text><line x1="36" y1="124.0" x2="40" y2="124.0" stroke="#64748b"/><line x1="40" y1="124.0" x2="290" y2="124.0" stroke="#e2e8f0"/><text x="33" y="128.0" font-size="11" text-anchor="end" fill="#64748b">4</text><line x1="36" y1="92.0" x2="40" y2="92.0" stroke="#64748b"/><line x1="40" y1="92.0" x2="290" y2="92.0" stroke="#e2e8f0"/><text x="33" y="96.0" font-size="11" text-anchor="end" fill="#64748b">5</text><line x1="36" y1="60.0" x2="40" y2="60.0" stroke="#64748b"/><line x1="40" y1="60.0" x2="290" y2="60.0" stroke="#e2e8f0"/><text x="33" y="64.0" font-size="11" text-anchor="end" fill="#64748b">6</text><text x="165" y="285" font-size="12" text-anchor="middle" fill="#334155">x</text><text x="13" y="140" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 13 140)">y</text><text x="150.0" y="17" font-size="13" text-anchor="middle" fill="#334155" font-weight="700">別の直線 ŷ = 0.5 + 1.5x</text><line x1="40.0" y1="236.0" x2="261.4" y2="-61.6" stroke="#ef4444" stroke-width="2"/><circle cx="75.7" cy="188.0" r="4.5" fill="var(--primary)"/><rect x="111.4" y="124.0" width="17.9" height="16.0" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="111.4" cy="124.0" r="4.5" fill="var(--primary)"/><rect x="147.1" y="92.0" width="71.4" height="64.0" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="147.1" cy="156.0" r="4.5" fill="var(--primary)"/><rect x="182.9" y="44.0" width="17.9" height="16.0" fill="#f59e0b" opacity=".35" stroke="#b45309"/><circle cx="182.9" cy="60.0" r="4.5" fill="var(--primary)"/><text x="288" y="240" font-size="12" text-anchor="end" fill="#92400e">SSE = 4.5</text></svg></div>
+    <div class="viz-cap">どんな直線を引いても、最小二乗直線より SSE を小さくすることはできません。</div>
+  </div>
+<pre class="code-block">
+<span class="cl">x &lt;- <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>)</span>
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="nm">2</span>, <span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">6</span>)</span>
+<span class="cl">toy &lt;- <span class="kw">lm</span>(y ~ x)</span>
+<span class="cl">toy</span>
+<span class="cl"><span class="kw">residuals</span>(toy)</span>
+<span class="cl"><span class="kw">sum</span>(<span class="kw">residuals</span>(toy)^<span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">sum</span>((y - (<span class="nm">0.5</span> + <span class="nm">1.5</span> * x))^<span class="nm">2</span>)   <span class="cm"># 別の直線のSSE</span></span>
+</pre>
+<div class="output-reveal">
+Call:
+lm(formula = y ~ x)
+
+Coefficients:
+(Intercept)            x  
+        1.0          1.1  
+
+   1    2    3    4 
+-0.1  0.8 -1.3  0.6 
+[1] 2.7
+[1] 4.5</div>
+  <h3>式で書くと</h3>
+  <p>講義のまとめです。最小二乗直線は<strong>残差の二乗の合計が最小</strong>になる直線です。残差を d₁, d₂, … と書くと、d₁² + d₂² + … が最小になってほしい（d の代わりに error と書いても同じ）。長い和を書くのは大変なので、数学者は和の記号 <strong>Σ（シグマ）</strong>を使い、y切片 b₀ と傾き b₁ の<strong>両方に関して最小</strong>にする、と表します。</p>
+  <div class="teal-box">📌 <strong>最小化する量：Σ (y − ŷ)² ＝ Σ (y − b₀ − b₁x)²</strong><br>残差は y − ŷ で、予測 ŷ = b₀ + b₁x を代入すると、引き算の括弧が分配されて y − b₀ − b₁x になります。b₀ と b₁ の2つの変数について最小化します。</div>
+  <p>では b₀ と b₁ はどう計算されるのでしょうか。公式は複数あります（各点から平均を引いて割る形、和だけで書く形など）。ただし、導出には<strong>多変数の微積分と線形代数</strong>が必要で、この授業では重視しません。講師が強調するのは、<strong>計算はR（technology）に任せ、値の意味を解釈できること</strong>です。ただし、次の2つの関係式は知っておくと便利です。</p>
+  <table class="compare-table">
+    <tr><th>求めるもの</th><th>式</th><th>意味</th></tr>
+    <tr><td><strong>傾き b₁</strong></td><td><strong>b₁ = r × (s<sub>y</sub> / s<sub>x</sub>)</strong></td><td>相関 r に、y の標準偏差と x の標準偏差の比をかける。相関が分かれば傾きが計算できる（覚えやすい式）</td></tr>
+    <tr><td><strong>y切片 b₀</strong></td><td><strong>b₀ = ȳ − b₁x̄</strong></td><td>重心（centroid）(x̄, ȳ) は、いつも直線の上にある</td></tr>
+  </table>
+  <p>y切片の式の導き方：「平均の x を入れると、平均の y が出てくる」はずなので、ŷ = a + bx に x̄ と ȳ を代入すると ȳ = a + b·x̄。両辺から b·x̄ を引けば、<strong>a = ȳ − b·x̄</strong>。b は上の式のいずれかで計算した傾きです。ここでは a の代わりに b₀ と書いても同じです。</p>
+  <p>donors の標本で確認しましょう。</p>
+<pre class="code-block">
+<span class="cl">x &lt;- sampleDonors$largestGiftAmount</span>
+<span class="cl">y &lt;- sampleDonors$totalGivingAmount</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">cor</span>(x, y) * <span class="kw">sd</span>(y) / <span class="kw">sd</span>(x)    <span class="cm"># 傾き b1 = r * (sy / sx)</span></span>
+<span class="cl"><span class="kw">mean</span>(y) - <span class="nm">3.909609</span> * <span class="kw">mean</span>(x) <span class="cm"># 切片 b0 = ybar - b1 * xbar</span></span>
+</pre>
+<div class="output-reveal">[1] 3.909609
+[1] 51.81691</div>
+  <p>r = 0.5851685、s<sub>y</sub> = 169.4683、s<sub>x</sub> = 25.36508、x̄ = 24.238、ȳ = 146.578 から、b₁ = 0.5851685 × (169.4683 / 25.36508) = 3.91、b₀ = 146.578 − 3.9096 × 24.238 = 51.82 となり、<code>lm()</code>の結果と一致します。</p>
+  <h3>Rで求める：summary()</h3>
+  <p>講義では最後に<code>data =</code>引数を使う書き方で<code>lm()</code>を実行しました（応答変数を<code>~</code>の左、説明変数を右に書き、データフレームを<code>data =</code>で指定）。</p>
+<pre class="code-block">
+<span class="cl">model &lt;- <span class="kw">lm</span>(totalGivingAmount ~ largestGiftAmount, data = sampleDonors)</span>
+<span class="cl">model</span>
+</pre>
+<div class="output-reveal">
+Call:
+lm(formula = totalGivingAmount ~ largestGiftAmount, data = sampleDonors)
+
+Coefficients:
+      (Intercept)  largestGiftAmount  
+            51.82               3.91  
+</div>
+  <p>切片は 51.82、largestGiftAmount の係数（傾き）は 3.91。<strong>GeoGebra の図とは別のデータなので</strong>、傾きも線も違います。<code>summary()</code>でも同じ値が分かり、さらに多くの情報が出ます（後の動画で扱います）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model)</span>
+</pre>
+<div class="output-reveal">
+Call:
+lm(formula = totalGivingAmount ~ largestGiftAmount, data = sampleDonors)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-448.26  -62.28  -33.37   41.97  478.22 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         51.817     27.292   1.899   0.0636 .  
+largestGiftAmount    3.910      0.782   5.000 8.07e-06 ***
+---
+Signif. codes:  0 &#x27;***&#x27; 0.001 &#x27;**&#x27; 0.01 &#x27;*&#x27; 0.05 &#x27;.&#x27; 0.1 &#x27; &#x27; 1
+
+Residual standard error: 138.8 on 48 degrees of freedom
+Multiple R-squared:  0.3424,	Adjusted R-squared:  0.3287 
+F-statistic:    25 on 1 and 48 DF,  p-value: 8.075e-06
+</div>
+  <div class="warn-box">⚠️ 今は <strong>Estimate 列</strong>だけを見ます。<strong>1行目（Intercept）の値がy切片、2行目（変数名の行）の値が傾き</strong>で、2行目は<code>~</code>の後に書いた説明変数の名前（largestGiftAmount）の横に出ます。他の列と下の部分は後の動画で学びます。</div>
+  <p>最小二乗直線の残差の二乗和は <code>sum(model$residuals^2)</code> で求められ、<strong>925380.4</strong> です。たとえば同じ切片のまま傾きを 2.5 に変えると、この値は 1,046,446 に増えます。つまり傾き 3.91 のときが最小です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">sum</span>(model$residuals^<span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal">[1] 925380.4</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「最良の直線」とは、<strong>残差を二乗して全部足した値（SSE）がいちばん小さくなる直線</strong>のこと。二乗は「正方形の面積」と考えるとイメージしやすいです。傾きは <strong>b₁ = r × (s<sub>y</sub>/s<sub>x</sub>)</strong>、切片は <strong>b₀ = ȳ − b₁x̄</strong>。</p></div>
+  <div class="practice-card" id="p-m6ri-u4">
+    <div class="ptitle">💻 ミニ練習：残差の二乗和 SSE を求める</div>
+    <p class="ptask"><code>model</code>（<code>lm(totalGivingAmount ~ largestGiftAmount, data = sampleDonors)</code>）の<strong>残差の二乗和</strong>を求めるRコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6ri-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6ri-u4', ['sum', 'residuals', '^2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6ri-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6ri-u4-result"></div>
+    <div class="answer-reveal" id="p-m6ri-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">sum</span>(model$residuals^<span class="nm">2</span>)</span>
+</pre>
+      <p class="answer-note">結果は 925380.4。<code>residuals(model)</code>や<code>resid(model)</code>と書いても同じです。最小二乗直線は、b₀ と b₁ をどう変えてもこの値をこれより小さくできない直線です。</p>
+    </div>
+  </div>
+
+</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In regressing annual maintenance cost on the age of a bus, which is the response variable?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Annual maintenance cost</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Age of the bus</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Both variables are responses</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither; regression has no response</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does the word “error” mean in the statement Outcome = Model + Error?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A mistake made while collecting data</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The variation of the points around the model</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A bug in the software that fits the line</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The difference between two models</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Connecting every dot with a zig-zag line is an example of which problem?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Correlation</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Extrapolation</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Residual analysis</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Overfitting</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which R call fits the least squares line that predicts total from gift?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>lm(gift ~ total)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>lm(gift, total)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>lm(total ~ gift)</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>cor(total, gift)</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In the equation ŷ = b₀ + b₁x, what does b₁ represent?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The y-intercept of the line</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The slope of the line</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The residual of the first point</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The mean of the y values</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A residual is calculated as which of the following?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Predicted y minus actual y</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Actual y plus predicted y</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Actual y minus predicted y</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Actual x minus predicted x</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A donor’s point lies below the least squares line. Which statement is correct?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The residual is negative and the line over-predicted</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The residual is positive and the line over-predicted</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The residual is negative and the line under-predicted</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The residual is zero</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What does the least squares regression line minimise?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The number of points above the line</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The largest single residual only</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The sum of the raw residuals</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The sum of the squared residuals</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 3, 2, 1, 2, 0, 3];
+var FEEDBACKS=["The response (dependent) variable is the outcome we predict, here the yearly maintenance cost. The bus age is the explanatory (independent) variable.", "In statistics, error is just deviation from what the model expects (variability). It does not mean a mistake.", "Forcing a perfect relationship through every point is overfitting; the model will not fit new data well. We want a line that captures the trend.", "In lm(y ~ x) the response goes first and the explanatory variable second. cor() returns a correlation, not a line.", "b₀ is the y-intercept and b₁ is the slope. With the donors sample, lm() gave 51.82 (intercept) and 3.91 (slope).", "Residual = actual y − predicted y (y − ŷ). Reversing the order would flip the sign.", "A point below the line has a negative residual: the line predicted too high, so it over-predicted.", "The line is the best fit because it makes the sum of the squared residuals (SSE) as small as possible. The sum of the raw residuals is always 0 for this line."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">regression</div><div class="term-en">回帰</div><div class="term-def">x から y を予測し、2つの量的変数の関連を調べる方法。相関の記号 r の語源。</div></div>
+    <div class="term-item"><div class="term-name">response variable (y)</div><div class="term-en">応答変数</div><div class="term-def">予測・測定したい結果。dependent variable / outcome とも。</div></div>
+    <div class="term-item"><div class="term-name">explanatory variable (x)</div><div class="term-en">説明変数</div><div class="term-def">y を予測するのに使う変数。independent variable / predictor / feature とも。</div></div>
+    <div class="term-item"><div class="term-name">association</div><div class="term-en">関連</div><div class="term-def">一方を知ると他方を予測しやすくなる関係。</div></div>
+    <div class="term-item"><div class="term-name">overfitting</div><div class="term-en">過学習</div><div class="term-def">点を全部つなぐなど、データに合わせすぎて新データに合わなくなること。</div></div>
+    <div class="term-item"><div class="term-name">least squares regression line (LSRL)</div><div class="term-en">最小二乗回帰直線</div><div class="term-def">残差の二乗和を最小にする直線。line of best fit、trend line、OLSR とも。</div></div>
+    <div class="term-item"><div class="term-name">intercept (b₀) / slope (b₁)</div><div class="term-en">y切片／傾き</div><div class="term-def">ŷ = b₀ + b₁x の2つのパラメータ。<code>lm()</code>の係数。</div></div>
+    <div class="term-item"><div class="term-name">ŷ (y-hat)</div><div class="term-en">予測値</div><div class="term-def">直線から求めた y の予測。ハットは誤差を含む傾向を表す。</div></div>
+    <div class="term-item"><div class="term-name">residual</div><div class="term-en">残差</div><div class="term-def">実際の y − 予測された y（y − ŷ）。</div></div>
+    <div class="term-item"><div class="term-name">SSE</div><div class="term-en">残差の二乗和</div><div class="term-def">Σ(y − ŷ)²。最小二乗直線ではこれが最小。</div></div>
+    <div class="term-item"><div class="term-name">centroid</div><div class="term-en">重心</div><div class="term-def">(x̄, ȳ)。最小二乗直線は必ずここを通る。</div></div>
+    <div class="term-item"><div class="term-name">time series</div><div class="term-en">時系列</div><div class="term-def">x軸が時間の散布図。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><code>lm(y ~ x)</code>は<strong>yが先</strong>。式は ŷ = b₀ + b₁x。残差は<strong>実際 − 予測</strong>で、符号の意味（上＝＋、下＝−）を言葉で説明できるようにしましょう。最良の直線は「残差の二乗和が最小」。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：M6 回帰① 回帰直線と最小二乗法</p>
+  <p style="margin-top:.5rem;"><a href="m6_corr_calc.html">← 相関の計算と注意</a> · <a href="m6_reg_interpret.html">係数・残差・R² →</a> · <a href="m6_reg_intro_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

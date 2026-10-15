@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas⑦ 集計とピボットテーブル</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — GroupBy & Pivot</div>
+  <h1>📊 Pandas⑦：groupby と pivot_table</h1>
+  <p>分けて・計算して・まとめる groupby、agg、transform、ピボットテーブルを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① groupby</a><a href="#unit2">② agg</a><a href="#unit3">③ transform</a><a href="#unit4">④ pivot</a><a href="#quiz">📝 Quiz</a><a href="pd_groupby_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.08 Aggregation and Grouping</li><li>Handbook 3.09 Pivot Tables</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>groupby の考え方：分けて・計算して・まとめる</h2><div class="unit-sub">split - apply - combine</div></div>
+  </div>
+<p><code>groupby</code>は、<strong>分けて（split）→ 計算して（apply）→ まとめる（combine）</strong>という3つの手順をまとめて行います。</p><pre class="code-block">
+<span class="cl">tips = pd.read_csv(<span class="st">'data/tips.csv'</span>)</span>
+</pre><pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>)[<span class="st">'tip'</span>].mean()     <span class="cm"># 曜日ごとのチップの平均</span></span>
+</pre><div class="output-reveal">day
+Fri     2.734737
+Sat     2.993103
+Sun     3.255132
+Thur    2.771452
+Name: tip, dtype: float64</div><pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'sex'</span>)[[<span class="st">'total_bill'</span>, <span class="st">'tip'</span>]].sum()</span>
+</pre><div class="output-reveal">        total_bill     tip
+sex                       
+Female     1570.95  246.51
+Male       3256.82  485.07</div><pre class="code-block">
+<span class="cl">tips.groupby([<span class="st">'day'</span>, <span class="st">'time'</span>])[<span class="st">'tip'</span>].mean()    <span class="cm"># 2つのキー</span></span>
+</pre><div class="output-reveal">day   time  
+Fri   Dinner    2.940000
+      Lunch     2.382857
+Sat   Dinner    2.993103
+Sun   Dinner    3.255132
+Thur  Dinner    3.000000
+      Lunch     2.767705
+Name: tip, dtype: float64</div><div class="warn-box">⚠️ <code>groupby</code>だけでは何も計算されません。<code>.mean()</code>や<code>.sum()</code>のような集計を付けて、はじめて結果が出ます。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>クラスを「男女ごと」に分けて、それぞれの平均点を出し、1枚の表にまとめる作業と同じです。</p></div><div class="practice-card" id="p-p7-u1">
+    <div class="ptitle">💻 ミニ練習：groupby</div>
+    <p class="ptask"><code>tips</code>を<code>smoker</code>ごとにグループ化し、<code>total_bill</code>の平均を求めてください。</p>
+    <textarea class="code-editor" id="p-p7-u1-input" rows="7">tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p7-u1", ["groupby('smoker')", "mean"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p7-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p7-u1-result"></div>
+    <div class="answer-reveal" id="p-p7-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'smoker'</span>)[<span class="st">'total_bill'</span>].mean()</span>
+</pre>
+      <p class="answer-note">喫煙者と非喫煙者の2行の結果です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>複数の集計：agg</h2><div class="unit-sub">まとめて・列ごとに違う集計</div></div>
+  </div>
+<p><code>agg</code>を使うと、<strong>複数の集計</strong>を一度に行えます。</p><pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>)[<span class="st">'tip'</span>].agg([<span class="st">'min'</span>, <span class="st">'median'</span>, <span class="st">'max'</span>])</span>
+</pre><div class="output-reveal">       min  median    max
+day                      
+Fri   1.00   3.000   4.73
+Sat   1.00   2.750  10.00
+Sun   1.01   3.150   6.50
+Thur  1.25   2.305   6.70</div><p>列ごとに違う集計をしたいときは、辞書で指定します。</p><pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>).agg({<span class="st">'total_bill'</span>: <span class="st">'mean'</span>, <span class="st">'tip'</span>: <span class="st">'max'</span>, <span class="st">'size'</span>: <span class="st">'sum'</span>})</span>
+</pre><div class="output-reveal">      total_bill    tip  size
+day                          
+Fri    17.151579   4.73    40
+Sat    20.441379  10.00   219
+Sun    21.410000   6.50   216
+Thur   17.682742   6.70   152</div><pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>).agg(avg_tip=(<span class="st">'tip'</span>, <span class="st">'mean'</span>), n=(<span class="st">'tip'</span>, <span class="st">'count'</span>))    <span class="cm"># 結果の列名を付ける</span></span>
+</pre><div class="output-reveal">       avg_tip   n
+day               
+Fri   2.734737  19
+Sat   2.993103  87
+Sun   3.255132  76
+Thur  2.771452  62</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>agg</code>は「集計メニューを渡す」イメージ。名前付きの書き方（新列名=(列, 関数)）が読みやすくておすすめです。</p></div><div class="practice-card" id="p-p7-u2">
+    <div class="ptitle">💻 ミニ練習：agg</div>
+    <p class="ptask"><code>day</code>ごとに、<code>tip</code>の<strong>最小・最大</strong>を求めてください。</p>
+    <textarea class="code-editor" id="p-p7-u2-input" rows="7">tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p7-u2", ["groupby('day')", "agg", "'min'", "'max'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p7-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p7-u2-result"></div>
+    <div class="answer-reveal" id="p-p7-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>)[<span class="st">'tip'</span>].agg([<span class="st">'min'</span>, <span class="st">'max'</span>])</span>
+</pre>
+      <p class="answer-note">曜日ごとの最小・最大チップの表です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>グループの絞り込みと変換</h2><div class="unit-sub">filter と transform</div></div>
+  </div>
+<p><code>filter</code>は条件に合う<strong>グループごと</strong>残し、<code>transform</code>は元の行数のまま<strong>グループの値を各行に付けます</strong>。</p><pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>).filter(lambda g: len(g) &gt; <span class="nm">70</span>)[<span class="st">'day'</span>].unique()    <span class="cm"># 70件より多い曜日だけ</span></span>
+</pre><div class="output-reveal">array(['Sun', 'Sat'], dtype=object)</div><pre class="code-block">
+<span class="cl">tips[<span class="st">'day_mean'</span>] = tips.groupby(<span class="st">'day'</span>)[<span class="st">'tip'</span>].transform(<span class="st">'mean'</span>)</span>
+<span class="cl">tips[[<span class="st">'day'</span>, <span class="st">'tip'</span>, <span class="st">'day_mean'</span>]].head(<span class="nm">4</span>)</span>
+</pre><div class="output-reveal">   day   tip  day_mean
+0  Sun  1.01  3.255132
+1  Sun  1.66  3.255132
+2  Sun  3.50  3.255132
+3  Sun  3.31  3.255132</div><pre class="code-block">
+<span class="cl">tips[<span class="st">'tip_diff'</span>] = tips[<span class="st">'tip'</span>] - tips[<span class="st">'day_mean'</span>]</span>
+<span class="cl">tips[[<span class="st">'day'</span>, <span class="st">'tip'</span>, <span class="st">'tip_diff'</span>]].head(<span class="nm">3</span>)</span>
+</pre><div class="output-reveal">   day   tip  tip_diff
+0  Sun  1.01 -2.245132
+1  Sun  1.66 -1.595132
+2  Sun  3.50  0.244868</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>agg</code>は行が減る（グループ数になる）、<code>transform</code>は行数がそのまま。「各行に、そのグループの平均を付けたい」ときは<code>transform</code>。</p></div><div class="practice-card" id="p-p7-u3">
+    <div class="ptitle">💻 ミニ練習：transform</div>
+    <p class="ptask">各行に、その行の<code>day</code>の<code>tip</code>平均を付けた Series を作ってください。</p>
+    <textarea class="code-editor" id="p-p7-u3-input" rows="7">tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p7-u3", ["transform", "'mean'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p7-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p7-u3-result"></div>
+    <div class="answer-reveal" id="p-p7-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips.groupby(<span class="st">'day'</span>)[<span class="st">'tip'</span>].transform(<span class="st">'mean'</span>)</span>
+</pre>
+      <p class="answer-note">元の行数（244行）と同じ長さの結果です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>ピボットテーブル</h2><div class="unit-sub">pivot_table と crosstab</div></div>
+  </div>
+<p>Excelの<strong>ピボットテーブル</strong>と同じです。<code>pivot_table</code>は「行・列・集計する値・集計方法」を指定します。</p><pre class="code-block">
+<span class="cl">tips.pivot_table(<span class="st">'tip'</span>, index=<span class="st">'day'</span>, columns=<span class="st">'sex'</span>, aggfunc=<span class="st">'mean'</span>)</span>
+</pre><div class="output-reveal">sex     Female      Male
+day                     
+Fri   2.781111  2.693000
+Sat   2.801786  3.083898
+Sun   3.367222  3.220345
+Thur  2.575625  2.980333</div><pre class="code-block">
+<span class="cl">tips.pivot_table(<span class="st">'total_bill'</span>, index=<span class="st">'day'</span>, columns=<span class="st">'time'</span>, aggfunc=<span class="st">'sum'</span>, margins=<span class="kw">True</span>)    <span class="cm"># 合計の行・列を付ける</span></span>
+</pre><div class="output-reveal">time   Dinner    Lunch      All
+day                            
+Fri    235.96    89.92   325.88
+Sat   1778.40      NaN  1778.40
+Sun   1627.16      NaN  1627.16
+Thur    18.78  1077.55  1096.33
+All   3660.30  1167.47  4827.77</div><p>個数を数えるだけなら<code>pd.crosstab</code>が簡単です。</p><pre class="code-block">
+<span class="cl">pd.crosstab(tips[<span class="st">'day'</span>], tips[<span class="st">'smoker'</span>])</span>
+</pre><div class="output-reveal">smoker  No  Yes
+day            
+Fri      4   15
+Sat     45   42
+Sun     57   19
+Thur    45   17</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>groupby</code>で2つのキーを使い<code>unstack</code>した結果と同じものが、<code>pivot_table</code>で1回で作れます。</p></div><div class="practice-card" id="p-p7-u4">
+    <div class="ptitle">💻 ミニ練習：pivot_table</div>
+    <p class="ptask"><code>day</code>を行、<code>smoker</code>を列にして、<code>total_bill</code>の<strong>平均</strong>のピボットテーブルを作ってください。</p>
+    <textarea class="code-editor" id="p-p7-u4-input" rows="7">tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p7-u4", ["pivot_table", "index='day'", "columns='smoker'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p7-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p7-u4-result"></div>
+    <div class="answer-reveal" id="p-p7-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips.pivot_table(<span class="st">'total_bill'</span>, index=<span class="st">'day'</span>, columns=<span class="st">'smoker'</span>, aggfunc=<span class="st">'mean'</span>)</span>
+</pre>
+      <p class="answer-note">初期の集計は平均なので、aggfuncは省略しても同じです。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What are the three steps behind groupby?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Sort the rows, filter them, then draw a plot</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Split, apply, combine</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Read the file, clean it, then save it again</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Merge the tables, join them, then concatenate them</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does tips.groupby("day") return on its own?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A GroupBy object, with nothing computed yet</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The mean of every numeric column, one row per day</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A new DataFrame that is sorted by the day column</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A plain Python list holding only the day names</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which call gives min, median and max of tip for each day?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>tips.groupby('day')['tip'].agg(['min', 'median', 'max'])</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>tips.groupby('day').tip.range() with a built-in method</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>tips.agg('day', ['min', 'max']) with the key as an argument</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>tips['tip'].groupby().agg('day') with the arguments swapped</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">How does transform differ from agg?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>transform works only on text columns and nothing else</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>transform always returns the sum of each group</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>transform removes missing values before it computes</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>transform keeps the original number of rows</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does pivot_table(values, index="day", columns="sex") build?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A table with days as rows and sexes as columns</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A list of every possible combination of its rows</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A copy of the original table that has no changes</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A bar chart with one bar for each of the rows</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which function counts how often each pair of categories occurs?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pd.crosstab</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>pd.melt, which reshapes wide data to long data</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>pd.cut, which puts numbers into bins</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>pd.concat, which stacks frames on top of each other</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 0, 0, 3, 0, 0];
+var FEEDBACKS=["Data is split into groups, a function is applied to each, and the results are combined.", "You must call an aggregation such as mean() or sum() to get a result.", "agg accepts a list of function names and returns one column per function.", "agg reduces each group to one row, while transform returns a value for every original row.", "Like a spreadsheet pivot, the index gives the rows, columns gives the columns, and a function aggregates the values.", "crosstab builds a frequency table of two (or more) categorical variables."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">groupby</div><div class="term-en">グループ化</div><div class="term-def">キーでデータを分け、グループごとに集計するための準備。</div></div>
+    <div class="term-item"><div class="term-name">agg</div><div class="term-en">複数の集計</div><div class="term-def">リストや辞書で複数の集計をまとめて指定する。</div></div>
+    <div class="term-item"><div class="term-name">transform</div><div class="term-en">行数を保つ変換</div><div class="term-def">グループの値を、元のすべての行に付ける。</div></div>
+    <div class="term-item"><div class="term-name">filter</div><div class="term-en">グループの絞り込み</div><div class="term-def">条件を満たすグループだけ残す。</div></div>
+    <div class="term-item"><div class="term-name">pivot_table</div><div class="term-en">ピボットテーブル</div><div class="term-def">行・列・値・集計方法を指定して、集計表を作る。</div></div>
+    <div class="term-item"><div class="term-name">crosstab</div><div class="term-en">クロス集計</div><div class="term-def">2つのカテゴリの組み合わせごとの個数を数える。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>groupbyは、集計とセットで使います。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas⑦ 集計とピボットテーブル</p>
+  <p style="margin-top:.5rem;"><a href="pd_combine.html">← ⑥ 連結・結合</a> · <a href="pd_text_time.html">⑧ 文字列・時系列 →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

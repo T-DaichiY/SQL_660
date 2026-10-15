@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas⑥ 連結と結合</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — Concat & Merge</div>
+  <h1>🔗 Pandas⑥：concat と merge</h1>
+  <p>concatでつなぎ、mergeで結びつけ、howで残す行を選ぶ方法を学びます。SQLのJOINと対応させます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① concat</a><a href="#unit2">② merge</a><a href="#unit3">③ how</a><a href="#unit4">④ suffixes</a><a href="#quiz">📝 Quiz</a><a href="pd_combine_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.06 Combining Datasets: Concat and Append</li><li>Handbook 3.07 Combining Datasets: Merge and Join</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>縦に・横につなぐ：concat</h2><div class="unit-sub">pd.concat</div></div>
+  </div>
+<p><code>pd.concat</code>は、複数のSeriesやDataFrameを<strong>つなげる</strong>関数です。初期設定では<strong>縦</strong>（行を追加）につなぎます。</p><pre class="code-block">
+<span class="cl">df1 = pd.DataFrame({<span class="st">'A'</span>: [<span class="st">'A1'</span>, <span class="st">'A2'</span>], <span class="st">'B'</span>: [<span class="st">'B1'</span>, <span class="st">'B2'</span>]}, index=[<span class="nm">1</span>, <span class="nm">2</span>])</span>
+<span class="cl">df2 = pd.DataFrame({<span class="st">'A'</span>: [<span class="st">'A3'</span>, <span class="st">'A4'</span>], <span class="st">'B'</span>: [<span class="st">'B3'</span>, <span class="st">'B4'</span>]}, index=[<span class="nm">3</span>, <span class="nm">4</span>])</span>
+</pre><pre class="code-block">
+<span class="cl">pd.concat([df1, df2])</span>
+</pre><div class="output-reveal">    A   B
+1  A1  B1
+2  A2  B2
+3  A3  B3
+4  A4  B4</div><pre class="code-block">
+<span class="cl">pd.concat([df1, df2], ignore_index=<span class="kw">True</span>)    <span class="cm"># 索引を振り直す</span></span>
+</pre><div class="output-reveal">    A   B
+0  A1  B1
+1  A2  B2
+2  A3  B3
+3  A4  B4</div><p>索引がかぶっていても、そのままつながります（重複した索引になる点に注意）。振り直すには<code>ignore_index=True</code>です。</p><pre class="code-block">
+<span class="cl">df3 = pd.DataFrame({<span class="st">'C'</span>: [<span class="st">'C1'</span>, <span class="st">'C2'</span>]}, index=[<span class="nm">1</span>, <span class="nm">2</span>])</span>
+<span class="cl">pd.concat([df1, df3], axis=<span class="nm">1</span>)    <span class="cm"># 横につなぐ（索引でそろう）</span></span>
+</pre><div class="output-reveal">    A   B   C
+1  A1  B1  C1
+2  A2  B2  C2</div><pre class="code-block">
+<span class="cl">df4 = pd.DataFrame({<span class="st">'A'</span>: [<span class="st">'A9'</span>], <span class="st">'C'</span>: [<span class="st">'C9'</span>]})</span>
+<span class="cl"><span class="kw">print</span>(pd.concat([df1, df4]))                <span class="cm"># 無い列はNaN（outer）</span></span>
+<span class="cl">pd.concat([df1, df4], join=<span class="st">'inner'</span>)           <span class="cm"># 共通の列だけ</span></span>
+</pre><div class="output-reveal">    A    B    C
+1  A1   B1  NaN
+2  A2   B2  NaN
+0  A9  NaN   C9
+    A
+1  A1
+2  A2
+0  A9</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>concat</code>は「積み木を縦または横に積む」道具。列や索引がそろわない部分はNaNで埋まります。</p></div><div class="practice-card" id="p-p6-u1">
+    <div class="ptitle">💻 ミニ練習：縦に連結</div>
+    <p class="ptask"><code>df1</code>と<code>df2</code>を縦につなぎ、索引を0から振り直してください。</p>
+    <textarea class="code-editor" id="p-p6-u1-input" rows="7"># df1, df2 は同じ列を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p6-u1", ["pd.concat", "ignore_index=True"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p6-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p6-u1-result"></div>
+    <div class="answer-reveal" id="p-p6-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pd.concat([df1, df2], ignore_index=<span class="kw">True</span>)</span>
+</pre>
+      <p class="answer-note">ignore_indexで連番になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>共通の列で結びつける：merge</h2><div class="unit-sub">データベースのJOINと同じ</div></div>
+  </div>
+<p><code>pd.merge</code>は、<strong>共通の列（キー）</strong>の値が同じ行どうしを結びつけます。SQLの<code>JOIN</code>とほぼ同じです。</p><pre class="code-block">
+<span class="cl">emp = pd.DataFrame({<span class="st">'employee'</span>: [<span class="st">'Bob'</span>, <span class="st">'Jake'</span>, <span class="st">'Lisa'</span>, <span class="st">'Sue'</span>], <span class="st">'group'</span>: [<span class="st">'Accounting'</span>, <span class="st">'Engineering'</span>, <span class="st">'Engineering'</span>, <span class="st">'HR'</span>]})</span>
+<span class="cl">hired = pd.DataFrame({<span class="st">'employee'</span>: [<span class="st">'Lisa'</span>, <span class="st">'Bob'</span>, <span class="st">'Jake'</span>, <span class="st">'Sue'</span>], <span class="st">'hire_date'</span>: [<span class="nm">2004</span>, <span class="nm">2008</span>, <span class="nm">2012</span>, <span class="nm">2014</span>]})</span>
+</pre><pre class="code-block">
+<span class="cl">df3 = pd.merge(emp, hired)    <span class="cm"># 共通の列 employee が自動でキーになる</span></span>
+<span class="cl">df3</span>
+</pre><div class="output-reveal">  employee        group  hire_date
+0      Bob   Accounting       2008
+1     Jake  Engineering       2012
+2     Lisa  Engineering       2004
+3      Sue           HR       2014</div><p>キーの値が重複している場合（<strong>多対一</strong>）は、片側の値が複製されてつきます。</p><pre class="code-block">
+<span class="cl">boss = pd.DataFrame({<span class="st">'group'</span>: [<span class="st">'Accounting'</span>, <span class="st">'Engineering'</span>, <span class="st">'HR'</span>], <span class="st">'supervisor'</span>: [<span class="st">'Carly'</span>, <span class="st">'Guido'</span>, <span class="st">'Steve'</span>]})</span>
+<span class="cl">pd.merge(df3, boss)</span>
+</pre><div class="output-reveal">  employee        group  hire_date supervisor
+0      Bob   Accounting       2008      Carly
+1     Jake  Engineering       2012      Guido
+2     Lisa  Engineering       2004      Guido
+3      Sue           HR       2014      Steve</div><p>キーの列名が違うときは<code>left_on</code>・<code>right_on</code>で指定します。</p><pre class="code-block">
+<span class="cl">salary = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Bob'</span>, <span class="st">'Jake'</span>, <span class="st">'Lisa'</span>, <span class="st">'Sue'</span>], <span class="st">'salary'</span>: [<span class="nm">70000</span>, <span class="nm">80000</span>, <span class="nm">120000</span>, <span class="nm">90000</span>]})</span>
+<span class="cl">pd.merge(emp, salary, left_on=<span class="st">'employee'</span>, right_on=<span class="st">'name'</span>).drop(<span class="st">'name'</span>, axis=<span class="nm">1</span>)</span>
+</pre><div class="output-reveal">  employee        group  salary
+0      Bob   Accounting   70000
+1     Jake  Engineering   80000
+2     Lisa  Engineering  120000
+3      Sue           HR   90000</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>名簿AとBを「名前」でつなぎ合わせて、1枚の表にする作業です。</p></div><div class="practice-card" id="p-p6-u2">
+    <div class="ptitle">💻 ミニ練習：merge</div>
+    <p class="ptask"><code>emp</code>と<code>hired</code>を、共通の列で結びつけてください。</p>
+    <textarea class="code-editor" id="p-p6-u2-input" rows="7"># emp と hired は employee 列を共有
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p6-u2", ["pd.merge"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p6-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p6-u2-result"></div>
+    <div class="answer-reveal" id="p-p6-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pd.merge(emp, hired, on=<span class="st">'employee'</span>)</span>
+</pre>
+      <p class="answer-note"><code>on='employee'</code>とキーを明示するのが安全です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>どの行を残す？：how</h2><div class="unit-sub">inner / outer / left / right</div></div>
+  </div>
+<p>片方にしかないキーがあるとき、どの行を残すかを<code>how</code>で決めます。</p><pre class="code-block">
+<span class="cl">a = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Peter'</span>, <span class="st">'Paul'</span>, <span class="st">'Mary'</span>], <span class="st">'food'</span>: [<span class="st">'fish'</span>, <span class="st">'beans'</span>, <span class="st">'bread'</span>]})</span>
+<span class="cl">b = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Mary'</span>, <span class="st">'Joseph'</span>], <span class="st">'drink'</span>: [<span class="st">'wine'</span>, <span class="st">'beer'</span>]})</span>
+</pre><pre class="code-block">
+<span class="cl">pd.merge(a, b)                    <span class="cm"># 初期設定 inner：両方にあるキーだけ</span></span>
+</pre><div class="output-reveal">   name   food drink
+0  Mary  bread  wine</div><pre class="code-block">
+<span class="cl">pd.merge(a, b, how=<span class="st">'outer'</span>)       <span class="cm"># どちらかにあれば残す（無い所はNaN）</span></span>
+</pre><div class="output-reveal">     name   food drink
+0  Joseph    NaN  beer
+1    Mary  bread  wine
+2    Paul  beans   NaN
+3   Peter   fish   NaN</div><pre class="code-block">
+<span class="cl">pd.merge(a, b, how=<span class="st">'left'</span>)        <span class="cm"># 左（a）の行は全部残す</span></span>
+</pre><div class="output-reveal">    name   food drink
+0  Peter   fish   NaN
+1   Paul  beans   NaN
+2   Mary  bread  wine</div><pre class="code-block">
+<span class="cl">pd.merge(a, b, how=<span class="st">'right'</span>)       <span class="cm"># 右（b）の行は全部残す</span></span>
+</pre><div class="output-reveal">     name   food drink
+0    Mary  bread  wine
+1  Joseph    NaN  beer</div><table class="compare-table"><thead><tr><th>how</th><th>残る行</th></tr></thead><tbody><tr><td><code>inner</code>（初期）</td><td>両方にあるキー</td></tr><tr><td><code>outer</code></td><td>どちらかにあるキー</td></tr><tr><td><code>left</code></td><td>左のキー全部</td></tr><tr><td><code>right</code></td><td>右のキー全部</td></tr></tbody></table><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SQLの <code>INNER / FULL OUTER / LEFT / RIGHT JOIN</code> と1対1で対応します。</p></div><div class="practice-card" id="p-p6-u3">
+    <div class="ptitle">💻 ミニ練習：left</div>
+    <p class="ptask"><code>a</code>の行をすべて残して、<code>b</code>を結びつけてください。</p>
+    <textarea class="code-editor" id="p-p6-u3-input" rows="7"># a と b は name 列を共有
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p6-u3", ["how='left'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p6-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p6-u3-result"></div>
+    <div class="answer-reveal" id="p-p6-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pd.merge(a, b, how=<span class="st">'left'</span>)</span>
+</pre>
+      <p class="answer-note">Peter、Paulの drink は NaN になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>列名がかぶったとき・join</h2><div class="unit-sub">suffixes と DataFrame.join</div></div>
+  </div>
+<p>キー以外に<strong>同じ名前の列</strong>があると、<code>_x</code>・<code>_y</code>が付きます。<code>suffixes</code>で分かりやすい名前にできます。</p><pre class="code-block">
+<span class="cl">l = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Bob'</span>, <span class="st">'Jake'</span>], <span class="st">'rank'</span>: [<span class="nm">1</span>, <span class="nm">2</span>]})</span>
+<span class="cl">r = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Bob'</span>, <span class="st">'Jake'</span>], <span class="st">'rank'</span>: [<span class="nm">3</span>, <span class="nm">1</span>]})</span>
+<span class="cl">pd.merge(l, r, on=<span class="st">'name'</span>, suffixes=[<span class="st">'_L'</span>, <span class="st">'_R'</span>])</span>
+</pre><div class="output-reveal">   name  rank_L  rank_R
+0   Bob       1       3
+1  Jake       2       1</div><p>索引どうしで結びつけるなら、<code>join</code>が簡単です。</p><pre class="code-block">
+<span class="cl">l2 = l.set_index(<span class="st">'name'</span>)</span>
+<span class="cl">r2 = r.set_index(<span class="st">'name'</span>)</span>
+<span class="cl">l2.join(r2, lsuffix=<span class="st">'_L'</span>, rsuffix=<span class="st">'_R'</span>)</span>
+</pre><div class="output-reveal">      rank_L  rank_R
+name                
+Bob        1       3
+Jake       2       1</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>キーを列で結びつけるなら<code>merge</code>、索引で結びつけるなら<code>join</code>。</p></div><div class="practice-card" id="p-p6-u4">
+    <div class="ptitle">💻 ミニ練習：suffixes</div>
+    <p class="ptask">同名の列 <code>rank</code> に <code>_L</code>・<code>_R</code> を付けて <code>name</code> でmergeしてください。</p>
+    <textarea class="code-editor" id="p-p6-u4-input" rows="7"># l と r は name, rank を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p6-u4", ["pd.merge", "suffixes=['_L', '_R']"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p6-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p6-u4-result"></div>
+    <div class="answer-reveal" id="p-p6-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pd.merge(l, r, on=<span class="st">'name'</span>, suffixes=[<span class="st">'_L'</span>, <span class="st">'_R'</span>])</span>
+</pre>
+      <p class="answer-note">列は rank_L と rank_R になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does pd.concat([df1, df2]) do by default?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Stacks the rows of df2 below df1</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Joins the two frames on a shared key column</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Adds the columns of df2 beside df1</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Computes the sum of both frames cell by cell</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does ignore_index=True do in concat?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Drops all rows with an index</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Builds a new 0..n-1 index</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Hides the index when printing</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Ignores columns that appear twice</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which is the closest SQL equivalent of pd.merge(a, b) with its default?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>FULL OUTER JOIN of the two tables</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>UNION of the rows of both tables</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>INNER JOIN on the shared columns</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>LEFT JOIN keeping every row of a</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which how value keeps every row of the left frame?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>inner</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>right</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>outer</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>left</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">The key columns have different names. Which arguments do you use?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>on and by</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>left_on and right_on</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>key1 and key2</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>index_a and index_b</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Both frames have a non-key column named rank. How do you tell them apart after merge?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Rename them manually afterwards only</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Pandas refuses to merge such frames</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Pass suffixes=["_L", "_R"] to merge</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The columns are summed automatically</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 2, 3, 1, 2];
+var FEEDBACKS=["The default axis is 0, so rows are appended vertically.", "The old index labels are discarded and a fresh integer index is created.", "The default is how=\"inner\": only keys present in both frames survive.", "how=\"left\" keeps all keys from the left DataFrame and fills missing right values with NaN.", "left_on names the key in the left frame, and right_on names the key in the right frame.", "Overlapping non-key columns get suffixes, and the suffixes argument lets you choose them."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">concat</div><div class="term-en">連結</div><div class="term-def">複数のDataFrameを縦（axis=0）または横（axis=1）につなぐ。</div></div>
+    <div class="term-item"><div class="term-name">merge</div><div class="term-en">結合</div><div class="term-def">共通の列（キー）の値が同じ行どうしを結びつける。SQLのJOIN。</div></div>
+    <div class="term-item"><div class="term-name">how</div><div class="term-en">結合の種類</div><div class="term-def">inner／outer／left／right。残す行が変わる。</div></div>
+    <div class="term-item"><div class="term-name">left_on / right_on</div><div class="term-en">キーの指定</div><div class="term-def">左右でキーの列名が違うときに使う。</div></div>
+    <div class="term-item"><div class="term-name">suffixes</div><div class="term-en">接尾辞</div><div class="term-def">同名の列に付ける目印（例：_L、_R）。</div></div>
+    <div class="term-item"><div class="term-name">join</div><div class="term-en">索引で結合</div><div class="term-def">索引どうしを結びつける、mergeの簡易版。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>SQLのJOINを学んだなら、mergeのhowはそのまま対応します。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas⑥ 連結と結合</p>
+  <p style="margin-top:.5rem;"><a href="pd_hier.html">← ⑤ 階層索引</a> · <a href="pd_groupby.html">⑦ 集計・ピボット →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas② データの選択</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — Indexing & Selection</div>
+  <h1>🔍 Pandas②：データを選ぶ・絞る</h1>
+  <p>loc／iloc、列の選択、条件による絞り込み、値の書き換えを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① Series</a><a href="#unit2">② DataFrame</a><a href="#unit3">③ 絞り込み</a><a href="#unit4">④ 書き換え</a><a href="#quiz">📝 Quiz</a><a href="pd_indexing_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.02 Data Indexing and Selection</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>Seriesの取り出し：ラベルと位置</h2><div class="unit-sub">loc と iloc</div></div>
+  </div>
+<p>Seriesは「ラベル」でも「位置」でも取り出せるので、混乱しやすいところです。そこで、取り出し方を<strong>はっきり使い分ける2つの道具</strong>があります。</p><ul><li><code>loc</code>：<strong>ラベル</strong>で取り出す（スライスの終点も<strong>含む</strong>）</li><li><code>iloc</code>：<strong>位置</strong>（0から数えた番号）で取り出す（終点は<strong>含まない</strong>）</li></ul><pre class="code-block">
+<span class="cl">data = pd.Series([<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>], index=[<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">5</span>])</span>
+<span class="cl"><span class="kw">print</span>(data[<span class="nm">1</span>])          <span class="cm"># 角括弧の整数は「ラベル」として扱われる</span></span>
+<span class="cl"><span class="kw">print</span>(data.loc[<span class="nm">1</span>:<span class="nm">3</span>])    <span class="cm"># ラベル1〜3（3を含む）</span></span>
+<span class="cl">data.iloc[<span class="nm">1</span>:<span class="nm">3</span>]          <span class="cm"># 位置1〜2（3番目は含まない）</span></span>
+</pre><div class="output-reveal">a
+1    a
+3    b
+dtype: object
+3    b
+5    c
+dtype: object</div><div class="warn-box">⚠️ 索引が整数のとき、<code>data[1]</code>は「ラベル1」ですが、<code>data[1:3]</code>は「<strong>位置</strong>1〜2」になる、というややこしい決まりがあります。迷わないために<strong>常に<code>loc</code>か<code>iloc</code>を使う</strong>のがおすすめです。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>loc</code>＝Label（名前）、<code>iloc</code>＝integer（番号）。名前なら終点を含み、番号なら含みません。</p></div><div class="practice-card" id="p-p2-u1">
+    <div class="ptitle">💻 ミニ練習：loc と iloc</div>
+    <p class="ptask">Series <code>s</code> から、<strong>ラベルが 3 の要素</strong>を <code>loc</code> で、<strong>先頭の要素</strong>を <code>iloc</code> で取り出す2行を書いてください。</p>
+    <textarea class="code-editor" id="p-p2-u1-input" rows="7">s = pd.Series(['a', 'b', 'c'], index=[1, 3, 5])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p2-u1", ["s.loc[3]", "s.iloc[0]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p2-u1-result"></div>
+    <div class="answer-reveal" id="p-p2-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">s.loc[<span class="nm">3</span>]</span>
+<span class="cl">s.iloc[<span class="nm">0</span>]</span>
+</pre>
+      <p class="answer-note">ラベル3は2番目の要素で、位置0は先頭です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>DataFrameの列と行を選ぶ</h2><div class="unit-sub">df['col']、loc、iloc</div></div>
+  </div>
+<p>DataFrameでは、<strong>列は名前で、行は loc／iloc</strong>で選ぶのが基本です。</p><pre class="code-block">
+<span class="cl">df = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Ann'</span>, <span class="st">'Bob'</span>, <span class="st">'Cy'</span>, <span class="st">'Di'</span>], <span class="st">'age'</span>: [<span class="nm">23</span>, <span class="nm">31</span>, <span class="nm">27</span>, <span class="nm">45</span>], <span class="st">'city'</span>: [<span class="st">'NY'</span>, <span class="st">'LA'</span>, <span class="st">'NY'</span>, <span class="st">'SF'</span>]}, index=[<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'d'</span>])</span>
+</pre><pre class="code-block">
+<span class="cl">df[<span class="st">'age'</span>]              <span class="cm"># 1列 → Series</span></span>
+</pre><div class="output-reveal">a    23
+b    31
+c    27
+d    45
+Name: age, dtype: int64</div><pre class="code-block">
+<span class="cl">df[[<span class="st">'name'</span>, <span class="st">'age'</span>]]    <span class="cm"># 複数列 → DataFrame（リストで指定）</span></span>
+</pre><div class="output-reveal">  name  age
+a  Ann   23
+b  Bob   31
+c   Cy   27
+d   Di   45</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(df.loc[<span class="st">'b'</span>])             <span class="cm"># 行ラベルで1行</span></span>
+<span class="cl">df.loc[<span class="st">'a'</span>:<span class="st">'c'</span>, [<span class="st">'name'</span>, <span class="st">'age'</span>]]   <span class="cm"># 行ラベルと列名</span></span>
+</pre><div class="output-reveal">name    Bob
+age      31
+city     LA
+Name: b, dtype: object
+  name  age
+a  Ann   23
+b  Bob   31
+c   Cy   27</div><pre class="code-block">
+<span class="cl">df.iloc[:<span class="nm">2</span>, :<span class="nm">2</span>]        <span class="cm"># 上の2行・左の2列（位置）</span></span>
+</pre><div class="output-reveal">  name  age
+a  Ann   23
+b  Bob   31</div><p>新しい列は、代入するだけで追加できます。</p><pre class="code-block">
+<span class="cl">df[<span class="st">'age_next'</span>] = df[<span class="st">'age'</span>] + <span class="nm">1</span></span>
+<span class="cl">df</span>
+</pre><div class="output-reveal">  name  age city  age_next
+a  Ann   23   NY        24
+b  Bob   31   LA        32
+c   Cy   27   NY        28
+d   Di   45   SF        46</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>df.loc[行, 列]</code>の書き方はNumPyの<code>x[行, 列]</code>と同じ。違いは、行・列を<strong>名前</strong>で指定できることです。</p></div><div class="practice-card" id="p-p2-u2">
+    <div class="ptitle">💻 ミニ練習：行と列を選ぶ</div>
+    <p class="ptask"><code>df</code>から、行ラベル <code>b</code> と <code>c</code> の <code>name</code> 列だけを取り出してください（<code>loc</code>を使う）。</p>
+    <textarea class="code-editor" id="p-p2-u2-input" rows="7"># df は name, age, city を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p2-u2", ["df.loc['b':'c', 'name']"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p2-u2-result"></div>
+    <div class="answer-reveal" id="p-p2-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df.loc[<span class="st">'b'</span>:<span class="st">'c'</span>, <span class="st">'name'</span>]</span>
+</pre>
+      <p class="answer-note">locのスライスは終点を含むので、bとcの2行になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>条件で絞り込む</h2><div class="unit-sub">ブール値のマスク</div></div>
+  </div>
+<p>NumPyのマスクと同じ考え方で、<strong>条件に合う行</strong>を取り出せます。</p><pre class="code-block">
+<span class="cl">df[df[<span class="st">'age'</span>] &gt; <span class="nm">25</span>]</span>
+</pre><div class="output-reveal">  name  age city  age_next
+b  Bob   31   LA        32
+c   Cy   27   NY        28
+d   Di   45   SF        46</div><pre class="code-block">
+<span class="cl">df[(df[<span class="st">'age'</span>] &gt; <span class="nm">25</span>) &amp; (df[<span class="st">'city'</span>] == <span class="st">'NY'</span>)]    <span class="cm"># 複数条件は &amp; と括弧</span></span>
+</pre><div class="output-reveal">  name  age city  age_next
+c   Cy   27   NY        28</div><pre class="code-block">
+<span class="cl">df.loc[df[<span class="st">'city'</span>].isin([<span class="st">'NY'</span>, <span class="st">'SF'</span>]), [<span class="st">'name'</span>, <span class="st">'city'</span>]]</span>
+</pre><div class="output-reveal">  name city
+a  Ann   NY
+c   Cy   NY
+d   Di   SF</div><div class="warn-box">⚠️ 複数条件は<code>&amp;</code>（かつ）・<code>|</code>（または）で、条件ごとに括弧が必要です。<code>and</code>・<code>or</code>は使えません。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「df[条件]」は「条件がTrueの行だけ残す」の意味。条件の結果は、行ごとのTrue/Falseです。</p></div><div class="practice-card" id="p-p2-u3">
+    <div class="ptitle">💻 ミニ練習：条件で絞る</div>
+    <p class="ptask"><code>age</code>が30以上の行だけを取り出してください。</p>
+    <textarea class="code-editor" id="p-p2-u3-input" rows="7"># df は name, age, city を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p2-u3", ["df[df['age'] >= 30]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p2-u3-result"></div>
+    <div class="answer-reveal" id="p-p2-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df[df[<span class="st">'age'</span>] &gt;= <span class="nm">30</span>]</span>
+</pre>
+      <p class="answer-note">結果はBob（31）とDi（45）の2行です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>値の書き換えと、よくある落とし穴</h2><div class="unit-sub">loc で代入する</div></div>
+  </div>
+<p>値の書き換えには<code>loc</code>を使います。</p><pre class="code-block">
+<span class="cl">df.loc[<span class="st">'a'</span>, <span class="st">'age'</span>] = <span class="nm">24</span></span>
+<span class="cl">df.loc[df[<span class="st">'city'</span>] == <span class="st">'NY'</span>, <span class="st">'city'</span>] = <span class="st">'New York'</span></span>
+<span class="cl">df</span>
+</pre><div class="output-reveal">  name  age      city  age_next
+a  Ann   24  New York        24
+b  Bob   31        LA        32
+c   Cy   27  New York        28
+d   Di   45        SF        46</div><div class="warn-box">⚠️ <code>df[条件]['col'] = 値</code>のように<strong>つなげて書く</strong>と、元のDataFrameが変わらないことがあります（SettingWithCopyWarning）。書き換えは必ず<code>df.loc[条件, 'col'] = 値</code>の<strong>1回の指定</strong>で。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「どこを」（行・列）と「何に」（値）を、1つの<code>loc</code>で指定するのがコツ。</p></div><div class="practice-card" id="p-p2-u4">
+    <div class="ptitle">💻 ミニ練習：書き換え</div>
+    <p class="ptask"><code>age</code>が40以上の人の<code>city</code>を <code>Senior</code> に書き換えてください（<code>loc</code>で）。</p>
+    <textarea class="code-editor" id="p-p2-u4-input" rows="7"># df は name, age, city を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p2-u4", ["df.loc[df['age'] >= 40, 'city']"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p2-u4-result"></div>
+    <div class="answer-reveal" id="p-p2-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df.loc[df[<span class="st">'age'</span>] &gt;= <span class="nm">40</span>, <span class="st">'city'</span>] = <span class="st">'Senior'</span></span>
+</pre>
+      <p class="answer-note">行の条件と列名を、1つのlocで指定します。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">For s = pd.Series([10, 20, 30], index=[1, 3, 5]), what is s.loc[3]?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>10</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An error</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>30</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>20</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the main difference between slicing with loc and with iloc?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>There is no difference between them at all</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>loc is always faster for any kind of data frame</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>iloc can only be used on columns holding strings</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>loc includes the end label, iloc excludes it</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you select two columns "a" and "b" from df?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df["a", "b"]  with two arguments</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.a.b  chaining two attributes</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df[["a", "b"]]</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df("a", "b")  like a function call</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which expression keeps rows where age is above 25 and city is NY?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df[df.age &gt; 25 and df.city == 'NY']</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.loc['age' &gt; 25 and 'city' == 'NY']</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df[df['age'] &gt; 25, df['city'] == 'NY'] with a comma</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df[(df['age'] &gt; 25) &amp; (df['city'] == 'NY')]</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does df.iloc[:2, :2] return?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A single value</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The last two rows and columns</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Rows labelled 2</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The first two rows and the first two columns</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which way is recommended to change values where a condition holds?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df[cond]['col'] = v</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.col(cond) = v</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df['col'][cond] = v with a copy</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df.loc[cond, 'col'] = v</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 3, 2, 3, 3, 3];
+var FEEDBACKS=["loc uses labels, and label 3 holds the value 20.", "loc slices by label and includes the end. iloc slices by position and excludes it, like Python lists.", "Pass a list of column names. The result is a DataFrame.", "Use & with parentheses. Python and/or do not work element-wise on Series.", "iloc is purely position-based: rows 0 and 1, columns 0 and 1.", "A single loc call states rows and column together, so the original DataFrame is modified reliably."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">loc</div><div class="term-en">ラベルで選ぶ</div><div class="term-def">行・列の名前で選ぶ。スライスの終点を含む。</div></div>
+    <div class="term-item"><div class="term-name">iloc</div><div class="term-en">位置で選ぶ</div><div class="term-def">0からの番号で選ぶ。スライスの終点を含まない。</div></div>
+    <div class="term-item"><div class="term-name">boolean mask</div><div class="term-en">ブールマスク</div><div class="term-def">条件の結果（True/False）で行を絞る。&、|を使い、括弧が必要。</div></div>
+    <div class="term-item"><div class="term-name">isin</div><div class="term-en">含まれるか</div><div class="term-def">df['c'].isin([…])で、リストに含まれる行をTrueにする。</div></div>
+    <div class="term-item"><div class="term-name">SettingWithCopyWarning</div><div class="term-en">コピーの警告</div><div class="term-def">つなげて代入すると元が変わらない恐れがある。locを1回で使う。</div></div>
+    <div class="term-item"><div class="term-name">new column</div><div class="term-en">列の追加</div><div class="term-def">df['new'] = … で新しい列を作る。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>迷ったらloc（名前）かiloc（番号）を使います。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas② データの選択</p>
+  <p style="margin-top:.5rem;"><a href="pd_objects.html">← ① Series・DataFrame</a> · <a href="pd_ops.html">③ 計算・並べ替え →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

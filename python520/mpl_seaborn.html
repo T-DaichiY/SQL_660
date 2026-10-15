@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Matplotlib⑥ Seaborn</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Matplotlib — Seaborn</div>
+  <h1>🌊 Matplotlib⑥：Seabornで統計グラフ</h1>
+  <p>DataFrameをそのまま渡せるSeabornで、散布図・分布・箱ひげ図・ヒートマップを描きます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 基本</a><a href="#unit2">② 分布</a><a href="#unit3">③ 関係</a><a href="#quiz">📝 Quiz</a><a href="mpl_seaborn_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 4.14 Visualization with Seaborn</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>Seabornとは</h2><div class="unit-sub">Matplotlibの上に作られた、統計向けの描画ライブラリ</div></div>
+  </div>
+<p><strong>Seaborn</strong>は、Matplotlibをもとにした描画ライブラリです。<strong>DataFrameをそのまま渡して</strong>、少ないコードで見栄えのよい統計グラフが描けます。</p><pre class="code-block">
+<span class="cl"><span class="kw">import</span> seaborn <span class="kw">as</span> sns</span>
+<span class="cl"></span>
+<span class="cl">tips = pd.read_csv(<span class="st">'data/tips.csv'</span>)</span>
+<span class="cl">sns.set_theme()</span>
+<span class="cl">sns.scatterplot(data=tips, x=<span class="st">'total_bill'</span>, y=<span class="st">'tip'</span>)</span>
+</pre><div class="plot-out"><img src="images/m6_scatter.png" alt="散布図" loading="lazy"></div><p><code>hue</code>で色分け、<code>size</code>で大きさ、<code>style</code>で形を、列の値に応じて変えられます。</p><pre class="code-block">
+<span class="cl">sns.scatterplot(data=tips, x=<span class="st">'total_bill'</span>, y=<span class="st">'tip'</span>, hue=<span class="st">'time'</span>, style=<span class="st">'smoker'</span>)</span>
+</pre><div class="plot-out"><img src="images/m6_hue.png" alt="色分け" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Matplotlibは「1つずつ指示する」、Seabornは「表と列名を渡して、まとめて描かせる」イメージです。</p></div><div class="practice-card" id="p-m6-u1">
+    <div class="ptitle">💻 ミニ練習：scatterplot</div>
+    <p class="ptask"><code>tips</code>の<code>size</code>を横軸、<code>tip</code>を縦軸にした散布図を、<code>sex</code>で色分けして描いてください。</p>
+    <textarea class="code-editor" id="p-m6-u1-input" rows="7">import seaborn as sns
+import pandas as pd
+tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m6-u1", ["sns.scatterplot", "x='size'", "y='tip'", "hue='sex'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6-u1-result"></div>
+    <div class="answer-reveal" id="p-m6-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">sns.scatterplot(data=tips, x=<span class="st">'size'</span>, y=<span class="st">'tip'</span>, hue=<span class="st">'sex'</span>)</span>
+</pre>
+      <p class="answer-note">dataにDataFrame、x・y・hueに列名を渡します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>分布を見る：histplot・boxplot</h2><div class="unit-sub">カテゴリごとの比較</div></div>
+  </div>
+<p>分布を描くのは<code>sns.histplot</code>、カテゴリごとの分布の比較は<code>sns.boxplot</code>が定番です。</p><pre class="code-block">
+<span class="cl">sns.histplot(data=tips, x=<span class="st">'tip'</span>, bins=<span class="nm">20</span>, kde=<span class="kw">True</span>)</span>
+</pre><div class="plot-out"><img src="images/m6_hist.png" alt="ヒストグラム" loading="lazy"></div><pre class="code-block">
+<span class="cl">sns.boxplot(data=tips, x=<span class="st">'day'</span>, y=<span class="st">'total_bill'</span>)</span>
+</pre><div class="plot-out"><img src="images/m6_box.png" alt="箱ひげ図" loading="lazy"></div><div class="teal-box">📌 箱ひげ図の読み方：箱の中の線が<strong>中央値</strong>、箱の上下が<strong>四分位</strong>（25%と75%）、ひげの外の点は<strong>外れ値</strong>の候補です。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>箱ひげ図は、グループごとの「中心」と「ばらつき」を1つの図で比べられます。</p></div><div class="practice-card" id="p-m6-u2">
+    <div class="ptitle">💻 ミニ練習：boxplot</div>
+    <p class="ptask"><code>tips</code>で、<code>time</code>ごとの<code>tip</code>の箱ひげ図を描いてください。</p>
+    <textarea class="code-editor" id="p-m6-u2-input" rows="7">import seaborn as sns
+import pandas as pd
+tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m6-u2", ["sns.boxplot", "x='time'", "y='tip'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6-u2-result"></div>
+    <div class="answer-reveal" id="p-m6-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">sns.boxplot(data=tips, x=<span class="st">'time'</span>, y=<span class="st">'tip'</span>)</span>
+</pre>
+      <p class="answer-note">xにカテゴリ、yに数値の列を指定します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>関係を一覧する：pairplot・heatmap</h2><div class="unit-sub">列どうしの関係をまとめて見る</div></div>
+  </div>
+<p><code>sns.pairplot</code>は、数値の列どうしの散布図を<strong>全部の組み合わせ</strong>で並べます。</p><pre class="code-block">
+<span class="cl">sns.pairplot(tips[[<span class="st">'total_bill'</span>, <span class="st">'tip'</span>, <span class="st">'size'</span>]])</span>
+</pre><div class="plot-out"><img src="images/m6_pair.png" alt="pairplot" loading="lazy"></div><p>相関係数の表は、<code>heatmap</code>で色にすると一目で分かります。</p><pre class="code-block">
+<span class="cl">corr = tips[[<span class="st">'total_bill'</span>, <span class="st">'tip'</span>, <span class="st">'size'</span>]].corr()</span>
+<span class="cl">sns.heatmap(corr, annot=<span class="kw">True</span>, cmap=<span class="st">'coolwarm'</span>, vmin=-<span class="nm">1</span>, vmax=<span class="nm">1</span>)</span>
+</pre><div class="plot-out"><img src="images/m6_heat.png" alt="ヒートマップ" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>まず<code>pairplot</code>で全体を眺め、気になる関係を<code>scatterplot</code>で深掘りする、という流れが定番です。</p></div><div class="practice-card" id="p-m6-u3">
+    <div class="ptitle">💻 ミニ練習：heatmap</div>
+    <p class="ptask">相関行列<code>corr</code>を、数値付き（<code>annot=True</code>）のヒートマップで描いてください。</p>
+    <textarea class="code-editor" id="p-m6-u3-input" rows="7">import seaborn as sns
+import pandas as pd
+tips = pd.read_csv('data/tips.csv')
+corr = tips[['total_bill', 'tip', 'size']].corr()
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m6-u3", ["sns.heatmap", "annot=True"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6-u3-result"></div>
+    <div class="answer-reveal" id="p-m6-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">sns.heatmap(corr, annot=<span class="kw">True</span>)</span>
+</pre>
+      <p class="answer-note">annotでセルに数値を書き込みます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is Seaborn built on?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Matplotlib</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>SQL databases</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>JavaScript charts</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>R language</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does the hue argument do in sns.scatterplot?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Colours the points by the values of a column</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Changes the figure size only</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Draws a legend with no data</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sorts the rows by that column before plotting</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which call shows the distribution of one numeric column?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>sns.heatmap</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>sns.pairplot with one column</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>sns.histplot</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>sns.scatterplot</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does the line inside a box of a boxplot represent?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The median</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The maximum</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The number of values</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does sns.pairplot(df) produce?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>One bar chart for every row</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A grid of scatter plots for each pair of numeric columns</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A single line chart of every column together</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A table of descriptive statistics for all columns</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does annot=True do in sns.heatmap?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Writes the values in the cells</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Adds an arrow with a text annotation</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Removes the colour bar from the figure</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sorts the rows by their average value</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 2, 1, 1, 0];
+var FEEDBACKS=["Seaborn provides a higher-level interface on top of Matplotlib.", "hue maps a column to colour so groups can be compared in one plot.", "histplot draws a histogram, optionally with a density curve.", "The central line is the median. The box covers the middle 50% of the data.", "It plots each numeric variable against every other, with distributions on the diagonal.", "annot=True prints the numbers inside each cell."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">seaborn</div><div class="term-en">シーボーン</div><div class="term-def">Matplotlibの上に作られた統計向けの描画ライブラリ。</div></div>
+    <div class="term-item"><div class="term-name">hue</div><div class="term-en">色分け</div><div class="term-def">列の値に応じて色を変える。size・styleも同様。</div></div>
+    <div class="term-item"><div class="term-name">histplot</div><div class="term-en">ヒストグラム</div><div class="term-def">分布を描く。kde=Trueで密度曲線。</div></div>
+    <div class="term-item"><div class="term-name">boxplot</div><div class="term-en">箱ひげ図</div><div class="term-def">中央値・四分位・外れ値で、グループごとの分布を比べる。</div></div>
+    <div class="term-item"><div class="term-name">pairplot</div><div class="term-en">ペアプロット</div><div class="term-def">数値の列の全組み合わせの散布図を並べる。</div></div>
+    <div class="term-item"><div class="term-name">heatmap</div><div class="term-en">ヒートマップ</div><div class="term-def">行列の値を色で表す。相関行列によく使う。annot=Trueで数値付き。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>まずpairplotで眺め、気になる関係を深掘りします。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Matplotlib⑥ Seaborn</p>
+  <p style="margin-top:.5rem;"><a href="mpl_style3d.html">← ⑤ スタイル・棒・3D</a> · <a href="ml_intro.html">① 機械学習とは →</a> · <a href="mpl_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

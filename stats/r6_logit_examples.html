@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>650 M6 ロジスティック回帰の実例(二値・連続・German credit・Shiny)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M6 🧪 実例・Shiny <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">650 M6 · Logistic Regression — Worked Examples &amp; Shiny</div>
+  <h1>🧪 ロジスティック回帰の実例：二値・連続・German credit・Shiny</h1>
+  <p>これまで学んだ「確率 → オッズ → 対数オッズ」の変換を、実データ（German credit）で<strong>通しで使う</strong>回です。<strong>二値の予測変数</strong>と<strong>連続の予測変数</strong>で、切片と係数がそれぞれ何を意味するかを数字で確かめ、最後に<strong>Shiny アプリ</strong>でモデルを公開する流れを見ます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 「Another Example: German credit」／「One binary predictor Logistic regression」／「Binary Predictor Interpretation」／「Logistic regression with one continuous predictor」／「Shiny app」</p>
+  <p style="font-size:.9rem">📦 データ: ①〜④は R の <code>caret</code> パッケージの <code>GermanCredit</code>（1,000 人。Good 700・Bad 300）から 4 列を取り出した <code>gc2</code>。⑤は Coursera Loan Default Prediction Challenge（講義のデモ）。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① German credit・切片のみ</a><a href="#unit2">② 二値：切片</a><a href="#unit3">③ 二値：係数</a><a href="#unit4">④ 連続変数</a><a href="#unit5">⑤ Shiny</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>
+<ul style="margin:.4rem 0 0 1.2rem">
+<li>① German credit と予測変数なしのモデル：Another Example: German credit</li>
+<li>② 二値予測変数の切片の解釈：One binary predictor Logistic regression</li>
+<li>③ 二値予測変数の係数の解釈（オッズの比と 73% 減）：Binary Predictor Interpretation</li>
+<li>④ 連続予測変数（Age）と係数を導く手順：Logistic regression with one continuous predictor</li>
+<li>⑤ end-to-end のデモ（LLM、Shiny、デプロイ）：Shiny app</li>
+</ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>German credit：予測変数なしのモデル</h2><div class="unit-sub">二値の応答 Class と、切片 = 全体の対数オッズ</div></div>
+  </div>
+  <p>ここからは、これまでに学んだ「確率 → オッズ → 対数オッズ（log odds）」の変換を、実際のデータで<strong>一気に通して</strong>使います。講師は「このあたりから少しペースを上げる。理解していれば付いてこられるはず」と言っていました。分からなくなったら、動画を止めて前の回（入門・モデル評価）に戻りましょう。</p>
+  <p>使うデータは R の <code>caret</code> パッケージにある <strong>GermanCredit</strong>（ドイツの顧客 1,000 人の信用データ）です。まず 4 列（<code>Class, Age, Amount, ForeignWorker</code>）だけに絞って、新しいデータフレーム <code>gc2</code> を作ります。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(caret)</span>
+<span class="cl"><span class="kw">library</span>(dplyr)</span>
+<span class="cl"><span class="kw">data</span>(GermanCredit)</span>
+<span class="cl">gc2 &lt;- GermanCredit |&gt; <span class="kw">select</span>(Class, Age, Amount, ForeignWorker)</span>
+<span class="cl"><span class="kw">glimpse</span>(gc2)</span>
+</pre><div class="output-reveal">Rows: 1,000
+Columns: 4
+$ Class         &lt;fct&gt; Good, Bad, Good, Good, Bad, Good, Good, Good, Good, Bad,~
+$ Age           &lt;int&gt; 67, 22, 49, 45, 53, 35, 53, 35, 61, 28, 25, 24, 22, 60, ~
+$ Amount        &lt;int&gt; 1169, 5951, 2096, 7882, 4870, 9055, 2835, 6948, 3059, 52~
+$ ForeignWorker &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,~</div>
+  <ul>
+    <li><code>Class</code>：<strong>Good / Bad</strong>（信用が良いか悪いか）。これが<strong>応答変数</strong>（二値）。</li>
+    <li><code>Age</code>：年齢、<code>Amount</code>：ローン額、<code>ForeignWorker</code>：外国人労働者かどうか（後で詳しく）。</li>
+  </ul>
+  <p>二値の応答変数を確認します。さらに <code>contrasts()</code> で「どちらが 1 か」を必ず確かめます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">table</span>(gc2$Class)</span>
+<span class="cl"><span class="kw">contrasts</span>(gc2$Class)</span>
+</pre><div class="output-reveal"> Bad Good
+ 300  700
+     Good
+Bad     0
+Good    1</div>
+  <p>Good が 700 人、Bad が 300 人。<strong>Good = 1、Bad = 0</strong> なので、モデルが予測するのは「<strong>良い信用（Good）である確率</strong>」です。講師の注意：「とくに ForeignWorker はちょっと変（screwy）なので、<strong>何が 1 で何が 0 かを必ず確認する癖</strong>をつけよう」。</p>
+  <h3 style="margin:1rem 0 .3rem">予測変数なしのモデル（切片だけ）</h3>
+  <p>まず予測変数を<strong>1 つも入れない</strong>モデル <code>Class ~ 1</code> を作ります。出てくる係数は切片だけです。</p>
+<pre class="code-block">
+<span class="cl">mod0 &lt;- <span class="kw">glm</span>(Class ~ <span class="nm">1</span>, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl"><span class="kw">summary</span>(mod0)$coefficients</span>
+</pre><div class="output-reveal">             Estimate Std. Error  z value     Pr(&gt;|z|)
+(Intercept) 0.8472979 0.06900652 12.27852 1.181419e-34</div>
+  <p>切片 0.8473 の正体を手で確かめましょう。全体の Good の割合は p = 700/1000 = 0.7 です。</p>
+<pre class="code-block">
+<span class="cl">p &lt;- <span class="nm">700</span> / <span class="nm">1000</span></span>
+<span class="cl">p</span>
+<span class="cl">p / (<span class="nm">1</span> - p)</span>
+<span class="cl"><span class="kw">log</span>(p / (<span class="nm">1</span> - p))</span>
+</pre><div class="output-reveal">[1] 0.7
+[1] 2.333333
+[1] 0.8472979</div>
+  <div class="table-wrap" style="overflow-x:auto"><table class="compare-table">
+    <tr><th>確率 p</th><th>オッズ p/(1−p)</th><th>対数オッズ log(オッズ)</th></tr>
+    <tr><td>0.7</td><td>0.7 / 0.3 = 2.33</td><td>log(2.333) = <strong>0.847</strong>（= 切片）</td></tr>
+  </table></div>
+  <p>つまり<strong>予測変数がないとき、切片は「全体の対数オッズ」</strong>そのものです。係数（coefficient）は「Good である確率の<strong>対数オッズ</strong>」の形で出てきます。</p>
+  <div class="warn-box">⚠️ <strong>講師の注意：</strong>① <code>contrasts()</code> で 1 と 0 を必ず確認する。② 確率・オッズ・対数オッズの往復（0.7 → 2.33 → 0.847 → 逆向き）は「流暢にできる」ことが、このあと全部の前提になる。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>予測変数がないとき、切片は「全体の log odds」。Good が 700 人・Bad が 300 人なら、log(700/300) = 0.847 がそのまま切片です。</p></div>
+  <div class="practice-card" id="p-r6x-u1">
+    <div class="ptitle">💻 ミニ練習：GermanCredit の切片だけのモデル</div>
+    <p class="ptask"><code>gc2</code> の <code>Class</code> を応答変数、予測変数なしで二項ロジスティック回帰を当てはめ、係数表を表示する R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r6x-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r6x-u1', ['glm', 'Class', 'binomial', 'summary', 'gc2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r6x-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r6x-u1-result"></div>
+    <div class="answer-reveal" id="p-r6x-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">mod0 &lt;- <span class="kw">glm</span>(Class ~ <span class="nm">1</span>, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl"><span class="kw">summary</span>(mod0)</span>
+</pre>
+      <p class="answer-note">切片は 0.8473。これは log(0.7/0.3) と同じ値です。<code>~ 1</code> は「予測変数なし（定数だけ）」の意味です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>二値の予測変数 ForeignWorker：切片の解釈</h2><div class="unit-sub">切片は x = 0 のときの対数オッズ</div></div>
+  </div>
+  <p>次に二値の予測変数 <code>ForeignWorker</code> を 1 つ加えます。講師が最初に強調したのは<strong>コード化がふつうと逆</strong>という点です。</p>
+  <div class="warn-box">⚠️ <strong>ForeignWorker のコード化：</strong><strong>0 ＝ 外国人労働者（yes）</strong>、<strong>1 ＝ 国内の労働者（no、native）</strong>。「1 ＝ 外国人」と思い込まないこと。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">table</span>(gc2$ForeignWorker)</span>
+</pre><div class="output-reveal">  0   1
+ 37 963 </div>
+  <p>外国人は 37 人、国内は 963 人です。Class との 2 × 2 表も見ておきます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">table</span>(gc2$Class, gc2$ForeignWorker)</span>
+</pre><div class="output-reveal">         0   1
+  Bad    4 296
+  Good  33 667</div>
+<div class="viz">
+    <div class="viz-title">ForeignWorker 別の Good の割合（棒の長さは割合に比例）</div>
+    <div style="text-align:center"><svg viewBox="0 0 440 190" width="440" height="190" role="img" aria-label="ForeignWorker 別の good credit の割合" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="439" height="189" fill="#fff" stroke="#cbd5e1"/><line x1="110.0" y1="40" x2="110.0" y2="160" stroke="#e2e8f0"/><text x="110.0" y="176" font-size="10" text-anchor="middle" fill="#64748b">0%</text><line x1="185.0" y1="40" x2="185.0" y2="160" stroke="#e2e8f0"/><text x="185.0" y="176" font-size="10" text-anchor="middle" fill="#64748b">25%</text><line x1="260.0" y1="40" x2="260.0" y2="160" stroke="#e2e8f0"/><text x="260.0" y="176" font-size="10" text-anchor="middle" fill="#64748b">50%</text><line x1="335.0" y1="40" x2="335.0" y2="160" stroke="#e2e8f0"/><text x="335.0" y="176" font-size="10" text-anchor="middle" fill="#64748b">75%</text><line x1="410.0" y1="40" x2="410.0" y2="160" stroke="#e2e8f0"/><text x="410.0" y="176" font-size="10" text-anchor="middle" fill="#64748b">100%</text><text x="102" y="74" font-size="11" text-anchor="end" fill="#334155">外国人 (FW = 0)</text><rect x="110" y="54" width="267.6" height="32" fill="#2563eb" fill-opacity=".8"/><rect x="377.6" y="54" width="32.4" height="32" fill="#f97316" fill-opacity=".7"/><text x="243.8" y="74" font-size="11" text-anchor="middle" fill="#fff">Good 33/37 = 89.2%</text><text x="102" y="129" font-size="11" text-anchor="end" fill="#334155">国内 (FW = 1)</text><rect x="110" y="109" width="207.8" height="32" fill="#2563eb" fill-opacity=".8"/><rect x="317.8" y="109" width="92.2" height="32" fill="#f97316" fill-opacity=".7"/><text x="213.9" y="129" font-size="11" text-anchor="middle" fill="#fff">Good 667/963 = 69.3%</text><rect x="110" y="12" width="12" height="12" fill="#2563eb" fill-opacity=".8"/><text x="126" y="22" font-size="10" fill="#334155">Good（Class = 1）</text><rect x="240" y="12" width="12" height="12" fill="#f97316" fill-opacity=".7"/><text x="256" y="22" font-size="10" fill="#334155">Bad（Class = 0）</text></svg></div>
+    <div class="viz-cap">外国人（FW = 0）は 33/37 = 89.2%、国内（FW = 1）は 667/963 = 69.3% が Good。</div>
+  </div>
+  <p>モデルを当てはめます。</p>
+<pre class="code-block">
+<span class="cl">mod_fw &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl">sum_fw &lt;- <span class="kw">summary</span>(mod_fw)</span>
+<span class="cl">sum_fw$coefficients</span>
+</pre><div class="output-reveal">               Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept)    2.110213  0.5294184  3.985908 6.722255e-05
+ForeignWorker -1.297783  0.5340052 -2.430281 1.508712e-02</div>
+  <p>ForeignWorker は有意（p = 0.0151）で、係数は<strong>負</strong>（−1.2978）です。<strong>x が 0 から 1 に増える</strong>（外国人 → 国内）と良い信用の対数オッズが<strong>下がる</strong>、つまり<strong>外国人のほうが Good になる確率が高い</strong>ことを意味します（上の表でも 89% 対 69%）。係数の符号は、重回帰と同じく「x が 1 単位増えたとき」の向きです。</p>
+  <p>モデル式は次のとおりです（P は Good である確率）。</p>
+  <p style="text-align:center"><strong>P(Good) = 1 / (1 + e<sup>−(2.1102 − 1.2978 × ForeignWorker)</sup>)</strong></p>
+  <h3 style="margin:1rem 0 .3rem">切片の解釈：x = 0 のときの対数オッズ</h3>
+  <p>予測変数が入ったモデルでは、<strong>切片は「x = 0 のときの対数オッズ」</strong>に変わります。式で x = 0 とすると b₁x の項が消え、切片だけが残るからです。ここでは「外国人（FW = 0）の Good の対数オッズ」です。</p>
+<pre class="code-block">
+<span class="cl">b0 &lt;- sum_fw$coefficients[<span class="nm">1</span>, <span class="nm">1</span>]</span>
+<span class="cl">b0</span>
+<span class="cl"><span class="kw">exp</span>(b0)</span>
+<span class="cl"><span class="kw">exp</span>(b0) / (<span class="nm">1</span> + <span class="kw">exp</span>(b0))</span>
+</pre><div class="output-reveal">[1] 2.110213
+[1] 8.25
+[1] 0.8918919</div>
+  <ol>
+    <li>表から切片を取り出す：<code>sum_fw$coefficients[1, 1]</code> = 2.11（対数オッズ）。</li>
+    <li>対数オッズ → オッズ：<code>exp()</code> を取る → <strong>8.25</strong>。</li>
+    <li>オッズ → 確率：<strong>p = odds / (1 + odds)</strong>（オッズの定義 p/(1−p) を少し代数で変形すると出る式）→ <strong>0.8919</strong>。</li>
+  </ol>
+  <p>この 0.8919 は 2 × 2 表の <strong>33 / 37</strong>（外国人 37 人のうち Good が 33 人）とぴったり一致します。「期待どおり」というわけです。</p>
+  <div class="table-wrap" style="overflow-x:auto"><table class="compare-table">
+    <tr><th>ステップ</th><th>計算</th><th>値</th></tr>
+    <tr><td>対数オッズ</td><td>切片</td><td>2.1102</td></tr>
+    <tr><td>オッズ</td><td>exp(2.1102)</td><td>8.25（= 33/4）</td></tr>
+    <tr><td>確率</td><td>8.25 / (1 + 8.25)</td><td>0.8919（= 33/37）</td></tr>
+  </table></div>
+  <div class="note-box">🔑 <strong>まとめ：</strong>予測変数を加えたとき、切片は「その二値予測変数が 0 のときの対数オッズ」。講師の予告：「<strong>この切片の解釈が、次の係数の解釈とそのまま対応するとは限らない</strong>。係数のほうは少し意外な形になる」。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>切片は「x = 0 の人たち」の対数オッズ。exp() でオッズ、odds ÷ (1 + odds) で確率に戻せます。外国人 (FW = 0) の Good 確率は 33/37 = 0.892。</p></div>
+  <div class="practice-card" id="p-r6x-u2">
+    <div class="ptitle">💻 ミニ練習：切片から確率へ</div>
+    <p class="ptask"><code>mod_fw</code> の切片を取り出し、<code>exp()</code> でオッズに、さらにオッズから確率に変換する R コードを書いてください（外国人の Good の確率を求めます）。</p>
+    <textarea class="code-editor" id="p-r6x-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r6x-u2', ['summary', 'coefficients', 'exp', 'mod_fw'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r6x-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r6x-u2-result"></div>
+    <div class="answer-reveal" id="p-r6x-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">b0 &lt;- <span class="kw">summary</span>(mod_fw)$coefficients[<span class="nm">1</span>, <span class="nm">1</span>]</span>
+<span class="cl"><span class="kw">exp</span>(b0)</span>
+<span class="cl"><span class="kw">exp</span>(b0) / (<span class="nm">1</span> + <span class="kw">exp</span>(b0))</span>
+</pre>
+      <p class="answer-note">結果はオッズ 8.25、確率 0.8918919（= 33/37）。<code>plogis(b0)</code> でも同じ 0.8918919 になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>二値の予測変数：係数の解釈</h2><div class="unit-sub">係数 = オッズの比の対数（割り算！）</div></div>
+  </div>
+  <p>いよいよ<strong>係数 b₁ = −1.2978 の意味</strong>です。講師は最初に結論を言いました。</p>
+  <div class="note-box">🔑 <strong>結論：</strong>二値予測変数の係数は、<strong>「x が 0 から 1 に 1 単位増えたときの、良い信用の<em>対数オッズ</em>の変化」</strong>。ただし<strong>足し算・引き算ではなく、割り算（オッズの比）</strong>で出す。</div>
+  <p>講師の言葉では「少し直感に反する」「確率を足したり引いたりしてはダメ」。順番に計算しましょう。</p>
+<pre class="code-block">
+<span class="cl">b0 &lt;- <span class="kw">coef</span>(mod_fw)[[<span class="nm">1</span>]]</span>
+<span class="cl">b1 &lt;- <span class="kw">coef</span>(mod_fw)[[<span class="nm">2</span>]]</span>
+<span class="cl">p0 &lt;- <span class="kw">plogis</span>(b0 + b1 * <span class="nm">0</span>)</span>
+<span class="cl">odds0 &lt;- p0 / (<span class="nm">1</span> - p0)</span>
+<span class="cl">p0; odds0; <span class="kw">log</span>(odds0)</span>
+</pre><div class="output-reveal">[1] 0.8918919
+[1] 8.25
+[1] 2.110213</div>
+  <p><strong>x = 0（外国人）：</strong>p = 0.891、1 − p = 0.108（= 4/37）、オッズ = 0.891 / 0.108 = <strong>8.25</strong>、log(8.25) = <strong>2.11</strong>（= 切片）。ここまでは前の単元の復習です。</p>
+<pre class="code-block">
+<span class="cl">p1 &lt;- <span class="kw">plogis</span>(b0 + b1 * <span class="nm">1</span>)</span>
+<span class="cl">odds1 &lt;- p1 / (<span class="nm">1</span> - p1)</span>
+<span class="cl">p1; <span class="nm">1</span> - p1; odds1</span>
+</pre><div class="output-reveal">[1] 0.6926272
+[1] 0.3073728
+[1] 2.253378</div>
+  <p><strong>x = 1（国内）：</strong>式に x = 1 を入れると p = <strong>0.693</strong>。これは表の <strong>667 / 963</strong>（国内 963 人のうち Good が 667 人）と一致します。1 − p = 0.307（= 296/963）、オッズ = 0.693 / 0.307 = <strong>2.25</strong>（= 667/296）。</p>
+  <div class="table-wrap" style="overflow-x:auto"><table class="compare-table">
+    <tr><th></th><th>x = 0（外国人）</th><th>x = 1（国内）</th></tr>
+    <tr><td>確率 p</td><td>0.8919 (= 33/37)</td><td>0.6926 (= 667/963)</td></tr>
+    <tr><td>1 − p</td><td>0.1081 (= 4/37)</td><td>0.3074 (= 296/963)</td></tr>
+    <tr><td>オッズ</td><td>8.25</td><td>2.2534</td></tr>
+    <tr><td>対数オッズ</td><td>2.1102（= b₀）</td><td>0.8124（= b₀ + b₁）</td></tr>
+  </table></div>
+  <p>ここが山場です。係数を出すには、<strong>新しいオッズ ÷ 古いオッズ</strong>を計算します。「新しい」は x を 1 単位増やしたほうのオッズ、「古い」は x = 0 のときのオッズです。</p>
+<pre class="code-block">
+<span class="cl">odds1 / odds0</span>
+<span class="cl"><span class="kw">log</span>(odds1 / odds0)</span>
+<span class="cl">b1</span>
+<span class="cl"><span class="nm">1</span> - odds1 / odds0</span>
+</pre><div class="output-reveal">[1] 0.2731368
+[1] -1.297783
+[1] -1.297783
+[1] 0.7268632</div>
+  <ol>
+    <li>オッズの比：2.25 ÷ 8.25 = <strong>0.273</strong>（odds ratio、オッズ比）。</li>
+    <li>その自然対数：ln(0.273) = <strong>−1.2978</strong> → これが<strong>係数 b₁</strong>とぴったり一致！</li>
+    <li>つまり、係数 b₁ ＝ 「x を 0 → 1 にしたときの<strong>対数オッズの変化</strong>」。逆に exp(b₁) = 0.273 が<strong>オッズ比</strong>。</li>
+  </ol>
+  <div class="viz">
+    <div class="viz-title">「割り算 → log」の流れ（外国人 → 国内）</div>
+    <div class="table-wrap" style="overflow-x:auto"><table class="compare-table">
+      <tr><td>古いオッズ（x = 0）</td><td>8.25</td></tr>
+      <tr><td>新しいオッズ（x = 1）</td><td>2.2534</td></tr>
+      <tr><td>新 ÷ 古（オッズ比）</td><td>2.2534 / 8.25 = 0.2731</td></tr>
+      <tr><td>ln（オッズ比）</td><td>ln(0.2731) = −1.2978 = b₁</td></tr>
+    </table></div>
+  </div>
+  <h3 style="margin:1rem 0 .3rem">「約 73% 減」の意味</h3>
+  <p>オッズ比 0.273 の読み方です。もし 2 つのオッズが<strong>等しければ</strong>、x ÷ x = <strong>1</strong>（オッズは変わらない）。オッズが<strong>下がる</strong>と比は 1 より小さい小数になります。0.273 は 1 から約 0.73 下がった数なので、<strong>国内（FW = 1）のオッズは、外国人（FW = 0）より約 73% 低い</strong>（1 − 0.273 = 0.727）。言い換えると、国内のオッズは外国人の 0.273 倍です。</p>
+  <div class="warn-box">⚠️ <strong>講師の注意：</strong>① 係数は「対数オッズの変化」で、<strong>確率の差ではない</strong>（0.891 − 0.693 = 0.198 は係数 −1.298 とは別物）。② 比は<strong>新 ÷ 古</strong>の向きを間違えない（逆にすると 3.66 になり、符号が逆の +1.298 になる）。③ 「回帰は回帰だから線形回帰と同じ読み方」ではない。これは難しくて当然なので、<strong>何度も見直してよい</strong>。ただし、確率 → オッズ → 対数オッズの往復は、ここまでで流暢にできる状態が目標。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>係数は「オッズの比」の対数。x を 0 → 1 にしたとき、オッズが何倍になるか（0.273 倍＝約 73% 減）を log で表したものです。引き算ではなく割り算、というのがコツ。</p></div>
+  <div class="practice-card" id="p-r6x-u3">
+    <div class="ptitle">💻 ミニ練習：国内労働者のオッズと係数を再現する</div>
+    <p class="ptask"><code>mod_fw</code> の係数 <code>b0</code>, <code>b1</code> を使い、ForeignWorker = 1 のときの確率とオッズを求め、x = 0 のオッズとの比の対数が係数に一致することを確かめる R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r6x-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r6x-u3', ['plogis', 'log', 'coef', 'b0', 'b1'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r6x-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r6x-u3-result"></div>
+    <div class="answer-reveal" id="p-r6x-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">p1 &lt;- <span class="kw">plogis</span>(b0 + b1 * <span class="nm">1</span>)</span>
+<span class="cl">odds1 &lt;- p1 / (<span class="nm">1</span> - p1)</span>
+<span class="cl"><span class="kw">log</span>(odds1 / odds0)</span>
+</pre>
+      <p class="answer-note">結果は −1.297783（= b₁）。odds1 / odds0 = 0.2731368 なので、国内のオッズは外国人の約 0.273 倍（約 73% 減）です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>連続の予測変数 Age：係数の解釈</h2><div class="unit-sub">1 歳ごとにオッズが約 1.019 倍</div></div>
+  </div>
+  <p>連続変数の予測変数は <strong>Age（年齢）</strong>です。まず、Class ごとの平均年齢を見ておきましょう（講師：「Good の人のほうがやや年上」）。</p>
+<pre class="code-block">
+<span class="cl">gc2 |&gt;</span>
+<span class="cl">  <span class="kw">group_by</span>(Class) |&gt;</span>
+<span class="cl">  <span class="kw">summarize</span>(<span class="st">&quot;Mean age&quot;</span> = <span class="kw">mean</span>(Age))</span>
+</pre><div class="output-reveal"># A tibble: 2 x 2
+  Class `Mean age`
+  &lt;fct&gt;      &lt;dbl&gt;
+1 Bad         34.0
+2 Good        36.2</div>
+  <p>平均年齢は Bad が 34.0 歳、Good が 36.2 歳。年齢が高いほど Good になりやすそうです。モデルを作ります（<code>mod_age</code>）。出力は二値予測変数のときと同じ形です。</p>
+<pre class="code-block">
+<span class="cl">mod_age &lt;- <span class="kw">glm</span>(Class ~ Age, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl">sum_age &lt;- <span class="kw">summary</span>(mod_age)</span>
+<span class="cl">sum_age$coefficients</span>
+</pre><div class="output-reveal">              Estimate  Std. Error  z value    Pr(&gt;|z|)
+(Intercept) 0.20091865 0.232852767 0.862857 0.388216070
+Age         0.01843994 0.006434155 2.865946 0.004157657</div>
+  <p>Age の係数は <strong>0.0184</strong>、p = 0.0042 で有意です（切片は有意ではありませんが、ここでは気にしません）。モデル式：</p>
+  <p style="text-align:center"><strong>P(Good) = 1 / (1 + e<sup>−(0.2009 + 0.01844 × Age)</sup>)</strong></p>
+  <p>解釈：<strong>年齢が 1 歳増えると、良い信用の対数オッズが 0.018 増える</strong>。これも二値のときと同じ手順で確かめられます。<strong>Age = 0</strong>（現実にはあり得ないが、説明のために最も計算しやすい）から始めます。</p>
+<pre class="code-block">
+<span class="cl">b0 &lt;- <span class="kw">coef</span>(mod_age)[[<span class="nm">1</span>]]</span>
+<span class="cl">b1 &lt;- <span class="kw">coef</span>(mod_age)[[<span class="nm">2</span>]]</span>
+<span class="cl">odds_at &lt;- function(age) {</span>
+<span class="cl">  p &lt;- <span class="kw">plogis</span>(b0 + b1 * age)</span>
+<span class="cl">  p / (<span class="nm">1</span> - p)</span>
+<span class="cl">}</span>
+<span class="cl"><span class="kw">plogis</span>(b0 + b1 * <span class="nm">0</span>); odds_at(<span class="nm">0</span>)</span>
+<span class="cl"><span class="kw">plogis</span>(b0 + b1 * <span class="nm">1</span>); odds_at(<span class="nm">1</span>)</span>
+<span class="cl">odds_at(<span class="nm">1</span>) / odds_at(<span class="nm">0</span>)</span>
+<span class="cl"><span class="kw">log</span>(odds_at(<span class="nm">1</span>) / odds_at(<span class="nm">0</span>))</span>
+</pre><div class="output-reveal">[1] 0.5500614
+[1] 1.222525
+[1] 0.5546208
+[1] 1.245278
+[1] 1.018611
+[1] 0.01843994</div>
+  <div class="table-wrap" style="overflow-x:auto"><table class="compare-table">
+    <tr><th>Age</th><th>確率 p</th><th>オッズ</th></tr>
+    <tr><td>0</td><td>0.5501</td><td>0.5501 / 0.4499 = 1.2225</td></tr>
+    <tr><td>1</td><td>0.5546</td><td>0.5546 / 0.4454 = 1.2453</td></tr>
+    <tr><td colspan="2">オッズの比 1.2453 / 1.2225</td><td><strong>1.0186</strong>、ln(1.0186) = <strong>0.0184</strong> = 係数</td></tr>
+  </table></div>
+  <p>講師：「ね、すごいでしょう？ 連続変数で 1 単位増えるのは、二値変数で 1 単位増える（0 → 1）ととてもよく似ています」。さらに<strong>どの 2 つの年齢でもよい</strong>と言いました（55 → 56、33 → 34 など）。確かめましょう。</p>
+<pre class="code-block">
+<span class="cl">odds_at(<span class="nm">56</span>) / odds_at(<span class="nm">55</span>)</span>
+<span class="cl">odds_at(<span class="nm">34</span>) / odds_at(<span class="nm">33</span>)</span>
+<span class="cl"><span class="kw">exp</span>(b1)</span>
+</pre><div class="output-reveal">[1] 1.018611
+[1] 1.018611
+[1] 1.018611</div>
+  <div class="viz">
+    <div class="viz-title">Age から Good の確率を表す曲線（赤い点は 33→34 歳と 55→56 歳）</div>
+    <div style="text-align:center"><svg viewBox="0 0 430 260" width="430" height="260" role="img" aria-label="Age から good credit の確率を表すロジスティック曲線" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="429" height="259" fill="#fff" stroke="#cbd5e1"/><line x1="60" y1="210.0" x2="400" y2="210.0" stroke="#e2e8f0"/><text x="54" y="214.0" font-size="10" text-anchor="end" fill="#64748b">0</text><line x1="60" y1="162.5" x2="400" y2="162.5" stroke="#e2e8f0"/><text x="54" y="166.5" font-size="10" text-anchor="end" fill="#64748b">0.25</text><line x1="60" y1="115.0" x2="400" y2="115.0" stroke="#e2e8f0"/><text x="54" y="119.0" font-size="10" text-anchor="end" fill="#64748b">0.5</text><line x1="60" y1="67.5" x2="400" y2="67.5" stroke="#e2e8f0"/><text x="54" y="71.5" font-size="10" text-anchor="end" fill="#64748b">0.75</text><line x1="60" y1="20.0" x2="400" y2="20.0" stroke="#e2e8f0"/><text x="54" y="24.0" font-size="10" text-anchor="end" fill="#64748b">1</text><line x1="86.2" y1="210" x2="86.2" y2="214" stroke="#94a3b8"/><text x="86.2" y="226" font-size="10" text-anchor="middle" fill="#64748b">20</text><line x1="138.5" y1="210" x2="138.5" y2="214" stroke="#94a3b8"/><text x="138.5" y="226" font-size="10" text-anchor="middle" fill="#64748b">30</text><line x1="190.8" y1="210" x2="190.8" y2="214" stroke="#94a3b8"/><text x="190.8" y="226" font-size="10" text-anchor="middle" fill="#64748b">40</text><line x1="243.1" y1="210" x2="243.1" y2="214" stroke="#94a3b8"/><text x="243.1" y="226" font-size="10" text-anchor="middle" fill="#64748b">50</text><line x1="295.4" y1="210" x2="295.4" y2="214" stroke="#94a3b8"/><text x="295.4" y="226" font-size="10" text-anchor="middle" fill="#64748b">60</text><line x1="347.7" y1="210" x2="347.7" y2="214" stroke="#94a3b8"/><text x="347.7" y="226" font-size="10" text-anchor="middle" fill="#64748b">70</text><line x1="400.0" y1="210" x2="400.0" y2="214" stroke="#94a3b8"/><text x="400.0" y="226" font-size="10" text-anchor="middle" fill="#64748b">80</text><polyline points="60.0,92.7 65.2,91.9 70.5,91.1 75.7,90.3 80.9,89.5 86.2,88.6 91.4,87.8 96.6,87.0 101.8,86.2 107.1,85.4 112.3,84.7 117.5,83.9 122.8,83.1 128.0,82.3 133.2,81.6 138.5,80.8 143.7,80.0 148.9,79.3 154.2,78.5 159.4,77.8 164.6,77.0 169.8,76.3 175.1,75.6 180.3,74.9 185.5,74.1 190.8,73.4 196.0,72.7 201.2,72.0 206.5,71.3 211.7,70.6 216.9,70.0 222.2,69.3 227.4,68.6 232.6,67.9 237.8,67.3 243.1,66.6 248.3,66.0 253.5,65.4 258.8,64.7 264.0,64.1 269.2,63.5 274.5,62.9 279.7,62.2 284.9,61.6 290.2,61.0 295.4,60.5 300.6,59.9 305.8,59.3 311.1,58.7 316.3,58.2 321.5,57.6 326.8,57.0 332.0,56.5 337.2,56.0 342.5,55.4 347.7,54.9 352.9,54.4 358.2,53.9 363.4,53.3 368.6,52.8 373.8,52.3 379.1,51.9 384.3,51.4 389.5,50.9 394.8,50.4 400.0,49.9" fill="none" stroke="#2563eb" stroke-width="2.5"/><circle cx="154.2" cy="78.5" r="4" fill="#dc2626"/><circle cx="159.4" cy="77.8" r="4" fill="#dc2626"/><circle cx="269.2" cy="63.5" r="4" fill="#dc2626"/><circle cx="274.5" cy="62.9" r="4" fill="#dc2626"/><text x="150.2" y="98.5" font-size="10" fill="#dc2626" text-anchor="middle">33→34</text><text x="265.2" y="83.5" font-size="10" fill="#dc2626" text-anchor="middle">55→56</text><text x="230.0" y="250" font-size="11" text-anchor="middle" fill="#334155">Age（年齢）</text><text x="14" y="115.0" font-size="11" text-anchor="middle" fill="#334155" transform="rotate(-90 14 115.0)">P(Good)</text></svg></div>
+    <div class="viz-cap">確率の増え方は場所によって違う（33→34 歳で 0.6920 → 0.6959、55→56 歳で 0.7712 → 0.7744）が、<strong>オッズの比はどこでも 1.0186</strong>。だから係数は「対数オッズの変化」として一定になる。</div>
+  </div>
+  <h3 style="margin:1rem 0 .3rem">係数を導く 8 ステップ（講師のレシピ）</h3>
+  <ol>
+    <li>回帰（<code>glm</code>）を実行する。</li>
+    <li>係数を、ロジスティック回帰の式 1/(1 + e<sup>−(b₀ + b₁x)</sup>) に代入する。</li>
+    <li>x = 0 のときの<strong>確率</strong>を計算する。</li>
+    <li>x = 0 のときの<strong>オッズ</strong>を計算する。</li>
+    <li>x = 1 のときの<strong>確率</strong>を計算する。</li>
+    <li>x = 1 のときの<strong>オッズ</strong>を計算する。</li>
+    <li>オッズの比（x = 1 のオッズ ÷ x = 0 のオッズ）を計算する。</li>
+    <li>その<strong>対数</strong>を取る → これが<strong>係数 b₁</strong>。</li>
+  </ol>
+  <div class="note-box">🎯 <strong>講師のメッセージ：</strong>「これを暗記する必要はない。現実の仕事では全部を覚えてはいない。でも<strong>試験では知っていると、時間と労力がずっと楽になる</strong>」。ロジスティック回帰の核心なので、いろいろな例で手を動かして遊んでみよう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>連続変数でも二値変数でも、係数は「x を 1 増やしたときのオッズの比の log」。年齢が 1 歳増えるごとにオッズは約 1.019 倍（約 1.9% 増）です。どの年齢から 1 歳増やしても同じ比になります。</p></div>
+  <div class="practice-card" id="p-r6x-u4">
+    <div class="ptitle">💻 ミニ練習：Age のモデルを当てはめる</div>
+    <p class="ptask"><code>gc2</code> を使い、<code>Class</code> を <code>Age</code> で予測する二項ロジスティック回帰 <code>mod_age</code> を当てはめ、係数表を表示する R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r6x-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r6x-u4', ['glm', 'Class', 'Age', 'binomial', 'summary'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r6x-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r6x-u4-result"></div>
+    <div class="answer-reveal" id="p-r6x-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">mod_age &lt;- <span class="kw">glm</span>(Class ~ Age, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl"><span class="kw">summary</span>(mod_age)$coefficients</span>
+</pre>
+      <p class="answer-note">Age の係数は 0.01843994（p = 0.00416）。<code>exp(coef(mod_age)[[2]])</code> で 1.018611（1 歳ごとにオッズが約 1.019 倍）が得られます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>Shiny アプリで公開する（end-to-end の例）</h2><div class="unit-sub">LLM と一緒に、データからダッシュボードまで</div></div>
+  </div>
+  <p>最後の動画は、これまでの内容の<strong>応用編</strong>です。目的は「データを整える → モデルを作る → <strong>Shiny アプリとして公開する</strong>」を最初から最後まで通し（end-to-end）で行い、<strong>ポートフォリオ（portfolio）に載せられる成果</strong>にすることです。講師の考え方：「モデルを作るだけでなく、<strong>組織の価値に変える</strong>（誰かが使って判断できる形にする）ことが大切」。講師自身も Shiny アプリは初めてでしたが、生成 AI（LLM）の助けで少ない学習時間で作れた、という実例です。</p>
+  <h3 style="margin:1rem 0 .3rem">データと下準備</h3>
+  <ul>
+    <li>データ：Coursera の <strong>Loan Default Prediction Challenge</strong>（Kaggle から入手した CSV）。<strong>255,000 行 × 18 列</strong>。応答変数は<strong>ローンが債務不履行（default）になったかどうか</strong>（二値）。</li>
+    <li>訓練時間を短くするため、<strong>50,000 行を無作為に抽出</strong>（<code>sample_n</code>）。<code>set.seed()</code> で結果を再現可能にし、元の大きなデータは <code>rm()</code> で環境から消す。</li>
+  </ul>
+<pre class="code-block">
+<span class="cl"><span class="cm"># 講義の流れを示す例（CSV の場所・オブジェクト名は各自の環境に合わせる）</span></span>
+<span class="cl"><span class="kw">library</span>(readr); <span class="kw">library</span>(dplyr)</span>
+<span class="cl">loans_raw &lt;- <span class="kw">read_csv</span>(<span class="st">&quot;loan_default.csv&quot;</span>, show_col_types = FALSE)</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">123</span>)</span>
+<span class="cl">loan_data &lt;- <span class="kw">sample_n</span>(loans_raw, <span class="nm">50000</span>)</span>
+<span class="cl"><span class="kw">rm</span>(loans_raw)</span>
+</pre>
+  <h3 style="margin:1rem 0 .3rem">LLM に「小分け」で頼む</h3>
+  <p>講師は Google Gemini に、<strong>段階的に</strong>プロンプトを出しました。「最初から全部（掃除・モデル・Shiny）を頼むより、1 ステップずつ」が重要なコツ。LLM は仕事を詰め込みすぎると、人間と同じく手を抜いたりミスをしたりするからです。</p>
+  <div class="table-wrap" style="overflow-x:auto"><table class="compare-table">
+    <tr><th>段階</th><th>LLM に頼んだこと</th><th>結果・講師のコメント</th></tr>
+    <tr><td>① データの整理＋モデル</td><td>ロジスティック回帰で default を予測したい。データの掃除とモデル作成</td><td><code>LoanID</code> は予測に役立たない「ノイズ」なので除く。欠損は 0 件。<code>glm(..., family = binomial)</code>。ほとんどの変数が有意（***）だが、<code>LoanTerm</code> と <code>LoanPurpose</code> の education / other は<strong>有意でない</strong>。AUC などの評価指標も出た（ダッシュボードには載せない）</td></tr>
+    <tr><td>② 有意でない予測変数の除去</td><td>有意でない変数を除くコードを書いて</td><td>2 通り：<strong>手動で除く</strong>、または<strong>ステップワイズ選択</strong>（AIC、<code>trace = 0</code> で長い出力を隠す）。<strong>結果は同じ</strong></td></tr>
+    <tr><td>③ Shiny アプリ</td><td>Shiny アプリにしたい</td><td>初回実行でエラー → <strong>エラー文をそのまま LLM に貼って修正</strong> → アプリが起動</td></tr>
+  </table></div>
+  <div class="note-box">🧠 <strong>人間が LLM を超える点（human in the loop）：</strong>Education は「High School / Bachelor’s / Master’s / PhD」など複数水準を持つカテゴリ変数です。ある水準（例：Master’s）だけが有意でなくても、<strong>1 水準だけを式から外すことはできません</strong>（変数全体がひとかたまり）。解決策は<strong>ワンホット（one-hot）エンコード</strong>：「High School なら 1、そうでなければ 0」のような 0/1 列に分ければ、水準ごとに残す・外すを決められます。LLM はこの案を出さなかったので、分析者が気づいて指示します。LoanPurpose も同様ですが、講義ではやっていません。</div>
+  <p>Shiny アプリでは、借り手の<strong>年齢・年収・ローン額・信用スコア・勤続月数・金利・最終学歴・雇用形態</strong>などを入力できます（どれもモデルで有意だった予測変数）。入力すると<strong>デフォルト確率</strong>と<strong>リスクの高低</strong>を返します。アプリの中身は、結局のところ次のような<strong>予測</strong>です（考え方を示す簡略版であり、講義のコードそのものではありません）。</p>
+<pre class="code-block">
+<span class="cl"><span class="cm"># 考え方：入力値から 1 行のデータを作り、確率を予測する</span></span>
+<span class="cl">new_borrower &lt;- <span class="kw">data.frame</span>(Age = <span class="nm">35</span>, Income = <span class="nm">60000</span>, LoanAmount = <span class="nm">20000</span>,</span>
+<span class="cl">                           CreditScore = <span class="nm">650</span>, MonthsEmployed = <span class="nm">36</span>,</span>
+<span class="cl">                           InterestRate = <span class="nm">8</span>, Education = <span class="st">&quot;Bachelor&#x27;s&quot;</span>,</span>
+<span class="cl">                           EmploymentType = <span class="st">&quot;Full-time&quot;</span>)</span>
+<span class="cl"><span class="kw">predict</span>(mod_final, newdata = new_borrower, type = <span class="st">&quot;response&quot;</span>)</span>
+</pre>
+  <h3 style="margin:1rem 0 .3rem">アプリを育てる過程</h3>
+  <ul>
+    <li>最初の画面は、統計に詳しくない人には不親切（係数や p 値が並んでいる）。<strong>欲しいのは「確率」</strong>。</li>
+    <li>入力して “generate assessment” を押すと確率は <strong>6%</strong> → <strong>低リスク（low risk）</strong>と表示。どこから高リスクとするかの<strong>基準（閾値）は銀行ごとに調整</strong>できる。</li>
+    <li>再度 LLM に「係数や p 値を隠し、確率とリスクを前面に。どの予測変数が確率に最も効いているかも見せたい」と依頼。またエラー → エラー文を貼って修正（アプリの大幅な作り直し）。</li>
+    <li>修正後の簡素な画面で試すと確率は約 <strong>8%</strong>。信用スコアがとても悪く、ローン額もとても高くしても約 <strong>12%</strong> で、まだ low risk。</li>
+    <li>理由の候補：①モデルの中で信用スコアやローン額の効果がそれほど強くない、②モデルそのものがあまり良くない（診断をやり直す）、③<strong>50,000 行しか使っていない</strong>（全データなら改善するかも）。</li>
+    <li>失業中・低所得・若い・高金利・悪いスコアなど極端な入力にすると、ようやく<strong>高リスク（default の可能性が高い）</strong>。講師：「経験のある人なら、そんな条件は予測するまでもなく危ないと分かる」。それでも、<strong>モデルの内部（ロジスティック回帰や診断）を知らない人が使えるダッシュボード</strong>としては有用。</li>
+  </ul>
+  <h3 style="margin:1rem 0 .3rem">共有（デプロイ）とポートフォリオ</h3>
+  <ul>
+    <li><strong>shinyapps.io</strong> を使うと、ノートブック全体を渡さなくても<strong>ウェブサイトのリンク</strong>だけで共有できる。手順：①プロジェクトを準備、②shinyapps.io のアカウントを作る、③RStudio から接続してデプロイ（デバッグが必要なこともある）。講義ではアカウント作成まではやっていない。</li>
+    <li>ノートブックを整理して <strong>GitHub に置き、履歴書にリンク</strong>すれば、「AI の助けでデータを掃除し、Shiny でデプロイした」という成果を見せられる。使い方や目的の説明も添えよう。</li>
+  </ul>
+  <div class="warn-box">⚠️ <strong>実践の注意：</strong>① Shiny アプリが実行中のままだと再実行できない。<strong>先に停止してから</strong>修正版を走らせる。② プロンプトは<strong>小分け</strong>にする。③ 生成された確率が「低すぎる」「おかしい」と感じたら、アプリのバグかモデルの限界かを切り分ける（診断・サンプル数・極端な値のテスト）。④ 上の予測コードは考え方の例で、列名・モデル名は実際のデータに合わせて変える。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Shiny アプリは「ロジスティック回帰で確率を計算する画面」です。仕事の流れは、掃除 → モデル → 不要な変数の整理 → アプリ化 → 共有。LLM には小さく頼み、エラーが出たらそのまま貼って直してもらいます。</p></div>
+  <div class="practice-card" id="p-r6x-u5">
+    <div class="ptitle">💻 ミニ練習：新しい借り手の確率を予測する</div>
+    <p class="ptask">最終モデル <code>mod_final</code> を使い、新しい借り手 1 人（<code>data.frame</code> で作る）の default 確率を、確率の形（0〜1）で求める R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r6x-u5-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r6x-u5', ['predict', 'newdata', 'type', 'response', 'data.frame'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r6x-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r6x-u5-result"></div>
+    <div class="answer-reveal" id="p-r6x-u5-answer" hidden>
+      <pre class="code-block">
+<span class="cl">new_borrower &lt;- <span class="kw">data.frame</span>(Age = <span class="nm">25</span>, Income = <span class="nm">20000</span>, LoanAmount = <span class="nm">30000</span>,</span>
+<span class="cl">                           CreditScore = <span class="nm">500</span>, MonthsEmployed = <span class="nm">0</span>,</span>
+<span class="cl">                           InterestRate = <span class="nm">20</span>, Education = <span class="st">&quot;High School&quot;</span>,</span>
+<span class="cl">                           EmploymentType = <span class="st">&quot;Unemployed&quot;</span>)</span>
+<span class="cl"><span class="kw">predict</span>(mod_final, newdata = new_borrower, type = <span class="st">&quot;response&quot;</span>)</span>
+</pre>
+      <p class="answer-note"><code>type = "response"</code> を付けると対数オッズではなく確率（0〜1）が返ります。付けないと対数オッズ（リンクの尺度）が返るので注意。列名とカテゴリの綴りは、学習データと完全に同じにします。</p>
+    </div>
+  </div>
+</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In gc2, contrasts(gc2$Class) shows Good = 1. For glm(Class ~ 1, family = binomial), what does the intercept 0.8473 represent?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>the probability that a customer has good credit</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>the log odds of good credit, log(0.7 / 0.3)</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>the odds of good credit, 0.7 / 0.3</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>the log odds of bad credit, log(0.3 / 0.7)</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">ForeignWorker is coded 0 = foreign worker and 1 = native worker, and its coefficient is −1.2978. Which conclusion is correct?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Native workers have a higher probability of good credit than foreign workers</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Foreign workers have a 1.2978 lower probability of good credit</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A negative coefficient means the variable is not significant</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Going from 0 to 1 lowers the log odds, so foreign workers look better</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What is the estimated probability of good credit for foreign workers (ForeignWorker = 0), and where does it come from?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.891 = 33 / 37 = exp(2.11) / (1 + exp(2.11))</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.693 = 667 / 963 = exp(0.81) / (1 + exp(0.81))</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.700 = 700 / 1000, the overall share of good credit</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.108 = 4 / 37, the share of foreign workers with bad credit</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">How can the binary-predictor coefficient (−1.2978) be recovered from the two probabilities?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Subtract the probability at x = 0 from the probability at x = 1</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Subtract the odds at x = 0 from the odds at x = 1, then take the log</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Divide the odds at x = 1 by the odds at x = 0, then take the natural log</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Divide the probability at x = 1 by the probability at x = 0 and exponentiate</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">The odds ratio for ForeignWorker is 2.25 / 8.25 = 0.273. What does it say?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Native workers are 27.3% less likely to have good credit (in probability)</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Foreign workers&#x27; odds of good credit are 73% lower than native workers&#x27;</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The probability of good credit drops by 0.273 when ForeignWorker goes from 0 to 1</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Native workers&#x27; odds of good credit are about 73% lower than foreign workers&#x27;</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In glm(Class ~ Age), the Age coefficient is 0.01844. Which statement is correct?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Each year multiplies the odds of good credit by exp(0.01844) ≈ 1.019</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Each extra year raises the probability of good credit by exactly 0.01844</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Each extra year raises the odds of good credit by exactly 0.01844 units</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A customer aged 0 would have a probability of good credit of 0.01844</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">The odds ratio for one more year of age is 1.0186 when going from 55 to 56. What is it from 33 to 34?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Larger, because younger customers react more strongly to one extra year of age</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Smaller, because the probability curve is flatter at age 33 than at age 55</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The same, 1.0186, because the log odds change by b1 per unit everywhere</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It cannot be computed unless the starting age is exactly 0 or exactly 1</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In the Shiny-app project the lecturer asks the LLM for the work in several short prompts, not one big prompt. Why?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because LLMs refuse to write R code that is longer than a few dozen lines</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Too many tasks at once invite errors; small steps are easier to check and fix</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because shinyapps.io only accepts an app that was built from exactly three prompts</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because every new prompt retrains the logistic model with a larger sample of loans</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 3, 0, 2, 1];
+var FEEDBACKS=["With no predictors the intercept is the overall log odds of the outcome coded 1: p = 700/1000 = 0.7, odds = 0.7/0.3 = 2.33, log(2.33) = 0.847.", "The coefficient is the change in log odds for a one-unit increase (0 to 1). It is negative, so the native group (1) has lower odds of good credit; foreign workers (0) look better: 33/37 = 89.2% versus 667/963 = 69.3%.", "At x = 0 only the intercept remains: exp(2.1102) = 8.25 odds, and p = odds / (1 + odds) = 8.25 / 9.25 = 0.8919, which equals 33/37 in the table.", "Odds at x = 1 are 2.2534 and odds at x = 0 are 8.25. The ratio 2.2534 / 8.25 = 0.2731, and ln(0.2731) = −1.2978. It is a division of odds followed by a log, never a subtraction.", "Odds at x = 1 (native) are 0.273 times the odds at x = 0 (foreign), i.e. about 1 − 0.273 = 73% lower. The comparison is about odds, not probabilities, and the direction matters.", "The coefficient is the change in log odds per year. Exponentiating gives the odds ratio 1.0186: one more year multiplies the odds by about 1.019. It is neither a probability change nor an odds difference.", "The log odds are a straight line in Age, so every one-year step changes them by 0.01844 and multiplies the odds by 1.0186. Only the change in probability differs by place (0.6920 to 0.6959 versus 0.7712 to 0.7744).", "Giving an LLM too many tasks at once makes it cut corners and makes errors harder to locate. Cleaning, modelling, dropping predictors and building the app are done step by step, and error messages are pasted back to the LLM to fix."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">probability</div><div class="term-en">確率</div><div class="term-def">ある事象が起こる割合（0〜1）。ここでは Good である確率。</div></div>
+    <div class="term-item"><div class="term-name">odds</div><div class="term-en">オッズ</div><div class="term-def">p / (1 − p)。p = 0.7 なら 2.33。</div></div>
+    <div class="term-item"><div class="term-name">log odds (logit)</div><div class="term-en">対数オッズ</div><div class="term-def">オッズの自然対数。glm の係数が表すのはこの尺度。</div></div>
+    <div class="term-item"><div class="term-name">odds ratio</div><div class="term-en">オッズ比</div><div class="term-def">新しいオッズ ÷ 古いオッズ。exp(係数) に等しい。</div></div>
+    <div class="term-item"><div class="term-name">contrasts()</div><div class="term-en">水準の符号化の確認</div><div class="term-def">どの水準が 1（予測対象）で、どれが 0 かを確かめる関数。</div></div>
+    <div class="term-item"><div class="term-name">family = binomial</div><div class="term-en">二項分布族</div><div class="term-def">二値の応答変数のロジスティック回帰を指定する glm の引数。</div></div>
+    <div class="term-item"><div class="term-name">plogis()</div><div class="term-en">確率への変換</div><div class="term-def">対数オッズを確率に戻す関数。1/(1 + e<sup>−x</sup>)。</div></div>
+    <div class="term-item"><div class="term-name">reference value (x = 0)</div><div class="term-en">x = 0 の状態</div><div class="term-def">予測変数が入ると、切片は x = 0 のときの対数オッズになる。</div></div>
+    <div class="term-item"><div class="term-name">one-hot encoding</div><div class="term-en">ワンホット符号化</div><div class="term-def">多水準のカテゴリを、水準ごとの 0/1 の列に分けること。</div></div>
+    <div class="term-item"><div class="term-name">Shiny app</div><div class="term-en">Shiny アプリ</div><div class="term-def">R で作る、ブラウザ上で動く対話型のウェブアプリ。</div></div>
+    <div class="term-item"><div class="term-name">human in the loop</div><div class="term-en">人が判断に加わる</div><div class="term-def">LLM の出力を分析者が確認・修正しながら進めること。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>① 切片は「x = 0 のときの対数オッズ」、② 係数は「x が 1 増えたときの対数オッズの変化（オッズの比の log）」。③ 確率は足し引きせず、<strong>新オッズ ÷ 旧オッズ</strong>。④ 計算ができたら、x = 0 → 1 のレシピを自分の例で試そう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：650 M6 ロジスティック回帰の実例（二値・連続・German credit・Shiny）</p>
+  <p style="margin-top:.5rem;"><a href="r6_logit_assess.html">← モデル評価</a> · <a href="exercises.html">演習へ →</a> · <a href="r6_logit_examples_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

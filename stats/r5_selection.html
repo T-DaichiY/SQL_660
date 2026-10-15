@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>650 M5 変数選択とモデル評価</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M5 🪜 変数選択・評価 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">650 M5 · Multiple Regression — Variable Selection &amp; Model Evaluation</div>
+  <h1>🎯 650 M5 変数選択とモデル評価</h1>
+  <p>説明変数の候補がたくさんあるとき、<strong>どの変数を残せば「いちばん良いモデル」になるのか</strong>。この回では<strong>前進選択・後退選択・ステップワイズ・階層的回帰</strong>という選び方を学び、最後に<strong>「見たことのないデータでも通用するか」</strong>を train/test 分割で確かめます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 「Variable selection: Forward selection」／「Backward selection」／「Stepwise and Hierarchal selection」／「Evaluating performance」（SU1 Data Analytics M5）</p>
+  <p style="font-size:.9rem">📦 データ: ワシントンD.C.の自転車シェアの日次データ <code>bikes.csv</code>（2011〜2012年の731日）。<code>rentals</code>（貸出台数）を予測します。影響点29日を除き、2乗項とダミー変数を作った 702日分のデータを使います（前の動画までの作業）。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 前進選択（手動）</a><a href="#unit2">② step()・AIC/BIC</a><a href="#unit3">③ 後退選択</a><a href="#unit4">④ ステップワイズ・階層的</a><a href="#unit5">⑤ 性能の評価</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>
+<ul style="margin:.4rem 0 0 1.2rem">
+<li>① 変数選択とは・全部分集合回帰・前進選択を手でやる：「Variable selection: Forward selection」前半</li>
+<li>② <code>step()</code> による自動前進選択・AIC と BIC・多重共線性への注意：「Variable selection: Forward selection」後半</li>
+<li>③ 後退選択：「Backward selection」</li>
+<li>④ ステップワイズ選択・階層的回帰・倹約モデル：「Stepwise and Hierarchal selection」</li>
+<li>⑤ train/test 分割・過学習・データ漏洩：「Evaluating performance」</li>
+</ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>変数選択と前進選択（手動）</h2><div class="unit-sub">全部試すのは大変。1つずつ足していこう</div></div>
+  </div>
+  <p>モデルを作るときの目標は、データに埋もれている<strong>信号（signal）</strong>を見つけること（ノイズに惑わされずに）。<strong>変数選択（variable selection）</strong>とは、<strong>モデルにとっていちばん良い説明変数を見つける作業</strong>です。「いちばん良い」とは、データをよく説明し、予測に役立つ変数のこと。ただし<strong>何をもって「良い」とするかは、組織の定義や使う指標（R²、調整済みR²、p値、AIC など）によって変わります</strong>。</p>
+  <h3>全部分集合回帰（all subset regression）</h3>
+  <p>いちばん確実なのは、<strong>変数の組み合わせを全部試す</strong>方法です。ただし計算量がとても大きく、大きなデータには現実的ではありません。説明変数が <em>k</em> 個あると、各変数が「入る／入らない」の2通りなので、モデルは 2<sup><em>k</em></sup> 通りになります。</p>
+  <table class="compare-table">
+    <tr><th>説明変数の数</th><th>試すモデルの数</th><th>メモ</th></tr>
+    <tr><td>3 個</td><td>2³ = 8</td><td>3個だけなら全部試せる（空のモデルを含む）</td></tr>
+    <tr><td>10 個</td><td>2¹⁰ = 1,024</td><td>講義の例</td></tr>
+    <tr><td>20 個</td><td>2²⁰ = 1,048,576</td><td>列数としては「ビッグデータ」ではないのに 100 万超</td></tr>
+  </table>
+  <p>そこで使うのが<strong>前進選択（forward selection）</strong>です。「前に進む」ように、変数を<strong>1つずつ足していく</strong>方法です。</p>
+  <ol>
+    <li>説明変数を 1 つだけ使った単回帰をいくつも作り、<strong>最も良い 1 つ</strong>を選ぶ（候補は相関行列を見て「関係が強そう」なものから試すとよい）。</li>
+    <li>選んだ変数に<strong>もう 1 つ</strong>足した重回帰を、候補ごとに作って比べ、最も良い組み合わせを選ぶ。</li>
+    <li>これを繰り返し、<strong>停止ルール（stopping rule）</strong>を満たしたらやめる。</li>
+  </ol>
+  <div class="note-box">📌 <strong>これまでの準備</strong>：この回のデータは、前の動画で整えたものです。コードの流れだけ確認しておきましょう。</div>
+  <pre class="code-block">
+<span class="cl">bikes &lt;- <span class="kw">read_csv</span>(<span class="st">"bikes.csv"</span>, col_types = <span class="st">"Dffffddddd"</span>)</span>
+<span class="cl">bikes_model1 &lt;- <span class="kw">lm</span>(data = bikes, rentals ~ humidity + temperature + windspeed)</span>
+<span class="cl">infpts &lt;- <span class="kw">unique</span>(<span class="kw">which</span>(<span class="kw">cooks.distance</span>(bikes_model1) &gt; <span class="nm">0.005</span>))   <span class="cm"># 影響点 29 日</span></span>
+<span class="cl">bikesNoIP &lt;- bikes[-infpts, ]                                    <span class="cm"># 702 日分</span></span>
+<span class="cl"><span class="cm"># ここから先は前の動画で作ったもの：</span></span>
+<span class="cl"><span class="cm">#   humidity2, windspeed2, temperature2（2乗項）／ season・holiday・weekday・weather を</span></span>
+<span class="cl"><span class="cm">#   dummy_cols(remove_first_dummy = TRUE) でダミー変数に（→ bikesCleanEncoded）</span></span>
+<span class="cl"><span class="cm">#   date を month・day・year に分けたもの（→ bikesCleanEncoded2）</span></span>
+<span class="cl"><span class="kw">dim</span>(bikesCleanEncoded)</span>
+<span class="cl"><span class="kw">dim</span>(bikesCleanEncoded2)</span>
+</pre><div class="output-reveal">[1] 702  21
+[1] 702  23</div>
+  <h3>手でやってみる：1 回目（R² で比べる）</h3>
+  <p>候補は <code>humidity</code>・<code>temperature</code>・<code>windspeed</code>・<code>season_Summer</code>（夏かどうか）の 4 つ。それぞれ単回帰を作り、<strong>R²</strong> を比べます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># First round：単回帰 4 本の R²</span></span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ humidity))$r.squared</span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ temperature))$r.squared</span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ windspeed))$r.squared</span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ season_Summer))$r.squared</span>
+</pre><div class="output-reveal">[1] 0.008311977
+[1] 0.4448094
+[1] 0.05926697
+[1] 0.1343517</div>
+  <p>上から順に humidity 0.0083、<strong>temperature 0.4448</strong>、windspeed 0.0593、season_Summer 0.1344。<strong>temperature が約 44% を説明して一番</strong>です。気温が高い日ほど借りる人が多いはず、というドメイン知識（領域知識）とも合います。</p>
+  <h3>2 回目（調整済み R² で比べる）</h3>
+  <p>temperature を残して、2 つ目の変数を <code>humidity</code> と <code>windspeed</code> で比べます（<code>season_Summer</code> を試してもかまいません）。<strong>説明変数が 2 つ以上になったので、比べるのは「調整済みR²（adjusted R²）」</strong>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># Second round：temperature に何を足す？</span></span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ temperature))$adj.r.squared             <span class="cm"># 足す前</span></span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ temperature + humidity))$adj.r.squared</span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ temperature + windspeed))$adj.r.squared</span>
+</pre><div class="output-reveal">[1] 0.4440163
+[1] 0.4809831
+[1] 0.4625476</div>
+  <p>temperature だけの 0.444（約 44%）から、humidity を足すと <strong>0.481（約 48%）</strong>に改善、windspeed なら 0.463。よって <strong>temperature と humidity</strong> をモデルに入れます。この作業を、停止ルールを満たすまで繰り返します。</p>
+  <div class="warn-box">⚠️ <strong>R² は変数を足すだけで必ず増えます。</strong>説明変数が 2 つ以上のモデルを比べるときは、変数の数でペナルティをかけた<strong>調整済みR²</strong>（や次に学ぶ AIC）を使いましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>前進選択は「1人ずつチームに入れていく」やり方。まず一番頼りになる人（temperature）を選び、次に一番相性の良い人（humidity）を足していきます。全員の組み合わせを試すと数が爆発するので、1人ずつ決めていくのです。</p></div>
+  <div class="practice-card" id="p-r5s-u1">
+    <div class="ptitle">💻 ミニ練習：windspeed だけの R² を求める</div>
+    <p class="ptask">手動の前進選択の 1 回目と同じ形で、<code>bikesCleanEncoded</code> を使い、<code>windspeed</code> だけで <code>rentals</code> を説明する単回帰の <strong>R²</strong> を求める R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r5s-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r5s-u1', ['summary', 'lm', 'windspeed', 'r.squared'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r5s-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r5s-u1-result"></div>
+    <div class="answer-reveal" id="p-r5s-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ windspeed))$r.squared</span>
+</pre>
+      <p class="answer-note">結果は 0.05926697（約 6%）。temperature（0.4448）よりずっと小さいので、1 回目の候補としては選ばれません。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>step() で自動化：AIC と BIC</h2><div class="unit-sub">null model から full model まで</div></div>
+  </div>
+  <p>手作業は大変なので、R の <code>step()</code> 関数に任せます。<code>step()</code> は<strong>既定では R² ではなく AIC を最小にする</strong>ように変数を選びます。<strong>AIC（赤池情報量規準）</strong>は「当てはまりの良さ」と「モデルの複雑さ」のバランスを見る指標で、<strong>同じくらい説明できるなら、よりシンプルなモデルを好みます</strong>。AIC は小さいほど良い指標です。</p>
+  <p>前進選択では、まず<strong>説明変数を 1 つも持たない空のモデル（null model）</strong>と、<strong>全部入りのモデル（full model）</strong>を作ります。</p>
+  <pre class="code-block">
+<span class="cl">null_model &lt;- <span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ <span class="nm">1</span>)   <span class="cm"># 切片だけ（= rentals の平均を当てるだけ）</span></span>
+<span class="cl">full_model &lt;- <span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ .)   <span class="cm"># ~ . は「残り全部の列」</span></span>
+<span class="cl"></span>
+<span class="cl">forward_model &lt;- <span class="kw">step</span>(null_model,</span>
+<span class="cl">                      scope = <span class="kw">list</span>(lower = null_model, upper = full_model),</span>
+<span class="cl">                      direction = <span class="st">"forward"</span>)</span>
+</pre>
+  <ul>
+    <li><strong>null model</strong>：<code>rentals ~ 1</code>。説明変数なしで、いわば「平均を当てずっぽうに答える」モデル。どの変数も役に立たないなら、これが最良になり得ます。</li>
+    <li><strong>full model</strong>：<code>rentals ~ .</code>。<code>.</code> を使うと、変数がたくさんあっても全部を書かずに済みます。</li>
+    <li><code>scope</code>：<code>lower</code>（最小の形＝null）から <code>upper</code>（最大の形＝full）までの範囲で動く、という指定。<code>direction = "forward"</code> で「何もない状態から積み上げる」。</li>
+  </ul>
+  <p>最初に出る表（Start）では、null model の AIC と、<strong>1つ足したときの AIC</strong> が小さい順に並びます。</p>
+  <div class="output-reveal">Start:  AIC=10608.03
+rentals ~ 1
+
+                                Df  Sum of Sq        RSS   AIC
++ realfeel                       1 1149203856 1408161943 10191
++ temperature                    1 1137540345 1419825454 10197
++ temperature2                   1 1035422526 1521943273 10246
++ date                           1 1014581565 1542784235 10255
++ season_Winter                  1  869304633 1688061167 10318
++ season_Summer                  1  343586556 2213779243 10509
++ windspeed2                     1  158372280 2398993520 10565
++ windspeed                      1  151567321 2405798478 10567
++ `weather_Heavy precipitation`  1   88270659 2469095140 10585
++ `weather_Light precipitation`  1   84471504 2472894295 10586
++ season_Spring                  1   54882572 2502483228 10595
++ humidity2                      1   36832876 2520532924 10600
++ humidity                       1   21256766 2536109033 10604
++ holiday_Yes                    1   13527994 2543837806 10606
++ weekday_Sunday                 1   10431096 2546934703 10607
+&lt;none&gt;                                        2557365799 10608
++ weekday_Thursday               1    5182379 2552183421 10609
++ weekday_Monday                 1    1795066 2555570733 10610
++ weekday_Wednesday              1     381286 2556984513 10610
++ weekday_Tuesday                1     176072 2557189727 10610
++ weekday_Saturday               1      19184 2557346615 10610</div>
+  <p>AIC は<strong>相対的に使う</strong>値です。「10,608」という数字そのものに意味はなく、<strong>モデル同士を比べる</strong>ためのものです。表のいちばん上（<code>+ realfeel</code>）が最も AIC が下がる候補なので、realfeel が最初に追加されます。</p>
+  <div class="viz">
+    <div class="viz-title">前進選択で AIC が下がっていく様子（13 回の追加）</div>
+    <div style="text-align:center"><svg viewBox="0 0 460 280" width="460" height="280" role="img" aria-label="前進選択でAICが下がっていく様子" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="459" height="279" fill="#fff" stroke="#cbd5e1"/><line x1="60" y1="205.7" x2="440" y2="205.7" stroke="#e2e8f0"/><text x="54" y="209.2" font-size="10" text-anchor="end" fill="#64748b">9,400</text><line x1="60" y1="162.9" x2="440" y2="162.9" stroke="#e2e8f0"/><text x="54" y="166.4" font-size="10" text-anchor="end" fill="#64748b">9,700</text><line x1="60" y1="120.0" x2="440" y2="120.0" stroke="#e2e8f0"/><text x="54" y="123.5" font-size="10" text-anchor="end" fill="#64748b">10,000</text><line x1="60" y1="77.1" x2="440" y2="77.1" stroke="#e2e8f0"/><text x="54" y="80.6" font-size="10" text-anchor="end" fill="#64748b">10,300</text><line x1="60" y1="34.3" x2="440" y2="34.3" stroke="#e2e8f0"/><text x="54" y="37.8" font-size="10" text-anchor="end" fill="#64748b">10,600</text><polyline points="60.0,33.1 89.2,92.7 118.5,161.9 147.7,176.7 176.9,183.5 206.2,191.6 235.4,193.4 264.6,195.0 293.8,196.6 323.1,198.0 352.3,199.4 381.5,200.2 410.8,210.3 440.0,210.4" fill="none" stroke="#2563eb" stroke-width="2"/><circle cx="60.0" cy="33.1" r="3.5" fill="#2563eb"/><text x="60.0" y="234" font-size="10" text-anchor="middle" fill="#64748b">0</text><circle cx="89.2" cy="92.7" r="3.5" fill="#2563eb"/><text x="89.2" y="234" font-size="10" text-anchor="middle" fill="#64748b">1</text><circle cx="118.5" cy="161.9" r="3.5" fill="#2563eb"/><text x="118.5" y="234" font-size="10" text-anchor="middle" fill="#64748b">2</text><circle cx="147.7" cy="176.7" r="3.5" fill="#2563eb"/><text x="147.7" y="234" font-size="10" text-anchor="middle" fill="#64748b">3</text><circle cx="176.9" cy="183.5" r="3.5" fill="#2563eb"/><text x="176.9" y="234" font-size="10" text-anchor="middle" fill="#64748b">4</text><circle cx="206.2" cy="191.6" r="3.5" fill="#2563eb"/><text x="206.2" y="234" font-size="10" text-anchor="middle" fill="#64748b">5</text><circle cx="235.4" cy="193.4" r="3.5" fill="#2563eb"/><text x="235.4" y="234" font-size="10" text-anchor="middle" fill="#64748b">6</text><circle cx="264.6" cy="195.0" r="3.5" fill="#2563eb"/><text x="264.6" y="234" font-size="10" text-anchor="middle" fill="#64748b">7</text><circle cx="293.8" cy="196.6" r="3.5" fill="#2563eb"/><text x="293.8" y="234" font-size="10" text-anchor="middle" fill="#64748b">8</text><circle cx="323.1" cy="198.0" r="3.5" fill="#2563eb"/><text x="323.1" y="234" font-size="10" text-anchor="middle" fill="#64748b">9</text><circle cx="352.3" cy="199.4" r="3.5" fill="#2563eb"/><text x="352.3" y="234" font-size="10" text-anchor="middle" fill="#64748b">10</text><circle cx="381.5" cy="200.2" r="3.5" fill="#2563eb"/><text x="381.5" y="234" font-size="10" text-anchor="middle" fill="#64748b">11</text><circle cx="410.8" cy="210.3" r="3.5" fill="#2563eb"/><text x="410.8" y="234" font-size="10" text-anchor="middle" fill="#64748b">12</text><circle cx="440.0" cy="210.4" r="3.5" fill="#dc2626"/><text x="440.0" y="234" font-size="10" text-anchor="middle" fill="#64748b">13</text><text x="250.0" y="252" font-size="11" text-anchor="middle" fill="#334155">ステップ（0 = null model、1つずつ変数を追加）</text><text x="14" y="120.0" font-size="11" text-anchor="middle" fill="#334155" transform="rotate(-90 14 120.0)">AIC</text><text x="436.0" y="200.4" font-size="10" text-anchor="end" fill="#dc2626">9367.2（最小）</text></svg></div>
+    <div class="viz-cap">各点は追加後の AIC。13 回目の <code>windspeed2</code> を足した 9367.2 が最小で、それ以降はどの変数を足しても AIC は上がります。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>追加された変数</th><th>そのときの AIC</th></tr>
+    <tr><td>0</td><td><code>（null model）</code></td><td>10608.0</td></tr>
+    <tr><td>1</td><td><code>realfeel</code></td><td>10191.2</td></tr>
+    <tr><td>2</td><td><code>date</code></td><td>9707.0</td></tr>
+    <tr><td>3</td><td><code>humidity2</code></td><td>9603.4</td></tr>
+    <tr><td>4</td><td><code>season_Spring</code></td><td>9555.2</td></tr>
+    <tr><td>5</td><td><code>windspeed</code></td><td>9499.1</td></tr>
+    <tr><td>6</td><td><code>holiday_Yes</code></td><td>9486.1</td></tr>
+    <tr><td>7</td><td><code>weather_Heavy precipitation</code></td><td>9474.9</td></tr>
+    <tr><td>8</td><td><code>season_Winter</code></td><td>9463.5</td></tr>
+    <tr><td>9</td><td><code>weather_Light precipitation</code></td><td>9454.2</td></tr>
+    <tr><td>10</td><td><code>weekday_Sunday</code></td><td>9444.2</td></tr>
+    <tr><td>11</td><td><code>temperature2</code></td><td>9438.3</td></tr>
+    <tr><td>12</td><td><code>temperature</code></td><td>9367.9</td></tr>
+    <tr><td>13</td><td><code>windspeed2</code></td><td>9367.2</td></tr>
+  </table>
+  <p>2 番目に <code>date</code> が加わって AIC は 9707 に、次に 2 乗項の <code>humidity2</code> が加わります。最後の表では、どの候補（<code>+</code>）を足しても AIC が増えるため、ここで停止します。</p>
+  <div class="output-reveal">Step:  AIC=9367.17
+rentals ~ realfeel + date + humidity2 + season_Spring + windspeed + 
+    holiday_Yes + `weather_Heavy precipitation` + season_Winter + 
+    `weather_Light precipitation` + weekday_Sunday + temperature2 + 
+    temperature + windspeed2
+
+                    Df Sum of Sq       RSS    AIC
+&lt;none&gt;                           420770265 9367.2
++ weekday_Monday     1   1042643 419727622 9367.4
++ weekday_Saturday   1    750767 420019498 9367.9
++ weekday_Tuesday    1    608526 420161739 9368.2
++ humidity           1    517794 420252471 9368.3
++ weekday_Thursday   1     42623 420727643 9369.1
++ season_Summer      1     12101 420758164 9369.2
++ weekday_Wednesday  1      1797 420768468 9369.2</div>
+  <p>AIC の最小値は <strong>9367.2</strong> で、これが前進選択の最終モデルです（説明変数 13 個、調整済みR² 0.8324）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(forward_model)$adj.r.squared</span>
+</pre><div class="output-reveal">[1] 0.8323584</div>
+  <div class="note-box">💡 <code>step()</code> が表示する AIC は、<code>AIC(forward_model)</code> が返す値（11361.36）とは定数分ずれます。モデルの比較には影響しないので、<code>step()</code> の表の中だけで比べれば大丈夫です。</div>
+  <h3>停止ルールを変える：BIC</h3>
+  <p>AIC 以外を使うこともできます。<strong>BIC（ベイズ情報量規準）</strong>は、AIC より<strong>複雑さへのペナルティが重い</strong>指標です。<code>step()</code> の <code>k</code> に <code>log(行数)</code> を渡すと BIC になります。</p>
+  <pre class="code-block">
+<span class="cl">bikesN &lt;- <span class="kw">nrow</span>(bikesCleanEncoded)    <span class="cm"># 行数</span></span>
+<span class="cl"></span>
+<span class="cl">forward_model_bic &lt;- <span class="kw">step</span>(null_model,</span>
+<span class="cl">                          scope = <span class="kw">list</span>(lower = null_model, upper = full_model),</span>
+<span class="cl">                          direction = <span class="st">"forward"</span>,</span>
+<span class="cl">                          k = <span class="kw">log</span>(bikesN))</span>
+</pre>
+  <p>出力の見出しは相変わらず <code>AIC=</code> と表示されますが、<strong>中身は BIC</strong> です（<code>k</code> を指定したため）。最初の null model の値は約 10,613 から始まり、最後は次のようになります。</p>
+  <div class="output-reveal">Step:  AIC=9427.11
+rentals ~ realfeel + date + humidity2 + season_Spring + windspeed + 
+    holiday_Yes + `weather_Heavy precipitation` + season_Winter + 
+    `weather_Light precipitation` + weekday_Sunday + temperature2 + 
+    temperature
+
+                    Df Sum of Sq       RSS    AIC
+&lt;none&gt;                           422415573 9427.1
++ windspeed2         1   1645307 420770265 9430.9
++ weekday_Monday     1   1170235 421245337 9431.7
++ weekday_Saturday   1    809226 421606347 9432.3
++ weekday_Tuesday    1    596753 421818820 9432.7
++ humidity           1    592916 421822656 9432.7
++ weekday_Thursday   1     53548 422362025 9433.6
++ season_Summer      1     25017 422390556 9433.6
++ weekday_Wednesday  1      2890 422412683 9433.7</div>
+  <p>BIC のほうが AIC より厳しいので、最終モデルの説明変数は <strong>12 個</strong>（AIC では 13 個で、<code>windspeed2</code> が入りません）と、やや少なくなります。BIC の最小値は 9427.1 です。</p>
+  <h3>前進選択・後退選択の落とし穴：多重共線性</h3>
+  <div class="warn-box">⚠️ 前進選択も後退選択も、<strong>多重共線性（multicollinearity）を考慮しません。</strong>すでにモデルにある変数と似た変数（強く相関する変数）が、さらに足されてしまうことがあり、冗長になります。選んだあとで<strong>VIF（分散拡大係数）</strong>を調べ、必要ならより<strong>倹約的（parsimonious）なモデル</strong>に絞りましょう。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">library</span>(car)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">vif</span>(forward_model), <span class="nm">1</span>)</span>
+</pre><div class="output-reveal">                     realfeel                          date 
+                         69.6                           1.3 
+                    humidity2                 season_Spring 
+                          2.1                           1.4 
+                    windspeed                   holiday_Yes 
+                         19.5                           1.0 
+`weather_Heavy precipitation`                 season_Winter 
+                          1.4                           2.1 
+`weather_Light precipitation`                weekday_Sunday 
+                          1.7                           1.0 
+                 temperature2                   temperature 
+                         98.4                         213.9 
+                   windspeed2 
+                         19.2 </div>
+  <p>このモデルでは <code>temperature</code>（213.9）・<code>temperature2</code>（98.4）・<code>realfeel</code>（69.6）、さらに <code>windspeed</code> と <code>windspeed2</code> の VIF がとても大きいことが分かります。気温・体感温度・気温の2乗は、互いにほとんど同じ情報を持っているからです（<code>temperature</code> と <code>realfeel</code> の相関は 0.99）。AIC が下がっても、こうした変数の重複は別途チェックして整理する必要があります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>step()</code> は「AIC が一番小さくなるように」自動で変数を足してくれる機械。でも「似た者同士」を一緒に入れてしまうことがあるので、最後に VIF で重複を点検しましょう。</p></div>
+  <div class="practice-card" id="p-r5s-u2">
+    <div class="ptitle">💻 ミニ練習：前進選択を BIC で行う</div>
+    <p class="ptask">null model（<code>null_model</code>）と full model（<code>full_model</code>）はすでに作ってあるものとします。<code>step()</code> で<strong>前進選択</strong>を行い、停止基準を <strong>BIC</strong> にする R コードを書いてください（行数は <code>nrow(bikesCleanEncoded)</code>）。</p>
+    <textarea class="code-editor" id="p-r5s-u2-input" rows="6"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r5s-u2', ['step', 'scope', 'forward', 'log', 'nrow'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r5s-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r5s-u2-result"></div>
+    <div class="answer-reveal" id="p-r5s-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">bikesN &lt;- <span class="kw">nrow</span>(bikesCleanEncoded)</span>
+<span class="cl"><span class="kw">step</span>(null_model,</span>
+<span class="cl">     scope = <span class="kw">list</span>(lower = null_model, upper = full_model),</span>
+<span class="cl">     direction = <span class="st">"forward"</span>,</span>
+<span class="cl">     k = <span class="kw">log</span>(bikesN))</span>
+</pre>
+      <p class="answer-note"><code>k = log(行数)</code> が BIC の合図です。見出しは「AIC=」のままですが、最終モデルは 12 変数、値は 9427.1 になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>後退選択（backward selection）</h2><div class="unit-sub">全部入りから、1つずつ外していく</div></div>
+  </div>
+  <p><strong>後退選択（backward selection）</strong>は前進選択の逆です。<strong>最初に全部の説明変数を入れたモデル</strong>を作り、<strong>p値が最も大きい（最も有意でない）変数を 1 つずつ外していく</strong>方法で、停止条件を満たすまで繰り返します。</p>
+  <h3>手でやってみる</h3>
+  <p>ここでは日付を <code>month</code>・<code>day</code>・<code>year</code> に分けたデータ <code>bikesCleanEncoded2</code> を使い、<code>rentals ~ .</code>（全部入り）から始めます。</p>
+  <pre class="code-block">
+<span class="cl">backward0 &lt;- <span class="kw">lm</span>(data = bikesCleanEncoded2, rentals ~ .)   <span class="cm"># 全部入りモデル</span></span>
+<span class="cl"><span class="kw">summary</span>(backward0)$adj.r.squared</span>
+</pre><div class="output-reveal">[1] 0.8782628</div>
+  <p>全部入りの調整済みR² は約 <strong>0.88</strong>（0.8783）とたいへん高い値です。ただし、係数表を見ると有意でない（p値が大きい）ものがたくさんあります。たとえば <code>month4</code> の p値は 0.600 です。では <code>month4</code> を外そうとすると…</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">lm</span>(rentals ~ . - month4, data = bikesCleanEncoded2)</span>
+</pre><div class="output-reveal">Error in eval(predvars, data, env) : object 'month4' not found</div>
+  <p>エラーになります。<code>month4</code> は<strong>データの独立した列ではない</strong>からです。<code>month</code> は 1〜12 を水準とする 1 つの因子（factor）の列で、<code>month4</code> は R が係数表に出す「4月」のダミー変数の名前にすぎません。1 か月ずつ外したいなら、月を<strong>ワンホット化</strong>して、<strong>12 列ではなく 11 列</strong>（1 か月は基準として外す）の列を自分で作る必要があります（宿題として試してみましょう）。このデータには月の列が <code>month</code> しかないため、この方法では月ごとには外せません。</p>
+  <div class="warn-box">⚠️ 12 か月分を全部ダミー化すると、1 列が他の 11 列から決まってしまい（ダミー変数の罠）、モデルが組めなくなります。<strong>基準になる 1 水準を除いた n−1 列</strong>にするのがルールです。</div>
+  <h3>step() で自動化</h3>
+  <p>後退選択は <code>step()</code> に<strong>全部入りモデルを渡し、<code>direction = "backward"</code></strong> を指定します（前進選択の <code>~ 1</code> から積み上げる形とは逆です）。</p>
+  <pre class="code-block">
+<span class="cl">initial_model &lt;- <span class="kw">lm</span>(rentals ~ ., data = bikesCleanEncoded2)</span>
+<span class="cl"></span>
+<span class="cl">backward_model &lt;- <span class="kw">step</span>(initial_model, direction = <span class="st">"backward"</span>)</span>
+<span class="cl"><span class="kw">summary</span>(backward_model)</span>
+</pre>
+  <p>最初の表は、全部入りモデルの AIC が <strong>9160.9</strong>。表の中の記号に注目してください。前進選択は <code>+</code>（足す）でしたが、後退選択は <strong><code>-</code>（引く）</strong>です。</p>
+  <div class="output-reveal">Start:  AIC=9160.9
+rentals ~ month + day + year + temperature + realfeel + humidity + 
+    windspeed + humidity2 + windspeed2 + temperature2 + season_Spring + 
+    season_Summer + season_Winter + holiday_Yes + weekday_Monday + 
+    weekday_Saturday + weekday_Sunday + weekday_Thursday + weekday_Tuesday + 
+    weekday_Wednesday + `weather_Heavy precipitation` + `weather_Light precipitation`
+
+                                Df Sum of Sq       RSS    AIC
+- weekday_Saturday               1       293 297115163 9158.9
+- weekday_Thursday               1    155103 297269973 9159.3
+- realfeel                       1    183909 297298779 9159.3
+- windspeed2                     1    277146 297392016 9159.6
+- weekday_Wednesday              1    442535 297557405 9159.9
+&lt;none&gt;                                       297114870 9160.9
+- windspeed                      1    861287 297976157 9160.9
+- day                            1    995181 298110051 9161.2
+- weekday_Tuesday                1   1360929 298475799 9162.1
+- weekday_Monday                 1   2018364 299133234 9163.7
+- humidity                       1   3831457 300946327 9167.9
+- holiday_Yes                    1   5962364 303077234 9172.8
+- season_Summer                  1   7454015 304568885 9176.3
+- season_Spring                  1   7729047 304843917 9176.9
+- humidity2                      1   8069760 305184630 9177.7
+- weekday_Sunday                 1   8272609 305387479 9178.2
+- `weather_Heavy precipitation`  1  11939088 309053958 9186.6
+- `weather_Light precipitation`  1  13225676 310340546 9189.5
+- month                         11  31179222 328294092 9209.0
+- temperature2                   1  34771166 331886036 9236.6
+- temperature                    1  36450166 333565036 9240.1
+- season_Winter                  1  45485678 342600548 9258.9
+- year                           1 586970522 884085392 9924.4</div>
+  <p>いちばん上の <code>- weekday_Saturday</code> を引くと AIC が 9158.9 に下がるので、まず Saturday が除かれます。2 つ目のモデルには Sunday は残り、Saturday はありません。次の表で <code>- realfeel</code> を引くとさらに良くなります。</p>
+  <div class="output-reveal">Step:  AIC=9158.9
+rentals ~ month + day + year + temperature + realfeel + humidity + 
+    windspeed + humidity2 + windspeed2 + temperature2 + season_Spring + 
+    season_Summer + season_Winter + holiday_Yes + weekday_Monday + 
+    weekday_Sunday + weekday_Thursday + weekday_Tuesday + weekday_Wednesday + 
+    `weather_Heavy precipitation` + `weather_Light precipitation`
+
+                                Df Sum of Sq       RSS    AIC
+- realfeel                       1    183618 297298780 9157.3
+- weekday_Thursday               1    212599 297327762 9157.4
+- windspeed2                     1    277435 297392598 9157.6
+- weekday_Wednesday              1    598636 297713799 9158.3
+&lt;none&gt;                                       297115163 9158.9
+- windspeed                      1    860996 297976158 9158.9
+- day                            1    995148 298110311 9159.2
+- weekday_Tuesday                1   1827702 298942865 9161.2
+- weekday_Monday                 1   2648809 299763971 9163.1
+- humidity                       1   3833226 300948389 9165.9
+- holiday_Yes                    1   5968162 303083324 9170.9
+- season_Summer                  1   7454441 304569604 9174.3
+- season_Spring                  1   7730024 304845187 9174.9
+- humidity2                      1   8078922 305194084 9175.7
+- weekday_Sunday                 1  11060842 308176005 9182.6
+- `weather_Heavy precipitation`  1  11939657 309054819 9184.6
+- `weather_Light precipitation`  1  13271289 310386451 9187.6
+- month                         11  31197008 328312170 9207.0
+- temperature2                   1  34777014 331892177 9234.6
+- temperature                    1  36508075 333623238 9238.3
+- season_Winter                  1  45485480 342600643 9256.9
+- year                           1 587027254 884142416 9922.4</div>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>除かれた変数</th><th>そのときの AIC</th></tr>
+    <tr><td>0</td><td><code>（全部入り）</code></td><td>9160.9</td></tr>
+    <tr><td>1</td><td><code>weekday_Saturday</code></td><td>9158.9</td></tr>
+    <tr><td>2</td><td><code>realfeel</code></td><td>9157.3</td></tr>
+    <tr><td>3</td><td><code>weekday_Thursday</code></td><td>9155.9</td></tr>
+    <tr><td>4</td><td><code>windspeed2</code></td><td>9154.5</td></tr>
+    <tr><td>5</td><td><code>weekday_Wednesday</code></td><td>9153.6</td></tr>
+  </table>
+  <p>5 回の削除のあと、最後の表では先頭が <code>&lt;none&gt;</code> になります。これは<strong>「このまま何も外さないのが最良」</strong>という意味です。たとえば <code>day</code> を外すと AIC は 9153.6 からむしろ 9153.8 へ、わずかに増えます（AIC は小さいほうが良い）。</p>
+  <div class="output-reveal">Step:  AIC=9153.57
+rentals ~ month + day + year + temperature + humidity + windspeed + 
+    humidity2 + temperature2 + season_Spring + season_Summer + 
+    season_Winter + holiday_Yes + weekday_Monday + weekday_Sunday + 
+    weekday_Tuesday + `weather_Heavy precipitation` + `weather_Light precipitation`
+
+                                Df Sum of Sq       RSS    AIC
+&lt;none&gt;                                       298248719 9153.6
+- day                            1    943837 299192556 9153.8
+- weekday_Tuesday                1   1341962 299590681 9154.7
+- weekday_Monday                 1   2270320 300519039 9156.9
+- humidity                       1   3831100 302079819 9160.5
+- holiday_Yes                    1   5829688 304078406 9165.2
+- season_Summer                  1   7470618 305719336 9168.9
+- season_Spring                  1   7771560 306020279 9169.6
+- humidity2                      1   8148718 306397436 9170.5
+- weekday_Sunday                 1  11098955 309347674 9177.2
+- `weather_Heavy precipitation`  1  12035252 310283971 9179.3
+- `weather_Light precipitation`  1  12910629 311159347 9181.3
+- month                         11  32162312 330411030 9203.5
+- windspeed                      1  32001806 330250525 9223.1
+- temperature2                   1  35424055 333672774 9230.4
+- season_Winter                  1  45602945 343851664 9251.5
+- temperature                    1  61615327 359864046 9283.4
+- year                           1 589101833 887350552 9917.0</div>
+  <p>最終モデル（<code>summary(backward_model)</code> の末尾）です。</p>
+  <div class="output-reveal">Residual standard error: 665.2 on 674 degrees of freedom
+Multiple R-squared:  0.8834,	Adjusted R-squared:  0.8787 
+F-statistic: 189.1 on 27 and 674 DF,  p-value: &lt; 2.2e-16</div>
+  <p>説明変数は 22 個から 17 個に減り、調整済みR² は 0.8783 → <strong>0.8787</strong> とわずかに上がりました。</p>
+  <div class="note-box">⚠️ 最終モデルにも<strong>有意でない（p値が大きい）変数が残って</strong>います（たとえば <code>month4</code> は p = 0.631、<code>weekday_Tuesday</code> も 0.082）。AIC は「全体として悪くならなければ残す」基準だからです。月をワンホット化して、効く月と効かない月を調べてみる価値があります。</div>
+  <h3>後退選択でも多重共線性は扱わない</h3>
+  <p>前進選択と同じく、後退選択も多重共線性を処理しません。たとえば <strong>月は気温と交絡している</strong>かもしれません。夏に貸出が多いのは「月」のせいではなく「気温」のせいかもしれないのです。あるいは、季節（<code>season</code>）の変数がすでにその変動を説明しているなら、<strong>season は残して month を外す</strong>ほうが、AIC も調整済みR² も良くなる可能性があります。</p>
+  <table class="compare-table">
+    <tr><th></th><th>前進選択</th><th>後退選択</th></tr>
+    <tr><td>出発点</td><td>空のモデル（<code>~ 1</code>）</td><td>全部入り（<code>~ .</code>）</td></tr>
+    <tr><td>1 ステップの動き</td><td>変数を 1 つ<strong>足す</strong>（<code>+</code>）</td><td>変数を 1 つ<strong>引く</strong>（<code>-</code>）</td></tr>
+    <tr><td><code>step()</code> の指定</td><td><code>direction = "forward"</code> と <code>scope</code></td><td><code>direction = "backward"</code></td></tr>
+    <tr><td>停止</td><td>足しても AIC が下がらない</td><td>外しても AIC が下がらない（<code>&lt;none&gt;</code>）</td></tr>
+    <tr><td>多重共線性</td><td colspan="2" style="text-align:center">どちらも考慮しない → 最後に VIF を確認</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>後退選択は「全員集めてから、役に立たない人を1人ずつ帰す」やり方。帰しても成績（AIC）が良くならなくなったら終わりです。前進は＋、後退は−と覚えましょう。</p></div>
+  <div class="practice-card" id="p-r5s-u3">
+    <div class="ptitle">💻 ミニ練習：後退選択を実行する</div>
+    <p class="ptask"><code>bikesCleanEncoded2</code> の全部入りモデルを <code>initial_model</code> として作り、<code>step()</code> で<strong>後退選択</strong>を行い、結果を <code>backward_model</code> に保存する R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r5s-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r5s-u3', ['lm', 'step', 'backward', 'initial_model'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r5s-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r5s-u3-result"></div>
+    <div class="answer-reveal" id="p-r5s-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">initial_model &lt;- <span class="kw">lm</span>(rentals ~ ., data = bikesCleanEncoded2)</span>
+<span class="cl">backward_model &lt;- <span class="kw">step</span>(initial_model, direction = <span class="st">"backward"</span>)</span>
+</pre>
+      <p class="answer-note">結果は 5 つの変数（weekday_Saturday・realfeel・weekday_Thursday・windspeed2・weekday_Wednesday）が順に外れ、AIC 9160.9 → 9153.6、調整済みR² 0.8787 になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>ステップワイズ・階層的回帰・倹約モデル</h2><div class="unit-sub">4つの方法の使い分け</div></div>
+  </div>
+  <p>前進選択は足すだけ、後退選択は引くだけでした。では<strong>両方を同時にやったら？</strong>それが<strong>ステップワイズ選択（stepwise selection／mixed selection）</strong>です。前進選択のように<strong>変数を足し</strong>、後退選択のように<strong>変数を外す</strong>。いいとこ取りの方法です。</p>
+  <h3>step() で direction = "both"</h3>
+  <pre class="code-block">
+<span class="cl">model_all &lt;- <span class="kw">lm</span>(data = bikesCleanEncoded2, rentals ~ .)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">step</span>(model_all, direction = <span class="st">"both"</span>)</span>
+</pre>
+  <p>出発は全部入りモデル（AIC 9160.9）なので、最初は<strong>外す（<code>-</code>）ことしかできません</strong>（すでに全部入っているので足す変数がない）。AIC が下がる <code>weekday_Saturday</code> を外します。2 回目以降の表には、<strong>外す候補（<code>-</code>）</strong>と、<strong>外した変数を戻す候補（<code>+</code>）</strong>が一緒に並びます。</p>
+  <div class="output-reveal">Step:  AIC=9158.9
+rentals ~ month + day + year + temperature + realfeel + humidity + 
+    windspeed + humidity2 + windspeed2 + temperature2 + season_Spring + 
+    season_Summer + season_Winter + holiday_Yes + weekday_Monday + 
+    weekday_Sunday + weekday_Thursday + weekday_Tuesday + weekday_Wednesday + 
+    `weather_Heavy precipitation` + `weather_Light precipitation`
+
+                                Df Sum of Sq       RSS    AIC
+- realfeel                       1    183618 297298780 9157.3
+- weekday_Thursday               1    212599 297327762 9157.4
+- windspeed2                     1    277435 297392598 9157.6
+- weekday_Wednesday              1    598636 297713799 9158.3
+&lt;none&gt;                                       297115163 9158.9
+- windspeed                      1    860996 297976158 9158.9
+- day                            1    995148 298110311 9159.2
++ weekday_Saturday               1       293 297114870 9160.9
+- weekday_Tuesday                1   1827702 298942865 9161.2
+- weekday_Monday                 1   2648809 299763971 9163.1
+- humidity                       1   3833226 300948389 9165.9
+- holiday_Yes                    1   5968162 303083324 9170.9
+- season_Summer                  1   7454441 304569604 9174.3
+- season_Spring                  1   7730024 304845187 9174.9
+- humidity2                      1   8078922 305194084 9175.7
+- weekday_Sunday                 1  11060842 308176005 9182.6
+- `weather_Heavy precipitation`  1  11939657 309054819 9184.6
+- `weather_Light precipitation`  1  13271289 310386451 9187.6
+- month                         11  31197008 328312170 9207.0
+- temperature2                   1  34777014 331892177 9234.6
+- temperature                    1  36508075 333623238 9238.3
+- season_Winter                  1  45485480 342600643 9256.9
+- year                           1 587027254 884142416 9922.4</div>
+  <p>表の中ほどに <code>+ weekday_Saturday</code> が見えます。戻しても AIC は 9160.9 と悪化するので戻されません。このデータでは、戻したほうが良くなる変数がなかったため、最終モデルは後退選択と同じになりました（AIC 9153.6、調整済みR² 0.8787）。</p>
+  <h3>olsrr パッケージの ols_step 関数</h3>
+  <p><code>olsrr</code> パッケージには、ステップワイズ用の関数が用意されています。名前は <code>ols_step_</code> ＋ 方向（<code>both</code>）＋ 指標です。</p>
+  <table class="compare-table">
+    <tr><th>関数</th><th>変数を出し入れする基準</th></tr>
+    <tr><td><code>ols_step_both_p()</code></td><td>p値</td></tr>
+    <tr><td><code>ols_step_both_aic()</code></td><td>AIC</td></tr>
+    <tr><td><code>ols_step_both_r2()</code></td><td>R²</td></tr>
+    <tr><td><code>ols_step_both_adj_r2()</code></td><td>調整済みR²</td></tr>
+  </table>
+  <p>引数も確認しておきましょう（詳しくはドキュメントを参照）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">library</span>(olsrr)</span>
+<span class="cl">modelAll &lt;- <span class="kw">lm</span>(data = bikesCleanEncoded, rentals ~ .)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">ols_step_both_p</span>(model = modelAll,</span>
+<span class="cl">                p_enter = <span class="nm">0.2</span>,      <span class="cm"># この値以下のp値なら、モデルに入る</span></span>
+<span class="cl">                p_remove = <span class="nm">0.01</span>,    <span class="cm"># この値より大きいp値なら、モデルから外す</span></span>
+<span class="cl">                progress = FALSE,   <span class="cm"># TRUE にすると途中経過を表示</span></span>
+<span class="cl">                details = FALSE)    <span class="cm"># TRUE にすると各ステップの詳細を表示</span></span>
+</pre>
+  <ul>
+    <li><code>p_enter</code>：変数が<strong>入る</strong>ためのp値の上限（講義では 0.2 以下で入る）。</li>
+    <li><code>p_remove</code>：p値がこれより<strong>大きい</strong>と変数が外れる（講義では 0.01 より大きいと外す）。</li>
+    <li><code>progress</code>・<code>details</code> を <code>TRUE</code> にすると詳しい情報が出ます（時間は少しかかります）。</li>
+  </ul>
+  <p>初期値と違う設定なので、<code>step()</code> とは少し違う結果になります。出力には AIC・BIC・R²・SBIC・調整済みR² が表示され、「real_feel が追加→のちに削除」「windspeed² が追加→windspeed が削除」「Monday が追加→削除」のように、<strong>追加と削除（Added/Removed 列）</strong>の履歴が見られます。</p>
+  <div class="warn-box">⚠️ <strong>2つの注意</strong>：(1) 出力に出る <code>beta</code> は<strong>標準化回帰係数ではなく</strong>、ふつうの回帰係数です。(2) <code>olsrr</code> の <code>ols_step_</code> 関数は<strong>更新後のモデルを自動で保存しません</strong>。使いたいときは<strong>結果を新しいオブジェクトに代入</strong>し、選ばれた変数を自分で <code>lm()</code> に書き直します。</div>
+  <h3>階層的回帰（hierarchical regression）</h3>
+  <p>前進・後退・ステップワイズは、機械的に（データの数字だけで）変数を選びます。それに対して<strong>階層的回帰</strong>は、<strong>理論や概念の構造に沿って、変数を段階的に入れる（外す）</strong>方法です。「この変数は先に入れるべき」という重要度や理論的な関係を前提にします。</p>
+  <p><strong>例：会社での仕事のパフォーマンス（job performance）を予測する</strong></p>
+  <ol>
+    <li><strong>ステップ 1</strong>：統制変数（control variables）として<strong>年齢と学歴</strong>を入れる。</li>
+    <li><strong>ステップ 2</strong>：仕事に関係する変数、つまり<strong>経験とスキル</strong>を足す。</li>
+    <li><strong>ステップ 3</strong>：<strong>交互作用</strong>（年齢 × 経験：年齢と経験が組み合わさって効くか）を足す。</li>
+  </ol>
+  <p>これは前の3つよりずっと繊細で、<strong>ドメイン知識と、組織・状況の理解</strong>が必要です。</p>
+  <h3>倹約モデル（parsimonious model）とオッカムの剃刀</h3>
+  <p><strong>倹約モデル（parsimonious model）</strong>とは、<strong>データを、できるだけシンプルに、しかし十分に説明する</strong>モデルのこと。<strong>必要最小限の説明変数で、データの背後にある信号をとらえます</strong>。ここで出てくるのが<strong>オッカムの剃刀（Occam's razor）</strong>。中世の哲学者オッカムの考えで、「<strong>ほかが同じなら、よりシンプルな説明（モデル）が良い</strong>」という原則です。シンプルなモデルが好まれる理由は 3 つあります。</p>
+  <ul>
+    <li><strong>効率（efficiency）</strong>：変数が 3 個のモデルと 20 個のモデルで AIC が同じくらいなら、3 個のほうを選ぶ。集めて保存するデータが少なくて済みます。</li>
+    <li><strong>解釈しやすさ（interpretability）</strong>：3 つの変数は 20 個よりずっと理解しやすい。</li>
+    <li><strong>汎化（generalization）</strong>：変数が少ないほうが、<strong>過学習を避けて</strong>新しいデータにも通用しやすい（過学習は⑤で）。</li>
+  </ul>
+  <h3>4 つの方法の比較</h3>
+  <table class="compare-table">
+    <tr><th>方法</th><th>変数を足す</th><th>変数を外す</th><th>理論に基づく？</th><th>計算コスト</th><th>過学習のリスク</th></tr>
+    <tr><td>前進選択</td><td>する</td><td>しない</td><td>いいえ</td><td>低い</td><td>中程度</td></tr>
+    <tr><td>後退選択</td><td>しない</td><td>する</td><td>いいえ</td><td>高い</td><td>低〜中程度</td></tr>
+    <tr><td>ステップワイズ</td><td>する</td><td>する</td><td>いいえ</td><td>中程度</td><td>中程度</td></tr>
+    <tr><td>階層的回帰</td><td>する</td><td>しない</td><td>はい</td><td>低〜中程度</td><td>低い</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>前進は「足すだけ」、後退は「引くだけ」、ステップワイズは「足したり引いたり」。階層的回帰は、データではなく<strong>理論</strong>に従って順番に入れていく方法です。どれを使っても、ゴールは<strong>できるだけシンプルで十分に説明できるモデル</strong>です。</p></div>
+  <div class="practice-card" id="p-r5s-u4">
+    <div class="ptitle">💻 ミニ練習：ols_step_both_p() を保存する</div>
+    <p class="ptask">全部入りモデル <code>modelAll</code> に <code>ols_step_both_p()</code> を使い、<strong>p_enter = 0.2、p_remove = 0.01</strong> で選択します。結果を <code>step_result</code> に<strong>保存</strong>する R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r5s-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r5s-u4', ['ols_step_both_p', 'p_enter', 'p_remove', 'step_result', '<-'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r5s-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r5s-u4-result"></div>
+    <div class="answer-reveal" id="p-r5s-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">step_result &lt;- <span class="kw">ols_step_both_p</span>(model = modelAll,</span>
+<span class="cl">                               p_enter = <span class="nm">0.2</span>,</span>
+<span class="cl">                               p_remove = <span class="nm">0.01</span>)</span>
+</pre>
+      <p class="answer-note">ols_step 関数は更新後のモデルを自動では保存しません。結果を代入しておき、選ばれた変数は自分で lm() に書き直して使います。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>モデルの性能を評価する</h2><div class="unit-sub">過学習と train/test 分割</div></div>
+  </div>
+  <p>ここまでは「どのモデルを選ぶか」でした。次は<strong>「選んだモデルが、見たことのない新しいデータでもうまくいくか」</strong>です。予測に使う（本番運用する）なら、モデルを作ったときのデータだけでなく、<strong>明日・来月届くデータ</strong>でも通用しなければいけません。</p>
+  <h3>過学習（overfitting）</h3>
+  <p><strong>過学習</strong>とは、モデルが<strong>手元のデータを丸暗記してしまい</strong>、背後にあるパターン（信号）を理解できていない状態です。ノイズを信号だと勘違いします。単回帰・重回帰ではそれほど大きな問題にならないこともありますが、<strong>機械学習のモデルは、重回帰より複雑なぶん、過学習しやすい</strong>ので、先の科目で必ず出てきます。</p>
+  <h3>訓練データとテストデータ（train/test split）</h3>
+  <p>データを 2 つに分けます。</p>
+  <ul>
+    <li><strong>訓練データ（training set）</strong>：モデルを作る（パターンと関係を学ぶ）ためのデータ。</li>
+    <li><strong>テストデータ（test set）</strong>：取っておいて、<strong>未知のデータでの性能</strong>を測るためのデータ。「モデルは汎化（generalize）できているか？」に答えます。</li>
+  </ul>
+  <p>ほかに validation set（検証データ）や holdout set もありますが、ここでは扱いません。</p>
+  <div class="note-box">📌 たとえば<strong>訓練データでは R² = 0.95、テストデータでは R² = 0.40</strong> なら、モデルは過学習です。訓練データのノイズまで学んで高い R² を出しているのに、新しいデータではうまく予測できません。</div>
+  <p>この授業では <strong>80:20</strong>（訓練 80%／テスト 20%）で分けます。validation set も使う場合は <strong>70-15-15</strong> や <strong>80-10-10</strong>（訓練-検証-テスト）などがよく使われ、データの大きさで決めます。<strong>データが小さいときは分割しません</strong>（全部を訓練に使います）。</p>
+  <h3>R で分割する</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)                      <span class="cm"># 乱数を固定（再現性のため）</span></span>
+<span class="cl"></span>
+<span class="cl">n &lt;- <span class="kw">dim</span>(bikes)[<span class="nm">1</span>]               <span class="cm"># 行数（731）</span></span>
+<span class="cl"></span>
+<span class="cl">train_indices &lt;- <span class="kw">sample</span>(<span class="nm">1</span>:n, size = <span class="nm">0.8</span> * n)   <span class="cm"># 1〜731 から 80% をランダムに選ぶ</span></span>
+<span class="cl"></span>
+<span class="cl">train_set &lt;- bikes[train_indices, ]    <span class="cm"># 選んだ行 = 訓練データ</span></span>
+<span class="cl">test_set  &lt;- bikes[-train_indices, ]   <span class="cm"># それ以外 = テストデータ</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"Training set size:"</span>, <span class="kw">nrow</span>(train_set), <span class="st">"\n"</span>)</span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"Test set size:"</span>, <span class="kw">nrow</span>(test_set), <span class="st">"\n"</span>)</span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"Training set size (%):"</span>, <span class="kw">nrow</span>(train_set) / n, <span class="st">"\n"</span>)</span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"Test set size (%):"</span>, <span class="kw">nrow</span>(test_set) / n, <span class="st">"\n"</span>)</span>
+</pre><div class="output-reveal">Training set size: 584 
+Test set size: 147 
+Training set size (%): 0.7989056 
+Test set size (%): 0.2010944 </div>
+  <p>731 の 80% は 584.8 で、<code>sample()</code> は切り捨てて 584 行を選びます。そのため訓練 <strong>584 行</strong>・テスト <strong>147 行</strong>（0.7989 ≒ 80%、0.2011 ≒ 20%）と、ぴったり 80:20 にはなりません。</p>
+  <h3>ステップ 2〜4：作る → 予測する → 評価する</h3>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 2) 訓練データでモデルを作る</span></span>
+<span class="cl">temp_model_training &lt;- <span class="kw">lm</span>(data = train_set, rentals ~ temperature)</span>
+<span class="cl"><span class="kw">summary</span>(temp_model_training)$r.squared</span>
+</pre><div class="output-reveal">[1] 0.3946758</div>
+  <p>訓練データでの R² は約 <strong>0.39（約 40%）</strong>。次に、<strong>未知のデータ（テストデータ）</strong>で予測します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 3) テストデータで予測</span></span>
+<span class="cl">predictions &lt;- <span class="kw">predict</span>(temp_model_training, newdata = test_set)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 4) テストデータでの R² を、定義の式から計算</span></span>
+<span class="cl">ss_total    &lt;- <span class="kw">sum</span>((test_set$rentals - <span class="kw">mean</span>(test_set$rentals))^<span class="nm">2</span>)</span>
+<span class="cl">ss_residual &lt;- <span class="kw">sum</span>((test_set$rentals - predictions)^<span class="nm">2</span>)</span>
+<span class="cl">r_squared &lt;- <span class="nm">1</span> - (ss_residual / ss_total)</span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"R-squared:"</span>, r_squared, <span class="st">"\n"</span>)</span>
+</pre><div class="output-reveal">R-squared: 0.3880397 </div>
+  <p>テストデータでの R² は 0.388 で、訓練データ（0.395）とほぼ同じです。<strong>差が小さいので、このモデルは過学習していません</strong>（ノイズに惑わされず、信号をつかめている）。予測値の次元（行数）が実測値と同じであることに気をつけましょう。もっと簡単に、<strong>予測値と実測値の相関を2乗する</strong>方法もあります。</p>
+  <pre class="code-block">
+<span class="cl">r_squared &lt;- <span class="kw">cor</span>(test_set$rentals, predictions)^<span class="nm">2</span></span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"R-squared:"</span>, r_squared, <span class="st">"\n"</span>)</span>
+</pre><div class="output-reveal">R-squared: 0.3921496 </div>
+  <p>0.392 と、式から求めた 0.388 は少し違います。相関の2乗は「予測値が実測値にどれだけ直線的に合うか」を測るので、予測値の平均や傾きのずれまでは罰しないためです。どちらも訓練データと近い値で、結論は同じです。</p>
+  <div class="viz">
+    <div class="viz-title">テストデータ 147 日の予測値と実測値（赤の破線は完全に一致する線）</div>
+    <div style="text-align:center"><svg viewBox="0 0 420 340" width="420" height="340" role="img" aria-label="テストセットの予測値と実測値の散布図" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="419" height="339" fill="#fff" stroke="#cbd5e1"/><line x1="60" y1="290.0" x2="400" y2="290.0" stroke="#e2e8f0"/><text x="54" y="293.5" font-size="10" text-anchor="end" fill="#64748b">0</text><text x="60.0" y="304" font-size="10" text-anchor="middle" fill="#64748b">0</text><line x1="60" y1="230.0" x2="400" y2="230.0" stroke="#e2e8f0"/><text x="54" y="233.5" font-size="10" text-anchor="end" fill="#64748b">2,000</text><text x="135.6" y="304" font-size="10" text-anchor="middle" fill="#64748b">2,000</text><line x1="60" y1="170.0" x2="400" y2="170.0" stroke="#e2e8f0"/><text x="54" y="173.5" font-size="10" text-anchor="end" fill="#64748b">4,000</text><text x="211.1" y="304" font-size="10" text-anchor="middle" fill="#64748b">4,000</text><line x1="60" y1="110.0" x2="400" y2="110.0" stroke="#e2e8f0"/><text x="54" y="113.5" font-size="10" text-anchor="end" fill="#64748b">6,000</text><text x="286.7" y="304" font-size="10" text-anchor="middle" fill="#64748b">6,000</text><line x1="60" y1="50.0" x2="400" y2="50.0" stroke="#e2e8f0"/><text x="54" y="53.5" font-size="10" text-anchor="end" fill="#64748b">8,000</text><text x="362.2" y="304" font-size="10" text-anchor="middle" fill="#64748b">8,000</text><line x1="60.0" y1="290.0" x2="400.0" y2="20.0" stroke="#dc2626" stroke-dasharray="5 4"/><circle cx="145.2" cy="250.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="150.7" cy="255.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="147.7" cy="247.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="131.7" cy="260.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="131.9" cy="247.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="161.9" cy="274.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="175.3" cy="238.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="174.0" cy="235.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="207.1" cy="240.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="172.9" cy="231.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="203.4" cy="227.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="181.4" cy="233.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="186.5" cy="230.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="186.7" cy="228.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="211.1" cy="207.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="225.4" cy="196.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="214.9" cy="227.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="183.0" cy="217.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="174.5" cy="239.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="250.5" cy="196.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="210.8" cy="236.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="205.0" cy="205.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="191.3" cy="245.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="232.9" cy="229.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="222.3" cy="168.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="261.5" cy="168.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="225.4" cy="130.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="258.2" cy="150.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="272.1" cy="155.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="274.0" cy="146.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="300.7" cy="170.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="298.0" cy="170.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="262.1" cy="130.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="265.9" cy="129.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="276.7" cy="153.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="309.0" cy="172.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="258.2" cy="143.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="265.9" cy="169.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="277.3" cy="144.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="289.1" cy="146.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="277.7" cy="148.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="286.2" cy="150.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="277.3" cy="137.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="272.9" cy="123.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="301.2" cy="153.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="319.2" cy="191.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="292.8" cy="174.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="308.0" cy="155.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="276.2" cy="175.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="273.5" cy="159.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="282.3" cy="148.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="275.4" cy="136.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="267.9" cy="148.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="274.4" cy="155.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="242.2" cy="208.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="270.4" cy="138.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="275.4" cy="146.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="247.6" cy="180.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="264.2" cy="146.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="258.8" cy="127.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="196.5" cy="202.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="241.8" cy="145.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="249.9" cy="136.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="242.6" cy="217.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="223.1" cy="164.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="225.2" cy="149.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="209.4" cy="163.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="207.3" cy="166.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="202.3" cy="202.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="217.5" cy="178.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="189.7" cy="180.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="219.2" cy="207.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="182.2" cy="181.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="222.9" cy="212.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="209.8" cy="268.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="178.0" cy="184.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="201.1" cy="182.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="169.5" cy="217.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="185.3" cy="200.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="209.8" cy="215.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="199.8" cy="221.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="152.5" cy="215.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="149.2" cy="220.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="161.9" cy="195.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="162.1" cy="217.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="204.8" cy="154.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="207.1" cy="177.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="173.5" cy="205.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="187.2" cy="172.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="194.4" cy="164.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="186.6" cy="199.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="194.0" cy="160.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="179.4" cy="176.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="193.5" cy="235.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="197.8" cy="142.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="242.6" cy="96.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="216.7" cy="84.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="218.9" cy="112.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="259.2" cy="89.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="206.5" cy="259.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="210.6" cy="121.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="226.4" cy="104.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="241.6" cy="101.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="233.7" cy="92.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="266.3" cy="67.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="255.5" cy="68.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="256.7" cy="159.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="279.6" cy="92.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="285.2" cy="108.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="277.1" cy="69.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="255.3" cy="80.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="308.4" cy="112.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="281.4" cy="69.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="298.2" cy="119.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="302.2" cy="90.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="313.8" cy="102.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="299.5" cy="92.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="288.1" cy="44.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="285.4" cy="73.5" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="298.5" cy="74.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="286.8" cy="61.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="276.7" cy="54.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="289.1" cy="78.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="288.5" cy="84.1" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="269.6" cy="38.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="239.5" cy="52.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="244.7" cy="63.9" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="269.6" cy="68.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="261.9" cy="67.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="242.8" cy="33.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="238.9" cy="83.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="237.4" cy="86.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="218.9" cy="98.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="237.8" cy="64.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="228.3" cy="47.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="244.7" cy="69.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="243.6" cy="66.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="187.8" cy="126.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="200.9" cy="121.0" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="177.0" cy="221.7" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="181.6" cy="132.2" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="177.6" cy="130.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="198.0" cy="176.4" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="210.0" cy="123.3" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="180.2" cy="259.6" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="170.8" cy="249.8" r="3" fill="#2563eb" fill-opacity=".6"/><circle cx="161.4" cy="208.1" r="3" fill="#2563eb" fill-opacity=".6"/><text x="230.0" y="324" font-size="11" text-anchor="middle" fill="#334155">予測値（predictions）</text><text x="14" y="155.0" font-size="11" text-anchor="middle" fill="#334155" transform="rotate(-90 14 155.0)">実測値（rentals）</text></svg></div>
+    <div class="viz-cap">完璧なモデルなら全部の点が破線の上（相関 r = 1）に乗ります。予測値と実測値の相関は r = 0.626（r² = 0.392）で、まずまずの関係です。</div>
+  </div>
+  <p>R² を計算する関数は <code>yardstick</code> など別のパッケージにもあります（<code>rsq()</code>）。ここでは入門として、チューニングや交差検証（cross validation）などの手順は省いています。</p>
+  <h3>データクリーニングは、分割の「前」か「後」か</h3>
+  <p>これは<strong>とても大切</strong>な点です。</p>
+  <ul>
+    <li><strong>分割の前にやってよい</strong>こと：列名の修正、重複行の削除、明らかな入力ミスの修正（訓練データでもテストデータでも同じになる作業）。</li>
+    <li><strong>分割の後にやる</strong>こと：それ以外の多くの処理。<strong>訓練データでやった処理は、テストデータにも同じようにやります</strong>。手順は<strong>コメント付きでわかりやすく</strong>書き、<strong>自動化</strong>できればさらに良いです。</li>
+  </ul>
+  <div class="warn-box">⚠️ <strong>データ漏洩（data leakage）</strong>：分割の前にクリーニングをすると、テストデータの情報が訓練データに影響してしまいます。たとえば欠損値（NA）を<strong>データ全体の中央値</strong>で埋めると、テストデータの値が中央値に混ざり、その中央値が訓練データ、ひいてはモデルに影響します。すると<strong>性能が実際より良く見える</strong>ことになります。訓練データとテストデータの間には、きちんと線を引きましょう。欠損値の補完（imputing NAs）などは、分割の<strong>後</strong>に行います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>モデルの「本当の実力」は、見せたことのないデータで測ります。練習問題（訓練データ）で満点でも、本番（テストデータ）で点が取れなければ、丸暗記しただけ。これが過学習です。</p></div>
+  <div class="practice-card" id="p-r5s-u5">
+    <div class="ptitle">💻 ミニ練習：テストデータの R² を求める</div>
+    <p class="ptask"><code>predictions</code>（テストデータへの予測値）と <code>test_set</code> がすでにあるとします。<strong>予測値と実測値（<code>rentals</code>）の相関を 2 乗する</strong>方法で、テストデータの R² を求める R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-r5s-u5-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-r5s-u5', ['cor', 'test_set', 'rentals', 'predictions'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-r5s-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-r5s-u5-result"></div>
+    <div class="answer-reveal" id="p-r5s-u5-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(test_set$rentals, predictions)^<span class="nm">2</span></span>
+</pre>
+      <p class="answer-note">結果は 0.3921496（約 0.39）。訓練データの R²（0.3947）とほぼ同じなので、過学習は見られません。</p>
+    </div>
+  </div>
+</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">A project has 10 candidate predictors. How many unique models must all subset regression assess?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>10 × 10 = 100 models</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>2^10 = 1,024 models</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>10! = 3,628,800 models</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>10 + 10 = 20 models</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">By default, which quantity does step() try to minimise?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>R-squared on the training data</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The largest p-value in the model</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The residual standard error</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>AIC</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you make step() use BIC instead of AIC in forward selection?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Set k = 0; it ignores the number of predictors entirely</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Set direction = "bic"; it rewards extra predictors more</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Set k = log(n); it penalises complexity more heavily</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Set scope = BIC; it only works with the null model</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why can forward and backward selection leave redundant predictors in the final model?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>They compare candidate models only on unseen test data</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They ignore multicollinearity; check VIF afterwards</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They always keep every level of a categorical variable</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They cannot add more than five predictors in total</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In the bikes data, lm(rentals ~ . - month4) fails with an error. Why?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A minus sign is not allowed inside any lm formula that uses a dot</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Terms can only be dropped after step() has been run on the model</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The month 4 term has the lowest p-value, so R refuses to remove it</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>month4 is only a level of the factor month, not a column</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Two models have almost the same AIC: one has 3 predictors, the other has 20. Which is preferred?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The 3-predictor model, by Occam's razor (parsimony)</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The 20-predictor model, because it has more information</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Neither, because AIC cannot compare different models</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The 20-predictor model, because it uses all the data</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A model gets R-squared 0.95 on the training set but only 0.40 on the test set. What does this indicate?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Overfitting: noise was learned as if it were signal</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Underfitting: the model is too simple to learn anything</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A good fit: the test set is always lower than training</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Data leakage from the test set into the training set</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Missing values will be filled with the median. Why should this be done after the train/test split?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Missing values cannot be detected before the data is split</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>R refuses to split a data set that contains missing values</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A full-data median leaks test information into training</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Imputing afterwards guarantees the highest possible R-squared</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 2, 1, 3, 0, 0, 2];
+var FEEDBACKS=["Each predictor is either in or out, so 10 predictors give 2^10 = 1,024 models, and 20 predictors give over one million. That is why all subset regression is not feasible for large data sets.", "step() minimises AIC by default. AIC balances goodness of fit against model complexity and is only meaningful when comparing models fitted to the same data.", "BIC is obtained by setting k = log(number of rows). It penalises complexity more heavily than AIC, so it tends to keep fewer predictors (12 instead of 13 here), although the printed header still says AIC.", "Forward and backward selection do not account for multicollinearity, so a variable similar to one already in the model can still be added. Check the VIF of the final model and aim for a more parsimonious one.", "month is one factor column with 12 levels; month4 is just the name R gives to one dummy variable in the coefficient table. To drop months one at a time you would one-hot encode month (11 columns, not 12).", "Occam's razor: all else being equal, prefer the simpler model. A 3-predictor model is cheaper to collect and store, easier to interpret, and is more likely to generalise without overfitting.", "Training R-squared far above test R-squared means overfitting: the model memorised noise in the training data. In this lesson the temperature model gave about 0.39 (training) and 0.39 (test), so no overfitting.", "Imputing with the median of the entire data set lets test-set values influence the training data and the model (data leakage), giving over-optimistic performance. Do the cleaning on the training set, then repeat the same steps on the test set."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">variable selection</div><div class="term-en">変数選択</div><div class="term-def">モデルに入れる最良の説明変数を選ぶ作業。「最良」は指標次第。</div></div>
+    <div class="term-item"><div class="term-name">all subset regression</div><div class="term-en">全部分集合回帰</div><div class="term-def">変数の全組み合わせ（2ᵏ 通り）を試す方法。大きなデータには不向き。</div></div>
+    <div class="term-item"><div class="term-name">forward selection</div><div class="term-en">前進選択</div><div class="term-def">変数を 1 つずつ足していく。<code>direction = "forward"</code>。</div></div>
+    <div class="term-item"><div class="term-name">backward selection</div><div class="term-en">後退選択</div><div class="term-def">全部入りから p値の大きい変数を 1 つずつ外す。<code>direction = "backward"</code>。</div></div>
+    <div class="term-item"><div class="term-name">stepwise selection</div><div class="term-en">ステップワイズ選択</div><div class="term-def">足す・外すを同時に行う（mixed）。<code>direction = "both"</code>。</div></div>
+    <div class="term-item"><div class="term-name">hierarchical regression</div><div class="term-en">階層的回帰</div><div class="term-def">理論に沿って変数を段階的に入れる方法。ドメイン知識が必要。</div></div>
+    <div class="term-item"><div class="term-name">AIC / BIC</div><div class="term-en">赤池／ベイズ情報量規準</div><div class="term-def">当てはまりと複雑さのバランス。小さいほど良く、BIC のほうがペナルティが重い。</div></div>
+    <div class="term-item"><div class="term-name">null model</div><div class="term-en">空のモデル</div><div class="term-def"><code>rentals ~ 1</code>。説明変数なしで平均を当てるだけ。</div></div>
+    <div class="term-item"><div class="term-name">parsimonious model</div><div class="term-en">倹約モデル</div><div class="term-def">できるだけ少ない変数で信号をとらえるモデル。オッカムの剃刀。</div></div>
+    <div class="term-item"><div class="term-name">overfitting</div><div class="term-en">過学習</div><div class="term-def">手元のデータ（ノイズ）を丸暗記し、新しいデータで性能が落ちること。</div></div>
+    <div class="term-item"><div class="term-name">training / test set</div><div class="term-en">訓練／テストデータ</div><div class="term-def">訓練でモデルを作り、テストで未知データへの性能を測る（80:20 など）。</div></div>
+    <div class="term-item"><div class="term-name">data leakage</div><div class="term-en">データ漏洩</div><div class="term-def">テストデータの情報が訓練に影響してしまうこと。性能が甘く見える。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>前進は＋、後退は−、ステップワイズは両方。<code>step()</code> は既定で AIC を最小化し、<code>k = log(n)</code> で BIC になります。選んだあとは VIF を確認し、最後は<strong>テストデータで</strong>性能を測りましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：650 M5 変数選択とモデル評価</p>
+  <p style="margin-top:.5rem;"><a href="r5_special.html">← 前へ</a> · <a href="r6_logit_intro.html">ロジスティック回帰へ →</a> · <a href="r5_selection_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

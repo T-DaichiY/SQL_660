@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 NumPy② ufuncと集計</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · NumPy — Ufuncs & Aggregates</div>
+  <h1>⚡ NumPy②：まとめて計算・集計</h1>
+  <p>ベクトル化（ループなしの計算）、ufunc、sum・mean・axis、nanの扱いを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ベクトル化</a><a href="#unit2">② ufunc</a><a href="#unit3">③ 集計</a><a href="#unit4">④ nan</a><a href="#quiz">📝 Quiz</a><a href="np_ufuncs_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 2.03 Computation on NumPy Arrays: Universal Functions</li><li>Handbook 2.04 Aggregations: Min, Max, and Everything in Between</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>配列まるごと計算する（ベクトル化）</h2><div class="unit-sub">forループを書かない</div></div>
+  </div>
+<p>NumPyでは、配列に対して<code>+</code>や<code>*</code>を書くと、<strong>全要素にまとめて</strong>計算されます。これを<strong>ベクトル化</strong>と呼びます。</p><pre class="code-block">
+<span class="cl">values = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">5</span>])</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># ループで書くと</span></span>
+<span class="cl">out = []</span>
+<span class="cl"><span class="kw">for</span> v <span class="kw">in</span> values:</span>
+<span class="cl">    out.append(<span class="nm">1.0</span> / v)</span>
+<span class="cl"><span class="kw">print</span>(out)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># ベクトル化すると</span></span>
+<span class="cl"><span class="nm">1.0</span> / values</span>
+</pre><div class="output-reveal">[1.0, 0.5, 0.2]
+array([1. , 0.5, 0.2])</div><p>結果は同じですが、2つ目のほうが短く、データが大きいほど<strong>はるかに速く</strong>なります。計算の中身が、Pythonではなく速いC言語のコードで行われるからです。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>1人ずつ手でハンコを押すのがforループ。ハンコの列をまとめて押せる大きなスタンプがNumPy。</p></div><div class="practice-card" id="p-n2-u1">
+    <div class="ptitle">💻 ミニ練習：まとめて計算</div>
+    <p class="ptask">配列 <code>a = np.array([1, 2, 3, 4])</code> の全要素を2乗した配列を、ループを使わずに作ってください。</p>
+    <textarea class="code-editor" id="p-n2-u1-input" rows="7">a = np.array([1, 2, 3, 4])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n2-u1", ["a ** 2"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n2-u1-result"></div>
+    <div class="answer-reveal" id="p-n2-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">a ** <span class="nm">2</span></span>
+</pre>
+      <p class="answer-note"><code>**</code>は累乗。配列全体に一度に作用します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ユニバーサル関数（ufunc）</h2><div class="unit-sub">演算子の正体と、よく使う関数</div></div>
+  </div>
+<p>配列にかけられる速い関数を<strong>ufunc</strong>（ユニバーサル関数）と呼びます。実は<code>+</code>などの演算子も、ufuncの別名です。</p><table class="compare-table"><thead><tr><th>演算子</th><th>ufunc</th></tr></thead><tbody><tr><td><code>a + b</code></td><td><code>np.add</code></td></tr><tr><td><code>a - b</code></td><td><code>np.subtract</code></td></tr><tr><td><code>a * b</code></td><td><code>np.multiply</code></td></tr><tr><td><code>a / b</code></td><td><code>np.divide</code></td></tr><tr><td><code>a // b</code></td><td><code>np.floor_divide</code></td></tr><tr><td><code>a ** b</code></td><td><code>np.power</code></td></tr><tr><td><code>a % b</code></td><td><code>np.mod</code></td></tr></tbody></table><pre class="code-block">
+<span class="cl">x = np.arange(<span class="nm">4</span>)</span>
+<span class="cl"><span class="kw">print</span>(x + <span class="nm">5</span>)</span>
+<span class="cl"><span class="kw">print</span>(x * <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">print</span>(x ** <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">print</span>(-x)</span>
+<span class="cl">x // <span class="nm">2</span></span>
+</pre><div class="output-reveal">[5 6 7 8]
+[0 2 4 6]
+[0 1 4 9]
+[ 0 -1 -2 -3]
+array([0, 0, 1, 1])</div><p>数学の関数も、そのまま配列に使えます。</p><pre class="code-block">
+<span class="cl">t = np.array([-<span class="nm">2</span>, -<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>])</span>
+<span class="cl"><span class="kw">print</span>(np.abs(t))</span>
+<span class="cl"><span class="kw">print</span>(np.exp([<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>]))</span>
+<span class="cl">np.log([<span class="nm">1</span>, <span class="nm">10</span>, <span class="nm">100</span>])</span>
+</pre><div class="output-reveal">[2 1 0 1 2]
+[1.         2.71828183 7.3890561 ]
+array([0.        , 2.30258509, 4.60517019])</div><pre class="code-block">
+<span class="cl">np.log10([<span class="nm">1</span>, <span class="nm">10</span>, <span class="nm">100</span>, <span class="nm">1000</span>])</span>
+</pre><div class="output-reveal">array([0., 1., 2., 3.])</div><div class="warn-box">⚠️ <code>np.log</code>は<strong>自然対数</strong>（底がe）です。10を底にしたいときは<code>np.log10</code>、2なら<code>np.log2</code>です。</div><div class="practice-card" id="p-n2-u2">
+    <div class="ptitle">💻 ミニ練習：ufunc</div>
+    <p class="ptask">配列 <code>t = np.array([-3, 4, -5])</code> の絶対値を、<code>np.abs</code>で求めてください。</p>
+    <textarea class="code-editor" id="p-n2-u2-input" rows="7">t = np.array([-3, 4, -5])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n2-u2", ["np.abs"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n2-u2-result"></div>
+    <div class="answer-reveal" id="p-n2-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">np.abs(t)</span>
+</pre>
+      <p class="answer-note"><code>np.abs</code>は各要素の絶対値を返します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>集計：合計・最小・最大・平均</h2><div class="unit-sub">sum / min / max / mean / std</div></div>
+  </div>
+<p>配列を1つの数にまとめる関数が<strong>集計（aggregate）</strong>です。</p><pre class="code-block">
+<span class="cl">d = np.array([<span class="nm">4</span>, <span class="nm">8</span>, <span class="nm">15</span>, <span class="nm">16</span>, <span class="nm">23</span>, <span class="nm">42</span>])</span>
+<span class="cl"><span class="kw">print</span>(d.sum())</span>
+<span class="cl"><span class="kw">print</span>(d.min(), d.max())</span>
+<span class="cl"><span class="kw">print</span>(d.mean())</span>
+<span class="cl"><span class="kw">print</span>(d.std())</span>
+<span class="cl">d.argmax()   <span class="cm"># 最大値の「位置」</span></span>
+</pre><div class="output-reveal">108
+4 42
+18.0
+12.315302134607444
+5</div><p><code>np.sum(d)</code>と<code>d.sum()</code>は同じ意味です。Pythonの組み込み<code>sum()</code>より、NumPyの<code>sum</code>のほうが速いので、配列にはこちらを使います。</p><p>2次元の配列では、<strong>axis</strong>で「どの方向に集計するか」を指定します。</p><pre class="code-block">
+<span class="cl">m = np.array([[<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>],</span>
+<span class="cl">              [<span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>]])</span>
+<span class="cl"><span class="kw">print</span>(m.sum())          <span class="cm"># 全体</span></span>
+<span class="cl"><span class="kw">print</span>(m.sum(axis=<span class="nm">0</span>))    <span class="cm"># 列ごと（縦方向に潰す）</span></span>
+<span class="cl">m.sum(axis=<span class="nm">1</span>)           <span class="cm"># 行ごと（横方向に潰す）</span></span>
+</pre><div class="output-reveal">21
+[5 7 9]
+array([ 6, 15])</div><div class="teal-box">📌 <strong>axisの覚え方：</strong><code>axis=0</code>は「0番目の軸（行方向）を<strong>潰す</strong>」ので、結果は<strong>列ごと</strong>の値になります。<code>axis=1</code>は列方向を潰すので、<strong>行ごと</strong>の値です。</div><div class="practice-card" id="p-n2-u3">
+    <div class="ptitle">💻 ミニ練習：列ごとの平均</div>
+    <p class="ptask">上の2次元配列 <code>m</code> の<strong>列ごとの平均</strong>を求めてください。</p>
+    <textarea class="code-editor" id="p-n2-u3-input" rows="7">m = np.array([[1, 2, 3], [4, 5, 6]])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n2-u3", ["m.mean(axis=0)"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n2-u3-result"></div>
+    <div class="answer-reveal" id="p-n2-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">m.mean(axis=<span class="nm">0</span>)</span>
+</pre>
+      <p class="answer-note">列ごと＝行方向を潰す＝<code>axis=0</code>。結果は[2.5, 3.5, 4.5]です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>欠損値（NaN）に注意</h2><div class="unit-sub">nan付きの関数</div></div>
+  </div>
+<p>データに欠損値（<code>np.nan</code>）が混ざると、普通の<code>sum</code>や<code>mean</code>は<code>nan</code>になってしまいます。</p><pre class="code-block">
+<span class="cl">e = np.array([<span class="nm">1.0</span>, <span class="nm">2.0</span>, np.nan, <span class="nm">4.0</span>])</span>
+<span class="cl"><span class="kw">print</span>(e.sum())</span>
+<span class="cl"><span class="kw">print</span>(np.nansum(e))</span>
+<span class="cl">np.nanmean(e)</span>
+</pre><div class="output-reveal">nan
+7.0
+2.3333333333333335</div><p><code>nan</code>を<strong>無視して</strong>計算したいときは、<code>nansum</code>・<code>nanmean</code>・<code>nanmax</code>のように頭に<code>nan</code>が付く関数を使います。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>nanは「分からない」。分からない数が混ざった足し算の答えも「分からない」になります。無視してよいなら<code>nan</code>付きの関数を。</p></div><div class="practice-card" id="p-n2-u4">
+    <div class="ptitle">💻 ミニ練習：nanを無視</div>
+    <p class="ptask">配列 <code>e = np.array([2.0, np.nan, 4.0])</code> の平均を、nanを無視して求めてください。</p>
+    <textarea class="code-editor" id="p-n2-u4-input" rows="7">e = np.array([2.0, np.nan, 4.0])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n2-u4", ["np.nanmean"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n2-u4-result"></div>
+    <div class="answer-reveal" id="p-n2-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">np.nanmean(e)</span>
+</pre>
+      <p class="answer-note">結果は3.0です。通常の<code>np.mean</code>だと<code>nan</code>になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does vectorization mean in NumPy?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Writing one separate function for each element of the array</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Applying an operation to a whole array without a loop</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Converting every list in the program into a long string</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sorting an array into order before any computing is done</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which ufunc does the operator + call?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>np.plus</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>np.sum</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>np.add</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>np.append</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does np.log(100) compute?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The natural logarithm of 100</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The logarithm of 100 to base 10</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The logarithm of 100 to base 2</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>100 raised to the power e</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">m has shape (2, 3). What is the shape of m.sum(axis=0)?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>(2,)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>(2, 3)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>(1, 1)</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>(3,)</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why does np.array([1.0, np.nan, 3.0]).sum() return nan?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>sum cannot handle floats</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Any operation with nan gives nan</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>nan is replaced by zero first</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The array must be sorted first</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which call gives the position of the largest value?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>a.argmax()</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>a.max() followed by a.find()</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>a.sort()[-1] on the original array</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>a.index(a.max()) as for a list</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 2, 0, 3, 1, 0];
+var FEEDBACKS=["Operations apply to every element at once, and the loop runs in fast compiled code.", "a + b is shorthand for np.add(a, b). Likewise * is np.multiply.", "np.log is the natural log. Use np.log10 or np.log2 for the other bases.", "axis=0 collapses the rows, leaving one value per column: 3 values.", "nan propagates through arithmetic. Use np.nansum to ignore it.", "argmax returns the index of the maximum, while max returns the value itself."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">ufunc</div><div class="term-en">ユニバーサル関数</div><div class="term-def">配列の全要素に速く作用する関数。+や*も実体はufunc。</div></div>
+    <div class="term-item"><div class="term-name">vectorization</div><div class="term-en">ベクトル化</div><div class="term-def">forループを書かず、配列まるごとに計算すること。</div></div>
+    <div class="term-item"><div class="term-name">aggregate</div><div class="term-en">集計</div><div class="term-def">sum・min・max・mean・stdなど、配列を1つの値にまとめる関数。</div></div>
+    <div class="term-item"><div class="term-name">axis</div><div class="term-en">軸</div><div class="term-def">集計する方向。axis=0は行方向を潰して列ごとの結果、axis=1は行ごと。</div></div>
+    <div class="term-item"><div class="term-name">nan</div><div class="term-en">欠損値</div><div class="term-def">数値ではない値。普通の集計に混ざると結果もnanになる。nansum等で無視できる。</div></div>
+    <div class="term-item"><div class="term-name">argmax</div><div class="term-en">最大値の位置</div><div class="term-def">最大値そのものではなく、そのインデックスを返す。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>axisで迷ったら、「どの軸を潰すか」を考えます。出力の形（shape）を必ず確認しましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：NumPy② ufuncと集計</p>
+  <p style="margin-top:.5rem;"><a href="np_arrays.html">← ① 配列</a> · <a href="np_broadcast.html">③ ブロードキャスト →</a> · <a href="np_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 ANOVA②　RでのANOVAと計算</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 🔢 ANOVA② 計算とR <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · ANOVA ② — ANOVA in R &amp; the Calculation</div>
+  <h1>🧮 ANOVA②：RでのANOVAと計算</h1>
+  <p>3つの減量プランの比較データを R に入力し、<code>aov()</code> と <code>summary()</code> で<strong>分散分析表を読み</strong>、<code>pf()</code> で<strong>p値を求めて F分布に描き</strong>、最後に <strong>SST・SSB・SSW・MS・F を手計算</strong>で出す方法を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: ANOVA 4 (ANOVA with R) ／ ANOVA 5 (Using R: p-value and plotting F distribution) ／ ANOVA 6 (ANOVA Math)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① データ入力</a><a href="#unit2">② aov と ANOVA表</a><a href="#unit3">③ p値と F分布</a><a href="#unit4">④ 手計算</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+  <div class="teal-box">📖 <strong>講義動画との対応</strong><ul style='margin:.4rem 0 0 1.2rem'><li>① Rにデータを入れる：ANOVA 4 (ANOVA with R)</li><li>② aov() と ANOVA表の読み方：ANOVA 4 (ANOVA with R)</li><li>③ pf() でp値・F分布を描く・臨界値：ANOVA 5 (Using R: p-value and plotting F distribution)</li><li>④ 5ステップの計算：ANOVA 6 (ANOVA Math)</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>Rにデータを入れる：group と weight_loss</h2><div class="unit-sub">減量プランの例・factor（因子）</div></div>
+  </div>
+  <p>前の講義（ANOVA 3）では、スプレッドシートで ANOVA を<strong>手計算</strong>しました。題材は<strong>減量プランの比較</strong>です。3か月後の<strong>減量（pounds）</strong>を、<strong>Plan 1（4人）・Plan 2（3人）・Plan 3（3人）</strong>の計10人で調べました。今回はそのデータを <strong>R</strong> に入れて、同じ答えが一瞬で出ることを確かめます。</p>
+  <p>Rでは、データを<strong>「どの群か」</strong>（<code>group</code>）と<strong>「測定値」</strong>（<code>weight_loss</code>）の2本のベクトルで表します。<strong>先頭から同じ順番</strong>に並べるのが約束です（最初の4個が Plan 1 の人、次の3個が Plan 2、最後の3個が Plan 3）。</p>
+<pre class="code-block">
+<span class="cl"><span class="cm"># 群の番号（Plan 1 が4人、Plan 2 が3人、Plan 3 が3人）</span></span>
+<span class="cl">group &lt;- <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">3</span>)</span>
+<span class="cl">group</span>
+</pre><div class="output-reveal"> [1] 1 1 1 1 2 2 2 3 3 3</div>
+  <p>見た目は数字ですが、この <code>1, 2, 3</code> は<strong>平均を取りたい数量ではなく、ただの名前（ラベル）</strong>です。そこで <code>as.factor()</code> を使い、<strong>因子（factor）</strong>＝カテゴリ変数に変えます。</p>
+<pre class="code-block">
+<span class="cl">group &lt;- <span class="kw">as.factor</span>(group)</span>
+<span class="cl">group</span>
+</pre><div class="output-reveal"> [1] 1 1 1 1 2 2 2 3 3 3
+Levels: 1 2 3</div>
+  <p>出力に <code>Levels: 1 2 3</code> が付きました。これは「この変数は <strong>3つの水準（level）を持つ名義変数（nominal variable）</strong>」という意味です。量的変数（quantitative）でも間隔尺度でもありません。</p>
+  <p>続いて、減量の値を<strong>同じ順番</strong>で入力します（<code>c()</code> は combine／concatenate＝まとめる関数）。</p>
+<pre class="code-block">
+<span class="cl">weight_loss &lt;- <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">7</span>,   <span class="cm"> # Plan 1</span></span>
+<span class="cl">               <span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">7</span>,    <span class="cm"> # Plan 2</span></span>
+<span class="cl">               <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">18</span>)  <span class="cm"> # Plan 3</span></span>
+<span class="cl">weight_loss</span>
+</pre><div class="output-reveal"> [1]  7  9  5  7  9 11  7 15 12 18</div>
+  <table class="compare-table">
+    <tr><th>オブジェクト</th><th>型</th><th>中身</th></tr>
+    <tr><td><code>group</code></td><td>factor（因子）</td><td>Plan 1, 2, 3 のラベル（10個）</td></tr>
+    <tr><td><code>weight_loss</code></td><td>numeric（数値）</td><td>各人の減量 (lb)（10個）</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>factor にし忘れると結果が変わります。</strong>数値のまま <code>aov()</code> に渡すと、R は <code>1, 2, 3</code> を「量」として扱い、群の自由度が 2 ではなく <strong>1</strong> になってしまいます（直線回帰になるため）。<pre class='code-block'><span class="cl">grp_n &lt;- <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">3</span>)  <span class="cm"> # as.factor() していない</span></span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">aov</span>(weight_loss ~ grp_n))</span></pre><div class='output-reveal'>            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+grp_n        1 105.65  105.65   19.96 0.00209 **
+Residuals    8  42.35    5.29                   </div>Df が 1 と 8 になっており、講義の 2 と 7 とは別物です。</div>
+
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>group</code> は<strong>名前札</strong>、<code>weight_loss</code> は<strong>はかった数</strong>。1・2・3 は足したり平均したりする数ではないので、<code>as.factor()</code> で「これは名前だよ」と R に教えます。</p></div>
+
+  <div class="practice-card" id="p-a2-u1">
+    <div class="ptitle">💻 ミニ練習：データを入力する</div>
+    <p class="ptask">減量データ（Plan 1: 7, 9, 5, 7／Plan 2: 9, 11, 7／Plan 3: 15, 12, 18）を R に入力してください。群を表す <code>group</code>（<code>as.factor()</code> で因子にする）と、測定値 <code>weight_loss</code> を作ります。</p>
+    <textarea class="code-editor" id="p-a2-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-a2-u1', ['c', 'as.factor', 'group', 'weight_loss'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-a2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-a2-u1-result"></div>
+    <div class="answer-reveal" id="p-a2-u1-answer" hidden>
+      <pre class="code-block"><span class="cl">group &lt;- <span class="kw">as.factor</span>(c(<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">3</span>))</span>
+<span class="cl">weight_loss &lt;- <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">7</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">18</span>)</span></pre>
+      <p class="answer-note"><code>group</code> と <code>weight_loss</code> は<strong>同じ順番・同じ長さ</strong>（10個）にそろえます。群は <code>as.factor()</code> で因子に。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>aov() と ANOVA表の読み方</h2><div class="unit-sub">aov／summary／anova(lm)</div></div>
+  </div>
+  <p>R で ANOVA をする方法は主に2つあります。まず1つ目、<code>aov()</code> です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">aov</span>(weight_loss ~ group)</span>
+</pre><div class="output-reveal">Call:
+   aov(formula = weight_loss ~ group)
+
+Terms:
+                group Residuals
+Sum of Squares    114        34
+Deg. of Freedom     2         7
+
+Residual standard error: 2.203893
+Estimated effects may be unbalanced</div>
+  <p><strong>モデル式（formula）</strong>の読み方：<code>~</code>（チルダ。多くのキーボードで 1 の左隣、Shift を押して入力）の<strong>左が応答変数（response）</strong>＝予測したいもの（減量）、<strong>右がモデル（説明変数）</strong>＝予測に使うもの（群）です。「<em>group は weight_loss を説明するよいモデルか？</em>」を調べる ANOVA です。<code>aov</code> は R に最初から入っている組み込み関数で、パッケージの読み込みは不要です。</p>
+  <p>このままでも、平方和（Sum of Squares）と自由度（Deg. of Freedom）が読み取れます。</p>
+  <ul>
+    <li>群の平方和 <strong>114</strong>、残差（Residuals＝誤差）の平方和 <strong>34</strong>。合計 114 + 34 = <strong>148</strong> は、全員を全体平均と比べた<strong>全体のばらつき（SST）</strong>です。</li>
+    <li>自由度は群が <strong>2</strong>（群の数 3 − 1）、残差が <strong>7</strong>。合計 2 + 7 = <strong>9</strong> で、人数 10 − 1 = 9 と一致します。</li>
+  </ul>
+  <div class="viz"><div class="viz-title">全体のばらつき 148 の内訳</div><svg viewBox="0 0 440 90" width="100%" style="max-width:480px" role="img" aria-label="全体のばらつき SST=148 が SSB=114 と SSW=34 に分かれる棒">
+<rect x="20" y="10" width="400" height="22" fill="#cbd5e1"/><text x="220" y="26" text-anchor="middle" font-size="12" fill="#1e293b">SST = 148（全体）</text>
+<rect x="20" y="44" width="308.1" height="26" fill="#2563eb"/><text x="174" y="62" text-anchor="middle" font-size="12" fill="#fff">SSB = 114（群間：説明できる）</text>
+<rect x="328.1" y="44" width="91.9" height="26" fill="#f59e0b"/><text x="374" y="62" text-anchor="middle" font-size="12" fill="#1e293b">SSW = 34</text>
+<text x="220" y="86" text-anchor="middle" font-size="11" fill="#64748b">長さは値に比例（148 = 114 + 34）</text>
+</svg><div class="viz-cap">群の違いで説明できる分（SSB）が大部分を占めています。</div></div>
+  <p>実際にはもっと情報の多い <code>summary()</code> を使うのが普通です。<strong>これが一元配置分散分析表（one-way ANOVA table）で、読めることが試験でも問われます。</strong></p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(<span class="kw">aov</span>(weight_loss ~ group))</span>
+</pre><div class="output-reveal">            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+group        2    114   57.00   11.73 0.00581 **
+Residuals    7     34    4.86                   
+---
+Signif. codes:  0 &#x27;***&#x27; 0.001 &#x27;**&#x27; 0.01 &#x27;*&#x27; 0.05 &#x27;.&#x27; 0.1 &#x27; &#x27; 1</div>
+  <table class="compare-table">
+    <tr><th>列</th><th>意味</th><th>この例での計算</th></tr>
+    <tr><td>Df</td><td>自由度 degrees of freedom</td><td>群 = 3 − 1 = 2、残差 = 10 − 3 = 7</td></tr>
+    <tr><td>Sum Sq</td><td>平方和 sum of squares</td><td>114、34</td></tr>
+    <tr><td>Mean Sq</td><td>平均平方 mean square ＝ Sum Sq ÷ Df</td><td>114 ÷ 2 = <strong>57</strong>、34 ÷ 7 = <strong>4.86</strong></td></tr>
+    <tr><td>F value</td><td>F比 ＝ 群の Mean Sq ÷ 残差の Mean Sq</td><td>57 ÷ 4.86 ≈ <strong>11.73</strong></td></tr>
+    <tr><td>Pr(&gt;F)</td><td>p値</td><td>0.00581</td></tr>
+  </table>
+  <p>「F比（ratio）」と呼ぶのは、<strong>群の平均平方（モデルが説明できる分）÷ 残差の平均平方（説明できない分）</strong>という割り算だからです。試験では、表の一部の数字だけを与えて<strong>空欄の数字を計算させる</strong>問題が出ます。Sum Sq と Df から Mean Sq、Mean Sq から F、と自分で埋められるようにしておきましょう。</p>
+  <p><strong>星印（Signif. codes）</strong>：p値の右の記号は、どの有意水準で有意かを示します。ここは <code>**</code>（p = 0.0058 は 0.01 より小さい）なので、有意水準 α = 0.05 でも 0.01 でも有意です。<code>***</code>（0.001）は付いていないので、α = 0.001 では有意とは言えません。</p>
+  <div class="warn-box">⚠️ <strong>F値の丸め</strong>：同じ F が <code>11.73</code>（summary）や <code>11.735</code>（anova）と表示されるのは、<strong>表示桁数が違うだけ</strong>です。真の値は 11.7353…。</div>
+
+  <p>2つ目の方法は、<strong>線形回帰</strong>（<code>lm()</code>）を経由するやり方です。ANOVA と線形回帰は実は同じ仲間（後の M6 で扱います）。<code>lm()</code> だけだと係数が出るだけであまり役に立ちません。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">lm</span>(weight_loss ~ group)</span>
+</pre><div class="output-reveal">Call:
+lm(formula = weight_loss ~ group)
+
+Coefficients:
+(Intercept)       group2       group3  
+          7            2            8  </div>
+  <p>（Plan 1 の平均 7 が切片、Plan 2 は +2、Plan 3 は +8 で、それぞれ平均 9 と 15 に対応します。）この線形モデルを <code>anova()</code> に渡すと、同じ分散分析表が得られます。<strong>先ほどの <code>aov()</code> ではなく、<code>anova()</code> であることに注意</strong>。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">anova</span>(<span class="kw">lm</span>(weight_loss ~ group))</span>
+</pre><div class="output-reveal">Analysis of Variance Table
+
+Response: weight_loss
+          Df Sum Sq Mean Sq F value   Pr(&gt;F)   
+group      2    114  57.000  11.735 0.005811 **
+Residuals  7     34   4.857                    
+---
+Signif. codes:  0 &#x27;***&#x27; 0.001 &#x27;**&#x27; 0.01 &#x27;*&#x27; 0.05 &#x27;.&#x27; 0.1 &#x27; &#x27; 1</div>
+  <p>数値はどちらも同じで、丸めの桁数が違うだけです（<code>summary(aov())</code> は p値を有効数字3桁、<code>anova()</code> は 4桁で表示）。</p>
+  <table class="compare-table">
+    <tr><th>書き方</th><th>出力</th></tr>
+    <tr><td><code>aov(y ~ g)</code></td><td>SS と df だけの短い結果</td></tr>
+    <tr><td><code>summary(aov(y ~ g))</code></td><td>完全な ANOVA 表（Mean Sq, F, p値）。最もよく使う</td></tr>
+    <tr><td><code>anova(lm(y ~ g))</code></td><td>同じ表（線形回帰経由）。丸めが少し違う</td></tr>
+  </table>
+  <p>実務では、スプレッドシートで平方和を計算したりはしません。<code>summary(aov())</code> の1行で終わりです。ただし<strong>手計算（ANOVA 3 と本ページ④）の意味が分かっているからこそ、表を正しく読める</strong>のです。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>summary(aov(減量 ~ 群))</code> と打つと表が出ます。Mean Sq は「Sum Sq ÷ Df」、F は「上の Mean Sq ÷ 下の Mean Sq」。星 <code>**</code> は「有意だよ」の合図です。</p></div>
+
+  <div class="practice-card" id="p-a2-u2">
+    <div class="ptitle">💻 ミニ練習：ANOVA表を出す</div>
+    <p class="ptask"><code>group</code> と <code>weight_loss</code> は入力済みとして、<code>summary()</code> と <code>aov()</code> を使って一元配置分散分析表を出すコードを書いてください。さらに、<code>lm()</code> と <code>anova()</code> を使う別の書き方も1行書いてください。</p>
+    <textarea class="code-editor" id="p-a2-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-a2-u2', ['summary', 'aov', 'weight_loss', 'group', 'anova', 'lm'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-a2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-a2-u2-result"></div>
+    <div class="answer-reveal" id="p-a2-u2-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">summary</span>(<span class="kw">aov</span>(weight_loss ~ group))</span>
+<span class="cl"><span class="kw">anova</span>(<span class="kw">lm</span>(weight_loss ~ group))</span></pre>
+      <p class="answer-note"><code>~</code> の左が応答変数（weight_loss）、右が群（group）。どちらも Df 2 と 7、Sum Sq 114 と 34、F ≈ 11.73 が出ます。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>pf() でp値を求める・F分布を描く</h2><div class="unit-sub">pf、curve、臨界値</div></div>
+  </div>
+  <p>ANOVA 表には p値が最初から出ています。それでも、<strong>練習問題などで F値を手計算で出した後に、表を使わず技術（R）で p値を出したい</strong>ことがあります。そのための関数が <code>pf()</code> です。</p>
+  <p>確率分布の関数は、頭文字で役割が決まります。<code>p</code> は probability（確率＝左側の面積）、<code>d</code> は density（密度）、<code>q</code> は quantile（分位点）。分布の名前を後ろに付けます。これまでに <code>pnorm</code>・<code>pbinom</code>・<code>pt</code> を見てきましたが、<strong>F分布なら <code>pf</code></strong>です。</p>
+  <table class="compare-table">
+    <tr><th>頭文字</th><th>意味</th><th>F分布での関数</th></tr>
+    <tr><td><code>p</code></td><td>確率（面積）</td><td><code>pf(F, df1, df2)</code></td></tr>
+    <tr><td><code>d</code></td><td>密度（曲線の高さ）</td><td><code>df(x, df1, df2)</code></td></tr>
+    <tr><td><code>q</code></td><td>分位点（臨界値）</td><td><code>qf(p, df1, df2)</code></td></tr>
+  </table>
+<pre class="code-block">
+<span class="cl"><span class="kw">pf</span>(<span class="nm">11.735</span>, <span class="nm">2</span>, <span class="nm">7</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 0.005811518</div>
+  <p>引数は順に、<strong>F統計量 11.735</strong>、<strong>分子の自由度 df1 = 2</strong>（群の自由度。numerator）、<strong>分母の自由度 df2 = 7</strong>（誤差・残差の自由度。denominator）です。<strong>df1 + df2 = 2 + 7 = 9 ＝ N − 1</strong>（全体の自由度）になるのが常です。</p>
+  <p><code>lower.tail = FALSE</code> が必要な理由：F の p値は<strong>観測した F より右側</strong>（それ以上極端な値）の面積です。何も指定しないと R は<strong>左側</strong>を返すので、<code>FALSE</code> にして右側を求めます。結果は 0.0058（正確には 0.005811…）で、ANOVA 表の <code>Pr(&gt;F)</code> と一致します。</p>
+  <div class="warn-box">⚠️ <strong>小数と％を混同しないこと。</strong>p = 0.0058 は 5.8% ではありません。100 倍して <strong>0.58%</strong> です。</div>
+
+  <p><strong>F分布を描いてみる</strong>。p値が曲線のどこなのかを目で確認しましょう。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">curve</span>(<span class="kw">df</span>(x, df1 = <span class="nm">2</span>, df2 = <span class="nm">7</span>), from = <span class="nm">0</span>, to = <span class="nm">12</span>,</span>
+<span class="cl">      xlab = <span class="st">&quot;F&quot;</span>, ylab = <span class="st">&quot;&quot;</span>)</span>
+<span class="cl"><span class="kw">abline</span>(v = <span class="nm">11.735</span>, col = <span class="st">&quot;red&quot;</span>)</span>
+</pre>
+  <ul>
+    <li><code>curve()</code>：式から曲線を描く関数。<code>x</code> は「ここに x が入る」目印なので、そのまま <code>x</code> と書く。</li>
+    <li><code>df(x, df1 = 2, df2 = 7)</code>：ここでの <code>df</code> は<strong>データフレーム（data frame）ではなく、F分布の密度（density）</strong>。</li>
+    <li><code>from = 0, to = 12</code>：横軸の範囲。<code>xlab = "F"</code> で横軸ラベル、<code>ylab = ""</code> で縦軸ラベルは空に。</li>
+    <li><code>abline(v = 11.735, col = "red")</code>：<code>v</code> は vertical（縦線）。F = 11.735 の位置に赤線。</li>
+  </ul>
+  <div class="viz"><div class="viz-title">F分布（df1 = 2, df2 = 7）と、観測した F = 11.735</div><svg viewBox="0 0 480 235" width="100%" style="max-width:520px" role="img" aria-label="F分布 df1=2, df2=7 の密度曲線。F=4.74 より右が有意水準5%の棄却域、F=11.735 に赤い縦線">
+<line x1="50" y1="190" x2="455" y2="190" stroke="#64748b"/><line x1="50" y1="15" x2="50" y2="190" stroke="#64748b"/>
+<line x1="50" y1="190" x2="50" y2="195" stroke="#64748b"/><text x="50" y="208" text-anchor="middle" font-size="11" fill="#64748b">0</text><line x1="117" y1="190" x2="117" y2="195" stroke="#64748b"/><text x="117" y="208" text-anchor="middle" font-size="11" fill="#64748b">2</text><line x1="183" y1="190" x2="183" y2="195" stroke="#64748b"/><text x="183" y="208" text-anchor="middle" font-size="11" fill="#64748b">4</text><line x1="250" y1="190" x2="250" y2="195" stroke="#64748b"/><text x="250" y="208" text-anchor="middle" font-size="11" fill="#64748b">6</text><line x1="317" y1="190" x2="317" y2="195" stroke="#64748b"/><text x="317" y="208" text-anchor="middle" font-size="11" fill="#64748b">8</text><line x1="383" y1="190" x2="383" y2="195" stroke="#64748b"/><text x="383" y="208" text-anchor="middle" font-size="11" fill="#64748b">10</text><line x1="450" y1="190" x2="450" y2="195" stroke="#64748b"/><text x="450" y="208" text-anchor="middle" font-size="11" fill="#64748b">12</text>
+<polygon points="207.9,190 207.9,186.4 210.0,186.5 213.3,186.7 216.7,186.9 220.0,187.0 223.3,187.2 226.7,187.3 230.0,187.5 233.3,187.6 236.7,187.7 240.0,187.8 243.3,187.9 246.7,188.0 250.0,188.1 253.3,188.2 256.7,188.3 260.0,188.3 263.3,188.4 266.7,188.5 270.0,188.6 273.3,188.6 276.7,188.7 280.0,188.7 283.3,188.8 286.7,188.8 290.0,188.9 293.3,188.9 296.7,189.0 300.0,189.0 303.3,189.1 306.7,189.1 310.0,189.1 313.3,189.2 316.7,189.2 320.0,189.2 323.3,189.3 326.7,189.3 330.0,189.3 333.3,189.3 336.7,189.4 340.0,189.4 343.3,189.4 346.7,189.4 350.0,189.4 353.3,189.5 356.7,189.5 360.0,189.5 363.3,189.5 366.7,189.5 370.0,189.6 373.3,189.6 376.7,189.6 380.0,189.6 383.3,189.6 386.7,189.6 390.0,189.6 393.3,189.6 396.7,189.7 400.0,189.7 403.3,189.7 406.7,189.7 410.0,189.7 413.3,189.7 416.7,189.7 420.0,189.7 423.3,189.7 426.7,189.7 430.0,189.7 433.3,189.8 436.7,189.8 440.0,189.8 443.3,189.8 446.7,189.8 450.0,189.8 450,190" fill="#f59e0b" opacity=".35"/>
+<polyline points="50,20 53.3,40.2 56.7,57.6 60,72.6 63.3,85.5 66.7,96.8 70,106.6 73.3,115.2 76.7,122.7 80,129.3 83.3,135.1 86.7,140.3 90,144.9 93.3,149 96.7,152.6 100,155.9 103.3,158.8 106.7,161.4 110,163.7 113.3,165.8 116.7,167.8 120,169.5 123.3,171.1 126.7,172.5 130,173.8 133.3,175 136.7,176 140,177 143.3,177.9 146.7,178.8 150,179.5 153.3,180.2 156.7,180.9 160,181.4 163.3,182 166.7,182.5 170,183 173.3,183.4 176.7,183.8 180,184.1 183.3,184.5 186.7,184.8 190,185.1 193.3,185.4 196.7,185.6 200,185.9 203.3,186.1 206.7,186.3 210,186.5 213.3,186.7 216.7,186.9 220,187 223.3,187.2 226.7,187.3 230,187.5 233.3,187.6 236.7,187.7 240,187.8 243.3,187.9 246.7,188 250,188.1 253.3,188.2 256.7,188.3 260,188.3 263.3,188.4 266.7,188.5 270,188.6 273.3,188.6 276.7,188.7 280,188.7 283.3,188.8 286.7,188.8 290,188.9 293.3,188.9 296.7,189 300,189 303.3,189.1 306.7,189.1 310,189.1 313.3,189.2 316.7,189.2 320,189.2 323.3,189.3 326.7,189.3 330,189.3 333.3,189.3 336.7,189.4 340,189.4 343.3,189.4 346.7,189.4 350,189.4 353.3,189.5 356.7,189.5 360,189.5 363.3,189.5 366.7,189.5 370,189.6 373.3,189.6 376.7,189.6 380,189.6 383.3,189.6 386.7,189.6 390,189.6 393.3,189.6 396.7,189.7 400,189.7 403.3,189.7 406.7,189.7 410,189.7 413.3,189.7 416.7,189.7 420,189.7 423.3,189.7 426.7,189.7 430,189.7 433.3,189.8 436.7,189.8 440,189.8 443.3,189.8 446.7,189.8 450,189.8" fill="none" stroke="#2563eb" stroke-width="2"/>
+<line x1="207.9" y1="60" x2="207.9" y2="190" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="211.9" y="70" font-size="11" fill="#b45309">臨界値 4.74</text>
+<line x1="441.2" y1="110" x2="441.2" y2="190" stroke="#dc2626" stroke-width="2"/>
+<text x="435.2" y="104" text-anchor="end" font-size="11" fill="#dc2626">F = 11.735（p = 0.0058 はこの右の面積）</text>
+<text x="252" y="228" text-anchor="middle" font-size="12" fill="#334155">F</text>
+<text x="56" y="30" font-size="11" fill="#64748b">密度 df(x, 2, 7)</text>
+</svg><div class="viz-cap">赤線より右側の面積が p値＝0.0058（図では細すぎてほとんど見えません）。オレンジの部分は有意水準 5% の棄却域（F &gt; 4.74）。作図の計算は R の <code>df(x, 2, 7)</code> による。</div></div>
+  <p>表で使う場合は、<strong>表の最上段（横）が df1 = 2、左端（縦）が df2 = 7</strong> です。</p>
+  <p><strong>結論（p値による方法）</strong>：p = 0.0058 は非常に小さい。つまり、本当は全プランの平均が同じなのに、この実験のような結果が<strong>偶然だけで</strong>出る確率はごくわずか。よって<strong>帰無仮説（H₀：すべての平均が等しい）を棄却</strong>し、<strong>少なくとも1組の平均が違う</strong>という証拠がある。</p>
+  <p><strong>臨界値による方法</strong>（教科書やサイトによってはこちら）：F表から、α = 0.05 の臨界値（critical value）を探します。R でも求められます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">qf</span>(<span class="nm">0.95</span>, <span class="nm">2</span>, <span class="nm">7</span>)</span>
+</pre><div class="output-reveal">[1] 4.737414</div>
+  <p>臨界値は<strong>約 4.74</strong>。これより右の F はすべて有意です。今回の F = 11.7 は 4.74 より大きいので、H₀ を棄却します。2つの方法の結論は必ず一致します。</p>
+  <table class="compare-table">
+    <tr><th>方法</th><th>比べるもの</th><th>この例</th><th>結論</th></tr>
+    <tr><td>p値</td><td>p と α</td><td>0.0058 &lt; 0.05</td><td>H₀ を棄却</td></tr>
+    <tr><td>臨界値</td><td>F と F臨界</td><td>11.7 &gt; 4.74</td><td>H₀ を棄却</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>ANOVA は「どのプランが違うか」までは教えてくれません。</strong>教えてくれるのは「どこかに差がある」ことだけ（omnibus test）。どのペアが違うかは、次のページの多重比較（post hoc test）で調べます。</div>
+
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>p値は<strong>F の赤線より右にある、ほんの少しの面積</strong>。ここが小さいほど「偶然ではなさそう」。<code>pf(F, 2, 7, lower.tail = FALSE)</code> で求めます。F が 4.74 より大きければ有意、とも言えます。</p></div>
+
+  <div class="practice-card" id="p-a2-u3">
+    <div class="ptitle">💻 ミニ練習：pf() で p値を求める</div>
+    <p class="ptask">F = 5.12、分子の自由度 2、分母の自由度 12 のとき、右側の p値を求める <code>pf()</code> のコードを書いてください。</p>
+    <textarea class="code-editor" id="p-a2-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-a2-u3', ['pf', '5.12', 'lower.tail', 'FALSE', '12'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-a2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-a2-u3-result"></div>
+    <div class="answer-reveal" id="p-a2-u3-answer" hidden>
+      <pre class="code-block"><span class="cl"><span class="kw">pf</span>(<span class="nm">5.12</span>, <span class="nm">2</span>, <span class="nm">12</span>, lower.tail = <span class="kw">FALSE</span>)</span></pre>
+      <p class="answer-note">出力は <code>[1] 0.02467623</code>（約 0.025）。次の単元の例題の p値です。<code>lower.tail = FALSE</code> を付け忘れると左側の面積（0.975…）が出てしまうので注意。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>ANOVA の計算：SST・SSB・SSW・MS・F</h2><div class="unit-sub">5ステップの手計算</div></div>
+  </div>
+  <p>ここからは、ANOVA の<strong>数学（計算）</strong>です。R や他のソフトを使えば計算は不要ですが、<strong>昔ながらの手計算</strong>こそ、仕組みを理解する近道です。コードを走らせるだけでは見えない「何をしているか」が見えてきます。計算は<strong>5ステップ</strong>で、最後に F表（chart）を見ます。</p>
+  <div class="teal-box"><strong>5ステップ</strong>：① 全体の平方和 SST → ② モデル（群）の平方和 SSM（= SSB）→ ③ 残差の平方和 SSR（= SSW）→ ④ 平均平方 MS → ⑤ F比 ＋ F表で判定</div>
+  <p>まず用語の整理。名前は教材によって違いますが、中身は同じです。</p>
+  <table class="compare-table">
+    <tr><th>この講義</th><th>別名</th><th>意味</th></tr>
+    <tr><td>SST（total）</td><td>SS total</td><td>全員を<strong>全体平均（grand mean）</strong>と比べたばらつき</td></tr>
+    <tr><td>SSM（model）</td><td>SSB（between）／SS group</td><td><strong>群平均</strong>が全体平均からどれだけ離れているか（群の違いで説明できる分）</td></tr>
+    <tr><td>SSR（residual）</td><td>SSW（within）／SS error</td><td>各人が<strong>自分の群の平均</strong>からどれだけ離れているか（説明できない分）</td></tr>
+  </table>
+  <h3 style="margin:1.2rem 0 .4rem">例題：3群・15人（各群 5人）</h3>
+  <p>別のデータで、3つの群の平均は <strong>2.2、3.2、5.0</strong>、全体平均（grand mean）は <strong>3.47</strong>（正確には 10.4 ÷ 3 = 3.4667）です。</p>
+  <p><strong>ステップ1：SST（全体の平方和）</strong>　群は無視して、全員を全体平均と比べます。各得点 − 全体平均 を二乗して全部足す。これは<strong>データ全体の分散を、n − 1 で割らずに求めたもの</strong>です。つまり<strong>SST ＝ 全体の分散 × (n − 1)</strong>。この例では SST = <strong>43.74</strong>。n − 1 = 14 で割れば全体の分散（grand variance）は約 3.12 で、行ったり来たりできます。全体の自由度は <strong>df<sub>T</sub> = N − 1 = 15 − 1 = 14</strong>。</p>
+  <p><strong>ステップ2：SSM（モデルの平方和）</strong>　目的は「全体平均で説明するより、<strong>群平均で説明するほうがばらつきを多く説明できるか</strong>」を見ること。各群の平均から全体平均を引いて二乗し、<strong>その群の人数を掛けて</strong>足します。</p>
+  <p style="text-align:center">SSM = Σ n<sub>j</sub> (x̄<sub>j</sub> − x̄)² = 5(2.2 − 3.47)² + 5(3.2 − 3.47)² + 5(5.0 − 3.47)² ≈ <strong>20.13</strong>　（df<sub>M</sub> = k − 1 = 3 − 1 = <strong>2</strong>）</p>
+  <p><strong>ステップ3：SSR（残差の平方和）</strong>　説明できなかった分。引き算で出せます：SSR = SST − SSM = 43.74 − 20.13 = <strong>23.61</strong>。自由度は df<sub>R</sub> = df<sub>T</sub> − df<sub>M</sub> = 14 − 2 = <strong>12</strong>（= N − k = 15 − 3）。自由度は3つあるが、<strong>2つ分かれば3つ目は引き算で出る</strong>（14 = 2 + 12）。</p>
+  <p><strong>ステップ4：平均平方（MS）</strong>　平方和は人数が多いほど大きくなる（標本の大きさに依存する）ので、自由度で割って調整します。MS<sub>M</sub> = 20.13 ÷ 2 ≈ <strong>10.07</strong>、MS<sub>R</sub> = 23.61 ÷ 12 ≈ <strong>1.97</strong>。</p>
+  <p><strong>ステップ5：F比</strong>　「説明できた分 ÷ 説明できない分」＝ モデルのよさ ÷ そのダメさ。t検定の「差 ÷ ばらつき」と同じ発想です。F = 10.07 ÷ 1.97 ≈ <strong>5.12</strong>。</p>
+  <p><strong>F表で判定</strong>　分子の自由度（モデル）= 2、分母の自由度（残差）= 12 のとき、α = 0.05 の臨界値は <strong>3.89</strong>。表によって見出しが <code>dfn</code>／<code>dfd</code>（numerator／denominator）や V1／V2、M／R など違いますが、中身は同じ（分子＝モデル、分母＝残差）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">qf</span>(<span class="nm">0.95</span>, <span class="nm">2</span>, <span class="nm">12</span>)</span>
+<span class="cl"><span class="kw">pf</span>(<span class="nm">5.12</span>, <span class="nm">2</span>, <span class="nm">12</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 3.885294
+[1] 0.02467623</div>
+  <p>F = 5.12 &gt; 3.89 なので <strong>H₀ を棄却</strong>（p = 0.0247 &lt; 0.05 でも同じ結論）。<strong>少なくとも1つの群の平均は他と違う</strong>。ただし F検定は<strong>omnibus test</strong>で「どの群か」までは分かりません。そこで次に<strong>post hoc test</strong>が必要になります。</p>
+  <table class="compare-table">
+    <tr><th>量</th><th>計算</th><th>値</th></tr>
+    <tr><td>df（全体／モデル／残差）</td><td>N − 1／k − 1／N − k</td><td>14／2／12</td></tr>
+    <tr><td>SST</td><td>Σ(x − x̄)² ＝ 分散 × (N − 1)</td><td>43.74</td></tr>
+    <tr><td>SSM</td><td>Σ n<sub>j</sub>(x̄<sub>j</sub> − x̄)²</td><td>20.13</td></tr>
+    <tr><td>SSR</td><td>SST − SSM</td><td>23.61</td></tr>
+    <tr><td>MS<sub>M</sub>／MS<sub>R</sub></td><td>SSM÷2／SSR÷12</td><td>10.07／1.97</td></tr>
+    <tr><td>F</td><td>MS<sub>M</sub> ÷ MS<sub>R</sub></td><td>5.12（臨界値 3.89、p = 0.0247）</td></tr>
+  </table>
+  <h3 style="margin:1.2rem 0 .4rem">同じ手順を、減量データで R に任せる</h3>
+  <p>講義の 3プラン・10人のデータにこの5ステップをそのまま当てはめると、R の表と同じになります（SSB は「人数 × (群平均 − 全体平均)²」で 4×9 + 3×1 + 3×25 = 114）。</p>
+<pre class="code-block">
+<span class="cl">weight_loss &lt;- <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">7</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">18</span>)</span>
+<span class="cl">group &lt;- <span class="kw">as.factor</span>(c(<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">3</span>))</span>
+<span class="cl">gm     &lt;- <span class="kw">mean</span>(weight_loss)                   <span class="cm"> # 全体平均</span></span>
+<span class="cl">gmeans &lt;- <span class="kw">tapply</span>(weight_loss, group, mean)    <span class="cm"> # 群平均</span></span>
+<span class="cl">n      &lt;- <span class="kw">tapply</span>(weight_loss, group, length)  <span class="cm"> # 群の人数</span></span>
+<span class="cl">sst &lt;- <span class="kw">sum</span>((weight_loss - gm)^<span class="nm">2</span>)              <span class="cm"> # 全体の平方和</span></span>
+<span class="cl">ssb &lt;- <span class="kw">sum</span>(n * (gmeans - gm)^<span class="nm">2</span>)               <span class="cm"> # 群間の平方和</span></span>
+<span class="cl">ssw &lt;- sst - ssb                              <span class="cm"> # 群内（残差）の平方和</span></span>
+<span class="cl">msb &lt;- ssb / (<span class="nm">3</span> - <span class="nm">1</span>)</span>
+<span class="cl">msw &lt;- ssw / (<span class="nm">10</span> - <span class="nm">3</span>)</span>
+<span class="cl">F   &lt;- msb / msw</span>
+<span class="cl"><span class="kw">c</span>(sst = sst, ssb = ssb, ssw = ssw, msb = msb, msw = msw, F = F)</span>
+</pre><div class="output-reveal">      sst       ssb       ssw       msb       msw         F 
+148.00000 114.00000  34.00000  57.00000   4.85714  11.73529 </div>
+  <p>（出力は <code>summary(aov())</code> の表と同じ：SS が 114 と 34、MS が 57 と 4.86、F が 11.73。）</p>
+  <div class="note-box">🔎 <strong>R の分散分析表に「Total」の行はありません。</strong>R が出す表は「群（group）」と「Residuals」の2行だけ。全体の 148（または 43.74）は、2つの SS を足して自分で求めます。</div>
+
+  <div class="warn-box">⚠️ <strong>試験で求められること</strong>：理屈（何をしているか）を理解したうえで、<strong>F統計量を計算し、臨界値 F を見つけ、仮説について判断する</strong>こと。そのために必要な式は上の表にある数個だけです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ばらつきを<strong>「群の違いで説明できる分」</strong>と<strong>「説明できない分」</strong>に分け、それぞれを自由度で割って、割り算したものが F。F が臨界値より大きければ「群の違いは偶然ではなさそう」。</p></div>
+
+  <div class="practice-card" id="p-a2-u4">
+    <div class="ptitle">💻 ミニ練習：SSBとFを計算する</div>
+    <p class="ptask"><code>weight_loss</code> と <code>group</code> が入力済みとして、全体平均 <code>gm</code> と群ごとの平均・人数を求め、<code>ssb</code>（群間の平方和）を計算するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-a2-u4-input" rows="8"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-a2-u4', ['mean', 'tapply', 'sum', 'gm', 'ssb'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-a2-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-a2-u4-result"></div>
+    <div class="answer-reveal" id="p-a2-u4-answer" hidden>
+      <pre class="code-block"><span class="cl">gm &lt;- <span class="kw">mean</span>(weight_loss)</span>
+<span class="cl">gmeans &lt;- <span class="kw">tapply</span>(weight_loss, group, mean)</span>
+<span class="cl">n &lt;- <span class="kw">tapply</span>(weight_loss, group, length)</span>
+<span class="cl">ssb &lt;- <span class="kw">sum</span>(n * (gmeans - gm)^<span class="nm">2</span>)</span>
+<span class="cl">ssb</span></pre>
+      <p class="answer-note"><code>ssb</code> は 114（= 4×3² + 3×1² + 3×5²）。これを 2 で割ると MSB = 57。残差の SSW = 148 − 114 = 34 を 7 で割ると 4.86。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why is the group vector converted with as.factor() before running aov()?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To sort the weight-loss values from the smallest to the largest</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To mark 1, 2 and 3 as group labels, not quantities</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To turn the group numbers into percentages automatically</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To make aov() ignore the response variable completely</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In aov(weight_loss ~ group), what does each side of the tilde (~) represent?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The left side is the explanatory variable and the right side is the response</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Both sides are response variables that are compared with each other</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The left side is the sample size and the right side is the number of groups</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Left is the response (weight_loss); right is the model (group)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In summary(aov(weight_loss ~ group)) the Residuals row has Df = 7 and Sum Sq = 34. What is its Mean Sq?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>4.86 (34 ÷ 7)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>17.00 (34 ÷ 2)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>57.00 (114 ÷ 2)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.21 (7 ÷ 34)</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">The group Mean Sq is 57.00 and the Residuals Mean Sq is 4.86. What is the F value?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.09</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>11.73</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>61.86</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>52.14</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why does pf(11.735, 2, 7, lower.tail = FALSE) use lower.tail = FALSE?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To shade the left side of the F curve, where the small F values are</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The p-value is the area to the right of the observed F</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To convert the F statistic into a t statistic first</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because the degrees of freedom must add up to 9</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">The R output gives p = 0.0058. What is that as a percentage?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.58%</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>5.8%</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>58%</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.058%</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A study has N = 15 observations in k = 3 groups. What are the model and residual degrees of freedom?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>3 and 15</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>2 and 14</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>3 and 12</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>2 and 12</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In a one-way ANOVA with df (2, 12), F = 5.12 and the critical value at α = 0.05 is 3.89. What is the correct conclusion?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Fail to reject H0; the group means are all equal</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Reject H0; every pair of group means is different</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Reject H0; at least one group mean is different</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The test is inconclusive until a Total row is added</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 0, 3, 2];
+var FEEDBACKS=["1, 2, 3 are names of treatment plans (a nominal variable). Left as numbers, aov() would treat them as a quantity and give Df = 1 instead of 2.", "The response goes to the left of ~ and the explanatory variable (the model) to the right: does group predict weight loss?", "Mean Sq = Sum Sq ÷ Df, so 34 ÷ 7 = 4.86. (57.00 is the Mean Sq of the group row.)", "F = group Mean Sq ÷ residual Mean Sq = 57 ÷ 4.86 ≈ 11.73.", "The p-value is the probability of an F at least as large as observed, i.e. the area in the right tail. The default would return the left-tail area.", "Multiply a proportion by 100: 0.0058 × 100 = 0.58%. It is not 5.8%.", "df model = k − 1 = 2 and df residual = N − k = 12. Together they add up to N − 1 = 14.", "5.12 > 3.89, so reject H0. ANOVA is an omnibus test: it says some mean differs but not which one, so a post hoc test is needed next."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">analysis of variance (ANOVA)</div><div class="term-en">分散分析</div><div class="term-def">3群以上の平均の差を、ばらつきの比（F）で調べる検定。</div></div>
+    <div class="term-item"><div class="term-name">factor</div><div class="term-en">因子（カテゴリ変数）</div><div class="term-def"><code>as.factor()</code> で作る、名前（水準）を持つ変数。</div></div>
+    <div class="term-item"><div class="term-name">response / explanatory</div><div class="term-en">応答変数／説明変数</div><div class="term-def"><code>~</code> の左が応答、右が説明（モデル）。</div></div>
+    <div class="term-item"><div class="term-name">sum of squares (SS)</div><div class="term-en">平方和</div><div class="term-def">偏差を二乗して足したもの。SST = SSB + SSW。</div></div>
+    <div class="term-item"><div class="term-name">mean square (MS)</div><div class="term-en">平均平方</div><div class="term-def">SS ÷ 自由度。</div></div>
+    <div class="term-item"><div class="term-name">F ratio</div><div class="term-en">F比</div><div class="term-def">MS(群) ÷ MS(残差)。モデルのよさ ÷ そのダメさ。</div></div>
+    <div class="term-item"><div class="term-name">degrees of freedom</div><div class="term-en">自由度</div><div class="term-def">群 k − 1、残差 N − k、全体 N − 1。</div></div>
+    <div class="term-item"><div class="term-name">residual</div><div class="term-en">残差</div><div class="term-def">自分の群の平均からのずれ。説明できない分。</div></div>
+    <div class="term-item"><div class="term-name">pf()</div><div class="term-en">F分布の確率</div><div class="term-def"><code>pf(F, df1, df2, lower.tail = FALSE)</code> で右側の p値。</div></div>
+    <div class="term-item"><div class="term-name">critical value</div><div class="term-en">臨界値</div><div class="term-def">棄却域の境目。<code>qf(0.95, df1, df2)</code>。</div></div>
+    <div class="term-item"><div class="term-name">omnibus test</div><div class="term-en">総括的検定</div><div class="term-def">どこかに差があることだけを示し、どの群かは言わない。</div></div>
+    <div class="term-item"><div class="term-name">post hoc test</div><div class="term-en">事後検定</div><div class="term-def">ANOVA 後に、どのペアが違うかを調べる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>表の読み方は「Mean Sq = Sum Sq ÷ Df」「F = 上の MS ÷ 下の MS」。p値は <code>pf(F, df1, df2, lower.tail = FALSE)</code>。ANOVA 表に Total の行は出ません。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：M5 ANOVA② RでのANOVAと計算</p>
+  <p style="margin-top:.5rem;"><a href="m5_anova_concept.html">← ANOVA①：考え方</a> · <a href="m5_anova_post.html">ANOVA③：多重比較 →</a> · <a href="m5_anova_calc_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

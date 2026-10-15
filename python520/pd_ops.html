@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas③ 計算と索引のそろえ方</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — Operations</div>
+  <h1>➕ Pandas③：計算とアラインメント</h1>
+  <p>索引を保つ計算、アラインメント、fill_value、DataFrameとSeriesの計算、並べ替えを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 索引を保つ</a><a href="#unit2">② アラインメント</a><a href="#unit3">③ DF×Series</a><a href="#unit4">④ 並べ替え</a><a href="#quiz">📝 Quiz</a><a href="pd_ops_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.03 Operating on Data in Pandas</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>計算しても索引は保たれる</h2><div class="unit-sub">ufuncとの関係</div></div>
+  </div>
+<p>PandasのSeriesやDataFrameにNumPyの関数や演算を使っても、<strong>行ラベル・列ラベルは残ります</strong>。</p><pre class="code-block">
+<span class="cl">s = pd.Series([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>], index=[<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'d'</span>])</span>
+<span class="cl"><span class="kw">print</span>(s * <span class="nm">10</span>)</span>
+<span class="cl">np.exp(s)</span>
+</pre><div class="output-reveal">a    10
+b    20
+c    30
+d    40
+dtype: int64
+a     2.718282
+b     7.389056
+c    20.085537
+d    54.598150
+dtype: float64</div><pre class="code-block">
+<span class="cl">df = pd.DataFrame(np.arange(<span class="nm">6</span>).reshape(<span class="nm">2</span>, <span class="nm">3</span>), columns=[<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>])</span>
+<span class="cl">df * <span class="nm">2</span></span>
+</pre><div class="output-reveal">   A  B   C
+0  0  2   4
+1  6  8  10</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>NumPyの計算が、名札付きのまま使えます。結果にも名札が付いて返ってきます。</p></div><div class="practice-card" id="p-p3-u1">
+    <div class="ptitle">💻 ミニ練習：計算</div>
+    <p class="ptask">Series <code>s</code> の全要素を2乗した Series を作ってください。</p>
+    <textarea class="code-editor" id="p-p3-u1-input" rows="7">s = pd.Series([1, 2, 3], index=['a', 'b', 'c'])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p3-u1", ["s ** 2"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p3-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p3-u1-result"></div>
+    <div class="answer-reveal" id="p-p3-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">s ** <span class="nm">2</span></span>
+</pre>
+      <p class="answer-note">結果は a:1, b:4, c:9 で、索引は保たれます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>索引がそろう：アラインメント</h2><div class="unit-sub">同じラベル同士を足す</div></div>
+  </div>
+<p>2つのSeriesやDataFrameを計算すると、<strong>同じラベルどうし</strong>が自動で対応づけられます（アラインメント）。片方にしかないラベルは<strong>NaN</strong>になります。</p><pre class="code-block">
+<span class="cl">a = pd.Series([<span class="nm">2</span>, <span class="nm">4</span>, <span class="nm">6</span>], index=[<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>])</span>
+<span class="cl">b = pd.Series([<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">5</span>], index=[<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>])</span>
+<span class="cl">a + b</span>
+</pre><div class="output-reveal">0    NaN
+1    5.0
+2    9.0
+3    NaN
+dtype: float64</div><p>NaNにしたくないときは、<code>add</code>などのメソッドで<code>fill_value</code>（無い所を何として扱うか）を指定します。</p><pre class="code-block">
+<span class="cl">a.add(b, fill_value=<span class="nm">0</span>)</span>
+</pre><div class="output-reveal">0    2.0
+1    5.0
+2    9.0
+3    5.0
+dtype: float64</div><pre class="code-block">
+<span class="cl">A = pd.DataFrame([[<span class="nm">1</span>, <span class="nm">11</span>], [<span class="nm">5</span>, <span class="nm">1</span>]], columns=list(<span class="st">'AB'</span>))</span>
+<span class="cl">B = pd.DataFrame(np.arange(<span class="nm">9</span>).reshape(<span class="nm">3</span>, <span class="nm">3</span>), columns=list(<span class="st">'BAC'</span>))</span>
+<span class="cl">A + B     <span class="cm"># 列の順番が違っても、列名でそろう</span></span>
+</pre><div class="output-reveal">     A     B   C
+0  2.0  11.0 NaN
+1  9.0   4.0 NaN
+2  NaN   NaN NaN</div><div class="warn-box">⚠️ 位置ではなく<strong>ラベル</strong>で対応づけられます。ラベルが違うと、期待しないNaNが出るので、結果にNaNがあったらまずラベルを疑いましょう。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>出席番号ではなく名前で点呼してから足し算するイメージ。名前が片方にしかいなければ「不明（NaN）」になります。</p></div><div class="practice-card" id="p-p3-u2">
+    <div class="ptitle">💻 ミニ練習：fill_value</div>
+    <p class="ptask"><code>a</code>と<code>b</code>を、ない所を0として足してください。</p>
+    <textarea class="code-editor" id="p-p3-u2-input" rows="7">a = pd.Series([1, 2], index=[0, 1])
+b = pd.Series([10, 20], index=[1, 2])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p3-u2", [".add(", "fill_value=0"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p3-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p3-u2-result"></div>
+    <div class="answer-reveal" id="p-p3-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">a.add(b, fill_value=<span class="nm">0</span>)</span>
+</pre>
+      <p class="answer-note">結果は 0:1, 1:12, 2:20。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>DataFrameとSeriesの計算</h2><div class="unit-sub">ブロードキャストが行われる</div></div>
+  </div>
+<p>DataFrameからSeriesを引くと、Seriesの<strong>ラベルと列名</strong>がそろえられ、NumPyのブロードキャストと同じように計算されます。</p><pre class="code-block">
+<span class="cl">df = pd.DataFrame(np.array([[<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>], [<span class="nm">4</span>, <span class="nm">6</span>, <span class="nm">9</span>]]), columns=list(<span class="st">'ABC'</span>))</span>
+<span class="cl">df - df.iloc[<span class="nm">0</span>]       <span class="cm"># 各行から、0行目を引く</span></span>
+</pre><div class="output-reveal">   A  B  C
+0  0  0  0
+1  3  4  6</div><pre class="code-block">
+<span class="cl">df.sub(df[<span class="st">'A'</span>], axis=<span class="nm">0</span>)    <span class="cm"># 各列から、A列を引く（行方向にそろえる）</span></span>
+</pre><div class="output-reveal">   A  B  C
+0  0  1  2
+1  0  2  5</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「df - 行」は各行から引く。列方向に引きたいときは <code>df.sub(列, axis=0)</code> と書きます。</p></div><div class="practice-card" id="p-p3-u3">
+    <div class="ptitle">💻 ミニ練習：列ごとの平均を引く</div>
+    <p class="ptask"><code>df</code>の各列から、その列の平均を引いてください。</p>
+    <textarea class="code-editor" id="p-p3-u3-input" rows="7">df = pd.DataFrame({'x': [1, 2, 3], 'y': [10, 20, 30]})
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p3-u3", ["df - df.mean()"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p3-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p3-u3-result"></div>
+    <div class="answer-reveal" id="p-p3-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df - df.mean()</span>
+</pre>
+      <p class="answer-note">df.mean()は列ごとの平均のSeriesで、列名でそろえて引かれます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>並べ替えと集計の基本</h2><div class="unit-sub">sort_values・mean・sum</div></div>
+  </div>
+<p>列の値で行を並べ替えるには<code>sort_values</code>を使います。</p><pre class="code-block">
+<span class="cl">tips = pd.read_csv(<span class="st">'data/tips.csv'</span>)</span>
+</pre><pre class="code-block">
+<span class="cl">tips.sort_values(<span class="st">'tip'</span>, ascending=<span class="kw">False</span>).head(<span class="nm">3</span>)</span>
+</pre><div class="output-reveal">     total_bill    tip   sex smoker  day    time  size
+170       50.81  10.00  Male    Yes  Sat  Dinner     3
+212       48.33   9.00  Male     No  Sat  Dinner     4
+23        39.42   7.58  Male     No  Sat  Dinner     4</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(tips[<span class="st">'tip'</span>].mean())</span>
+<span class="cl"><span class="kw">print</span>(tips[[<span class="st">'total_bill'</span>, <span class="st">'tip'</span>]].sum())</span>
+<span class="cl">tips[<span class="st">'tip'</span>].max()</span>
+</pre><div class="output-reveal">2.99827868852459
+total_bill    4827.77
+tip            731.58
+dtype: float64
+10.0</div><pre class="code-block">
+<span class="cl">tips[<span class="st">'tip_rate'</span>] = tips[<span class="st">'tip'</span>] / tips[<span class="st">'total_bill'</span>]</span>
+<span class="cl">tips[[<span class="st">'total_bill'</span>, <span class="st">'tip'</span>, <span class="st">'tip_rate'</span>]].head(<span class="nm">3</span>)</span>
+</pre><div class="output-reveal">   total_bill   tip  tip_rate
+0       16.99  1.01  0.059447
+1       10.34  1.66  0.160542
+2       21.01  3.50  0.166587</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>sort_values(列名)</code>は小さい順、<code>ascending=False</code>で大きい順。計算した結果は新しい列として追加できます。</p></div><div class="practice-card" id="p-p3-u4">
+    <div class="ptitle">💻 ミニ練習：並べ替え</div>
+    <p class="ptask"><code>tips</code>を <code>total_bill</code> の<strong>大きい順</strong>に並べ、先頭1行を取り出してください。</p>
+    <textarea class="code-editor" id="p-p3-u4-input" rows="7"># tips は読み込み済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p3-u4", ["sort_values", "'total_bill'", "ascending=False"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p3-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p3-u4-result"></div>
+    <div class="answer-reveal" id="p-p3-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips.sort_values(<span class="st">'total_bill'</span>, ascending=<span class="kw">False</span>).head(<span class="nm">1</span>)</span>
+</pre>
+      <p class="answer-note">最大の会計金額の行が得られます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">After np.exp(series), what happens to the labels of the Series?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>They are dropped</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They become integers</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They are sorted alphabetically</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They are preserved</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">a has index [0, 1, 2] and b has index [1, 2, 3]. What is a + b at label 0?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The value of a at 0</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>NaN</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An error</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you add two Series and treat missing labels as 0?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>a.fill(b), which merges the two Series</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>a + b + 0, because adding zero removes NaN</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>a.add(b, fill_value=0)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>a.sum(b, 0), with the second Series as an argument</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does df - df.iloc[0] do?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Removes the row at position 0</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Sorts all rows by the first row</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Subtracts every row from the first row only</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Subtracts the first row from every row</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which call subtracts column A from every column of df, row by row?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df - df['A']  (the plain operator)</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.apply(df['A'])  with a Series as function</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df.sub(df['A'], axis=1)  (the default direction)</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df.sub(df['A'], axis=0)</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">How do you sort tips by total_bill from largest to smallest?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>tips.order_by('total_bill')</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>tips.sort('total_bill')</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>tips.sort_values('total_bill', ascending=False)</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>tips.sort_values('total_bill').reverse</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 2, 2, 3, 3, 2];
+var FEEDBACKS=["Pandas keeps index and column labels when NumPy ufuncs are applied.", "Label 0 exists only in a, so the sum is NaN after alignment.", "The add method accepts fill_value for labels present in only one operand.", "The row Series is aligned on column names and broadcast over all rows.", "axis=0 aligns the Series on the row index instead of the column names.", "sort_values with ascending=False sorts in descending order."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">alignment</div><div class="term-en">アラインメント</div><div class="term-def">ラベルが同じ要素どうしを対応づけて計算する。片方にしかないラベルはNaN。</div></div>
+    <div class="term-item"><div class="term-name">fill_value</div><div class="term-en">埋める値</div><div class="term-def">add等で、ラベルが無い所を何として扱うかを指定する。</div></div>
+    <div class="term-item"><div class="term-name">add / sub / mul</div><div class="term-en">演算メソッド</div><div class="term-def">演算子の代わりに使い、fill_valueやaxisを指定できる。</div></div>
+    <div class="term-item"><div class="term-name">axis=0 / axis=1</div><div class="term-en">軸</div><div class="term-def">sub等で、行方向にそろえるか列方向にそろえるか。</div></div>
+    <div class="term-item"><div class="term-name">sort_values</div><div class="term-en">並べ替え</div><div class="term-def">列の値で行を並べ替える。ascending=Falseで降順。</div></div>
+    <div class="term-item"><div class="term-name">mean / sum / max</div><div class="term-en">集計</div><div class="term-def">列ごとの平均・合計・最大。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>結果にNaNが出たら、まずラベルがそろっているか疑います。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas③ 計算と索引のそろえ方</p>
+  <p style="margin-top:.5rem;"><a href="pd_indexing.html">← ② 選ぶ・絞る</a> · <a href="pd_missing.html">④ 欠損値 →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

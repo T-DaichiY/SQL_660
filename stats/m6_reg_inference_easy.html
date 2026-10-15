@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M6 回帰③　傾きの推測（信頼区間と検定）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 🎯 傾きの推測 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy active" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Inference for the Slope 🍎</div>
+    <h1>🍎 超やさしい版：回帰③（傾きの推測）</h1>
+  <p>「<strong>手元の傾きから、本当の傾きについて何が言える？</strong>」を、信頼区間と検定で答えます。</p>
+    <div class="unit-nav"><a href="#u1">傾きはゆれる</a><a href="#u2">信頼区間</a><a href="#u3">検定</a><a href="#u4">summaryの読み方</a><a href="m6_reg_inference.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画</strong>：Linear Regression 8（Inference for Slope - CI）と 9（Inference for Slope - ST）。データは寄付者 donors（母集団 95,412 人、標本 n = 50）。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>傾きはゆれる</h2><div class="unit-sub">b は推定値、本当の値は β</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>手元の傾き b は「推定値」。標本を取り直すと b は変わる。本当の傾きは β（ベータ）。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🎲</div>
+    <div class="ru-text">寄付者 95,412 人から<strong>50人</strong>を選んで直線を引くと、傾きは <strong>b = 3.91</strong>。<br>別の50人を選ぶと、別の傾きになります（相関も 0.35 になったり 0.78 になったり）。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th></th><th>標本（手元にある）</th><th>母集団（本当の値）</th></tr>
+    <tr><td>傾き</td><td>b</td><td>β</td></tr>
+    <tr><td>平均</td><td>x̄</td><td>μ</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>b は毎回ゆれる。<strong>どれくらいゆれるか</strong>が <strong>標準誤差 SE(b)</strong>。今回の例は <strong>b = 3.91、SE = 0.782</strong>、自由度は <strong>n − 2 = 48</strong>（切片と傾きの2つを推定したから）です。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 手元の傾きは b と β のどっち？<span class="cp-a">A. b（標本の傾き）。β は母集団の本当の傾きで、普通はわからない。</span></div><div class="cp-q">Q2. 自由度は？<span class="cp-a">A. n − 2 = 50 − 2 = 48。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>信頼区間</h2><div class="unit-sub">β のありかを区間で推測</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>信頼区間 = b ± t* × SE(b)。今回は 3.91 ± 1.57 = (2.34, 5.48)。</strong></p></div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">📏</div>
+    <div class="ru-text"><strong>b を真ん中に、前後に「ゆれの幅」を取った区間</strong>で、本当の傾き β をはさみにいきます。</div>
+  </div>
+  <pre class="code-block">
+<span class="cl">tcrit <span class="kw">&lt;-</span> <span class="kw">qt</span>(p = <span class="nm">0.975</span>, df = <span class="nm">48</span>)   <span class="cm"># 2.01</span></span>
+<span class="cl"><span class="nm">3.910</span> - tcrit * <span class="nm">0.782</span></span>
+<span class="cl"><span class="nm">3.910</span> + tcrit * <span class="nm">0.782</span></span>
+<span class="cl"><span class="kw">confint</span>(model, level = <span class="nm">0.95</span>)   <span class="cm"># 一発で出す</span></span>
+</pre><div class="output-reveal">[1] 2.337292
+[1] 5.481925
+
+                                   2.5 %     97.5 %
+sampleDonors$largestGiftAmount  2.337298   5.481919</div>
+  <div class="big-rule">
+    <div class="ru-arrow">✅</div>
+    <div class="ru-text">本当の傾きは <strong>β = 2.64</strong>。区間 (2.34, 5.48) の<strong>中に入っている</strong> → 区間は β を<strong>捕まえた</strong>！</div>
+  </div>
+  <div class="warn-box">⚠️ 「95%」は、「同じやり方で何回も区間を作ると、そのうち約95%がβを含む」という意味です。現実では β は知らないので、捕まえたかは確かめられません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「95% 確信：最大寄付額で総寄付額を予測する傾きは 2.3〜5.5 のあたり」と書きます。確信度を上げると（99%）区間は広く、下げると（90%）狭くなります。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. t* を出す R の式は？<span class="cp-a">A. qt(0.975, 48)（= 2.01）。</span></div><div class="cp-q">Q2. 区間は β = 2.64 を含む？<span class="cp-a">A. 含む（2.34 ≤ 2.64 ≤ 5.48）。だから捕まえた。</span></div><div class="cp-q">Q3. 99% にすると区間は広い？狭い？<span class="cp-a">A. 広い（1.81〜6.01）。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>有意性検定</h2><div class="unit-sub">関係はあるといえる？</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>H₀: β = 0（関係なし）。t = b ÷ SE = 5、p ≈ 8×10⁻⁶ ＜ 0.05 → H₀ を棄却。</strong></p></div>
+  <div class="big-rule down">
+    <div class="ru-arrow">⚖️</div>
+    <div class="ru-text"><strong>「本当は傾き 0（関係なし）」と仮定</strong>して、b = 3.91 が偶然出る確率（p 値）を調べます。小さければ、その仮定はあやしい。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>手順</th><th>内容</th></tr>
+    <tr><td>① 仮説</td><td>H₀: β = 0　／　Hₐ: β ≠ 0（α = 0.05）</td></tr>
+    <tr><td>② t</td><td>t = (3.910 − 0) ÷ 0.782 = <strong>5</strong></td></tr>
+    <tr><td>③ p 値</td><td>2 × pt(5, 48, lower.tail = FALSE) = <strong>8.06×10⁻⁶</strong>（出力は 8.07e-06）</td></tr>
+    <tr><td>④ 判断</td><td>p ＜ 0.05 → H₀ を棄却</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 結論の書き方</div><p>「最大寄付額と総寄付額の間に<strong>関連がある、という説得力のある証拠</strong>がある（母集団の傾きは 0 ではない）。」</p></div>
+  <div class="warn-box">⚠️ 2 を掛け忘れない（両側だから）。p ≥ 0.05 なら「棄却できない」であって「関係ないと証明」ではありません。</div>
+  <div class="warn-box">⚠️ p 値が小さい ≠ 重要。「欠席1回で成績 1% 減」は、p が小さくても実質的にはほぼ意味がない。効果の大きさと R²（この例は 0.3424）も見ましょう。</div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 帰無仮説は？<span class="cp-a">A. β = 0（母集団の傾きが 0 ＝ 関連なし）。</span></div><div class="cp-q">Q2. t と p の手計算は？<span class="cp-a">A. t = b ÷ SE = 3.910 ÷ 0.782 = 5。p = 2 * pt(5, 48, lower.tail = FALSE) ≈ 8×10⁻⁶。</span></div><div class="cp-q">Q3. p 値が小さければ、必ず重要？<span class="cp-a">A. いいえ。効果の大きさ（傾き）と R² も見る。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>summary の読み方</h2><div class="unit-sub">傾きの行を横に読む</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>summary(model) の「傾きの行」を横に読む：Estimate → Std. Error → t value → Pr(&gt;|t|)。</strong></p></div>
+  <pre class="code-block">
+<span class="cl">                               Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="cl">(Intercept)                      51.817     27.292   1.899   0.0636 .  </span>
+<span class="cl">sampleDonors$largestGiftAmount    3.910      0.782   5.000 8.07e-06 ***</span>
+</pre>
+  <table class="compare-table">
+    <tr><th>列</th><th>傾きの行の値</th><th>使い道</th></tr>
+    <tr><td>Estimate</td><td>3.910</td><td>b（区間の中心）</td></tr>
+    <tr><td>Std. Error</td><td>0.782</td><td>SE(b)（区間の幅）</td></tr>
+    <tr><td>t value</td><td>5.000</td><td>検定統計量</td></tr>
+    <tr><td>Pr(&gt;|t|)</td><td>8.07e-06</td><td>両側 p 値</td></tr>
+  </table>
+  <p>下のほうの <strong>Multiple R-squared: 0.3424</strong> は、y の変動の約 34% を x で説明できるという意味です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>1行で 区間（Estimate ± t* × Std. Error）も、検定（t と p）もできる。<code>summary(model)$coefficients[2, 4]</code> で p 値だけ取り出せます。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. p 値はどの列？<span class="cp-a">A. Pr(>|t|) の列（傾きの行は 8.07e-06）。</span></div><div class="cp-q">Q2. *** の意味は？<span class="cp-a">A. p 値が 0.001 より小さい（実質 0 に近い）。統計的に有意。</span></div></div>
+</div>
+
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m6_reg_inference.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• b = 3.91、SE = 0.782、df = 48</p><p style="margin:.4rem 0">• 95% CI：(2.34, 5.48)、β = 2.64 を含む</p><p style="margin:.4rem 0">• H₀: β = 0 → t = 5、p ≈ 8×10⁻⁶ → 棄却</p><p style="margin:.4rem 0">• p 値が小さくても効果の大きさと R² を確認</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">図・練習・英語MCQクイズは <a href="m6_reg_inference.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M6 回帰③ 傾きの推測 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_reg_inference.html">← 本編</a> · <a href="m6_reg_interpret.html">前：係数・残差・R²</a> · <a href="m6_reg_more.html">次：カテゴリ・重回帰 →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

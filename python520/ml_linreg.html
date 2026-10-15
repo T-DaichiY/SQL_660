@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 ML④ 線形回帰</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Machine Learning — Linear Regression</div>
+  <h1>📉 ML④：線形回帰</h1>
+  <p>単回帰・重回帰、基底関数による多項式回帰、RidgeとLassoの正則化を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 単回帰</a><a href="#unit2">② 重回帰</a><a href="#unit3">③ 多項式</a><a href="#unit4">④ 正則化</a><a href="#quiz">📝 Quiz</a><a href="ml_linreg_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 5.06 In Depth: Linear Regression</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>単回帰：直線を当てはめる</h2><div class="unit-sub">y = a x + b</div></div>
+  </div>
+<p>特徴量が1つの<strong>単回帰</strong>は、データに最もよく合う直線 <code>y = ax + b</code> を探します。<code>a</code>が<strong>傾き</strong>（<code>coef_</code>）、<code>b</code>が<strong>切片</strong>（<code>intercept_</code>）です。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression</span>
+<span class="cl">rng = np.random.RandomState(<span class="nm">1</span>)</span>
+<span class="cl">x = <span class="nm">10</span> * rng.rand(<span class="nm">50</span>)</span>
+<span class="cl">y = <span class="nm">2</span> * x - <span class="nm">5</span> + rng.randn(<span class="nm">50</span>)</span>
+</pre><pre class="code-block">
+<span class="cl">model = LinearRegression(fit_intercept=<span class="kw">True</span>)</span>
+<span class="cl">model.fit(x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>), y)</span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'slope    :'</span>, model.coef_[<span class="nm">0</span>].round(<span class="nm">3</span>))</span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'intercept:'</span>, model.intercept_.round(<span class="nm">3</span>))</span>
+</pre><div class="output-reveal">slope    : 2.027
+intercept: -4.999</div><p>本当の値は 傾き2・切片-5。ノイズがあるので少しずれますが、近い値が復元できました。</p><pre class="code-block">
+<span class="cl">xfit = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl">yfit = model.predict(xfit.reshape(-<span class="nm">1</span>, <span class="nm">1</span>))</span>
+<span class="cl">plt.scatter(x, y)</span>
+<span class="cl">plt.plot(xfit, yfit, color=<span class="st">'tomato'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Simple linear regression'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml4_simple.png" alt="単回帰" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>傾きは「xが1増えるとyがどれだけ増えるか」。切片は「x=0のときのy」。</p></div><div class="practice-card" id="p-ml4-u1">
+    <div class="ptitle">💻 ミニ練習：傾きを調べる</div>
+    <p class="ptask"><code>x</code>と<code>y</code>に直線を当てはめて、傾きを <code>slope</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml4-u1-input" rows="7">from sklearn.linear_model import LinearRegression
+x = np.array([1, 2, 3, 4])
+y = np.array([3, 5, 7, 9])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml4-u1", ["LinearRegression", "fit", "coef_"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml4-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml4-u1-result"></div>
+    <div class="answer-reveal" id="p-ml4-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">model = LinearRegression().fit(x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>), y)</span>
+<span class="cl">slope = model.coef_[<span class="nm">0</span>]</span>
+</pre>
+      <p class="answer-note">y = 2x + 1 なので傾きは2です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>重回帰：特徴量が複数</h2><div class="unit-sub">y = a0 + a1 x1 + a2 x2 + …</div></div>
+  </div>
+<p>特徴量が複数なら<strong>重回帰</strong>。直線が「平面」や「超平面」になるだけで、使い方は同じです。</p><pre class="code-block">
+<span class="cl">rng = np.random.RandomState(<span class="nm">1</span>)</span>
+<span class="cl">X = <span class="nm">10</span> * rng.rand(<span class="nm">100</span>, <span class="nm">3</span>)</span>
+<span class="cl">y = <span class="nm">0.5</span> + np.dot(X, [<span class="nm">1.5</span>, -<span class="nm">2.0</span>, <span class="nm">1.0</span>])     <span class="cm"># ノイズなし</span></span>
+<span class="cl">model = LinearRegression().fit(X, y)</span>
+<span class="cl"><span class="kw">print</span>(model.intercept_.round(<span class="nm">3</span>))</span>
+<span class="cl"><span class="kw">print</span>(model.coef_.round(<span class="nm">3</span>))</span>
+</pre><div class="output-reveal">0.5
+[ 1.5 -2.   1. ]</div><p>ノイズなしなら、真の係数 <code>[1.5, -2, 1]</code> と切片 <code>0.5</code> がぴったり復元されます。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(round(model.score(X, y), <span class="nm">3</span>))     <span class="cm"># 決定係数 R^2</span></span>
+</pre><div class="output-reveal">1.0</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>係数ごとに「その特徴量が1増えたとき、他を固定した場合のyの増え方」を表します。</p></div><div class="practice-card" id="p-ml4-u2">
+    <div class="ptitle">💻 ミニ練習：予測値</div>
+    <p class="ptask">上の <code>model</code> に <code>[[1, 1, 1]]</code> を入れたときの予測値（スカラー）を <code>p</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml4-u2-input" rows="7"># model は学習済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml4-u2", ["model.predict", "[0]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml4-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml4-u2-result"></div>
+    <div class="answer-reveal" id="p-ml4-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">p = model.predict([[<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>]])[<span class="nm">0</span>]</span>
+</pre>
+      <p class="answer-note">0.5 + 1.5 - 2 + 1 = 1.0 です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>基底関数と多項式回帰</h2><div class="unit-sub">直線モデルで曲線を表す</div></div>
+  </div>
+<p>特徴量を<strong>変換して増やす</strong>（基底関数）と、「係数については線形」のままで曲線が表せます。代表が<strong>多項式回帰</strong>で、<code>x → [x, x², x³]</code> と変換してから線形回帰します。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> PolynomialFeatures</span>
+<span class="cl"><span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> make_pipeline</span>
+<span class="cl"></span>
+<span class="cl">x = np.array([<span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>])</span>
+<span class="cl">poly = PolynomialFeatures(<span class="nm">3</span>, include_bias=<span class="kw">False</span>)</span>
+<span class="cl">poly.fit_transform(x[:, <span class="kw">None</span>])</span>
+</pre><div class="output-reveal">array([[ 2.,  4.,  8.],
+       [ 3.,  9., 27.],
+       [ 4., 16., 64.]])</div><pre class="code-block">
+<span class="cl">rng = np.random.RandomState(<span class="nm">1</span>)</span>
+<span class="cl">x = <span class="nm">10</span> * rng.rand(<span class="nm">50</span>)</span>
+<span class="cl">y = np.sin(x) + <span class="nm">0.1</span> * rng.randn(<span class="nm">50</span>)</span>
+<span class="cl">model = make_pipeline(PolynomialFeatures(<span class="nm">7</span>), LinearRegression())</span>
+<span class="cl">model.fit(x[:, <span class="kw">None</span>], y)</span>
+<span class="cl">xfit = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">500</span>)</span>
+<span class="cl">plt.scatter(x, y)</span>
+<span class="cl">plt.plot(xfit, model.predict(xfit[:, <span class="kw">None</span>]), color=<span class="st">'tomato'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Polynomial regression (degree 7)'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml4_poly.png" alt="7次多項式" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>式の形は <code>y = a0 + a1x + a2x² + …</code>。xの式は曲がっていても、<strong>係数aについては直線的</strong>なので線形回帰で解けます。</p></div><div class="warn-box">次数を上げすぎると過学習します。前のレッスンの交差検証で次数を選びましょう。</div><div class="practice-card" id="p-ml4-u3">
+    <div class="ptitle">💻 ミニ練習：特徴量の形</div>
+    <p class="ptask"><code>x = [1, 2, 3]</code>（<code>x[:, None]</code>で2次元）に<code>PolynomialFeatures(2, include_bias=False)</code>を適用した結果を <code>F</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml4-u3-input" rows="7">from sklearn.preprocessing import PolynomialFeatures
+x = np.array([1, 2, 3])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml4-u3", ["PolynomialFeatures(2", "fit_transform"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml4-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml4-u3-result"></div>
+    <div class="answer-reveal" id="p-ml4-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">F = PolynomialFeatures(<span class="nm">2</span>, include_bias=<span class="kw">False</span>).fit_transform(x[:, <span class="kw">None</span>])</span>
+</pre>
+      <p class="answer-note">列は x と x² で、形は (3, 2) です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>正則化：RidgeとLasso</h2><div class="unit-sub">係数が大きくなりすぎないようにする</div></div>
+  </div>
+<p>基底関数を増やすと係数が暴れて過学習しやすくなります。そこで<strong>係数の大きさにペナルティ</strong>をつけるのが<strong>正則化</strong>です。</p><ul><li><strong>Ridge（L2）</strong>：係数の2乗の和を小さく。係数を全体的に縮める。</li><li><strong>Lasso（L1）</strong>：係数の絶対値の和を小さく。不要な特徴量の係数を<strong>ちょうど0</strong>にする。</li></ul><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> Ridge, Lasso</span>
+<span class="cl">rng = np.random.RandomState(<span class="nm">0</span>)</span>
+<span class="cl">X = rng.randn(<span class="nm">60</span>, <span class="nm">5</span>)</span>
+<span class="cl">y = <span class="nm">3</span> * X[:, <span class="nm">0</span>] - <span class="nm">2</span> * X[:, <span class="nm">1</span>] + <span class="nm">0.5</span> * rng.randn(<span class="nm">60</span>)   <span class="cm"># 使うのは最初の2列だけ</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'OLS  :'</span>, LinearRegression().fit(X, y).coef_.round(<span class="nm">2</span>))</span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'Ridge:'</span>, Ridge(alpha=<span class="nm">10</span>).fit(X, y).coef_.round(<span class="nm">2</span>))</span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'Lasso:'</span>, Lasso(alpha=<span class="nm">0.3</span>).fit(X, y).coef_.round(<span class="nm">2</span>))</span>
+</pre><div class="output-reveal">OLS  : [ 2.9  -1.93  0.04  0.05 -0.05]
+Ridge: [ 2.48 -1.64  0.05  0.11 -0.08]
+Lasso: [ 2.62 -1.62  0.    0.   -0.  ]</div><p>Ridgeは係数を少し縮め、Lassoは関係ない3つの特徴量の係数を<strong>0</strong>にしました。<code>alpha</code>が正則化の強さ（大きいほど強い）です。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Ridge＝「みんな控えめに」、Lasso＝「いらない子は0に」。</p></div><div class="practice-card" id="p-ml4-u4">
+    <div class="ptitle">💻 ミニ練習：Ridge</div>
+    <p class="ptask"><code>x</code> と <code>y</code> に <code>Ridge(alpha=1.0)</code> を当てはめ、傾きを <code>slope</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml4-u4-input" rows="7">from sklearn.linear_model import Ridge
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml4-u4", ["Ridge(alpha=1.0)", "coef_"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml4-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml4-u4-result"></div>
+    <div class="answer-reveal" id="p-ml4-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">slope = Ridge(alpha=<span class="nm">1.0</span>).fit(x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>), y).coef_[<span class="nm">0</span>]</span>
+</pre>
+      <p class="answer-note">普通の回帰の2より少し縮んで約1.818になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In LinearRegression, what does the attribute intercept_ hold?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The prediction when all features are zero</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The slope for the first feature in the matrix</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of samples that were used in training</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The R-squared score on the training data</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How does multiple linear regression differ from simple linear regression?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It can only ever predict categories</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It never needs a call to fit()</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It uses several features</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It ignores the target y completely</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why is polynomial regression still called a linear model?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because it can only draw straight lines in the plot</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because it needs no training step at all</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because it uses exactly one feature only</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is linear in its coefficients</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which regularisation method can set some coefficients exactly to zero?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Ridge, with its squared (L2) penalty</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Lasso</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Neither of them can do that</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Both of them always do that</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What happens when the Ridge parameter alpha is increased?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The model becomes a lot more flexible</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Coefficients shrink more</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The data are shuffled before fitting</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The intercept is removed from the model</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A degree-15 polynomial fits the training points almost perfectly but predicts new points badly. What is this?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Underfitting, caused by a model that is too simple</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Imputation of the missing training values</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Standardisation of the features</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Overfitting</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 3, 1, 1, 3];
+var FEEDBACKS=["The intercept is the model output when every feature equals zero.", "Multiple regression has more than one feature column; the usage is otherwise the same.", "Features such as x^2 are created first; the model is linear in its coefficients.", "The L1 penalty in Lasso produces sparse coefficients.", "A larger alpha means a stronger penalty, so coefficients are pulled toward zero.", "Too much flexibility captures noise, which is overfitting. Regularisation or a lower degree can help."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">Coefficient</div><div class="term-en">係数</div><div class="term-def">各特徴量にかかる重み。coef_ に入る。</div></div>
+    <div class="term-item"><div class="term-name">Intercept</div><div class="term-en">切片</div><div class="term-def">すべての特徴量が0のときの予測値。intercept_。</div></div>
+    <div class="term-item"><div class="term-name">Basis function</div><div class="term-en">基底関数</div><div class="term-def">特徴量を変換して新しい特徴量を作る関数（x²など）。</div></div>
+    <div class="term-item"><div class="term-name">Polynomial regression</div><div class="term-en">多項式回帰</div><div class="term-def">xのべき乗を特徴にして曲線を当てはめる。</div></div>
+    <div class="term-item"><div class="term-name">Ridge (L2)</div><div class="term-en">リッジ回帰</div><div class="term-def">係数の2乗和にペナルティ。係数を縮める。</div></div>
+    <div class="term-item"><div class="term-name">Lasso (L1)</div><div class="term-en">ラッソ回帰</div><div class="term-def">係数の絶対値和にペナルティ。一部を0にする。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>係数 coef_ と切片 intercept_ の意味を言葉で説明できるようにしましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：ML④ 線形回帰</p>
+  <p style="margin-top:.5rem;"><a href="ml_features.html">← ③ 特徴量エンジニアリング</a> · <a href="ml_cluster.html">⑤ K-Means →</a> · <a href="ml_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

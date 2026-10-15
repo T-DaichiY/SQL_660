@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas⑤ 階層索引</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — Hierarchical Indexing</div>
+  <h1>🗃️ Pandas⑤：階層索引（MultiIndex）</h1>
+  <p>2段の索引、stack／unstack、set_index／reset_index、レベルごとの集計を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① MultiIndex</a><a href="#unit2">② unstack</a><a href="#unit3">③ set_index</a><a href="#unit4">④ level集計</a><a href="#quiz">📝 Quiz</a><a href="pd_hier_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.05 Hierarchical Indexing</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>索引を2段にする：MultiIndex</h2><div class="unit-sub">「都道府県 × 年」のようなデータ</div></div>
+  </div>
+<p>1つの行を2つ以上のラベル（例：州と年）で指定したいとき、<strong>MultiIndex（階層索引）</strong>を使います。</p><pre class="code-block">
+<span class="cl">index = pd.MultiIndex.from_tuples([(<span class="st">'CA'</span>, <span class="nm">2000</span>), (<span class="st">'CA'</span>, <span class="nm">2010</span>), (<span class="st">'TX'</span>, <span class="nm">2000</span>), (<span class="st">'TX'</span>, <span class="nm">2010</span>)], names=[<span class="st">'state'</span>, <span class="st">'year'</span>])</span>
+<span class="cl">pop = pd.Series([<span class="nm">34.0</span>, <span class="nm">37.3</span>, <span class="nm">20.9</span>, <span class="nm">25.1</span>], index=index)</span>
+<span class="cl">pop</span>
+</pre><div class="output-reveal">state  year
+CA     2000    34.0
+       2010    37.3
+TX     2000    20.9
+       2010    25.1
+dtype: float64</div><p>これで<strong>2段のラベル</strong>で取り出せます。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(pop[<span class="st">'CA'</span>])              <span class="cm"># 州だけ指定</span></span>
+<span class="cl"><span class="kw">print</span>(pop[<span class="st">'CA'</span>, <span class="nm">2010</span>])         <span class="cm"># 州と年</span></span>
+<span class="cl">pop.loc[:, <span class="nm">2010</span>]               <span class="cm"># 全州の2010年</span></span>
+</pre><div class="output-reveal">year
+2000    34.0
+2010    37.3
+dtype: float64
+37.3
+state
+CA    37.3
+TX    25.1
+dtype: float64</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「州」というフォルダの中に「年」のファイルがある、という階層構造です。</p></div><div class="practice-card" id="p-p5-u1">
+    <div class="ptitle">💻 ミニ練習：2段索引</div>
+    <p class="ptask"><code>pop</code>から、<strong>TXの2000年</strong>の値を取り出してください。</p>
+    <textarea class="code-editor" id="p-p5-u1-input" rows="7"># pop は state と year の2段索引を持つ Series
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p5-u1", ["pop['TX', 2000]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p5-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p5-u1-result"></div>
+    <div class="answer-reveal" id="p-p5-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pop[<span class="st">'TX'</span>, <span class="nm">2000</span>]</span>
+</pre>
+      <p class="answer-note">結果は20.9です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>stack と unstack</h2><div class="unit-sub">縦長 ↔ 横長</div></div>
+  </div>
+<p>2段索引のSeriesは、<code>unstack()</code>で<strong>内側のラベルを列に</strong>移して、表にできます。逆は<code>stack()</code>です。</p><pre class="code-block">
+<span class="cl">index = pd.MultiIndex.from_tuples([(<span class="st">'CA'</span>, <span class="nm">2000</span>), (<span class="st">'CA'</span>, <span class="nm">2010</span>), (<span class="st">'TX'</span>, <span class="nm">2000</span>), (<span class="st">'TX'</span>, <span class="nm">2010</span>)], names=[<span class="st">'state'</span>, <span class="st">'year'</span>])</span>
+<span class="cl">pop = pd.Series([<span class="nm">34.0</span>, <span class="nm">37.3</span>, <span class="nm">20.9</span>, <span class="nm">25.1</span>], index=index)</span>
+</pre><pre class="code-block">
+<span class="cl">table = pop.unstack()</span>
+<span class="cl">table</span>
+</pre><div class="output-reveal">year   2000  2010
+state            
+CA     34.0  37.3
+TX     20.9  25.1</div><pre class="code-block">
+<span class="cl">table.stack()</span>
+</pre><div class="output-reveal">state  year
+CA     2000    34.0
+       2010    37.3
+TX     2000    20.9
+       2010    25.1
+dtype: float64</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>unstack</code>は縦長（ロング）から横長（ワイド）へ、<code>stack</code>はその逆。データの形を変えるときに役立ちます。</p></div><div class="practice-card" id="p-p5-u2">
+    <div class="ptitle">💻 ミニ練習：unstack</div>
+    <p class="ptask"><code>pop</code>を <code>unstack()</code> して表にしてください。</p>
+    <textarea class="code-editor" id="p-p5-u2-input" rows="7"># pop は state と year の2段索引
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p5-u2", ["unstack"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p5-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p5-u2-result"></div>
+    <div class="answer-reveal" id="p-p5-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pop.unstack()</span>
+</pre>
+      <p class="answer-note">年が列になり、州が行になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>索引と列を行き来する</h2><div class="unit-sub">set_index / reset_index</div></div>
+  </div>
+<p>普通の列を索引にするのが<code>set_index</code>、索引を普通の列に戻すのが<code>reset_index</code>です。</p><pre class="code-block">
+<span class="cl">df = pd.DataFrame({<span class="st">'state'</span>: [<span class="st">'CA'</span>, <span class="st">'CA'</span>, <span class="st">'TX'</span>, <span class="st">'TX'</span>], <span class="st">'year'</span>: [<span class="nm">2000</span>, <span class="nm">2010</span>, <span class="nm">2000</span>, <span class="nm">2010</span>], <span class="st">'pop'</span>: [<span class="nm">34.0</span>, <span class="nm">37.3</span>, <span class="nm">20.9</span>, <span class="nm">25.1</span>]})</span>
+<span class="cl">idx = df.set_index([<span class="st">'state'</span>, <span class="st">'year'</span>])</span>
+<span class="cl">idx</span>
+</pre><div class="output-reveal">             pop
+state year      
+CA    2000  34.0
+      2010  37.3
+TX    2000  20.9
+      2010  25.1</div><pre class="code-block">
+<span class="cl">idx.reset_index()</span>
+</pre><div class="output-reveal">  state  year   pop
+0    CA  2000  34.0
+1    CA  2010  37.3
+2    TX  2000  20.9
+3    TX  2010  25.1</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>set_index</code>は「列を名札にする」、<code>reset_index</code>は「名札を列に戻す」。</p></div><div class="practice-card" id="p-p5-u3">
+    <div class="ptitle">💻 ミニ練習：set_index</div>
+    <p class="ptask"><code>df</code>の<code>state</code>列を索引にしてください。</p>
+    <textarea class="code-editor" id="p-p5-u3-input" rows="7"># df は state, year, pop 列を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p5-u3", ["set_index('state')"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p5-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p5-u3-result"></div>
+    <div class="answer-reveal" id="p-p5-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df.set_index(<span class="st">'state'</span>)</span>
+</pre>
+      <p class="answer-note">列が索引（行の名札）になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>レベルごとに集計</h2><div class="unit-sub">level を指定</div></div>
+  </div>
+<p>集計関数に<code>level</code>（どの段で集計するか）を指定できます。<code>groupby(level=...)</code>も同じ考え方です。</p><pre class="code-block">
+<span class="cl">data = pop.groupby(level=<span class="st">'state'</span>).mean()   <span class="cm"># 州ごとの平均</span></span>
+<span class="cl">data</span>
+</pre><div class="output-reveal">state
+CA    35.65
+TX    23.00
+dtype: float64</div><pre class="code-block">
+<span class="cl">pop.groupby(level=<span class="st">'year'</span>).sum()            <span class="cm"># 年ごとの合計</span></span>
+</pre><div class="output-reveal">year
+2000    54.9
+2010    62.4
+dtype: float64</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>2段のラベルのうち、「どの段でまとめるか」を指定して集計します。</p></div><div class="practice-card" id="p-p5-u4">
+    <div class="ptitle">💻 ミニ練習：レベルで集計</div>
+    <p class="ptask"><code>pop</code>を<strong>州ごと</strong>に合計してください。</p>
+    <textarea class="code-editor" id="p-p5-u4-input" rows="7"># pop は state と year の2段索引
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p5-u4", ["groupby(level='state')", "sum"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p5-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p5-u4-result"></div>
+    <div class="answer-reveal" id="p-p5-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pop.groupby(level=<span class="st">'state'</span>).sum()</span>
+</pre>
+      <p class="answer-note">CA: 71.3、TX: 46.0です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is a MultiIndex used for?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Converting a column into a function</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Storing several DataFrames in one file</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Speeding up all numeric calculations</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Labelling each row with two or more levels of keys</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does Series.unstack() do on a two-level index?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Deletes the inner level of the index</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Sorts the index alphabetically in place</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Moves the inner index level into columns</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Converts values to strings of text</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which method turns the index of a DataFrame back into normal columns?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df.unset()</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.flatten_index()</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df.drop_index()</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df.reset_index()</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does df.set_index("state") do?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Sorts the rows by state without any other change</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Removes the column named state from the data</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Uses the state column as the row index</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Replaces every state value with its index number</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">How do you get the mean per state from a Series with a (state, year) index?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>s.unstack().stack().mean() for each year</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>s.mean(axis=1) over the states</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>s.state.mean() with attribute access</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>s.groupby(level='state').mean()</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which is true about stack() and unstack()?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>They always return a Series of strings</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They sort the data and remove duplicates</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They only work on DataFrames with no index at all</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They reshape data between long and wide forms</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 2, 3, 2, 3, 3];
+var FEEDBACKS=["A MultiIndex gives rows a hierarchy of labels, such as state and year.", "unstack pivots the innermost index level into columns, producing a table.", "reset_index moves the index into columns and restores a default integer index.", "set_index makes the chosen column(s) the index. The column leaves the normal columns.", "groupby(level=...) aggregates over the chosen index level.", "They are inverse operations that move labels between the index and the columns."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">MultiIndex</div><div class="term-en">階層索引</div><div class="term-def">2段以上のラベルで行を指定する索引。</div></div>
+    <div class="term-item"><div class="term-name">unstack</div><div class="term-en">横長にする</div><div class="term-def">内側のレベルを列へ移して表にする。</div></div>
+    <div class="term-item"><div class="term-name">stack</div><div class="term-en">縦長にする</div><div class="term-def">列を内側のレベルへ移す。unstackの逆。</div></div>
+    <div class="term-item"><div class="term-name">set_index</div><div class="term-en">索引にする</div><div class="term-def">列を行の名札（索引）にする。</div></div>
+    <div class="term-item"><div class="term-name">reset_index</div><div class="term-en">索引を戻す</div><div class="term-def">索引を普通の列に戻し、連番の索引にする。</div></div>
+    <div class="term-item"><div class="term-name">level</div><div class="term-en">レベル</div><div class="term-def">MultiIndexの段。groupby(level=…)で段ごとに集計できる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>unstackは縦長→横長、stackはその逆と覚えます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas⑤ 階層索引</p>
+  <p style="margin-top:.5rem;"><a href="pd_missing.html">← ④ 欠損値</a> · <a href="pd_combine.html">⑥ 連結・結合 →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

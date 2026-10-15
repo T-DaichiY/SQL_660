@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 ML① 機械学習とscikit-learnの基本</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main active" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Machine Learning — Intro & scikit-learn</div>
+  <h1>🤖 ML①：機械学習とscikit-learnの基本</h1>
+  <p>教師あり・教師なし学習、特徴量行列とターゲット、Estimator APIの5手順をアヤメの例で学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 種類</a><a href="#unit2">② X と y</a><a href="#unit3">③ Estimator API</a><a href="#unit4">④ アヤメ</a><a href="#quiz">📝 Quiz</a><a href="ml_intro_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 5.01 What Is Machine Learning?</li><li>Handbook 5.02 Introducing Scikit-Learn</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>機械学習とは何か</h2><div class="unit-sub">教師あり学習と教師なし学習</div></div>
+  </div>
+<p>機械学習は、<strong>データから規則（モデル）を見つけ出し、新しいデータに当てはめる</strong>技術です。人が「if文」で規則を書く代わりに、データに規則を学ばせます。大きく2種類に分かれます。</p><ul><li><strong>教師あり学習</strong>：「正解（ラベル）」つきのデータで学ぶ。正解が<strong>カテゴリ</strong>なら<strong>分類</strong>、<strong>連続した数値</strong>なら<strong>回帰</strong>。</li><li><strong>教師なし学習</strong>：正解なしで、データの構造そのものを探す。例：<strong>クラスタリング</strong>（グループ分け）、<strong>次元削減</strong>。</li></ul><div class="teal-box">🍎 たとえ：教師あり＝「答え付きの問題集」で勉強する。教師なし＝答えのない写真の山を「似たもの同士」に仕分ける。</div><p>たとえば「身長から体重を予測する」のは回帰、「メールが迷惑メールかどうか」は分類です。まず小さなデータで確かめましょう。</p><pre class="code-block">
+<span class="cl">heights = np.array([<span class="nm">150</span>, <span class="nm">160</span>, <span class="nm">170</span>, <span class="nm">180</span>])   <span class="cm"># 入力</span></span>
+<span class="cl">weights = np.array([<span class="nm">50</span>, <span class="nm">56</span>, <span class="nm">65</span>, <span class="nm">72</span>])       <span class="cm"># 正解（連続値＝回帰）</span></span>
+<span class="cl">spam = np.array([<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>])               <span class="cm"># 正解（カテゴリ＝分類）</span></span>
+<span class="cl"><span class="kw">print</span>(heights.shape, weights.dtype, spam.dtype)</span>
+</pre><div class="output-reveal">(4,) int64 int64</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>正解が<strong>数値の量</strong>なら回帰、<strong>どのグループか</strong>なら分類。正解が無いなら教師なし。</p></div><div class="practice-card" id="p-ml1-u1">
+    <div class="ptitle">💻 ミニ練習：種類を見分ける</div>
+    <p class="ptask">正解が <code>[3.2, 1.5, 2.8]</code> のような連続値のとき、これは分類・回帰のどちら？変数 <code>kind</code> に英語（"classification" か "regression"）で入れてください。</p>
+    <textarea class="code-editor" id="p-ml1-u1-input" rows="7"># kind に文字列を入れる
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1-u1", ["regression"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1-u1-result"></div>
+    <div class="answer-reveal" id="p-ml1-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">kind = <span class="st">"regression"</span></span>
+</pre>
+      <p class="answer-note">連続した数値を予測するので回帰です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>データの形：特徴量行列とターゲット</h2><div class="unit-sub">X は2次元、y は1次元</div></div>
+  </div>
+<p>scikit-learnでは、データを<strong>特徴量行列 X</strong>（行＝サンプル、列＝特徴量）と、<strong>ターゲット y</strong>（正解の配列）に分けて渡します。Xは必ず<strong>2次元</strong>（<code>[n_samples, n_features]</code>）です。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.datasets <span class="kw">import</span> load_iris</span>
+<span class="cl">iris = load_iris(as_frame=<span class="kw">True</span>)</span>
+<span class="cl">df = iris.frame</span>
+<span class="cl">df.head()</span>
+</pre><div class="output-reveal">   sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  target
+0                5.1               3.5                1.4               0.2       0
+1                4.9               3.0                1.4               0.2       0
+2                4.7               3.2                1.3               0.2       0
+3                4.6               3.1                1.5               0.2       0
+4                5.0               3.6                1.4               0.2       0</div><p>アヤメ（iris）の花のデータです。4つの測定値が特徴量、<code>target</code>が品種（0,1,2）です。</p><pre class="code-block">
+<span class="cl">X = iris.data      <span class="cm"># 特徴量行列（DataFrameでもOK）</span></span>
+<span class="cl">y = iris.target    <span class="cm"># ターゲット</span></span>
+<span class="cl"><span class="kw">print</span>(X.shape)</span>
+<span class="cl"><span class="kw">print</span>(y.shape)</span>
+<span class="cl"><span class="kw">print</span>(list(X.columns))</span>
+</pre><div class="output-reveal">(150, 4)
+(150,)
+['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Xは「表」（行がサンプル、列が特徴量）、yは「正解の1列」。この約束がすべての出発点です。</p></div><div class="warn-box">1つの特徴量しかないときも、Xは<code>(n, 1)</code>の2次元にします（<code>x.reshape(-1, 1)</code>）。1次元のままだとエラーになります。</div><div class="practice-card" id="p-ml1-u2">
+    <div class="ptitle">💻 ミニ練習：形を整える</div>
+    <p class="ptask">1次元配列 <code>x</code> を、特徴量行列として使える <code>(n, 1)</code> の形に変えて <code>X</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1-u2-input" rows="7">x = np.array([1, 2, 3, 4])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1-u2", ["reshape(-1, 1)"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1-u2-result"></div>
+    <div class="answer-reveal" id="p-ml1-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">X = x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>)</span>
+</pre>
+      <p class="answer-note">reshape(-1, 1) で縦1列の2次元配列になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>Estimator API：5つの手順</h2><div class="unit-sub">どのモデルでも同じ型</div></div>
+  </div>
+<p>scikit-learnの強みは、<strong>どのモデルでも使い方が同じ</strong>ことです。</p><ol><li>モデルの<strong>クラスを選ぶ</strong>（<code>import</code>）</li><li>ハイパーパラメータを決めて<strong>インスタンスを作る</strong></li><li>データを<strong>X, y に整える</strong></li><li><code>fit()</code>で<strong>学習</strong></li><li><code>predict()</code>で<strong>予測</strong></li></ol><pre class="code-block">
+<span class="cl">rng = np.random.RandomState(<span class="nm">42</span>)</span>
+<span class="cl">x = <span class="nm">10</span> * rng.rand(<span class="nm">50</span>)</span>
+<span class="cl">y = <span class="nm">2</span> * x - <span class="nm">1</span> + rng.randn(<span class="nm">50</span>)    <span class="cm"># 傾き2、切片-1のデータにノイズ</span></span>
+</pre><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression   <span class="cm"># 手順1</span></span>
+<span class="cl">model = LinearRegression(fit_intercept=<span class="kw">True</span>)              <span class="cm"># 手順2</span></span>
+<span class="cl">X = x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>)                                       <span class="cm"># 手順3</span></span>
+<span class="cl">model.fit(X, y)                                            <span class="cm"># 手順4</span></span>
+<span class="cl"><span class="kw">print</span>(model.coef_, model.intercept_)</span>
+</pre><div class="output-reveal">[1.9776566] -0.903310725531111</div><p>末尾が<code>_</code>のもの（<code>coef_</code>など）は、<strong>学習の結果</strong>できた値です。</p><pre class="code-block">
+<span class="cl">xfit = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl">yfit = model.predict(xfit.reshape(-<span class="nm">1</span>, <span class="nm">1</span>))      <span class="cm"># 手順5</span></span>
+<span class="cl">plt.scatter(x, y)</span>
+<span class="cl">plt.plot(xfit, yfit, color=<span class="st">'tomato'</span>)</span>
+<span class="cl">plt.title(<span class="st">'LinearRegression fit'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml1_fit.png" alt="回帰直線" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>fit</code>で覚えさせ、<code>predict</code>で答えさせる。この2つはほぼ全モデル共通です。</p></div><div class="practice-card" id="p-ml1-u3">
+    <div class="ptitle">💻 ミニ練習：予測する</div>
+    <p class="ptask">学習済みの <code>model</code> で、<code>x = 5</code> のときの予測値（配列）を <code>pred</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1-u3-input" rows="7"># model は学習済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1-u3", ["model.predict", "[[5]]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1-u3-result"></div>
+    <div class="answer-reveal" id="p-ml1-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pred = model.predict([[<span class="nm">5</span>]])</span>
+</pre>
+      <p class="answer-note">predictの入力も2次元で渡します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>例：アヤメの分類</h2><div class="unit-sub">学習用とテスト用に分けて、正解率を測る</div></div>
+  </div>
+<p>モデルは、学習に使っていないデータで評価します。そこで、データを<strong>学習用</strong>と<strong>テスト用</strong>に分けます（<code>train_test_split</code>）。分類モデルとして、ここでは単純な<strong>ガウシアン・ナイーブベイズ</strong>を使います（中身は今は気にしなくてOK）。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split</span>
+<span class="cl"><span class="kw">from</span> sklearn.naive_bayes <span class="kw">import</span> GaussianNB</span>
+<span class="cl"><span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score</span>
+<span class="cl"></span>
+<span class="cl">Xtrain, Xtest, ytrain, ytest = train_test_split(iris.data, iris.target, random_state=<span class="nm">1</span>)</span>
+<span class="cl">model = GaussianNB()</span>
+<span class="cl">model.fit(Xtrain, ytrain)</span>
+<span class="cl">y_pred = model.predict(Xtest)</span>
+<span class="cl"><span class="kw">print</span>(accuracy_score(ytest, y_pred))</span>
+</pre><div class="output-reveal">0.9736842105263158</div><p>約97%が当たりました。<code>random_state</code>を固定すると、分け方が毎回同じになり結果を再現できます。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(Xtrain.shape, Xtest.shape)</span>
+<span class="cl"><span class="kw">print</span>(y_pred[:<span class="nm">10</span>])</span>
+<span class="cl"><span class="kw">print</span>(ytest.values[:<span class="nm">10</span>])</span>
+</pre><div class="output-reveal">(112, 4) (38, 4)
+[0 1 1 0 2 1 2 0 0 2]
+[0 1 1 0 2 1 2 0 0 2]</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>正解率（accuracy）は「当たった数 ÷ 全体の数」。テスト用データで測るのがコツです。</p></div><div class="practice-card" id="p-ml1-u4">
+    <div class="ptitle">💻 ミニ練習：正解率</div>
+    <p class="ptask"><code>y_true</code> と <code>y_hat</code> の正解率を <code>acc</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1-u4-input" rows="7">from sklearn.metrics import accuracy_score
+y_true = [0, 1, 1, 0]
+y_hat = [0, 1, 0, 0]
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1-u4", ["accuracy_score"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1-u4-result"></div>
+    <div class="answer-reveal" id="p-ml1-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">acc = accuracy_score(y_true, y_hat)</span>
+</pre>
+      <p class="answer-note">4つ中3つ一致なので0.75です。</p>
+    </div>
+  </div><div class="teal-box">🔎 もう一歩：教師なし学習の例はあとのレッスン（K-Means、PCA）で扱います。</div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Predicting a house price (a continuous number) from its size is an example of which task?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Grouping similar houses together without any labels</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Regression</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Compressing the data to fewer dimensions for plotting</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sorting houses into categories such as cheap or expensive</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the key difference between supervised and unsupervised learning?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Supervised learning always needs a GPU to run</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Unsupervised learning is always more accurate than supervised</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Supervised models cannot use numeric features</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Supervised learning uses known targets</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In scikit-learn, what shape should the features matrix X have?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>[n_samples, n_features]</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A single flat list containing only the labels</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A dictionary that maps column names to values</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>[n_features, n_samples, 1] with a trailing axis</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which is the correct order of the Estimator API steps?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Predict first, then fit, then choose the model, then arrange the data</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Arrange the data, call predict, call fit, then choose the model</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Choose a class and hyperparameters, arrange X and y, fit, predict</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Fit, choose the model, predict, then arrange the data last</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does a trailing underscore, as in model.coef_, tell you?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The value is private and cannot be read by users</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is a hyperparameter you must set before training</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The attribute is deprecated and will be removed</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It was learned during fit()</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why do we evaluate a model on a separate test set?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To make the training run noticeably faster</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To measure performance on unseen data</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To enlarge the training set with extra samples</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because accuracy_score needs two different arrays</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 3, 1];
+var FEEDBACKS=["A continuous target means regression. Classification predicts categories.", "Supervised learning learns from known answers (labels). Unsupervised learning finds structure without them.", "Rows are samples and columns are features, so X is 2-dimensional.", "You choose and configure the model, prepare X and y, call fit(), then predict().", "Attributes ending in an underscore are results of fit().", "Testing on unseen data estimates how the model will behave on new data."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">Supervised learning</div><div class="term-en">教師あり学習</div><div class="term-def">正解つきのデータで学ぶ。分類と回帰がある。</div></div>
+    <div class="term-item"><div class="term-name">Unsupervised learning</div><div class="term-en">教師なし学習</div><div class="term-def">正解なしでデータの構造を探す。クラスタリングなど。</div></div>
+    <div class="term-item"><div class="term-name">Feature matrix (X)</div><div class="term-en">特徴量行列</div><div class="term-def">行＝サンプル、列＝特徴量の2次元データ。</div></div>
+    <div class="term-item"><div class="term-name">Target (y)</div><div class="term-en">ターゲット</div><div class="term-def">予測したい正解の配列。</div></div>
+    <div class="term-item"><div class="term-name">Estimator</div><div class="term-en">推定器</div><div class="term-def">fit / predict を持つscikit-learnのモデルの総称。</div></div>
+    <div class="term-item"><div class="term-name">Hyperparameter</div><div class="term-en">ハイパーパラメータ</div><div class="term-def">学習の前に人が決める設定（例：n_neighbors）。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>まず X（2次元）と y（1次元）の形を確認する癖をつけましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：ML① 機械学習とscikit-learnの基本</p>
+  <p style="margin-top:.5rem;"><a href="mpl_seaborn.html">← ⑥ Seaborn</a> · <a href="ml_validation.html">② モデルの検証 →</a> · <a href="ml_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

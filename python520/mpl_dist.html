@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Matplotlib② 分布・誤差棒・等高線</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Matplotlib — Histograms, Errorbars, Contours</div>
+  <h1>📊 Matplotlib②：ヒストグラム・誤差棒・等高線</h1>
+  <p>ヒストグラム、誤差棒、等高線と2次元の密度を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① hist</a><a href="#unit2">② errorbar</a><a href="#unit3">③ contour</a><a href="#quiz">📝 Quiz</a><a href="mpl_dist_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 4.03 Visualizing Errors</li><li>Handbook 4.04 Density and Contour Plots</li><li>Handbook 4.05 Histograms, Binnings, and Density</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ヒストグラム：分布を見る</h2><div class="unit-sub">plt.hist</div></div>
+  </div>
+<p>データが<strong>どの値にどれくらい集まっているか</strong>（分布）を見るのがヒストグラムです。</p><pre class="code-block">
+<span class="cl">np.random.seed(<span class="nm">1</span>)</span>
+<span class="cl">data = np.random.randn(<span class="nm">1000</span>)</span>
+<span class="cl">plt.hist(data)</span>
+</pre><div class="plot-out"><img src="images/m2_hist1.png" alt="ヒストグラム" loading="lazy"></div><p><code>bins</code>（区間の数）、<code>density</code>（面積を1にそろえる）などで見た目を調整できます。</p><pre class="code-block">
+<span class="cl">plt.hist(data, bins=<span class="nm">30</span>, density=<span class="kw">True</span>, alpha=<span class="nm">0.5</span>, color=<span class="st">'steelblue'</span>, edgecolor=<span class="st">'white'</span>)</span>
+</pre><div class="plot-out"><img src="images/m2_hist2.png" alt="調整したヒストグラム" loading="lazy"></div><p>数値だけ欲しいときは、描かずに<code>np.histogram</code>で個数と区間の境界が得られます。</p><pre class="code-block">
+<span class="cl">counts, edges = np.histogram(data, bins=<span class="nm">5</span>)</span>
+<span class="cl"><span class="kw">print</span>(counts)</span>
+<span class="cl"><span class="kw">print</span>(edges.round(<span class="nm">2</span>))</span>
+</pre><div class="output-reveal">[ 47 326 510 114   3]
+[-3.05 -1.65 -0.25  1.15  2.56  3.96]</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ビンの数が少ないと大づかみ、多いと細かくなりすぎます。いくつか試して見やすいものを選びます。</p></div><div class="practice-card" id="p-m2-u1">
+    <div class="ptitle">💻 ミニ練習：ヒストグラム</div>
+    <p class="ptask"><code>data</code>を<strong>20区間</strong>のヒストグラムで描いてください。</p>
+    <textarea class="code-editor" id="p-m2-u1-input" rows="7">import numpy as np
+import matplotlib.pyplot as plt
+data = np.random.randn(500)
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m2-u1", ["plt.hist", "bins=20"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m2-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m2-u1-result"></div>
+    <div class="answer-reveal" id="p-m2-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">plt.hist(data, bins=<span class="nm">20</span>)</span>
+</pre>
+      <p class="answer-note">binsで区間の数を指定します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>誤差棒：errorbar</h2><div class="unit-sub">データのばらつきを示す</div></div>
+  </div>
+<p>測定値には誤差があります。<code>plt.errorbar</code>は、点と一緒に<strong>誤差の範囲</strong>を描きます。</p><pre class="code-block">
+<span class="cl">x = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">10</span>)</span>
+<span class="cl">y = np.sin(x)</span>
+<span class="cl">dy = <span class="nm">0.2</span></span>
+<span class="cl">plt.errorbar(x, y, yerr=dy, fmt=<span class="st">'o'</span>, color=<span class="st">'black'</span>, ecolor=<span class="st">'lightgray'</span>, elinewidth=<span class="nm">3</span>, capsize=<span class="nm">0</span>)</span>
+</pre><div class="plot-out"><img src="images/m2_errbar.png" alt="誤差棒" loading="lazy"></div><p><code>fmt='o'</code>は点の形式、<code>yerr</code>は縦方向の誤差、<code>ecolor</code>は誤差棒の色です。</p><p>連続的な誤差の範囲は、<code>plt.fill_between</code>で帯として描けます。</p><pre class="code-block">
+<span class="cl">xx = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl">yy = np.sin(xx)</span>
+<span class="cl">plt.plot(xx, yy, color=<span class="st">'navy'</span>)</span>
+<span class="cl">plt.fill_between(xx, yy - <span class="nm">0.2</span>, yy + <span class="nm">0.2</span>, color=<span class="st">'navy'</span>, alpha=<span class="nm">0.2</span>)</span>
+</pre><div class="plot-out"><img src="images/m2_fill.png" alt="帯" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>点には誤差棒（<code>errorbar</code>）、連続した線には帯（<code>fill_between</code>）が向いています。</p></div><div class="practice-card" id="p-m2-u2">
+    <div class="ptitle">💻 ミニ練習：errorbar</div>
+    <p class="ptask">x, y を丸い点で描き、縦の誤差を 0.5 にしてください。</p>
+    <textarea class="code-editor" id="p-m2-u2-input" rows="7">import numpy as np
+import matplotlib.pyplot as plt
+x = np.arange(5)
+y = np.array([1.0, 2.0, 1.5, 3.0, 2.5])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m2-u2", ["plt.errorbar", "yerr=0.5", "fmt='o'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m2-u2-result"></div>
+    <div class="answer-reveal" id="p-m2-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">plt.errorbar(x, y, yerr=<span class="nm">0.5</span>, fmt=<span class="st">'o'</span>)</span>
+</pre>
+      <p class="answer-note">yerrに数または配列を渡します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>等高線と密度：contour</h2><div class="unit-sub">3つ目の値を線や色で表す</div></div>
+  </div>
+<p>2つの変数 (x, y) に対して値 z がある関数は、<strong>等高線</strong>で表せます。</p><pre class="code-block">
+<span class="cl"><span class="kw">def</span> f(x, y):</span>
+<span class="cl">    <span class="kw">return</span> np.sin(x) ** <span class="nm">10</span> + np.cos(<span class="nm">10</span> + y * x) * np.cos(x)</span>
+<span class="cl"></span>
+<span class="cl">x = np.linspace(<span class="nm">0</span>, <span class="nm">5</span>, <span class="nm">50</span>)</span>
+<span class="cl">y = np.linspace(<span class="nm">0</span>, <span class="nm">5</span>, <span class="nm">40</span>)</span>
+<span class="cl">X, Y = np.meshgrid(x, y)</span>
+<span class="cl">Z = f(X, Y)</span>
+<span class="cl">plt.contour(X, Y, Z, colors=<span class="st">'black'</span>)</span>
+</pre><div class="plot-out"><img src="images/m2_contour1.png" alt="等高線" loading="lazy"></div><pre class="code-block">
+<span class="cl">plt.contourf(X, Y, Z, <span class="nm">20</span>, cmap=<span class="st">'RdGy'</span>)</span>
+<span class="cl">plt.colorbar()</span>
+</pre><div class="plot-out"><img src="images/m2_contour2.png" alt="塗りつぶし等高線" loading="lazy"></div><p><code>meshgrid</code>は、x と y の配列から<strong>全ての (x, y) の組み合わせ</strong>の格子（2次元配列）を作ります。</p><pre class="code-block">
+<span class="cl">X, Y = np.meshgrid([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>], [<span class="nm">10</span>, <span class="nm">20</span>])</span>
+<span class="cl"><span class="kw">print</span>(X)</span>
+<span class="cl">Y</span>
+</pre><div class="output-reveal">[[1 2 3]
+ [1 2 3]]
+array([[10, 10, 10],
+       [20, 20, 20]])</div><p>2次元の分布（点の密度）は、<code>plt.hist2d</code>で四角形ごとの個数を色で描けます。</p><pre class="code-block">
+<span class="cl">np.random.seed(<span class="nm">2</span>)</span>
+<span class="cl">m = np.random.multivariate_normal([<span class="nm">0</span>, <span class="nm">0</span>], [[<span class="nm">1</span>, <span class="nm">1</span>], [<span class="nm">1</span>, <span class="nm">2</span>]], <span class="nm">5000</span>)</span>
+<span class="cl">plt.hist2d(m[:, <span class="nm">0</span>], m[:, <span class="nm">1</span>], bins=<span class="nm">30</span>, cmap=<span class="st">'Blues'</span>)</span>
+<span class="cl">plt.colorbar(label=<span class="st">'count'</span>)</span>
+</pre><div class="plot-out"><img src="images/m2_hist2d.png" alt="2次元ヒストグラム" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>等高線は地図の標高線と同じ。<code>contourf</code>は線のあいだを色で塗ります。</p></div><div class="practice-card" id="p-m2-u3">
+    <div class="ptitle">💻 ミニ練習：meshgrid</div>
+    <p class="ptask"><code>x = [0, 1]</code>、<code>y = [0, 1, 2]</code> から格子 <code>X, Y</code> を作ってください。</p>
+    <textarea class="code-editor" id="p-m2-u3-input" rows="7">import numpy as np
+x = np.array([0, 1])
+y = np.array([0, 1, 2])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m2-u3", ["np.meshgrid"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m2-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m2-u3-result"></div>
+    <div class="answer-reveal" id="p-m2-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">X, Y = np.meshgrid(x, y)</span>
+</pre>
+      <p class="answer-note">Xの形は(3, 2)になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does a histogram show?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>How the values are distributed across intervals</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>How two variables change together as time passes</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The exact order in which the data points arrived</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only the average value of all of the data</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which argument sets the number of intervals in plt.hist?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>bars</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>bins</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>cells</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>groups</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does density=True do in plt.hist?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Draws many more points on the figure</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Normalizes the heights so the area is 1</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Colours each of the bars by how dense it is</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes the outliers from the data before plotting</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which call draws points with vertical error bars?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>plt.errorbar(x, y, yerr=dy, fmt="o")</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>plt.plot(x, y, err=dy), using a keyword that plot does not have</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>plt.hist(x, yerr=dy), which draws bars of counts</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>plt.bar(x, y, error=dy, fmt="o"), with a different keyword</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does np.meshgrid([1, 2, 3], [10, 20]) return?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A single 1-D array that holds five numbers</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Two 2-D arrays covering every (x, y) pair</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The product of both lists as one single number</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A list of the coordinate pairs written as strings</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">How does contourf differ from contour?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>contourf fills the regions between lines</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>contourf can only work with one-dimensional data</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>contourf draws just a single level of the data</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>contourf needs no Z values to be supplied</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 1, 0, 1, 0];
+var FEEDBACKS=["The data range is split into bins and the height shows how many values fall in each.", "bins controls the number of intervals (or their edges).", "The heights are scaled so that the total area equals 1, which allows comparing distributions.", "errorbar takes yerr for vertical errors and fmt for the marker style.", "It builds coordinate matrices X and Y so that every combination of x and y is represented.", "contour draws lines at fixed levels, while contourf paints the areas between them."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">hist</div><div class="term-en">ヒストグラム</div><div class="term-def">値の分布を区間ごとの個数で表す。bins・density。</div></div>
+    <div class="term-item"><div class="term-name">errorbar</div><div class="term-en">誤差棒</div><div class="term-def">点と誤差の範囲を一緒に描く。yerrで縦方向の誤差。</div></div>
+    <div class="term-item"><div class="term-name">fill_between</div><div class="term-en">帯</div><div class="term-def">2本の線の間を塗って、連続的な誤差の範囲を表す。</div></div>
+    <div class="term-item"><div class="term-name">contour / contourf</div><div class="term-en">等高線</div><div class="term-def">z値の等しい線を描く／線のあいだを塗りつぶす。</div></div>
+    <div class="term-item"><div class="term-name">meshgrid</div><div class="term-en">格子</div><div class="term-def">xとyの全ての組み合わせの座標配列を作る。</div></div>
+    <div class="term-item"><div class="term-name">hist2d</div><div class="term-en">2次元ヒストグラム</div><div class="term-def">平面上の点の密度を、四角形ごとの個数の色で表す。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>binsは、いくつか試して見やすい数を選びます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Matplotlib② 分布・誤差棒・等高線</p>
+  <p style="margin-top:.5rem;"><a href="mpl_basics.html">← ① 線・散布図</a> · <a href="mpl_legend_color.html">③ 凡例・カラーバー →</a> · <a href="mpl_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

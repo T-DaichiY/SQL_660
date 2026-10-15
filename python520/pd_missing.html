@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas④ 欠損値</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — Missing Values</div>
+  <h1>🕳️ Pandas④：欠損値</h1>
+  <p>NaNの意味、isnull、dropna、fillnaを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① とは</a><a href="#unit2">② 見つける</a><a href="#unit3">③ 取り除く</a><a href="#unit4">④ 埋める</a><a href="#quiz">📝 Quiz</a><a href="pd_missing_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.04 Handling Missing Data</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>欠損値とは</h2><div class="unit-sub">NaN と None</div></div>
+  </div>
+<p>実データには<strong>値が入っていない</strong>箇所がよくあります（欠損値）。Pandasでは、数値の欠損は<strong>NaN</strong>、文字列などの欠損は<strong>None</strong>や<strong>NaN</strong>で表されます。</p><pre class="code-block">
+<span class="cl">vals = pd.Series([<span class="nm">1</span>, np.nan, <span class="nm">3</span>, <span class="kw">None</span>])</span>
+<span class="cl">vals</span>
+</pre><div class="output-reveal">0    1.0
+1    NaN
+2    3.0
+3    NaN
+dtype: float64</div><p>数値の列にNoneを入れると、自動でNaNに変換され、型は<code>float64</code>になります（整数のまま欠損を持てないため）。</p><div class="warn-box">⚠️ NaNを含む計算の結果はNaNです。ただし、Pandasの<code>sum</code>・<code>mean</code>はデフォルトで<strong>NaNを無視して</strong>計算します（NumPyとは違う点）。</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(vals.sum())</span>
+<span class="cl"><span class="kw">print</span>(vals.mean())</span>
+<span class="cl">np.nan + <span class="nm">1</span></span>
+</pre><div class="output-reveal">4.0
+2.0
+nan</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>欠損値は「空欄」。足し算に空欄が混ざると答えも不明になりますが、Pandasの集計は空欄を飛ばして計算してくれます。</p></div><div class="practice-card" id="p-p4-u1">
+    <div class="ptitle">💻 ミニ練習：欠損を含むSeries</div>
+    <p class="ptask">値 <code>1, 2, NaN</code> の Series を作り、<code>s</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-p4-u1-input" rows="7">import numpy as np
+import pandas as pd
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p4-u1", ["pd.Series", "np.nan"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p4-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p4-u1-result"></div>
+    <div class="answer-reveal" id="p-p4-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">s = pd.Series([<span class="nm">1</span>, <span class="nm">2</span>, np.nan])</span>
+</pre>
+      <p class="answer-note"><code>np.nan</code>が欠損値です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>見つける：isnull / notnull</h2><div class="unit-sub">欠損の数を数える</div></div>
+  </div>
+<p>欠損かどうかは、<code>isnull()</code>（または<code>isna()</code>）と<code>notnull()</code>で判定します。結果はTrue/Falseです。</p><pre class="code-block">
+<span class="cl">df = pd.DataFrame({<span class="st">'a'</span>: [<span class="nm">1</span>, np.nan, <span class="nm">3</span>, <span class="nm">4</span>], <span class="st">'b'</span>: [np.nan, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>], <span class="st">'c'</span>: [<span class="nm">1</span>, <span class="nm">2</span>, np.nan, np.nan]})</span>
+</pre><pre class="code-block">
+<span class="cl">df.isnull()</span>
+</pre><div class="output-reveal">       a      b      c
+0  False   True  False
+1   True  False  False
+2  False  False   True
+3  False  False   True</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(df.isnull().sum())          <span class="cm"># 列ごとの欠損数</span></span>
+<span class="cl">df.isnull().sum().sum()        <span class="cm"># 全体の欠損数</span></span>
+</pre><div class="output-reveal">a    1
+b    1
+c    2
+dtype: int64
+4</div><pre class="code-block">
+<span class="cl">df[df[<span class="st">"a"</span>].notnull()]          <span class="cm"># a列が欠損でない行だけ</span></span>
+</pre><div class="output-reveal">     a    b    c
+0  1.0  NaN  1.0
+2  3.0  3.0  NaN
+3  4.0  4.0  NaN</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>isnull().sum()</code>は、「各列に空欄がいくつあるか」を数える定番のコードです。</p></div><div class="practice-card" id="p-p4-u2">
+    <div class="ptitle">💻 ミニ練習：欠損の数</div>
+    <p class="ptask"><code>df</code>の<strong>列ごとの欠損数</strong>を求めてください。</p>
+    <textarea class="code-editor" id="p-p4-u2-input" rows="7"># df は a, b, c を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p4-u2", ["isnull()", "sum()"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p4-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p4-u2-result"></div>
+    <div class="answer-reveal" id="p-p4-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df.isnull().sum()</span>
+</pre>
+      <p class="answer-note">isnull()でTrue/Falseにし、sum()で列ごとのTrueの個数を数えます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>取り除く：dropna</h2><div class="unit-sub">行ごと・列ごと</div></div>
+  </div>
+<p><code>dropna()</code>は、欠損のある<strong>行</strong>を取り除きます（元のdfは変わらず、新しいDataFrameが返ります）。</p><pre class="code-block">
+<span class="cl">df.dropna()</span>
+</pre><div class="output-reveal">Empty DataFrame
+Columns: [a, b, c]
+Index: []</div><pre class="code-block">
+<span class="cl">df.dropna(axis=<span class="nm">1</span>)           <span class="cm"># 欠損のある「列」を取り除く</span></span>
+</pre><div class="output-reveal">Empty DataFrame
+Columns: []
+Index: [0, 1, 2, 3]</div><pre class="code-block">
+<span class="cl">df.dropna(how=<span class="st">"all"</span>)        <span class="cm"># すべてが欠損の行だけ除く</span></span>
+</pre><div class="output-reveal">     a    b    c
+0  1.0  NaN  1.0
+1  NaN  2.0  2.0
+2  3.0  3.0  NaN
+3  4.0  4.0  NaN</div><pre class="code-block">
+<span class="cl">df.dropna(thresh=<span class="nm">2</span>)         <span class="cm"># 欠損でない値が2個以上ある行だけ残す</span></span>
+</pre><div class="output-reveal">     a    b    c
+0  1.0  NaN  1.0
+1  NaN  2.0  2.0
+2  3.0  3.0  NaN
+3  4.0  4.0  NaN</div><div class="warn-box">⚠️ <code>dropna()</code>は初期設定で<strong>1つでも欠損がある行</strong>を丸ごと消します。データが大幅に減ることがあるので、減った行数を確認しましょう。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>how='all'</code>は「全部空欄なら消す」、<code>thresh=n</code>は「n個以上埋まっていれば残す」。</p></div><div class="practice-card" id="p-p4-u3">
+    <div class="ptitle">💻 ミニ練習：dropna</div>
+    <p class="ptask"><code>df</code>から、<strong>欠損でない値が2個以上ある行</strong>だけを残してください。</p>
+    <textarea class="code-editor" id="p-p4-u3-input" rows="7"># df は a, b, c を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p4-u3", ["dropna", "thresh=2"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p4-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p4-u3-result"></div>
+    <div class="answer-reveal" id="p-p4-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df.dropna(thresh=<span class="nm">2</span>)</span>
+</pre>
+      <p class="answer-note">threshは「残すために必要な欠損でない値の数」です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>埋める：fillna</h2><div class="unit-sub">値・直前の値・直後の値</div></div>
+  </div>
+<p><code>fillna</code>は欠損を別の値で埋めます。</p><pre class="code-block">
+<span class="cl">df.fillna(<span class="nm">0</span>)</span>
+</pre><div class="output-reveal">     a    b    c
+0  1.0  0.0  1.0
+1  0.0  2.0  2.0
+2  3.0  3.0  0.0
+3  4.0  4.0  0.0</div><pre class="code-block">
+<span class="cl">df.fillna(df.mean())      <span class="cm"># 列ごとの平均で埋める</span></span>
+</pre><div class="output-reveal">          a    b    c
+0  1.000000  3.0  1.0
+1  2.666667  2.0  2.0
+2  3.000000  3.0  1.5
+3  4.000000  4.0  1.5</div><pre class="code-block">
+<span class="cl">s = pd.Series([<span class="nm">1</span>, np.nan, <span class="nm">2</span>, <span class="kw">None</span>, <span class="nm">3</span>], index=list(<span class="st">'abcde'</span>))</span>
+<span class="cl"><span class="kw">print</span>(s.ffill())    <span class="cm"># 直前の値で埋める</span></span>
+<span class="cl">s.bfill()           <span class="cm"># 直後の値で埋める</span></span>
+</pre><div class="output-reveal">a    1.0
+b    1.0
+c    2.0
+d    2.0
+e    3.0
+dtype: float64
+a    1.0
+b    2.0
+c    2.0
+d    3.0
+e    3.0
+dtype: float64</div><div class="warn-box">⚠️ 欠損をどう処理するかで分析結果が変わります。0で埋めるのが正しいとは限りません（例：気温が欠損のとき0℃とは限らない）。意味を考えて選びましょう。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>ffill</code>は「前の値をそのまま持ち越す」、<code>bfill</code>は「次の値を前に持ってくる」。</p></div><div class="practice-card" id="p-p4-u4">
+    <div class="ptitle">💻 ミニ練習：fillna</div>
+    <p class="ptask"><code>df</code>の欠損を、<strong>列ごとの平均</strong>で埋めてください。</p>
+    <textarea class="code-editor" id="p-p4-u4-input" rows="7"># df は a, b, c を持つ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p4-u4", ["fillna", "df.mean()"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p4-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p4-u4-result"></div>
+    <div class="answer-reveal" id="p-p4-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df.fillna(df.mean())</span>
+</pre>
+      <p class="answer-note">df.mean()は列ごとの平均で、列名が対応する欠損を埋めます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What dtype does pd.Series([1, np.nan, 3]) have?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>int64, since most values are integers</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>bool, since NaN counts as False</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>object, because the values are mixed</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>float64</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which call counts missing values in each column of df?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df.notnull().drop()</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.count_na()</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df.missing()</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df.isnull().sum()</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">By default, how does df.dropna() treat a row?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Removes it only if all values are missing</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Keeps it but marks it</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Fills it with zeros</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes it if any value is missing</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does df.dropna(thresh=2) keep?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Columns in which two values are present</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the rows that have exactly two missing cells</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The first two rows of the data frame, always</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Rows with at least 2 non-missing values</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does s.ffill() do?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Fills each gap with the next value that follows</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Fills every gap with zero</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Fills each gap with the previous value</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Deletes the gaps and shortens the Series</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why should you think before using fillna(0)?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is not allowed on floats</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It always slows down the code</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It deletes the index</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Zero may be a misleading value for the data</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 3, 3, 3, 2, 3];
+var FEEDBACKS=["Integers cannot hold NaN in the default dtypes, so the Series becomes float64.", "isnull gives True/False for each cell, and sum counts the True values per column.", "The default is how=\"any\": a single NaN removes the whole row.", "thresh is the minimum number of non-NA values needed to keep a row.", "ffill propagates the last valid value forward. bfill uses the next valid value.", "A filled value changes the data. Zero is not a neutral choice for many measurements."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">NaN</div><div class="term-en">欠損値</div><div class="term-def">数値の欠けた値。入ると列の型はfloat64になる。</div></div>
+    <div class="term-item"><div class="term-name">isnull / notnull</div><div class="term-en">欠損の判定</div><div class="term-def">欠損ならTrue（isnull）／欠損でないならTrue（notnull）。</div></div>
+    <div class="term-item"><div class="term-name">dropna</div><div class="term-en">欠損を除く</div><div class="term-def">欠損のある行（や列）を取り除く。how・thresh・axisで調整。</div></div>
+    <div class="term-item"><div class="term-name">fillna</div><div class="term-en">欠損を埋める</div><div class="term-def">指定した値や平均などで埋める。</div></div>
+    <div class="term-item"><div class="term-name">ffill / bfill</div><div class="term-en">前／後ろの値で埋める</div><div class="term-def">直前の値を持ち越す／直後の値を前に持ってくる。</div></div>
+    <div class="term-item"><div class="term-name">thresh</div><div class="term-en">しきい値</div><div class="term-def">残すために必要な、欠損でない値の最小数。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>欠損の処理は分析結果を変えます。意味を考えて選びます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas④ 欠損値</p>
+  <p style="margin-top:.5rem;"><a href="pd_ops.html">← ③ 計算・並べ替え</a> · <a href="pd_hier.html">⑤ 階層索引 →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

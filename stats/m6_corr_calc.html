@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6 相関②　手計算と注意点</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 🧮 相関の計算と注意 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M6 · Correlation ② — How r is calculated, and its cautions</div>
+  <h1>🧮 相関②：手計算と注意点</h1>
+  <p>相関係数 r はどう計算されるのか。<strong>共分散（covariance）</strong>を標準化したものが r です。電卓でも手計算できる小さな例を通して意味をつかみ、そのあとで r の<strong>性質</strong>と、使うときの<strong>注意点</strong>（因果・曲線・外れ値・カテゴリ変数）を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 「M6 Correlation 5 - How is correlation calculated manually?」「M6 Correlation 6 - Main caution about correlation」「M6 Correlation 7 - More Cautions about correlations」</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 共分散と r の手計算</a><a href="#unit2">② r の性質</a><a href="#unit3">③ 注意点</a><a href="#unit4">④ Spearman・Anscombe</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 共分散と r の手計算：<strong>Correlation 5</strong>（共分散の式、手計算、標準化、z スコア版、n − 1）</li><li>② r の性質：<strong>Correlation 6</strong>（量的変数が必要・x と y の入れ替え・単位変換・単位なし・符号・外れ値に弱い）</li><li>③ 注意点：<strong>Correlation 6 の続きの「主な注意」（相関≠因果）</strong>と <strong>Correlation 7</strong> の注意 1〜3, 6（曲線・r ≈ 0・カテゴリ変数）</li><li>④ Spearman・Kendall と Anscombe・Datasaurus：<strong>Correlation 7</strong>（注意 4, 5）</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>共分散 covariance と r の手計算</h2><div class="unit-sub">「平均からのズレ」を掛けて足す</div></div>
+  </div>
+  <p>相関 r の土台は<strong>共分散（covariance）</strong>です。散布図の 1 つの点は順序対 (x<sub>i</sub>, y<sub>i</sub>)。それぞれの<strong>平均からのズレ（偏差 deviation）</strong>を掛け合わせ、全部の点で足し合わせ、n − 1 で割ります。</p>
+  <div class="note-box">📐 <strong>共分散の式：</strong> cov(x, y) = Σ (x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ) ／ (n − 1)　（x̄, ȳ は x と y の平均、n は順序対の数、Σ は「全部足す」）</div>
+  <p>符号の読み方は直感的です。</p>
+  <ul>
+    <li><strong>cov &gt; 0（正の相関）</strong>：平均的に、x と y が<strong>そろって平均より大きい／そろって小さい</strong>。</li>
+    <li><strong>cov &lt; 0（負の相関）</strong>：平均的に、<strong>片方が平均より大きいとき、もう片方は小さい</strong>。</li>
+  </ul>
+  <h3>講義の例：検索結果の「位置」とクリック率</h3>
+  <p>検索結果の掲載順位（position：1 が最上位）と、そのクリック率（click-through rate, %）の 10 組です。まず平均と、各値の平均からのズレを求めます。</p>
+<pre class="code-block">
+<span class="cl">position &lt;- <span class="nm">1</span>:<span class="nm">10</span></span>
+<span class="cl">rate &lt;- <span class="kw">c</span>(<span class="nm">23.53</span>, <span class="nm">14.94</span>, <span class="nm">11.19</span>, <span class="nm">7.47</span>, <span class="nm">5.29</span>, <span class="nm">3.8</span>, <span class="nm">2.79</span>, <span class="nm">2.11</span>, <span class="nm">1.57</span>, <span class="nm">1.18</span>)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">mean</span>(position)</span>
+<span class="cl"><span class="kw">mean</span>(rate)</span>
+<span class="cl"></span>
+<span class="cl">deviation_positions &lt;- position - <span class="kw">mean</span>(position)</span>
+<span class="cl">deviation_rates &lt;- rate - <span class="kw">mean</span>(rate)</span>
+<span class="cl">deviation_positions</span>
+<span class="cl">deviation_rates</span>
+</pre><div class="output-reveal">[1] 5.5
+[1] 7.387
+ [1] -4.5 -3.5 -2.5 -1.5 -0.5  0.5  1.5  2.5  3.5  4.5
+ [1] 16.143  7.553  3.803  0.083 -2.097 -3.587 -4.597 -5.277 -5.817 -6.207</div>
+  <p>平均は位置が <strong>5.5</strong>、クリック率が <strong>7.387</strong>。たとえば 1 位は x が −4.5（平均より下）、y が +16.143（平均より上）で、符号が逆です。次に、<strong>同じ点どうしのズレを掛け</strong>（products）、足して（Σ）、n − 1 = 9 で割ります。<code>length()</code>を使うと数える手間が省けます。</p>
+<table class="compare-table"><tr><th>i</th><th>位置 x</th><th>クリック率 y (%)</th><th>x − x̄</th><th>y − ȳ</th><th>(x − x̄)(y − ȳ)</th></tr><tr><td>1</td><td>1</td><td>23.53</td><td>−4.50</td><td>16.14</td><td>−72.64</td></tr><tr><td>2</td><td>2</td><td>14.94</td><td>−3.50</td><td>7.55</td><td>−26.44</td></tr><tr><td>3</td><td>3</td><td>11.19</td><td>−2.50</td><td>3.80</td><td>−9.51</td></tr><tr><td>4</td><td>4</td><td>7.47</td><td>−1.50</td><td>0.08</td><td>−0.12</td></tr><tr><td>5</td><td>5</td><td>5.29</td><td>−0.50</td><td>−2.10</td><td>1.05</td></tr><tr><td>6</td><td>6</td><td>3.8</td><td>0.50</td><td>−3.59</td><td>−1.79</td></tr><tr><td>7</td><td>7</td><td>2.79</td><td>1.50</td><td>−4.60</td><td>−6.90</td></tr><tr><td>8</td><td>8</td><td>2.11</td><td>2.50</td><td>−5.28</td><td>−13.19</td></tr><tr><td>9</td><td>9</td><td>1.57</td><td>3.50</td><td>−5.82</td><td>−20.36</td></tr><tr><td>10</td><td>10</td><td>1.18</td><td>4.50</td><td>−6.21</td><td>−27.93</td></tr><tr><td colspan="5"><strong>合計 Σ</strong></td><td><strong>−177.835</strong></td></tr></table><p style="font-size:.85rem">※ 表は小数第 2 位までの表示（合計は丸める前の値）。</p><pre class="code-block">
+<span class="cl">products &lt;- deviation_positions * deviation_rates</span>
+<span class="cl">products</span>
+<span class="cl">sum_products &lt;- <span class="kw">sum</span>(products)</span>
+<span class="cl">sum_products</span>
+<span class="cl">my_covariance &lt;- sum_products / (<span class="kw">length</span>(products) - <span class="nm">1</span>)</span>
+<span class="cl">my_covariance</span>
+<span class="cl"><span class="kw">cov</span>(position, rate)</span>
+</pre><div class="output-reveal"> [1] -72.6435 -26.4355  -9.5075  -0.1245   1.0485  -1.7935  -6.8955 -13.1925
+ [9] -20.3595 -27.9315
+[1] -177.835
+[1] -19.75944
+[1] -19.75944</div>
+  <p>共分散は<strong>−19.76</strong>。R の<code>cov()</code>ならステップなしで同じ値が出ます。負なので、順位の数字が大きい（下位）ほどクリック率が低い、という負の関係を表しています。</p>
+  <div class="warn-box">⚠️ <strong>共分散があまり使われない理由（講義の 3 点）</strong><ol style="margin:.4rem 0 0 1.2rem"><li><strong>上限・下限がない</strong>：値が大きければ数百・数千・数百万にもなる。</li><li><strong>単位が変</strong>：x が年（years）、y がドル（dollars）なら、共分散の単位は「年・ドル（year-dollars）」。引き算してから掛けるので、単位も掛け算になる。</li><li><strong>単位が変数ごとに違う</strong>ので、別々の 2 組の変数の「関連の強さ」を比べられない。</li></ol></div>
+  <h3>標準化して相関係数 r にする</h3>
+  <p>そこで共分散を<strong>標準化（standardize）</strong>します。標準化とは「ズレを標準偏差で割る」こと（z スコアを求めるのと同じ考え方）。共分散を x の標準偏差と y の標準偏差の積で割ると、単位が全部約分されて<strong>単位のない（unitless）</strong>指標になります。</p>
+  <div class="note-box">📐 <strong>ピアソンの相関係数（Pearson's correlation coefficient）：</strong> r = cov(x, y) ／ (s<sub>x</sub> · s<sub>y</sub>)　（s<sub>x</sub>, s<sub>y</sub> は標本標準偏差）</div>
+<pre class="code-block">
+<span class="cl">sd_position &lt;- <span class="kw">sd</span>(position)</span>
+<span class="cl">sd_rate &lt;- <span class="kw">sd</span>(rate)</span>
+<span class="cl">sd_position</span>
+<span class="cl">sd_rate</span>
+<span class="cl">my_covariance / (sd_position * sd_rate)</span>
+<span class="cl"><span class="kw">cor</span>(rate, position)</span>
+</pre><div class="output-reveal">[1] 3.02765
+[1] 7.232038
+[1] -0.9024191
+[1] -0.9024191</div>
+  <p>s<sub>x</sub> = 3.0277、s<sub>y</sub> = 7.2320 なので r = −19.759 ÷ (3.0277 × 7.2320) = <strong>−0.9024 ≈ −0.90</strong>。<code>cor()</code>の答えと一致しました。</p>
+  <div class="viz"><div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 300 230" width="300" height="230" role="img" aria-label="r = −0.90" style="max-width:100%;height:auto"><rect x="44" y="22" width="244" height="168" fill="none" stroke="#cbd5e1"/><line x1="88.4" y1="190" x2="88.4" y2="194" stroke="#cbd5e1"/><text x="88.4" y="205" font-size="10" text-anchor="middle" fill="currentColor">2</text><line x1="132.7" y1="190" x2="132.7" y2="194" stroke="#cbd5e1"/><text x="132.7" y="205" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="177.1" y1="190" x2="177.1" y2="194" stroke="#cbd5e1"/><text x="177.1" y="205" font-size="10" text-anchor="middle" fill="currentColor">6</text><line x1="221.5" y1="190" x2="221.5" y2="194" stroke="#cbd5e1"/><text x="221.5" y="205" font-size="10" text-anchor="middle" fill="currentColor">8</text><line x1="265.8" y1="190" x2="265.8" y2="194" stroke="#cbd5e1"/><text x="265.8" y="205" font-size="10" text-anchor="middle" fill="currentColor">10</text><line x1="40" y1="190.0" x2="44" y2="190.0" stroke="#cbd5e1"/><text x="38" y="193.5" font-size="10" text-anchor="end" fill="currentColor">0</text><line x1="40" y1="157.7" x2="44" y2="157.7" stroke="#cbd5e1"/><text x="38" y="161.2" font-size="10" text-anchor="end" fill="currentColor">5</text><line x1="40" y1="125.4" x2="44" y2="125.4" stroke="#cbd5e1"/><text x="38" y="128.9" font-size="10" text-anchor="end" fill="currentColor">10</text><line x1="40" y1="93.1" x2="44" y2="93.1" stroke="#cbd5e1"/><text x="38" y="96.6" font-size="10" text-anchor="end" fill="currentColor">15</text><line x1="40" y1="60.8" x2="44" y2="60.8" stroke="#cbd5e1"/><text x="38" y="64.3" font-size="10" text-anchor="end" fill="currentColor">20</text><line x1="40" y1="28.5" x2="44" y2="28.5" stroke="#cbd5e1"/><text x="38" y="32.0" font-size="10" text-anchor="end" fill="currentColor">25</text><text x="166.0" y="224" font-size="11" text-anchor="middle" fill="currentColor">Position (x)</text><text x="12" y="106.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 106.0)">Click-through rate (y, %)</text><text x="166.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">r = −0.90</text><circle cx="66.2" cy="38.0" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="88.4" cy="93.5" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="110.5" cy="117.7" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="132.7" cy="141.7" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="154.9" cy="155.8" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="177.1" cy="165.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="199.3" cy="172.0" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="221.5" cy="176.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="243.6" cy="179.9" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="265.8" cy="182.4" r="3.6" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.82rem">位置 vs クリック率</div></div></div><div class="viz-cap">10 個の点（講義の位置×クリック率データ）。右下がりで、点は直線ではなく下に曲がるカーブに沿っています。この曲がり具合は③で扱います。</div></div>
+  <h3>z スコア版の式</h3>
+  <p>同じ r は、x と y をそれぞれ<strong>先に z スコアにしてから</strong>掛けて足す形でも書けます。標準化の流れがよく見える式です。</p>
+  <div class="note-box">📐 r = Σ (z<sub>x</sub> · z<sub>y</sub>) ／ (n − 1)　ただし z<sub>x</sub> = (x<sub>i</sub> − x̄)／s<sub>x</sub>、z<sub>y</sub> = (y<sub>i</sub> − ȳ)／s<sub>y</sub></div>
+<table class="compare-table"><tr><th>i</th><th>z<sub>x</sub> = (x − x̄)/s<sub>x</sub></th><th>z<sub>y</sub> = (y − ȳ)/s<sub>y</sub></th><th>z<sub>x</sub> · z<sub>y</sub></th></tr><tr><td>1</td><td>−1.486</td><td>2.232</td><td>−3.318</td></tr><tr><td>2</td><td>−1.156</td><td>1.044</td><td>−1.207</td></tr><tr><td>3</td><td>−0.826</td><td>0.526</td><td>−0.434</td></tr><tr><td>4</td><td>−0.495</td><td>0.011</td><td>−0.006</td></tr><tr><td>5</td><td>−0.165</td><td>−0.290</td><td>0.048</td></tr><tr><td>6</td><td>0.165</td><td>−0.496</td><td>−0.082</td></tr><tr><td>7</td><td>0.495</td><td>−0.636</td><td>−0.315</td></tr><tr><td>8</td><td>0.826</td><td>−0.730</td><td>−0.603</td></tr><tr><td>9</td><td>1.156</td><td>−0.804</td><td>−0.930</td></tr><tr><td>10</td><td>1.486</td><td>−0.858</td><td>−1.276</td></tr><tr><td colspan="3"><strong>合計 Σ</strong></td><td><strong>−8.122</strong></td></tr></table><pre class="code-block">
+<span class="cl">z_x &lt;- (position - <span class="kw">mean</span>(position)) / <span class="kw">sd</span>(position)</span>
+<span class="cl">z_y &lt;- (rate - <span class="kw">mean</span>(rate)) / <span class="kw">sd</span>(rate)</span>
+<span class="cl"><span class="kw">sum</span>(z_x * z_y) / (<span class="kw">length</span>(position) - <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">cor</span>(position, rate)</span>
+</pre><div class="output-reveal">[1] -0.9024191
+[1] -0.9024191</div>
+  <p>−8.1218 ÷ 9 = −0.9024。どちらの道で計算しても同じです。この式は、②で見る r の性質（単位が変わっても変わらない、など）を理解するのに役立つ、と講師は説明しています。</p>
+  <div class="note-box">📜 <strong>コンピュータ以前の公式：</strong> 検索すると別の式もたくさん出てきます。たとえば r = Σ(x<sub>i</sub> − x̄)(y<sub>i</sub> − ȳ) ／ [√Σ(x<sub>i</sub> − x̄)² · √Σ(y<sub>i</sub> − ȳ)²]。講師は「怖がらせるために載せた。これを手計算させたりはしない」と言っています。</div>
+<pre class="code-block">
+<span class="cl">dx &lt;- position - <span class="kw">mean</span>(position)</span>
+<span class="cl">dy &lt;- rate - <span class="kw">mean</span>(rate)</span>
+<span class="cl"><span class="kw">sum</span>(dx * dy) / <span class="kw">sqrt</span>(<span class="kw">sum</span>(dx^<span class="nm">2</span>) * <span class="kw">sum</span>(dy^<span class="nm">2</span>))</span>
+</pre><div class="output-reveal">[1] -0.9024191</div>
+  <div class="warn-box">⚠️ <strong>実務では手計算しません。</strong> 現場では<code>cor()</code>を一発で使います。手計算は「記号が何を意味するか」を理解するための練習です（講義の課題は「共分散のときのように、z スコアの式で r を一歩ずつ計算してみよう」）。</div>
+  <div class="note-box">❓ <strong>なぜ n ではなく n − 1 で割る？</strong> <em>標本</em>共分散は<strong>標本平均</strong>を使い、n − 1 で割ります。<em>母集団</em>共分散なら母平均 μ を使い、母集団の大きさ N で割ります。標本は母集団と完全には一致しないので、n − 1 で割ると母集団共分散の<strong>不偏推定量（unbiased estimator）</strong>になります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>共分散＝「x と y が一緒に平均から離れる度合い」。単位つきで大きさも決まらないので、<strong>標準偏差で割って −1〜+1 の単位なしの数（r）</strong>にします。r = −0.90 は「位置が下がるとクリック率は強く下がる」。</p></div>
+  <div class="practice-card" id="p-m6c-u1">
+    <div class="ptitle">💻 ミニ練習：z スコアの式で r を求める</div>
+    <p class="ptask">上の<code>position</code>と<code>rate</code>を使い、z スコアの式（Σ z<sub>x</sub>z<sub>y</sub> ／ (n − 1)）で相関係数を計算するRコードを書いてください。答えは −0.9024 になります。</p>
+    <textarea class="code-editor" id="p-m6c-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6c-u1', ['mean', 'sd', 'sum', 'length'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6c-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6c-u1-result"></div>
+    <div class="answer-reveal" id="p-m6c-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">z_x &lt;- (position - <span class="kw">mean</span>(position)) / <span class="kw">sd</span>(position)</span>
+<span class="cl">z_y &lt;- (rate - <span class="kw">mean</span>(rate)) / <span class="kw">sd</span>(rate)</span>
+<span class="cl"><span class="kw">sum</span>(z_x * z_y) / (<span class="kw">length</span>(position) - <span class="nm">1</span>)</span>
+</pre><div class="output-reveal">[1] -0.9024191</div>
+      <p class="answer-note">結果は −0.9024191。<code>cor(position, rate)</code>と一致します。<code>scale()</code>で z スコアを作っても構いません。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>相関係数 r の性質</h2><div class="unit-sub">r = Σ z<sub>x</sub>z<sub>y</sub> ／ (n − 1) から分かること</div></div>
+  </div>
+  <p>r の性質の多くは、①の z スコアの式から説明できます。講義では次のデータを使います。<code>paste()</code>は文字と値をつなげる関数で、グラフの題名に r を直接表示するのに便利です。</p>
+<pre class="code-block">
+<span class="cl">x &lt;- <span class="nm">1</span>:<span class="nm">10</span></span>
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="nm">2</span>, <span class="nm">5</span>, <span class="nm">13</span>, <span class="nm">7</span>, <span class="nm">8</span>, <span class="nm">10</span>, <span class="nm">12</span>, <span class="nm">14</span>, <span class="nm">17</span>, <span class="nm">25</span>)</span>
+<span class="cl">my_cor &lt;- <span class="kw">round</span>(<span class="kw">cor</span>(x, y), <span class="nm">3</span>)</span>
+<span class="cl">my_cor</span>
+<span class="cl"><span class="kw">plot</span>(x, y,</span>
+<span class="cl">     main = <span class="kw">paste</span>(<span class="st">"r ="</span>, my_cor),   <span class="cm"># paste() でタイトルに r を表示</span></span>
+<span class="cl">     pch = <span class="nm">16</span>, las = <span class="nm">1</span>)</span>
+</pre><div class="output-reveal">[1] 0.875</div>
+  <div class="note-box">1️⃣ <strong>性質1：r には量的変数（quantitative variables）が必要。</strong> カテゴリ変数をそのまま入れるとエラーになります。</div>
+<pre class="code-block">
+<span class="cl">z &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">"yes"</span>, <span class="nm">4</span>), <span class="kw">rep</span>(<span class="st">"no"</span>, <span class="nm">6</span>))</span>
+<span class="cl">z</span>
+<span class="cl"><span class="kw">cor</span>(x, z)</span>
+</pre><div class="output-reveal"> [1] "yes" "yes" "yes" "yes" "no"  "no"  "no"  "no"  "no"  "no" 
+Error in cor(x, z) : &#x27;y&#x27; must be numeric
+Execution halted</div>
+  <p>カテゴリを<strong>数に置き換える（encode）</strong>ことはできますが、種類で扱いが違います。</p>
+  <table class="compare-table">
+    <tr><th>種類</th><th>例</th><th>数値化</th></tr>
+    <tr><td>binary（2 値）</td><td>yes / no</td><td>0 と 1 にしてよい</td></tr>
+    <tr><td>ordinal（順序あり）</td><td>XS, S, M, L, XL</td><td>順序のある数（1〜5 など）にしてよい</td></tr>
+    <tr><td>nominal（順序なし）</td><td>好きな色：青・緑・赤</td><td><strong>数にしない方がよい</strong>（青 = 1、緑 = 2 にすると「緑の方が上・強い」という意味のない大小が生まれる）</td></tr>
+  </table>
+<pre class="code-block">
+<span class="cl">z01 &lt;- <span class="kw">ifelse</span>(z == <span class="st">"yes"</span>, <span class="nm">1</span>, <span class="nm">0</span>)   <span class="cm"># 2つのカテゴリ(binary)を 0/1 に</span></span>
+<span class="cl"><span class="kw">cor</span>(x, z01)</span>
+</pre><div class="output-reveal">[1] -0.8528029</div>
+  <div class="note-box">2️⃣ <strong>性質2：explanatory（説明）変数と response（応答）変数を区別しない。</strong> x と y を入れ替えると散布図は反転したように見えますが、<strong>r はまったく同じ</strong>です（相関行列でも見ました）。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(x, y)   <span class="cm"># もとのデータ</span></span>
+<span class="cl"><span class="kw">cor</span>(y, x)   <span class="cm"># x と y を入れ替える</span></span>
+</pre><div class="output-reveal">[1] 0.8746122
+[1] 0.8746122</div>
+  <div class="note-box">3️⃣ <strong>性質3：単位を変えても（定数を足したり掛けたりしても）r は変わらない。</strong> センチ → フィート、ドル → 百万ドルのような単位変換です。r は「標準化した共分散」なので、定数の足し算・掛け算は標準化で打ち消されます。</div>
+<pre class="code-block">
+<span class="cl">x2 &lt;- <span class="nm">2</span> * x        <span class="cm"># x を 2 倍</span></span>
+<span class="cl">y2 &lt;- y / <span class="nm">10</span>       <span class="cm"># y を 10 で割る</span></span>
+<span class="cl"><span class="kw">cor</span>(x2, y2)</span>
+<span class="cl"><span class="kw">cov</span>(x, y)          <span class="cm"># 共分散は単位で変わる</span></span>
+<span class="cl"><span class="kw">cov</span>(x2, y2)</span>
+</pre><div class="output-reveal">[1] 0.8746122
+[1] 17.38889
+[1] 3.477778</div>
+  <p>x を 2 倍、y を 10 分の 1 にしても r は 0.8746 のまま。いっぽう<strong>共分散は 17.39 から 3.48 に変わりました</strong>（共分散は単位に依存する）。</p>
+  <div class="note-box">4️⃣ <strong>性質4：r には単位がない。</strong> パーセントでもありません。r = 0.875 を「87.5%」と書いてはいけません。<strong>単位なしの 0.875</strong> です。</div>
+  <div class="note-box">5️⃣ <strong>性質5：r の符号は、直線的な関係の向きと必ず一致する。</strong> 例：donors データの贈与回数（numberGifts）と総寄付額（totalGivingAmount）。外れ値があって直線関係ははっきりしませんが、符号は正（r ≈ +0.6）で、右上がりの傾向と合っています。</div>
+<pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl">my_x &lt;- donors$numberGifts</span>
+<span class="cl">my_y &lt;- donors$totalGivingAmount</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(my_x, my_y), <span class="nm">4</span>)</span>
+</pre><div class="output-reveal">[1] 0.5998</div>
+  <div class="note-box">6️⃣ <strong>性質6：r は外れ値に強くない（not resistant to extreme values）。</strong> 1 点だけで r は大きく動きます。</div>
+<pre class="code-block">
+<span class="cl">x &lt;- <span class="nm">1</span>:<span class="nm">6</span></span>
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">4.5</span>, <span class="nm">6</span>, <span class="nm">7</span>)</span>
+<span class="cl"><span class="kw">cor</span>(x, y)</span>
+<span class="cl"></span>
+<span class="cl">y_out &lt;- y</span>
+<span class="cl">y_out[<span class="nm">6</span>] &lt;- <span class="nm">20</span>     <span class="cm"># 最後の 1 点だけ極端な値にする</span></span>
+<span class="cl"><span class="kw">cor</span>(x, y_out)</span>
+</pre><div class="output-reveal">[1] 0.9940327
+[1] 0.7924682</div><div class="viz"><div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 280 230" width="280" height="230" role="img" aria-label="r = 0.994" style="max-width:100%;height:auto"><rect x="44" y="22" width="224" height="168" fill="none" stroke="#cbd5e1"/><line x1="76.0" y1="190" x2="76.0" y2="194" stroke="#cbd5e1"/><text x="76.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">1</text><line x1="108.0" y1="190" x2="108.0" y2="194" stroke="#cbd5e1"/><text x="108.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">2</text><line x1="140.0" y1="190" x2="140.0" y2="194" stroke="#cbd5e1"/><text x="140.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">3</text><line x1="172.0" y1="190" x2="172.0" y2="194" stroke="#cbd5e1"/><text x="172.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="204.0" y1="190" x2="204.0" y2="194" stroke="#cbd5e1"/><text x="204.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">5</text><line x1="236.0" y1="190" x2="236.0" y2="194" stroke="#cbd5e1"/><text x="236.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">6</text><line x1="40" y1="190.0" x2="44" y2="190.0" stroke="#cbd5e1"/><text x="38" y="193.5" font-size="10" text-anchor="end" fill="currentColor">0</text><line x1="40" y1="151.8" x2="44" y2="151.8" stroke="#cbd5e1"/><text x="38" y="155.3" font-size="10" text-anchor="end" fill="currentColor">5</text><line x1="40" y1="113.6" x2="44" y2="113.6" stroke="#cbd5e1"/><text x="38" y="117.1" font-size="10" text-anchor="end" fill="currentColor">10</text><line x1="40" y1="75.5" x2="44" y2="75.5" stroke="#cbd5e1"/><text x="38" y="79.0" font-size="10" text-anchor="end" fill="currentColor">15</text><line x1="40" y1="37.3" x2="44" y2="37.3" stroke="#cbd5e1"/><text x="38" y="40.8" font-size="10" text-anchor="end" fill="currentColor">20</text><text x="156.0" y="224" font-size="11" text-anchor="middle" fill="currentColor">x</text><text x="12" y="106.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 106.0)">y</text><text x="156.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">r = 0.994</text><circle cx="76.0" cy="174.7" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="108.0" cy="167.1" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="140.0" cy="159.5" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="172.0" cy="155.6" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="204.0" cy="144.2" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="236.0" cy="136.5" r="3.6" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.82rem">点が直線に沿っている</div></div><div style="text-align:center"><svg viewBox="0 0 280 230" width="280" height="230" role="img" aria-label="r = 0.79" style="max-width:100%;height:auto"><rect x="44" y="22" width="224" height="168" fill="none" stroke="#cbd5e1"/><line x1="76.0" y1="190" x2="76.0" y2="194" stroke="#cbd5e1"/><text x="76.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">1</text><line x1="108.0" y1="190" x2="108.0" y2="194" stroke="#cbd5e1"/><text x="108.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">2</text><line x1="140.0" y1="190" x2="140.0" y2="194" stroke="#cbd5e1"/><text x="140.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">3</text><line x1="172.0" y1="190" x2="172.0" y2="194" stroke="#cbd5e1"/><text x="172.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="204.0" y1="190" x2="204.0" y2="194" stroke="#cbd5e1"/><text x="204.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">5</text><line x1="236.0" y1="190" x2="236.0" y2="194" stroke="#cbd5e1"/><text x="236.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">6</text><line x1="40" y1="190.0" x2="44" y2="190.0" stroke="#cbd5e1"/><text x="38" y="193.5" font-size="10" text-anchor="end" fill="currentColor">0</text><line x1="40" y1="151.8" x2="44" y2="151.8" stroke="#cbd5e1"/><text x="38" y="155.3" font-size="10" text-anchor="end" fill="currentColor">5</text><line x1="40" y1="113.6" x2="44" y2="113.6" stroke="#cbd5e1"/><text x="38" y="117.1" font-size="10" text-anchor="end" fill="currentColor">10</text><line x1="40" y1="75.5" x2="44" y2="75.5" stroke="#cbd5e1"/><text x="38" y="79.0" font-size="10" text-anchor="end" fill="currentColor">15</text><line x1="40" y1="37.3" x2="44" y2="37.3" stroke="#cbd5e1"/><text x="38" y="40.8" font-size="10" text-anchor="end" fill="currentColor">20</text><text x="156.0" y="224" font-size="11" text-anchor="middle" fill="currentColor">x</text><text x="12" y="106.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 106.0)">y</text><text x="156.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">r = 0.79</text><circle cx="76.0" cy="174.7" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="108.0" cy="167.1" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="140.0" cy="159.5" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="172.0" cy="155.6" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="204.0" cy="144.2" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="236.0" cy="37.3" r="3.6" fill="#ef4444" opacity=".85"/></svg><div style="font-size:.82rem">最後の 1 点だけ 7 → 20 に変更</div></div></div><div class="viz-cap">同じ 6 点のうち、最後の y を 7 から 20 に変えただけで r は 0.994 から 0.79 まで下がります（赤い点が外れ値）。</div></div>
+  <div class="warn-box">🔬 <strong>講義の課題（アプレットで実験）：</strong> 講師のリンク先のアプレットでマウスクリックで点を足したり消したりして、r の変化を観察します。観察のあとで、次の空欄に「強まる（strengthen）／弱まる（weaken）／ほぼ変わらない（keep about the same）」を入れます。
+    <ul style="margin:.4rem 0 0 1.2rem"><li>トレンドの<strong>外</strong>に点を<strong>足す</strong>と、相関は ＿＿。</li><li>トレンドに<strong>沿う</strong>点を<strong>足す</strong>と、相関は ＿＿。</li><li>トレンドの<strong>外</strong>の点を<strong>取り除く</strong>と、相関は ＿＿。</li><li>トレンドに<strong>沿う</strong>点を<strong>取り除く</strong>と、相関は ＿＿。</li></ul>
+    <details style="margin-top:.5rem"><summary>考えてから開く：目安の答え</summary><p style="margin:.4rem 0 0">外に足す → <strong>弱まる</strong>／沿うものを足す → <strong>強まる</strong>（ほぼ変わらないこともある）／外れた点を取り除く → <strong>強まる</strong>／沿う点を取り除く → <strong>弱まる</strong>。上のデータ（r = 0.8746）で試すと、外れた点 (5.5, 30) を足すと 0.648、直線上の点 (11, 21.7) を足すと 0.902、外れた点 (3, 13) を取り除くと 0.945 になります。</p></details></div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>r は「単位なしの −1〜+1 の数」。<strong>x と y を入れ替えても、単位を変えても同じ</strong>。でも<strong>外れ値 1 個で大きく変わる</strong>ので要注意。r = 0.875 に「%」は付けない。</p></div>
+  <div class="practice-card" id="p-m6c-u2">
+    <div class="ptitle">💻 ミニ練習：外れ値で r はどう変わる？</div>
+    <p class="ptask"><code>x &lt;- 1:6</code>、<code>y &lt;- c(2, 3, 4, 4.5, 6, 7)</code>のとき、最後の y を 7 から 20 に置き換えたうえで相関係数を求めるRコードを書いてください（約 0.79 になります）。</p>
+    <textarea class="code-editor" id="p-m6c-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6c-u2', ['cor', 'x', 'y', '20'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6c-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6c-u2-result"></div>
+    <div class="answer-reveal" id="p-m6c-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x &lt;- <span class="nm">1</span>:<span class="nm">6</span></span>
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">4.5</span>, <span class="nm">6</span>, <span class="nm">7</span>)</span>
+<span class="cl">y[<span class="nm">6</span>] &lt;- <span class="nm">20</span></span>
+<span class="cl"><span class="kw">cor</span>(x, y)</span>
+</pre><div class="output-reveal">[1] 0.7924682</div>
+      <p class="answer-note">結果は 0.7924682。もとの 0.9940327 から、1 点の外れ値だけで大きく下がりました。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>相関を使うときの注意点</h2><div class="unit-sub">因果・曲線・外れ値・カテゴリ変数</div></div>
+  </div>
+  <p>講師が挙げる注意点を順番に整理します（番号は講義の「注意 1〜6」に対応）。</p>
+  <div class="note-box">⚠️ <strong>注意1：相関は因果を意味しない（Correlation does not imply causation）。</strong> 2 つの変数が強く関連していても、一方が他方の<em>原因</em>とは限りません。</div>
+  <p>x と y が一緒に動くとき、考えられる説明は 3 つ以上あります。</p>
+  <table class="compare-table">
+    <tr><th>考えられる説明</th><th>図式</th><th>例</th></tr>
+    <tr><td>x が y の原因？</td><td>x → y</td><td>勉強時間が増えるとテスト点が上がる</td></tr>
+    <tr><td>逆に y が x の原因？</td><td>y → x</td><td>（逆向きの可能性も常に検討する）</td></tr>
+    <tr><td>第三の変数 z が両方の原因？<br>（<strong>lurking variable</strong>／交絡 confounder）</td><td>z → x, z → y</td><td>気温 → アイスの売上、気温 → 水難事故。アイスと事故は連動するが、アイスが事故の原因ではない</td></tr>
+  </table>
+  <ul>
+    <li>講義資料の例：チョコレートの消費量とノーベル賞受賞者数の国別の相関（NEJM の論文と、それへの反論）。「相関があるから原因だ」とは言えない典型例です。</li>
+    <li>spurious correlations（見かけ上の相関）：無関係なものが偶然に強く相関する例が集められたサイトがあります。</li>
+    <li>因果を調べる方法：<strong>ランダム化実験（randomized experiment）</strong>（A/B テストなど）や、観察研究と因果の基準（Bradford Hill の基準など）。</li>
+    <li>講義資料の締めくくり：<em>Correlation does not imply causation… but it might!</em>（因果を示さないが、因果かもしれない）。</li>
+  </ul>
+  <div class="note-box">⚠️ <strong>注意2：|r| が 1 に近くても、関係が直線とは限らない。</strong> ①の位置×クリック率は r = −0.90 ですが、散布図は<strong>曲線</strong>でした。<br>⚠️ <strong>注意3：r が 0 に近くても、関連が全くないとは限らない。</strong> r = 0 は「<strong>直線的な</strong>関連がない」だけ。曲線（放物線・二次関数）の関連は残っていることがあります。</div>
+<pre class="code-block">
+<span class="cl">x &lt;- -<span class="nm">5</span>:<span class="nm">5</span></span>
+<span class="cl">y &lt;- x^<span class="nm">2</span></span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(x, y), <span class="nm">4</span>)</span>
+</pre><div class="output-reveal">[1] 0</div><div class="viz"><div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 290 230" width="290" height="230" role="img" aria-label="r = −0.90 だが曲線" style="max-width:100%;height:auto"><rect x="44" y="22" width="234" height="168" fill="none" stroke="#cbd5e1"/><line x1="86.5" y1="190" x2="86.5" y2="194" stroke="#cbd5e1"/><text x="86.5" y="205" font-size="10" text-anchor="middle" fill="currentColor">2</text><line x1="129.1" y1="190" x2="129.1" y2="194" stroke="#cbd5e1"/><text x="129.1" y="205" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="171.6" y1="190" x2="171.6" y2="194" stroke="#cbd5e1"/><text x="171.6" y="205" font-size="10" text-anchor="middle" fill="currentColor">6</text><line x1="214.2" y1="190" x2="214.2" y2="194" stroke="#cbd5e1"/><text x="214.2" y="205" font-size="10" text-anchor="middle" fill="currentColor">8</text><line x1="256.7" y1="190" x2="256.7" y2="194" stroke="#cbd5e1"/><text x="256.7" y="205" font-size="10" text-anchor="middle" fill="currentColor">10</text><line x1="40" y1="190.0" x2="44" y2="190.0" stroke="#cbd5e1"/><text x="38" y="193.5" font-size="10" text-anchor="end" fill="currentColor">0</text><line x1="40" y1="157.7" x2="44" y2="157.7" stroke="#cbd5e1"/><text x="38" y="161.2" font-size="10" text-anchor="end" fill="currentColor">5</text><line x1="40" y1="125.4" x2="44" y2="125.4" stroke="#cbd5e1"/><text x="38" y="128.9" font-size="10" text-anchor="end" fill="currentColor">10</text><line x1="40" y1="93.1" x2="44" y2="93.1" stroke="#cbd5e1"/><text x="38" y="96.6" font-size="10" text-anchor="end" fill="currentColor">15</text><line x1="40" y1="60.8" x2="44" y2="60.8" stroke="#cbd5e1"/><text x="38" y="64.3" font-size="10" text-anchor="end" fill="currentColor">20</text><line x1="40" y1="28.5" x2="44" y2="28.5" stroke="#cbd5e1"/><text x="38" y="32.0" font-size="10" text-anchor="end" fill="currentColor">25</text><text x="161.0" y="224" font-size="11" text-anchor="middle" fill="currentColor">Position (x)</text><text x="12" y="106.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 106.0)">Click-through rate (y, %)</text><text x="161.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">r = −0.90 だが曲線</text><circle cx="65.3" cy="38.0" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="86.5" cy="93.5" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="107.8" cy="117.7" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="129.1" cy="141.7" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="150.4" cy="155.8" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="171.6" cy="165.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="192.9" cy="172.0" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="214.2" cy="176.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="235.5" cy="179.9" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="256.7" cy="182.4" r="3.6" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.82rem">r は −1 に近いのに、直線ではない</div></div><div style="text-align:center"><svg viewBox="0 0 290 230" width="290" height="230" role="img" aria-label="r = 0 だが関係はある" style="max-width:100%;height:auto"><rect x="44" y="22" width="234" height="168" fill="none" stroke="#cbd5e1"/><line x1="83.0" y1="190" x2="83.0" y2="194" stroke="#cbd5e1"/><text x="83.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">-4</text><line x1="122.0" y1="190" x2="122.0" y2="194" stroke="#cbd5e1"/><text x="122.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">-2</text><line x1="161.0" y1="190" x2="161.0" y2="194" stroke="#cbd5e1"/><text x="161.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">0</text><line x1="200.0" y1="190" x2="200.0" y2="194" stroke="#cbd5e1"/><text x="200.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">2</text><line x1="239.0" y1="190" x2="239.0" y2="194" stroke="#cbd5e1"/><text x="239.0" y="205" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="40" y1="178.8" x2="44" y2="178.8" stroke="#cbd5e1"/><text x="38" y="182.3" font-size="10" text-anchor="end" fill="currentColor">0</text><line x1="40" y1="122.8" x2="44" y2="122.8" stroke="#cbd5e1"/><text x="38" y="126.3" font-size="10" text-anchor="end" fill="currentColor">10</text><line x1="40" y1="66.8" x2="44" y2="66.8" stroke="#cbd5e1"/><text x="38" y="70.3" font-size="10" text-anchor="end" fill="currentColor">20</text><text x="161.0" y="224" font-size="11" text-anchor="middle" fill="currentColor">x</text><text x="12" y="106.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 106.0)">y = x²</text><text x="161.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">r = 0 だが関係はある</text><path d="M63.5,38.8 L73.2,65.4 L83.0,89.2 L92.8,110.2 L102.5,128.4 L112.2,143.8 L122.0,156.4 L131.8,166.2 L141.5,173.2 L151.2,177.4 L161.0,178.8 L170.8,177.4 L180.5,173.2 L190.2,166.2 L200.0,156.4 L209.8,143.8 L219.5,128.4 L229.2,110.2 L239.0,89.2 L248.8,65.4 L258.5,38.8" fill="none" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="3 3"/><circle cx="63.5" cy="38.8" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="83.0" cy="89.2" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="102.5" cy="128.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="122.0" cy="156.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="141.5" cy="173.2" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="161.0" cy="178.8" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="180.5" cy="173.2" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="200.0" cy="156.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="219.5" cy="128.4" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="239.0" cy="89.2" r="3.6" fill="var(--primary)" opacity=".85"/><circle cx="258.5" cy="38.8" r="3.6" fill="var(--primary)" opacity=".85"/></svg><div style="font-size:.82rem">r = 0 でも、はっきりした放物線の関係</div></div></div><div class="viz-cap">左：r が −1 に近くても直線とは限らない。右：r がちょうど 0 でも関連がないとは限らない。どちらも<strong>散布図を描かないと分からない</strong>例です。</div></div>
+  <div class="warn-box">⚠️ <strong>ピアソンの相関係数は、非線形（nonlinear）の関係の説明に使わない。</strong> だから<strong>必ずデータを散布図に描いて</strong>、関係が直線的かどうかを見ます。直線的なら Pearson、そうでなければ別の相関統計量を検討します（④で扱う）。<br>外れ値（性質6）にも注意：1 点で r が大きく動くので、散布図で外れ値の有無も確認しましょう。</div>
+  <div class="note-box">⚠️ <strong>注意6：カテゴリ変数に「相関（correlation）」という言葉を使わない。</strong> 講師の「こだわり」です。「髪の色と目の色は相関しているか？」のような言い方は、統計では不適切。correlation は<strong>量的変数どうし</strong>にしか計算できない、とても限定された意味の言葉だからです。カテゴリ変数には「<strong>関連（association）</strong>」や「関係（relationship）」を使います。</div>
+  <p>例：donors データの urbanicity（居住地域）と socioeconomic status（社会経済的地位）の 2 元表。2 つともカテゴリなので<code>cor()</code>は計算できず、エラーになります。</p>
+<pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl"><span class="kw">table</span>(donors$urbanicity, donors$socioEconomicStatus)</span>
+<span class="cl"><span class="kw">cor</span>(donors$urbanicity, donors$socioEconomicStatus)</span>
+</pre><div class="output-reveal">        
+         average highest lowest
+  city      8264    6145   5280
+  rural    13623    1358   4809
+  suburb    8530   11503   1891
+  town     12369    4982   2176
+  urban     5852    4510   1804
+Error in cor(donors$urbanicity, donors$socioEconomicStatus) : 
+  &#x27;x&#x27; must be numeric</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>r は<strong>直線の強さ</strong>だけを測る道具。①「相関＝原因」ではない　②r が −1 に近くても曲線かも　③r が 0 でも曲線の関連があるかも　④カテゴリ変数には「相関」と言わず「関連」。<strong>とにかく先に散布図！</strong></p></div>
+  <div class="practice-card" id="p-m6c-u3">
+    <div class="ptitle">💻 ミニ練習：r = 0 の放物線を作る</div>
+    <p class="ptask"><code>x</code>を −5 から 5 の整数とし、<code>y</code>をその 2 乗（y = x²）としたとき、<code>cor</code>で相関係数を求めるRコードを書いてください。結果は 0 です。</p>
+    <textarea class="code-editor" id="p-m6c-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6c-u3', ['cor', 'x', '^2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6c-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6c-u3-result"></div>
+    <div class="answer-reveal" id="p-m6c-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x &lt;- -<span class="nm">5</span>:<span class="nm">5</span></span>
+<span class="cl"><span class="kw">cor</span>(x, x^<span class="nm">2</span>)</span>
+</pre><div class="output-reveal">[1] 0</div>
+      <p class="answer-note">結果は 0。y は x から完全に決まる（放物線）のに、直線的な関連がないので r = 0 になります。散布図を描く習慣の大切さが分かる例です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>Spearman・Kendall、そして Anscombe と Datasaurus</h2><div class="unit-sub">別の相関統計量と、「必ずプロットする」教訓</div></div>
+  </div>
+  <h3>注意4：非線形なら別の相関統計量を</h3>
+  <p>相関にはピアソン以外にも種類があります：<strong>Spearman の順位相関（Spearman's rank）</strong>、<strong>Kendall のτ（Kendall's tau）</strong>、ほか多数。ピアソンが最も一般的です。<code>cor()</code>の<code>method</code>で選べます（既定は<code>"pearson"</code>。<code>use = "everything"</code>という既定値は、欠損値 NA がある場合の扱いの話です）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(position, rate)                          <span class="cm"># 既定は method = "pearson"</span></span>
+<span class="cl"><span class="kw">cor</span>(position, rate, method = <span class="st">"spearman"</span>)</span>
+<span class="cl"><span class="kw">cor</span>(position, rate, method = <span class="st">"kendall"</span>)</span>
+</pre><div class="output-reveal">[1] -0.9024191
+[1] -1
+[1] -1</div>
+  <p>位置×クリック率（曲線）では、<strong>Pearson は −0.90、Spearman は −1</strong>。Kendall も −1 です。順位でみると「位置が下がるとクリック率は必ず下がる」ので完全な単調関係、というわけです。曲線なのでピアソンは使うべきではありません。</p>
+  <p>もう一つの曲線の例（y = x²、x は 0〜10）：</p>
+<pre class="code-block">
+<span class="cl">x &lt;- <span class="nm">0</span>:<span class="nm">10</span></span>
+<span class="cl">y &lt;- x^<span class="nm">2</span></span>
+<span class="cl"><span class="kw">cor</span>(x, y)</span>
+<span class="cl"><span class="kw">cor</span>(x, y, method = <span class="st">"spearman"</span>)</span>
+</pre><div class="output-reveal">[1] 0.9631427
+[1] 1</div>
+  <p>Pearson は 0.963 と非常に強い値を出しますが、Spearman は 1。どちらも「強い正の関係」を示しますが、<strong>直線的ではない</strong>ことをピアソンだけでは見落とします。</p>
+  <div class="note-box">⚠️ <strong>注意5：いつでもデータをプロットする（Always plot your data）。</strong></div>
+  <h3>Anscombe's Quartet（アンスコムの 4 つ組）</h3>
+  <p>Frank Anscombe（1918–2001）はイギリスの統計学者で、次の 4 組のデータを作りました。R には<code>anscombe</code>という名前で組み込まれています。</p>
+<pre class="code-block">
+<span class="cl">anscombe</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x1, anscombe$y1)</span>
+</pre><div class="output-reveal">   x1 x2 x3 x4    y1   y2    y3    y4
+1  10 10 10  8  8.04 9.14  7.46  6.58
+2   8  8  8  8  6.95 8.14  6.77  5.76
+3  13 13 13  8  7.58 8.74 12.74  7.71
+4   9  9  9  8  8.81 8.77  7.11  8.84
+5  11 11 11  8  8.33 9.26  7.81  8.47
+6  14 14 14  8  9.96 8.10  8.84  7.04
+7   6  6  6  8  7.24 6.13  6.08  5.25
+8   4  4  4 19  4.26 3.10  5.39 12.50
+9  12 12 12  8 10.84 9.13  8.15  5.56
+10  7  7  7  8  4.82 7.26  6.42  7.91
+11  5  5  5  8  5.68 4.74  5.73  6.89
+[1] 0.8164205</div>
+  <div class="warn-box">🎯 <strong>講義の課題（3 段階）</strong><ol style="margin:.4rem 0 0 1.2rem"><li>残りの 3 つの散布図（x2 vs y2、x3 vs y3、x4 vs y4）を描く。（x1 vs y1 は講義で提示済み：<code>plot(anscombe$x1, anscombe$y1)</code>）</li><li>4 つの散布図それぞれの r を、<strong>見た目で推定</strong>する（eyeballing）。</li><li>R で 4 つの r を計算し、推定との違いを確かめる。<strong>ここから得られる一番の教訓は何か？</strong></li></ol></div>
+  <p>自分で試してから、答えを確かめましょう。</p>
+  <div class="practice-card" id="p-m6c-u4">
+    <div class="ptitle">💻 ミニ練習：Anscombe の 2 組目を計算する</div>
+    <p class="ptask"><code>anscombe</code>の x2 と y2 の相関係数をピアソン（既定）とスピアマンの両方で求めるRコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m6c-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m6c-u4', ['cor', 'anscombe', 'x2', 'y2', 'spearman'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m6c-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m6c-u4-result"></div>
+    <div class="answer-reveal" id="p-m6c-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(anscombe$x2, anscombe$y2)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x2, anscombe$y2, method = <span class="st">"spearman"</span>)</span>
+</pre><div class="output-reveal">[1] 0.8162365
+[1] 0.6909091</div>
+      <p class="answer-note">ピアソンは 0.8162365。スピアマンは 0.6909091。ピアソンの値は他の 3 組とほぼ同じ（約 0.816）ですが、散布図は放物線のような曲線です。</p>
+    </div>
+  </div><pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(anscombe$x1, anscombe$y1)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x2, anscombe$y2)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x3, anscombe$y3)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x4, anscombe$y4)</span>
+</pre><div class="output-reveal">[1] 0.8164205
+[1] 0.8162365
+[1] 0.8162867
+[1] 0.8165214</div><div class="viz"><div style="display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 260 210" width="260" height="210" role="img" aria-label="セット 1：r = 0.816" style="max-width:100%;height:auto"><rect x="44" y="22" width="204" height="148" fill="none" stroke="#cbd5e1"/><line x1="66.7" y1="170" x2="66.7" y2="174" stroke="#cbd5e1"/><text x="66.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="112.0" y1="170" x2="112.0" y2="174" stroke="#cbd5e1"/><text x="112.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">8</text><line x1="157.3" y1="170" x2="157.3" y2="174" stroke="#cbd5e1"/><text x="157.3" y="185" font-size="10" text-anchor="middle" fill="currentColor">12</text><line x1="202.7" y1="170" x2="202.7" y2="174" stroke="#cbd5e1"/><text x="202.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">16</text><line x1="248.0" y1="170" x2="248.0" y2="174" stroke="#cbd5e1"/><text x="248.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">20</text><line x1="40" y1="145.3" x2="44" y2="145.3" stroke="#cbd5e1"/><text x="38" y="148.8" font-size="10" text-anchor="end" fill="currentColor">4</text><line x1="40" y1="96.0" x2="44" y2="96.0" stroke="#cbd5e1"/><text x="38" y="99.5" font-size="10" text-anchor="end" fill="currentColor">8</text><line x1="40" y1="46.7" x2="44" y2="46.7" stroke="#cbd5e1"/><text x="38" y="50.2" font-size="10" text-anchor="end" fill="currentColor">12</text><text x="146.0" y="204" font-size="11" text-anchor="middle" fill="currentColor">x1</text><text x="12" y="96.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 96.0)">y1</text><text x="146.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">セット 1：r = 0.816</text><line x1="55.3" y1="139.2" x2="248.0" y2="34.3" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="134.7" cy="95.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="108.9" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="168.7" cy="101.2" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="123.3" cy="86.0" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="146.0" cy="91.9" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="180.0" cy="71.8" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="89.3" cy="105.4" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="66.7" cy="142.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="157.3" cy="61.0" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="100.7" cy="135.2" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="78.0" cy="124.6" r="3.2" fill="var(--primary)" opacity=".85"/></svg></div><div style="text-align:center"><svg viewBox="0 0 260 210" width="260" height="210" role="img" aria-label="セット 2：r = 0.816" style="max-width:100%;height:auto"><rect x="44" y="22" width="204" height="148" fill="none" stroke="#cbd5e1"/><line x1="66.7" y1="170" x2="66.7" y2="174" stroke="#cbd5e1"/><text x="66.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="112.0" y1="170" x2="112.0" y2="174" stroke="#cbd5e1"/><text x="112.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">8</text><line x1="157.3" y1="170" x2="157.3" y2="174" stroke="#cbd5e1"/><text x="157.3" y="185" font-size="10" text-anchor="middle" fill="currentColor">12</text><line x1="202.7" y1="170" x2="202.7" y2="174" stroke="#cbd5e1"/><text x="202.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">16</text><line x1="248.0" y1="170" x2="248.0" y2="174" stroke="#cbd5e1"/><text x="248.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">20</text><line x1="40" y1="145.3" x2="44" y2="145.3" stroke="#cbd5e1"/><text x="38" y="148.8" font-size="10" text-anchor="end" fill="currentColor">4</text><line x1="40" y1="96.0" x2="44" y2="96.0" stroke="#cbd5e1"/><text x="38" y="99.5" font-size="10" text-anchor="end" fill="currentColor">8</text><line x1="40" y1="46.7" x2="44" y2="46.7" stroke="#cbd5e1"/><text x="38" y="50.2" font-size="10" text-anchor="end" fill="currentColor">12</text><text x="146.0" y="204" font-size="11" text-anchor="middle" fill="currentColor">x2</text><text x="12" y="96.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 96.0)">y2</text><text x="146.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">セット 2：r = 0.816</text><line x1="55.3" y1="139.2" x2="248.0" y2="34.3" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="134.7" cy="81.9" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="94.3" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="168.7" cy="86.9" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="123.3" cy="86.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="146.0" cy="80.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="180.0" cy="94.8" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="89.3" cy="119.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="66.7" cy="156.4" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="157.3" cy="82.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="100.7" cy="105.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="78.0" cy="136.2" r="3.2" fill="var(--primary)" opacity=".85"/></svg></div><div style="text-align:center"><svg viewBox="0 0 260 210" width="260" height="210" role="img" aria-label="セット 3：r = 0.816" style="max-width:100%;height:auto"><rect x="44" y="22" width="204" height="148" fill="none" stroke="#cbd5e1"/><line x1="66.7" y1="170" x2="66.7" y2="174" stroke="#cbd5e1"/><text x="66.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="112.0" y1="170" x2="112.0" y2="174" stroke="#cbd5e1"/><text x="112.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">8</text><line x1="157.3" y1="170" x2="157.3" y2="174" stroke="#cbd5e1"/><text x="157.3" y="185" font-size="10" text-anchor="middle" fill="currentColor">12</text><line x1="202.7" y1="170" x2="202.7" y2="174" stroke="#cbd5e1"/><text x="202.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">16</text><line x1="248.0" y1="170" x2="248.0" y2="174" stroke="#cbd5e1"/><text x="248.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">20</text><line x1="40" y1="145.3" x2="44" y2="145.3" stroke="#cbd5e1"/><text x="38" y="148.8" font-size="10" text-anchor="end" fill="currentColor">4</text><line x1="40" y1="96.0" x2="44" y2="96.0" stroke="#cbd5e1"/><text x="38" y="99.5" font-size="10" text-anchor="end" fill="currentColor">8</text><line x1="40" y1="46.7" x2="44" y2="46.7" stroke="#cbd5e1"/><text x="38" y="50.2" font-size="10" text-anchor="end" fill="currentColor">12</text><text x="146.0" y="204" font-size="11" text-anchor="middle" fill="currentColor">x3</text><text x="12" y="96.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 96.0)">y3</text><text x="146.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">セット 3：r = 0.816</text><line x1="55.3" y1="139.2" x2="248.0" y2="34.3" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="134.7" cy="102.7" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="111.2" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="168.7" cy="37.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="123.3" cy="107.0" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="146.0" cy="98.3" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="180.0" cy="85.6" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="89.3" cy="119.7" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="66.7" cy="128.2" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="157.3" cy="94.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="100.7" cy="115.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="78.0" cy="124.0" r="3.2" fill="var(--primary)" opacity=".85"/></svg></div><div style="text-align:center"><svg viewBox="0 0 260 210" width="260" height="210" role="img" aria-label="セット 4：r = 0.816" style="max-width:100%;height:auto"><rect x="44" y="22" width="204" height="148" fill="none" stroke="#cbd5e1"/><line x1="66.7" y1="170" x2="66.7" y2="174" stroke="#cbd5e1"/><text x="66.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">4</text><line x1="112.0" y1="170" x2="112.0" y2="174" stroke="#cbd5e1"/><text x="112.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">8</text><line x1="157.3" y1="170" x2="157.3" y2="174" stroke="#cbd5e1"/><text x="157.3" y="185" font-size="10" text-anchor="middle" fill="currentColor">12</text><line x1="202.7" y1="170" x2="202.7" y2="174" stroke="#cbd5e1"/><text x="202.7" y="185" font-size="10" text-anchor="middle" fill="currentColor">16</text><line x1="248.0" y1="170" x2="248.0" y2="174" stroke="#cbd5e1"/><text x="248.0" y="185" font-size="10" text-anchor="middle" fill="currentColor">20</text><line x1="40" y1="145.3" x2="44" y2="145.3" stroke="#cbd5e1"/><text x="38" y="148.8" font-size="10" text-anchor="end" fill="currentColor">4</text><line x1="40" y1="96.0" x2="44" y2="96.0" stroke="#cbd5e1"/><text x="38" y="99.5" font-size="10" text-anchor="end" fill="currentColor">8</text><line x1="40" y1="46.7" x2="44" y2="46.7" stroke="#cbd5e1"/><text x="38" y="50.2" font-size="10" text-anchor="end" fill="currentColor">12</text><text x="146.0" y="204" font-size="11" text-anchor="middle" fill="currentColor">x4</text><text x="12" y="96.0" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 96.0)">y4</text><text x="146.0" y="14" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">セット 4：r = 0.816</text><line x1="55.3" y1="139.2" x2="248.0" y2="34.3" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><circle cx="112.0" cy="113.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="123.6" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="99.6" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="85.6" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="90.2" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="107.8" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="129.9" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="236.7" cy="40.5" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="126.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="97.1" r="3.2" fill="var(--primary)" opacity=".85"/><circle cx="112.0" cy="109.7" r="3.2" fill="var(--primary)" opacity=".85"/></svg></div></div><div class="viz-cap">Anscombe の 4 組。どれも平均・ばらつき・r（約 0.816）・回帰直線（赤）がほぼ同じですが、点の並びはまったく別物です。（左上は直線的、右上は曲線、左下は外れ値が 1 つ、右下は 1 点だけ x が離れている）</div></div>
+  <div class="note-box">📌 <strong>教訓：</strong> 4 組とも r ≈ 0.816（さらに x の平均 9、y の平均 7.5 なども同じ）。<strong>数値の要約だけでは、データの姿が全く違うことに気づけません。必ずプロットしましょう。</strong></div>
+  <div class="note-box">🦖 <strong>Datasaurus（より新しいデータセット）：</strong> 講師が紹介している、アンスコムの考え方の現代版です。恐竜（dinosaur）の形などの、見た目が全く違う多くのデータが、平均・標準偏差・相関はほぼ同じ。講義のリンク（CRAN の <em>datasauRus</em> パッケージ）を開いて、<strong>何が起きているのか・このデータセットの要点は何か</strong>を自分で考えてみましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>曲線の関係には、Pearson でなく <strong>Spearman（順位）</strong>や Kendall を考える。そして Anscombe の教訓：<strong>r が同じでも、グラフは全然違うことがある。だから先に散布図。</strong></p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">The covariance of position and click-through rate is negative. What does this mean?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Both variables are below their means in every single ordered pair</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>On average, when one variable is above its mean, the other is below its mean</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The scatterplot must contain at least one extreme outlier</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Position is the explanatory variable and rate is the response</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why is the correlation r usually reported instead of the covariance?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Covariance cannot be calculated when a sample has more than ten pairs</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Covariance only works when both variables are measured in dollars</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>r is always larger in size than the covariance, so it looks more impressive</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>r is unitless and bounded, so strengths can be compared across variables</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which expression gives Pearson&#x27;s r from z-scores of x and y?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Σ(z_x · z_y) / (n − 1)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Σ(z_x + z_y) / n</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Σ(z_x · z_y) / n²</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>(Σ z_x) · (Σ z_y)</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Every x value is multiplied by 0.01 (centimetres to metres) and y is unchanged. What happens to r?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is also multiplied by 0.01</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It changes sign</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It does not change</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It becomes a percentage</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">For x = 1,…,6 and y = 2, 3, 4, 4.5, 6, 7, r = 0.994. Changing the last y to 20 gives r = 0.79. What does this show?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Correlation is resistant, so one point rarely matters</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>One extreme point can change r a lot</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>r only works with six points or fewer</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Changing a single y can only flip the sign of r</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A study finds a strong correlation between chocolate consumption and Nobel laureates per capita. What is the best conclusion?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Chocolate makes people win Nobel prizes, so countries should eat more of it</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Winning Nobel prizes causes a country to eat more chocolate</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The two variables are unrelated because r is not exactly 1</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Correlation alone cannot show that either one causes the other</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">For a curved, always-decreasing relationship, Pearson r = −0.90 and Spearman r = −1. What should you conclude?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The relationship is curved, so Pearson&#x27;s r is a poor summary</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Spearman must be wrong because it is larger in size</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The data contain missing values (NA)</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The relationship is perfectly linear</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Anscombe&#x27;s quartet has four datasets with r ≈ 0.816 each. What is the main takeaway?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Equal correlations imply the four scatterplots look alike</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>r = 0.816 means 81.6% of the points lie on the line</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Plot the data: equal r values can hide very different patterns</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Anscombe showed Pearson&#x27;s r is always wrong for small samples</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 3, 0, 2];
+var FEEDBACKS=["Negative covariance: on average one variable is above its mean when the other is below. Here the covariance is −19.76.", "Dividing the covariance by s_x · s_y cancels the units and gives a number between −1 and 1, so different pairs of variables can be compared.", "r = Σ(z_x · z_y) / (n − 1): standardize both variables, multiply the z-scores pairwise, add them up and divide by n − 1.", "r is unaffected by adding or multiplying by a constant (unit changes). The covariance, however, does change with units.", "r is not resistant to extreme values: one point moved r from 0.994 to 0.79.", "Correlation does not imply causation. The link may be chance, reverse causation, or a lurking third variable.", "When Spearman is stronger than Pearson for a curved pattern, plot the data: Pearson measures only linear association.", "All four Anscombe datasets have r ≈ 0.816 but very different scatterplots. Always plot your data; a number alone can hide the shape."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">covariance</div><div class="term-en">共分散</div><div class="term-def">x と y の平均からのズレの積の平均（n − 1 で割る）。単位がある。</div></div>
+    <div class="term-item"><div class="term-name">deviation</div><div class="term-en">偏差</div><div class="term-def">値から平均を引いたもの。x − x̄。</div></div>
+    <div class="term-item"><div class="term-name">standardize / z-score</div><div class="term-en">標準化／z スコア</div><div class="term-def">偏差を標準偏差で割る。単位が消える。</div></div>
+    <div class="term-item"><div class="term-name">Pearson's r</div><div class="term-en">ピアソンの相関係数</div><div class="term-def">cov(x, y) ／ (s<sub>x</sub>s<sub>y</sub>)。直線的な関係の強さ。</div></div>
+    <div class="term-item"><div class="term-name">unitless</div><div class="term-en">単位なし</div><div class="term-def">r は単位も % も持たない。0.875 を 87.5% と書かない。</div></div>
+    <div class="term-item"><div class="term-name">resistant</div><div class="term-en">外れ値に強い</div><div class="term-def">r は強くない：1 点で大きく変わる。</div></div>
+    <div class="term-item"><div class="term-name">causation</div><div class="term-en">因果</div><div class="term-def">原因と結果。相関だけでは示せない。</div></div>
+    <div class="term-item"><div class="term-name">lurking variable</div><div class="term-en">潜在変数（交絡）</div><div class="term-def">x と y の両方に影響する第三の変数。</div></div>
+    <div class="term-item"><div class="term-name">nonlinear</div><div class="term-en">非線形</div><div class="term-def">曲線の関係。ピアソンには不向き。</div></div>
+    <div class="term-item"><div class="term-name">Spearman's rank / Kendall's tau</div><div class="term-en">順位相関</div><div class="term-def">ピアソン以外の相関統計量。<code>method = "spearman"</code>。</div></div>
+    <div class="term-item"><div class="term-name">Anscombe's quartet</div><div class="term-en">アンスコムの 4 つ組</div><div class="term-def">r が同じでも形が違う 4 組のデータ。</div></div>
+    <div class="term-item"><div class="term-name">association</div><div class="term-en">関連</div><div class="term-def">カテゴリ変数の関係には correlation でなくこの語を使う。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>r の計算は「平均からのズレを掛けて足し、標準偏差で割る」。試験や実務では、<strong>まず散布図、次に r</strong> の順に。r の値だけを見て「直線的」「因果がある」と決めつけないこと。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：M6 相関② 手計算と注意点</p>
+  <p style="margin-top:.5rem;"><a href="m6_corr_basics.html">← 相関の基本</a> · <a href="m6_reg_intro.html">回帰入門 →</a> · <a href="m6_corr_calc_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

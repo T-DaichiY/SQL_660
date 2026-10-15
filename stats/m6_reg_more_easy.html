@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M6 回帰④　カテゴリ変数と重回帰</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 🧩 カテゴリ・重回帰 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy active" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Categorical Predictors &amp; Multiple Regression 🍎</div>
+    <h1>🍎 超やさしい版：回帰④（カテゴリと重回帰）</h1>
+  <p>「<strong>男か女か</strong>」のような<strong>カテゴリ</strong>でも予測できる。「<strong>理由がいくつもある</strong>」ときは<strong>重回帰</strong>。最後に M6 をまとめます。</p>
+    <div class="unit-nav"><a href="#u1">カテゴリで予測</a><a href="#u2">水準がたくさん</a><a href="#u3">重回帰</a><a href="#u4">M6 まとめ</a><a href="m6_reg_more.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①②は Linear Regression 10（Regression with Categorical Predictors）、③は Linear Regression 11（Multiple regression）、④は M6 全体のまとめ。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>カテゴリでも予測できる</h2><div class="unit-sub">ダミー変数と基準カテゴリ</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>カテゴリは「0 か 1 のスイッチ」にして使う。切片は基準の人の予測値、係数は「基準とのちがい」。</strong></p></div>
+  <p>寄付者データ（50 人）で、総寄付額 <code>totalGivingAmount</code> を性別 <code>gender</code> で予測します。標本は女性 27 人、男性 22 人。</p>
+<pre class="code-block">
+<span class="cl">model_gender &lt;- <span class="kw">lm</span>(totalGivingAmount ~ gender, data = sampleDonors)</span>
+<span class="cl"><span class="kw">summary</span>(model_gender)</span>
+</pre><div class="output-reveal">Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   139.17      33.05   4.211 0.000114 ***
+gendermale     22.08      49.32   0.448 0.656465    </div>
+  <div class="big-rule">
+    <div class="ru-arrow">🔘</div>
+    <div class="ru-text"><strong>ŷ = 139.17 + 22.08 × male</strong><br>男性でないとき male = 0 → 139.17（女性）<br>男性のとき male = 1 → 161.25（男性）</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>しくみ</th><th>意味</th></tr>
+    <tr><td>基準カテゴリ（reference group）</td><td>スイッチが 0 の人たち（ここでは女性）。その予測値が切片 139.17。</td></tr>
+    <tr><td>係数 22.08</td><td>男性は女性より 22.08 多いと予測、という「差」。</td></tr>
+    <tr><td>予測のコード</td><td><code>predict(model_gender, data.frame(gender = "male"))</code> → 約 $161</td></tr>
+  </table>
+  <div class="warn-box">⚠️ p 値は 0.656 でとても高い。この男女差は<strong>偶然かもしれません</strong>。「男性のほうが多く寄付する」とは言えません（標本が限られているので）。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>カテゴリは「基準」を 1 つ決めて、他は「基準よりいくつ多い？」で表す。係数が「差」。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 切片 139.17 はだれの予測値？<span class="cp-a">A. 基準カテゴリ（女性）の予測値。</span></div><div class="cp-q">Q2. 男性の予測値は？<span class="cp-a">A. 139.17 + 22.08 = 161.25（約 $161）。</span></div><div class="cp-q">Q3. gender の p 値が高いと何が言える？<span class="cp-a">A. 男女差が偶然かもしれないので、一般化してはいけない。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>水準がたくさんあるとき</h2><div class="unit-sub">urbanicity の 5 水準</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>水準が 5 つなら、基準を除いた 4 つのスイッチ。基準の予測値は切片そのもの。</strong></p></div>
+  <p>居住地域 <code>urbanicity</code> は city・rural・suburb・town・urban の 5 つ（人数は 9・14・7・8・11）。基準は city です。</p>
+  <div class="big-rule down">
+    <div class="ru-arrow">🏘️</div>
+    <div class="ru-text"><strong>ŷ = 199.28 − 113.63 (rural) + 18.72 (suburb) − 84.47 (town) − 60.47 (urban)</strong></div>
+  </div>
+  <table class="compare-table">
+    <tr><th>地域</th><th>計算</th><th>予測</th></tr>
+    <tr><td>city（基準）</td><td>切片だけ</td><td>$199.28</td></tr>
+    <tr><td>rural</td><td>199.28 − 113.63</td><td>約 $85</td></tr>
+    <tr><td>suburb</td><td>199.28 + 18.72</td><td>$218</td></tr>
+  </table>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>0 と 1 を入れる項が増えるだけ。予測したい地域の項に 1、あとは全部 0 を入れて足し算。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. city の項が式にないのはなぜ？<span class="cp-a">A. city が基準カテゴリなので、切片に含まれているから。</span></div><div class="cp-q">Q2. rural の予測は？<span class="cp-a">A. 199.28 − 113.63 ≈ 85.65、約 $85。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>重回帰：理由がいくつもあるとき</h2><div class="unit-sub">調整済み R² と「他を一定に」</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>説明変数は + でつなぐ。評価は調整済み R²。係数は「他を一定にしたとき」と言う。</strong></p></div>
+  <p>米国西部の公立大学 9 校で、卒業率 <code>rate</code> を支出 <code>expend</code> と SAT の中央値 <code>SAT</code> で予測します。</p>
+  <table class="compare-table">
+    <tr><th>モデル</th><th>R²</th><th>調整済み R²</th></tr>
+    <tr><td>支出のみ</td><td>0.618</td><td>0.564</td></tr>
+    <tr><td>SAT のみ</td><td>0.835</td><td>0.811</td></tr>
+    <tr><td>両方（重回帰）</td><td>0.841</td><td>0.788</td></tr>
+  </table>
+<pre class="code-block">
+<span class="cl">model_mult &lt;- <span class="kw">lm</span>(rate ~ expend + SAT)</span>
+<span class="cl"><span class="kw">summary</span>(model_mult)</span>
+</pre><div class="output-reveal">Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept) -37.777476  16.503961  -2.289   0.0620 .
+expend        0.002011   0.004115   0.489   0.6425  
+SAT           0.080646   0.027766   2.905   0.0272 *
+
+Multiple R-squared:  0.8413,	Adjusted R-squared:  0.7884 </div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">🎓</div>
+    <div class="ru-text"><strong>SAT だけのほうがよいモデル。</strong>調整済み R² は 0.811 → 0.788 に下がった。役に立たない支出を入れたからです。「ただお金を投入すればよいわけではない」。</div>
+  </div>
+  <div class="note-box">🔑 <strong>係数の言い方：</strong>「median SAT が <strong>100 点</strong>増えるごとに、卒業率は <strong>8.1%</strong> 増えると予測される、<strong>expenditure を一定にしたとき</strong>」（0.081% × 100 = 8.1%）。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>調整済み R² は「入れすぎたら減点」の採点。係数は「ほかの条件をそろえたら、この変数が 1 増えると予測がいくつ変わる？」。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 重回帰のコードは？<span class="cp-a">A. <code>lm(rate ~ expend + SAT)</code>（説明変数を + でつなぐ）。</span></div><div class="cp-q">Q2. なぜ調整済み R² を使う？<span class="cp-a">A. 役に立たない変数を入れても R² は上がってしまうので、その分を減点するため。</span></div><div class="cp-q">Q3. 「holding expenditure constant」とは？<span class="cp-a">A. 支出が同じ大学どうしで比べたとき、という意味。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>まとめ：M6 の全体像</h2><div class="unit-sub">相関 → 回帰 → 推測 → 拡張</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>相関で「見る」→ 回帰で「式にする」→ 推測で「偶然か確かめる」→ 拡張で「カテゴリ・複数の変数」。</strong></p></div>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>使うもの</th><th>一言</th></tr>
+    <tr><td>① 相関</td><td>散布図、r</td><td>強さと向き。相関 ≠ 原因</td></tr>
+    <tr><td>② 回帰</td><td><code>lm(y ~ x)</code>、残差、R²</td><td>ŷ = b₀ + b₁x で予測</td></tr>
+    <tr><td>③ 推測</td><td>信頼区間、t 検定、p 値</td><td>傾きは偶然ではない？（donors：傾き 3.910、p = 8.07e-06）</td></tr>
+    <tr><td>④ 拡張</td><td>ダミー変数、重回帰</td><td>カテゴリや複数の変数も OK</td></tr>
+  </table>
+  <div class="warn-box">⚠️ 回帰の結果は 3 点セットで読もう：①<strong>p 値</strong>は低い？ ②<strong>R²（重回帰は調整済み R²）</strong>は高い？ ③ 係数を<strong>単位つき</strong>で言える？（重回帰なら「他を一定にして」）</div>
+  <div class="note-box">📝 <strong>課題：</strong>自分のデータで重回帰モデルを作り、R² と調整済み R²、各変数の有意性を確かめて portfolio に入れましょう。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>M6 の流れは「見る → 式にする → 確かめる → 広げる」。p 値と R² と単位をいつもセットで確認しよう。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. M6 の 4 つのステップは？<span class="cp-a">A. 相関 → 回帰 → 推測 → 拡張（カテゴリ・重回帰）。</span></div><div class="cp-q">Q2. カテゴリ変数の係数は何を表す？<span class="cp-a">A. そのカテゴリと基準カテゴリの差。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_reg_inference.html">← 回帰③ 推測</a><a href="m6_reg_more.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• カテゴリ → 0/1 のスイッチ</p><p style="margin:.4rem 0">• 切片 = 基準カテゴリの予測</p><p style="margin:.4rem 0">• 係数 = 基準との差</p><p style="margin:.4rem 0">• 重回帰 = <code>y ~ x1 + x2</code></p><p style="margin:.4rem 0">• 評価は調整済み R²</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">グラフ、練習問題、英語MCQクイズは <a href="m6_reg_more.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M6 回帰④ カテゴリ変数と重回帰 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_reg_more.html">← 本編</a> · <a href="m6_reg_inference.html">回帰③ 推測</a> · <a href="index.html">🏠 概要</a> · <a href="r4_assumptions_easy.html">650 M4 →</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

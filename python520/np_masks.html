@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 NumPy④ マスクとファンシーインデックス</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · NumPy — Masks & Fancy Indexing</div>
+  <h1>🎯 NumPy④：条件で選ぶ・番地で選ぶ</h1>
+  <p>比較演算とブール配列、マスクでの取り出しと書き換え、複数条件、ファンシーインデックスを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 比較と数え方</a><a href="#unit2">② マスク</a><a href="#unit3">③ ファンシー</a><a href="#quiz">📝 Quiz</a><a href="np_masks_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 2.06 Comparisons, Masks, and Boolean Logic</li><li>Handbook 2.07 Fancy Indexing</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>比較演算は、真偽の配列を作る</h2><div class="unit-sub">< > == != と、数え方</div></div>
+  </div>
+<p>配列に比較演算子を使うと、各要素の<strong>True/False</strong>の配列が返ります。</p><pre class="code-block">
+<span class="cl">x = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>])</span>
+<span class="cl">x &lt; <span class="nm">3</span></span>
+</pre><div class="output-reveal">array([ True,  True, False, False, False])</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(x == <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">print</span>(x != <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">print</span>(x &gt;= <span class="nm">4</span>)</span>
+</pre><div class="output-reveal">[False False  True False False]
+[ True  True False  True  True]
+[False False False  True  True]</div><p>この真偽の配列は、数えたり調べたりできます。<code>True</code>は1、<code>False</code>は0として扱われます。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(np.sum(x &lt; <span class="nm">4</span>))         <span class="cm"># 4未満の個数</span></span>
+<span class="cl"><span class="kw">print</span>(np.count_nonzero(x &lt; <span class="nm">4</span>))</span>
+<span class="cl"><span class="kw">print</span>(np.any(x &gt; <span class="nm">4</span>))       <span class="cm"># 1つでもTrue?</span></span>
+<span class="cl">np.all(x &gt; <span class="nm">0</span>)              <span class="cm"># 全部True?</span></span>
+</pre><div class="output-reveal">3
+3
+True
+True</div><pre class="code-block">
+<span class="cl">m = np.array([[<span class="nm">1</span>, <span class="nm">5</span>, <span class="nm">2</span>], [<span class="nm">7</span>, <span class="nm">3</span>, <span class="nm">9</span>]])</span>
+<span class="cl">np.sum(m &gt; <span class="nm">2</span>, axis=<span class="nm">1</span>)     <span class="cm"># 行ごとに「2より大きい」の個数</span></span>
+</pre><div class="output-reveal">array([1, 3])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「条件に合うものは何個?」は、<code>np.sum(条件)</code>で一発。TrueがそのまんまNの個数になります。</p></div><div class="practice-card" id="p-n4-u1">
+    <div class="ptitle">💻 ミニ練習：個数を数える</div>
+    <p class="ptask">配列 <code>x = np.array([3, 8, 1, 9, 5])</code> のうち、<strong>5より大きい</strong>要素の個数を求めてください。</p>
+    <textarea class="code-editor" id="p-n4-u1-input" rows="7">x = np.array([3, 8, 1, 9, 5])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n4-u1", ["np.sum", "> 5"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n4-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n4-u1-result"></div>
+    <div class="answer-reveal" id="p-n4-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">np.sum(x &gt; <span class="nm">5</span>)</span>
+</pre>
+      <p class="answer-note">8と9で2個です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>マスクで取り出す・複数条件</h2><div class="unit-sub">x[x < 3]、& | ~</div></div>
+  </div>
+<p>真偽の配列を<code>[ ]</code>に入れると、<strong>Trueの位置の値だけ</strong>が取り出せます。この真偽の配列を<strong>マスク</strong>と呼びます。</p><pre class="code-block">
+<span class="cl">x = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>])</span>
+<span class="cl">mask = x &gt; <span class="nm">2</span></span>
+<span class="cl"><span class="kw">print</span>(mask)</span>
+<span class="cl">x[mask]            <span class="cm"># 2より大きいものだけ</span></span>
+</pre><div class="output-reveal">[False False  True  True  True]
+array([3, 4, 5])</div><pre class="code-block">
+<span class="cl">x[x % <span class="nm">2</span> == <span class="nm">0</span>]       <span class="cm"># 偶数だけ</span></span>
+</pre><div class="output-reveal">array([2, 4])</div><p><strong>複数の条件</strong>は、<code>and</code>や<code>or</code>ではなく、<code>&amp;</code>（かつ）、<code>|</code>（または）、<code>~</code>（否定）を使い、<strong>各条件を括弧で囲み</strong>ます。</p><pre class="code-block">
+<span class="cl">x[(x &gt; <span class="nm">1</span>) &amp; (x &lt; <span class="nm">5</span>)]     <span class="cm"># 1より大きく5未満</span></span>
+</pre><div class="output-reveal">array([2, 3, 4])</div><pre class="code-block">
+<span class="cl">x[(x &lt; <span class="nm">2</span>) | (x &gt; <span class="nm">4</span>)]     <span class="cm"># 2未満 または 4より大きい</span></span>
+</pre><div class="output-reveal">array([1, 5])</div><pre class="code-block">
+<span class="cl">x[~(x &gt; <span class="nm">2</span>)]              <span class="cm"># 2より大きく「ない」もの</span></span>
+</pre><div class="output-reveal">array([1, 2])</div><div class="warn-box">⚠️ <code>x[x > 1 and x < 5]</code>は<strong>エラー</strong>になります（<code>ValueError: The truth value of an array...</code>）。配列の要素ごとの判定には<code>&amp;</code>・<code>|</code>を使い、括弧を忘れないこと。</div><p>マスクで<strong>値を書き換える</strong>こともできます。</p><pre class="code-block">
+<span class="cl">y = np.array([<span class="nm">5</span>, -<span class="nm">3</span>, <span class="nm">8</span>, -<span class="nm">1</span>])</span>
+<span class="cl">y[y &lt; <span class="nm">0</span>] = <span class="nm">0</span>       <span class="cm"># 負の値を0に</span></span>
+<span class="cl">y</span>
+</pre><div class="output-reveal">array([5, 0, 8, 0])</div><div class="practice-card" id="p-n4-u2">
+    <div class="ptitle">💻 ミニ練習：複数条件</div>
+    <p class="ptask">配列 <code>x = np.arange(10)</code> から、<strong>3以上かつ7以下</strong>の要素を取り出してください。</p>
+    <textarea class="code-editor" id="p-n4-u2-input" rows="7">x = np.arange(10)
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n4-u2", ["&", "x[", ">= 3", "<= 7"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n4-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n4-u2-result"></div>
+    <div class="answer-reveal" id="p-n4-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x[(x &gt;= <span class="nm">3</span>) &amp; (x &lt;= <span class="nm">7</span>)]</span>
+</pre>
+      <p class="answer-note">結果は[3, 4, 5, 6, 7]。<code>and</code>ではなく<code>&amp;</code>、括弧が必要です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>ファンシーインデックス</h2><div class="unit-sub">位置のリストで取り出す</div></div>
+  </div>
+<p>インデックスに<strong>位置のリスト（配列）</strong>を渡すと、好きな順番で・好きな要素を取り出せます。これが<strong>ファンシーインデックス</strong>です。</p><pre class="code-block">
+<span class="cl">x = np.array([<span class="nm">51</span>, <span class="nm">92</span>, <span class="nm">14</span>, <span class="nm">71</span>, <span class="nm">60</span>, <span class="nm">20</span>])</span>
+<span class="cl">x[[<span class="nm">0</span>, <span class="nm">3</span>, <span class="nm">4</span>]]</span>
+</pre><div class="output-reveal">array([51, 71, 60])</div><pre class="code-block">
+<span class="cl">ind = np.array([[<span class="nm">3</span>, <span class="nm">7</span>], [<span class="nm">4</span>, <span class="nm">5</span>]])</span>
+<span class="cl">z = np.arange(<span class="nm">10</span>, <span class="nm">20</span>)</span>
+<span class="cl">z[ind]      <span class="cm"># 結果の形は、インデックスの形</span></span>
+</pre><div class="output-reveal">array([[13, 17],
+       [14, 15]])</div><p>2次元では、行のリストと列のリストを組み合わせて<strong>(行, 列)のペア</strong>を取り出します。</p><pre class="code-block">
+<span class="cl">X = np.arange(<span class="nm">12</span>).reshape(<span class="nm">3</span>, <span class="nm">4</span>)</span>
+<span class="cl">row = np.array([<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">2</span>])</span>
+<span class="cl">col = np.array([<span class="nm">2</span>, <span class="nm">1</span>, <span class="nm">3</span>])</span>
+<span class="cl">X[row, col]      <span class="cm"># (0,2), (1,1), (2,3) の3点</span></span>
+</pre><div class="output-reveal">array([ 2,  5, 11])</div><pre class="code-block">
+<span class="cl">X[<span class="nm">2</span>, [<span class="nm">2</span>, <span class="nm">0</span>, <span class="nm">1</span>]]     <span class="cm"># 単純なインデックスと組み合わせる</span></span>
+</pre><div class="output-reveal">array([10,  8,  9])</div><p>代入にも使えます。</p><pre class="code-block">
+<span class="cl">w = np.arange(<span class="nm">10</span>)</span>
+<span class="cl">w[[<span class="nm">2</span>, <span class="nm">4</span>, <span class="nm">6</span>]] = <span class="nm">99</span></span>
+<span class="cl">w</span>
+</pre><div class="output-reveal">array([ 0,  1, 99,  3, 99,  5, 99,  7,  8,  9])</div><div class="warn-box">⚠️ スライスは<strong>ビュー</strong>ですが、ファンシーインデックスは<strong>コピー</strong>を返します（元の配列とは別物）。</div><div class="teal-box">📌 マスク（真偽）とファンシー（位置）の違い：マスクは「条件に合うものを選ぶ」、ファンシーは「番地を指定して選ぶ」。</div><div class="practice-card" id="p-n4-u3">
+    <div class="ptitle">💻 ミニ練習：番地を指定</div>
+    <p class="ptask">配列 <code>x = np.array([10, 20, 30, 40, 50])</code> から、位置 <code>4, 0, 2</code> の要素を<strong>この順番で</strong>取り出してください。</p>
+    <textarea class="code-editor" id="p-n4-u3-input" rows="7">x = np.array([10, 20, 30, 40, 50])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n4-u3", ["x[[4, 0, 2]]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n4-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n4-u3-result"></div>
+    <div class="answer-reveal" id="p-n4-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x[[<span class="nm">4</span>, <span class="nm">0</span>, <span class="nm">2</span>]]</span>
+</pre>
+      <p class="answer-note">結果は[50, 10, 30]。リストの順番どおりに並びます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does x &lt; 3 return for a NumPy array x?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A single True or False for the whole array</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An array of booleans, one per element</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The elements of x that are smaller than 3</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The number of elements that are smaller than 3</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How do you count how many elements of x are greater than 4?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>len(x &gt; 4)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>x.count(4)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>np.sum(x &gt; 4)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>x.sort(4)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which expression selects values between 2 and 8 (exclusive) in x?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>x[x &gt; 2 and x &lt; 8] using plain keywords</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>x[(x &gt; 2) &amp; (x &lt; 8)]</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>x[2 &lt; x &lt; 8, 1] as a chained comparison</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>x[x &gt; 2, x &lt; 8] with two index arguments</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does y[y &lt; 0] = 0 do?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Deletes the negative values from y</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Replaces negative values with 0</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Creates a new array without changing y</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Raises an error</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">For x = np.array([10, 20, 30, 40]), what is x[[3, 0]]?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>[40, 10]</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>[30, 10]</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>[10, 40]</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>[10, 20, 30]</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">How does fancy indexing differ from slicing?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It returns a copy, not a view</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It can only be used on 1-D arrays</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It always sorts the result</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It changes the dtype</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 2, 1, 1, 0, 0];
+var FEEDBACKS=["Comparison operators are ufuncs that return a boolean array of the same shape.", "True counts as 1, so the sum of a boolean array is the number of True values.", "Use & with parentheses around each condition. Plain and/or raise a ValueError on arrays.", "A boolean mask on the left side selects positions, and those positions are assigned 0.", "Fancy indexing returns the elements at positions 3 and 0, in that order.", "Slices share memory with the original, but fancy indexing returns an independent copy."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">mask</div><div class="term-en">マスク</div><div class="term-def">True/Falseの配列。x[mask]でTrueの位置の値だけを取り出す。</div></div>
+    <div class="term-item"><div class="term-name">&, |, ~</div><div class="term-en">論理演算子</div><div class="term-def">かつ／または／否定。配列ではand・or・notの代わりに使い、各条件を括弧で囲む。</div></div>
+    <div class="term-item"><div class="term-name">count_nonzero</div><div class="term-en">個数を数える</div><div class="term-def">条件のTrueの個数。np.sum(条件)でも同じ。</div></div>
+    <div class="term-item"><div class="term-name">any / all</div><div class="term-en">1つでも／全部</div><div class="term-def">どれかTrueか、全部Trueかを調べる。</div></div>
+    <div class="term-item"><div class="term-name">fancy indexing</div><div class="term-en">ファンシーインデックス</div><div class="term-def">位置のリストで要素を選ぶ。結果はコピー。</div></div>
+    <div class="term-item"><div class="term-name">copy vs view</div><div class="term-en">コピーとビュー</div><div class="term-def">スライスはビュー、ファンシーインデックスやマスクはコピー。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>複数条件では括弧を忘れずに。andとorは配列では使えません。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：NumPy④ マスクとファンシーインデックス</p>
+  <p style="margin-top:.5rem;"><a href="np_broadcast.html">← ③ ブロードキャスト</a> · <a href="np_sort.html">⑤ 並べ替え・構造化 →</a> · <a href="np_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

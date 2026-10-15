@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Matplotlib③ 凡例とカラーバー</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Matplotlib — Legends & Colorbars</div>
+  <h1>🎨 Matplotlib③：凡例とカラーバー</h1>
+  <p>凡例の配置、載せる要素の選び方、カラーバーとカラーマップの選び方を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 凡例</a><a href="#unit2">② 要素を選ぶ</a><a href="#unit3">③ カラーバー</a><a href="#quiz">📝 Quiz</a><a href="mpl_legend_color_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 4.06 Customizing Plot Legends</li><li>Handbook 4.07 Customizing Colorbars</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>凡例を自由に配置する</h2><div class="unit-sub">loc・ncol・frameon</div></div>
+  </div>
+<p><code>plt.legend()</code>は、場所や見た目を変えられます。</p><pre class="code-block">
+<span class="cl">x = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.plot(x, np.sin(x), label=<span class="st">'Sine'</span>)</span>
+<span class="cl">ax.plot(x, np.cos(x), <span class="st">'--'</span>, label=<span class="st">'Cosine'</span>)</span>
+<span class="cl">ax.axis(<span class="st">'equal'</span>)</span>
+<span class="cl">ax.legend(loc=<span class="st">'upper left'</span>, frameon=<span class="kw">False</span>)</span>
+</pre><div class="plot-out"><img src="images/m3_leg1.png" alt="凡例の位置" loading="lazy"></div><pre class="code-block">
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.plot(x, np.sin(x), label=<span class="st">'Sine'</span>)</span>
+<span class="cl">ax.plot(x, np.cos(x), <span class="st">'--'</span>, label=<span class="st">'Cosine'</span>)</span>
+<span class="cl">ax.legend(loc=<span class="st">'lower center'</span>, ncol=<span class="nm">2</span>, frameon=<span class="kw">True</span>, shadow=<span class="kw">True</span>)</span>
+</pre><div class="plot-out"><img src="images/m3_leg2.png" alt="2列の凡例" loading="lazy"></div><table class="compare-table"><thead><tr><th>引数</th><th>役割</th></tr></thead><tbody><tr><td><code>loc</code></td><td>位置（<code>'upper left'</code>、<code>'best'</code>など）</td></tr><tr><td><code>ncol</code></td><td>列の数</td></tr><tr><td><code>frameon</code></td><td>枠を付けるか</td></tr><tr><td><code>fancybox</code> / <code>shadow</code></td><td>角を丸く／影を付ける</td></tr></tbody></table><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>凡例が線に重なって読みにくいときは、<code>loc</code>で場所を変えるか、<code>ncol</code>で横に並べます。</p></div><div class="practice-card" id="p-m3-u1">
+    <div class="ptitle">💻 ミニ練習：凡例</div>
+    <p class="ptask">凡例を<strong>右上</strong>に、枠なしで表示してください。</p>
+    <textarea class="code-editor" id="p-m3-u1-input" rows="7">import matplotlib.pyplot as plt
+fig, ax = plt.subplots()
+ax.plot([1, 2], label="a")
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m3-u1", ["ax.legend", "loc='upper right'", "frameon=False"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3-u1-result"></div>
+    <div class="answer-reveal" id="p-m3-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">ax.legend(loc=<span class="st">'upper right'</span>, frameon=<span class="kw">False</span>)</span>
+</pre>
+      <p class="answer-note">locとframeonを指定します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>凡例に載せる要素を選ぶ</h2><div class="unit-sub">一部だけ・点の大きさの凡例</div></div>
+  </div>
+<p>線の一部だけを凡例に出したいときは、<code>label</code>を付けた線だけが載る性質を使います。</p><pre class="code-block">
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.plot(x, np.sin(x), label=<span class="st">'Sine'</span>)</span>
+<span class="cl">ax.plot(x, np.cos(x), label=<span class="st">'Cosine'</span>)</span>
+<span class="cl">ax.plot(x, np.sin(x + <span class="nm">1</span>), color=<span class="st">'gray'</span>, alpha=<span class="nm">0.4</span>)   <span class="cm"># label なし → 凡例に載らない</span></span>
+<span class="cl">ax.legend()</span>
+</pre><div class="plot-out"><img src="images/m3_leg3.png" alt="一部だけ" loading="lazy"></div><p>点の大きさが何を意味するかを凡例にするには、「見本の点」を描いて凡例に使う方法があります。</p><pre class="code-block">
+<span class="cl">rng = np.random.RandomState(<span class="nm">3</span>)</span>
+<span class="cl">xs = rng.rand(<span class="nm">30</span>)</span>
+<span class="cl">ys = rng.rand(<span class="nm">30</span>)</span>
+<span class="cl">sz = <span class="nm">500</span> * rng.rand(<span class="nm">30</span>)</span>
+<span class="cl">plt.scatter(xs, ys, s=sz, alpha=<span class="nm">0.3</span>, color=<span class="st">'steelblue'</span>)</span>
+<span class="cl"><span class="kw">for</span> s <span class="kw">in</span> [<span class="nm">100</span>, <span class="nm">300</span>, <span class="nm">500</span>]:</span>
+<span class="cl">    plt.scatter([], [], s=s, color=<span class="st">'gray'</span>, alpha=<span class="nm">0.3</span>, label=str(s) + <span class="st">' units'</span>)</span>
+<span class="cl">plt.legend(scatterpoints=<span class="nm">1</span>, labelspacing=<span class="nm">1</span>, title=<span class="st">'size'</span>)</span>
+</pre><div class="plot-out"><img src="images/m3_leg4.png" alt="大きさの凡例" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>空の<code>scatter([], [])</code>は「凡例用の見本」を作る小ワザです。</p></div><div class="practice-card" id="p-m3-u2">
+    <div class="ptitle">💻 ミニ練習：label</div>
+    <p class="ptask">2本のうち<strong>1本目だけ</strong>が凡例に出るよう、<code>label</code>を付けて描き、凡例を表示してください。</p>
+    <textarea class="code-editor" id="p-m3-u2-input" rows="7">import matplotlib.pyplot as plt
+fig, ax = plt.subplots()
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m3-u2", ["label=", "ax.legend"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3-u2-result"></div>
+    <div class="answer-reveal" id="p-m3-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">ax.plot([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>], label=<span class="st">'first'</span>)</span>
+<span class="cl">ax.plot([<span class="nm">3</span>, <span class="nm">2</span>, <span class="nm">1</span>])</span>
+<span class="cl">ax.legend()</span>
+</pre>
+      <p class="answer-note">labelのない線は凡例に載りません。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>カラーバーとカラーマップ</h2><div class="unit-sub">cmap の選び方</div></div>
+  </div>
+<p>色で値を表すとき、<strong>色の並び（カラーマップ、cmap）</strong>が大切です。</p><pre class="code-block">
+<span class="cl">xx = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl">I = np.sin(xx) * np.cos(xx[:, np.newaxis])</span>
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">im = ax.imshow(I, cmap=<span class="st">'viridis'</span>)</span>
+<span class="cl">fig.colorbar(im, label=<span class="st">'value'</span>)</span>
+</pre><div class="plot-out"><img src="images/m3_cbar1.png" alt="カラーバー" loading="lazy"></div><table class="compare-table"><thead><tr><th>種類</th><th>使いどころ</th><th>例</th></tr></thead><tbody><tr><td>連続（sequential）</td><td>小さい→大きい</td><td><code>viridis</code>、<code>Blues</code></td></tr><tr><td>発散（diverging）</td><td>0を中心に正負</td><td><code>RdBu</code>、<code>coolwarm</code></td></tr><tr><td>定性（qualitative）</td><td>カテゴリの区別</td><td><code>tab10</code>、<code>Set1</code></td></tr></tbody></table><div class="warn-box">⚠️ 虹色の<code>jet</code>は、明るさが一様に変化せず、値の大小を誤解しやすいため、<code>viridis</code>などを使うのが推奨です。白黒印刷でも読める色を選びましょう。</div><pre class="code-block">
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">im = ax.imshow(I, cmap=<span class="st">'RdBu'</span>)</span>
+<span class="cl">im.set_clim(-<span class="nm">1</span>, <span class="nm">1</span>)           <span class="cm"># 色の範囲を固定</span></span>
+<span class="cl">fig.colorbar(im, extend=<span class="st">'both'</span>)</span>
+</pre><div class="plot-out"><img src="images/m3_cbar2.png" alt="RdBuと範囲" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>順序のある値には<code>viridis</code>、0が中心の正負には<code>RdBu</code>、カテゴリには<code>tab10</code>。</p></div><div class="practice-card" id="p-m3-u3">
+    <div class="ptitle">💻 ミニ練習：カラーバー</div>
+    <p class="ptask"><code>fig.colorbar</code>で、画像<code>im</code>にカラーバーを付けてください。</p>
+    <textarea class="code-editor" id="p-m3-u3-input" rows="7">import numpy as np
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots()
+im = ax.imshow(np.random.rand(5, 5), cmap="viridis")
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m3-u3", ["fig.colorbar(im"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3-u3-result"></div>
+    <div class="answer-reveal" id="p-m3-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">fig.colorbar(im)</span>
+</pre>
+      <p class="answer-note">figのcolorbarに画像を渡します。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which call places the legend in the upper left without a frame?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ax.legend(loc='upper left', frameon=False)</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ax.legend(place='top', border=False), using invented names</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ax.legend(left=True, box=False), with two flags that do not exist</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>plt.legend(upper_left=True), which is not a valid argument</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does ncol=2 do in legend()?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Uses exactly two colours in the legend</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Arranges the entries in two columns</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Shows only the first two of the entries</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Doubles the font size of the whole legend</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A line was drawn without a label argument. What happens in the legend?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>An error is raised as soon as legend() is called</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It appears there under the name "line 1"</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It does not appear in the legend</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is drawn in black so it is easy to find</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which kind of colormap fits data that is centred on zero with positive and negative values?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A sequential map such as Blues</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A qualitative map such as tab10</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A diverging map such as RdBu</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A rainbow map such as jet</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why is jet discouraged as a default colormap?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It has been removed from the library</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Its brightness changes unevenly, so values are misread</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It cannot be printed on a colour printer</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It supports integer values only and no decimals</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">How do you add a colorbar for an image im on the figure fig?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>fig.colorbar(im)</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>im.add_colorbar(fig)</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>plt.bar(im)</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>fig.legend(im)</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 1, 2, 2, 1, 0];
+var FEEDBACKS=["loc sets the position and frameon switches the border on or off.", "ncol is the number of columns used to lay out the legend entries.", "Only artists that have a label are included in the legend.", "Diverging maps have a neutral centre and two contrasting directions.", "Perceptually uniform maps like viridis represent value differences more faithfully.", "fig.colorbar takes the mappable object, which is the image returned by imshow."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">legend</div><div class="term-en">凡例</div><div class="term-def">線や点の意味の一覧。loc・ncol・frameonで調整。</div></div>
+    <div class="term-item"><div class="term-name">label</div><div class="term-en">ラベル</div><div class="term-def">凡例に載る名前。付けない要素は凡例に出ない。</div></div>
+    <div class="term-item"><div class="term-name">colorbar</div><div class="term-en">カラーバー</div><div class="term-def">色と値の対応を示す帯。fig.colorbar(im)。</div></div>
+    <div class="term-item"><div class="term-name">cmap</div><div class="term-en">カラーマップ</div><div class="term-def">色の並び。viridis・RdBu・tab10など。</div></div>
+    <div class="term-item"><div class="term-name">sequential / diverging</div><div class="term-en">連続／発散</div><div class="term-def">小→大に向く／0を中心に正負に向く色の並び。</div></div>
+    <div class="term-item"><div class="term-name">clim</div><div class="term-en">色の範囲</div><div class="term-def">im.set_clim(最小, 最大)で色が表す値の範囲を固定する。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>色の選び方で、グラフの伝わり方が変わります。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Matplotlib③ 凡例とカラーバー</p>
+  <p style="margin-top:.5rem;"><a href="mpl_dist.html">← ② 分布・誤差・等高線</a> · <a href="mpl_layout.html">④ 複数グラフ・注釈 →</a> · <a href="mpl_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

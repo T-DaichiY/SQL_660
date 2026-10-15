@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 ML⑤ K-Meansクラスタリング</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Machine Learning — K-Means</div>
+  <h1>🎯 ML⑤：K-Meansクラスタリング</h1>
+  <p>K-Meansの仕組み、KMeansの使い方、エルボー法、限界（ガウス混合モデルへの道）を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 考え方</a><a href="#unit2">② KMeans</a><a href="#unit3">③ k の決め方</a><a href="#unit4">④ 限界</a><a href="#quiz">📝 Quiz</a><a href="ml_cluster_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 5.11 In Depth: k-Means Clustering</li><li>Handbook 5.12 In Depth: Gaussian Mixture Models（名前だけ）</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>クラスタリングとK-Meansの考え方</h2><div class="unit-sub">正解なしでグループ分け</div></div>
+  </div>
+<p><strong>クラスタリング</strong>は、ラベルなしのデータを「似たもの同士」のグループに分ける教師なし学習です。<strong>K-Means</strong>は、グループ数 <code>k</code> を決め、次の2つを繰り返します。</p><ol><li>各点を、<strong>一番近い中心</strong>のグループに入れる。</li><li>各グループの<strong>平均の位置</strong>に中心を動かす。</li></ol><p>中心が動かなくなったら完成です。まず練習用のデータを作ります。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.datasets <span class="kw">import</span> make_blobs</span>
+<span class="cl">X, y_true = make_blobs(n_samples=<span class="nm">300</span>, centers=<span class="nm">4</span>, cluster_std=<span class="nm">0.60</span>, random_state=<span class="nm">0</span>)</span>
+<span class="cl">plt.scatter(X[:, <span class="nm">0</span>], X[:, <span class="nm">1</span>], s=<span class="nm">20</span>)</span>
+<span class="cl">plt.title(<span class="st">'Unlabelled data'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml5_blobs.png" alt="4つのかたまり" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>目で見ると4つのかたまり。K-Meansはそれを自動で見つけます。</p></div><div class="practice-card" id="p-ml5-u1">
+    <div class="ptitle">💻 ミニ練習：データの形</div>
+    <p class="ptask">上の <code>X</code> の行数（サンプル数）を <code>n</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml5-u1-input" rows="7"># X は make_blobs で作成済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml5-u1", ["X.shape[0]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml5-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml5-u1-result"></div>
+    <div class="answer-reveal" id="p-ml5-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">n = X.shape[<span class="nm">0</span>]</span>
+</pre>
+      <p class="answer-note">300です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>scikit-learnのKMeans</h2><div class="unit-sub">fit と predict</div></div>
+  </div>
+<p>使い方は他のモデルと同じです。ただし教師なしなので、<code>fit(X)</code>に<strong>yは渡しません</strong>。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.cluster <span class="kw">import</span> KMeans</span>
+<span class="cl">kmeans = KMeans(n_clusters=<span class="nm">4</span>, n_init=<span class="nm">10</span>, random_state=<span class="nm">0</span>)</span>
+<span class="cl">kmeans.fit(X)</span>
+<span class="cl">y_kmeans = kmeans.predict(X)</span>
+<span class="cl"><span class="kw">print</span>(y_kmeans[:<span class="nm">10</span>])</span>
+<span class="cl"><span class="kw">print</span>(np.bincount(y_kmeans))</span>
+<span class="cl"><span class="kw">print</span>(kmeans.cluster_centers_.round(<span class="nm">2</span>))</span>
+</pre><div class="output-reveal">[1 2 0 2 1 1 3 0 2 2]
+[75 75 75 75]
+[[ 0.95  4.42]
+ [ 1.98  0.87]
+ [-1.37  7.75]
+ [-1.58  2.83]]</div><pre class="code-block">
+<span class="cl">plt.scatter(X[:, <span class="nm">0</span>], X[:, <span class="nm">1</span>], c=y_kmeans, s=<span class="nm">20</span>, cmap=<span class="st">'viridis'</span>)</span>
+<span class="cl">c = kmeans.cluster_centers_</span>
+<span class="cl">plt.scatter(c[:, <span class="nm">0</span>], c[:, <span class="nm">1</span>], c=<span class="st">'black'</span>, s=<span class="nm">150</span>, alpha=<span class="nm">0.6</span>)</span>
+<span class="cl">plt.title(<span class="st">'KMeans result'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml5_kmeans.png" alt="KMeansの結果" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ラベル0〜3の<strong>番号そのものに意味はありません</strong>。実行ごとに番号の振り方が変わることがあります（同じグループ分けでも）。</p></div><div class="practice-card" id="p-ml5-u2">
+    <div class="ptitle">💻 ミニ練習：中心の個数</div>
+    <p class="ptask">学習済みの <code>kmeans</code> について、クラスタ中心の個数を <code>k</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml5-u2-input" rows="7"># kmeans は学習済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml5-u2", ["cluster_centers_", "len"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml5-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml5-u2-result"></div>
+    <div class="answer-reveal" id="p-ml5-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">k = len(kmeans.cluster_centers_)</span>
+</pre>
+      <p class="answer-note">4つです。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>kをどう決める？ エルボー法</h2><div class="unit-sub">inertia を見る</div></div>
+  </div>
+<p>正解がないので、<code>k</code>は自分で決めます。目安が<strong>inertia</strong>（各点と所属中心との距離の2乗の合計）です。kを増やすと必ず下がりますが、<strong>下がり方が急に緩やかになる「ひじ」</strong>のkがよい候補です。</p><pre class="code-block">
+<span class="cl">ks = range(<span class="nm">1</span>, <span class="nm">9</span>)</span>
+<span class="cl">inertias = [KMeans(n_clusters=k, n_init=<span class="nm">10</span>, random_state=<span class="nm">0</span>).fit(X).inertia_ <span class="kw">for</span> k <span class="kw">in</span> ks]</span>
+<span class="cl">plt.plot(list(ks), inertias, marker=<span class="st">'o'</span>)</span>
+<span class="cl">plt.xlabel(<span class="st">'k'</span>)</span>
+<span class="cl">plt.ylabel(<span class="st">'inertia'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Elbow method'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml5_elbow.png" alt="エルボー法" loading="lazy"></div><p>k=4 までは急に下がり、その後は緩やかです。ひじは k=4 あたりと読めます。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「これ以上増やしても、あまり得をしない」点を探します。</p></div><div class="practice-card" id="p-ml5-u3">
+    <div class="ptitle">💻 ミニ練習：inertia</div>
+    <p class="ptask"><code>n_clusters=4, n_init=10, random_state=0</code> のKMeansを <code>X</code> に当てはめ、<code>inertia_</code> を小数第1位まで丸めて <code>inr</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml5-u3-input" rows="7"># X は make_blobs で作成済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml5-u3", ["inertia_", "round"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml5-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml5-u3-result"></div>
+    <div class="answer-reveal" id="p-ml5-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">inr = round(KMeans(n_clusters=<span class="nm">4</span>, n_init=<span class="nm">10</span>, random_state=<span class="nm">0</span>).fit(X).inertia_, <span class="nm">1</span>)</span>
+</pre>
+      <p class="answer-note">約212.0 です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>K-Meansの限界と、次の一歩</h2><div class="unit-sub">丸いかたまりが得意</div></div>
+  </div>
+<ul><li>最初の中心の置き方で結果が変わる → <code>n_init</code>で何回も試して最良を採用。</li><li><strong>k</strong>を先に決める必要がある。</li><li>境界は「中心への近さ」で決まるので、<strong>細長い・入り組んだ形</strong>が苦手。</li></ul><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.datasets <span class="kw">import</span> make_moons</span>
+<span class="cl">Xm, _ = make_moons(<span class="nm">200</span>, noise=<span class="nm">0.05</span>, random_state=<span class="nm">0</span>)</span>
+<span class="cl">lab = KMeans(n_clusters=<span class="nm">2</span>, n_init=<span class="nm">10</span>, random_state=<span class="nm">0</span>).fit_predict(Xm)</span>
+<span class="cl">plt.scatter(Xm[:, <span class="nm">0</span>], Xm[:, <span class="nm">1</span>], c=lab, s=<span class="nm">20</span>)</span>
+<span class="cl">plt.title(<span class="st">'KMeans on two moons'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml5_moons.png" alt="三日月型" loading="lazy"></div><p>三日月型では、上下ではなく「左右」で割ってしまいます。こうした場合は、<strong>ガウス混合モデル</strong>（Handbook 5.12）やスペクトラルクラスタリングなど、別の手法を検討します。このレッスンでは存在を知っておけば十分です。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>K-Meansは「丸くて、大きさがそろったかたまり」を想定しています。</p></div><div class="practice-card" id="p-ml5-u4">
+    <div class="ptitle">💻 ミニ練習：二分割</div>
+    <p class="ptask"><code>pts</code> を <code>n_clusters=2, n_init=10, random_state=0</code> のKMeansでクラスタリングし、クラスタごとの人数を<strong>小さい順</strong>にしたリストを <code>sizes</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml5-u4-input" rows="7">pts = np.array([[0, 0], [0, 1], [1, 0], [10, 10], [10, 11], [11, 10], [11, 11]])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml5-u4", ["KMeans", "bincount", "sorted"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml5-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml5-u4-result"></div>
+    <div class="answer-reveal" id="p-ml5-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">lab = KMeans(n_clusters=<span class="nm">2</span>, n_init=<span class="nm">10</span>, random_state=<span class="nm">0</span>).fit_predict(pts)</span>
+<span class="cl">sizes = sorted(np.bincount(lab).tolist())</span>
+</pre>
+      <p class="answer-note">3人と4人で [3, 4] です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">K-Means is an example of which type of learning?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Supervised classification with labelled examples</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Unsupervised clustering</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Supervised regression with a numeric target</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Reinforcement learning with rewards</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which pair of steps does K-Means repeat?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Sort the data and then remove all outliers</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Train a decision tree and then prune it</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Assign points to centres, move centres to means</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Scale the features and then one-hot encode them</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What do you pass to KMeans.fit()?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only X</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Both the features X and the labels y together</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only the labels y, never the features</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A list that contains the names of each cluster</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">KMeans returns cluster labels 0, 1, 2. What can we say about these numbers?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Label 0 is always the largest of the clusters</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They are ranked by how important each cluster is</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They match the true class numbers of the data</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They are arbitrary names</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does the elbow method look at?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The number of features contained in X</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>How the accuracy changes on training data</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The colour map that is used in the plot</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Inertia against k</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does K-Means struggle with two interleaved half-moon shapes?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It assumes round clusters</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It cannot work with data in two dimensions</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It requires labelled data to be given to it</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It only works when k is exactly equal to four</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 2, 0, 3, 3, 0];
+var FEEDBACKS=["K-Means groups unlabelled data, so it is unsupervised clustering.", "Assignment and update steps alternate until the centres stop moving.", "There are no labels in unsupervised learning, so only X is passed.", "Labels are just identifiers. The same grouping may get different numbers in different runs.", "You choose k where the drop in inertia becomes gradual.", "Distance-to-centre boundaries cannot separate curved, interleaved shapes."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">Clustering</div><div class="term-en">クラスタリング</div><div class="term-def">ラベルなしで似たもの同士をグループ分けする。</div></div>
+    <div class="term-item"><div class="term-name">Centroid</div><div class="term-en">重心（中心）</div><div class="term-def">クラスタの平均の位置。cluster_centers_。</div></div>
+    <div class="term-item"><div class="term-name">k (n_clusters)</div><div class="term-en">クラスタ数</div><div class="term-def">作るグループの数。自分で決める。</div></div>
+    <div class="term-item"><div class="term-name">Inertia</div><div class="term-en">イナーシャ</div><div class="term-def">各点と所属中心との距離の2乗和。小さいほどまとまりが良い。</div></div>
+    <div class="term-item"><div class="term-name">Elbow method</div><div class="term-en">エルボー法</div><div class="term-def">inertiaの下がり方が緩やかになる点でkを選ぶ。</div></div>
+    <div class="term-item"><div class="term-name">n_init</div><div class="term-en">初期化の回数</div><div class="term-def">中心の初期値を変えて何回も試し、最良を採る回数。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>クラスタ番号に意味はありません。人数や中心で比べましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：ML⑤ K-Meansクラスタリング</p>
+  <p style="margin-top:.5rem;"><a href="ml_linreg.html">← ④ 線形回帰</a> · <a href="ml_pca.html">⑥ 主成分分析 →</a> · <a href="ml_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

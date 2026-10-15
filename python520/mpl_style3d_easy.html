@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：Matplotlib⑤ スタイル・棒グラフ・3D</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M4 · Matplotlib — Styles, Bars, 3D 🍎</div>
+    <h1>🍎 超やさしい版：Matplotlib⑤ スタイル・棒グラフ・3D</h1>
+    <p>スタイルと棒グラフのポイント。</p>
+    <div class="unit-nav"><a href="#u1">スタイル・棒</a><a href="#u2">3D</a><a href="mpl_style3d.html" class="easy-toplink">📖 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>スタイルと棒グラフ</h2><div class="unit-sub">style / bar</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong><code>plt.style.use('ggplot')</code>で見た目を一括変更。カテゴリの比較は<code>ax.bar</code>。</strong></p></div><pre class="code-block">
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.bar([<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>], [<span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">2</span>], color=<span class="st">'steelblue'</span>)</span>
+<span class="cl">ax.set_ylabel(<span class="st">'count'</span>)</span>
+</pre><div class="plot-out"><img src="images/e_m5a.png" alt="棒グラフ" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>割合は円グラフですが、比べやすいのは棒グラフです。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 縦の棒グラフの関数は？<span class="cp-a">A. ax.bar（横向きはbarh）。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>3Dグラフ</h2><div class="unit-sub">projection</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong><code>fig.add_subplot(projection='3d')</code>で3D軸を作る。<code>view_init</code>で角度を変える。</strong></p></div><pre class="code-block">
+<span class="cl"><span class="kw">import</span> numpy <span class="kw">as</span> np</span>
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl">fig = plt.figure()</span>
+<span class="cl">ax = fig.add_subplot(projection=<span class="st">'3d'</span>)</span>
+<span class="cl">z = np.linspace(<span class="nm">0</span>, <span class="nm">6</span>, <span class="nm">50</span>)</span>
+<span class="cl">ax.plot3D(np.sin(z), np.cos(z), z)</span>
+</pre><div class="plot-out"><img src="images/e_m5b.png" alt="3D" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>3Dは使いすぎないのも大事です。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 3D軸を作る指定は？<span class="cp-a">A. projection='3d'。</span></div></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">くわしい説明・練習・英語クイズは <a href="mpl_style3d.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 DTSC520 レッスン：Matplotlib⑤ スタイル・棒グラフ・3D — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="mpl_style3d.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){q.addEventListener('click', function(){ q.classList.toggle('open'); });});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

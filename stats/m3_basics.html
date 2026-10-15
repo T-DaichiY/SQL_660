@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 推測の基礎①　データ収集と帰無仮説</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 🔬 データ収集・帰無仮説 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main active" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Foundations of Inference ① — Data Collection &amp; the Null Hypothesis</div>
+  <h1>🎯 推測の基礎①：データ収集と帰無仮説</h1>
+  <p>統計の推測は、<strong>どうデータを集めたか</strong>で決まります。まず<strong>母集団と標本・偏り・観察研究と実験</strong>を学び、そのうえで「<strong>真であることは証明できない</strong>」という<strong>反証（falsification）</strong>の考え方から、<strong>帰無仮説</strong>と対立仮説が生まれる理由を理解します。</p>
+  <p style="font-size:.9rem">📺 講義動画: Data collection principles ／ Null hypothesis</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 母集団と標本</a><a href="#unit2">② 変数と研究の種類</a><a href="#unit3">③ 反証可能性</a><a href="#unit4">④ 帰無仮説と対立仮説</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 母集団と標本（偏りの避け方）：<strong>Data collection principles</strong> 前半（メカジキの例）</li><li>② 説明変数・応答変数、観察研究と実験：<strong>Data collection principles</strong> 後半（郡の貧困率と連邦支出の例）</li><li>③ 反証可能性（紫の象、灰色の領域）：<strong>Null hypothesis</strong> 前半</li><li>④ 帰無仮説と対立仮説、先行研究から新しい理論へ：<strong>Null hypothesis</strong> 後半</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>母集団と標本、そして偏り</h2><div class="unit-sub">メカジキの水銀量で考える</div></div>
+  </div>
+  <p>データ収集の目的は、<strong>信頼できるデータ</strong>を、研究の目標に合う形で集めることです。そのためにまず<strong>母集団（population）</strong>と<strong>標本（sample）</strong>の違いを押さえます。</p>
+  <div class="note-box">🐟 <strong>講義の例：</strong>研究の問い「<em>大西洋のメカジキ（swordfish）に含まれる水銀量の平均はいくらか？</em>」<br>・<strong>対象母集団（target population）</strong>＝大西洋にいるすべてのメカジキ<br>・<strong>ケース（case）</strong>＝1匹のメカジキ（1行のデータ）<br>・<strong>標本</strong>＝ケースの一部分。たとえば60匹を選ぶ。母集団のごく一部であることが多い</div>
+  <p>標本のデータから<strong>母集団の平均を推定（estimate）</strong>して、研究の問いに答えます。全部の魚を測るのは現実的でないからです。</p>
+  <table class="compare-table">
+    <tr><th>用語</th><th>メカジキの例</th></tr>
+    <tr><td>population 母集団</td><td>大西洋のすべてのメカジキ</td></tr>
+    <tr><td>case ケース</td><td>1匹のメカジキ</td></tr>
+    <tr><td>sample 標本</td><td>選んだ60匹</td></tr>
+    <tr><td>estimate 推定</td><td>60匹の水銀量の平均から、母集団の平均を見積もる</td></tr>
+  </table>
+  <h3>代表的な標本を取り、偏り（bias）を避ける</h3>
+  <p>大切なのは、母集団を<strong>よく代表する標本（representative sample）</strong>を取り、<strong>バイアス（bias＝偏り）</strong>を避けることです。</p>
+  <ul>
+    <li><strong>ランダム標本（random sample）</strong>が望ましい。もっとも基本的なものが<strong>単純無作為抽出（simple random sample）</strong>。</li>
+    <li>ただし<strong>ランダムでも欠陥は起こる</strong>。たとえば<strong>無回答（non-response）が多い</strong>と、返事をくれた人が母集団全体を代表していないかもしれない。</li>
+    <li><strong>便宜的標本（convenience sample）</strong>＝手近にいる人・ものが入りやすい取り方。母集団について結論を出す土台としては<strong>一般に不適切</strong>。</li>
+  </ul>
+  <p>R で確かめてみましょう。まず1万匹の架空の母集団（体長が大きいほど水銀が多いという現実的な関係を入れた<strong>シミュレーション</strong>）を作ります。ここでは母集団を全部知っているので、「本当の母平均」と標本の平均を比べられます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2026</span>)</span>
+<span class="cl"><span class="kw">N</span>   &lt;- <span class="nm">10000</span></span>
+<span class="cl"><span class="kw">l</span><span class="kw">e</span><span class="kw">n</span> &lt;- <span class="kw">rnorm</span>(<span class="kw">N</span>, <span class="nm">150</span>, <span class="nm">25</span>)</span>
+<span class="cl"><span class="kw">h</span><span class="kw">g</span>  &lt;- <span class="kw">round</span>(<span class="kw">pmax</span>(<span class="nm">0.05</span>, <span class="nm">0.9</span> + <span class="nm">0.012</span>*(<span class="kw">l</span><span class="kw">e</span><span class="kw">n</span> - <span class="nm">150</span>) + <span class="kw">rnorm</span>(<span class="kw">N</span>, <span class="nm">0</span>, <span class="nm">0.25</span>)), <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span> &lt;- <span class="kw">data.frame</span>(<span class="kw">l</span><span class="kw">e</span><span class="kw">n</span><span class="kw">g</span><span class="kw">t</span><span class="kw">h</span><span class="kw">_</span><span class="kw">c</span><span class="kw">m</span> = <span class="kw">round</span>(<span class="kw">l</span><span class="kw">e</span><span class="kw">n</span>), <span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span> = <span class="kw">h</span><span class="kw">g</span>)</span>
+<span class="cl"><span class="kw">nrow</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>)</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>$<span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span>)      <span class="cm"># 母集団の本当の平均</span></span>
+<span class="cl"><span class="kw">head</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>, <span class="nm">3</span>)</span>
+</pre>
+  <div class="output-reveal">[1] 10000
+[1] 0.90759
+  length_cm mercury
+1       163    0.95
+2       123    0.94
+3       153    0.96</div>
+  <p>母集団の平均は <strong>0.91</strong>（0.90759）。次に、<strong>単純無作為抽出</strong>で60匹を選びます（<code>sample()</code>）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">s</span><span class="kw">r</span><span class="kw">s</span> &lt;- <span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>[<span class="kw">sample</span>(<span class="kw">N</span>, <span class="nm">60</span>), ]</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">s</span><span class="kw">r</span><span class="kw">s</span>$<span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span>)</span>
+<span class="cl"><span class="kw">replicate</span>(<span class="nm">5</span>, <span class="kw">mean</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>$<span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span>[<span class="kw">sample</span>(<span class="kw">N</span>, <span class="nm">60</span>)]))   <span class="cm"># 取り直しを5回</span></span>
+</pre>
+  <div class="output-reveal">[1] 0.8628333
+[1] 0.9210000 0.8866667 0.9328333 0.8550000 0.8500000</div>
+  <p>標本平均は <strong>0.863</strong>。母平均 0.908 とぴったりは一致しませんが近く、取り直すたびに少しずつ違います（偶然のばらつき）。ランダムなら、ズレは<strong>一方向に偏りません</strong>。</p>
+  <p>次に「港で釣れる大きい魚ばかり」を集めた<strong>便宜的標本</strong>を作ってみます（体長の上位20%から60匹）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">b</span><span class="kw">i</span><span class="kw">g</span>  &lt;- <span class="kw">which</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>$<span class="kw">l</span><span class="kw">e</span><span class="kw">n</span><span class="kw">g</span><span class="kw">t</span><span class="kw">h</span><span class="kw">_</span><span class="kw">c</span><span class="kw">m</span> &gt;= <span class="kw">quantile</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>$<span class="kw">l</span><span class="kw">e</span><span class="kw">n</span><span class="kw">g</span><span class="kw">t</span><span class="kw">h</span><span class="kw">_</span><span class="kw">c</span><span class="kw">m</span>, <span class="nm">0.8</span>))</span>
+<span class="cl"><span class="kw">c</span><span class="kw">o</span><span class="kw">n</span><span class="kw">v</span> &lt;- <span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>[<span class="kw">sample</span>(<span class="kw">b</span><span class="kw">i</span><span class="kw">g</span>, <span class="nm">60</span>), ]</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">c</span><span class="kw">o</span><span class="kw">n</span><span class="kw">v</span>$<span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span>)</span>
+<span class="cl"><span class="kw">cor</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>$<span class="kw">l</span><span class="kw">e</span><span class="kw">n</span><span class="kw">g</span><span class="kw">t</span><span class="kw">h</span><span class="kw">_</span><span class="kw">c</span><span class="kw">m</span>, <span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>$<span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span>)</span>
+</pre>
+  <div class="output-reveal">[1] 1.3565
+[1] 0.7689983</div>
+  <p>便宜的標本の平均は <strong>1.357</strong>。母平均 0.908 より大幅に高く、しかも大きい魚ばかり集めたので<strong>毎回同じ方向にズレます</strong>。これが<strong>バイアス</strong>です。標本が大きくなっても、取り方が偏っていれば直りません。</p>
+  <div class="viz">
+    <div class="viz-title">メカジキの水銀量：3つの平均の比べ方（R の結果をそのまま描画）</div>
+    <svg viewBox="0 0 520 150" width="100%" style="max-width:520px" role="img" aria-label="母平均0.91、単純無作為抽出0.86、便宜的抽出1.36の棒グラフ">
+      <line x1="150" y1="8" x2="150" y2="118" stroke="#94a3b8"/>
+      <text x="10" y="28" font-size="12" fill="currentColor">母集団の平均</text><rect x="150" y="14" width="181.6" height="20" fill="#64748b" rx="3"/><text x="337.6" y="29" font-size="12" fill="currentColor">0.908</text>
+      <text x="10" y="68" font-size="12" fill="currentColor">無作為標本(60匹)</text><rect x="150" y="54" width="172.6" height="20" fill="#0d9488" rx="3"/><text x="328.6" y="69" font-size="12" fill="currentColor">0.863</text>
+      <text x="10" y="108" font-size="12" fill="currentColor">便宜的標本(60匹)</text><rect x="150" y="94" width="271.4" height="20" fill="#ef4444" rx="3"/><text x="427.4" y="109" font-size="12" fill="currentColor">1.357</text>
+      <text x="150" y="140" font-size="11" fill="currentColor">0</text><text x="296" y="140" font-size="11" fill="currentColor">0.75</text><text x="440" y="140" font-size="11" fill="currentColor">1.5 (ppm)</text>
+    </svg>
+    <div class="viz-cap">無作為標本は母平均に近い（ズレは偶然のばらつき）。大きい魚ばかり集めた便宜的標本は、系統的に高い値に偏る。数値は R で作った架空データ。</div>
+  </div>
+
+  <div class="warn-box">⚠️ <strong>講師の注意：</strong>「<strong>ランダムな標本でも欠陥はありうる</strong>」。特に無回答が多いとき、答えた人は母集団全体を代表しないかもしれません。便宜的標本（手近な人だけ）は、母集団についての結論の土台としてはたいてい良くありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>母集団＝知りたい全体、標本＝実際に調べた一部。標本が母集団の<strong>縮図</strong>になっていないと（偏りがあると）、平均がズレる。くじ引きのような<strong>ランダム</strong>な選び方が基本で、手近な人だけ集めるのは危ない。</p></div>
+
+  <div class="practice-card" id="p-m3a-u1">
+    <div class="ptitle">💻 ミニ練習：単純無作為抽出で標本平均を求める</div>
+    <p class="ptask">データフレーム <code>swordfish</code>（<code>mercury</code> 列に水銀量、全 <code>N</code> = 10000 行）が既にあるとします。<code>sample()</code> で<strong>60行を無作為に選び</strong>、その <code>mercury</code> の平均を求めるコードを書いてください（標本を <code>srs</code> に保存）。</p>
+    <textarea class="code-editor" id="p-m3a-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3a-u1', ['sample', 'swordfish', 'srs', 'mean', 'mercury'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3a-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3a-u1-result"></div>
+    <div class="answer-reveal" id="p-m3a-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">s</span><span class="kw">r</span><span class="kw">s</span> &lt;- <span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>[<span class="kw">sample</span>(<span class="kw">nrow</span>(<span class="kw">s</span><span class="kw">w</span><span class="kw">o</span><span class="kw">r</span><span class="kw">d</span><span class="kw">f</span><span class="kw">i</span><span class="kw">s</span><span class="kw">h</span>), <span class="nm">60</span>), ]</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">s</span><span class="kw">r</span><span class="kw">s</span>$<span class="kw">m</span><span class="kw">e</span><span class="kw">r</span><span class="kw">c</span><span class="kw">u</span><span class="kw">r</span><span class="kw">y</span>)</span>
+</pre>
+      <p class="answer-note"><code>sample(nrow(swordfish), 60)</code> が「1〜10000 から60個を重複なく無作為に選ぶ」。その行番号で行を取り出し、<code>mean()</code> で平均を出す。乱数なので実行するたびに値は少し変わる。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>説明変数・応答変数、観察研究と実験</h2><div class="unit-sub">因果と関連を取り違えない</div></div>
+  </div>
+  <p>次は、データの中の<strong>変数の役割</strong>と、データの<strong>集め方の種類</strong>です。</p>
+  <h3>説明変数と応答変数</h3>
+  <div class="note-box">🏛️ <strong>講義の例：</strong>「貧困率の高い郡では、連邦政府の支出は平均して高いか低いか？」<br>貧困が支出に影響すると考えるなら、<strong>貧困率 ＝ 説明変数（explanatory variable）</strong>、<strong>連邦支出 ＝ 応答変数（response variable）</strong>。</div>
+  <table class="compare-table">
+    <tr><th>用語</th><th>意味</th><th>この例</th></tr>
+    <tr><td>explanatory variable 説明変数</td><td>影響を与えると<strong>疑っている</strong>側（原因の候補）</td><td>郡の貧困率</td></tr>
+    <tr><td>response variable 応答変数</td><td>影響を受けると考える側（結果）</td><td>郡の連邦支出</td></tr>
+  </table>
+  <p>変数が多いときは、<strong>複数の変数を説明変数として</strong>考えることもできます。</p>
+  <div class="warn-box">⚠️ <strong>講師の注意：</strong>説明変数・応答変数とラベルを付けても、<strong>2つの関係が本当に因果的（causal）だとは保証されません</strong>。いつも思い出すこと：<strong>association does not imply causation（関連があっても因果とは限らない）</strong>。</div>
+  <h3>データ収集の2種類：観察研究と実験</h3>
+  <table class="compare-table">
+    <tr><th></th><th>observational study 観察研究</th><th>experiment 実験</th></tr>
+    <tr><td>やり方</td><td>データが生まれる過程に<strong>直接介入しない</strong>で集める</td><td>誰が処置（treatment）を受け、誰が受けないかを<strong>研究者が割り当てる</strong></td></tr>
+    <tr><td>目的</td><td>実態を観察・記録する</td><td><strong>因果関係</strong>の可能性を調べる</td></tr>
+    <tr><td>例</td><td>各郡の貧困率と連邦支出を記録する</td><td>参加者を処置群と対照群に割り当てて結果を比べる</td></tr>
+  </table>
+  <p>実験では、処置を受ける人を<strong>ランダムに割り当てる</strong>のが基本です。R の <code>sample()</code> で、20人を処置群10人・対照群10人に割り当ててみましょう。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">11</span>)</span>
+<span class="cl"><span class="kw">g</span><span class="kw">r</span><span class="kw">o</span><span class="kw">u</span><span class="kw">p</span> &lt;- <span class="kw">sample</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"treatment"</span>, <span class="st">"control"</span>), <span class="kw">e</span><span class="kw">a</span><span class="kw">c</span><span class="kw">h</span> = <span class="nm">10</span>))</span>
+<span class="cl"><span class="kw">table</span>(<span class="kw">g</span><span class="kw">r</span><span class="kw">o</span><span class="kw">u</span><span class="kw">p</span>)</span>
+<span class="cl"><span class="kw">head</span>(<span class="kw">g</span><span class="kw">r</span><span class="kw">o</span><span class="kw">u</span><span class="kw">p</span>, <span class="nm">6</span>)</span>
+</pre>
+  <div class="output-reveal">group
+  control treatment 
+       10        10 
+[1] "treatment" "control"   "control"   "treatment" "control"   "treatment"</div>
+  <p><code>rep()</code> で「処置10・対照10」の札を作り、<code>sample()</code> で並べ替えれば、各人への割り当てがランダムになります（研究者が割り当てを<strong>管理</strong>していることに注目）。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>説明変数＝「原因かも」、応答変数＝「結果かも」</strong>という立場のラベル。ただのラベルで、因果の証明ではない。<strong>観察研究</strong>は「そのまま観察」、<strong>実験</strong>は「研究者が処置を割り当てる」。因果を調べたいときは実験。</p></div>
+
+  <div class="practice-card" id="p-m3a-u2">
+    <div class="ptitle">💻 ミニ練習：ランダムな割り当て</div>
+    <p class="ptask">12人を<strong>処置群6人・対照群6人</strong>にランダムに割り当てる <code>group</code> を作り、<code>table()</code> で人数を確認するコードを書いてください（<code>rep()</code> と <code>sample()</code> を使う。群の名前は "treatment" と "control"）。</p>
+    <textarea class="code-editor" id="p-m3a-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3a-u2', ['rep', 'sample', 'group', 'table', 'treatment', 'control'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3a-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3a-u2-result"></div>
+    <div class="answer-reveal" id="p-m3a-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">g</span><span class="kw">r</span><span class="kw">o</span><span class="kw">u</span><span class="kw">p</span> &lt;- <span class="kw">sample</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"treatment"</span>, <span class="st">"control"</span>), <span class="kw">e</span><span class="kw">a</span><span class="kw">c</span><span class="kw">h</span> = <span class="nm">6</span>))</span>
+<span class="cl"><span class="kw">table</span>(<span class="kw">g</span><span class="kw">r</span><span class="kw">o</span><span class="kw">u</span><span class="kw">p</span>)</span>
+</pre>
+      <p class="answer-note"><code>rep(..., each = 6)</code> で6個ずつの札を作り、<code>sample()</code> でランダムに並べ替える。<code>table(group)</code> は control 6、treatment 6 になる。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>なぜ「帰無仮説」？反証可能性という考え方</h2><div class="unit-sub">真は証明できない、偽は示せる</div></div>
+  </div>
+  <p><strong>仮説（hypothesis）</strong>とは、ある現象についての<strong>説明の提案</strong>です。「2つの変数に関係がある」という単純なものから、「トラウマと抑うつの関係は、ある原因で生じる」というような込み入ったものまであります。</p>
+  <h3>問題：研究では「真である」ことをほとんど示せない</h3>
+  <p>母集団全員のデータが手に入らない限り、研究で何かが<strong>真である</strong>と<strong>実証する</strong>ことは、まずできません。そこで考え出された解決策が、<strong>帰無仮説（null hypothesis）</strong>と<strong>仮説検定（hypothesis testing）</strong>です。</p>
+  <div class="note-box">👂 <strong>講義の例：</strong>「男の子の耳は女の子の耳より大きいか？」<br>世界中の男子と女子を全員測らない限り、「男の子の耳のほうが大きい」ことが真だとは示せない。<br>しかし、<strong>十分な数の男子と女子</strong>を測り、<strong>「差がない」としたら、これだけの差が偶然だけで起こる確率</strong>を計算すれば、「差がない」という考えが<strong>偽である可能性</strong>を確率で示せる。</div>
+  <h3>反証可能性（falsification）</h3>
+  <p>これは<strong>falsification（反証）</strong>の考え方に似ています：<strong>理論が偽であると示すことは論理的に可能</strong>だが、<strong>真であると証明することはできない</strong>、という立場です。</p>
+  <div class="note-box">🐘 <strong>講義のたとえ：</strong>「象はすべて青い」という理論は、紫の象を1頭見ただけで<strong>偽</strong>だと言える。どれだけ青い象を見ても「すべて青い」が<strong>真</strong>とは証明できない。<br>つまり、理論に反する観察が1つあれば、その理論は偽。</div>
+  <p>さらに講師は、<strong>「偽」も完全には証明できない</strong>と補足します。紫の象が紫なのは、皮膚の化学物質の偶然の反応のせいかもしれない…というように、<strong>代わりの説明（alternative explanations）</strong>はいつも残るからです。そこで私たちが扱うのは、「そうしたことがどれくらい起こりやすいか」という<strong>確率（likelihood）</strong>です。</p>
+  <h3>科学の目標</h3>
+  <ul>
+    <li><strong>科学の目標は、理論を厳しい反証の試みに繰り返しさらすこと。</strong>講師はこれを<strong>科学と非科学の境界線（line of demarcation）</strong>と呼ぶ。</li>
+    <li>いま最善の理論を何度も試し、「偽かもしれない」と検証し続ける。<strong>最善の科学者は、自分の理論を偽だと示そうとする人</strong>（「かかってこい、正しいと思うから徹底的に間違いを探してくれ」）。</li>
+    <li>反証の試みに耐えた理論は、本当に良い理論。問題が見つかったら、少し修正した別の理論を作る。</li>
+    <li>例：<strong>ニュートン力学からアインシュタインへ</strong>。とても賢い人たちでも、時間とともに小さな違いが見つかり、新しい理論のほうが良くなる。</li>
+  </ul>
+  <div class="viz">
+    <div class="viz-title">灰色の領域を少しずつ削る（講義の図のイメージ）</div>
+    <svg viewBox="0 0 520 140" width="100%" style="max-width:520px" role="img" aria-label="可能な説明全体（灰色）から、反証によって少しずつ領域が削られ緑の説明が残る図">
+      <rect x="5" y="10" width="150" height="100" fill="#cbd5e1" rx="4"/><circle cx="115" cy="40" r="12" fill="#22c55e"/><text x="80" y="130" font-size="12" text-anchor="middle" fill="currentColor">最初：説明の候補が多い</text>
+      <rect x="185" y="10" width="150" height="100" fill="#cbd5e1" rx="4"/><rect x="185" y="10" width="70" height="100" fill="#fff"/><rect x="255" y="70" width="80" height="40" fill="#fff"/><circle cx="295" cy="40" r="12" fill="#22c55e"/><text x="260" y="130" font-size="12" text-anchor="middle" fill="currentColor">検証で一部が否定される</text>
+      <rect x="365" y="10" width="150" height="100" fill="#cbd5e1" rx="4"/><rect x="365" y="10" width="90" height="100" fill="#fff"/><rect x="455" y="70" width="60" height="40" fill="#fff"/><rect x="455" y="10" width="20" height="45" fill="#fff"/><rect x="495" y="10" width="20" height="18" fill="#fff"/><circle cx="475" cy="40" r="12" fill="#22c55e"/><text x="440" y="130" font-size="12" text-anchor="middle" fill="currentColor">さらに削られ最善の理論が残る</text>
+    </svg>
+    <div class="viz-cap">灰色＝まだ否定されていない説明の全体、緑＝いまの最善の理論、白＝反証の試みで否定された部分。「真であること」は示せないが、検証に耐えた理論が残る。</div>
+  </div>
+
+  <p>講師の図では、<strong>灰色＝可能な説明のすべて</strong>、<strong>緑＝自分が正しいと思う説明</strong>です。目標は<strong>灰色をできるだけ取り除く</strong>こと。「緑だと思うが、灰色の別の場所かもしれない」と検証し、<strong>少しずつ灰色を削って</strong>真実に近づいていきます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「全部の象が青い」は<strong>証明できない</strong>が、紫の象1頭で<strong>くつがえせる</strong>。だから科学は「正しさの証明」ではなく「<strong>間違いを探して、生き残った理論を使う</strong>」やり方。仮説検定はこの考え方を統計にしたもの。</p></div>
+
+  <div class="practice-card" id="p-m3a-u3">
+    <div class="ptitle">💻 ミニ練習：観察された差を計算する</div>
+    <p class="ptask">男子の耳の長さ <code>boys</code> と女子の耳の長さ <code>girls</code> のベクトルが既にあるとします。<strong>男子の平均 − 女子の平均</strong>（観察された差）を計算し、<code>obs</code> に保存するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m3a-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3a-u3', ['obs', 'mean', 'boys', 'girls'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3a-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3a-u3-result"></div>
+    <div class="answer-reveal" id="p-m3a-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">o</span><span class="kw">b</span><span class="kw">s</span> &lt;- <span class="kw">mean</span>(<span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>) - <span class="kw">mean</span>(<span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span>)</span>
+<span class="cl"><span class="kw">o</span><span class="kw">b</span><span class="kw">s</span></span>
+</pre>
+      <p class="answer-note">観察された差 obs は、「差がない」（帰無仮説）が正しいとしたら偶然でどのくらい起こるかを調べる出発点。次の単元で実際に確率を計算する。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>帰無仮説と対立仮説</h2><div class="unit-sub">H₀ を崩す試みとして仮説検定を見る</div></div>
+  </div>
+  <h3>帰無仮説と対立仮説</h3>
+  <p>これを、<strong>帰無仮説（null hypothesis, H₀）</strong>と<strong>対立仮説（alternative hypothesis, H₁）</strong>の形で設定します。</p>
+  <table class="compare-table">
+    <tr><th></th><th>内容</th><th>耳の大きさの例</th></tr>
+    <tr><td>null hypothesis H₀ 帰無仮説</td><td>いつも<strong>「効果なし」</strong>：差がない・関係がない…</td><td>男女で耳の大きさに差は<strong>ない</strong></td></tr>
+    <tr><td>alternative hypothesis H₁ 対立仮説</td><td><strong>差や関係がある</strong></td><td>男女で耳の大きさに差が<strong>ある</strong></td></tr>
+  </table>
+  <p>データを集め、「<strong>帰無仮説に反する証拠（support against the null）</strong>」が見つかれば、<strong>対立仮説がいまの最善の理論として残ります</strong>。そしてさらに別の理論を加えながら、真実に近づいていきます（例：「背の高い男子と低い男子で耳の大きさに差がある」という新しい仮説を立てる、というふうに灰色を削る）。</p>
+  <h3>R で確かめる：「差がない」としたら、この差は偶然か？</h3>
+  <p>耳の長さ（mm）の<strong>架空データ</strong>を、男子40人・女子40人で作ります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">5</span>)</span>
+<span class="cl"><span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span> &lt;- <span class="kw">round</span>(<span class="kw">rnorm</span>(<span class="nm">40</span>, <span class="nm">60</span>, <span class="nm">4</span>), <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>  &lt;- <span class="kw">round</span>(<span class="kw">rnorm</span>(<span class="nm">40</span>, <span class="nm">62.5</span>, <span class="nm">4</span>), <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>); <span class="kw">mean</span>(<span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span>)</span>
+<span class="cl"><span class="kw">o</span><span class="kw">b</span><span class="kw">s</span> &lt;- <span class="kw">mean</span>(<span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>) - <span class="kw">mean</span>(<span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span>)</span>
+<span class="cl"><span class="kw">o</span><span class="kw">b</span><span class="kw">s</span></span>
+</pre>
+  <div class="output-reveal">[1] 62.295
+[1] 60.28
+[1] 2.015</div>
+  <p>男子のほうが 2.015 mm 長いという差が観察されました。<strong>もし本当は差がない（H₀）なら</strong>、男女のラベルは意味を持たないので、全員のデータをシャッフルして「ランダムに2群に分け直した差」を作れます。それを1万回繰り返し、<strong>観察した差と同じくらい極端な差がどのくらいの割合で出るか</strong>を数えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">a</span><span class="kw">l</span><span class="kw">l</span><span class="kw">_</span><span class="kw">e</span><span class="kw">a</span><span class="kw">r</span><span class="kw">s</span> &lt;- <span class="kw">c</span>(<span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>, <span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span>)</span>
+<span class="cl"><span class="kw">d</span> &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, {</span>
+<span class="cl">  <span class="kw">i</span> &lt;- <span class="kw">sample</span>(<span class="nm">80</span>, <span class="nm">40</span>)</span>
+<span class="cl">  <span class="kw">mean</span>(<span class="kw">a</span><span class="kw">l</span><span class="kw">l</span><span class="kw">_</span><span class="kw">e</span><span class="kw">a</span><span class="kw">r</span><span class="kw">s</span>[<span class="kw">i</span>]) - <span class="kw">mean</span>(<span class="kw">a</span><span class="kw">l</span><span class="kw">l</span><span class="kw">_</span><span class="kw">e</span><span class="kw">a</span><span class="kw">r</span><span class="kw">s</span>[-<span class="kw">i</span>])</span>
+<span class="cl">})</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">abs</span>(<span class="kw">d</span>) &gt;= <span class="kw">abs</span>(<span class="kw">o</span><span class="kw">b</span><span class="kw">s</span>))</span>
+</pre>
+  <div class="output-reveal">[1] 0.0248</div>
+  <p>約 <strong>2.5%</strong>。「差がない」としたら、これほど大きな差が偶然だけで起こる確率は低い、つまり<strong>帰無仮説に反する証拠</strong>です。同じことを標準の方法、<code>t.test()</code> でも調べられます（結果はほぼ一致）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(<span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>, <span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span>)</span>
+</pre>
+  <div class="output-reveal">	Welch Two Sample t-test
+
+data:  boys and girls
+t = 2.3439, df = 71.197, p-value = 0.02188
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.3009101 3.7290899
+sample estimates:
+mean of x mean of y 
+   62.295    60.280 </div>
+  <p>p 値は 0.0219。出力の <code>alternative hypothesis: true difference in means is not equal to 0</code> が対立仮説（差は 0 ではない）を表します。検定の詳しい読み方（検定統計量・p 値・有意水準）は次の講義で学びます。</p>
+  <div class="warn-box">⚠️ <strong>データが少ないと、同じ程度の差でも証拠にならない：</strong>各群8人だけの別データ（<code>set.seed(9)</code>、母平均は女子60・男子61）で <code>t.test(b2, g2)$p.value</code> を求めると 0.203 で、差が約 2.29 mm あっても「差がない」を棄却できません。このとき「帰無仮説を<strong>受け入れた（差がないと証明した）</strong>」のではなく、<strong>証拠が足りなかっただけ</strong>です（fail to reject）。</div>
+  <h3>先行研究を使って新しい理論を作る</h3>
+  <p>理論を1から作る必要はありません。<strong>過去の研究</strong>があり、すでに分かっていることを考慮に入れる統計の分野も別にあります（今は扱わない）。講義の例：</p>
+  <ul>
+    <li>宗教性は、良好な適応（情緒的適応）と関連する。</li>
+    <li>男女で宗教性は異なる（女子のほうが男子より宗教的）。</li>
+    <li>宗教性の種類が男女に与える影響は異なる。</li>
+    <li>男女で、親の宗教性との関わり方が異なる。</li>
+  </ul>
+  <p>そこで「<strong>男子の宗教性の一側面は、親との関係の違いのために適応と関連しうる</strong>」という新しい理論を作り、それを<strong>厳しい反証の試みにさらす</strong>わけです。</p>
+  <div class="warn-box">⚠️ <strong>講師のまとめ（覚えること）：</strong>(1) <strong>falsification（反証）</strong>という用語、(2) <strong>帰無仮説と対立仮説</strong>の理解。科学哲学そのものには深入りしませんが、この考え方が次の「実際の統計検定」につながります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>帰無仮説＝「何も起きていない（差なし・関係なし）」</strong>という、わざと崩しやすい仮説。データがそれに合わないほどなら捨て、「差あり」が残る。捨てられなくても「差がない」と証明したことにはならない。</p></div>
+
+  <div class="practice-card" id="p-m3a-u4">
+    <div class="ptitle">💻 ミニ練習：2群の差を検定する</div>
+    <p class="ptask"><code>boys</code> と <code>girls</code> の平均に差があるかを調べる、<strong>2標本の t 検定</strong>のコードを1行で書いてください。</p>
+    <textarea class="code-editor" id="p-m3a-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3a-u4', ['t.test', 'boys', 'girls'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3a-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3a-u4-result"></div>
+    <div class="answer-reveal" id="p-m3a-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(<span class="kw">b</span><span class="kw">o</span><span class="kw">y</span><span class="kw">s</span>, <span class="kw">g</span><span class="kw">i</span><span class="kw">r</span><span class="kw">l</span><span class="kw">s</span>)</span>
+</pre>
+      <p class="answer-note"><code>t.test(x, y)</code> は、帰無仮説（2群の母平均に差がない）の下でこの差がどれくらい珍しいかを調べる。p 値が小さいほど帰無仮説に反する証拠が強い。</p>
+    </div>
+  </div>
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>この回で「帰無仮説が正しいと仮定して、データがどれだけ珍しいか」を確率で測るという考え方が出てきました。次の <a href="m3_testing.html">推測の基礎②</a> では、この考え方を実際の<strong>統計的検定</strong>として組み立てていきます。</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the target population in the question “What is the average mercury content in swordfish in the Atlantic Ocean?”</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The 60 swordfish that end up in the sample</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All swordfish in the Atlantic Ocean</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The average mercury content</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>All fish that contain mercury</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which kind of sample is generally a poor basis for conclusions about a population?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A simple random sample</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A random sample with few non-responses</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A random sample drawn from a complete list of the population</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A convenience sample of easily reachable individuals</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which problem can ruin even a random sample?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>High non-response</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Using R to draw it</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Measuring all the cases</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Giving each case an ID number</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">We suspect poverty affects federal spending in a county. Which variable is the response variable?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Poverty rate</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>County name</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Federal spending</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Number of counties</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In an experiment, who decides which participants receive the treatment?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The participants themselves</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Nobody — groups form naturally</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A survey of the population</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The researchers</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Poverty is labelled explanatory and spending is labelled response. What does this labelling guarantee?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>That poverty is the cause of the spending differences</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Nothing about cause: association is not causation</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>That spending has no effect on poverty</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>That the data come from an experiment</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">According to falsification, a theory such as “all elephants are blue” can be …</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>refuted by one counterexample, but never proven</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>confirmed with certainty once enough cases agree</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>proven true by a single well-run experiment</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>neither tested nor refuted by any data</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In the study of boys’ and girls’ ear size, what is the null hypothesis?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>There is a difference in ear size between boys and girls</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Boys’ ears are larger than girls’ ears</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>There is no difference in ear size</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The sample of boys is larger than the sample of girls</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 3, 1, 0, 2];
+var FEEDBACKS=["The target population is every swordfish in the Atlantic Ocean; one fish is a case. A sample (such as 60 fish) is only a subset used to estimate the population average.", "A convenience sample over-represents people or cases that are easy to reach, so it tends to be biased and is a bad basis for conclusions about the population.", "If the non-response rate is high, those who reply may not represent the whole population, so a random sample can still be biased.", "The response variable is the outcome we think is affected: federal spending. Poverty rate is the explanatory variable.", "In an experiment the researcher controls who is allocated to the treatment (ideally at random). In an observational study the researcher does not interfere with how the data arise.", "Labelling variables does not make the relationship causal. Association does not imply causation, whichever variable we call explanatory.", "One purple elephant shows the theory is false, but no number of blue elephants proves it true. Even a refutation leaves alternative explanations, so we work with likelihood.", "The null hypothesis always states no effect (no difference, no relationship). If the data give evidence against it, the alternative is left as the best current theory; failing to find evidence does not prove the null true."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">population</div><div class="term-en">母集団</div><div class="term-def">調べたい対象全体（例：大西洋のすべてのメカジキ）。</div></div>
+    <div class="term-item"><div class="term-name">sample</div><div class="term-en">標本</div><div class="term-def">母集団から選んだケースの一部。</div></div>
+    <div class="term-item"><div class="term-name">case</div><div class="term-en">ケース</div><div class="term-def">1つの観測対象（1匹の魚、1人など）。</div></div>
+    <div class="term-item"><div class="term-name">simple random sample</div><div class="term-en">単純無作為抽出</div><div class="term-def">もっとも基本的なランダム標本。</div></div>
+    <div class="term-item"><div class="term-name">convenience sample</div><div class="term-en">便宜的標本</div><div class="term-def">手近な個体が入りやすい取り方。偏りやすい。</div></div>
+    <div class="term-item"><div class="term-name">bias</div><div class="term-en">偏り・バイアス</div><div class="term-def">標本が母集団を系統的に代表しないこと。</div></div>
+    <div class="term-item"><div class="term-name">non-response</div><div class="term-en">無回答</div><div class="term-def">返答しない人が多いとランダム標本でも偏る。</div></div>
+    <div class="term-item"><div class="term-name">explanatory / response variable</div><div class="term-en">説明変数／応答変数</div><div class="term-def">影響を与えると疑う側／受ける側。因果の保証ではない。</div></div>
+    <div class="term-item"><div class="term-name">observational study / experiment</div><div class="term-en">観察研究／実験</div><div class="term-def">介入せず観察／研究者が処置を割り当てる。</div></div>
+    <div class="term-item"><div class="term-name">falsification</div><div class="term-en">反証可能性</div><div class="term-def">理論は偽と示せるが、真とは証明できない。</div></div>
+    <div class="term-item"><div class="term-name">null hypothesis (H₀)</div><div class="term-en">帰無仮説</div><div class="term-def">効果なし（差なし・関係なし）という仮説。</div></div>
+    <div class="term-item"><div class="term-name">alternative hypothesis (H₁)</div><div class="term-en">対立仮説</div><div class="term-def">差や関係がある、という仮説。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>「母集団／標本」「説明／応答」「観察／実験」を用語の対で覚える。因果を言えるのはランダム割り当ての<strong>実験</strong>。帰無仮説は「<strong>効果なし</strong>」、真は証明できず偽を探す（falsification）。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🎯 統計レッスン：M3 推測の基礎① データ収集と帰無仮説</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m3_testing.html">推測の基礎②：検定の考え方 →</a> · <a href="m3_basics_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>650 M5 重回帰・診断・標準化係数・多重共線性(VIF)・影響点</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M5 🧱 重回帰・診断 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main active" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">650 M5 · Multiple Regression — Diagnostics, Standardized Coefficients, VIF, Influential Points</div>
+  <h1>🧱 重回帰・診断・標準化係数・多重共線性(VIF)・影響点</h1>
+  <p>単回帰の「説明変数 1 つ」から、<strong>説明変数をいくつも使う重回帰（multiple regression）</strong>へ進みます。作ったモデルは「どれがよいモデルか」「どの変数が効いているか」「変数どうしが重なっていないか」「おかしな点が線を引っ張っていないか」を<strong>診断（diagnostics）</strong>して初めて信頼できます。この回は、その診断道具をまとめて学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 「SU1 Data Analytics M5 — Multiple regression」／「Diagnostics」／「Standardize regression coefficients」／「Multicollinearity &amp; VIF」／「Influential point analysis」</p>
+  <p style="font-size:.9rem">📦 データ: 自転車シェアの日次データ <code>bikes</code>（731 日分。目的変数 <code>rentals</code> ＝その日の貸出台数、説明変数は <code>humidity</code>（湿度 0〜1）・<code>temperature</code>（気温 °F）・<code>windspeed</code>（風速 mph））。多重共線性の説明には R で作った模擬データも使います。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 重回帰と予測</a><a href="#unit2">② モデルの診断指標</a><a href="#unit3">③ 標準化係数</a><a href="#unit4">④ 多重共線性とVIF</a><a href="#unit5">⑤ 影響点分析</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>
+<ul style="margin:.4rem 0 0 1.2rem">
+<li>① 重回帰モデルの作り方・式・予測（<code>fitted.values</code> と <code>predict()</code>）：Multiple regression</li>
+<li>② モデルどうしを比べる診断指標（調整済み R²・AIC・BIC・S・RMSE・F・Mallows の Cp）：Diagnostics</li>
+<li>③ 単位の違う説明変数を比べる標準化回帰係数（<code>scale()</code>、<code>lm.beta</code>）：Standardize regression coefficients</li>
+<li>④ 多重共線性の検出（相関行列・VIF・許容度）と対処：Multicollinearity &amp; VIF</li>
+<li>⑤ 外れ値と影響点、Cook の距離による検出と除去の注意点：Influential point analysis</li>
+</ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>重回帰モデル：予測変数をいくつも使う</h2><div class="unit-sub">lm() で作り、手計算・fitted・predict で予測する</div></div>
+  </div>
+  <p>単回帰（simple linear regression / OLS）は、予測変数（predictor）が 1 つ、たとえば気温 <em>x</em> から貸出台数 <em>y</em> を予測する式でした。</p>
+  <p style="text-align:center;font-size:1.05rem"><strong>yᵢ = b₀ + b₁xᵢ + eᵢ</strong>　（e は誤差。誤差の代わりに ŷ と書いてもよい）</p>
+  <p><strong>重回帰（multiple regression）</strong>は「気温だけでなく、湿度や風速も分かればもっとよく当たるのでは？」という発想で、予測変数を n 個まで増やします（添字を p＝predictor と書くこともあります）。</p>
+  <p style="text-align:center;font-size:1.05rem"><strong>yᵢ = b₀ + b₁x₁ᵢ + b₂x₂ᵢ + … + bₙxₙᵢ + eᵢ</strong></p>
+  <p>R での作り方は、単回帰の <code>~</code> の右側に <code>+</code> で変数を足すだけです。ここでは湿度・気温・風速の 3 変数でモデルを作り、<code>bikes_model1</code> と名付けます。</p>
+<pre class="code-block">
+<span class="cl">bikes_model1 &lt;- <span class="kw">lm</span>(rentals ~ humidity + temperature + windspeed, data = bikes)</span>
+<span class="cl">bikes_model1</span>
+<span class="cl"><span class="kw">summary</span>(bikes_model1)</span>
+</pre><div class="output-reveal">Call:
+lm(formula = rentals ~ humidity + temperature + windspeed, data = bikes)
+
+Coefficients:
+(Intercept)     humidity  temperature    windspeed
+     2706.0      -3100.1         78.3       -115.5
+
+Call:
+lm(formula = rentals ~ humidity + temperature + windspeed, data = bikes)
+
+Residuals:
+    Min      1Q  Median      3Q     Max
+-4780.5 -1082.6   -62.2  1056.5  3653.5
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  2706.002    367.483   7.364 4.86e-13 ***
+humidity    -3100.123    383.992  -8.073 2.83e-15 ***
+temperature    78.316      3.464  22.606  &lt; 2e-16 ***
+windspeed    -115.463     17.028  -6.781 2.48e-11 ***
+---
+Signif. codes:  0 &#x27;***&#x27; 0.001 &#x27;**&#x27; 0.01 &#x27;*&#x27; 0.05 &#x27;.&#x27; 0.1 &#x27; &#x27; 1
+
+Residual standard error: 1425 on 727 degrees of freedom
+Multiple R-squared:  0.4609,	Adjusted R-squared:  0.4587
+F-statistic: 207.2 on 3 and 727 DF,  p-value: &lt; 2.2e-16</div>
+  <p>係数（coefficients）は <code>summary()</code> の <strong>Estimate</strong> 列です。b₁ ＝ 湿度、b₂ ＝ 気温、b₃ ＝ 風速の係数にあたり、予測変数が 3 つなので b₃ までです。Std. Error から後ろの列の読み方は、単回帰とほとんど同じです（予測変数の行が増えただけ）。これを回帰式に書き直すと次のとおりです。</p>
+  <p style="text-align:center;font-size:1.05rem"><strong>rentalŝ ＝ 2706.00 − 3100.12 × humidity ＋ 78.32 × temperature − 115.46 × windspeed</strong></p>
+  <p>この式があれば、「ある日の湿度・気温・風速」の 3 つが分かるだけで貸出台数を見積もれます。</p>
+  <div class="viz">
+    <div class="viz-title">4 つの変数を 1 枚で見る（講義では plotly の 3D 散布図）</div>
+    <p style="margin:.2rem 0">x・y・z 軸に湿度・気温・風速、<strong>点の色</strong>で貸出台数（応答変数）を表すと、4 変数を 1 つの図に載せられます。マウスで回転でき、点にカーソルを合わせると値が出ます。気温が低い領域に貸出の少ない（暗い色の）点が集まり、気温が高い領域ほど貸出の多い（黄色の）点が増えます。</p>
+  </div>
+<pre class="code-block">
+<span class="cl"><span class="cm"># install.packages(&quot;plotly&quot;)  # 初回のみ</span></span>
+<span class="cl"><span class="kw">library</span>(plotly)</span>
+<span class="cl"><span class="kw">plot_ly</span>(bikes, x = ~humidity, y = ~temperature, z = ~windspeed,</span>
+<span class="cl">        marker = <span class="kw">list</span>(color = ~rentals, showscale = TRUE),</span>
+<span class="cl">        type = <span class="st">&quot;scatter3d&quot;</span>, mode = <span class="st">&quot;markers&quot;</span>)</span>
+</pre>
+  <h3 style="margin:1.5rem 0 .5rem">予測①：式に手で代入する（15 行目の日）</h3>
+  <p>講義は、データの 15 行目（講師が適当に選んだ日）を例にしました。実際の値を見てから、式に代入してみます。</p>
+<pre class="code-block">
+<span class="cl">bikes[<span class="nm">15</span>, <span class="kw">c</span>(<span class="st">&quot;humidity&quot;</span>, <span class="st">&quot;temperature&quot;</span>, <span class="st">&quot;windspeed&quot;</span>, <span class="st">&quot;rentals&quot;</span>)]</span>
+<span class="cl"></span>
+<span class="cl"><span class="nm">2706.00</span> - <span class="nm">3100.12</span> * <span class="nm">0.49875</span> + <span class="nm">78.32</span> * <span class="nm">37.34</span> - <span class="nm">115.46</span> * <span class="nm">6.576</span></span>
+</pre><div class="output-reveal">   humidity temperature windspeed rentals
+15  0.49875    37.33997  6.576293    1248
+[1] 3325.019</div>
+  <p>予測はおよそ <strong>3,300 台</strong>。ところが実際は <strong>1,248 台</strong>です。差（残差 ＝ 実測 − 予測）は約 <strong>−2,000 台</strong>で、<strong>負の残差（negative residual）</strong>は「モデルが実際より<strong>多く見積もりすぎた（過大予測）</strong>」ことを意味します。この日に限れば、このモデルはあまり役に立っていません。</p>
+  <div class="warn-box">⚠️ <strong>R では掛け算の <code>*</code> を必ず書く</strong>。数学では係数が括弧の隣にあるだけで掛け算を表せますが、R では <code>3100.12(0.49875)</code> のような書き方はエラーです。</div>
+  <p>もう少しプログラムらしく書くなら、<code>dplyr</code> の <code>pull()</code> で列から値を 1 つ取り出して掛けます。<strong><code>pull()</code> を使うと、余計な列名（humidity など）が結果に付かず、数値だけが出ます。</strong></p>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(dplyr)</span>
+<span class="cl">h &lt;- bikes[<span class="nm">15</span>, ] |&gt; <span class="kw">pull</span>(humidity)</span>
+<span class="cl">t &lt;- bikes[<span class="nm">15</span>, ] |&gt; <span class="kw">pull</span>(temperature)</span>
+<span class="cl">w &lt;- bikes[<span class="nm">15</span>, ] |&gt; <span class="kw">pull</span>(windspeed)</span>
+<span class="cl"><span class="nm">2706.00</span> - <span class="nm">3100.12</span> * h + <span class="nm">78.32</span> * t - <span class="nm">115.46</span> * w</span>
+</pre><div class="output-reveal">[1] 3325.019</div>
+  <h3 style="margin:1.5rem 0 .5rem">予測②：fitted.values ③：predict()</h3>
+  <p>手計算は係数の丸めで少しずれます（3325.019）。モデルが覚えている<strong>あてはめ値（fitted values）</strong>を使えば、丸めなしの予測が取り出せます。</p>
+<pre class="code-block">
+<span class="cl">bikes_model1$fitted.values[<span class="nm">15</span>]</span>
+<span class="cl"><span class="kw">residuals</span>(bikes_model1)[<span class="nm">15</span>]</span>
+</pre><div class="output-reveal">      15
+3324.815
+       15
+-2076.815 </div>
+  <p>ただし <code>fitted.values</code> は、<strong>その湿度・気温・風速の組が実際にデータの中にある行</strong>にしか使えません。どんな組でも予測できる、より汎用的な道具が <code>predict()</code> です。モデルを作った後に、予測したい値を<strong>データフレーム（data frame）</strong>で渡します。ルールは単回帰のときと同じで、次の 2 つです。</p>
+  <ul>
+    <li>新しいデータは<strong>データフレーム</strong>であること。</li>
+    <li><strong>列名はモデルで使った変数名と同じ</strong>にして、予測したい値を入れること。</li>
+  </ul>
+<pre class="code-block">
+<span class="cl">new.data &lt;- <span class="kw">data.frame</span>(humidity = <span class="nm">0.65</span>, temperature = <span class="nm">38</span>, windspeed = <span class="nm">7</span>)</span>
+<span class="cl"><span class="kw">predict</span>(bikes_model1, newdata = new.data)</span>
+</pre><div class="output-reveal">      1
+2858.69 </div>
+  <p>湿度 0.65・気温 38°F・風速 7 mph の日は、約 <strong>2,859 台</strong>と予測されます。この組がデータにあるとは限らないため、実測がなく、残差は計算できません（<code>predict()</code> は「手計算を代わりにやってくれる」関数です）。</p>
+  <p>複数の日を一度に予測するには、<code>c()</code>（concatenate）で値を並べます。1 つ目は今の日、2 つ目は<strong>湿度が高く・気温が高く・風が弱い</strong>日です。</p>
+<pre class="code-block">
+<span class="cl">new.data &lt;- <span class="kw">data.frame</span>(humidity    = <span class="kw">c</span>(<span class="nm">0.65</span>, <span class="nm">0.85</span>),</span>
+<span class="cl">                       temperature = <span class="kw">c</span>(<span class="nm">38</span>, <span class="nm">80</span>),</span>
+<span class="cl">                       windspeed   = <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">2</span>))</span>
+<span class="cl"><span class="kw">predict</span>(bikes_model1, newdata = new.data)</span>
+</pre><div class="output-reveal">       1        2
+2858.690 6105.251 </div>
+  <p>2 日目は<strong>約 6,105 台</strong>と、予測がずっと大きくなります。暖かく風が弱いので貸出が増える一方、湿度が高い（係数は負）ことは少し押し下げる、という複数の変数の効果が合わさっています。</p>
+  <div class="note-box">🔑 <strong>重回帰の係数の読み方：</strong>たとえば風速の係数 −115.46 は、「<strong>湿度と気温が同じなら</strong>、風速が 1 mph 強いと貸出が約 115 台少ない」と予測する、という意味です（他の変数を一定にしたときの効果）。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>重回帰は「<strong>材料をいくつも使う予測</strong>」。lm() の ~ の右に + で並べるだけ。fitted は「データにある日」、predict は「好きな日」の予測。残差がマイナスなら予測しすぎです。</p></div>
+  <div class="practice-card" id="p-m5a-u1">
+    <div class="ptitle">💻 ミニ練習：3 変数のモデルと予測</div>
+    <p class="ptask"><code>bikes</code> データで、<code>rentals</code> を <code>humidity</code>・<code>temperature</code>・<code>windspeed</code> で予測するモデルを <code>bikes_model1</code> として作り、湿度 0.65・気温 38・風速 7 の日の貸出台数を予測する R コードを書いてください。</p>
+    <textarea class="code-editor" id="p-m5a-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5a-u1', ['lm', 'predict', 'data.frame', 'humidity', 'temperature', 'windspeed'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5a-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5a-u1-result"></div>
+    <div class="answer-reveal" id="p-m5a-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">bikes_model1 &lt;- <span class="kw">lm</span>(rentals ~ humidity + temperature + windspeed, data = bikes)</span>
+<span class="cl">new.data &lt;- <span class="kw">data.frame</span>(humidity = <span class="nm">0.65</span>, temperature = <span class="nm">38</span>, windspeed = <span class="nm">7</span>)</span>
+<span class="cl"><span class="kw">predict</span>(bikes_model1, newdata = new.data)</span>
+</pre>
+      <p class="answer-note">結果は約 2858.69。列名は変数名と完全に一致させ、値は <code>data.frame()</code> で渡します。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>モデルの診断指標：どちらのモデルがよいか</h2><div class="unit-sub">調整済み R²・AIC・BIC・S・RMSE・F・Cp</div></div>
+  </div>
+  <p>説明変数がたくさんあるとき、<strong>4 変数のモデルが 2 変数のモデルより悪い</strong>こともあります。では、どのモデルを選び、予測がどれくらい当たっているかをどう判断するのでしょうか。講義の方針は<strong>総合的（holistic）に判断する</strong>ことです。統計では長い間、予測変数の行末の星（*, **, ***）が付いた p 値だけを見て「有意だから OK」とする人が多くいましたが、<strong>1 つの指標に頼りすぎない</strong>ことが大切です。</p>
+  <p>診断の道具は他にもあります（残差分析は <code>plot(model)</code> で行えます。<strong>VIF（多重共線性）は④、影響点の分析は⑤</strong>で扱います）。この単元では、<strong>モデル A とモデル B のどちらがよいかを比べる指標</strong>を見ます。比べるのは次の 2 つです。</p>
+  <ul>
+    <li><strong>temp_model</strong>：気温だけの単回帰 <code>lm(rentals ~ temperature, data = bikes)</code></li>
+    <li><strong>bikes_model1</strong>：気温・湿度・風速の重回帰（①のモデル）</li>
+  </ul>
+<pre class="code-block">
+<span class="cl">temp_model &lt;- <span class="kw">lm</span>(rentals ~ temperature, data = bikes)</span>
+<span class="cl">bikes_model1 &lt;- <span class="kw">lm</span>(rentals ~ humidity + temperature + windspeed, data = bikes)</span>
+</pre>
+  <h3 style="margin:1.5rem 0 .5rem">1) 調整済み R²（adjusted R²）：高いほどよい</h3>
+  <p>通常の R² は、予測変数を<strong>増やせば（役に立たない変数でも）必ず上がってしまう</strong>ので、重回帰では使いにくい指標です。たとえば家の価格を予測するのに「ドアノブの数」や「ドアノブの直径」を入れても、価値とはほとんど関係ないのに R² は上がります。<strong>調整済み R² は、役に立たない予測変数を入れたモデルにペナルティを課して</strong>、膨らんだ R² を下げます。20 個の変数を手当たり次第に投げ込んでも見抜かれます。<strong>高い値がよい</strong>指標です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(temp_model)$adj.r.squared</span>
+<span class="cl"><span class="kw">summary</span>(bikes_model1)$adj.r.squared</span>
+</pre><div class="output-reveal">[1] 0.3929171
+[1] 0.4586704</div>
+  <p>気温だけのモデルは 0.393、3 変数のモデルは 0.459。大きく増えたわけではありませんが、<strong>湿度と風速を知ることで貸出の予測が改善した</strong>と言えます。</p>
+  <h3 style="margin:1.5rem 0 .5rem">2) AIC（赤池情報量規準）：低いほどよい</h3>
+  <p><strong>AIC（Akaike Information Criterion）</strong>は、<strong>データへの当てはまり（fit）</strong>と<strong>モデルの複雑さ（complexity）</strong>のバランスを取る指標です。データによく合わせたいが、複雑すぎる過剰適合（overfit）モデルは避けたい、という両立を狙います。覚えておくことは 2 つです。</p>
+  <ol>
+    <li>当てはまりと複雑さのバランスを取る指標である。</li>
+    <li><strong>低い</strong>値がよい。そして<strong>相対的な指標</strong>で、値そのものの大きさ（絶対値）に意味はなく、<strong>別のモデルと比べて</strong>どちらが低いかを見る。</li>
+  </ol>
+  <h3 style="margin:1.5rem 0 .5rem">3) BIC（ベイズ情報量規準）：低いほどよい</h3>
+  <p><strong>BIC（Bayesian Information Criterion）</strong>は AIC と同じ発想ですが、<strong>モデルの複雑さへのペナルティがより強く</strong>、<strong>単純さ（parsimony）を好みます</strong>。別名 <strong>SBC</strong> とも呼ばれます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">AIC</span>(temp_model, bikes_model1)</span>
+<span class="cl"><span class="kw">BIC</span>(temp_model, bikes_model1)</span>
+<span class="cl"><span class="kw">bic</span>(temp_model, bikes_model1)   <span class="cm"># 小文字はエラー</span></span>
+</pre><div class="output-reveal">             df      AIC
+temp_model    3 12779.54
+bikes_model1  5 12697.73
+             df      BIC
+temp_model    3 12793.32
+bikes_model1  5 12720.70
+Error in bic(temp_model, bikes_model1) : could not find function &quot;bic&quot;</div>
+  <div class="warn-box">⚠️ <code>BIC()</code> は<strong>大文字</strong>で書きます。<code>bic()</code> と小文字にすると上のようにエラーになります。AIC・BIC のどちらも、3 変数のモデルのほうが低いので、<strong>重回帰モデルがよい</strong>という結論になります（差は AIC で約 82、BIC で約 73）。</div>
+  <h3 style="margin:1.5rem 0 .5rem">4) 残差標準誤差 S と RMSE：小さいほどよい</h3>
+  <p><strong>残差標準誤差（residual standard error, S）</strong>は、点が回帰直線からどれだけ離れているか（残差）のばらつきです。点が線の近くに集まっていれば S は小さく、よい線だと言えます。<strong>S を最小にしたい</strong>ので、小さい値がよい指標です。<code>summary()</code> に Residual standard error として出ており、<code>$sigma</code> でも取り出せます。</p>
+  <p><strong>RMSE（root mean squared error）</strong>は、名前のとおり「誤差を二乗し（squared）、平均し（mean）、平方根（root）を取る」計算です。<strong>R には RMSE の関数がない</strong>ので、実測値（actual）と予測値（predicted）を渡す関数を自分で作ります：残差（actual − predicted）→ 二乗 → 平均 → 平方根（二乗した分の単位を戻す）。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(temp_model)$sigma</span>
+<span class="cl"><span class="kw">summary</span>(bikes_model1)$sigma</span>
+<span class="cl"></span>
+<span class="cl">calculate_rmse &lt;- <span class="kw">function</span>(actual, predicted) {</span>
+<span class="cl">  <span class="kw">sqrt</span>(<span class="kw">mean</span>((actual - predicted)^<span class="nm">2</span>))</span>
+<span class="cl">}</span>
+<span class="cl"><span class="kw">calculate_rmse</span>(bikes$rentals, temp_model$fitted.values)</span>
+<span class="cl"><span class="kw">calculate_rmse</span>(bikes$rentals, bikes_model1$fitted.values)</span>
+</pre><div class="output-reveal">[1] 1509.388
+[1] 1425.305
+[1] 1507.322
+[1] 1421.4</div>
+  <p>S も RMSE も重回帰モデルのほうが小さく、こちらも重回帰が優れています。また<strong>データが大きくなるほど S は RMSE に近づきます</strong>（気温モデルでは S = 1509.388 と RMSE = 1507.322、ほぼ同じ）。</p>
+  <h3 style="margin:1.5rem 0 .5rem">5) F 統計量：モデル全体の検定（omnibus test）</h3>
+  <p><code>summary()</code> の最終行にある F 統計量（F-statistic）は、<strong>モデル全体</strong>の当てはまりを検定します。ANOVA と同じ考え方で、<strong>omnibus test（全体検定）</strong>と呼ばれます。</p>
+  <ul>
+    <li>H₀：すべての係数が 0（β₁ = β₂ = … = 0）。つまり、どの予測変数も応答変数と有意な関係がない。</li>
+    <li>H₁：少なくとも 1 つの係数は 0 ではない。</li>
+  </ul>
+  <p>F が<strong>大きい</strong>ほど、予測変数のあるモデルは予測変数のないモデルよりよく当てはまります。「大きい」の基準は有意水準 α で、p 値が α より小さければ H₀ を棄却し、少なくとも 1 つの予測変数に関係がある証拠が得られます。</p>
+  <div class="warn-box">⚠️ <strong>F が有意でも、すべての予測変数が有意とは限りません。</strong>F 検定は「全体として少なくとも 1 つは効いている」ことしか言えません。どの予測変数が効いているかは、係数の t 検定など追加の分析で見ます。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(bikes_model1)$fstatistic</span>
+</pre><div class="output-reveal">   value    numdf    dendf
+207.1771   3.0000 727.0000 </div>
+  <p>F = 207.18、分子の自由度（numerator df）は 3、分母の自由度（denominator df）は 727。p 値は 2.2e-16 より小さく、H₀ を棄却できます（気温だけのモデルは F = 473.47、自由度 1 と 729）。</p>
+  <h3 style="margin:1.5rem 0 .5rem">6) Mallows の Cp</h3>
+  <p><strong>Mallows の Cp</strong>は、計算した Cp を<strong>モデルのパラメータ数 p（切片を含めて数える）</strong>と比べます。講義の整理は次のとおりです。</p>
+  <ul>
+    <li><strong>Cp ≈ p</strong>：よいモデル。過度に複雑にならず、データをよく説明している。</li>
+    <li><strong>Cp &gt; p</strong>：過剰適合（overfitting）、不要な予測変数を含んでいる可能性。</li>
+    <li><strong>Cp &lt; p</strong>：過小適合（underfitting）、データの重要なばらつきを捉えられていない。</li>
+  </ul>
+  <p>R に標準の関数はないので、データとモデルを渡す関数を自作します（残差平方和 RSS、平均二乗誤差 MSE、行数 n、パラメータ数 p を使って Cp ＝ RSS / MSE − (n − 2p) を計算）。</p>
+<pre class="code-block">
+<span class="cl">calculate_MallowsC &lt;- <span class="kw">function</span>(dataset, model) {</span>
+<span class="cl">  rss &lt;- <span class="kw">sum</span>(<span class="kw">residuals</span>(model)^<span class="nm">2</span>)</span>
+<span class="cl">  mse &lt;- <span class="kw">summary</span>(model)$sigma^<span class="nm">2</span></span>
+<span class="cl">  n   &lt;- <span class="kw">nrow</span>(dataset)</span>
+<span class="cl">  p   &lt;- <span class="kw">length</span>(<span class="kw">coef</span>(model))      <span class="cm"># 切片 + 予測変数</span></span>
+<span class="cl">  cp  &lt;- (rss / mse) - (n - <span class="nm">2</span> * p)</span>
+<span class="cl">  <span class="kw">cat</span>(<span class="st">&quot;Mallows&#x27; C: &quot;</span>, cp, <span class="st">&quot;\n&quot;</span>)</span>
+<span class="cl">  <span class="kw">cat</span>(<span class="st">&quot;Number of predictors (including intercept): &quot;</span>, p, <span class="st">&quot;\n&quot;</span>)</span>
+<span class="cl">}</span>
+<span class="cl"><span class="kw">calculate_MallowsC</span>(bikes, temp_model)</span>
+<span class="cl"><span class="kw">calculate_MallowsC</span>(bikes, bikes_model1)</span>
+</pre><div class="output-reveal">Mallows&#x27; C:  2
+Number of predictors (including intercept):  2
+Mallows&#x27; C:  4
+Number of predictors (including intercept):  4 </div>
+  <p>気温モデルは Cp = 2、p = 2（切片＋気温）。重回帰モデルは Cp = 4、p = 4（切片＋ 3 変数）。<strong>どちらも Cp = p で、Cp から見ればどちらもよいモデル</strong>です。Cp ≈ p となるのは、モデルが適切に設定され、残差がおおよそ正規分布に従い、過剰適合・過小適合の大きな問題がないときです。</p>
+  <div class="note-box">💡 <strong>補足：</strong>この自作関数はそのモデル自身の MSE で計算するため、どのモデルでも Cp ＝ p になります。本来の Cp は、全予測変数を入れた大きいモデルの MSE を基準に使い、候補モデルを比べます。Cp は他の指標と合わせて総合的に見る補助的な指標だと考えましょう。</div>
+  <h3 style="margin:1.5rem 0 .5rem">診断指標のまとめ</h3>
+  <table class="compare-table">
+    <tr><th>指標</th><th>R の書き方</th><th>よい方向</th><th>気温のみ</th><th>3 変数</th></tr>
+    <tr><td>調整済み R²</td><td><code>summary(m)$adj.r.squared</code></td><td>高い</td><td>0.3929</td><td>0.4587</td></tr>
+    <tr><td>AIC</td><td><code>AIC(m)</code></td><td>低い（相対比較）</td><td>12779.54</td><td>12697.73</td></tr>
+    <tr><td>BIC（SBC）</td><td><code>BIC(m)</code></td><td>低い（より単純さ重視）</td><td>12793.32</td><td>12720.70</td></tr>
+    <tr><td>残差標準誤差 S</td><td><code>summary(m)$sigma</code></td><td>小さい</td><td>1509.39</td><td>1425.31</td></tr>
+    <tr><td>RMSE</td><td>自作 <code>calculate_rmse()</code></td><td>小さい</td><td>1507.32</td><td>1421.40</td></tr>
+    <tr><td>F 統計量</td><td><code>summary(m)$fstatistic</code></td><td>大きく p 値が小さい（全体検定）</td><td>473.47</td><td>207.18</td></tr>
+    <tr><td>Mallows の Cp</td><td>自作 <code>calculate_MallowsC()</code></td><td>p に近い</td><td>2（p = 2）</td><td>4（p = 4）</td></tr>
+  </table>
+  <p>どの指標でも、<strong>気温だけのモデルより 3 変数の重回帰モデルのほうがよい</strong>という同じ結論になりました。式（調整済み R²・AIC・BIC・Cp）の導出は講義ノートの Formulas に載っていますが、興味のある人向けで、暗記は求められていません。</p>
+  <div class="viz">
+    <div class="viz-title">2 つのモデルの比較（数値は上の R の出力）</div>
+    <p style="margin:.2rem 0;text-align:center">調整済み R²：<strong>0.393 → 0.459</strong>（↑よい）／ AIC：<strong>12779.5 → 12697.7</strong>（↓よい）／ RMSE：<strong>1507 → 1421</strong>（↓よい）</p>
+  </div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>モデルの「通信簿」は 1 つではなく何種類もあります。<strong>調整済み R² は高いほどよい</strong>、<strong>AIC・BIC・S・RMSE は低い（小さい）ほどよい</strong>。F は「全体として役に立つか」のチェック。1 つの指標だけで決めず、みんなで話し合うように総合判断しましょう。</p></div>
+  <div class="practice-card" id="p-m5a-u2">
+    <div class="ptitle">💻 ミニ練習：2 つのモデルを比べる</div>
+    <p class="ptask"><code>temp_model</code> と <code>bikes_model1</code> の調整済み R² を取り出し、さらに両モデルの AIC を 1 つのコードで比べてください。</p>
+    <textarea class="code-editor" id="p-m5a-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5a-u2', ['summary', 'adj.r.squared', 'AIC', 'temp_model', 'bikes_model1'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5a-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5a-u2-result"></div>
+    <div class="answer-reveal" id="p-m5a-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(temp_model)$adj.r.squared</span>
+<span class="cl"><span class="kw">summary</span>(bikes_model1)$adj.r.squared</span>
+<span class="cl"><span class="kw">AIC</span>(temp_model, bikes_model1)</span>
+</pre>
+      <p class="answer-note">調整済み R² は 0.3929 → 0.4587（高いほどよい）、AIC は 12779.54 → 12697.73（低いほどよい）。どちらも重回帰が優れています。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>標準化回帰係数：どの予測変数がいちばん効くか</h2><div class="unit-sub">単位の違う変数を同じ土俵で比べる</div></div>
+  </div>
+  <p>①のモデルの係数を見ると、湿度は −3100、気温は 78、風速は −115 です。−3100 が最大だから「湿度がいちばん重要」と言えるでしょうか。答えは<strong>いいえ</strong>。湿度は 0〜1、気温は °F、風速は mph と<strong>単位（スケール）が違う</strong>ので、係数の大きさをそのまま比べられません。しかも 3 変数とも p 値は極めて小さく、p 値でも差がつきません。</p>
+  <p>そこで<strong>データを標準化（standardize）</strong>します。標準化とは<strong>z スコア</strong>を求めること、つまり「観測値 − 平均」を「標準偏差」で割ることです。講義は 3 つの方法を示し、<strong>3 番目（lm.beta）を推奨</strong>しました。</p>
+  <h3 style="margin:1.5rem 0 .5rem">方法 1：手動で z スコアを作る（mutate）</h3>
+  <p>新しいデータセット <code>bikes_for_beta</code> に、必要な 4 列を選び、それぞれ <code>z_</code> で始まる標準化した列を作ります。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(dplyr)</span>
+<span class="cl">bikes_for_beta &lt;- bikes |&gt;</span>
+<span class="cl">  <span class="kw">select</span>(rentals, humidity, temperature, windspeed) |&gt;</span>
+<span class="cl">  <span class="kw">mutate</span>(z_rentals     = (rentals     - <span class="kw">mean</span>(rentals))     / <span class="kw">sd</span>(rentals),</span>
+<span class="cl">         z_humidity    = (humidity    - <span class="kw">mean</span>(humidity))    / <span class="kw">sd</span>(humidity),</span>
+<span class="cl">         z_temperature = (temperature - <span class="kw">mean</span>(temperature)) / <span class="kw">sd</span>(temperature),</span>
+<span class="cl">         z_windspeed   = (windspeed   - <span class="kw">mean</span>(windspeed))   / <span class="kw">sd</span>(windspeed))</span>
+<span class="cl"><span class="kw">head</span>(bikes_for_beta[, <span class="kw">c</span>(<span class="st">&quot;rentals&quot;</span>, <span class="st">&quot;z_rentals&quot;</span>)], <span class="nm">3</span>)</span>
+</pre><div class="output-reveal">  rentals z_rentals
+1     985    -1.817
+2     801    -1.912
+3    1349    -1.629</div>
+  <p>1 行目の貸出 985 台は z = −1.8。「平均より約 2 標準偏差<strong>低い</strong>」日という意味です（rentals の平均は 4504.3、標準偏差は 1937.2）。この z 変数でモデルを作り直します。</p>
+<pre class="code-block">
+<span class="cl">z_model &lt;- <span class="kw">lm</span>(z_rentals ~ z_humidity + z_temperature + z_windspeed, data = bikes_for_beta)</span>
+<span class="cl"><span class="kw">coef</span>(z_model)</span>
+</pre><div class="output-reveal">  (Intercept)    z_humidity z_temperature   z_windspeed
+ 6.657435e-16 -2.279295e-01  6.260599e-01 -1.923005e-01 </div>
+  <p>切片はほぼ 0（6.66e-16）。注目は<strong>絶対値（符号を無視した大きさ）が最大の係数：気温 0.626</strong>。つまり<strong>気温が貸出台数にいちばん大きな影響を与える</strong>予測変数です。次いで湿度（−0.228）、風速（−0.192）の順です。</p>
+  <div class="viz">
+    <div class="viz-title">元の係数と標準化係数の比較</div>
+    <div style="text-align:center"><svg viewBox="0 0 520 190" width="100%" style="max-width:560px" role="img" aria-label="標準化係数の棒グラフ"><rect x="0.5" y="0.5" width="519" height="189" fill="none" stroke="#cbd5e1"/><text x="260" y="18" font-size="12" text-anchor="middle" font-weight="700" fill="#334155">標準化係数（符号を無視して大きさで比べる）</text><line x1="260" y1="30" x2="260" y2="165" stroke="#64748b"/><rect x="208.7" y="42" width="51.3" height="24" fill="#f97316"/><text x="108" y="58" font-size="11" fill="#334155" text-anchor="end">humidity</text><text x="202.7" y="58" font-size="11" fill="#111827" text-anchor="end">-0.228</text><rect x="260.0" y="84" width="140.9" height="24" fill="#14b8a6"/><text x="108" y="100" font-size="11" fill="#334155" text-anchor="end">temperature</text><text x="406.9" y="100" font-size="11" fill="#111827" text-anchor="start">+0.626</text><rect x="216.8" y="126" width="43.2" height="24" fill="#f97316"/><text x="108" y="142" font-size="11" fill="#334155" text-anchor="end">windspeed</text><text x="210.8" y="142" font-size="11" fill="#111827" text-anchor="end">-0.192</text><text x="260" y="182" font-size="10" fill="#475569" text-anchor="middle">0</text></svg></div>
+    <div class="viz-cap">元の係数は 湿度 −3100.12／気温 78.32／風速 −115.46 と単位がバラバラ。標準化すると気温 0.626 が最大。符号は向き、大きさは影響の強さ。</div>
+  </div>
+  <p>同じことは、他の見方でも確かめられます。<strong>相関行列</strong>では、貸出と最も強く相関するのは気温（0.63）。また、<code>summary()</code> の<strong>第 3 列の t 値</strong>も、気温が絶対値最大（22.6、湿度 −8.1、風速 −6.8）です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(bikes[, <span class="kw">c</span>(<span class="st">&quot;rentals&quot;</span>, <span class="st">&quot;humidity&quot;</span>, <span class="st">&quot;temperature&quot;</span>, <span class="st">&quot;windspeed&quot;</span>)]), <span class="nm">2</span>)</span>
+</pre><div class="output-reveal">            rentals humidity temperature windspeed
+rentals        1.00    -0.10        0.63     -0.23
+humidity      -0.10     1.00        0.13     -0.25
+temperature    0.63     0.13        1.00     -0.16
+windspeed     -0.23    -0.25       -0.16      1.00</div>
+  <h3 style="margin:1.5rem 0 .5rem">方法 2：scale() で一気に標準化</h3>
+  <p>方法 1 は丁寧でよい復習ですが、<code>scale()</code> を使えば z スコアが自動で作れて、とても簡潔です。<code>scale()</code> の結果は行列なので、<code>as.data.frame()</code> でデータフレームにしてから <code>lm()</code> に渡します（列名は元のまま）。</p>
+<pre class="code-block">
+<span class="cl">bikes_for_beta2 &lt;- bikes |&gt;</span>
+<span class="cl">  <span class="kw">select</span>(rentals, humidity, temperature, windspeed) |&gt;</span>
+<span class="cl">  <span class="kw">scale</span>() |&gt;</span>
+<span class="cl">  <span class="kw">as.data.frame</span>()</span>
+<span class="cl">z_model2 &lt;- <span class="kw">lm</span>(rentals ~ humidity + temperature + windspeed, data = bikes_for_beta2)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">coef</span>(z_model2), <span class="nm">4</span>)</span>
+</pre><div class="output-reveal">(Intercept)    humidity temperature   windspeed
+     0.0000     -0.2279      0.6261     -0.1923 </div>
+  <p>方法 1 とまったく同じ係数になります。</p>
+  <h3 style="margin:1.5rem 0 .5rem">方法 3（推奨）：lm.beta パッケージ</h3>
+  <p>データそのものを標準化せず、<strong>モデルを渡すだけ</strong>で標準化係数が出ます。初回は <code>install.packages("lm.beta")</code> が必要です。<code>summary()</code> に包むと、元の Estimate と並んで <strong>Standardized</strong> 列が出ます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(lm.beta)</span>
+<span class="cl"><span class="kw">lm.beta</span>(bikes_model1)</span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">lm.beta</span>(bikes_model1))</span>
+</pre><div class="output-reveal">Call:
+lm(formula = rentals ~ humidity + temperature + windspeed, data = bikes)
+
+Standardized Coefficients::
+(Intercept)    humidity temperature   windspeed
+         NA  -0.2279295   0.6260599  -0.1923005
+
+（summary() の Coefficients 表には Estimate の右に Standardized 列が付く）
+              Estimate Standardized Std. Error t value Pr(&gt;|t|)
+temperature     78.316        0.626      3.464  22.606  &lt; 2e-16</div>
+  <div class="note-box">💻 <strong>課題でよく出る書き方（code grade alert）：</strong>最も効く予測変数の標準化係数だけを取り出すには、<code>summary(lm.beta(model))$coefficients[3, 2]</code>。<strong>3 行目（temperature）、2 列目（Standardized 列）</strong>を指定します。値は 0.626 です。</div>
+  <div class="warn-box">⚠️ <strong>"beta" の意味に注意。</strong>パッケージ名が <code>lm.beta</code> なのは、教科書によっては β を「標準化回帰係数」の記号として使うからです。しかし別の人は <strong>標準化していない（unstandardized）係数を β₀, β₁, …, βₖ</strong> と書き、母集団の回帰直線の未知の傾きも β、さらに<strong>検出力（statistical power）の文脈</strong>でも β が出てきます。課題では「standardized regression coefficient」または「lm.beta」と明記して区別します。</div>
+  <h3 style="margin:1.5rem 0 .5rem">解釈と注意点</h3>
+  <p>回帰式の β が標準化係数で、β₁ = 0.5、β₂ = 1 なら「<strong>x₂ は x₁ の 2 倍重要</strong>」と結論できます。ただし<strong>両方がおおよそ同じ分布で、標準偏差が大きくは違わない</strong>という仮定のもとでの話です。</p>
+  <table class="compare-table">
+    <tr><th>メリット</th><th>注意点</th></tr>
+    <tr><td>単位が違う予測変数の<strong>相対的な重要度</strong>を直接比べられる</td><td>単位がなくなり、<strong>実用上の意味</strong>が見えにくい（例：「1 件あたり $100」vs「1 件あたり 0.2 標準偏差」。$100 のほうが非専門家には分かりやすい）</td></tr>
+    <tr><td>データを探索するとき、変数の重要度をすばやく把握できる</td><td><strong>予測には向かない</strong>。標準化を元に戻す（unstandardize）か、元の係数を使う</td></tr>
+    <tr><td>同じスケールなので非専門家への説明に使いやすい</td><td>予測変数が<strong>同じような分布・似た標準偏差</strong>という仮定が強い</td></tr>
+    <tr><td></td><td>標本のばらつきに左右され、別のデータセットへの<strong>一般化がしにくい</strong></td></tr>
+  </table>
+  <div class="note-box">🔑 <strong>講義の推奨：</strong>報告するときは<strong>元の係数と標準化係数の両方</strong>を載せる。読み手に応じてどちらも必要になります。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>単位がバラバラの定規（円・°F・mph）を、みんな「標準偏差」という同じ定規にそろえたのが標準化係数。<strong>符号は無視して、絶対値が大きいほど影響が大きい</strong>。このデータでは気温が1位（0.626）、湿度が2位、風速が3位です。</p></div>
+  <div class="practice-card" id="p-m5a-u3">
+    <div class="ptitle">💻 ミニ練習：標準化係数を取り出す</div>
+    <p class="ptask"><code>scale()</code> を使って <code>rentals, humidity, temperature, windspeed</code> の 4 列を標準化したデータフレーム <code>bikes_for_beta2</code> を作り、同じ重回帰モデルの係数を表示してください（<code>dplyr</code> の <code>select()</code> を使ってよい）。</p>
+    <textarea class="code-editor" id="p-m5a-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5a-u3', ['select', 'scale', 'as.data.frame', 'lm', 'coef'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5a-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5a-u3-result"></div>
+    <div class="answer-reveal" id="p-m5a-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">bikes_for_beta2 &lt;- bikes |&gt;</span>
+<span class="cl">  <span class="kw">select</span>(rentals, humidity, temperature, windspeed) |&gt;</span>
+<span class="cl">  <span class="kw">scale</span>() |&gt;</span>
+<span class="cl">  <span class="kw">as.data.frame</span>()</span>
+<span class="cl">z_model2 &lt;- <span class="kw">lm</span>(rentals ~ humidity + temperature + windspeed, data = bikes_for_beta2)</span>
+<span class="cl"><span class="kw">coef</span>(z_model2)</span>
+</pre>
+      <p class="answer-note">temperature の係数が 0.626 で絶対値最大。<code>scale()</code> は行列を返すので <code>as.data.frame()</code> を忘れずに。<code>lm.beta</code> なら <code>summary(lm.beta(bikes_model1))$coefficients[3, 2]</code> でも同じ 0.626 が得られます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>多重共線性と VIF</h2><div class="unit-sub">予測変数どうしが似すぎていないか</div></div>
+  </div>
+  <p><strong>多重共線性（multicollinearity）</strong>とは、<strong>2 つ以上の予測変数が互いに強く相関し、強い線形関係をもっている状態</strong>です（multi ＝複数、collinear ＝同じ直線上、つまり複数の変数が互いに関連している）。何が困るのでしょうか。</p>
+  <ul>
+    <li>回帰係数が<strong>うまく推定できない／膨らむ</strong>（inflated）。</li>
+    <li>係数の<strong>符号が直感に合わない</strong>（正のはずが負、など）。</li>
+    <li><strong>標準誤差が膨らみ</strong>、それに頼る t 統計量と p 値が信頼できなくなる。</li>
+  </ul>
+  <div class="note-box">🔑 <strong>このクラスの基準：</strong>予測変数どうしの相関が<strong>絶対値で 0.5 未満</strong>なら共線性は低い。<strong>絶対値が 0.5 より大きければ</strong>、2 つの変数は相関していて多重共線性があるとみなします（相関の<strong>符号は無視</strong>し、大きさだけを見る）。</div>
+  <p><strong>例①：</strong>血圧を体重・身長・体格指数（BMI）で予測する。BMI は体重と身長から計算されるので、BMI は両者と相関します。そのまま回帰すると「体重が増えると血圧が上がるのに、BMI が下がると血圧が上がる」といった奇妙な向きや、膨らんだ標準誤差が出ます。<br><strong>例②：</strong>家の価格を寝室数・築年数・階数・床面積で予測する。寝室数が多いほど床面積も広いはずなので、この 2 つは相関しており、予測のよくないモデルになります。</p>
+  <h3 style="margin:1.5rem 0 .5rem">模擬データで体験する</h3>
+  <p>講義では、わざと多重共線性をもたせた模擬データ（100 行）を R で作りました。<code>y</code> を 4 つの予測変数 <code>x1〜x4</code> で予測します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">n  &lt;- <span class="nm">100</span></span>
+<span class="cl">x1 &lt;- <span class="kw">rnorm</span>(n, mean = <span class="nm">50</span>, sd = <span class="nm">10</span>)</span>
+<span class="cl">x2 &lt;- x1 + <span class="kw">rnorm</span>(n, mean = <span class="nm">0</span>, sd = <span class="nm">2</span>)        <span class="cm"># x1 にとても近い</span></span>
+<span class="cl">x3 &lt;- <span class="kw">rnorm</span>(n, mean = <span class="nm">50</span>, sd = <span class="nm">5</span>)            <span class="cm"># 無関係</span></span>
+<span class="cl">x4 &lt;- x1 + -x2 + <span class="kw">rnorm</span>(n, mean = <span class="nm">0</span>, sd = <span class="nm">1</span>)  <span class="cm"># x1 と x2 の差</span></span>
+<span class="cl">y  &lt;- <span class="nm">5</span> + <span class="nm">2</span> * x1 - <span class="nm">1</span> * x2 + <span class="kw">rnorm</span>(n, mean = <span class="nm">0</span>, sd = <span class="nm">5</span>)</span>
+<span class="cl">data &lt;- <span class="kw">data.frame</span>(y, x1, x2, x3, x4)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(data), <span class="nm">3</span>)</span>
+</pre><div class="output-reveal">       y     x1     x2    x3     x4
+y  1.000  0.860  0.821 0.038  0.078
+x1 0.860  1.000  0.978 0.018 -0.022
+x2 0.821  0.978  1.000 0.008 -0.208
+x3 0.038  0.018  0.008 1.000  0.093
+x4 0.078 -0.022 -0.208 0.093  1.000</div>
+  <p>目的変数 y と x1（0.860）、x2（0.821）が強く相関しているのを見て、思わず「よい予測変数だ！」と喜びたくなります。ところが <strong>x1 と x2 の相関が 0.978</strong>。基準の 0.5 を大きく超えており、典型的な多重共線性です。x1 と x2 の散布図を見ると、互いにほぼ一直線に並んでいます。</p>
+  <div class="viz">
+    <div class="viz-title">x1 と x2 は一直線上に並ぶ（相関 0.978）</div>
+    <div style="text-align:center"><svg viewBox="0 0 300 230" width="300" height="230" role="img" aria-label="x1とx2の散布図"><rect x="0.5" y="0.5" width="299" height="229" fill="none" stroke="#cbd5e1"/><line x1="40" y1="194" x2="288" y2="194" stroke="#64748b"/><line x1="40" y1="194" x2="40" y2="12" stroke="#64748b"/><text x="62.3" y="206" font-size="9" fill="#475569" text-anchor="middle">30</text><text x="35" y="180.8" font-size="9" fill="#475569" text-anchor="end">30</text><text x="106.8" y="206" font-size="9" fill="#475569" text-anchor="middle">40</text><text x="35" y="148.5" font-size="9" fill="#475569" text-anchor="end">40</text><text x="151.4" y="206" font-size="9" fill="#475569" text-anchor="middle">50</text><text x="35" y="116.1" font-size="9" fill="#475569" text-anchor="end">50</text><text x="195.9" y="206" font-size="9" fill="#475569" text-anchor="middle">60</text><text x="35" y="83.7" font-size="9" fill="#475569" text-anchor="end">60</text><text x="240.5" y="206" font-size="9" fill="#475569" text-anchor="middle">70</text><text x="35" y="51.4" font-size="9" fill="#475569" text-anchor="end">70</text><text x="285.0" y="206" font-size="9" fill="#475569" text-anchor="middle">80</text><text x="35" y="19.0" font-size="9" fill="#475569" text-anchor="end">80</text><circle cx="123.5" cy="137.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="159.5" cy="106.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="114.1" cy="146.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="222.4" cy="60.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="166.0" cy="106.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="114.8" cy="128.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="173.1" cy="92.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="184.3" cy="83.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="177.0" cy="92.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="137.8" cy="112.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="218.7" cy="68.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="168.7" cy="103.5" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="123.7" cy="123.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="52.7" cy="189.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="201.5" cy="78.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="149.4" cy="117.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="150.6" cy="115.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="193.4" cy="84.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="187.9" cy="83.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="177.8" cy="95.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="192.3" cy="86.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="186.2" cy="79.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="154.7" cy="112.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="62.7" cy="178.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="179.0" cy="93.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="148.9" cy="110.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="144.4" cy="118.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="85.8" cy="160.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="130.1" cy="133.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="170.0" cy="101.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="211.9" cy="68.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="146.8" cy="120.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="168.6" cy="97.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="149.0" cy="124.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="90.0" cy="155.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="132.9" cy="136.5" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="133.8" cy="127.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="148.7" cy="118.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="200.4" cy="81.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="185.4" cy="88.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="144.0" cy="130.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="140.1" cy="113.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="182.4" cy="101.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="176.2" cy="98.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="120.7" cy="142.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="119.8" cy="140.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="167.6" cy="87.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="185.6" cy="88.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="146.4" cy="125.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="190.6" cy="95.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="169.1" cy="97.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="124.1" cy="133.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="166.6" cy="104.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="101.1" cy="155.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="215.2" cy="76.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="239.6" cy="56.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="135.0" cy="118.5" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="104.9" cy="150.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="176.7" cy="103.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="145.3" cy="105.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="258.3" cy="32.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="149.6" cy="115.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="182.1" cy="83.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="152.6" cy="106.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="118.3" cy="141.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="159.8" cy="92.7" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="71.0" cy="173.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="216.6" cy="74.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="158.2" cy="109.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="248.1" cy="41.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="172.5" cy="82.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="119.7" cy="135.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="178.6" cy="90.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="109.8" cy="143.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="95.5" cy="155.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="164.3" cy="103.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="131.6" cy="122.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="151.4" cy="99.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="154.7" cy="104.0" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="125.1" cy="124.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="126.0" cy="139.5" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="145.3" cy="111.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="203.8" cy="73.5" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="83.5" cy="171.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="177.8" cy="90.5" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="166.2" cy="103.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="198.7" cy="69.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="137.8" cy="127.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="167.8" cy="103.9" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="163.3" cy="110.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="127.2" cy="131.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="205.2" cy="71.4" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="203.1" cy="80.3" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="182.6" cy="85.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="222.0" cy="69.6" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="176.2" cy="101.8" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="94.5" cy="145.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="125.8" cy="138.2" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="96.8" cy="150.1" r="2.6" fill="var(--primary)" opacity=".7"/><circle cx="130.3" cy="130.9" r="2.6" fill="var(--primary)" opacity=".7"/><text x="164" y="222" font-size="10" fill="#475569" text-anchor="middle">x1</text><text x="12" y="24" font-size="10" fill="#475569">x2</text></svg></div>
+    <div class="viz-cap">y を予測するのに x1 も x2 も強いが、予測変数どうしが同じ情報をもっている。</div>
+  </div>
+  <h3 style="margin:1.5rem 0 .5rem">検出法 1：相関行列</h3>
+  <p><code>cor()</code> の相関行列で、予測変数どうしのセルが絶対値 0.5 を超えていないかを確認します。ただしこの方法は<strong>2 つの変数の相関しか見えず</strong>、3 つ以上が一緒に相関している場合は見つけられません。<code>bikes</code> のモデル（realfeel を除いた数値変数）では、予測変数間の相関は最大でも −0.25（湿度と風速）で、0.5 を超えるものはなく、多重共線性の問題はなさそうです（③の相関行列を参照。貸出と気温だけが 0.63 と強い）。</p>
+  <h3 style="margin:1.5rem 0 .5rem">検出法 2：VIF（分散拡大係数）と許容度</h3>
+  <p><strong>VIF（variance inflation factor, 分散拡大係数）</strong>は多重共線性の量を測る指標で、相関行列では見えない 3 変数以上の関係も検出できます。</p>
+  <p style="text-align:center;font-size:1.05rem"><strong>VIF ＝ 1 / (1 − R²ₖ)　＝　1 / 許容度（Tolerance）</strong></p>
+  <p>ここでの R²ₖ は、<strong>ある予測変数（例：気温）を目的変数に見立て、他の予測変数（湿度・風速）で予測したとき</strong>の R² です。逆数（1 / VIF）が<strong>許容度（tolerance）</strong>で、「他の予測変数では説明されない分散の割合」を表します。</p>
+  <table class="compare-table">
+    <tr><th>状態</th><th>VIF</th><th>許容度</th></tr>
+    <tr><td>問題なし</td><td>5 以下</td><td>0.2 以上</td></tr>
+    <tr><td>多重共線性あり（対処が必要）</td><td><strong>5 より大きい</strong></td><td><strong>0.2 より小さい</strong></td></tr>
+    <tr><td>深刻（huge problem）</td><td>10 より大きい</td><td>0.1 より小さい</td></tr>
+  </table>
+  <p>許容度のほうが解釈しやすい場合があります。たとえば許容度 0.88 は<strong>よいこと</strong>です（その変数は、他の変数がすでに説明していない情報をたくさんもっている）。逆に許容度がとても低い変数は、他の変数がすでに説明している分散ばかりなので、「この変数は要らない」と言えます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(car)</span>
+<span class="cl"><span class="kw">vif</span>(bikes_model1)</span>
+<span class="cl"><span class="nm">1</span> / <span class="kw">vif</span>(bikes_model1)        <span class="cm"># 許容度（tolerance）</span></span>
+</pre><div class="output-reveal">  humidity temperature   windspeed 
+   1.074850    1.034283    1.084580 
+   humidity temperature   windspeed 
+  0.9303623   0.9668533   0.9220157 </div>
+  <p><code>bikes_model1</code> は 3 変数とも VIF が 5 よりずっと小さい（1.03〜1.08）ので、<strong>多重共線性はありません</strong>。<code>olsrr</code> パッケージの <code>ols_vif_tol(model)</code> でも VIF と許容度を一緒に出せ、許容度はどれも 0.2 より大きい（湿度 0.930、気温 0.967、風速 0.922）ので、<strong>湿度は他の変数が説明していない情報を十分もっており、モデルに残すべき</strong>です。</p>
+  <p>次に、模擬データのモデルです。</p>
+<pre class="code-block">
+<span class="cl">fake_model &lt;- <span class="kw">lm</span>(y ~ x1 + x2 + x3 + x4)</span>
+<span class="cl"><span class="kw">vif</span>(fake_model)</span>
+</pre><div class="output-reveal">        x1         x2         x3         x4
+110.221767 115.181353   1.014920   5.047766 </div>
+  <p>x1 と x2 の VIF は 5 を大きく超え（x2 は <strong>約 115</strong>）、同じ分散を二重に説明しています。さらに相関行列では見えなかったこと：<strong>x4 も（VIF 5.05 ＞ 5）</strong>、x1・x2 と絡んだ多重共線性の問題をもっています（x4 ＝ x1 − x2 ＋ ノイズ、と 3 変数が関係している）。相関行列は 2 変数しか見えないので x4 の問題を見逃しますが、VIF なら検出できます。</p>
+  <div class="viz">
+    <div class="viz-title">VIF の比較（点線は基準の 5）</div>
+    <div style="text-align:center"><svg viewBox="0 0 520 250" width="100%" style="max-width:560px" role="img" aria-label="VIFの棒グラフ"><rect x="0.5" y="0.5" width="519" height="249" fill="none" stroke="#cbd5e1"/><line x1="100.0" y1="26" x2="100.0" y2="228" stroke="#e2e8f0"/><text x="100.0" y="242" font-size="10" fill="#475569" text-anchor="middle">0</text><line x1="115.8" y1="26" x2="115.8" y2="228" stroke="#e2e8f0"/><text x="115.8" y="242" font-size="10" fill="#475569" text-anchor="middle">5</text><line x1="131.7" y1="26" x2="131.7" y2="228" stroke="#e2e8f0"/><text x="131.7" y="242" font-size="10" fill="#475569" text-anchor="middle">10</text><line x1="258.3" y1="26" x2="258.3" y2="228" stroke="#e2e8f0"/><text x="258.3" y="242" font-size="10" fill="#475569" text-anchor="middle">50</text><line x1="416.7" y1="26" x2="416.7" y2="228" stroke="#e2e8f0"/><text x="416.7" y="242" font-size="10" fill="#475569" text-anchor="middle">100</text><rect x="100" y="30" width="349.0" height="18" fill="#ef4444"/><text x="94" y="43" font-size="11" fill="#334155" text-anchor="end">x1</text><text x="454.0" y="43" font-size="10" fill="#111827">110.22</text><rect x="100" y="58" width="364.7" height="18" fill="#ef4444"/><text x="94" y="71" font-size="11" fill="#334155" text-anchor="end">x2</text><text x="469.7" y="71" font-size="10" fill="#111827">115.18</text><rect x="100" y="86" width="3.2" height="18" fill="#14b8a6"/><text x="94" y="99" font-size="11" fill="#334155" text-anchor="end">x3</text><text x="108.2" y="99" font-size="10" fill="#111827">1.01</text><rect x="100" y="114" width="16.0" height="18" fill="#f59e0b"/><text x="94" y="127" font-size="11" fill="#334155" text-anchor="end">x4</text><text x="121.0" y="127" font-size="10" fill="#111827">5.05</text><rect x="100" y="142" width="3.4" height="18" fill="#14b8a6"/><text x="94" y="155" font-size="11" fill="#334155" text-anchor="end">humidity</text><text x="108.4" y="155" font-size="10" fill="#111827">1.07</text><rect x="100" y="170" width="3.3" height="18" fill="#14b8a6"/><text x="94" y="183" font-size="11" fill="#334155" text-anchor="end">temperature</text><text x="108.3" y="183" font-size="10" fill="#111827">1.03</text><rect x="100" y="198" width="3.4" height="18" fill="#14b8a6"/><text x="94" y="211" font-size="11" fill="#334155" text-anchor="end">windspeed</text><text x="108.4" y="211" font-size="10" fill="#111827">1.08</text><line x1="115.8" y1="26" x2="115.8" y2="228" stroke="#111827" stroke-dasharray="4 3"/><text x="119.8" y="22" font-size="10" fill="#111827">VIF = 5</text><text x="100" y="238" font-size="10" fill="#475569">上の4本：模擬データ（x1〜x4）／下の3本：bikes のモデル</text></svg></div>
+    <div class="viz-cap">赤＝基準超え、橙＝ぎりぎり超え、緑＝問題なし。</div>
+  </div>
+  <h3 style="margin:1.5rem 0 .5rem">VIF が高いときの対処</h3>
+  <ol>
+    <li><strong>問題の変数を 1 つ削除する</strong>（例：床面積・寝室数・階数のうち、相関する 3 つから 1 つだけ残す）。模擬データでは VIF が最大（115）の x2 を除いたところ、<strong>残りの VIF がすべて 5 未満</strong>になり、x4 と x1 の問題も解消しました。</li>
+    <li><strong>相関する予測変数を 1 つの変数に合体する</strong>。たとえば階数と床面積を<strong>「1 階あたりの床面積（square footage per story）」</strong>という 1 つの変数にまとめる（割り算）。講義の宿題：このモデルで x1 と x2 から新しい変数 x5（積や商など）を作り、うまくいくか試してみる。</li>
+    <li>主成分分析（PCA）や、LASSO などの正則化（regularization）という方法もあるが、このコースの範囲外。</li>
+  </ol>
+<pre class="code-block">
+<span class="cl">fake_model2 &lt;- <span class="kw">lm</span>(y ~ x1 + x3 + x4)    <span class="cm"># x2 を除く</span></span>
+<span class="cl"><span class="kw">vif</span>(fake_model2)</span>
+</pre><div class="output-reveal">      x1       x3       x4
+1.000895 1.009098 1.009236 </div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>2 人の友だちがまったく同じことを言っているなら、1 人の意見で十分</strong>。似すぎている予測変数は 1 つにするか、まとめます。VIF が <strong>5 を超えたら要注意（許容度 0.2 未満）</strong>、10 を超えたら大問題です。</p></div>
+  <div class="practice-card" id="p-m5a-u4">
+    <div class="ptitle">💻 ミニ練習：VIF で共線性を調べる</div>
+    <p class="ptask">パッケージ <code>car</code> を使って、<code>bikes_model1</code> の VIF を求め、さらに許容度（VIF の逆数）も表示してください。</p>
+    <textarea class="code-editor" id="p-m5a-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5a-u4', ['library', 'car', 'vif', 'bikes_model1', '1 /'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5a-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5a-u4-result"></div>
+    <div class="answer-reveal" id="p-m5a-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">library</span>(car)</span>
+<span class="cl"><span class="kw">vif</span>(bikes_model1)</span>
+<span class="cl"><span class="nm">1</span> / <span class="kw">vif</span>(bikes_model1)</span>
+</pre>
+      <p class="answer-note">3 変数とも VIF は 1.03〜1.08 で 5 より小さいので、多重共線性はなし。許容度は 0.92〜0.97 で 0.2 より大きい。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>影響点分析：回帰線を引っ張る点を探す</h2><div class="unit-sub">外れ値・高レバレッジ・Cook の距離</div></div>
+  </div>
+  <p><strong>影響点（influential point）</strong>とは、順序対 (x, y) のうち、<strong>回帰直線の係数、その標準誤差、調整済み R²、その他の統計量に大きな影響を与える点</strong>のことです。大切なのは <strong>すべての外れ値が影響点とは限らない</strong>ことです。外れ値の現れ方には 3 つのタイプがあります。</p>
+  <div class="viz">
+    <div class="viz-title">外れ値の 3 タイプ（橙の大きな点が問題の点、赤線＝その点を含む回帰線、灰色の点線＝含まない回帰線）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 250 190" width="250" height="190" role="img" aria-label="① Y方向の外れ値"><rect x="0.5" y="0.5" width="249" height="189" fill="none" stroke="#cbd5e1"/><line x1="34" y1="160" x2="238" y2="160" stroke="#64748b"/><line x1="34" y1="160" x2="34" y2="12" stroke="#64748b"/><text x="136" y="176" font-size="10" fill="#475569" text-anchor="middle">x</text><text x="10" y="100" font-size="10" fill="#475569" text-anchor="middle">y</text><line x1="34.0" y1="134.0" x2="238.0" y2="11.1" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="34.0" y1="133.1" x2="238.0" y2="3.4" stroke="#ef4444" stroke-width="1.8"/><circle cx="123.9" cy="79.5" r="3" fill="var(--primary)" opacity=".75"/><circle cx="83.7" cy="93.1" r="3" fill="var(--primary)" opacity=".75"/><circle cx="64.5" cy="107.5" r="3" fill="var(--primary)" opacity=".75"/><circle cx="61.4" cy="119.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="73.2" cy="103.9" r="3" fill="var(--primary)" opacity=".75"/><circle cx="110.5" cy="87.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="79.8" cy="113.8" r="3" fill="var(--primary)" opacity=".75"/><circle cx="122.8" cy="83.6" r="3" fill="var(--primary)" opacity=".75"/><circle cx="67.9" cy="116.9" r="3" fill="var(--primary)" opacity=".75"/><circle cx="87.9" cy="99.2" r="3" fill="var(--primary)" opacity=".75"/><circle cx="68.3" cy="112.3" r="3" fill="var(--primary)" opacity=".75"/><circle cx="72.4" cy="110.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="109.2" cy="84.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="63.2" cy="126.8" r="3" fill="var(--primary)" opacity=".75"/><circle cx="87.5" cy="98.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="62.4" cy="119.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="94.8" cy="96.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="57.3" cy="120.6" r="3" fill="var(--primary)" opacity=".75"/><circle cx="123.7" cy="86.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="78.2" cy="111.7" r="3" fill="var(--primary)" opacity=".75"/><circle cx="90.7" cy="44.8" r="5" fill="#f59e0b" stroke="#92400e"/></svg><div style="font-size:.8rem"><strong>① Y方向の外れ値</strong><br>xは平均的、残差だけ大きい<br>傾き：点なし 0.95 → 点あり 1.00</div></div><div style="text-align:center"><svg viewBox="0 0 250 190" width="250" height="190" role="img" aria-label="② X方向の外れ値（高レバレッジ）"><rect x="0.5" y="0.5" width="249" height="189" fill="none" stroke="#cbd5e1"/><line x1="34" y1="160" x2="238" y2="160" stroke="#64748b"/><line x1="34" y1="160" x2="34" y2="12" stroke="#64748b"/><text x="136" y="176" font-size="10" fill="#475569" text-anchor="middle">x</text><text x="10" y="100" font-size="10" fill="#475569" text-anchor="middle">y</text><line x1="34.0" y1="134.0" x2="238.0" y2="11.1" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="34.0" y1="121.3" x2="238.0" y2="53.7" stroke="#ef4444" stroke-width="1.8"/><circle cx="123.9" cy="79.5" r="3" fill="var(--primary)" opacity=".75"/><circle cx="83.7" cy="93.1" r="3" fill="var(--primary)" opacity=".75"/><circle cx="64.5" cy="107.5" r="3" fill="var(--primary)" opacity=".75"/><circle cx="61.4" cy="119.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="73.2" cy="103.9" r="3" fill="var(--primary)" opacity=".75"/><circle cx="110.5" cy="87.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="79.8" cy="113.8" r="3" fill="var(--primary)" opacity=".75"/><circle cx="122.8" cy="83.6" r="3" fill="var(--primary)" opacity=".75"/><circle cx="67.9" cy="116.9" r="3" fill="var(--primary)" opacity=".75"/><circle cx="87.9" cy="99.2" r="3" fill="var(--primary)" opacity=".75"/><circle cx="68.3" cy="112.3" r="3" fill="var(--primary)" opacity=".75"/><circle cx="72.4" cy="110.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="109.2" cy="84.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="63.2" cy="126.8" r="3" fill="var(--primary)" opacity=".75"/><circle cx="87.5" cy="98.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="62.4" cy="119.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="94.8" cy="96.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="57.3" cy="120.6" r="3" fill="var(--primary)" opacity=".75"/><circle cx="123.7" cy="86.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="78.2" cy="111.7" r="3" fill="var(--primary)" opacity=".75"/><circle cx="215.3" cy="80.8" r="5" fill="#f59e0b" stroke="#92400e"/></svg><div style="font-size:.8rem"><strong>② X方向の外れ値（高レバレッジ）</strong><br>yは平均的、線を強く引っ張る<br>傾き：点なし 0.95 → 点あり 0.52</div></div><div style="text-align:center"><svg viewBox="0 0 250 190" width="250" height="190" role="img" aria-label="③ x・yとも極端だが傾向に沿う"><rect x="0.5" y="0.5" width="249" height="189" fill="none" stroke="#cbd5e1"/><line x1="34" y1="160" x2="238" y2="160" stroke="#64748b"/><line x1="34" y1="160" x2="34" y2="12" stroke="#64748b"/><text x="136" y="176" font-size="10" fill="#475569" text-anchor="middle">x</text><text x="10" y="100" font-size="10" fill="#475569" text-anchor="middle">y</text><line x1="34.0" y1="134.0" x2="238.0" y2="11.1" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="34.0" y1="134.9" x2="238.0" y2="8.3" stroke="#ef4444" stroke-width="1.8"/><circle cx="123.9" cy="79.5" r="3" fill="var(--primary)" opacity=".75"/><circle cx="83.7" cy="93.1" r="3" fill="var(--primary)" opacity=".75"/><circle cx="64.5" cy="107.5" r="3" fill="var(--primary)" opacity=".75"/><circle cx="61.4" cy="119.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="73.2" cy="103.9" r="3" fill="var(--primary)" opacity=".75"/><circle cx="110.5" cy="87.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="79.8" cy="113.8" r="3" fill="var(--primary)" opacity=".75"/><circle cx="122.8" cy="83.6" r="3" fill="var(--primary)" opacity=".75"/><circle cx="67.9" cy="116.9" r="3" fill="var(--primary)" opacity=".75"/><circle cx="87.9" cy="99.2" r="3" fill="var(--primary)" opacity=".75"/><circle cx="68.3" cy="112.3" r="3" fill="var(--primary)" opacity=".75"/><circle cx="72.4" cy="110.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="109.2" cy="84.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="63.2" cy="126.8" r="3" fill="var(--primary)" opacity=".75"/><circle cx="87.5" cy="98.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="62.4" cy="119.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="94.8" cy="96.0" r="3" fill="var(--primary)" opacity=".75"/><circle cx="57.3" cy="120.6" r="3" fill="var(--primary)" opacity=".75"/><circle cx="123.7" cy="86.4" r="3" fill="var(--primary)" opacity=".75"/><circle cx="78.2" cy="111.7" r="3" fill="var(--primary)" opacity=".75"/><circle cx="215.3" cy="21.0" r="5" fill="#f59e0b" stroke="#92400e"/></svg><div style="font-size:.8rem"><strong>③ x・yとも極端だが傾向に沿う</strong><br>線はほぼ動かない<br>傾き：点なし 0.95 → 点あり 0.98</div></div></div>
+    <div class="viz-cap">R で作った例（20 点＋橙の 1 点）。① は残差が大きいが線はあまり動かない。② は線を大きく引っ張る。③ は x・y とも極端でも傾向に沿うので影響が小さい。</div>
+  </div>
+  <ol>
+    <li><strong>Y 方向の外れ値：</strong>y が極端に大きい（残差が非常に大きい）が、x は他と変わらない。</li>
+    <li><strong>X 方向の外れ値＝高レバレッジ点（high leverage point）：</strong>y は平均的だが、x が他の x（たとえば 0〜10）から<strong>遠く離れている</strong>。最小二乗法の回帰直線をその点が強く引っ張り、本来あるべき傾向から大きくずれる。</li>
+    <li><strong>x・y とも極端だが、傾向の線に沿っている点：</strong>外れ値ではあるが、その点を除いても傾き・切片はほぼ同じ。<strong>影響点ではない</strong>。</li>
+  </ol>
+  <p>つまり影響点とは、<strong>回帰直線の式や、R・R² などの要約統計量を大きく変える点</strong>です。</p>
+  <h3 style="margin:1.5rem 0 .5rem">見つけ方：手動 vs 自動（Cook の距離）</h3>
+  <p><strong>手動：</strong>その点を入れた回帰と除いた回帰を比べる。候補が 100 個あると大変です。<strong>自動（推奨）：</strong><strong>Cook の距離（Cook's distance, D）</strong>は、<strong>その観測値を取り除いたときモデルがどれだけ変わるか</strong>を測ります。点を抜いて全部を再計算し、しきい値と比べて影響の大きさを判断してくれます。D が大きいほど、係数や統計量への影響が大きい点です。</p>
+  <div class="note-box">🔑 <strong>このクラスのしきい値：</strong>D &gt; <strong>4 / (n − k − 1)</strong> なら影響点。n ＝データの行数、k ＝モデルの予測変数の数。<br>他の目安：D &gt; 0.5 で影響点の可能性あり、D &gt; 1 ならほぼ確実に影響点。また k を入れない簡易版の 4 / n を使う人もいます（公式を覚えなくてよい利点）。</div>
+  <p><code>bikes</code> は 731 行 × 10 列。重回帰の予測変数は 3 つなので k = 3、n = 731 で <strong>4 / (731 − 3 − 1) ＝ 4 / 727 ≈ 0.0055</strong>。講義のコードでは切りのよい <strong>0.005</strong> を使いました。</p>
+  <p><code>olsrr</code> パッケージには関数がそろっています：<code>ols_plot_cooksd_bar(model)</code>（全点の棒グラフ。しきい値を超えた点が赤、普通の点が青）、<code>ols_plot_cooksd_chart(model)</code>（もう少しすっきりした図だが赤と青の区別はない）。以下は <code>cooks.distance()</code> の値から描いた同様の図です。</p>
+  <div class="viz">
+    <div class="viz-title">Cook の距離（bikes_model1、731 点。赤＝しきい値 0.005 超え）</div>
+    <div style="text-align:center"><svg viewBox="0 0 760 260" width="100%" role="img" aria-label="Cook距離の棒グラフ"><rect x="0.5" y="0.5" width="759" height="259" fill="none" stroke="#cbd5e1"/><line x1="52" y1="226.0" x2="750" y2="226.0" stroke="#e2e8f0"/><text x="47" y="229.0" font-size="10" fill="#475569" text-anchor="end">0.00</text><line x1="52" y1="178.9" x2="750" y2="178.9" stroke="#e2e8f0"/><text x="47" y="181.9" font-size="10" fill="#475569" text-anchor="end">0.02</text><line x1="52" y1="131.8" x2="750" y2="131.8" stroke="#e2e8f0"/><text x="47" y="134.8" font-size="10" fill="#475569" text-anchor="end">0.04</text><line x1="52" y1="84.7" x2="750" y2="84.7" stroke="#e2e8f0"/><text x="47" y="87.7" font-size="10" fill="#475569" text-anchor="end">0.06</text><line x1="52" y1="37.6" x2="750" y2="37.6" stroke="#e2e8f0"/><text x="47" y="40.6" font-size="10" fill="#475569" text-anchor="end">0.08</text><rect x="52.00" y="219.59" width="0.95" height="6.41" fill="#3b82f6"/><rect x="52.95" y="220.56" width="0.95" height="5.44" fill="#3b82f6"/><rect x="53.91" y="221.53" width="0.95" height="4.47" fill="#3b82f6"/><rect x="54.86" y="223.46" width="0.95" height="2.54" fill="#3b82f6"/><rect x="55.82" y="220.15" width="0.95" height="5.85" fill="#3b82f6"/><rect x="56.77" y="216.96" width="0.95" height="9.04" fill="#3b82f6"/><rect x="57.73" y="221.64" width="0.95" height="4.36" fill="#3b82f6"/><rect x="58.68" y="222.84" width="0.95" height="3.16" fill="#3b82f6"/><rect x="59.64" y="221.62" width="0.95" height="4.38" fill="#3b82f6"/><rect x="60.59" y="223.04" width="0.95" height="2.96" fill="#3b82f6"/><rect x="61.55" y="222.54" width="0.95" height="3.46" fill="#3b82f6"/><rect x="62.50" y="224.74" width="0.95" height="1.26" fill="#3b82f6"/><rect x="63.46" y="224.19" width="0.95" height="1.81" fill="#3b82f6"/><rect x="64.41" y="220.81" width="0.95" height="5.19" fill="#3b82f6"/><rect x="65.37" y="218.55" width="0.95" height="7.45" fill="#3b82f6"/><rect x="66.32" y="219.53" width="0.95" height="6.47" fill="#3b82f6"/><rect x="67.28" y="221.26" width="0.95" height="4.74" fill="#3b82f6"/><rect x="68.23" y="220.05" width="0.95" height="5.95" fill="#3b82f6"/><rect x="69.19" y="224.53" width="0.95" height="1.47" fill="#3b82f6"/><rect x="70.14" y="224.09" width="0.95" height="1.91" fill="#3b82f6"/><rect x="71.10" y="224.86" width="0.95" height="1.14" fill="#3b82f6"/><rect x="72.05" y="218.27" width="0.95" height="7.73" fill="#3b82f6"/><rect x="73.01" y="221.97" width="0.95" height="4.03" fill="#3b82f6"/><rect x="73.96" y="222.96" width="0.95" height="3.04" fill="#3b82f6"/><rect x="74.92" y="224.13" width="0.95" height="1.87" fill="#3b82f6"/><rect x="75.87" y="222.72" width="0.95" height="3.28" fill="#3b82f6"/><rect x="76.83" y="214.80" width="0.95" height="11.20" fill="#3b82f6"/><rect x="77.78" y="222.35" width="0.95" height="3.65" fill="#3b82f6"/><rect x="78.74" y="221.62" width="0.95" height="4.38" fill="#3b82f6"/><rect x="79.69" y="217.00" width="0.95" height="9.00" fill="#3b82f6"/><rect x="80.65" y="224.34" width="0.95" height="1.66" fill="#3b82f6"/><rect x="81.60" y="220.75" width="0.95" height="5.25" fill="#3b82f6"/><rect x="82.56" y="225.22" width="0.95" height="0.78" fill="#3b82f6"/><rect x="83.51" y="223.41" width="0.95" height="2.59" fill="#3b82f6"/><rect x="84.47" y="222.58" width="0.95" height="3.42" fill="#3b82f6"/><rect x="85.42" y="222.78" width="0.95" height="3.22" fill="#3b82f6"/><rect x="86.37" y="221.30" width="0.95" height="4.70" fill="#3b82f6"/><rect x="87.33" y="218.05" width="0.95" height="7.95" fill="#3b82f6"/><rect x="88.28" y="224.91" width="0.95" height="1.09" fill="#3b82f6"/><rect x="89.24" y="224.04" width="0.95" height="1.96" fill="#3b82f6"/><rect x="90.19" y="223.21" width="0.95" height="2.79" fill="#3b82f6"/><rect x="91.15" y="220.03" width="0.95" height="5.97" fill="#3b82f6"/><rect x="92.10" y="223.24" width="0.95" height="2.76" fill="#3b82f6"/><rect x="93.06" y="220.97" width="0.95" height="5.03" fill="#3b82f6"/><rect x="94.01" y="212.54" width="0.95" height="13.46" fill="#ef4444"/><rect x="94.97" y="217.95" width="0.95" height="8.05" fill="#3b82f6"/><rect x="95.92" y="222.31" width="0.95" height="3.69" fill="#3b82f6"/><rect x="96.88" y="223.51" width="0.95" height="2.49" fill="#3b82f6"/><rect x="97.83" y="223.15" width="0.95" height="2.85" fill="#3b82f6"/><rect x="98.79" y="185.33" width="0.95" height="40.67" fill="#ef4444"/><rect x="99.74" y="220.23" width="0.95" height="5.77" fill="#3b82f6"/><rect x="100.70" y="221.67" width="0.95" height="4.33" fill="#3b82f6"/><rect x="101.65" y="224.02" width="0.95" height="1.98" fill="#3b82f6"/><rect x="102.61" y="214.30" width="0.95" height="11.70" fill="#3b82f6"/><rect x="103.56" y="225.03" width="0.95" height="0.97" fill="#3b82f6"/><rect x="104.52" y="222.39" width="0.95" height="3.61" fill="#3b82f6"/><rect x="105.47" y="223.80" width="0.95" height="2.20" fill="#3b82f6"/><rect x="106.43" y="224.30" width="0.95" height="1.70" fill="#3b82f6"/><rect x="107.38" y="221.48" width="0.95" height="4.52" fill="#3b82f6"/><rect x="108.34" y="224.10" width="0.95" height="1.90" fill="#3b82f6"/><rect x="109.29" y="223.01" width="0.95" height="2.99" fill="#3b82f6"/><rect x="110.25" y="217.65" width="0.95" height="8.35" fill="#3b82f6"/><rect x="111.20" y="224.94" width="0.95" height="1.06" fill="#3b82f6"/><rect x="112.16" y="224.75" width="0.95" height="1.25" fill="#3b82f6"/><rect x="113.11" y="215.54" width="0.95" height="10.46" fill="#3b82f6"/><rect x="114.07" y="225.17" width="0.95" height="0.83" fill="#3b82f6"/><rect x="115.02" y="216.19" width="0.95" height="9.81" fill="#3b82f6"/><rect x="115.98" y="225.26" width="0.95" height="0.74" fill="#3b82f6"/><rect x="116.93" y="29.39" width="0.95" height="196.61" fill="#ef4444"/><rect x="117.89" y="224.97" width="0.95" height="1.03" fill="#3b82f6"/><rect x="118.84" y="224.86" width="0.95" height="1.14" fill="#3b82f6"/><rect x="119.79" y="224.40" width="0.95" height="1.60" fill="#3b82f6"/><rect x="120.75" y="220.17" width="0.95" height="5.83" fill="#3b82f6"/><rect x="121.70" y="224.78" width="0.95" height="1.22" fill="#3b82f6"/><rect x="122.66" y="224.99" width="0.95" height="1.01" fill="#3b82f6"/><rect x="123.61" y="225.28" width="0.95" height="0.72" fill="#3b82f6"/><rect x="124.57" y="223.97" width="0.95" height="2.03" fill="#3b82f6"/><rect x="125.52" y="221.76" width="0.95" height="4.24" fill="#3b82f6"/><rect x="126.48" y="223.98" width="0.95" height="2.02" fill="#3b82f6"/><rect x="127.43" y="223.79" width="0.95" height="2.21" fill="#3b82f6"/><rect x="128.39" y="225.16" width="0.95" height="0.84" fill="#3b82f6"/><rect x="129.34" y="225.44" width="0.95" height="0.56" fill="#3b82f6"/><rect x="130.30" y="225.61" width="0.95" height="0.39" fill="#3b82f6"/><rect x="131.25" y="224.76" width="0.95" height="1.24" fill="#3b82f6"/><rect x="132.21" y="223.53" width="0.95" height="2.47" fill="#3b82f6"/><rect x="133.16" y="222.07" width="0.95" height="3.93" fill="#3b82f6"/><rect x="134.12" y="215.76" width="0.95" height="10.24" fill="#3b82f6"/><rect x="135.07" y="219.29" width="0.95" height="6.71" fill="#3b82f6"/><rect x="136.03" y="223.31" width="0.95" height="2.69" fill="#3b82f6"/><rect x="136.98" y="225.74" width="0.95" height="0.26" fill="#3b82f6"/><rect x="137.94" y="225.71" width="0.95" height="0.29" fill="#3b82f6"/><rect x="138.89" y="225.26" width="0.95" height="0.74" fill="#3b82f6"/><rect x="139.85" y="225.03" width="0.95" height="0.97" fill="#3b82f6"/><rect x="140.80" y="216.88" width="0.95" height="9.12" fill="#3b82f6"/><rect x="141.76" y="221.45" width="0.95" height="4.55" fill="#3b82f6"/><rect x="142.71" y="224.54" width="0.95" height="1.46" fill="#3b82f6"/><rect x="143.67" y="225.24" width="0.95" height="0.76" fill="#3b82f6"/><rect x="144.62" y="223.42" width="0.95" height="2.58" fill="#3b82f6"/><rect x="145.58" y="225.37" width="0.95" height="0.63" fill="#3b82f6"/><rect x="146.53" y="225.32" width="0.95" height="0.68" fill="#3b82f6"/><rect x="147.49" y="224.13" width="0.95" height="1.87" fill="#3b82f6"/><rect x="148.44" y="221.77" width="0.95" height="4.23" fill="#3b82f6"/><rect x="149.40" y="224.55" width="0.95" height="1.45" fill="#3b82f6"/><rect x="150.35" y="222.59" width="0.95" height="3.41" fill="#3b82f6"/><rect x="151.31" y="225.67" width="0.95" height="0.33" fill="#3b82f6"/><rect x="152.26" y="212.80" width="0.95" height="13.20" fill="#ef4444"/><rect x="153.21" y="225.74" width="0.95" height="0.26" fill="#3b82f6"/><rect x="154.17" y="224.37" width="0.95" height="1.63" fill="#3b82f6"/><rect x="155.12" y="225.05" width="0.95" height="0.95" fill="#3b82f6"/><rect x="156.08" y="225.23" width="0.95" height="0.77" fill="#3b82f6"/><rect x="157.03" y="225.97" width="0.95" height="0.03" fill="#3b82f6"/><rect x="157.99" y="224.17" width="0.95" height="1.83" fill="#3b82f6"/><rect x="158.94" y="224.72" width="0.95" height="1.28" fill="#3b82f6"/><rect x="159.90" y="225.89" width="0.95" height="0.11" fill="#3b82f6"/><rect x="160.85" y="225.49" width="0.95" height="0.51" fill="#3b82f6"/><rect x="161.81" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="162.76" y="225.84" width="0.95" height="0.16" fill="#3b82f6"/><rect x="163.72" y="225.64" width="0.95" height="0.36" fill="#3b82f6"/><rect x="164.67" y="225.91" width="0.95" height="0.09" fill="#3b82f6"/><rect x="165.63" y="225.53" width="0.95" height="0.47" fill="#3b82f6"/><rect x="166.58" y="225.16" width="0.95" height="0.84" fill="#3b82f6"/><rect x="167.54" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="168.49" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="169.45" y="225.75" width="0.95" height="0.25" fill="#3b82f6"/><rect x="170.40" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="171.36" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="172.31" y="225.91" width="0.95" height="0.09" fill="#3b82f6"/><rect x="173.27" y="224.82" width="0.95" height="1.18" fill="#3b82f6"/><rect x="174.22" y="225.84" width="0.95" height="0.16" fill="#3b82f6"/><rect x="175.18" y="225.23" width="0.95" height="0.77" fill="#3b82f6"/><rect x="176.13" y="225.32" width="0.95" height="0.68" fill="#3b82f6"/><rect x="177.09" y="225.85" width="0.95" height="0.15" fill="#3b82f6"/><rect x="178.04" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="179.00" y="225.18" width="0.95" height="0.82" fill="#3b82f6"/><rect x="179.95" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="180.91" y="225.15" width="0.95" height="0.85" fill="#3b82f6"/><rect x="181.86" y="225.86" width="0.95" height="0.14" fill="#3b82f6"/><rect x="182.82" y="225.93" width="0.95" height="0.07" fill="#3b82f6"/><rect x="183.77" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="184.73" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="185.68" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="186.63" y="225.87" width="0.95" height="0.13" fill="#3b82f6"/><rect x="187.59" y="225.79" width="0.95" height="0.21" fill="#3b82f6"/><rect x="188.54" y="225.54" width="0.95" height="0.46" fill="#3b82f6"/><rect x="189.50" y="225.72" width="0.95" height="0.28" fill="#3b82f6"/><rect x="190.45" y="224.91" width="0.95" height="1.09" fill="#3b82f6"/><rect x="191.41" y="225.40" width="0.95" height="0.60" fill="#3b82f6"/><rect x="192.36" y="225.90" width="0.95" height="0.10" fill="#3b82f6"/><rect x="193.32" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="194.27" y="220.71" width="0.95" height="5.29" fill="#3b82f6"/><rect x="195.23" y="213.86" width="0.95" height="12.14" fill="#ef4444"/><rect x="196.18" y="220.05" width="0.95" height="5.95" fill="#3b82f6"/><rect x="197.14" y="217.39" width="0.95" height="8.61" fill="#3b82f6"/><rect x="198.09" y="225.25" width="0.95" height="0.75" fill="#3b82f6"/><rect x="199.05" y="224.39" width="0.95" height="1.61" fill="#3b82f6"/><rect x="200.00" y="225.51" width="0.95" height="0.49" fill="#3b82f6"/><rect x="200.96" y="223.19" width="0.95" height="2.81" fill="#3b82f6"/><rect x="201.91" y="224.62" width="0.95" height="1.38" fill="#3b82f6"/><rect x="202.87" y="218.61" width="0.95" height="7.39" fill="#3b82f6"/><rect x="203.82" y="209.23" width="0.95" height="16.77" fill="#ef4444"/><rect x="204.78" y="220.82" width="0.95" height="5.18" fill="#3b82f6"/><rect x="205.73" y="224.61" width="0.95" height="1.39" fill="#3b82f6"/><rect x="206.69" y="224.69" width="0.95" height="1.31" fill="#3b82f6"/><rect x="207.64" y="225.86" width="0.95" height="0.14" fill="#3b82f6"/><rect x="208.60" y="225.87" width="0.95" height="0.13" fill="#3b82f6"/><rect x="209.55" y="225.21" width="0.95" height="0.79" fill="#3b82f6"/><rect x="210.51" y="224.68" width="0.95" height="1.32" fill="#3b82f6"/><rect x="211.46" y="225.70" width="0.95" height="0.30" fill="#3b82f6"/><rect x="212.42" y="225.04" width="0.95" height="0.96" fill="#3b82f6"/><rect x="213.37" y="223.43" width="0.95" height="2.57" fill="#3b82f6"/><rect x="214.33" y="224.72" width="0.95" height="1.28" fill="#3b82f6"/><rect x="215.28" y="225.66" width="0.95" height="0.34" fill="#3b82f6"/><rect x="216.24" y="223.72" width="0.95" height="2.28" fill="#3b82f6"/><rect x="217.19" y="225.08" width="0.95" height="0.92" fill="#3b82f6"/><rect x="218.15" y="224.64" width="0.95" height="1.36" fill="#3b82f6"/><rect x="219.10" y="224.62" width="0.95" height="1.38" fill="#3b82f6"/><rect x="220.05" y="223.09" width="0.95" height="2.91" fill="#3b82f6"/><rect x="221.01" y="223.91" width="0.95" height="2.09" fill="#3b82f6"/><rect x="221.96" y="222.44" width="0.95" height="3.56" fill="#3b82f6"/><rect x="222.92" y="224.55" width="0.95" height="1.45" fill="#3b82f6"/><rect x="223.87" y="224.35" width="0.95" height="1.65" fill="#3b82f6"/><rect x="224.83" y="215.95" width="0.95" height="10.05" fill="#3b82f6"/><rect x="225.78" y="216.67" width="0.95" height="9.33" fill="#3b82f6"/><rect x="226.74" y="224.83" width="0.95" height="1.17" fill="#3b82f6"/><rect x="227.69" y="225.60" width="0.95" height="0.40" fill="#3b82f6"/><rect x="228.65" y="220.58" width="0.95" height="5.42" fill="#3b82f6"/><rect x="229.60" y="224.28" width="0.95" height="1.72" fill="#3b82f6"/><rect x="230.56" y="222.65" width="0.95" height="3.35" fill="#3b82f6"/><rect x="231.51" y="223.47" width="0.95" height="2.53" fill="#3b82f6"/><rect x="232.47" y="225.07" width="0.95" height="0.93" fill="#3b82f6"/><rect x="233.42" y="223.21" width="0.95" height="2.79" fill="#3b82f6"/><rect x="234.38" y="219.76" width="0.95" height="6.24" fill="#3b82f6"/><rect x="235.33" y="216.34" width="0.95" height="9.66" fill="#3b82f6"/><rect x="236.29" y="220.94" width="0.95" height="5.06" fill="#3b82f6"/><rect x="237.24" y="224.83" width="0.95" height="1.17" fill="#3b82f6"/><rect x="238.20" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="239.15" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="240.11" y="225.67" width="0.95" height="0.33" fill="#3b82f6"/><rect x="241.06" y="223.05" width="0.95" height="2.95" fill="#3b82f6"/><rect x="242.02" y="219.83" width="0.95" height="6.17" fill="#3b82f6"/><rect x="242.97" y="219.17" width="0.95" height="6.83" fill="#3b82f6"/><rect x="243.93" y="214.32" width="0.95" height="11.68" fill="#3b82f6"/><rect x="244.88" y="193.20" width="0.95" height="32.80" fill="#ef4444"/><rect x="245.84" y="177.67" width="0.95" height="48.33" fill="#ef4444"/><rect x="246.79" y="202.06" width="0.95" height="23.94" fill="#ef4444"/><rect x="247.75" y="216.25" width="0.95" height="9.75" fill="#3b82f6"/><rect x="248.70" y="219.83" width="0.95" height="6.17" fill="#3b82f6"/><rect x="249.66" y="210.21" width="0.95" height="15.79" fill="#ef4444"/><rect x="250.61" y="218.94" width="0.95" height="7.06" fill="#3b82f6"/><rect x="251.56" y="203.40" width="0.95" height="22.60" fill="#ef4444"/><rect x="252.52" y="209.09" width="0.95" height="16.91" fill="#ef4444"/><rect x="253.47" y="207.83" width="0.95" height="18.17" fill="#ef4444"/><rect x="254.43" y="216.28" width="0.95" height="9.72" fill="#3b82f6"/><rect x="255.38" y="218.79" width="0.95" height="7.21" fill="#3b82f6"/><rect x="256.34" y="217.65" width="0.95" height="8.35" fill="#3b82f6"/><rect x="257.29" y="224.93" width="0.95" height="1.07" fill="#3b82f6"/><rect x="258.25" y="224.87" width="0.95" height="1.13" fill="#3b82f6"/><rect x="259.20" y="224.15" width="0.95" height="1.85" fill="#3b82f6"/><rect x="260.16" y="220.67" width="0.95" height="5.33" fill="#3b82f6"/><rect x="261.11" y="220.19" width="0.95" height="5.81" fill="#3b82f6"/><rect x="262.07" y="219.00" width="0.95" height="7.00" fill="#3b82f6"/><rect x="263.02" y="215.51" width="0.95" height="10.49" fill="#3b82f6"/><rect x="263.98" y="217.94" width="0.95" height="8.06" fill="#3b82f6"/><rect x="264.93" y="216.07" width="0.95" height="9.93" fill="#3b82f6"/><rect x="265.89" y="224.40" width="0.95" height="1.60" fill="#3b82f6"/><rect x="266.84" y="223.77" width="0.95" height="2.23" fill="#3b82f6"/><rect x="267.80" y="225.16" width="0.95" height="0.84" fill="#3b82f6"/><rect x="268.75" y="224.63" width="0.95" height="1.37" fill="#3b82f6"/><rect x="269.71" y="222.33" width="0.95" height="3.67" fill="#3b82f6"/><rect x="270.66" y="221.91" width="0.95" height="4.09" fill="#3b82f6"/><rect x="271.62" y="223.56" width="0.95" height="2.44" fill="#3b82f6"/><rect x="272.57" y="224.94" width="0.95" height="1.06" fill="#3b82f6"/><rect x="273.53" y="222.75" width="0.95" height="3.25" fill="#3b82f6"/><rect x="274.48" y="223.57" width="0.95" height="2.43" fill="#3b82f6"/><rect x="275.44" y="225.84" width="0.95" height="0.16" fill="#3b82f6"/><rect x="276.39" y="225.88" width="0.95" height="0.12" fill="#3b82f6"/><rect x="277.35" y="222.34" width="0.95" height="3.66" fill="#3b82f6"/><rect x="278.30" y="223.29" width="0.95" height="2.71" fill="#3b82f6"/><rect x="279.26" y="176.36" width="0.95" height="49.64" fill="#ef4444"/><rect x="280.21" y="222.84" width="0.95" height="3.16" fill="#3b82f6"/><rect x="281.17" y="224.79" width="0.95" height="1.21" fill="#3b82f6"/><rect x="282.12" y="225.23" width="0.95" height="0.77" fill="#3b82f6"/><rect x="283.08" y="224.09" width="0.95" height="1.91" fill="#3b82f6"/><rect x="284.03" y="225.66" width="0.95" height="0.34" fill="#3b82f6"/><rect x="284.98" y="225.58" width="0.95" height="0.42" fill="#3b82f6"/><rect x="285.94" y="225.25" width="0.95" height="0.75" fill="#3b82f6"/><rect x="286.89" y="225.62" width="0.95" height="0.38" fill="#3b82f6"/><rect x="287.85" y="221.85" width="0.95" height="4.15" fill="#3b82f6"/><rect x="288.80" y="224.68" width="0.95" height="1.32" fill="#3b82f6"/><rect x="289.76" y="208.65" width="0.95" height="17.35" fill="#ef4444"/><rect x="290.71" y="208.31" width="0.95" height="17.69" fill="#ef4444"/><rect x="291.67" y="221.62" width="0.95" height="4.38" fill="#3b82f6"/><rect x="292.62" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="293.58" y="225.63" width="0.95" height="0.37" fill="#3b82f6"/><rect x="294.53" y="224.59" width="0.95" height="1.41" fill="#3b82f6"/><rect x="295.49" y="225.53" width="0.95" height="0.47" fill="#3b82f6"/><rect x="296.44" y="225.47" width="0.95" height="0.53" fill="#3b82f6"/><rect x="297.40" y="225.30" width="0.95" height="0.70" fill="#3b82f6"/><rect x="298.35" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="299.31" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="300.26" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="301.22" y="225.94" width="0.95" height="0.06" fill="#3b82f6"/><rect x="302.17" y="224.95" width="0.95" height="1.05" fill="#3b82f6"/><rect x="303.13" y="225.62" width="0.95" height="0.38" fill="#3b82f6"/><rect x="304.08" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="305.04" y="209.09" width="0.95" height="16.91" fill="#ef4444"/><rect x="305.99" y="225.73" width="0.95" height="0.27" fill="#3b82f6"/><rect x="306.95" y="225.61" width="0.95" height="0.39" fill="#3b82f6"/><rect x="307.90" y="225.41" width="0.95" height="0.59" fill="#3b82f6"/><rect x="308.86" y="224.55" width="0.95" height="1.45" fill="#3b82f6"/><rect x="309.81" y="224.38" width="0.95" height="1.62" fill="#3b82f6"/><rect x="310.77" y="225.93" width="0.95" height="0.07" fill="#3b82f6"/><rect x="311.72" y="225.93" width="0.95" height="0.07" fill="#3b82f6"/><rect x="312.68" y="225.29" width="0.95" height="0.71" fill="#3b82f6"/><rect x="313.63" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="314.59" y="225.85" width="0.95" height="0.15" fill="#3b82f6"/><rect x="315.54" y="225.93" width="0.95" height="0.07" fill="#3b82f6"/><rect x="316.50" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="317.45" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="318.40" y="225.85" width="0.95" height="0.15" fill="#3b82f6"/><rect x="319.36" y="225.88" width="0.95" height="0.12" fill="#3b82f6"/><rect x="320.31" y="225.75" width="0.95" height="0.25" fill="#3b82f6"/><rect x="321.27" y="225.86" width="0.95" height="0.14" fill="#3b82f6"/><rect x="322.22" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="323.18" y="221.81" width="0.95" height="4.19" fill="#3b82f6"/><rect x="324.13" y="221.13" width="0.95" height="4.87" fill="#3b82f6"/><rect x="325.09" y="225.54" width="0.95" height="0.46" fill="#3b82f6"/><rect x="326.04" y="225.73" width="0.95" height="0.27" fill="#3b82f6"/><rect x="327.00" y="225.78" width="0.95" height="0.22" fill="#3b82f6"/><rect x="327.95" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="328.91" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="329.86" y="221.91" width="0.95" height="4.09" fill="#3b82f6"/><rect x="330.82" y="221.96" width="0.95" height="4.04" fill="#3b82f6"/><rect x="331.77" y="225.97" width="0.95" height="0.03" fill="#3b82f6"/><rect x="332.73" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="333.68" y="225.90" width="0.95" height="0.10" fill="#3b82f6"/><rect x="334.64" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="335.59" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="336.55" y="225.87" width="0.95" height="0.13" fill="#3b82f6"/><rect x="337.50" y="224.66" width="0.95" height="1.34" fill="#3b82f6"/><rect x="338.46" y="225.88" width="0.95" height="0.12" fill="#3b82f6"/><rect x="339.41" y="223.37" width="0.95" height="2.63" fill="#3b82f6"/><rect x="340.37" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="341.32" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="342.28" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="343.23" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="344.19" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="345.14" y="225.75" width="0.95" height="0.25" fill="#3b82f6"/><rect x="346.10" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="347.05" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="348.01" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="348.96" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="349.92" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="350.87" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="351.82" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="352.78" y="225.91" width="0.95" height="0.09" fill="#3b82f6"/><rect x="353.73" y="225.66" width="0.95" height="0.34" fill="#3b82f6"/><rect x="354.69" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="355.64" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="356.60" y="218.83" width="0.95" height="7.17" fill="#3b82f6"/><rect x="357.55" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="358.51" y="225.63" width="0.95" height="0.37" fill="#3b82f6"/><rect x="359.46" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="360.42" y="225.82" width="0.95" height="0.18" fill="#3b82f6"/><rect x="361.37" y="224.65" width="0.95" height="1.35" fill="#3b82f6"/><rect x="362.33" y="217.67" width="0.95" height="8.33" fill="#3b82f6"/><rect x="363.28" y="225.40" width="0.95" height="0.60" fill="#3b82f6"/><rect x="364.24" y="220.91" width="0.95" height="5.09" fill="#3b82f6"/><rect x="365.19" y="223.86" width="0.95" height="2.14" fill="#3b82f6"/><rect x="366.15" y="224.03" width="0.95" height="1.97" fill="#3b82f6"/><rect x="367.10" y="225.55" width="0.95" height="0.45" fill="#3b82f6"/><rect x="368.06" y="225.76" width="0.95" height="0.24" fill="#3b82f6"/><rect x="369.01" y="225.71" width="0.95" height="0.29" fill="#3b82f6"/><rect x="369.97" y="225.63" width="0.95" height="0.37" fill="#3b82f6"/><rect x="370.92" y="225.94" width="0.95" height="0.06" fill="#3b82f6"/><rect x="371.88" y="225.94" width="0.95" height="0.06" fill="#3b82f6"/><rect x="372.83" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="373.79" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="374.74" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="375.70" y="225.26" width="0.95" height="0.74" fill="#3b82f6"/><rect x="376.65" y="213.00" width="0.95" height="13.00" fill="#ef4444"/><rect x="377.61" y="225.80" width="0.95" height="0.20" fill="#3b82f6"/><rect x="378.56" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="379.52" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="380.47" y="222.87" width="0.95" height="3.13" fill="#3b82f6"/><rect x="381.43" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="382.38" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="383.34" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="384.29" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="385.24" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="386.20" y="225.97" width="0.95" height="0.03" fill="#3b82f6"/><rect x="387.15" y="225.53" width="0.95" height="0.47" fill="#3b82f6"/><rect x="388.11" y="225.91" width="0.95" height="0.09" fill="#3b82f6"/><rect x="389.06" y="224.90" width="0.95" height="1.10" fill="#3b82f6"/><rect x="390.02" y="225.48" width="0.95" height="0.52" fill="#3b82f6"/><rect x="390.97" y="222.76" width="0.95" height="3.24" fill="#3b82f6"/><rect x="391.93" y="225.03" width="0.95" height="0.97" fill="#3b82f6"/><rect x="392.88" y="220.06" width="0.95" height="5.94" fill="#3b82f6"/><rect x="393.84" y="219.61" width="0.95" height="6.39" fill="#3b82f6"/><rect x="394.79" y="221.18" width="0.95" height="4.82" fill="#3b82f6"/><rect x="395.75" y="222.06" width="0.95" height="3.94" fill="#3b82f6"/><rect x="396.70" y="225.06" width="0.95" height="0.94" fill="#3b82f6"/><rect x="397.66" y="224.41" width="0.95" height="1.59" fill="#3b82f6"/><rect x="398.61" y="225.68" width="0.95" height="0.32" fill="#3b82f6"/><rect x="399.57" y="225.05" width="0.95" height="0.95" fill="#3b82f6"/><rect x="400.52" y="225.03" width="0.95" height="0.97" fill="#3b82f6"/><rect x="401.48" y="222.27" width="0.95" height="3.73" fill="#3b82f6"/><rect x="402.43" y="225.71" width="0.95" height="0.29" fill="#3b82f6"/><rect x="403.39" y="225.80" width="0.95" height="0.20" fill="#3b82f6"/><rect x="404.34" y="225.82" width="0.95" height="0.18" fill="#3b82f6"/><rect x="405.30" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="406.25" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="407.21" y="225.66" width="0.95" height="0.34" fill="#3b82f6"/><rect x="408.16" y="225.36" width="0.95" height="0.64" fill="#3b82f6"/><rect x="409.12" y="225.88" width="0.95" height="0.12" fill="#3b82f6"/><rect x="410.07" y="225.50" width="0.95" height="0.50" fill="#3b82f6"/><rect x="411.03" y="225.12" width="0.95" height="0.88" fill="#3b82f6"/><rect x="411.98" y="224.47" width="0.95" height="1.53" fill="#3b82f6"/><rect x="412.94" y="225.54" width="0.95" height="0.46" fill="#3b82f6"/><rect x="413.89" y="225.68" width="0.95" height="0.32" fill="#3b82f6"/><rect x="414.85" y="225.84" width="0.95" height="0.16" fill="#3b82f6"/><rect x="415.80" y="225.79" width="0.95" height="0.21" fill="#3b82f6"/><rect x="416.76" y="224.25" width="0.95" height="1.75" fill="#3b82f6"/><rect x="417.71" y="225.48" width="0.95" height="0.52" fill="#3b82f6"/><rect x="418.66" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="419.62" y="225.77" width="0.95" height="0.23" fill="#3b82f6"/><rect x="420.57" y="225.85" width="0.95" height="0.15" fill="#3b82f6"/><rect x="421.53" y="225.76" width="0.95" height="0.24" fill="#3b82f6"/><rect x="422.48" y="223.45" width="0.95" height="2.55" fill="#3b82f6"/><rect x="423.44" y="224.97" width="0.95" height="1.03" fill="#3b82f6"/><rect x="424.39" y="225.56" width="0.95" height="0.44" fill="#3b82f6"/><rect x="425.35" y="225.33" width="0.95" height="0.67" fill="#3b82f6"/><rect x="426.30" y="225.74" width="0.95" height="0.26" fill="#3b82f6"/><rect x="427.26" y="225.04" width="0.95" height="0.96" fill="#3b82f6"/><rect x="428.21" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="429.17" y="225.78" width="0.95" height="0.22" fill="#3b82f6"/><rect x="430.12" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="431.08" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="432.03" y="225.76" width="0.95" height="0.24" fill="#3b82f6"/><rect x="432.99" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="433.94" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="434.90" y="225.73" width="0.95" height="0.27" fill="#3b82f6"/><rect x="435.85" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="436.81" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="437.76" y="225.52" width="0.95" height="0.48" fill="#3b82f6"/><rect x="438.72" y="225.97" width="0.95" height="0.03" fill="#3b82f6"/><rect x="439.67" y="225.84" width="0.95" height="0.16" fill="#3b82f6"/><rect x="440.63" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="441.58" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="442.54" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="443.49" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="444.45" y="225.70" width="0.95" height="0.30" fill="#3b82f6"/><rect x="445.40" y="225.61" width="0.95" height="0.39" fill="#3b82f6"/><rect x="446.36" y="225.79" width="0.95" height="0.21" fill="#3b82f6"/><rect x="447.31" y="225.77" width="0.95" height="0.23" fill="#3b82f6"/><rect x="448.27" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="449.22" y="225.65" width="0.95" height="0.35" fill="#3b82f6"/><rect x="450.18" y="225.42" width="0.95" height="0.58" fill="#3b82f6"/><rect x="451.13" y="225.81" width="0.95" height="0.19" fill="#3b82f6"/><rect x="452.08" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="453.04" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="453.99" y="225.85" width="0.95" height="0.15" fill="#3b82f6"/><rect x="454.95" y="225.57" width="0.95" height="0.43" fill="#3b82f6"/><rect x="455.90" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="456.86" y="224.05" width="0.95" height="1.95" fill="#3b82f6"/><rect x="457.81" y="225.77" width="0.95" height="0.23" fill="#3b82f6"/><rect x="458.77" y="225.79" width="0.95" height="0.21" fill="#3b82f6"/><rect x="459.72" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="460.68" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="461.63" y="225.87" width="0.95" height="0.13" fill="#3b82f6"/><rect x="462.59" y="225.54" width="0.95" height="0.46" fill="#3b82f6"/><rect x="463.54" y="221.90" width="0.95" height="4.10" fill="#3b82f6"/><rect x="464.50" y="211.92" width="0.95" height="14.08" fill="#ef4444"/><rect x="465.45" y="221.71" width="0.95" height="4.29" fill="#3b82f6"/><rect x="466.41" y="225.80" width="0.95" height="0.20" fill="#3b82f6"/><rect x="467.36" y="225.05" width="0.95" height="0.95" fill="#3b82f6"/><rect x="468.32" y="225.68" width="0.95" height="0.32" fill="#3b82f6"/><rect x="469.27" y="225.27" width="0.95" height="0.73" fill="#3b82f6"/><rect x="470.23" y="225.58" width="0.95" height="0.42" fill="#3b82f6"/><rect x="471.18" y="225.45" width="0.95" height="0.55" fill="#3b82f6"/><rect x="472.14" y="225.49" width="0.95" height="0.51" fill="#3b82f6"/><rect x="473.09" y="215.58" width="0.95" height="10.42" fill="#3b82f6"/><rect x="474.05" y="222.07" width="0.95" height="3.93" fill="#3b82f6"/><rect x="475.00" y="224.60" width="0.95" height="1.40" fill="#3b82f6"/><rect x="475.96" y="223.74" width="0.95" height="2.26" fill="#3b82f6"/><rect x="476.91" y="222.05" width="0.95" height="3.95" fill="#3b82f6"/><rect x="477.87" y="219.04" width="0.95" height="6.96" fill="#3b82f6"/><rect x="478.82" y="218.29" width="0.95" height="7.71" fill="#3b82f6"/><rect x="479.78" y="225.75" width="0.95" height="0.25" fill="#3b82f6"/><rect x="480.73" y="219.33" width="0.95" height="6.67" fill="#3b82f6"/><rect x="481.69" y="215.28" width="0.95" height="10.72" fill="#3b82f6"/><rect x="482.64" y="224.60" width="0.95" height="1.40" fill="#3b82f6"/><rect x="483.60" y="223.78" width="0.95" height="2.22" fill="#3b82f6"/><rect x="484.55" y="220.62" width="0.95" height="5.38" fill="#3b82f6"/><rect x="485.50" y="224.23" width="0.95" height="1.77" fill="#3b82f6"/><rect x="486.46" y="217.22" width="0.95" height="8.78" fill="#3b82f6"/><rect x="487.41" y="223.73" width="0.95" height="2.27" fill="#3b82f6"/><rect x="488.37" y="219.81" width="0.95" height="6.19" fill="#3b82f6"/><rect x="489.32" y="221.66" width="0.95" height="4.34" fill="#3b82f6"/><rect x="490.28" y="224.80" width="0.95" height="1.20" fill="#3b82f6"/><rect x="491.23" y="221.10" width="0.95" height="4.90" fill="#3b82f6"/><rect x="492.19" y="214.88" width="0.95" height="11.12" fill="#3b82f6"/><rect x="493.14" y="213.08" width="0.95" height="12.92" fill="#ef4444"/><rect x="494.10" y="225.81" width="0.95" height="0.19" fill="#3b82f6"/><rect x="495.05" y="222.67" width="0.95" height="3.33" fill="#3b82f6"/><rect x="496.01" y="223.55" width="0.95" height="2.45" fill="#3b82f6"/><rect x="496.96" y="223.29" width="0.95" height="2.71" fill="#3b82f6"/><rect x="497.92" y="222.77" width="0.95" height="3.23" fill="#3b82f6"/><rect x="498.87" y="222.75" width="0.95" height="3.25" fill="#3b82f6"/><rect x="499.83" y="221.18" width="0.95" height="4.82" fill="#3b82f6"/><rect x="500.78" y="223.34" width="0.95" height="2.66" fill="#3b82f6"/><rect x="501.74" y="224.48" width="0.95" height="1.52" fill="#3b82f6"/><rect x="502.69" y="223.50" width="0.95" height="2.50" fill="#3b82f6"/><rect x="503.65" y="225.97" width="0.95" height="0.03" fill="#3b82f6"/><rect x="504.60" y="222.96" width="0.95" height="3.04" fill="#3b82f6"/><rect x="505.56" y="222.26" width="0.95" height="3.74" fill="#3b82f6"/><rect x="506.51" y="219.48" width="0.95" height="6.52" fill="#3b82f6"/><rect x="507.47" y="218.25" width="0.95" height="7.75" fill="#3b82f6"/><rect x="508.42" y="224.38" width="0.95" height="1.62" fill="#3b82f6"/><rect x="509.38" y="223.78" width="0.95" height="2.22" fill="#3b82f6"/><rect x="510.33" y="224.63" width="0.95" height="1.37" fill="#3b82f6"/><rect x="511.29" y="225.49" width="0.95" height="0.51" fill="#3b82f6"/><rect x="512.24" y="215.29" width="0.95" height="10.71" fill="#3b82f6"/><rect x="513.20" y="225.93" width="0.95" height="0.07" fill="#3b82f6"/><rect x="514.15" y="223.76" width="0.95" height="2.24" fill="#3b82f6"/><rect x="515.11" y="225.47" width="0.95" height="0.53" fill="#3b82f6"/><rect x="516.06" y="225.91" width="0.95" height="0.09" fill="#3b82f6"/><rect x="517.02" y="223.72" width="0.95" height="2.28" fill="#3b82f6"/><rect x="517.97" y="223.55" width="0.95" height="2.45" fill="#3b82f6"/><rect x="518.92" y="225.02" width="0.95" height="0.98" fill="#3b82f6"/><rect x="519.88" y="223.29" width="0.95" height="2.71" fill="#3b82f6"/><rect x="520.83" y="224.26" width="0.95" height="1.74" fill="#3b82f6"/><rect x="521.79" y="224.07" width="0.95" height="1.93" fill="#3b82f6"/><rect x="522.74" y="223.24" width="0.95" height="2.76" fill="#3b82f6"/><rect x="523.70" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="524.65" y="217.82" width="0.95" height="8.18" fill="#3b82f6"/><rect x="525.61" y="220.66" width="0.95" height="5.34" fill="#3b82f6"/><rect x="526.56" y="221.94" width="0.95" height="4.06" fill="#3b82f6"/><rect x="527.52" y="225.48" width="0.95" height="0.52" fill="#3b82f6"/><rect x="528.47" y="223.27" width="0.95" height="2.73" fill="#3b82f6"/><rect x="529.43" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="530.38" y="222.87" width="0.95" height="3.13" fill="#3b82f6"/><rect x="531.34" y="222.28" width="0.95" height="3.72" fill="#3b82f6"/><rect x="532.29" y="221.64" width="0.95" height="4.36" fill="#3b82f6"/><rect x="533.25" y="216.32" width="0.95" height="9.68" fill="#3b82f6"/><rect x="534.20" y="222.52" width="0.95" height="3.48" fill="#3b82f6"/><rect x="535.16" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="536.11" y="225.22" width="0.95" height="0.78" fill="#3b82f6"/><rect x="537.07" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="538.02" y="224.42" width="0.95" height="1.58" fill="#3b82f6"/><rect x="538.98" y="224.64" width="0.95" height="1.36" fill="#3b82f6"/><rect x="539.93" y="224.71" width="0.95" height="1.29" fill="#3b82f6"/><rect x="540.89" y="224.67" width="0.95" height="1.33" fill="#3b82f6"/><rect x="541.84" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="542.80" y="225.63" width="0.95" height="0.37" fill="#3b82f6"/><rect x="543.75" y="224.89" width="0.95" height="1.11" fill="#3b82f6"/><rect x="544.71" y="224.11" width="0.95" height="1.89" fill="#3b82f6"/><rect x="545.66" y="225.13" width="0.95" height="0.87" fill="#3b82f6"/><rect x="546.62" y="221.02" width="0.95" height="4.98" fill="#3b82f6"/><rect x="547.57" y="222.16" width="0.95" height="3.84" fill="#3b82f6"/><rect x="548.53" y="221.05" width="0.95" height="4.95" fill="#3b82f6"/><rect x="549.48" y="223.70" width="0.95" height="2.30" fill="#3b82f6"/><rect x="550.44" y="222.66" width="0.95" height="3.34" fill="#3b82f6"/><rect x="551.39" y="223.29" width="0.95" height="2.71" fill="#3b82f6"/><rect x="552.34" y="222.35" width="0.95" height="3.65" fill="#3b82f6"/><rect x="553.30" y="224.80" width="0.95" height="1.20" fill="#3b82f6"/><rect x="554.25" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="555.21" y="225.56" width="0.95" height="0.44" fill="#3b82f6"/><rect x="556.16" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="557.12" y="210.68" width="0.95" height="15.32" fill="#ef4444"/><rect x="558.07" y="221.80" width="0.95" height="4.20" fill="#3b82f6"/><rect x="559.03" y="223.10" width="0.95" height="2.90" fill="#3b82f6"/><rect x="559.98" y="222.54" width="0.95" height="3.46" fill="#3b82f6"/><rect x="560.94" y="224.43" width="0.95" height="1.57" fill="#3b82f6"/><rect x="561.89" y="225.78" width="0.95" height="0.22" fill="#3b82f6"/><rect x="562.85" y="225.02" width="0.95" height="0.98" fill="#3b82f6"/><rect x="563.80" y="225.19" width="0.95" height="0.81" fill="#3b82f6"/><rect x="564.76" y="223.17" width="0.95" height="2.83" fill="#3b82f6"/><rect x="565.71" y="225.15" width="0.95" height="0.85" fill="#3b82f6"/><rect x="566.67" y="224.52" width="0.95" height="1.48" fill="#3b82f6"/><rect x="567.62" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="568.58" y="223.94" width="0.95" height="2.06" fill="#3b82f6"/><rect x="569.53" y="212.41" width="0.95" height="13.59" fill="#ef4444"/><rect x="570.49" y="222.87" width="0.95" height="3.13" fill="#3b82f6"/><rect x="571.44" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="572.40" y="217.79" width="0.95" height="8.21" fill="#3b82f6"/><rect x="573.35" y="225.07" width="0.95" height="0.93" fill="#3b82f6"/><rect x="574.31" y="221.11" width="0.95" height="4.89" fill="#3b82f6"/><rect x="575.26" y="224.85" width="0.95" height="1.15" fill="#3b82f6"/><rect x="576.22" y="225.51" width="0.95" height="0.49" fill="#3b82f6"/><rect x="577.17" y="225.68" width="0.95" height="0.32" fill="#3b82f6"/><rect x="578.13" y="223.57" width="0.95" height="2.43" fill="#3b82f6"/><rect x="579.08" y="221.50" width="0.95" height="4.50" fill="#3b82f6"/><rect x="580.04" y="207.40" width="0.95" height="18.60" fill="#ef4444"/><rect x="580.99" y="213.40" width="0.95" height="12.60" fill="#ef4444"/><rect x="581.95" y="225.43" width="0.95" height="0.57" fill="#3b82f6"/><rect x="582.90" y="225.95" width="0.95" height="0.05" fill="#3b82f6"/><rect x="583.85" y="224.69" width="0.95" height="1.31" fill="#3b82f6"/><rect x="584.81" y="224.68" width="0.95" height="1.32" fill="#3b82f6"/><rect x="585.76" y="225.45" width="0.95" height="0.55" fill="#3b82f6"/><rect x="586.72" y="224.81" width="0.95" height="1.19" fill="#3b82f6"/><rect x="587.67" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="588.63" y="225.71" width="0.95" height="0.29" fill="#3b82f6"/><rect x="589.58" y="225.08" width="0.95" height="0.92" fill="#3b82f6"/><rect x="590.54" y="223.60" width="0.95" height="2.40" fill="#3b82f6"/><rect x="591.49" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="592.45" y="224.24" width="0.95" height="1.76" fill="#3b82f6"/><rect x="593.40" y="225.97" width="0.95" height="0.03" fill="#3b82f6"/><rect x="594.36" y="221.90" width="0.95" height="4.10" fill="#3b82f6"/><rect x="595.31" y="225.24" width="0.95" height="0.76" fill="#3b82f6"/><rect x="596.27" y="222.79" width="0.95" height="3.21" fill="#3b82f6"/><rect x="597.22" y="221.78" width="0.95" height="4.22" fill="#3b82f6"/><rect x="598.18" y="224.38" width="0.95" height="1.62" fill="#3b82f6"/><rect x="599.13" y="225.93" width="0.95" height="0.07" fill="#3b82f6"/><rect x="600.09" y="225.92" width="0.95" height="0.08" fill="#3b82f6"/><rect x="601.04" y="225.76" width="0.95" height="0.24" fill="#3b82f6"/><rect x="602.00" y="224.93" width="0.95" height="1.07" fill="#3b82f6"/><rect x="602.95" y="224.03" width="0.95" height="1.97" fill="#3b82f6"/><rect x="603.91" y="223.52" width="0.95" height="2.48" fill="#3b82f6"/><rect x="604.86" y="225.02" width="0.95" height="0.98" fill="#3b82f6"/><rect x="605.82" y="224.46" width="0.95" height="1.54" fill="#3b82f6"/><rect x="606.77" y="225.23" width="0.95" height="0.77" fill="#3b82f6"/><rect x="607.73" y="225.79" width="0.95" height="0.21" fill="#3b82f6"/><rect x="608.68" y="225.53" width="0.95" height="0.47" fill="#3b82f6"/><rect x="609.64" y="224.51" width="0.95" height="1.49" fill="#3b82f6"/><rect x="610.59" y="224.25" width="0.95" height="1.75" fill="#3b82f6"/><rect x="611.55" y="225.05" width="0.95" height="0.95" fill="#3b82f6"/><rect x="612.50" y="225.85" width="0.95" height="0.15" fill="#3b82f6"/><rect x="613.46" y="225.11" width="0.95" height="0.89" fill="#3b82f6"/><rect x="614.41" y="226.00" width="0.95" height="0.00" fill="#3b82f6"/><rect x="615.37" y="225.81" width="0.95" height="0.19" fill="#3b82f6"/><rect x="616.32" y="225.27" width="0.95" height="0.73" fill="#3b82f6"/><rect x="617.27" y="224.34" width="0.95" height="1.66" fill="#3b82f6"/><rect x="618.23" y="224.33" width="0.95" height="1.67" fill="#3b82f6"/><rect x="619.18" y="224.27" width="0.95" height="1.73" fill="#3b82f6"/><rect x="620.14" y="222.61" width="0.95" height="3.39" fill="#3b82f6"/><rect x="621.09" y="224.39" width="0.95" height="1.61" fill="#3b82f6"/><rect x="622.05" y="224.82" width="0.95" height="1.18" fill="#3b82f6"/><rect x="623.00" y="224.34" width="0.95" height="1.66" fill="#3b82f6"/><rect x="623.96" y="223.33" width="0.95" height="2.67" fill="#3b82f6"/><rect x="624.91" y="222.80" width="0.95" height="3.20" fill="#3b82f6"/><rect x="625.87" y="223.84" width="0.95" height="2.16" fill="#3b82f6"/><rect x="626.82" y="224.86" width="0.95" height="1.14" fill="#3b82f6"/><rect x="627.78" y="225.39" width="0.95" height="0.61" fill="#3b82f6"/><rect x="628.73" y="224.72" width="0.95" height="1.28" fill="#3b82f6"/><rect x="629.69" y="224.99" width="0.95" height="1.01" fill="#3b82f6"/><rect x="630.64" y="223.46" width="0.95" height="2.54" fill="#3b82f6"/><rect x="631.60" y="223.59" width="0.95" height="2.41" fill="#3b82f6"/><rect x="632.55" y="225.05" width="0.95" height="0.95" fill="#3b82f6"/><rect x="633.51" y="225.75" width="0.95" height="0.25" fill="#3b82f6"/><rect x="634.46" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="635.42" y="225.74" width="0.95" height="0.26" fill="#3b82f6"/><rect x="636.37" y="222.53" width="0.95" height="3.47" fill="#3b82f6"/><rect x="637.33" y="223.64" width="0.95" height="2.36" fill="#3b82f6"/><rect x="638.28" y="225.30" width="0.95" height="0.70" fill="#3b82f6"/><rect x="639.24" y="222.26" width="0.95" height="3.74" fill="#3b82f6"/><rect x="640.19" y="221.82" width="0.95" height="4.18" fill="#3b82f6"/><rect x="641.15" y="219.47" width="0.95" height="6.53" fill="#3b82f6"/><rect x="642.10" y="219.86" width="0.95" height="6.14" fill="#3b82f6"/><rect x="643.06" y="220.19" width="0.95" height="5.81" fill="#3b82f6"/><rect x="644.01" y="221.71" width="0.95" height="4.29" fill="#3b82f6"/><rect x="644.97" y="220.66" width="0.95" height="5.34" fill="#3b82f6"/><rect x="645.92" y="220.46" width="0.95" height="5.54" fill="#3b82f6"/><rect x="646.88" y="213.79" width="0.95" height="12.21" fill="#ef4444"/><rect x="647.83" y="222.54" width="0.95" height="3.46" fill="#3b82f6"/><rect x="648.79" y="223.32" width="0.95" height="2.68" fill="#3b82f6"/><rect x="649.74" y="225.61" width="0.95" height="0.39" fill="#3b82f6"/><rect x="650.69" y="221.83" width="0.95" height="4.17" fill="#3b82f6"/><rect x="651.65" y="221.04" width="0.95" height="4.96" fill="#3b82f6"/><rect x="652.60" y="220.93" width="0.95" height="5.07" fill="#3b82f6"/><rect x="653.56" y="209.30" width="0.95" height="16.70" fill="#ef4444"/><rect x="654.51" y="218.21" width="0.95" height="7.79" fill="#3b82f6"/><rect x="655.47" y="220.99" width="0.95" height="5.01" fill="#3b82f6"/><rect x="656.42" y="221.31" width="0.95" height="4.69" fill="#3b82f6"/><rect x="657.38" y="219.98" width="0.95" height="6.02" fill="#3b82f6"/><rect x="658.33" y="223.30" width="0.95" height="2.70" fill="#3b82f6"/><rect x="659.29" y="223.02" width="0.95" height="2.98" fill="#3b82f6"/><rect x="660.24" y="217.38" width="0.95" height="8.62" fill="#3b82f6"/><rect x="661.20" y="223.77" width="0.95" height="2.23" fill="#3b82f6"/><rect x="662.15" y="222.92" width="0.95" height="3.08" fill="#3b82f6"/><rect x="663.11" y="225.96" width="0.95" height="0.04" fill="#3b82f6"/><rect x="664.06" y="219.37" width="0.95" height="6.63" fill="#3b82f6"/><rect x="665.02" y="223.03" width="0.95" height="2.97" fill="#3b82f6"/><rect x="665.97" y="219.93" width="0.95" height="6.07" fill="#3b82f6"/><rect x="666.93" y="213.55" width="0.95" height="12.45" fill="#ef4444"/><rect x="667.88" y="225.84" width="0.95" height="0.16" fill="#3b82f6"/><rect x="668.84" y="223.22" width="0.95" height="2.78" fill="#3b82f6"/><rect x="669.79" y="220.31" width="0.95" height="5.69" fill="#3b82f6"/><rect x="670.75" y="222.24" width="0.95" height="3.76" fill="#3b82f6"/><rect x="671.70" y="217.30" width="0.95" height="8.70" fill="#3b82f6"/><rect x="672.66" y="219.83" width="0.95" height="6.17" fill="#3b82f6"/><rect x="673.61" y="217.89" width="0.95" height="8.11" fill="#3b82f6"/><rect x="674.57" y="220.07" width="0.95" height="5.93" fill="#3b82f6"/><rect x="675.52" y="221.48" width="0.95" height="4.52" fill="#3b82f6"/><rect x="676.48" y="221.46" width="0.95" height="4.54" fill="#3b82f6"/><rect x="677.43" y="216.95" width="0.95" height="9.05" fill="#3b82f6"/><rect x="678.39" y="216.25" width="0.95" height="9.75" fill="#3b82f6"/><rect x="679.34" y="225.29" width="0.95" height="0.71" fill="#3b82f6"/><rect x="680.30" y="216.87" width="0.95" height="9.13" fill="#3b82f6"/><rect x="681.25" y="222.68" width="0.95" height="3.32" fill="#3b82f6"/><rect x="682.21" y="220.74" width="0.95" height="5.26" fill="#3b82f6"/><rect x="683.16" y="220.90" width="0.95" height="5.10" fill="#3b82f6"/><rect x="684.11" y="220.16" width="0.95" height="5.84" fill="#3b82f6"/><rect x="685.07" y="217.78" width="0.95" height="8.22" fill="#3b82f6"/><rect x="686.02" y="216.74" width="0.95" height="9.26" fill="#3b82f6"/><rect x="686.98" y="215.26" width="0.95" height="10.74" fill="#3b82f6"/><rect x="687.93" y="219.62" width="0.95" height="6.38" fill="#3b82f6"/><rect x="688.89" y="196.18" width="0.95" height="29.82" fill="#ef4444"/><rect x="689.84" y="221.84" width="0.95" height="4.16" fill="#3b82f6"/><rect x="690.80" y="223.13" width="0.95" height="2.87" fill="#3b82f6"/><rect x="691.75" y="222.79" width="0.95" height="3.21" fill="#3b82f6"/><rect x="692.71" y="220.56" width="0.95" height="5.44" fill="#3b82f6"/><rect x="693.66" y="222.95" width="0.95" height="3.05" fill="#3b82f6"/><rect x="694.62" y="224.22" width="0.95" height="1.78" fill="#3b82f6"/><rect x="695.57" y="222.81" width="0.95" height="3.19" fill="#3b82f6"/><rect x="696.53" y="220.14" width="0.95" height="5.86" fill="#3b82f6"/><rect x="697.48" y="218.73" width="0.95" height="7.27" fill="#3b82f6"/><rect x="698.44" y="217.84" width="0.95" height="8.16" fill="#3b82f6"/><rect x="699.39" y="222.44" width="0.95" height="3.56" fill="#3b82f6"/><rect x="700.35" y="217.20" width="0.95" height="8.80" fill="#3b82f6"/><rect x="701.30" y="220.57" width="0.95" height="5.43" fill="#3b82f6"/><rect x="702.26" y="223.06" width="0.95" height="2.94" fill="#3b82f6"/><rect x="703.21" y="221.22" width="0.95" height="4.78" fill="#3b82f6"/><rect x="704.17" y="221.41" width="0.95" height="4.59" fill="#3b82f6"/><rect x="705.12" y="222.70" width="0.95" height="3.30" fill="#3b82f6"/><rect x="706.08" y="223.02" width="0.95" height="2.98" fill="#3b82f6"/><rect x="707.03" y="222.60" width="0.95" height="3.40" fill="#3b82f6"/><rect x="707.99" y="223.80" width="0.95" height="2.20" fill="#3b82f6"/><rect x="708.94" y="223.49" width="0.95" height="2.51" fill="#3b82f6"/><rect x="709.90" y="222.19" width="0.95" height="3.81" fill="#3b82f6"/><rect x="710.85" y="224.35" width="0.95" height="1.65" fill="#3b82f6"/><rect x="711.81" y="217.71" width="0.95" height="8.29" fill="#3b82f6"/><rect x="712.76" y="225.98" width="0.95" height="0.02" fill="#3b82f6"/><rect x="713.72" y="224.84" width="0.95" height="1.16" fill="#3b82f6"/><rect x="714.67" y="223.63" width="0.95" height="2.37" fill="#3b82f6"/><rect x="715.63" y="224.08" width="0.95" height="1.92" fill="#3b82f6"/><rect x="716.58" y="221.89" width="0.95" height="4.11" fill="#3b82f6"/><rect x="717.53" y="222.52" width="0.95" height="3.48" fill="#3b82f6"/><rect x="718.49" y="221.42" width="0.95" height="4.58" fill="#3b82f6"/><rect x="719.44" y="217.56" width="0.95" height="8.44" fill="#3b82f6"/><rect x="720.40" y="216.06" width="0.95" height="9.94" fill="#3b82f6"/><rect x="721.35" y="222.55" width="0.95" height="3.45" fill="#3b82f6"/><rect x="722.31" y="220.58" width="0.95" height="5.42" fill="#3b82f6"/><rect x="723.26" y="222.08" width="0.95" height="3.92" fill="#3b82f6"/><rect x="724.22" y="220.37" width="0.95" height="5.63" fill="#3b82f6"/><rect x="725.17" y="220.29" width="0.95" height="5.71" fill="#3b82f6"/><rect x="726.13" y="221.38" width="0.95" height="4.62" fill="#3b82f6"/><rect x="727.08" y="212.60" width="0.95" height="13.40" fill="#ef4444"/><rect x="728.04" y="225.94" width="0.95" height="0.06" fill="#3b82f6"/><rect x="728.99" y="216.64" width="0.95" height="9.36" fill="#3b82f6"/><rect x="729.95" y="218.91" width="0.95" height="7.09" fill="#3b82f6"/><rect x="730.90" y="222.63" width="0.95" height="3.37" fill="#3b82f6"/><rect x="731.86" y="221.56" width="0.95" height="4.44" fill="#3b82f6"/><rect x="732.81" y="219.13" width="0.95" height="6.87" fill="#3b82f6"/><rect x="733.77" y="223.52" width="0.95" height="2.48" fill="#3b82f6"/><rect x="734.72" y="225.71" width="0.95" height="0.29" fill="#3b82f6"/><rect x="735.68" y="222.51" width="0.95" height="3.49" fill="#3b82f6"/><rect x="736.63" y="223.89" width="0.95" height="2.11" fill="#3b82f6"/><rect x="737.59" y="223.61" width="0.95" height="2.39" fill="#3b82f6"/><rect x="738.54" y="225.66" width="0.95" height="0.34" fill="#3b82f6"/><rect x="739.50" y="223.72" width="0.95" height="2.28" fill="#3b82f6"/><rect x="740.45" y="223.62" width="0.95" height="2.38" fill="#3b82f6"/><rect x="741.41" y="220.78" width="0.95" height="5.22" fill="#3b82f6"/><rect x="742.36" y="216.14" width="0.95" height="9.86" fill="#3b82f6"/><rect x="743.32" y="221.43" width="0.95" height="4.57" fill="#3b82f6"/><rect x="744.27" y="221.05" width="0.95" height="4.95" fill="#3b82f6"/><rect x="745.23" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="746.18" y="225.99" width="0.95" height="0.01" fill="#3b82f6"/><rect x="747.14" y="221.91" width="0.95" height="4.09" fill="#3b82f6"/><rect x="748.09" y="224.34" width="0.95" height="1.66" fill="#3b82f6"/><rect x="749.05" y="225.90" width="0.95" height="0.10" fill="#3b82f6"/><line x1="52" y1="214.2" x2="750" y2="214.2" stroke="#111827" stroke-dasharray="5 3"/><text x="202" y="202.2" font-size="10" fill="#111827">しきい値 0.005</text><text x="122.9" y="33.4" font-size="11" fill="#b91c1c" font-weight="700">行69</text><text x="52.0" y="242" font-size="10" fill="#475569" text-anchor="middle">0</text><text x="147.5" y="242" font-size="10" fill="#475569" text-anchor="middle">100</text><text x="243.0" y="242" font-size="10" fill="#475569" text-anchor="middle">200</text><text x="338.5" y="242" font-size="10" fill="#475569" text-anchor="middle">300</text><text x="433.9" y="242" font-size="10" fill="#475569" text-anchor="middle">400</text><text x="529.4" y="242" font-size="10" fill="#475569" text-anchor="middle">500</text><text x="624.9" y="242" font-size="10" fill="#475569" text-anchor="middle">600</text><text x="720.4" y="242" font-size="10" fill="#475569" text-anchor="middle">700</text><text x="401" y="256" font-size="11" fill="#475569" text-anchor="middle">観測の行番号（731行）</text><text x="12" y="120" font-size="11" fill="#475569" transform="rotate(-90 12 120)" text-anchor="middle">Cook距離 D</text></svg></div>
+    <div class="viz-cap">ひときわ高い棒が行 69（D = 0.083）。ほかにも赤い棒が 29 本。大多数の青い点は通常の観測値。</div>
+  </div>
+<pre class="code-block">
+<span class="cl"><span class="kw">library</span>(olsrr)</span>
+<span class="cl"><span class="kw">ols_plot_cooksd_bar</span>(bikes_model1)</span>
+<span class="cl"><span class="kw">ols_plot_cooksd_chart</span>(bikes_model1)</span>
+<span class="cl"></span>
+<span class="cl"><span class="cm"># 数値で確認：大きい順に上位10個</span></span>
+<span class="cl"><span class="kw">head</span>(<span class="kw">sort</span>(<span class="kw">cooks.distance</span>(bikes_model1), decreasing = TRUE), <span class="nm">10</span>) |&gt; <span class="kw">round</span>(<span class="nm">3</span>)</span>
+</pre><div class="output-reveal">   69   239   204    50   203   668   205   210   554   212
+0.083 0.021 0.021 0.017 0.014 0.013 0.010 0.010 0.008 0.008 </div>
+  <h3 style="margin:1.5rem 0 .5rem">行 69 を調べる</h3>
+  <p>最も影響の大きい行 69 はどんな日でしょうか。日付・祝日かどうか・貸出台数などを見てみます。</p>
+<pre class="code-block">
+<span class="cl">bikes[<span class="nm">69</span>, <span class="kw">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;holiday&quot;</span>, <span class="st">&quot;rentals&quot;</span>, <span class="st">&quot;humidity&quot;</span>, <span class="st">&quot;windspeed&quot;</span>, <span class="st">&quot;temperature&quot;</span>)]</span>
+<span class="cl"><span class="kw">summary</span>(bikes[-<span class="nm">69</span>, <span class="kw">c</span>(<span class="st">&quot;humidity&quot;</span>, <span class="st">&quot;windspeed&quot;</span>, <span class="st">&quot;temperature&quot;</span>, <span class="st">&quot;rentals&quot;</span>)])</span>
+<span class="cl"><span class="kw">predict</span>(bikes_model1, bikes[<span class="nm">69</span>, ])</span>
+<span class="cl"><span class="kw">residuals</span>(bikes_model1)[<span class="nm">69</span>]</span>
+</pre><div class="output-reveal">         date holiday rentals humidity windspeed temperature
+69 2011-03-10       0     623        0  10.90243     50.5171
+
+    humidity        windspeed        temperature       rentals
+ Min.   :0.1879   Min.   : 0.9322   Min.   :22.60   Min.   :  22
+ 1st Qu.:0.5205   1st Qu.: 5.6182   1st Qu.:46.10   1st Qu.:3170
+ Median :0.6271   Median : 7.5342   Median :59.83   Median :4548
+ Mean   :0.6288   Mean   : 7.9262   Mean   :59.52   Mean   :4510
+ 3rd Qu.:0.7303   3rd Qu.: 9.7088   3rd Qu.:73.07   3rd Qu.:5966
+ Max.   :0.9725   Max.   :21.1266   Max.   :90.50   Max.   :8714
+
+      69
+5403.474
+       69
+-4780.474 </div>
+  <ul>
+    <li>2011 年 3 月 10 日、祝日ではない。貸出はわずか <strong>623 台</strong>（第 1 四分位数 3170 よりずっと少ない）。</li>
+    <li><strong>湿度が 0</strong>。行 69 を除いたデータでは湿度の最小は 0.1879 なので、<strong>とても奇妙な値</strong>。</li>
+    <li>風速は 10.9 と、第 3 四分位数（9.7）より速い。気温は 50.5°F で、平均（59.5°F）より低め。</li>
+    <li>モデルの予測は <strong>5,400 台超</strong>（5403）で、実測 623 台との差は <strong>−4,780 台</strong>（巨大な残差）。</li>
+  </ul>
+  <p>この点は回帰直線の係数を大きく動かします。まず疑うべきは<strong>データ入力ミス</strong>（湿度 0 や貸出台数の誤り）。もしこの会社のデータなら、「2011 年 3 月 10 日について他に情報はないか、なぜそんなに影響が大きいのか」を確認しましょう。</p>
+  <h3 style="margin:1.5rem 0 .5rem">しきい値を超えた点を一覧にして、除く</h3>
+  <p>上位 10 個だけでなく、しきい値を超えた全部の行を調べます。<code>cooks_d</code> に保存し、0.005 を超える行番号を取ります。<code>unique()</code> は、<code>cooks.distance</code> でなぜか起きる重複を除くために付けます。</p>
+<pre class="code-block">
+<span class="cl">cooks_d &lt;- <span class="kw">cooks.distance</span>(bikes_model1)</span>
+<span class="cl">influential_points &lt;- <span class="kw">unique</span>(<span class="kw">which</span>(cooks_d &gt; <span class="nm">0.005</span>))</span>
+<span class="cl"><span class="kw">length</span>(influential_points)</span>
+<span class="cl">bikes_clean &lt;- bikes[-influential_points, ]     <span class="cm"># c(...) の前のマイナスで「除く」</span></span>
+<span class="cl"><span class="kw">nrow</span>(bikes_clean)</span>
+<span class="cl"><span class="kw">nrow</span>(bikes_clean) / <span class="kw">nrow</span>(bikes)</span>
+</pre><div class="output-reveal">[1] 29
+[1] 702
+[1] 0.9603283</div>
+  <p>しきい値を超えた影響点は <strong>29 行</strong>。除くと <strong>702 行</strong>が残ります。<strong>元のデータの約 96% を残し、約 4% を除いた</strong>ことになります（どれだけ捨てたかを確認する習慣をつけましょう）。分析者の仕事は、この 29 行を見て、データ入力ミスがないか・パターンがないかを検討することです。</p>
+  <h3 style="margin:1.5rem 0 .5rem">除く前と除いた後を比べる</h3>
+<pre class="code-block">
+<span class="cl">bikes_model2 &lt;- <span class="kw">lm</span>(rentals ~ humidity + temperature + windspeed, data = bikes_clean)</span>
+<span class="cl"><span class="kw">summary</span>(bikes_model2)</span>
+</pre><div class="output-reveal">Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  2632.538    354.798   7.420 3.42e-13 ***
+humidity    -3354.687    381.444  -8.795  &lt; 2e-16 ***
+temperature    83.681      3.339  25.064  &lt; 2e-16 ***
+windspeed    -119.058     16.712  -7.124 2.62e-12 ***
+
+Residual standard error: 1330 on 698 degrees of freedom
+Multiple R-squared:  0.5175,	Adjusted R-squared:  0.5155
+F-statistic: 249.6 on 3 and 698 DF,  p-value: &lt; 2.2e-16</div>
+  <table class="compare-table">
+    <tr><th></th><th>全データ（731 行）</th><th>影響点を除く（702 行）</th></tr>
+    <tr><td>切片</td><td>2706.00</td><td>2632.54</td></tr>
+    <tr><td>humidity</td><td>−3100.12</td><td>−3354.69</td></tr>
+    <tr><td>temperature</td><td>78.32</td><td>83.68</td></tr>
+    <tr><td>windspeed</td><td>−115.46</td><td>−119.06</td></tr>
+    <tr><td>調整済み R²</td><td>0.4587（約 0.45）</td><td><strong>0.5155</strong>（より強い）</td></tr>
+    <tr><td>残差標準誤差 S</td><td>1425</td><td>1330</td></tr>
+  </table>
+  <p>係数が確かに変わり、調整済み R² は上がりました。モデルが<strong>ノイズを無視して信号（signal）をよく捉えている</strong>ことを示します。Cook の距離に照らして「除く価値があるほどの変化」だった、というのが講義の結論です。</p>
+  <p><strong>分布</strong>も変わります。要約統計量（全データ → 影響点を除く）：貸出の最小値 22 → 431、湿度の最小値 0 → 0.2758、風速の最大値 21.13 → 17.58、気温の最大値 90.50 → 88.17。平均値と中央値はほぼ同じ（貸出の平均 4504 → 4526）。</p>
+  <p>最後に、モデルのプロット <code>plot(model)</code> の 4 枚目の図、<strong>Residuals vs Leverage（残差 対 レバレッジ）</strong>を比べます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(bikes_model1, which = <span class="nm">5</span>)    <span class="cm"># 除く前：赤い線が大きく傾く</span></span>
+<span class="cl"><span class="kw">plot</span>(bikes_model2, which = <span class="nm">5</span>)    <span class="cm"># 除いた後：線がずっと平ら</span></span>
+</pre>
+  <p>除く前は Cook の距離の領域の近くで線が大きく下に傾いていますが、除いた後は<strong>線がずっと平ら</strong>です。標準化残差が、元のデータよりも安定していることを示す視覚的な確認です。</p>
+  <div class="warn-box">⚠️ <strong>講師の注意：データを除くのは重大なことです。</strong>
+  <ul style="margin:.4rem 0 0 1.2rem">
+    <li><strong>理由なく除かない</strong>、そして<strong>除いた事実を隠さない</strong>。</li>
+    <li><strong>元のデータと新しいデータの両方</strong>を保存し、<strong>どう・なぜ・何を除いたか</strong>を記録（justification）として残す。</li>
+    <li>3 月 10 日のような怪しい点は掘り下げて調べる（データ入力ミスの可能性）。</li>
+    <li>データを失いすぎたと感じたら、<strong>理由を添えて</strong>別のしきい値を使う選択肢もある。ちなみに 4 / (n − k − 1) ＝ 0.0055 まで厳しくすると 24 行、0.005 だと 29 行で、しきい値で数は変わります。</li>
+  </ul></div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>外れ値でも、線を動かさない点は「影響点」ではありません</strong>。線を引っ張る点（高レバレッジなど）を、Cook の距離という「影響力の点数」で探します。除くときは、理由を書いて、元データも必ず取っておきましょう。</p></div>
+  <div class="practice-card" id="p-m5a-u5">
+    <div class="ptitle">💻 ミニ練習：Cook の距離で影響点を探す</div>
+    <p class="ptask"><code>bikes_model1</code> の Cook の距離を <code>cooks_d</code> に保存し、しきい値 0.005 を超える行番号を重複なしで <code>influential_points</code> に入れ、それらを除いたデータ <code>bikes_clean</code> を作ってください。</p>
+    <textarea class="code-editor" id="p-m5a-u5-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5a-u5', ['cooks.distance', 'which', 'unique', 'bikes[-', '0.005'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5a-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5a-u5-result"></div>
+    <div class="answer-reveal" id="p-m5a-u5-answer" hidden>
+      <pre class="code-block">
+<span class="cl">cooks_d &lt;- <span class="kw">cooks.distance</span>(bikes_model1)</span>
+<span class="cl">influential_points &lt;- <span class="kw">unique</span>(<span class="kw">which</span>(cooks_d &gt; <span class="nm">0.005</span>))</span>
+<span class="cl">bikes_clean &lt;- bikes[-influential_points, ]</span>
+<span class="cl"><span class="kw">nrow</span>(bikes_clean)</span>
+</pre>
+      <p class="answer-note">影響点は 29 行、残りは 702 行（約 96%）。<code>[-influential_points, ]</code> のマイナスが「除く」の意味です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which call fits a regression of rentals on humidity, temperature and windspeed using the bikes data?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>lm(rentals ~ humidity, temperature, windspeed, data = bikes)</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>lm(rentals ~ humidity + temperature + windspeed, data = bikes)</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>lm(humidity + temperature + windspeed ~ rentals, data = bikes)</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>cor(rentals ~ humidity + temperature + windspeed, bikes)</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">For the 15th day the model predicts about 3,325 rentals but 1,248 occurred. What does the negative residual (about −2,077) mean?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The model under-predicted the rentals on that day</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The row must be deleted as an error</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All three coefficients turn negative</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The model over-predicted that day</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why can predict() be used where fitted.values cannot?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It takes any new values in a data frame</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It ignores the model coefficients entirely</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It only works on the first 15 rows</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>fitted.values needs a matrix as input</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why is adjusted R² preferred to R² when comparing models with different numbers of predictors?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is always larger than R², so every model looks better</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is calculated directly from the stars beside each p-value</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>R² rises with useless predictors; this one penalises them</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It only works for models that have just one predictor</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">The overall F-test of a multiple regression is significant. What can you conclude?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Every predictor in the model is statistically significant</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>At least one coefficient is not zero, but not which one</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The model has no multicollinearity problem</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The residuals are exactly normally distributed</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Standardized coefficients of the bikes model are humidity −0.228, temperature 0.626 and windspeed −0.192. Which conclusion is correct?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Humidity matters most, because its raw coefficient (−3100) is the largest</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Windspeed matters most, because it is the smallest in size</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Temperature has the greatest influence (largest absolute value)</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>All predictors are equally important, because all p-values are tiny</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">In a model, x2 has VIF = 115 and x1 has VIF = 110. What is an appropriate first step?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Keep both, because a high VIF means a strong predictor</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Multiply every coefficient by its VIF value</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Remove the rows flagged by Cook&#x27;s distance</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Drop one overlapping variable or combine the two</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">With n = 731 rows and k = 3 predictors, the class threshold 4/(n − k − 1) for Cook&#x27;s distance is about:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.0055</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.00055</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.055</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.5</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 2, 3, 0];
+var FEEDBACKS=["Predictors are joined with + on the right of the tilde and the response goes on the left: lm(rentals ~ humidity + temperature + windspeed, data = bikes).", "Residual = actual − predicted. A negative residual means the prediction was too high (over-estimated), here by roughly 2,000 rentals.", "fitted.values only gives predictions for rows already in the data. predict() takes a new data frame with the same column names, e.g. humidity = 0.65, temperature = 38, windspeed = 7, which gives about 2,859 rentals.", "R² never falls when predictors are added, even useless ones such as the number of doorknobs. Adjusted R² penalises unhelpful predictors; higher is better (0.393 for temperature only vs 0.459 for the three-predictor model).", "The F-test is an omnibus test of H0: all coefficients are 0. Rejecting it only shows that at least one predictor is related to the response; individual t-tests are needed to see which ones.", "Standardized coefficients share one scale, so compare their absolute values (ignore the sign): temperature 0.626 is the largest. Raw coefficients and p-values cannot rank predictors measured in different units.", "VIF > 5 (tolerance < 0.2) signals multicollinearity. Remove one of the correlated predictors, or combine them (e.g. square footage per story), then check that every VIF is below 5.", "4/(731 − 3 − 1) = 4/727 ≈ 0.0055. Points above it are flagged as influential, but check them (for example data entry errors) and document any removal instead of deleting silently."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">multiple regression</div><div class="term-en">重回帰</div><div class="term-def">予測変数を複数使う回帰。<code>lm(y ~ x1 + x2 + x3)</code>。</div></div>
+    <div class="term-item"><div class="term-name">adjusted R²</div><div class="term-en">調整済み決定係数</div><div class="term-def">役に立たない変数にペナルティを課した R²。高いほどよい。</div></div>
+    <div class="term-item"><div class="term-name">AIC / BIC</div><div class="term-en">情報量規準</div><div class="term-def">当てはまりと複雑さのバランス。低いほどよい（相対比較）。BIC は単純さを重視。</div></div>
+    <div class="term-item"><div class="term-name">RMSE</div><div class="term-en">平均二乗誤差の平方根</div><div class="term-def">誤差を二乗→平均→平方根。小さいほどよい。S に近い。</div></div>
+    <div class="term-item"><div class="term-name">F-statistic (omnibus test)</div><div class="term-en">F 統計量（全体検定）</div><div class="term-def">H₀：すべての係数が 0。有意でも全変数が有意とは限らない。</div></div>
+    <div class="term-item"><div class="term-name">Mallows' Cp</div><div class="term-en">マローズの Cp</div><div class="term-def">パラメータ数 p（切片込み）と比べる。Cp ≈ p がよいモデル。</div></div>
+    <div class="term-item"><div class="term-name">standardized coefficient</div><div class="term-en">標準化回帰係数</div><div class="term-def">z スコア化した変数での係数。絶対値が大きいほど影響が大きい。<code>lm.beta</code>。</div></div>
+    <div class="term-item"><div class="term-name">multicollinearity</div><div class="term-en">多重共線性</div><div class="term-def">予測変数どうしが強く相関。基準は |r| &gt; 0.5。</div></div>
+    <div class="term-item"><div class="term-name">VIF / tolerance</div><div class="term-en">分散拡大係数／許容度</div><div class="term-def">VIF = 1/(1−R²)。VIF &gt; 5（許容度 &lt; 0.2）で要対処、&gt; 10 は深刻。</div></div>
+    <div class="term-item"><div class="term-name">influential point</div><div class="term-en">影響点</div><div class="term-def">回帰線・統計量を大きく変える点。外れ値がすべて影響点とは限らない。</div></div>
+    <div class="term-item"><div class="term-name">high leverage point</div><div class="term-en">高レバレッジ点</div><div class="term-def">x が他から遠く離れた点。回帰線を強く引っ張る。</div></div>
+    <div class="term-item"><div class="term-name">Cook's distance</div><div class="term-en">Cook の距離</div><div class="term-def">観測値を除いたときのモデルの変化。D &gt; 4/(n−k−1) で影響点。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>診断は<strong>総合判断</strong>：調整済み R² は高く、AIC・BIC・S・RMSE は低く。標準化係数は符号を無視して大きさで比べ、VIF &gt; 5 は要注意。影響点を除くときは理由を記録し、元データも残す。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：650 M5 重回帰・診断・標準化係数・多重共線性(VIF)・影響点</p>
+  <p style="margin-top:.5rem;"><a href="r4_prediction.html">← 予測区間・信頼区間</a> · <a href="r5_special.html">VIF・多項・交互作用 →</a> · <a href="r5_multiple_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

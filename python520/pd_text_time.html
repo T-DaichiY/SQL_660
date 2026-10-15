@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Pandas⑧ 文字列・時系列・query</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Pandas — Strings, Time Series & Query</div>
+  <h1>🕒 Pandas⑧：文字列・日付・query</h1>
+  <p>.str、日付型、resample・rolling、queryを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① .str</a><a href="#unit2">② 日付</a><a href="#unit3">③ resample</a><a href="#unit4">④ query</a><a href="#quiz">📝 Quiz</a><a href="pd_text_time_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 3.10 Vectorized String Operations</li><li>Handbook 3.11 Working with Time Series</li><li>Handbook 3.12 High-Performance Pandas: eval() and query()</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>文字列を扱う：.str</h2><div class="unit-sub">まとめて加工する</div></div>
+  </div>
+<p>Seriesの文字列は、<code>.str</code>を付けると、<strong>全要素にまとめて</strong>文字列メソッドが使えます。欠損値があってもエラーになりません。</p><pre class="code-block">
+<span class="cl">names = pd.Series([<span class="st">'peter'</span>, <span class="st">'Paul'</span>, <span class="kw">None</span>, <span class="st">'MARY'</span>, <span class="st">'gUIDO'</span>])</span>
+<span class="cl"><span class="kw">print</span>(names.str.capitalize())</span>
+<span class="cl">names.str.lower()</span>
+</pre><div class="output-reveal">0    Peter
+1     Paul
+2     None
+3     Mary
+4    Guido
+dtype: object
+0    peter
+1     paul
+2     None
+3     mary
+4    guido
+dtype: object</div><pre class="code-block">
+<span class="cl">s = pd.Series([<span class="st">'Graham Chapman'</span>, <span class="st">'John Cleese'</span>, <span class="st">'Terry Gilliam'</span>])</span>
+<span class="cl"><span class="kw">print</span>(s.str.split().str[<span class="nm">0</span>])    <span class="cm"># 名</span></span>
+<span class="cl"><span class="kw">print</span>(s.str.len())</span>
+<span class="cl">s.str.contains(<span class="st">'ll'</span>)</span>
+</pre><div class="output-reveal">0    Graham
+1      John
+2     Terry
+dtype: object
+0    14
+1    11
+2    13
+dtype: int64
+0    False
+1    False
+2     True
+dtype: bool</div><pre class="code-block">
+<span class="cl">s.str.extract(<span class="st">'([A-Za-z]+)'</span>)    <span class="cm"># 正規表現で先頭の単語を取り出す</span></span>
+</pre><div class="output-reveal">        0
+0  Graham
+1    John
+2   Terry</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>.str</code>は「文字列メソッドをSeries全体に使うためのスイッチ」。</p></div><div class="practice-card" id="p-p8-u1">
+    <div class="ptitle">💻 ミニ練習：.str</div>
+    <p class="ptask"><code>s</code>の各要素を<strong>大文字</strong>にしてください。</p>
+    <textarea class="code-editor" id="p-p8-u1-input" rows="7">s = pd.Series(['abc', 'def'])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p8-u1", [".str.upper()"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p8-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p8-u1-result"></div>
+    <div class="answer-reveal" id="p-p8-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">s.str.upper()</span>
+</pre>
+      <p class="answer-note">結果は ABC と DEF です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>日付と時刻：datetime</h2><div class="unit-sub">to_datetime と .dt</div></div>
+  </div>
+<p>日付は文字列のままだと計算できません。<code>pd.to_datetime</code>で<strong>日付型</strong>に変えると、年・月・曜日を取り出せます。</p><pre class="code-block">
+<span class="cl">dates = pd.to_datetime([<span class="st">'2024-07-03'</span>, <span class="st">'2024-07-04'</span>, <span class="st">'2024-12-25'</span>])</span>
+<span class="cl">dates</span>
+</pre><div class="output-reveal">DatetimeIndex(['2024-07-03', '2024-07-04', '2024-12-25'], dtype='datetime64[ns]', freq=None)</div><pre class="code-block">
+<span class="cl">s = pd.Series(dates)</span>
+<span class="cl"><span class="kw">print</span>(s.dt.year.tolist())</span>
+<span class="cl"><span class="kw">print</span>(s.dt.month.tolist())</span>
+<span class="cl">s.dt.day_name().tolist()</span>
+</pre><div class="output-reveal">[2024, 2024, 2024]
+[7, 7, 12]
+['Wednesday', 'Thursday', 'Wednesday']</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(dates[<span class="nm">1</span>] - dates[<span class="nm">0</span>])</span>
+<span class="cl">pd.date_range(<span class="st">'2024-01-01'</span>, periods=<span class="nm">4</span>, freq=<span class="st">'D'</span>)</span>
+</pre><div class="output-reveal">1 days 00:00:00
+DatetimeIndex(['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04'], dtype='datetime64[ns]', freq='D')</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>日付型にすると「7月4日から3日後は？」のような計算ができます。まず<code>to_datetime</code>。</p></div><div class="practice-card" id="p-p8-u2">
+    <div class="ptitle">💻 ミニ練習：日付型</div>
+    <p class="ptask">文字列の日付 <code>d</code> を日付型に変換してください。</p>
+    <textarea class="code-editor" id="p-p8-u2-input" rows="7">d = pd.Series(['2024-01-15', '2024-03-01'])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p8-u2", ["pd.to_datetime"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p8-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p8-u2-result"></div>
+    <div class="answer-reveal" id="p-p8-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">pd.to_datetime(d)</span>
+</pre>
+      <p class="answer-note">変換後は<code>.dt</code>が使えます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>時系列の集計：resample と rolling</h2><div class="unit-sub">日別 → 月別、移動平均</div></div>
+  </div>
+<p>日付を索引にすると、<strong>期間ごとの集計</strong>が簡単です。</p><pre class="code-block">
+<span class="cl">idx = pd.date_range(<span class="st">'2024-01-01'</span>, periods=<span class="nm">60</span>, freq=<span class="st">'D'</span>)</span>
+<span class="cl">ts = pd.Series(np.arange(<span class="nm">60</span>), index=idx)</span>
+</pre><pre class="code-block">
+<span class="cl">ts.resample(<span class="st">'MS'</span>).sum()     <span class="cm"># 月ごとの合計（'MS'＝月初）</span></span>
+</pre><div class="output-reveal">2024-01-01     465
+2024-02-01    1305
+Freq: MS, dtype: int64</div><pre class="code-block">
+<span class="cl">ts.rolling(<span class="nm">7</span>).mean().tail(<span class="nm">3</span>)   <span class="cm"># 直近7日間の移動平均</span></span>
+</pre><div class="output-reveal">2024-02-27    54.0
+2024-02-28    55.0
+2024-02-29    56.0
+Freq: D, dtype: float64</div><pre class="code-block">
+<span class="cl">ts.shift(<span class="nm">1</span>).head(<span class="nm">3</span>)            <span class="cm"># 1日ずらす</span></span>
+</pre><div class="output-reveal">2024-01-01    NaN
+2024-01-02    0.0
+2024-01-03    1.0
+Freq: D, dtype: float64</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>resample</code>は「期間でまとめる」、<code>rolling</code>は「最近n個の窓をずらしながら平均」、<code>shift</code>は「ずらす」。</p></div><div class="practice-card" id="p-p8-u3">
+    <div class="ptitle">💻 ミニ練習：resample</div>
+    <p class="ptask"><code>ts</code>を<strong>月ごとの平均</strong>にしてください（<code>'MS'</code>）。</p>
+    <textarea class="code-editor" id="p-p8-u3-input" rows="7"># ts は日付が索引の Series
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p8-u3", ["resample", "'MS'", "mean"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p8-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p8-u3-result"></div>
+    <div class="answer-reveal" id="p-p8-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">ts.resample(<span class="st">'MS'</span>).mean()</span>
+</pre>
+      <p class="answer-note">1月と2月の2行になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>query と eval：読みやすい書き方</h2><div class="unit-sub">条件を文字列で書く</div></div>
+  </div>
+<p><code>query</code>は、条件を<strong>文字列で</strong>書けるので、行の絞り込みが読みやすくなります。</p><pre class="code-block">
+<span class="cl">tips = pd.read_csv(<span class="st">'data/tips.csv'</span>)</span>
+</pre><pre class="code-block">
+<span class="cl">tips.query(<span class="st">'tip &gt; 6 and day == "Sat"'</span>)</span>
+</pre><div class="output-reveal">     total_bill    tip     sex smoker  day    time  size
+23        39.42   7.58    Male     No  Sat  Dinner     4
+59        48.27   6.73    Male     No  Sat  Dinner     4
+170       50.81  10.00    Male    Yes  Sat  Dinner     3
+212       48.33   9.00    Male     No  Sat  Dinner     4
+214       28.17   6.50  Female    Yes  Sat  Dinner     3</div><pre class="code-block">
+<span class="cl">lim = <span class="nm">8</span></span>
+<span class="cl">tips.query(<span class="st">'total_bill &gt; @lim'</span>).shape    <span class="cm"># 変数は @ で参照</span></span>
+</pre><div class="output-reveal">(237, 7)</div><pre class="code-block">
+<span class="cl">tips.eval(<span class="st">'tip_rate = tip / total_bill'</span>).head(<span class="nm">2</span>)</span>
+</pre><div class="output-reveal">   total_bill   tip     sex smoker  day    time  size  tip_rate
+0       16.99  1.01  Female     No  Sun  Dinner     2  0.059447
+1       10.34  1.66    Male     No  Sun  Dinner     3  0.160542</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>df[(df.tip &gt; 6) &amp; (df.day == "Sat")]</code>と同じことを、括弧や<code>&amp;</code>なしで書けます。</p></div><div class="practice-card" id="p-p8-u4">
+    <div class="ptitle">💻 ミニ練習：query</div>
+    <p class="ptask"><code>size</code>が5以上の行を、<code>query</code>で取り出してください。</p>
+    <textarea class="code-editor" id="p-p8-u4-input" rows="7">tips = pd.read_csv('data/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-p8-u4", ["query", "size"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-p8-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-p8-u4-result"></div>
+    <div class="answer-reveal" id="p-p8-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips.query(<span class="st">'size &gt;= 5'</span>)</span>
+</pre>
+      <p class="answer-note">5人以上のテーブルの行が得られます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does the .str accessor allow you to do?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Sort the strings alphabetically in place</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Convert a column into a single string</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Apply string methods to every element of a Series</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Remove all numbers from a DataFrame</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which function converts text such as "2024-07-04" to a datetime type?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pd.timestamp, which gives the current time</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>pd.parse_text, which reads any text field</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>pd.date_range, which lists dates between two dates</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>pd.to_datetime</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does s.dt.year return for a datetime Series s?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The number of years since the first date</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A Series of True and False values</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The same dates sorted by year</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The year number of each date</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does ts.resample("MS").sum() do for daily data?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Sums all the values into one number</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Shifts every date by one month</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Sums the values for each month</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Splits the data into seven-day pieces</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is ts.rolling(7).mean()?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean of 7 random samples</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The mean of the first 7 values only</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A seven-day moving average</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A mean computed once per week</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In df.query("total_bill &gt; @lim"), what does @lim refer to?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A column named lim stored in df</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A comment that query ignores completely</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A string that contains the text lim</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A Python variable named lim</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 3, 3, 2, 2, 3];
+var FEEDBACKS=["It vectorizes string methods and skips missing values safely.", "to_datetime parses strings into datetime values, which then support the .dt accessor.", "The .dt accessor exposes parts of each date, such as year, month and day.", "resample groups the time series into periods (month starts here) and then aggregates.", "A window of 7 observations slides along the series, and the mean is computed in each window.", "The @ prefix tells query to use a variable from the Python environment."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">.str</div><div class="term-en">文字列アクセサ</div><div class="term-def">Seriesの全要素に文字列メソッドを使うためのスイッチ。</div></div>
+    <div class="term-item"><div class="term-name">to_datetime</div><div class="term-en">日付型へ変換</div><div class="term-def">文字列の日付を日付型にする。</div></div>
+    <div class="term-item"><div class="term-name">.dt</div><div class="term-en">日付アクセサ</div><div class="term-def">year・month・day_nameなど、日付の一部を取り出す。</div></div>
+    <div class="term-item"><div class="term-name">resample</div><div class="term-en">リサンプル</div><div class="term-def">期間（月など）ごとにまとめて集計する。</div></div>
+    <div class="term-item"><div class="term-name">rolling</div><div class="term-en">移動窓</div><div class="term-def">直近n個を窓にして平均などを計算する（移動平均）。</div></div>
+    <div class="term-item"><div class="term-name">query</div><div class="term-en">クエリ</div><div class="term-def">条件を文字列で書いて行を絞り込む。@で変数を参照。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>日付は文字列のままでは計算できません。まずto_datetimeです。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Pandas⑧ 文字列・時系列・query</p>
+  <p style="margin-top:.5rem;"><a href="pd_groupby.html">← ⑦ 集計・ピボット</a> · <a href="mpl_basics.html">① 線・散布図 →</a> · <a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

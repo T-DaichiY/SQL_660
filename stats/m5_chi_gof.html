@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 χ²①　適合度検定（GOF）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 🎲 χ²① 適合度 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Chi-square ① — Goodness-of-Fit Test</div>
+  <h1>🎲 χ²①：適合度検定（Goodness-of-Fit Test）</h1>
+  <p>カテゴリ（区分）ごとの<strong>度数</strong>が、「こうなるはず」という割合にうまく当てはまるかを調べるのが<strong>χ²適合度検定</strong>です。仮説の立て方、期待度数、手計算、p値、結論の書き方、そしてRでの実行までを、NHL選手の誕生日と広告の人種の割合という2つの例で順に学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Chi Sq 1 (Setting up a Chi-square GOF test) ／ Chi Sq 2 (Calculating Chi-Square Manually) ／ Chi Sq 3 (Finding P-value with Chi-Square Distribution) ／ Chi Sq 4 (Concluding a Chi-Square test) ／ Chi Sq 5 (GOF Example 2: Racial Stereotypes)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① セットアップ</a><a href="#unit2">② 手計算</a><a href="#unit3">③ p値</a><a href="#unit4">④ 結論とR</a><a href="#unit5">⑤ 例2</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① セットアップ（データの種類・仮説・期待度数・条件）：Chi Sq 1</li><li>② χ²統計量の手計算：Chi Sq 2</li><li>③ p値（自由度・χ²分布・pchisq）：Chi Sq 3</li><li>④ 結論の書き方と lsr による検定：Chi Sq 4</li><li>⑤ 適合度検定の例2（広告の人種の割合）：Chi Sq 5</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>適合度検定のセットアップ</h2><div class="unit-sub">NHL選手の誕生日は一様に散らばっている？</div></div>
+  </div>
+
+  <p>講義で使う題材は、Malcolm Gladwell の本 <em>Outliers</em> の文脈です。「<strong>NHL（ナショナル・ホッケー・リーグ）選手の誕生日は、1年を通じて均等（uniform）に分布していると言えるか？</strong>」を調べます。もし年の前半に生まれた子のほうが有利なら（学年の中で体が大きいなど）、前半生まれが多くなるはず、というのが Gladwell の主張です。</p>
+  <p>データは、<strong>最近のシーズンのNHL選手から無作為抽出した80人</strong>について、<strong>生まれた四半期（quarter）</strong>を数えたものです。1〜3月が Q1、4〜6月が Q2、7〜9月が Q3、10〜12月が Q4 です。</p>
+  <h3>まず3つの問いで道具を選ぶ</h3>
+  <ul>
+    <li><strong>どんなデータ？</strong> 「どの四半期か」は数値ではなく区分なので<strong>カテゴリカルデータ（categorical data）</strong>です。</li>
+    <li><strong>グループやサンプルはいくつ？</strong> 80人の<strong>1つのサンプル</strong>だけです。</li>
+    <li><strong>これまでの検定は使える？</strong> いいえ。平均の推測（t検定・信頼区間）も ANOVA も<strong>量的データ（quantitative data）</strong>が前提でした。カテゴリを数える今回は別の道具が要ります。</li>
+  </ul>
+  <p>観測した度数（observed counts）をRに保存します。</p>
+<pre class="code-block">
+<span class="cl">observed &lt;- <span class="kw">c</span>(<span class="nm">32</span>, <span class="nm">20</span>, <span class="nm">16</span>, <span class="nm">12</span>)   <span class="cm"># Q1, Q2, Q3, Q4 に生まれた人数</span></span>
+</pre>
+  <div class="viz"><div class="viz-title">四半期ごとの観測度数（80人）</div><div style="text-align:center"><svg viewBox="0 0 420 190" width="420" height="190" role="img" aria-label="四半期別の観測度数と期待度数20"><rect x="0.5" y="0.5" width="419" height="189" fill="none" stroke="#cbd5e1"/><line x1="40" y1="155.0" x2="405" y2="155.0" stroke="#e2e8f0"/><text x="36" y="159.0" font-size="11" text-anchor="end" fill="#64748b">0</text><line x1="40" y1="115.0" x2="405" y2="115.0" stroke="#e2e8f0"/><text x="36" y="119.0" font-size="11" text-anchor="end" fill="#64748b">10</text><line x1="40" y1="75.0" x2="405" y2="75.0" stroke="#e2e8f0"/><text x="36" y="79.0" font-size="11" text-anchor="end" fill="#64748b">20</text><line x1="40" y1="35.0" x2="405" y2="35.0" stroke="#e2e8f0"/><text x="36" y="39.0" font-size="11" text-anchor="end" fill="#64748b">30</text><rect x="58.1" y="27.0" width="55" height="128.0" fill="var(--primary)" opacity=".8"/><text x="85.6" y="23.0" font-size="12" text-anchor="middle" fill="#334155">32</text><text x="85.6" y="171" font-size="12" text-anchor="middle" fill="#64748b">Q1</text><rect x="149.4" y="75.0" width="55" height="80.0" fill="var(--primary)" opacity=".8"/><text x="176.9" y="71.0" font-size="12" text-anchor="middle" fill="#334155">20</text><text x="176.9" y="171" font-size="12" text-anchor="middle" fill="#64748b">Q2</text><rect x="240.6" y="91.0" width="55" height="64.0" fill="var(--primary)" opacity=".8"/><text x="268.1" y="87.0" font-size="12" text-anchor="middle" fill="#334155">16</text><text x="268.1" y="171" font-size="12" text-anchor="middle" fill="#64748b">Q3</text><rect x="331.9" y="107.0" width="55" height="48.0" fill="var(--primary)" opacity=".8"/><text x="359.4" y="103.0" font-size="12" text-anchor="middle" fill="#334155">12</text><text x="359.4" y="171" font-size="12" text-anchor="middle" fill="#64748b">Q4</text><line x1="40" y1="75.0" x2="405" y2="75.0" stroke="#ef4444" stroke-width="2" stroke-dasharray="5 3"/><text x="402" y="71.0" font-size="11" fill="#ef4444" text-anchor="end">期待度数 20</text></svg></div><div class="viz-cap">赤い点線は「完全に一様」ならこうなるはずの20人。Q1が32人と大きく上にずれています。</div></div>
+  <p>もし一様なら、4つの数字は互いにとても近い（本当は全く同じ）はずです。実際には違うので、<strong>「一様ではない」という初期的な（preliminary）証拠</strong>はあります。ただし、無作為抽出には<strong>標本変動（sampling variability）</strong>があるので、80人をちょうど20人ずつに分けて得られるとは限りません。問題は「<strong>この差は偶然で説明できる程度か、それとも偶然では説明しにくいほど大きいか</strong>」です。</p>
+  <h3>2つの統計的説明（モデル）</h3>
+  <ul>
+    <li><strong>説明1（偶然）：</strong>NHLの誕生日は本当に一様で、観測値が20からずれたのは標本変動のせいにすぎない。別のサンプルなら別の数字になる。</li>
+    <li><strong>説明2（Gladwellの説）：</strong>NHLの誕生日は一様ではない。</li>
+  </ul>
+  <p>有意性検定（significance test）のねらいは、「<strong>説明1が正しいとして、観測と同じかそれ以上の差が偶然だけで出る確率はどれくらいか</strong>」を求めることです。その確率が非常に小さければ説明1を退け、そうでなければ説明2の証拠にはなりません。</p>
+  <h3>仮説の立て方</h3>
+  <p><strong>帰無仮説 H₀（null hypothesis）</strong>：誕生日は四半期の間で一様に分布している（何も面白いことは起きていない）。<br><strong>対立仮説 Hₐ（alternative hypothesis）</strong>：誕生日は一様に分布していない（Gladwellの主張）。</p>
+  <p>記号で書くと、p_Q1 を「NHL選手全体のうち Q1 生まれの割合」として:</p>
+  <div class="note-box">H₀： p_Q1 = p_Q2 = p_Q3 = p_Q4（すべて 25%）<br>Hₐ： 少なくとも1つの割合が他と等しくない（25%ではない）</div>
+  <p>厳密には、1つが25%からずれれば別のどれかも必ずずれるので「少なくとも2つ」と言えますが、講師は「そこは気にしなくてよい」と言っています。また<strong>いつも25%とは限りません</strong>。月ごとに見る（12区分）なら各 1/12 になり、区分の数が変われば確率も変わります。</p>
+  <h3>期待度数 E の計算</h3>
+  <p>H₀が正しいとき各区分に入る人数の<strong>期待度数（expected count）</strong>は、<strong>E = n × p</strong>（標本サイズ × H₀の確率）です。ここでは 80 × 0.25 = <strong>20</strong> ずつ。</p>
+<pre class="code-block">
+<span class="cl">expected &lt;- <span class="kw">c</span>(<span class="nm">20</span>, <span class="nm">20</span>, <span class="nm">20</span>, <span class="nm">20</span>)   <span class="cm"># 80 * 0.25</span></span>
+</pre>
+  <div class="warn-box">⚠️ 期待度数は<strong>「平均的にこうなる」という値</strong>です。1回の80人のサンプルがちょうど20,20,20,20になるという意味ではなく、無作為抽出を何度も繰り返して平均をとれば各四半期に20人ずつ、という意味です。</div>
+  <h3>χ²検定の3つの条件</h3>
+  <p>この授業で扱う検定には、それぞれ条件（conditions）があります。条件を満たしてはじめて、あとで求める答えが正当になります。</p>
+  <table class="compare-table">
+    <tr><th>条件</th><th>NHLの例での確認</th></tr>
+    <tr><td>① 無作為抽出（random sample）または無作為割り当て</td><td>Gladwell は80人を無作為抽出した。NHL全体に一般化したいので重要（都合のよい選手だけを選ぶ「いいとこ取り」では代表性がない）</td></tr>
+    <tr><td>② 期待度数がすべて 5 以上</td><td>すべて 20 ≥ 5 で OK</td></tr>
+    <tr><td>③ 観測が独立とみなせる（independence）</td><td>非復元抽出なので厳密には独立でないが、母集団が十分大きければ問題ない。<strong>10%ルール：</strong>母集団は 80 × 10 = 800人より多い（NHL全体の10%が80人より大きい）と考える</td></tr>
+  </table>
+  <p>条件がそろったので、<strong>χ²適合度検定（chi-square goodness-of-fit test, GOF）</strong>を使います。「観測した分布が、期待する分布にどれだけうまく当てはまる（fit する）か」を調べる検定です。χ²（chi-squared）はギリシャ文字のカイ（χ）を2乗した名前です。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>「1つのカテゴリ変数」を数えて、「こうなるはず」という割合と比べる</strong>のが適合度検定。期待度数は n × p、条件は「無作為・期待度数≥5・独立（10%ルール）」の3つ。</p></div>
+  <div class="practice-card" id="p-m5g-u1">
+    <div class="ptitle">💻 ミニ練習：観測度数と期待度数を作る</div>
+    <p class="ptask">別の調査で、無作為抽出した<strong>60人</strong>の選手の誕生日を<strong>季節4区分</strong>で数えたところ、観測度数は 21, 15, 12, 12 でした。H₀（4区分で一様）のもとでの期待度数を、標本サイズに確率をかけて求めてください。<code>observed</code>と<code>expected</code>を作り、<code>expected</code>の値を表示します。</p>
+    <textarea class="code-editor" id="p-m5g-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5g-u1', ['sum', 'rep', 'c'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5g-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5g-u1-result"></div>
+    <div class="answer-reveal" id="p-m5g-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">observed &lt;- <span class="kw">c</span>(<span class="nm">21</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">12</span>)</span>
+<span class="cl">n &lt;- <span class="kw">sum</span>(observed)</span>
+<span class="cl">expected &lt;- n * <span class="kw">rep</span>(<span class="nm">0.25</span>, <span class="nm">4</span>)</span>
+<span class="cl">expected</span>
+</pre>
+      <p class="answer-note">n = 60、E = 60 × 0.25 = 15 が4区分すべてに入ります。期待度数はすべて 5 以上なので、条件②も満たします。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>χ²検定統計量を手計算する</h2><div class="unit-sub">観測と期待のズレを1つの数にする</div></div>
+  </div>
+
+  <p>速い計算方法は後で見ますが、まず<strong>手順（mechanics）</strong>を見ておくと、この数字が何を意味しているかが分かります。観測度数 <code>observed</code> と期待度数 <code>expected</code> がRに保存されている状態から始めます。</p>
+  <ol>
+    <li><strong>偏差（deviation）を出す：</strong>観測 − 期待。各区分が期待からどれだけ離れているか。</li>
+    <li><strong>2乗する：</strong>プラスとマイナスが打ち消し合わないように（標準偏差のときと同じ発想）。</li>
+    <li><strong>期待度数で割る：</strong>「重みつきの寄与（weighted contribution）」にする。</li>
+    <li><strong>足し合わせる：</strong>合計が χ² 検定統計量。</li>
+  </ol>
+<pre class="code-block">
+<span class="cl">observed - expected</span>
+<span class="cl">(observed - expected)^<span class="nm">2</span></span>
+<span class="cl">(observed - expected)^<span class="nm">2</span> / expected</span>
+<span class="cl"><span class="kw">sum</span>((observed - expected)^<span class="nm">2</span> / expected)</span>
+</pre><div class="output-reveal">[1]  12   0  -4  -8
+[1] 144   0  16  64
+[1] 7.2 0.0 0.8 3.2
+[1] 11.2</div>
+  <table class="compare-table">
+    <tr><th>四半期</th><th>観測 O</th><th>期待 E</th><th>O − E</th><th>(O − E)²</th><th>(O − E)² / E</th></tr>
+    <tr><td>Q1</td><td>32</td><td>20</td><td>12</td><td>144</td><td>7.2</td></tr>
+    <tr><td>Q2</td><td>20</td><td>20</td><td>0</td><td>0</td><td>0.0</td></tr>
+    <tr><td>Q3</td><td>16</td><td>20</td><td>−4</td><td>16</td><td>0.8</td></tr>
+    <tr><td>Q4</td><td>12</td><td>20</td><td>−8</td><td>64</td><td>3.2</td></tr>
+    <tr><td><strong>合計</strong></td><td>80</td><td>80</td><td>0</td><td>224</td><td><strong>11.2</strong></td></tr>
+  </table>
+  <p>4つの区分があるので<strong>寄与は4つ</strong>です（10区分なら10個）。Q1 は期待より12人多く、一番遠くにあります。Q2 の20人は期待どおりなので寄与は0です。合計して<strong>χ² = 11.2</strong>。</p>
+  <h3>なぜ期待度数で割るのか</h3>
+  <p>観測0・期待10の場合と、観測990・期待1,000の場合を比べましょう。どちらも差は10、2乗すると100で同じです。しかし<strong>驚きの大きさは全く違います</strong>。1,000を期待して990なら「ほぼ期待どおり」ですが、10を期待してゼロなら「ちょっと信じがたい」ですよね。</p>
+  <table class="compare-table">
+    <tr><th>場合</th><th>(O − E)²</th><th>÷ E</th><th>驚き</th></tr>
+    <tr><td>観測 0、期待 10</td><td>100</td><td>100 / 10 = 10</td><td>大きい</td></tr>
+    <tr><td>観測 990、期待 1,000</td><td>100</td><td>100 / 1000 = 0.1</td><td>とても小さい</td></tr>
+  </table>
+  <p>期待度数で割る（重みをつける）ことで、この違いが数字に反映されます。</p>
+  <h3>式で書く</h3>
+  <div class="note-box" style="font-size:1.05rem;text-align:center">χ² = Σ (Oᵢ − Eᵢ)² / Eᵢ</div>
+  <p>これは「(O₁ − E₁)²/E₁ + (O₂ − E₂)²/E₂ + (O₃ − E₃)²/E₃ + (O₄ − E₄)²/E₄」を省略して書いたものです。<strong>Σ（シグマ）</strong>は「全部足す」という記号で、添え字 i は「何番目の区分か」を表します。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>χ² は<strong>「(観測 − 期待)² ÷ 期待」を全区分で足した数</strong>。期待どおりなら 0 に近く、ズレが大きいほど大きくなります。今回は 7.2 + 0 + 0.8 + 3.2 = <strong>11.2</strong>。</p></div>
+  <div class="practice-card" id="p-m5g-u2">
+    <div class="ptitle">💻 ミニ練習：χ²を手計算する</div>
+    <p class="ptask">観測度数が <code>c(21, 15, 12, 12)</code>、期待度数が <code>c(15, 15, 15, 15)</code> のとき、χ²検定統計量を「観測−期待」の2乗を期待で割って合計する手順で求めてください。</p>
+    <textarea class="code-editor" id="p-m5g-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5g-u2', ['sum', 'c'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5g-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5g-u2-result"></div>
+    <div class="answer-reveal" id="p-m5g-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">observed &lt;- <span class="kw">c</span>(<span class="nm">21</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">12</span>)</span>
+<span class="cl">expected &lt;- <span class="kw">c</span>(<span class="nm">15</span>, <span class="nm">15</span>, <span class="nm">15</span>, <span class="nm">15</span>)</span>
+<span class="cl"><span class="kw">sum</span>((observed - expected)^<span class="nm">2</span> / expected)</span>
+</pre>
+      <p class="answer-note">寄与は 2.4, 0, 0.6, 0.6 で、合計は <strong>3.6</strong> です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>p値をχ²分布から求める</h2><div class="unit-sub">自由度 df = k − 1 と右側の面積</div></div>
+  </div>
+
+  <p>χ² = 11.2 がどれくらい珍しいかを知るには、<strong>p値</strong>を求めます。そのために、まず<strong>自由度（degrees of freedom, df）</strong>が必要です。</p>
+  <div class="note-box">適合度検定の自由度：<strong>df = k − 1</strong>（k = カテゴリの数）</div>
+  <p>これまでの自由度は標本サイズから決まることが多かったのですが、ここでは<strong>カテゴリの数</strong>を使います（標本サイズではない）。4つの四半期なので df = 4 − 1 = <strong>3</strong>。</p>
+  <div class="warn-box">⚠️ 他の資料では、カテゴリ数を <code>c</code> や、さらに紛らわしく <code>n</code> と書くことがあります。<code>n</code> は通常「標本サイズ」を表す記号ですが、ここでは「カテゴリの数」と定義されているはずです。意味を確認しましょう。</div>
+  <p>条件（期待度数がすべて 5 以上など）を満たしていれば、検定統計量は<strong>自由度 3 の χ²分布（chi-square distribution）</strong>にしたがいます。t分布が自由度で形を変えたように、χ²分布も自由度ごとに形が変わります。形は正規分布とは違って<strong>右に裾が長い（right-skewed）</strong>ことが特徴です。</p>
+  <div class="viz"><div class="viz-title">自由度3のχ²分布と、χ² = 11.2 より右の面積（p値）</div><div style="text-align:center"><svg viewBox="0 0 420 190" width="420" height="190" role="img" aria-label="自由度3のχ²分布と右側の面積"><rect x="0.5" y="0.5" width="419" height="189" fill="none" stroke="#cbd5e1"/><polygon points="244.4,150.0 244.4,147.3 244.4,147.3 246.2,147.5 248.1,147.6 249.9,147.7 251.7,147.8 253.5,147.9 255.4,148.0 257.2,148.1 259.0,148.2 260.8,148.2 262.6,148.3 264.5,148.4 266.3,148.5 268.1,148.5 269.9,148.6 271.8,148.7 273.6,148.7 275.4,148.8 277.2,148.8 279.1,148.9 280.9,148.9 282.7,149.0 284.6,149.0 286.4,149.1 288.2,149.1 290.0,149.2 291.9,149.2 293.7,149.2 295.5,149.3 297.3,149.3 299.1,149.3 301.0,149.4 302.8,149.4 304.6,149.4 306.4,149.4 308.3,149.5 310.1,149.5 311.9,149.5 313.8,149.5 315.6,149.6 317.4,149.6 319.2,149.6 321.1,149.6 322.9,149.6 324.7,149.7 326.5,149.7 328.4,149.7 330.2,149.7 332.0,149.7 333.8,149.7 335.6,149.7 337.5,149.7 339.3,149.8 341.1,149.8 343.0,149.8 344.8,149.8 346.6,149.8 348.4,149.8 350.2,149.8 352.1,149.8 353.9,149.8 355.7,149.8 357.5,149.9 359.4,149.9 361.2,149.9 363.0,149.9 364.9,149.9 366.7,149.9 368.5,149.9 370.3,149.9 372.1,149.9 374.0,149.9 375.8,149.9 377.6,149.9 379.5,149.9 381.3,149.9 383.1,149.9 384.9,149.9 386.8,149.9 388.6,149.9 390.4,149.9 392.2,149.9 394.1,149.9 395.9,149.9 397.7,149.9 399.5,149.9 401.4,150.0 403.2,150.0 405.0,150.0 405.0,150.0" fill="#ef4444" opacity=".35"/><polyline points="40.0,150.0 41.8,85.2 43.6,62.8 45.5,48.4 47.3,38.4 49.1,31.4 51.0,26.4 52.8,23.0 54.6,20.8 56.4,19.7 58.2,19.3 60.1,19.6 61.9,20.5 63.7,21.8 65.5,23.4 67.4,25.4 69.2,27.6 71.0,29.9 72.8,32.5 74.7,35.2 76.5,37.9 78.3,40.8 80.2,43.6 82.0,46.6 83.8,49.5 85.6,52.4 87.5,55.3 89.3,58.2 91.1,61.1 92.9,63.9 94.8,66.7 96.6,69.5 98.4,72.2 100.2,74.8 102.0,77.4 103.9,80.0 105.7,82.4 107.5,84.8 109.3,87.2 111.2,89.5 113.0,91.7 114.8,93.8 116.7,95.9 118.5,98.0 120.3,99.9 122.1,101.8 123.9,103.7 125.8,105.5 127.6,107.2 129.4,108.8 131.2,110.5 133.1,112.0 134.9,113.5 136.7,115.0 138.6,116.4 140.4,117.7 142.2,119.0 144.0,120.2 145.8,121.5 147.7,122.6 149.5,123.7 151.3,124.8 153.2,125.8 155.0,126.8 156.8,127.8 158.6,128.7 160.4,129.6 162.3,130.4 164.1,131.3 165.9,132.0 167.8,132.8 169.6,133.5 171.4,134.2 173.2,134.9 175.1,135.5 176.9,136.1 178.7,136.7 180.5,137.3 182.3,137.8 184.2,138.3 186.0,138.8 187.8,139.3 189.6,139.8 191.5,140.2 193.3,140.6 195.1,141.0 196.9,141.4 198.8,141.8 200.6,142.2 202.4,142.5 204.2,142.8 206.1,143.1 207.9,143.4 209.7,143.7 211.6,144.0 213.4,144.3 215.2,144.5 217.0,144.7 218.9,145.0 220.7,145.2 222.5,145.4 224.3,145.6 226.2,145.8 228.0,146.0 229.8,146.2 231.6,146.3 233.5,146.5 235.3,146.7 237.1,146.8 238.9,146.9 240.8,147.1 242.6,147.2 244.4,147.3 246.2,147.5 248.1,147.6 249.9,147.7 251.7,147.8 253.5,147.9 255.4,148.0 257.2,148.1 259.0,148.2 260.8,148.2 262.6,148.3 264.5,148.4 266.3,148.5 268.1,148.5 269.9,148.6 271.8,148.7 273.6,148.7 275.4,148.8 277.2,148.8 279.1,148.9 280.9,148.9 282.7,149.0 284.6,149.0 286.4,149.1 288.2,149.1 290.0,149.2 291.9,149.2 293.7,149.2 295.5,149.3 297.3,149.3 299.1,149.3 301.0,149.4 302.8,149.4 304.6,149.4 306.4,149.4 308.3,149.5 310.1,149.5 311.9,149.5 313.8,149.5 315.6,149.6 317.4,149.6 319.2,149.6 321.1,149.6 322.9,149.6 324.7,149.7 326.5,149.7 328.4,149.7 330.2,149.7 332.0,149.7 333.8,149.7 335.6,149.7 337.5,149.7 339.3,149.8 341.1,149.8 343.0,149.8 344.8,149.8 346.6,149.8 348.4,149.8 350.2,149.8 352.1,149.8 353.9,149.8 355.7,149.8 357.5,149.9 359.4,149.9 361.2,149.9 363.0,149.9 364.9,149.9 366.7,149.9 368.5,149.9 370.3,149.9 372.1,149.9 374.0,149.9 375.8,149.9 377.6,149.9 379.5,149.9 381.3,149.9 383.1,149.9 384.9,149.9 386.8,149.9 388.6,149.9 390.4,149.9 392.2,149.9 394.1,149.9 395.9,149.9 397.7,149.9 399.5,149.9 401.4,150.0 403.2,150.0 405.0,150.0" fill="none" stroke="var(--primary)" stroke-width="2"/><line x1="40" y1="150" x2="405" y2="150" stroke="#64748b"/><line x1="40.0" y1="150" x2="40.0" y2="154" stroke="#64748b"/><text x="40.0" y="166" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="131.2" y1="150" x2="131.2" y2="154" stroke="#64748b"/><text x="131.2" y="166" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="222.5" y1="150" x2="222.5" y2="154" stroke="#64748b"/><text x="222.5" y="166" font-size="11" text-anchor="middle" fill="#64748b">10</text><line x1="313.8" y1="150" x2="313.8" y2="154" stroke="#64748b"/><text x="313.8" y="166" font-size="11" text-anchor="middle" fill="#64748b">15</text><line x1="405.0" y1="150" x2="405.0" y2="154" stroke="#64748b"/><text x="405.0" y="166" font-size="11" text-anchor="middle" fill="#64748b">20</text><line x1="244.4" y1="23" x2="244.4" y2="150" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3"/><text x="244.4" y="19" font-size="11" fill="#ef4444" text-anchor="middle">11.2</text><text x="222" y="184" font-size="11" text-anchor="middle" fill="#64748b">χ² 統計量（自由度 df = 3）</text></svg></div><div class="viz-cap">p値は「検定統計量が11.2<strong>以上</strong>」になる確率、つまり赤い部分の面積です。</div></div>
+  <h3>① 表を使う</h3>
+  <p>χ²分布表（chi-square probability table）の df = 3 の行を見ます（右側の面積ごとの境界値）。</p>
+  <table class="compare-table">
+    <tr><th>右側の面積（p値）</th><th>0.10</th><th>0.05</th><th>0.025</th><th>0.02</th><th>0.01</th></tr>
+    <tr><td>df = 3 の境界値</td><td>6.251</td><td>7.815</td><td>9.348</td><td>9.837</td><td>11.345</td></tr>
+  </table>
+  <p>11.2 は <strong>9.84 と 11.34 の間</strong>にあるので、p値は <strong>1% と 2% の間</strong>です。表の弱点は、範囲しか分からないことです。</p>
+  <h3>② Rの <code>pchisq()</code> で正確に求める</h3>
+  <p>引数は <code>q</code>（検定統計量）、<code>df</code>（自由度）、<code>lower.tail</code>。<code>pchisq</code> は初期設定が<strong>左側（lower tail）</strong>の面積を返しますが、p値が欲しいのは<strong>右側（upper tail）</strong>なので、<code>lower.tail = FALSE</code> にします。</p>
+<pre class="code-block">
+<span class="cl">df &lt;- <span class="nm">4</span> - <span class="nm">1</span></span>
+<span class="cl"><span class="kw">pchisq</span>(q = <span class="nm">11.2</span>, df = df, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 0.01069213</div>
+  <div class="warn-box">⚠️ <code>lower.tail = FALSE</code> を忘れると、右側ではなく左側の面積（0.989）が出て、結論が逆になります。適合度検定では<strong>常に右側</strong>です。</div>
+  <p>p値は約 <strong>0.0107</strong>（約1%）で、たしかに表の範囲（1〜2%）に入っています。</p>
+  <h3>p値の解釈</h3>
+  <div class="note-box">「NHL選手の誕生日が一様に分布している（H₀）と仮定すると、標本変動だけで今回のようなデータ<strong>かそれ以上に極端なデータ</strong>が得られる確率は 0.0107 である。」</div>
+  <p>標本データのかわりに検定統計量で言ってもかまいません。その場合も「<strong>11.2 以上</strong>（or more）」と付けることが大切です。p値は11.2ちょうどの確率ではなく、11.2より右側全体の面積だからです。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>df は <strong>カテゴリ数 − 1</strong>。p値は χ² 分布の<strong>右側</strong>の面積なので <code>pchisq(統計量, df, lower.tail = FALSE)</code>。χ²=11.2、df=3 なら p ≈ 0.0107。</p></div>
+  <div class="practice-card" id="p-m5g-u3">
+    <div class="ptitle">💻 ミニ練習：pchisqでp値を求める</div>
+    <p class="ptask">χ² = 3.6、カテゴリ数が 4（df = 3）のときのp値を、右側の面積として<code>pchisq()</code>で求めてください。</p>
+    <textarea class="code-editor" id="p-m5g-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5g-u3', ['pchisq', 'lower.tail'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5g-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5g-u3-result"></div>
+    <div class="answer-reveal" id="p-m5g-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">pchisq</span>(q = <span class="nm">3.6</span>, df = <span class="nm">3</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre>
+      <p class="answer-note">p値は約 0.308 です。0.05よりずっと大きいので、この小さなズレは偶然で十分説明できる範囲です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>検定の結論とRの関数</h2><div class="unit-sub">結論に入れる3つのこと</div></div>
+  </div>
+
+  <p>p ≈ 1% を使って結論を書きます。有意性検定の結論には、次の<strong>3つ</strong>を入れます。</p>
+  <ol>
+    <li><strong>p値と有意水準 α（significance level）の比較。</strong>指定がなければ α = 5%（0.05）。ただし本当は<strong>研究を始める前に</strong>決めておくものです。第1種の過誤・第2種の過誤の考え方や、何を「驚くべき」とみなし何を偶然とみなすかが、α で決まるからです。</li>
+    <li><strong>H₀を棄却する（reject）か、棄却できない（fail to reject）か。</strong></li>
+    <li><strong>対立仮説に対する証拠の強さ</strong>（convincing evidence があるか）。</li>
+  </ol>
+  <div class="note-box">p ≈ 0.011 &lt; α = 0.05 なので H₀ を<strong>棄却</strong>する。「出生が一様なのはただの偶然」という最初の説明を退ける。<br>したがって、「NHL選手の誕生日は、<strong>今回のシーズンについて</strong>、四半期の間で一様に分布していない」という対立仮説の<strong>説得力のある証拠（convincing evidence）</strong>がある。</div>
+  <h3>言葉づかいの注意</h3>
+  <ul>
+    <li><strong>「証明（proof）」とは言わない。</strong>「だから誕生日は一様ではない」と断定すると証明のように聞こえます。統計では<strong>証拠（evidence）</strong>と言います。約1%の確率で、今回の差が標本変動だけで出た可能性（第1種の過誤）が残るからです。</li>
+    <li><strong>母集団（NHL全体）について述べる。</strong>「今回の観測度数 32, 20, 16, 12 が一様でない」のは見れば明らか（それが最初の証拠）です。知りたいのは、<strong>NHL全選手に一般化できるか</strong>です。</li>
+    <li><strong>データのシーズンに限定する。</strong>Gladwell は1シーズンのデータだけを使っているので、将来や過去のシーズンに当てはまるかは分かりません。</li>
+  </ul>
+  <table class="compare-table">
+    <tr><th>p値と α</th><th>H₀</th><th>結論</th><th>起こりうる誤り</th></tr>
+    <tr><td>p &lt; α</td><td>棄却</td><td>対立仮説の説得力のある証拠がある。<strong>統計的に有意（statistically significant）</strong></td><td>第1種の過誤（Type I）の可能性</td></tr>
+    <tr><td>p &gt; α</td><td>棄却できない（fail to reject）</td><td>対立仮説の説得力のある証拠はない。有意ではない</td><td>第2種の過誤（Type II）の可能性</td></tr>
+  </table>
+  <p>今回は p &lt; α なので「有意」。第1種の過誤とは、H₀が実は正しいのに「何か面白いことが起きている」と結論してしまうことで、その可能性が約1%あります。</p>
+  <h3>Rの関数で一発で求める</h3>
+  <p>手計算を毎回するわけにはいきません。<strong>lsr パッケージ</strong>（教科書 <em>Learning Statistics with R</em> のパッケージ）の適合度検定の関数は、検定統計量・p値のほか観測度数・期待度数・指定した確率もまとめて表示してくれます（base Rの <code>chisq.test()</code> でもできます）。</p>
+<pre class="code-block">
+<span class="cl"><span class="cm"># install.packages("lsr")   # 初回だけ（コメントを外して実行）</span></span>
+<span class="cl"><span class="kw">library</span>(lsr)                <span class="cm"># コードの中に書く</span></span>
+<span class="cl">lsr::goodnessOfFitTest</span>
+</pre>
+  <p>ポイントは2つです。</p>
+  <ul>
+    <li><strong><code>library(lsr)</code> をコードに書く。</strong>パネルのチェックボックスをクリックしてもパッケージは使えますが、コードを受け取った人が「チェックを入れてください」という注意書きを読まなくても、自動で動くようにするためです。</li>
+    <li><strong><code>lsr::</code> を付けるとその関数の出どころが分かる。</strong>後でコードを読み返したとき、どのパッケージの関数かを思い出せます。パッケージ名は小文字の <code>lsr</code> です。</li>
+  </ul>
+  <h3>落とし穴：渡すのは「度数」ではなく「データそのもの」</h3>
+  <p>この関数が欲しいのは<strong>1人1人のデータ</strong>（各人がどの四半期か）で、集計済みの度数ではありません。度数をそのまま渡すと、次のようなエラーや間違った結果になります。</p>
+  <ul>
+    <li><code>observed</code> をそのまま渡す → エラー「引数 x は factor でなければならない」（数値のまま）。</li>
+    <li><code>as.factor(observed)</code> に変える → 警告（近似が不正確かも）。度数 12, 16, 20, 32 が「カテゴリの名前」として扱われ、観測度数が 1, 1, 1, 1、χ² = 0、p値 = 1 になってしまう。</li>
+  </ul>
+  <p>度数の表しかないときは、<code>rep()</code> で<strong>元のデータを復元</strong>してから渡します。誰が実際にどの月生まれかは分かりませんが、「Q1が32人」は分かっているので十分です。</p>
+<pre class="code-block">
+<span class="cl">nhl_data &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">"Q1"</span>, <span class="nm">32</span>), <span class="kw">rep</span>(<span class="st">"Q2"</span>, <span class="nm">20</span>), <span class="kw">rep</span>(<span class="st">"Q3"</span>, <span class="nm">16</span>), <span class="kw">rep</span>(<span class="st">"Q4"</span>, <span class="nm">12</span>))</span>
+<span class="cl"><span class="kw">lsr::goodnessOfFitTest</span>(<span class="kw">as.factor</span>(nhl_data), p = <span class="kw">c</span>(<span class="nm">0.25</span>, <span class="nm">0.25</span>, <span class="nm">0.25</span>, <span class="nm">0.25</span>))</span>
+</pre><div class="output-reveal">     Chi-square test against specified probabilities
+
+Data variable:   as.factor(nhl_data) 
+
+Hypotheses: 
+   null:        true probabilities are as specified
+   alternative: true probabilities differ from those specified
+
+Descriptives: 
+   observed freq. expected freq. specified prob.
+Q1             32             20            0.25
+Q2             20             20            0.25
+Q3             16             20            0.25
+Q4             12             20            0.25
+
+Test results: 
+   X-squared statistic:  11.2 
+   degrees of freedom:  3 
+   p-value:  0.011 </div>
+  <p>観測度数 32, 20, 16, 12、期待度数 20、χ² = 11.2、df = 3、p = 0.011 と、手計算の結果と一致しました。</p>
+  <div class="note-box">📝 <strong>結果の報告の書き方：</strong>χ²(3) = 11.2, p &lt; 0.05。対立仮説を支持する証拠がある。特に、<strong>Q1 に生まれた選手の数が期待よりずっと多く</strong>、これが検定統計量 11.2 への最大の寄与（7.2）だった。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>結論は「p と α の比較 → H₀を棄却するか → 対立仮説の<strong>証拠</strong>（証明とは言わない）」の3点。Rでは度数ではなく<strong>元データ</strong>（<code>rep()</code> で復元）を <code>lsr::goodnessOfFitTest()</code> に渡す。</p></div>
+  <div class="practice-card" id="p-m5g-u4">
+    <div class="ptitle">💻 ミニ練習：度数から元データを復元する</div>
+    <p class="ptask">観測度数が Q1 = 32, Q2 = 20, Q3 = 16, Q4 = 12 のとき、<code>rep()</code> で元データ <code>nhl_data</code> を作り、<code>table()</code> で度数を確認してください（<code>as.factor()</code> も使います）。</p>
+    <textarea class="code-editor" id="p-m5g-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5g-u4', ['rep', 'table', 'as.factor'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5g-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5g-u4-result"></div>
+    <div class="answer-reveal" id="p-m5g-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">nhl_data &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">"Q1"</span>, <span class="nm">32</span>), <span class="kw">rep</span>(<span class="st">"Q2"</span>, <span class="nm">20</span>), <span class="kw">rep</span>(<span class="st">"Q3"</span>, <span class="nm">16</span>), <span class="kw">rep</span>(<span class="st">"Q4"</span>, <span class="nm">12</span>))</span>
+<span class="cl"><span class="kw">table</span>(<span class="kw">as.factor</span>(nhl_data))</span>
+</pre>
+      <p class="answer-note">表示は Q1 32, Q2 20, Q3 16, Q4 12 になります。この元データを <code>lsr::goodnessOfFitTest(as.factor(nhl_data), p = c(0.25, 0.25, 0.25, 0.25))</code> に渡せば χ² = 11.2 が得られます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>適合度検定の例2：広告の人種の割合</h2><div class="unit-sub">最初から最後まで自力で解く（α = 0.01）</div></div>
+  </div>
+
+  <p>この動画は、適合度検定の全工程を<strong>自分で解いてから答え合わせする</strong>形式です。題材は、フィラデルフィアで放映されたテレビ広告に登場する人物の人種（ethnicity）の割合が、<strong>国勢調査（census）の割合と同じかどうか</strong>。有意水準は <strong>α = 0.01</strong> です。</p>
+  <p>観測した人物は404人で、アフリカ系アメリカ人（African American）57人、アジア系（Asian）11人、白人（Caucasian）330人、ヒスパニック（Hispanic）6人。国勢調査の割合（H₀の確率）は、順に <strong>0.177, 0.032, 0.734, 0.057</strong> です。</p>
+  <h3>手順1：期待度数</h3>
+<pre class="code-block">
+<span class="cl">observed &lt;- <span class="kw">c</span>(<span class="nm">57</span>, <span class="nm">11</span>, <span class="nm">330</span>, <span class="nm">6</span>)</span>
+<span class="cl">null_p   &lt;- <span class="kw">c</span>(<span class="nm">0.177</span>, <span class="nm">0.032</span>, <span class="nm">0.734</span>, <span class="nm">0.057</span>)</span>
+<span class="cl">n &lt;- <span class="kw">sum</span>(observed)</span>
+<span class="cl">n</span>
+<span class="cl">expected &lt;- n * null_p</span>
+<span class="cl">expected</span>
+</pre><div class="output-reveal">[1] 404
+[1]  71.508  12.928 296.536  23.028</div>
+  <p>404人のうち17.7%なら 71.5人、73.4%なら約296人、5.7%なら約23人、という計算です。</p>
+  <h3>手順2：仮説と条件</h3>
+  <ul>
+    <li><strong>H₀：</strong>広告に登場する人種の割合は国勢調査の割合と同じ。<br>記号では p_AA = 0.177, p_Asian = 0.032, p_White = 0.734, p_Hispanic = 0.057。</li>
+    <li><strong>Hₐ：</strong>広告の割合は国勢調査と同じではない（少なくとも1つの割合が違う）。</li>
+  </ul>
+  <table class="compare-table">
+    <tr><th>条件</th><th>確認</th></tr>
+    <tr><td>無作為抽出</td><td>この問題文だけでは不明。元の論文を読まないと分からない。<strong>フィラデルフィアの広告が代表的か分からないので、一般化には慎重に</strong></td></tr>
+    <tr><td>期待度数 ≥ 5</td><td>すべて満たす（最小は12.9）。χ²分布を使うために重要</td></tr>
+    <tr><td>独立</td><td>非復元抽出だが、母集団の人物は 10 × 404 = <strong>4,040人</strong>より多いと仮定する</td></tr>
+  </table>
+  <h3>手順3：検定統計量とp値</h3>
+  <p>度数の表しかないので、<code>rep()</code> で元データを復元します。<code>as.factor()</code> で包むのを忘れると「x は factor でなければならない」というエラーになります。</p>
+<pre class="code-block">
+<span class="cl">commercial_data &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">"African American"</span>, <span class="nm">57</span>), <span class="kw">rep</span>(<span class="st">"Asian"</span>, <span class="nm">11</span>),</span>
+<span class="cl">                     <span class="kw">rep</span>(<span class="st">"Caucasian"</span>, <span class="nm">330</span>), <span class="kw">rep</span>(<span class="st">"Hispanic"</span>, <span class="nm">6</span>))</span>
+<span class="cl"><span class="kw">length</span>(commercial_data)</span>
+<span class="cl"><span class="kw">lsr::goodnessOfFitTest</span>(<span class="kw">as.factor</span>(commercial_data), p = null_p)</span>
+</pre><div class="output-reveal">[1] 404
+
+     Chi-square test against specified probabilities
+
+Data variable:   as.factor(commercial_data) 
+
+Hypotheses: 
+   null:        true probabilities are as specified
+   alternative: true probabilities differ from those specified
+
+Descriptives: 
+                 observed freq. expected freq. specified prob.
+African American             57         71.508           0.177
+Asian                        11         12.928           0.032
+Caucasian                   330        296.536           0.734
+Hispanic                      6         23.028           0.057
+
+Test results: 
+   X-squared statistic:  19.599 
+   degrees of freedom:  3 
+   p-value:  &lt;.001 </div>
+  <p>観測度数・期待度数・確率が先ほど入力したものと一致していることを確認します。<strong>χ² = 19.599、df = 4 − 1 = 3</strong>、p値は <strong>0.001 未満</strong>というとても小さい値です。正確なp値は、また <code>lower.tail = FALSE</code> で求めます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">pchisq</span>(q = <span class="nm">19.599</span>, df = <span class="nm">3</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 0.0002055213</div>
+  <div class="note-box">📝 <strong>p値の解釈：</strong>広告の人種の割合が国勢調査の割合と同じ（H₀）と仮定すると、標本変動だけでこのくらい極端な検定統計量<strong>かそれ以上</strong>が得られる確率は 0.0002 である。</div>
+  <div class="viz"><div class="viz-title">自由度3のχ²分布と χ² = 19.599</div><div style="text-align:center"><svg viewBox="0 0 420 190" width="420" height="190" role="img" aria-label="自由度3のχ²分布と右側の面積"><rect x="0.5" y="0.5" width="419" height="189" fill="none" stroke="#cbd5e1"/><polygon points="365.2,150.0 365.2,149.9 366.7,149.9 368.5,150.0 370.3,150.0 372.2,150.0 374.0,150.0 375.8,150.0 377.6,150.0 379.5,150.0 381.3,150.0 383.1,150.0 384.9,150.0 386.8,150.0 388.6,150.0 390.4,150.0 392.2,150.0 394.1,150.0 395.9,150.0 397.7,150.0 399.5,150.0 401.4,150.0 403.2,150.0 405.0,150.0 405.0,150.0" fill="#ef4444" opacity=".35"/><polyline points="40.0,150.0 41.8,82.4 43.6,59.5 45.5,45.1 47.3,35.3 49.1,28.6 51.0,24.2 52.8,21.4 54.6,19.8 56.4,19.3 58.2,19.6 60.1,20.6 61.9,22.1 63.7,24.0 65.5,26.2 67.4,28.7 69.2,31.5 71.0,34.3 72.8,37.4 74.7,40.5 76.5,43.6 78.3,46.8 80.2,50.1 82.0,53.3 83.8,56.5 85.6,59.7 87.5,62.8 89.3,65.9 91.1,68.9 92.9,71.9 94.8,74.8 96.6,77.7 98.4,80.5 100.2,83.2 102.1,85.8 103.9,88.3 105.7,90.8 107.5,93.2 109.3,95.5 111.2,97.8 113.0,99.9 114.8,102.0 116.6,104.0 118.5,106.0 120.3,107.9 122.1,109.7 123.9,111.4 125.8,113.1 127.6,114.7 129.4,116.2 131.2,117.7 133.1,119.1 134.9,120.5 136.7,121.8 138.6,123.1 140.4,124.3 142.2,125.4 144.0,126.5 145.8,127.6 147.7,128.6 149.5,129.6 151.3,130.5 153.2,131.4 155.0,132.3 156.8,133.1 158.6,133.9 160.4,134.6 162.3,135.3 164.1,136.0 165.9,136.7 167.8,137.3 169.6,137.9 171.4,138.4 173.2,139.0 175.1,139.5 176.9,140.0 178.7,140.5 180.5,140.9 182.3,141.4 184.2,141.8 186.0,142.2 187.8,142.5 189.6,142.9 191.5,143.2 193.3,143.5 195.1,143.9 197.0,144.2 198.8,144.4 200.6,144.7 202.4,145.0 204.2,145.2 206.1,145.4 207.9,145.7 209.7,145.9 211.5,146.1 213.4,146.3 215.2,146.4 217.0,146.6 218.8,146.8 220.7,146.9 222.5,147.1 224.3,147.2 226.2,147.4 228.0,147.5 229.8,147.6 231.6,147.7 233.5,147.8 235.3,147.9 237.1,148.0 238.9,148.1 240.7,148.2 242.6,148.3 244.4,148.4 246.2,148.5 248.0,148.6 249.9,148.6 251.7,148.7 253.5,148.8 255.3,148.8 257.2,148.9 259.0,148.9 260.8,149.0 262.6,149.0 264.5,149.1 266.3,149.1 268.1,149.2 269.9,149.2 271.8,149.3 273.6,149.3 275.4,149.3 277.2,149.4 279.1,149.4 280.9,149.4 282.7,149.5 284.6,149.5 286.4,149.5 288.2,149.5 290.0,149.6 291.9,149.6 293.7,149.6 295.5,149.6 297.3,149.6 299.1,149.7 301.0,149.7 302.8,149.7 304.6,149.7 306.4,149.7 308.3,149.7 310.1,149.7 311.9,149.8 313.8,149.8 315.6,149.8 317.4,149.8 319.2,149.8 321.1,149.8 322.9,149.8 324.7,149.8 326.5,149.8 328.3,149.8 330.2,149.9 332.0,149.9 333.8,149.9 335.7,149.9 337.5,149.9 339.3,149.9 341.1,149.9 343.0,149.9 344.8,149.9 346.6,149.9 348.4,149.9 350.2,149.9 352.1,149.9 353.9,149.9 355.7,149.9 357.6,149.9 359.4,149.9 361.2,149.9 363.0,149.9 364.8,149.9 366.7,149.9 368.5,150.0 370.3,150.0 372.2,150.0 374.0,150.0 375.8,150.0 377.6,150.0 379.5,150.0 381.3,150.0 383.1,150.0 384.9,150.0 386.8,150.0 388.6,150.0 390.4,150.0 392.2,150.0 394.1,150.0 395.9,150.0 397.7,150.0 399.5,150.0 401.4,150.0 403.2,150.0 405.0,150.0" fill="none" stroke="var(--primary)" stroke-width="2"/><line x1="40" y1="150" x2="405" y2="150" stroke="#64748b"/><line x1="40.0" y1="150" x2="40.0" y2="154" stroke="#64748b"/><text x="40.0" y="166" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="123.0" y1="150" x2="123.0" y2="154" stroke="#64748b"/><text x="123.0" y="166" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="205.9" y1="150" x2="205.9" y2="154" stroke="#64748b"/><text x="205.9" y="166" font-size="11" text-anchor="middle" fill="#64748b">10</text><line x1="288.9" y1="150" x2="288.9" y2="154" stroke="#64748b"/><text x="288.9" y="166" font-size="11" text-anchor="middle" fill="#64748b">15</text><line x1="371.8" y1="150" x2="371.8" y2="154" stroke="#64748b"/><text x="371.8" y="166" font-size="11" text-anchor="middle" fill="#64748b">20</text><line x1="365.2" y1="23" x2="365.2" y2="150" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4 3"/><text x="365.2" y="19" font-size="11" fill="#ef4444" text-anchor="middle">19.6</text><text x="222" y="184" font-size="11" text-anchor="middle" fill="#64748b">χ² 統計量（自由度 df = 3）</text></svg></div><div class="viz-cap">19.6 はグラフの右端のほうにあり、右側の面積（p値）はほとんど見えないほど小さい。</div></div>
+  <h3>手順4：結論</h3>
+  <p>p ≈ 0.0002 &lt; α = 0.01 → H₀ を<strong>棄却</strong>。広告に登場する人種の割合は、<strong>この調査の期間のフィラデルフィアの広告について</strong>、国勢調査の割合と同じではないという<strong>説得力のある証拠</strong>があります。</p>
+  <div class="warn-box">⚠️ 「証明された」とは言わず、「だからテレビ局に人種差別がある」とも言いません（そうかもしれませんが、この検定で言えることではありません）。言えるのは「地域の人口構成が広告に適切に反映されていないという証拠があり、<strong>さらなる調査が必要</strong>」ということまでです。</div>
+  <h3>手順5：どの人種が一番χ²に寄与したか</h3>
+  <p>各区分の寄与 (O − E)² / E を計算します。</p>
+<pre class="code-block">
+<span class="cl">contribution &lt;- (observed - expected)^<span class="nm">2</span> / expected</span>
+<span class="cl">contribution</span>
+<span class="cl"><span class="kw">sum</span>(contribution)</span>
+</pre><div class="output-reveal">[1]  2.9434758  0.2875297  3.7764025 12.5913142
+[1] 19.59872</div>
+  <table class="compare-table">
+    <tr><th>人種</th><th>観測 O</th><th>期待 E</th><th>寄与 (O − E)² / E</th></tr>
+    <tr><td>African American</td><td>57</td><td>71.5</td><td>2.94</td></tr>
+    <tr><td>Asian</td><td>11</td><td>12.9</td><td>0.29</td></tr>
+    <tr><td>Caucasian</td><td>330</td><td>296.5</td><td>3.78</td></tr>
+    <tr><td><strong>Hispanic</strong></td><td>6</td><td>23.0</td><td><strong>12.59</strong></td></tr>
+  </table>
+  <p>寄与の合計が 19.599。4番目の<strong>ヒスパニックの 12.59</strong> が全体の大半を占めます。期待は約23人なのに観測は<strong>6人</strong>だけ。つまり、<strong>ヒスパニックの登場人物が期待よりずっと少ない</strong>ことが、国勢調査とのズレのいちばんの原因です。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>χ² = 19.599、df = 3、p ≈ 0.0002。ヒスパニックの寄与（12.59）が最大で、期待23人に対して観測6人と大幅に少ない。結論は「証拠がある」まで。</p></div>
+  <div class="practice-card" id="p-m5g-u5">
+    <div class="ptitle">💻 ミニ練習：寄与から最大の区分を探す</div>
+    <p class="ptask">例2のデータ（<code>observed</code> = 57, 11, 330, 6、確率 0.177, 0.032, 0.734, 0.057）で、期待度数 <code>expected</code> と各区分の寄与 <code>contribution</code> を求め、さらに <code>chisq.test()</code> でχ²とp値を確認してください。</p>
+    <textarea class="code-editor" id="p-m5g-u5-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5g-u5', ['chisq.test', 'sum'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5g-u5', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5g-u5-result"></div>
+    <div class="answer-reveal" id="p-m5g-u5-answer" hidden>
+      <pre class="code-block">
+<span class="cl">observed &lt;- <span class="kw">c</span>(<span class="nm">57</span>, <span class="nm">11</span>, <span class="nm">330</span>, <span class="nm">6</span>)</span>
+<span class="cl">null_p &lt;- <span class="kw">c</span>(<span class="nm">0.177</span>, <span class="nm">0.032</span>, <span class="nm">0.734</span>, <span class="nm">0.057</span>)</span>
+<span class="cl">expected &lt;- <span class="kw">sum</span>(observed) * null_p</span>
+<span class="cl">contribution &lt;- (observed - expected)^<span class="nm">2</span> / expected</span>
+<span class="cl">contribution</span>
+<span class="cl"><span class="kw">chisq.test</span>(observed, p = null_p)</span>
+</pre>
+      <p class="answer-note">寄与は 2.94, 0.29, 3.78, 12.59。<code>chisq.test</code> は X-squared = 19.599, df = 3, p-value = 0.0002055 を返します（この関数には、度数をそのまま渡せます）。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">The NHL birthday data are counts of players born in each quarter of the year (one random sample of 80 players). Why can a t-test or ANOVA not be used?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The sample of 80 players is too small for any hypothesis test to be valid</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The variable is categorical, but they need quantitative data</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The players were not selected by a random sampling method at all</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The quarters of the year form a time series, and not a group</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">A random sample of 60 players is classified into 4 quarters. Under H0 (birthdays uniform), what is the expected count in each quarter?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>4</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>60</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>25</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>15</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A goodness-of-fit test compares observed counts across 12 months with the null model. How many degrees of freedom does the chi-square distribution have?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>11</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>12</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>13</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>1</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">When computing chi-square, why is each squared deviation divided by the expected count?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To make all of the deviations add up to exactly zero in every sample</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To change the squared values into percentages of the sample size</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To weight each deviation: 10 off is bigger news when E = 10</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To guarantee that the p-value always ends up smaller than alpha</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which R command gives the p-value for a chi-square statistic of 11.2 with df = 3?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pchisq(q = 11.2, df = 3)</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>pchisq(q = 11.2, df = 3, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>qchisq(p = 11.2, df = 3, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>pnorm(q = 11.2, mean = 0, lower.tail = FALSE)</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In the NHL example, p = 0.0107. Which interpretation is correct?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>If birthdays are uniform, data this extreme or more has a 1.07% chance</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>There is a 1.07% chance that the null hypothesis is actually true for the whole league</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The alternative hypothesis is true with a probability of 98.93% in this season</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Exactly 1.07% of all NHL players were born in the first quarter of the year</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">With alpha = 0.05 and p = 0.0107, which conclusion is best worded?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The result is not statistically significant, so we conclude that birthdays are uniform</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>We have proved that every NHL season has non-uniform birthdays across the quarters</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The counts 32, 20, 16, 12 are unequal, so H0 is certainly false for the whole league</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Reject H0: convincing evidence that birthdays this season are not uniform</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In the advertisement example the expected counts are 71.5, 12.9, 296.5, 23.0 and the contributions are 2.94, 0.29, 3.78, 12.59. Which statement is correct?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Caucasian characters contributed most, because they are the most numerous group</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Asian characters contributed most, because their expected count is the smallest</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Hispanic characters contributed most: 6 observed vs about 23 expected</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>All four groups contributed equally to the chi-square statistic overall</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 0, 3, 2];
+var FEEDBACKS=["t procedures and ANOVA need quantitative data. Counting how many players fall in each quarter is categorical data, so a chi-square goodness-of-fit test is used.", "E = n × p = 60 × 0.25 = 15. Expected counts are long-run averages, so they need not be whole numbers or match any single sample.", "df = k − 1 = 12 − 1 = 11, where k is the number of categories (not the sample size).", "Observed 0 vs expected 10 and observed 990 vs expected 1000 both have (O − E)² = 100, but the first is far more surprising. Dividing by E gives 10 versus 0.1.", "The p-value is the area to the right of the statistic, so lower.tail = FALSE is needed (answer about 0.0107). Without it you get the left-tail area, about 0.989.", "A p-value is computed assuming H0 is true: it is the probability of a test statistic as large as, or larger than, the one observed. It is not the probability that H0 is true.", "p < alpha, so reject H0 and report convincing evidence for Ha, about the population and the season sampled. Avoid the word proof, because a Type I error is still possible.", "Contribution = (O − E)² / E. The Hispanic contribution, 12.59, is the largest (6 observed vs 23 expected), giving chi-square = 19.599 with df = 3 and p ≈ 0.0002."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">goodness-of-fit test (GOF)</div><div class="term-en">適合度検定</div><div class="term-def">観測した度数の分布が、期待する分布に当てはまるかを調べるχ²検定。</div></div>
+    <div class="term-item"><div class="term-name">observed count (O)</div><div class="term-en">観測度数</div><div class="term-def">データで実際に数えた各区分の人数・個数。</div></div>
+    <div class="term-item"><div class="term-name">expected count (E)</div><div class="term-en">期待度数</div><div class="term-def">H₀が正しいときの平均的な度数。E = n × p。</div></div>
+    <div class="term-item"><div class="term-name">chi-square statistic (χ²)</div><div class="term-en">χ²検定統計量</div><div class="term-def">Σ (O − E)² / E。ズレが大きいほど大きい。</div></div>
+    <div class="term-item"><div class="term-name">contribution</div><div class="term-en">寄与</div><div class="term-def">各区分の (O − E)² / E。どの区分がズレの原因かが分かる。</div></div>
+    <div class="term-item"><div class="term-name">degrees of freedom (df)</div><div class="term-en">自由度</div><div class="term-def">適合度検定では カテゴリ数 − 1。</div></div>
+    <div class="term-item"><div class="term-name">chi-square distribution</div><div class="term-en">χ²分布</div><div class="term-def">右に裾が長い分布。形は自由度で決まる。</div></div>
+    <div class="term-item"><div class="term-name">p-value</div><div class="term-en">p値</div><div class="term-def">H₀を仮定して、観測以上に極端な統計量が出る確率（右側の面積）。</div></div>
+    <div class="term-item"><div class="term-name">significance level (α)</div><div class="term-en">有意水準</div><div class="term-def">結論を決める基準。指定がなければ0.05。研究前に決める。</div></div>
+    <div class="term-item"><div class="term-name">reject H₀ / fail to reject H₀</div><div class="term-en">H₀を棄却 / 棄却できない</div><div class="term-def">p &lt; α なら棄却、p &gt; α なら棄却できない。</div></div>
+    <div class="term-item"><div class="term-name">Type I / Type II error</div><div class="term-en">第1種・第2種の過誤</div><div class="term-def">Type I は正しいH₀を棄却、Type II は誤ったH₀を棄却しそこなう。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>適合度検定の流れは「<strong>仮説 → 期待度数 → 条件確認 → χ² → df = k − 1 → pchisq(..., lower.tail = FALSE) → 結論（evidence）</strong>」。Rに渡すのは度数ではなく<strong>元データ</strong>、というのも覚えておきましょう。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：M5 χ²① 適合度検定（GOF）</p>
+  <p style="margin-top:.5rem;"><a href="m5_anova_post.html">← ANOVA③ 事後検定</a> · <a href="m5_chi_two.html">χ²② 独立性・均質性 →</a> · <a href="m5_chi_gof_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

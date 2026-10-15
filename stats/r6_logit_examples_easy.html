@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：650 M6 ロジスティック回帰の実例(二値・連続・German credit・Shiny)</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M6 🧪 実例・Shiny 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy active" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">650 M6 · Logistic Regression Examples 🍎</div>
+    <h1>🍎 超やさしい版：ロジスティック回帰の実例</h1>
+  <p>German credit で「切片」と「係数」の意味を数字で確かめ、最後に Shiny アプリを見ます。</p>
+    <div class="unit-nav"><a href="#u1">切片だけ</a><a href="#u2">二値：切片</a><a href="#u3">二値：係数</a><a href="#u4">連続：Age</a><a href="#u5">Shiny</a><a href="r6_logit_examples.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①は Another Example: German credit、②は One binary predictor Logistic regression、③は Binary Predictor Interpretation、④は Logistic regression with one continuous predictor、⑤は Shiny app。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>German credit：切片だけのモデル</h2><div class="unit-sub">全体の対数オッズ</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>予測変数がないとき、切片は「全体の log odds」。Good = 1。</strong></p></div>
+  <p>ドイツの顧客 1,000 人のデータ（<code>GermanCredit</code>）。信用が Good の人 700 人、Bad の人 300 人。<code>contrasts()</code> で Good = 1 と確認します。</p>
+<pre class="code-block">
+<span class="cl">mod0 &lt;- <span class="kw">glm</span>(Class ~ <span class="nm">1</span>, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl"><span class="kw">summary</span>(mod0)$coefficients</span>
+</pre><div class="output-reveal">             Estimate Std. Error  z value     Pr(&gt;|z|)
+(Intercept) 0.8472979 0.06900652 12.27852 1.181419e-34</div>
+  <div class="big-rule"><div class="ru-arrow">🔁</div><div class="ru-text"><strong>確率 0.7 → オッズ 0.7 / 0.3 = 2.33 → 対数オッズ log(2.33) = 0.847（= 切片）</strong></div></div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>切片 0.847 は、全体の確率 0.7 を「オッズ → log」に変えた数。確率・オッズ・対数オッズの往復ができるようにしておこう。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. Class の 1 は Good と Bad のどちら？<span class="cp-a">A. Good（<code>contrasts()</code> で確認）。</span></div><div class="cp-q">Q2. 切片 0.847 はどう出る？<span class="cp-a">A. log(0.7 / 0.3) = 0.847。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>二値の予測変数：切片</h2><div class="unit-sub">ForeignWorker は 0 = 外国人</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>切片は「x = 0 の人たちの log odds」。外国人 (FW = 0) の Good 確率は 33/37 = 0.892。</strong></p></div>
+  <p>ForeignWorker は<strong>0 = 外国人、1 = 国内</strong>（ふつうと逆！）。外国人 37 人、国内 963 人です。</p>
+  <table class="compare-table"><tr><th></th><th>FW = 0（外国人）</th><th>FW = 1（国内）</th></tr><tr><td>Bad</td><td>4</td><td>296</td></tr><tr><td>Good</td><td>33</td><td>667</td></tr></table>
+<pre class="code-block">
+<span class="cl">mod_fw &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker, <span class="kw">binomial</span>(), <span class="kw">data</span> = gc2)</span>
+<span class="cl"><span class="kw">summary</span>(mod_fw)$coefficients</span>
+</pre><div class="output-reveal">               Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept)    2.110213  0.5294184  3.985908 6.722255e-05
+ForeignWorker -1.297783  0.5340052 -2.430281 1.508712e-02</div>
+  <div class="big-rule"><div class="ru-arrow">🧮</div><div class="ru-text"><strong>切片 2.1102 → exp() でオッズ 8.25 → 8.25 ÷ (1 + 8.25) = 0.8919 = 33/37</strong></div></div>
+  <div class="warn-box">⚠️ 係数が負 → 0 から 1（外国人 → 国内）で Good の log odds が下がる → 外国人のほうが Good になりやすい。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>予測変数が入ったら、切片は「x = 0 のときの対数オッズ」。exp() でオッズ、odds ÷ (1 + odds) で確率に戻す。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. FW = 0 はどんな人？<span class="cp-a">A. 外国人労働者（yes）。</span></div><div class="cp-q">Q2. 外国人の Good 確率は？<span class="cp-a">A. 33/37 = 0.892（オッズ 8.25）。</span></div><div class="cp-q">Q3. 係数が負だと何が言える？<span class="cp-a">A. FW が 0 → 1 で Good が減る。外国人のほうが良い信用になりやすい。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>二値の予測変数：係数</h2><div class="unit-sub">オッズの比（割り算）の log</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>係数 = ln（新しいオッズ ÷ 古いオッズ）。足し算ではなく割り算。</strong></p></div>
+  <table class="compare-table"><tr><th></th><th>x = 0（外国人）</th><th>x = 1（国内）</th></tr><tr><td>確率</td><td>0.8919</td><td>0.6926 (= 667/963)</td></tr><tr><td>オッズ</td><td>8.25</td><td>2.2534</td></tr></table>
+  <div class="big-rule down"><div class="ru-arrow">➗</div><div class="ru-text"><strong>2.2534 ÷ 8.25 = 0.2731　→　ln(0.2731) = −1.2978 = 係数</strong></div></div>
+<pre class="code-block">
+<span class="cl">odds1 / odds0</span>
+<span class="cl"><span class="kw">log</span>(odds1 / odds0)</span>
+</pre><div class="output-reveal">[1] 0.2731368
+[1] -1.297783</div>
+  <div class="note-box">🔑 オッズが同じなら x ÷ x = 1。下がると 1 より小さい小数。0.273 は約 <strong>73% の減少</strong>（国内のオッズは外国人の 0.273 倍）。</div>
+  <div class="warn-box">⚠️ 確率の差（0.891 − 0.693）は係数ではない。比は「新 ÷ 古」の向きで。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>係数は「x を 0 → 1 にしたとき、オッズが何倍になるか」の log。0.273 倍 = 約 73% 減。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 係数はどう計算する？<span class="cp-a">A. 新しいオッズ ÷ 古いオッズ を取り、自然対数にする。</span></div><div class="cp-q">Q2. 0.273 は何を表す？<span class="cp-a">A. 国内のオッズが外国人の 0.273 倍（約 73% 減）。</span></div><div class="cp-q">Q3. 確率の引き算でもよい？<span class="cp-a">A. だめ。割り算（オッズの比）。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>連続の予測変数 Age</h2><div class="unit-sub">1 歳ごとにオッズ 約 1.019 倍</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>連続変数でも同じ。係数 = 1 単位増えたときの対数オッズの変化。どの年齢でも同じ。</strong></p></div>
+  <p>平均年齢は Bad が 34.0 歳、Good が 36.2 歳。Age の係数は 0.0184（p = 0.0042）。</p>
+  <table class="compare-table"><tr><th>Age</th><th>確率</th><th>オッズ</th></tr><tr><td>0</td><td>0.5501</td><td>1.2225</td></tr><tr><td>1</td><td>0.5546</td><td>1.2453</td></tr></table>
+  <div class="big-rule mid"><div class="ru-arrow">🎂</div><div class="ru-text"><strong>1.2453 ÷ 1.2225 = 1.0186　→　ln(1.0186) = 0.0184 = 係数</strong><br>55 → 56 歳でも 33 → 34 歳でも、比は同じ 1.0186。</div></div>
+  <ol><li>回帰を実行 → 2. 式に代入 → 3. x = 0 の確率 → 4. オッズ → 5. x = 1 の確率 → 6. オッズ → 7. 比 → 8. log ＝ 係数</li></ol>
+  <div class="note-box">🎯 暗記は不要。でも試験では知っていると楽。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>年齢が 1 歳増えるごとに、Good のオッズは約 1.019 倍。比はどの年齢でも同じ。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. Age の係数 0.0184 の意味は？<span class="cp-a">A. 1 歳増えると対数オッズが 0.0184 増える（オッズ約 1.019 倍）。</span></div><div class="cp-q">Q2. 55 → 56 と 33 → 34 で比は違う？<span class="cp-a">A. 同じ 1.0186。</span></div></div>
+</div>
+<div class="unit" id="u5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>Shiny アプリ</h2><div class="unit-sub">LLM と作るダッシュボード</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>モデルは公開して使われてこそ価値がある。LLM には小さく頼み、エラーは貼って直す。</strong></p></div>
+  <p>Loan Default のデータ（255,000 行 × 18 列）から 50,000 行を無作為抽出し、ロジスティック回帰で default の確率を予測。LoanID は除く。有意でない変数は除く（手動でもステップワイズでも同じ結果）。</p>
+  <table class="compare-table"><tr><th>入力</th><th>確率</th><th>表示</th></tr><tr><td>ふつうの借り手</td><td>約 6%、のちに約 8%</td><td>低リスク</td></tr><tr><td>信用スコア悪い＋高額ローン</td><td>約 12%</td><td>まだ低リスク</td></tr></table>
+  <div class="note-box">🧠 Education は水準を 1 つだけ外せないので、ワンホット符号化を使う（人が LLM に提案する）。</div>
+  <div class="warn-box">⚠️ 実行中の Shiny は停止してから再実行。公開は shinyapps.io、成果は GitHub と履歴書へ。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>掃除 → モデル → アプリ → 公開。LLM には一度に全部ではなく小分けで頼む。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. なぜ小分けでプロンプトを出す？<span class="cp-a">A. 一度に頼みすぎるとミスが増え、直しにくいから。</span></div><div class="cp-q">Q2. エラーが出たら？<span class="cp-a">A. エラー文をそのまま LLM に貼って直してもらう。</span></div></div>
+</div>
+<div class="page-nav"><a href="r6_logit_assess_easy.html">← モデル評価</a><a href="r6_logit_examples.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 切片 = x = 0 の対数オッズ</p><p style="margin:.4rem 0">• 係数 = オッズの比の log</p><p style="margin:.4rem 0">• exp(係数) = オッズ比</p><p style="margin:.4rem 0">• 0.273 倍 = 約 73% 減</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">練習問題、英語MCQクイズ、Shiny の詳細は <a href="r6_logit_examples.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：650 M6 ロジスティック回帰の実例 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="r6_logit_examples.html">← 本編</a> · <a href="r6_logit_assess_easy.html">モデル評価</a> · <a href="exercises.html">演習へ →</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

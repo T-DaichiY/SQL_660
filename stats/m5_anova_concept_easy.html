@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M5 ANOVA①　考え方と仕組み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 🧮 ANOVA① 考え方 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy active" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M5 · Inference — ANOVA (1) 🍎</div>
+    <h1>🍎 超やさしい版：ANOVA①（考え方と仕組み）</h1>
+  <p>「<strong>3つ以上のグループで、平均に差はある？</strong>」を、1回の検定で調べる方法です。</p>
+    <div class="unit-nav"><a href="#u1">ANOVAって？</a><a href="#u2">SS・df・MS・F</a><a href="#u3">なぜ t 検定じゃダメ？</a><a href="#u4">体重データで計算</a><a href="m5_anova_concept.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①②は <strong>ANOVA 1 (Concept and Terminology)</strong>、③は <strong>ANOVA 2 (The problem with multiple comparison)</strong>、④は <strong>ANOVA 3 (ANOVA Mechanics)</strong>。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ANOVAってなに？</h2><div class="unit-sub">ばらつきの比で判断する</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>3グループ以上の平均を比べるのが ANOVA。「グループ間のちがい」÷「グループ内のばらつき」が大きいほど、平均に差がある証拠が強い。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🎯</div>
+    <div class="ru-text"><strong>平均がはなれていて、グループの中はギュッとまとまっている</strong> → 差がありそう！<br><strong>平均が近くて、グループの中はバラバラ</strong> → 差があるか分からない。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>比（F）</th><th>意味</th></tr>
+    <tr><td>大きい</td><td>平均に差がある証拠が強い</td></tr>
+    <tr><td>小さい</td><td>証拠が弱い</td></tr>
+  </table>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>2グループなら <strong>t 検定</strong>、3グループ以上なら <strong>ANOVA</strong>。この比を <strong>F（エフ）</strong>と呼びます。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 2グループのときは何を使う？<span class="cp-a">A. two-sample t-test。ANOVA は3グループ以上。</span></div><div class="cp-q">Q2. F が大きいと何が言える？<span class="cp-a">A. グループ間のちがいが、グループ内のばらつきよりずっと大きい。平均に差がある証拠が強い。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>SS・df・MS・F</h2><div class="unit-sub">ことばを整理しよう</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>SS total ＝ SS group ＋ SS error。MS ＝ SS ÷ df。F ＝ MS group ÷ MS error。</strong></p></div>
+  <table class="compare-table">
+    <tr><th>名前</th><th>ひとこと</th></tr>
+    <tr><td>SS total</td><td>ぜんぶのばらつき（全体平均からの距離を2乗して足す）</td></tr>
+    <tr><td>SS group</td><td>グループ平均が全体平均からはなれている度合い</td></tr>
+    <tr><td>SS error</td><td>グループの中のばらつき</td></tr>
+  </table>
+  <div class="big-rule mid">
+    <div class="ru-arrow">➕</div>
+    <div class="ru-text"><strong>SS total ＝ SS group ＋ SS error</strong>　例：10 ＋ 5 ＝ 15。<br>自由度も同じ：<strong>df total ＝ N − 1、df group ＝ k − 1、df error ＝ N − k</strong>。</div>
+  </div>
+  <p>データが12個（N ＝ 12）、グループが3つ（k ＝ 3）なら、df は 11、2、9 です（11 ＝ 2 ＋ 9）。</p>
+<pre class="code-block">
+<span class="cl">N &lt;- <span class="nm">12</span>; k &lt;- <span class="nm">3</span></span>
+<span class="cl"><span class="kw">c</span>(total = N - <span class="nm">1</span>, group = k - <span class="nm">1</span>, error = N - k)</span>
+</pre><div class="output-reveal">total group error 
+   11     2     9 </div>
+  <div class="warn-box">⚠️ 2乗するのは、プラスとマイナスが打ち消し合って 0 にならないようにするためです。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>SS は「ばらつきの合計」、df は「自由に動ける数」、MS は SS ÷ df。<strong>3つの SS のうち2つ分かれば、残りは足し算か引き算で出せます。</strong></p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SS group ＝ 10、SS error ＝ 5 のとき SS total は？<span class="cp-a">A. 15（10 ＋ 5）。</span></div><div class="cp-q">Q2. N ＝ 12、k ＝ 3 のとき df error は？<span class="cp-a">A. N − k ＝ 12 − 3 ＝ 9。</span></div><div class="cp-q">Q3. MS はどう作る？<span class="cp-a">A. SS ÷ df。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>なぜ t 検定を繰り返してはダメ？</h2><div class="unit-sub">まぐれ当たりが増える</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>t 検定を何回も繰り返すと「まぐれ当たり」が増える。だから ANOVA で全部まとめて1回で比べる。</strong></p></div>
+  <div class="big-rule down">
+    <div class="ru-arrow">🎰</div>
+    <div class="ru-text"><strong>くじを1回引くより、3回引くほうが「当たり」が出やすい。</strong>検定も同じで、回数が増えるほど「まちがって差があると言う」確率がふくらみます。</div>
+  </div>
+  <p>3つのプランを2つずつ比べると3回の検定。α ＝ 0.05 でも、実質のまちがい率は：</p>
+<pre class="code-block">
+<span class="cl"><span class="nm">1</span> - (<span class="nm">1</span> - <span class="nm">0.05</span>)^<span class="nm">3</span></span>
+</pre><div class="output-reveal">[1] 0.142625</div>
+  <table class="compare-table">
+    <tr><th>グループ数</th><th>検定の回数</th><th>まちがい率</th></tr>
+    <tr><td>3</td><td>3</td><td>0.143（約14%）</td></tr>
+    <tr><td>4</td><td>6</td><td>0.265</td></tr>
+    <tr><td>10</td><td>45</td><td>0.901（約90%）</td></tr>
+  </table>
+  <div class="warn-box">⚠️ ANOVA は「どこかに差がある」としか言えません。<strong>どのグループが違うか</strong>は、あとで<strong>事後検定（post hoc test）</strong>で調べます。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>帰無仮説 H₀：<strong>すべての平均が同じ</strong>。対立仮説：<strong>少なくとも1組は違う</strong>。ANOVA は全員まとめて1回で判断します。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 3回の t 検定で、まちがい率は何％くらい？<span class="cp-a">A. 約14%（1 − 0.95³ ＝ 0.143）。</span></div><div class="cp-q">Q2. ANOVA が有意なとき言えることは？<span class="cp-a">A. 少なくとも2つの平均が違う。どれが違うかは事後検定で調べる。</span></div></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>体重データで計算</h2><div class="unit-sub">3つの減量プラン</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>F ＝ 57 ÷ 4.86 ＝ 11.7。臨界値 4.74 より大きく、p ＝ 0.0058。だから「少なくとも2つのプランで平均が違う」。</strong></p></div>
+  <p>3つの減量プランの体重減少（lb）：Plan 1 は 7, 9, 5, 7（平均 7）、Plan 2 は 9, 11, 7（平均 9）、Plan 3 は 15, 12, 18（平均 15）。全体平均は 10。</p>
+  <table class="compare-table">
+    <tr><th>要因</th><th>df</th><th>SS</th><th>MS</th><th>F</th></tr>
+    <tr><td>グループ</td><td>2</td><td>114</td><td>57</td><td>11.7</td></tr>
+    <tr><td>誤差</td><td>7</td><td>34</td><td>4.86</td><td></td></tr>
+    <tr><td>合計</td><td>9</td><td>148</td><td></td><td></td></tr>
+  </table>
+  <div class="big-rule">
+    <div class="ru-arrow">✅</div>
+    <div class="ru-text"><strong>SS group：</strong>9×4 ＋ 1×3 ＋ 25×3 ＝ 114　<strong>SS error：</strong>8 ＋ 8 ＋ 18 ＝ 34<br><strong>114 ＋ 34 ＝ 148 ＝ SS total</strong>、<strong>df 2 ＋ 7 ＝ 9</strong>。</div>
+  </div>
+  <p>p 値は R でこう求めます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">pf</span>(<span class="nm">11.735</span>, <span class="nm">2</span>, <span class="nm">7</span>, lower.tail = FALSE)</span>
+</pre><div class="output-reveal">[1] 0.005811515</div>
+  <div class="warn-box">⚠️ F が臨界値 4.74 より大きい、または p 値が 0.05 より小さければ帰無仮説を棄却。ただし「どのプランが良いか」は事後検定で調べます。</div>
+<div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「<strong>グループ間（57）</strong>」が「<strong>グループ内（4.86）</strong>」よりずっと大きい → 平均に違いがある。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SS error は？<span class="cp-a">A. 8 ＋ 8 ＋ 18 ＝ 34。</span></div><div class="cp-q">Q2. F の計算は？<span class="cp-a">A. MS group ÷ MS error ＝ 57 ÷ 4.86 ≈ 11.7。</span></div><div class="cp-q">Q3. p ＝ 0.0058 から言えることは？<span class="cp-a">A. 0.05 より小さいので有意。少なくとも2つのプランの平均が違う。</span></div></div>
+</div>
+<div class="page-nav"><a href="m5_t_cond.html">← 前のレッスン</a><a href="m5_anova_concept.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• ANOVA：3グループ以上の平均を比べる</p><p style="margin:.4rem 0">• F ＝ MS group ÷ MS error</p><p style="margin:.4rem 0">• SS total ＝ SS group ＋ SS error</p><p style="margin:.4rem 0">• 有意でも「どこが違うか」は事後検定で</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">図解や英語MCQクイズは <a href="m5_anova_concept.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M5 ANOVA① 考え方と仕組み — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m5_anova_concept.html">← 本編</a> · <a href="m5_anova_calc.html">ANOVA②へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

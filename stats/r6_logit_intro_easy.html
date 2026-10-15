@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：650 M6 ロジスティック回帰の基本</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M6 🎚️ ロジスティック入門 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy active" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Logistic Regression — Basics 🍎</div>
+    <h1>🍎 超やさしい版：ロジスティック回帰の基本</h1>
+  <p>「<strong>どっちになる？</strong>」の確率を予測するのが、ロジスティック回帰。カギは<strong>確率 ⇄ 対数オッズ</strong>の行き来です。</p>
+    <div class="unit-nav"><a href="#u1">ロジスティック回帰とは</a><a href="#u2">確率・オッズ</a><a href="#u3">カギ</a><a href="#u4">Age の係数</a><a href="r6_logit_intro.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画対応</strong>：①「What is logistic regression」、②「Logistic regression model」、③「Key to logistic regression」、④「Logistic regression with one continuous predictor」。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ロジスティック回帰とは</h2><div class="unit-sub">結果が2択のとき</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>結果が「2択」なら <code>glm(…, family = binomial)</code>。係数の読み方は線形回帰とは別物。</strong></p></div>
+  <div class="big-rule"><div class="ru-arrow">🐚</div><div class="ru-text"><strong>線形回帰</strong>：収入のように「いくらか」を予測。<br><strong>ロジスティック回帰</strong>：スパム or 普通のメール、のように「どっちか」の確率を予測。</div></div>
+  <p>2択の片方を <strong>0</strong>、もう片方を <strong>1</strong> にします。アワビの <code>Type</code>（オス M／メス F）を殻の直径 <code>Diameter</code> から予測してみましょう（R は文字の順で F=0、M=1 にします。だから「オスの確率」を予測します）。</p>
+<pre class="code-block">
+<span class="cl">model &lt;- <span class="kw">glm</span>(Type ~ Diameter, family = binomial, data = AB2)</span>
+<span class="cl"><span class="kw">summary</span>(model)</span>
+</pre>
+  <div class="output-reveal">
+Call:
+glm(formula = Type ~ Diameter, family = binomial, data = AB2)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)   1.2891     0.2229   5.782 7.37e-09 ***
+Diameter     -2.5332     0.4902  -5.168 2.37e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+...</div>
+  <div class="warn-box">⚠️ 表の見た目は線形回帰とそっくりですが、<strong>「回帰は回帰だから同じ読み方」は間違い</strong>。今は「Diameter は有意（p = 2.37e-07）」が読めればOK。Deviance residuals と Fisher scoring は今は気にしなくて大丈夫です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>lm</code>ではなく<code>glm</code>、そして<code>family = binomial</code>。3つ以上の選択肢なら「多項」（multinomial）という別の回帰で、今は扱いません。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 結果が「卒業する／しない」のとき、使うのは<code>lm</code>と<code>glm</code>のどっち？<span class="cp-a">A. <code>glm(…, family = binomial)</code>。2択の結果だから。</span></div><div class="cp-q">Q2. アワビの<code>Type</code>で、1にあたるのはM？F？<span class="cp-a">A. M（オス）。Rは文字の順で最初のFを0、次のMを1にするから。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>確率・オッズ・対数オッズ</h2><div class="unit-sub">3つの言い方</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>確率 → オッズ → 対数オッズ。係数がわかったら、<code>P = 1/(1+e<sup>−式</sup>)</code> で確率にもどす。</strong></p></div>
+  <div class="big-rule"><div class="ru-arrow">🎰</div><div class="ru-text"><strong>オッズ</strong> ＝ 起こる ÷ 起こらない。確率 0.8 なら 0.8÷0.2＝<strong>4</strong>（「4対1」）。<br><strong>対数オッズ</strong> ＝ オッズの<strong>自然対数</strong>。ln(4)＝<strong>1.3863</strong>。</div></div>
+<pre class="code-block">
+<span class="cl">p &lt;- <span class="kw">c</span>(<span class="nm">0.1</span>, <span class="nm">0.5</span>, <span class="nm">0.7</span>, <span class="nm">0.9</span>)</span>
+<span class="cl"><span class="kw">data.frame</span>(p, odds = p / (<span class="nm">1</span> - p), log_odds = <span class="kw">log</span>(p / (<span class="nm">1</span> - p)))</span>
+</pre><div class="output-reveal">    p      odds   log_odds
+1 0.1 0.1111111 -2.1972246
+2 0.5 1.0000000  0.0000000
+3 0.7 2.3333333  0.8472979
+4 0.9 9.0000000  2.1972246</div>
+  <p>2択なので、片方の確率がわかればもう片方は <strong>1 − P</strong>。たとえば直径 0.4 のアワビがオスの確率は 0.5685、メスは 0.4315 です。</p>
+<pre class="code-block">
+<span class="cl">eta &lt;- <span class="nm">0.2758</span>                 <span class="cm"># 回帰式の値 b0 + b1 × 0.4</span></span>
+<span class="cl"><span class="nm">1</span> / (<span class="nm">1</span> + <span class="kw">exp</span>(-eta))</span>
+</pre><div class="output-reveal">[1] 0.5685</div>
+  <div class="note-box">📌 ここは濃い内容です。<strong>全部わからなくても、次に進んで大丈夫</strong>。あとで戻ると意味が見えてきます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><strong>流れ</strong>が先、数学は後。「確率 → オッズ → 対数オッズ」で係数を理解し、その係数を式に入れて確率を出します。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 確率が 0.5 のとき、オッズと対数オッズは？<span class="cp-a">A. オッズ＝1、対数オッズ＝0。</span></div><div class="cp-q">Q2. P(M)＝0.6 なら P(F)は？<span class="cp-a">A. 1 − 0.6 ＝ 0.4。</span></div><div class="cp-q">Q3. 確率が0.1のとき、対数オッズは正？負？<span class="cp-a">A. 負（−2.1972）。起こりにくい → マイナス。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>カギ：logit と逆 logit</h2><div class="unit-sub">0〜1に折り返す</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>logit は「確率 → 対数オッズ」、逆 logit は「どんな数 → 0〜1の確率」。これがロジスティック回帰のカギ。</strong></p></div>
+  <div class="big-rule"><div class="ru-arrow">🔁</div><div class="ru-text">回帰式の値は<strong>どんな実数にもなる</strong>のに、確率は<strong>0〜1</strong>だけ。<br>その橋渡しをするのが<strong>逆 logit</strong>（シグモイド）。</div></div>
+  <p><code>p = 0.5</code> で一周してみましょう。</p>
+<pre class="code-block">
+<span class="cl">p &lt;- <span class="nm">0.5</span></span>
+<span class="cl">(odds &lt;- p / (<span class="nm">1</span> - p))         <span class="cm"># 0.5 / 0.5 = 1</span></span>
+<span class="cl">(logit &lt;- <span class="kw">log</span>(odds))          <span class="cm"># log(1) = 0</span></span>
+<span class="cl"><span class="nm">1</span> / (<span class="nm">1</span> + <span class="kw">exp</span>(-logit))         <span class="cm"># 逆変換: 1 / (1 + e^0) = 1/2</span></span>
+</pre><div class="output-reveal">[1] 1
+[1] 0
+[1] 0.5</div>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>p = 0.5 の場合</th></tr>
+    <tr><td>確率</td><td>0.5</td></tr>
+    <tr><td>オッズ ＝ p/(1−p)</td><td>1</td></tr>
+    <tr><td>対数オッズ ＝ ln(オッズ)</td><td>0</td></tr>
+    <tr><td>逆 logit ＝ 1/(1+e<sup>0</sup>)</td><td>0.5（元にもどる）</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>p = 0.5 は「オッズ1・対数オッズ0」の基準点。確率を変えても、同じ道を通って<strong>元にもどれます</strong>（p = 0.7 → 0.8473 → 0.7）。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 対数オッズ 0 を確率にもどすといくつ？<span class="cp-a">A. 0.5（1/(1+e⁰) ＝ 1/2）。</span></div><div class="cp-q">Q2. 逆 logit はどんな範囲の数を出す？<span class="cp-a">A. いつでも 0 より大きく 1 より小さい数（確率）。</span></div></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>連続の予測変数 Age</h2><div class="unit-sub">係数の意味を確かめる</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>係数 ＝ 予測変数が1増えたときの「対数オッズの変化」。オッズの変化は「割り算」。</strong></p></div>
+  <p>German credit（1000人）で、信用 Good（良い）の確率を年齢 <code>Age</code> から予測します。Good は 700人、Bad は 300人。Good の人のほうが少し年上（平均 36.22 歳 対 33.96 歳）です。</p>
+<pre class="code-block">
+<span class="cl">mod_age &lt;- <span class="kw">glm</span>(Class ~ Age, family = binomial, data = gc2)</span>
+<span class="cl"><span class="kw">coef</span>(<span class="kw">summary</span>(mod_age))</span>
+</pre><div class="output-reveal">              Estimate  Std. Error  z value    Pr(&gt;|z|)
+(Intercept) 0.20091865 0.232852767 0.862857 0.388216070
+Age         0.01843994 0.006434155 2.865946 0.004157657</div>
+  <p>Age の係数は <strong>0.01844</strong>。「1歳ふえると<strong>対数オッズ</strong>が 0.018 ふえる」という意味です。確かめてみましょう。</p>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>Age = 0</th><th>Age = 1</th></tr>
+    <tr><td>確率</td><td>0.5501</td><td>0.5546</td></tr>
+    <tr><td>オッズ</td><td>1.2225</td><td>1.2453</td></tr>
+  </table>
+  <div class="big-rule mid"><div class="ru-arrow">➗</div><div class="ru-text">オッズの比 ＝ 1.2453 ÷ 1.2225 ＝ <strong>1.0186</strong><br>その自然対数 ln(1.0186) ＝ <strong>0.0184</strong> ＝ <strong>係数</strong> 🎉</div></div>
+  <p>これは Age = 55 → 56 でも 33 → 34 でも<strong>同じ 1.0186</strong> になります。</p>
+  <div class="warn-box">⚠️ オッズの変化は<strong>引き算ではなく割り算</strong>（新 ÷ 旧）。確率そのものの増え方は一定ではありません（33→34歳で +0.0039、55→56歳で +0.0032）。</div>
+  <div class="note-box">📝 暗記はいりませんが、<strong>知っていると試験で楽</strong>。手順：回帰 → 式に代入 → x=0 の確率とオッズ → x=1 の確率とオッズ → オッズの比 → 自然対数 → 係数。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>Age の係数 0.0184 ＝ 「1歳ふえるとオッズが約 1.0186 倍」。<strong>確率が 0.0184 ふえる</strong>という意味ではありません。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. Age の係数 0.01844 は何の変化を表す？<span class="cp-a">A. Age が1つ増えたときの<strong>対数オッズ</strong>の変化。</span></div><div class="cp-q">Q2. オッズが 1.2225 から 1.2453 に変わった。変化の求め方は？<span class="cp-a">A. 割り算：1.2453 ÷ 1.2225 ＝ 1.0186。（その自然対数が 0.0184）</span></div><div class="cp-q">Q3. Good の確率が 0.55 のとき、Bad は？<span class="cp-a">A. 1 − 0.55 ＝ 0.45。</span></div></div>
+</div>
+
+<div class="page-nav"><a href="r5_selection.html">← 変数選択</a><a href="r6_logit_intro.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 2択の結果 → <code>glm(…, family = binomial)</code></p><p style="margin:.4rem 0">• 確率 → オッズ → 対数オッズ</p><p style="margin:.4rem 0">• 逆 logit：<code>1/(1+e<sup>−x</sup>)</code> で 0〜1 に</p><p style="margin:.4rem 0">• 係数 ＝ 対数オッズの変化</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">グラフ3枚、練習カード、英語MCQクイズは <a href="r6_logit_intro.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：650 M6 ロジスティック回帰の基本 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="r6_logit_intro.html">← 本編</a> · <a href="r6_logit_assess.html">モデルの評価へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

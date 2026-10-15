@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 ML⑥ 主成分分析（PCA）</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Machine Learning — PCA</div>
+  <h1>🧭 ML⑥：主成分分析（PCA）</h1>
+  <p>PCAの考え方、次元削減、手書き数字の可視化、成分数の選び方を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 考え方</a><a href="#unit2">② 次元削減</a><a href="#unit3">③ 数字</a><a href="#unit4">④ 成分数</a><a href="#quiz">📝 Quiz</a><a href="ml_pca_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 5.09 In Depth: Principal Component Analysis</li><li>Handbook 5.10 In-Depth: Manifold Learning（名前だけ）</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>主成分分析（PCA）のイメージ</h2><div class="unit-sub">データが一番ばらつく方向を見つける</div></div>
+  </div>
+<p><strong>PCA</strong>は教師なしの<strong>次元削減</strong>手法です。データの<strong>ばらつきが最も大きい方向</strong>（第1主成分）、次にそれと直交して大きい方向（第2主成分）…を順に見つけます。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> PCA</span>
+<span class="cl">rng = np.random.RandomState(<span class="nm">1</span>)</span>
+<span class="cl">X = np.dot(rng.rand(<span class="nm">2</span>, <span class="nm">2</span>), rng.randn(<span class="nm">2</span>, <span class="nm">200</span>)).T</span>
+</pre><pre class="code-block">
+<span class="cl">plt.scatter(X[:, <span class="nm">0</span>], X[:, <span class="nm">1</span>], alpha=<span class="nm">0.4</span>)</span>
+<span class="cl">plt.axis(<span class="st">'equal'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Correlated 2D data'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml6_data.png" alt="相関のある2次元データ" loading="lazy"></div><pre class="code-block">
+<span class="cl">pca = PCA(n_components=<span class="nm">2</span>)</span>
+<span class="cl">pca.fit(X)</span>
+<span class="cl"><span class="kw">print</span>(pca.components_.round(<span class="nm">3</span>))</span>
+<span class="cl"><span class="kw">print</span>(pca.explained_variance_.round(<span class="nm">3</span>))</span>
+</pre><div class="output-reveal">[[ 0.944  0.329]
+ [-0.329  0.944]]
+[0.763 0.018]</div><p><code>components_</code>が各主成分の向き、<code>explained_variance_</code>がその方向のばらつき（分散）です。</p><pre class="code-block">
+<span class="cl">plt.scatter(X[:, <span class="nm">0</span>], X[:, <span class="nm">1</span>], alpha=<span class="nm">0.3</span>)</span>
+<span class="cl"><span class="kw">for</span> length, vector <span class="kw">in</span> zip(pca.explained_variance_, pca.components_):</span>
+<span class="cl">    v = vector * <span class="nm">3</span> * np.sqrt(length)</span>
+<span class="cl">    plt.annotate(<span class="st">''</span>, pca.mean_ + v, pca.mean_, arrowprops=dict(arrowstyle=<span class="st">'-&gt;'</span>, linewidth=<span class="nm">2</span>, color=<span class="st">'black'</span>))</span>
+<span class="cl">plt.axis(<span class="st">'equal'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Principal axes'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml6_axes.png" alt="主成分の軸" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データの雲に「長い軸」と「短い軸」を引く。長い軸が第1主成分です。</p></div><div class="practice-card" id="p-ml6-u1">
+    <div class="ptitle">💻 ミニ練習：主成分の数</div>
+    <p class="ptask">学習済みの <code>pca</code> の <code>components_</code> の形（<code>shape</code>）を <code>sh</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml6-u1-input" rows="7"># pca は学習済み
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml6-u1", ["components_.shape"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml6-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml6-u1-result"></div>
+    <div class="answer-reveal" id="p-ml6-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">sh = pca.components_.shape</span>
+</pre>
+      <p class="answer-note">(2, 2) です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>次元を減らす</h2><div class="unit-sub">transform と inverse_transform</div></div>
+  </div>
+<p><code>n_components=1</code>にすると、2次元のデータが<strong>1次元</strong>に圧縮されます。<code>inverse_transform</code>で元の空間に戻すと、情報の一部が失われた様子が見えます。</p><pre class="code-block">
+<span class="cl">pca1 = PCA(n_components=<span class="nm">1</span>)</span>
+<span class="cl">X_pca = pca1.fit_transform(X)</span>
+<span class="cl"><span class="kw">print</span>(X.shape, <span class="st">'-&gt;'</span>, X_pca.shape)</span>
+<span class="cl"><span class="kw">print</span>(pca1.explained_variance_ratio_.round(<span class="nm">3</span>))</span>
+</pre><div class="output-reveal">(200, 2) -&gt; (200, 1)
+[0.976]</div><pre class="code-block">
+<span class="cl">X_new = pca1.inverse_transform(X_pca)</span>
+<span class="cl">plt.scatter(X[:, <span class="nm">0</span>], X[:, <span class="nm">1</span>], alpha=<span class="nm">0.2</span>, label=<span class="st">'original'</span>)</span>
+<span class="cl">plt.scatter(X_new[:, <span class="nm">0</span>], X_new[:, <span class="nm">1</span>], alpha=<span class="nm">0.8</span>, label=<span class="st">'1D projection'</span>)</span>
+<span class="cl">plt.axis(<span class="st">'equal'</span>)</span>
+<span class="cl">plt.legend()</span>
+</pre><div class="plot-out"><img src="images/ml6_proj.png" alt="1次元への射影" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>影絵のように、一番情報が残る向きへ押しつぶすイメージです。</p></div><div class="practice-card" id="p-ml6-u2">
+    <div class="ptitle">💻 ミニ練習：寄与率</div>
+    <p class="ptask">この<code>X</code>に<code>PCA(n_components=2)</code>を当てはめ、第1主成分の寄与率（<code>explained_variance_ratio_[0]</code>）を小数第3位で丸めて <code>r</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml6-u2-input" rows="7"># X は上のデータ
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml6-u2", ["explained_variance_ratio_", "round"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml6-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml6-u2-result"></div>
+    <div class="answer-reveal" id="p-ml6-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">r = round(PCA(n_components=<span class="nm">2</span>).fit(X).explained_variance_ratio_[<span class="nm">0</span>], <span class="nm">3</span>)</span>
+</pre>
+      <p class="answer-note">第1主成分だけで約0.98の情報が残ります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>高次元データを可視化：手書き数字</h2><div class="unit-sub">64次元を2次元に</div></div>
+  </div>
+<p>8×8ピクセルの手書き数字（<code>load_digits</code>）は、1枚が<strong>64次元</strong>のデータです。PCAで2次元にすると、数字ごとの塊が見えてきます。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.datasets <span class="kw">import</span> load_digits</span>
+<span class="cl">digits = load_digits()</span>
+<span class="cl"><span class="kw">print</span>(digits.data.shape)</span>
+<span class="cl">pca = PCA(<span class="nm">2</span>)</span>
+<span class="cl">proj = pca.fit_transform(digits.data)</span>
+<span class="cl"><span class="kw">print</span>(proj.shape)</span>
+</pre><div class="output-reveal">(1797, 64)
+(1797, 2)</div><pre class="code-block">
+<span class="cl">plt.scatter(proj[:, <span class="nm">0</span>], proj[:, <span class="nm">1</span>], c=digits.target, cmap=<span class="st">'tab10'</span>, s=<span class="nm">12</span>, alpha=<span class="nm">0.7</span>)</span>
+<span class="cl">plt.colorbar(label=<span class="st">'digit'</span>)</span>
+<span class="cl">plt.xlabel(<span class="st">'component 1'</span>)</span>
+<span class="cl">plt.ylabel(<span class="st">'component 2'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Digits in 2D'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml6_digits.png" alt="数字の2次元表示" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ラベルは色付けにだけ使いました。PCA自身はラベルを見ていません（教師なし）。</p></div><div class="teal-box">🔎 <strong>多様体学習</strong>（Handbook 5.10）：PCAのような「直線的な」圧縮ではなく、データがなす曲がった面を展開する手法（Isomapなど）の総称です。ここでは名前だけ知っておけば十分です。</div><div class="practice-card" id="p-ml6-u3">
+    <div class="ptitle">💻 ミニ練習：2成分の形</div>
+    <p class="ptask"><code>digits.data</code> を <code>PCA(n_components=3)</code> で変換した結果の形を <code>sh</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml6-u3-input" rows="7">from sklearn.datasets import load_digits
+digits = load_digits()
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml6-u3", ["PCA(n_components=3)", "fit_transform", "shape"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml6-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml6-u3-result"></div>
+    <div class="answer-reveal" id="p-ml6-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">sh = PCA(n_components=<span class="nm">3</span>).fit_transform(digits.data).shape</span>
+</pre>
+      <p class="answer-note">(1797, 3) です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>成分の数をどう選ぶ？</h2><div class="unit-sub">累積寄与率</div></div>
+  </div>
+<p>主成分を何個残すかは、<strong>累積寄与率</strong>（足し合わせた説明力）で決めます。たとえば「情報の90%を残す最小の個数」を探します。</p><pre class="code-block">
+<span class="cl">pca_full = PCA().fit(digits.data)</span>
+<span class="cl">cum = np.cumsum(pca_full.explained_variance_ratio_)</span>
+<span class="cl">plt.plot(cum)</span>
+<span class="cl">plt.axhline(<span class="nm">0.9</span>, color=<span class="st">'gray'</span>, linestyle=<span class="st">'--'</span>)</span>
+<span class="cl">plt.xlabel(<span class="st">'number of components'</span>)</span>
+<span class="cl">plt.ylabel(<span class="st">'cumulative explained variance'</span>)</span>
+</pre><div class="plot-out"><img src="images/ml6_cum.png" alt="累積寄与率" loading="lazy"></div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(<span class="st">'90%を超える最小の成分数:'</span>, int(np.argmax(cum &gt;= <span class="nm">0.9</span>)) + <span class="nm">1</span>)</span>
+</pre><div class="output-reveal">90%を超える最小の成分数: 21</div><p><code>PCA(0.9)</code>のように割合を渡すと、自動でその個数を選んでくれます。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(PCA(<span class="nm">0.9</span>).fit(digits.data).n_components_)</span>
+</pre><div class="output-reveal">21</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>64個の成分のうち、約20個で情報の9割が説明できます。</p></div><div class="practice-card" id="p-ml6-u4">
+    <div class="ptitle">💻 ミニ練習：累積</div>
+    <p class="ptask"><code>ratio = np.array([0.6, 0.25, 0.1, 0.05])</code> の累積和を <code>cum</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml6-u4-input" rows="7">ratio = np.array([0.6, 0.25, 0.1, 0.05])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml6-u4", ["np.cumsum"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml6-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml6-u4-result"></div>
+    <div class="answer-reveal" id="p-ml6-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">cum = np.cumsum(ratio)</span>
+</pre>
+      <p class="answer-note">[0.6, 0.85, 0.95, 1.0] です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does the first principal component represent?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The feature that has the most missing values</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The class label assigned to each of the samples</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean value of every single feature</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The direction of greatest variance</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Is PCA supervised or unsupervised?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Unsupervised</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Supervised, because it needs the target y</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Supervised, because it relies on a held-out test set</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither, it is only a tool for making plots</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does explained_variance_ratio_ tell you?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The number of samples in each cluster</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Each component's share of variance</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The accuracy of the model on the test set</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The learning rate that was used by the solver</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does PCA(n_components=1).fit_transform(X) return for a 2D X of 200 points?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>An array of shape (2, 200) with the axes swapped</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A single number summarising all points</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An array of shape (200, 1)</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The two principal axes as unit vectors</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why use PCA on the 64-pixel digits data?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To add random noise to each of the images</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To compress it to a few dimensions</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To predict the digit labels directly from pixels</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To delete the target column from the data</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does PCA(0.9) do?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Keeps exactly 90 components from the data</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Drops 90% of the samples at random</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Sets the test size of the split to 0.9</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Keeps 90% of variance</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 0, 1, 2, 1, 3];
+var FEEDBACKS=["PCA orders directions by how much variance they capture; the first captures the most.", "PCA only looks at the structure of X.", "Each value is the fraction of the total variance explained by that component.", "Each of the 200 samples is reduced to one coordinate.", "PCA reduces dimensionality while keeping most of the variance.", "A float between 0 and 1 means \"choose the number of components that explains that fraction\"."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">Dimensionality reduction</div><div class="term-en">次元削減</div><div class="term-def">特徴量の数を減らしてデータを圧縮する。</div></div>
+    <div class="term-item"><div class="term-name">Principal component</div><div class="term-en">主成分</div><div class="term-def">データのばらつきが大きい方向。</div></div>
+    <div class="term-item"><div class="term-name">components_</div><div class="term-en">主成分ベクトル</div><div class="term-def">各主成分の向きを表す配列。</div></div>
+    <div class="term-item"><div class="term-name">Explained variance ratio</div><div class="term-en">寄与率</div><div class="term-def">各主成分が全体の分散に占める割合。</div></div>
+    <div class="term-item"><div class="term-name">Cumulative variance</div><div class="term-en">累積寄与率</div><div class="term-def">寄与率を先頭から足し合わせたもの。</div></div>
+    <div class="term-item"><div class="term-name">Manifold learning</div><div class="term-en">多様体学習</div><div class="term-def">データの曲がった構造を展開して低次元にする手法群。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>寄与率と累積寄与率で「何個残すか」を決めます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：ML⑥ 主成分分析（PCA）</p>
+  <p style="margin-top:.5rem;"><a href="ml_cluster.html">← ⑤ K-Means</a> · <a href="ml_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

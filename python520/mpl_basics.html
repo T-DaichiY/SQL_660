@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 Matplotlib① 線と散布図</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main active" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M4 · Matplotlib — Line & Scatter</div>
+  <h1>📈 Matplotlib①：折れ線と散布図</h1>
+  <p>plot・scatter、軸とタイトル、凡例、FigureとAxesの2つの書き方を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 折れ線</a><a href="#unit2">② ラベル</a><a href="#unit3">③ 散布図</a><a href="#unit4">④ fig と ax</a><a href="#quiz">📝 Quiz</a><a href="mpl_basics_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 4.01 Simple Line Plots</li><li>Handbook 4.02 Simple Scatter Plots</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>はじめの1枚：折れ線グラフ</h2><div class="unit-sub">import と plt.plot</div></div>
+  </div>
+<p>Matplotlibは、Pythonの代表的なグラフ描画ライブラリです。慣習として<code>import matplotlib.pyplot as plt</code>と書きます。</p><pre class="code-block">
+<span class="cl"><span class="kw">import</span> numpy <span class="kw">as</span> np</span>
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl"></span>
+<span class="cl">x = np.linspace(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>)</span>
+<span class="cl">plt.plot(x, np.sin(x))</span>
+</pre><div class="plot-out"><img src="images/m1_line1.png" alt="sin曲線" loading="lazy"></div><p>2本以上の線は、<code>plot</code>を続けて呼ぶだけです。色（<code>color</code>）や線の種類（<code>linestyle</code>）も指定できます。</p><pre class="code-block">
+<span class="cl">plt.plot(x, np.sin(x), color=<span class="st">'blue'</span>, linestyle=<span class="st">'-'</span>)</span>
+<span class="cl">plt.plot(x, np.cos(x), color=<span class="st">'tomato'</span>, linestyle=<span class="st">'--'</span>)</span>
+</pre><div class="plot-out"><img src="images/m1_line2.png" alt="sinとcos" loading="lazy"></div><table class="compare-table"><thead><tr><th>線の種類</th><th>書き方</th></tr></thead><tbody><tr><td>実線</td><td><code>'-'</code> / <code>'solid'</code></td></tr><tr><td>破線</td><td><code>'--'</code> / <code>'dashed'</code></td></tr><tr><td>一点鎖線</td><td><code>'-.'</code></td></tr><tr><td>点線</td><td><code>':'</code></td></tr></tbody></table><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>plt.plot(x, y)</code>が基本。xが横軸、yが縦軸の値のリストです。</p></div><div class="practice-card" id="p-m1-u1">
+    <div class="ptitle">💻 ミニ練習：折れ線</div>
+    <p class="ptask"><code>x = np.linspace(0, 10, 100)</code> の <code>y = x ** 2</code> を<strong>赤の破線</strong>で描くコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m1-u1-input" rows="7">import numpy as np
+import matplotlib.pyplot as plt
+x = np.linspace(0, 10, 100)
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m1-u1", ["plt.plot", "color='red'", "linestyle='--'"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m1-u1-result"></div>
+    <div class="answer-reveal" id="p-m1-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">plt.plot(x, x ** <span class="nm">2</span>, color=<span class="st">'red'</span>, linestyle=<span class="st">'--'</span>)</span>
+</pre>
+      <p class="answer-note">colorとlinestyleを指定します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>軸・タイトル・凡例を付ける</h2><div class="unit-sub">ラベルがないグラフは読めない</div></div>
+  </div>
+<p>グラフには<strong>タイトル</strong>、<strong>軸ラベル</strong>、複数の線なら<strong>凡例</strong>を付けます。</p><pre class="code-block">
+<span class="cl">plt.plot(x, np.sin(x), label=<span class="st">'sin(x)'</span>)</span>
+<span class="cl">plt.plot(x, np.cos(x), label=<span class="st">'cos(x)'</span>)</span>
+<span class="cl">plt.title(<span class="st">'Sine and Cosine'</span>)</span>
+<span class="cl">plt.xlabel(<span class="st">'x'</span>)</span>
+<span class="cl">plt.ylabel(<span class="st">'value'</span>)</span>
+<span class="cl">plt.legend()</span>
+</pre><div class="plot-out"><img src="images/m1_labels.png" alt="ラベル付き" loading="lazy"></div><p>軸の範囲は<code>plt.xlim</code>・<code>plt.ylim</code>、または<code>plt.axis([xmin, xmax, ymin, ymax])</code>で変えられます。</p><pre class="code-block">
+<span class="cl">plt.plot(x, np.sin(x))</span>
+<span class="cl">plt.xlim(<span class="nm">0</span>, <span class="nm">5</span>)</span>
+<span class="cl">plt.ylim(-<span class="nm">1.5</span>, <span class="nm">1.5</span>)</span>
+</pre><div class="plot-out"><img src="images/m1_lim.png" alt="範囲を指定" loading="lazy"></div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>線ごとに<code>label=</code>を付けて、最後に<code>plt.legend()</code>。タイトル・軸ラベル・凡例の3点セットを習慣にしましょう。</p></div><div class="practice-card" id="p-m1-u2">
+    <div class="ptitle">💻 ミニ練習：ラベル</div>
+    <p class="ptask">タイトルを <code>Test</code>、x軸ラベルを <code>x</code>、y軸ラベルを <code>y</code> にするコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m1-u2-input" rows="7">import matplotlib.pyplot as plt
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m1-u2", ["plt.title", "plt.xlabel", "plt.ylabel"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m1-u2-result"></div>
+    <div class="answer-reveal" id="p-m1-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">plt.title(<span class="st">'Test'</span>)</span>
+<span class="cl">plt.xlabel(<span class="st">'x'</span>)</span>
+<span class="cl">plt.ylabel(<span class="st">'y'</span>)</span>
+</pre>
+      <p class="answer-note">3つの関数を呼びます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>散布図：plt.scatter</h2><div class="unit-sub">点の大きさ・色にも意味を持たせる</div></div>
+  </div>
+<p>点の集まりを描くには<code>plt.scatter</code>を使います。点ごとに<strong>大きさ（s）</strong>や<strong>色（c）</strong>を変えられます。</p><pre class="code-block">
+<span class="cl">rng = np.random.RandomState(<span class="nm">0</span>)</span>
+<span class="cl">x = rng.randn(<span class="nm">100</span>)</span>
+<span class="cl">y = rng.randn(<span class="nm">100</span>)</span>
+<span class="cl">colors = rng.rand(<span class="nm">100</span>)</span>
+<span class="cl">sizes = <span class="nm">1000</span> * rng.rand(<span class="nm">100</span>)</span>
+<span class="cl">plt.scatter(x, y, c=colors, s=sizes, alpha=<span class="nm">0.3</span>, cmap=<span class="st">'viridis'</span>)</span>
+<span class="cl">plt.colorbar()</span>
+</pre><div class="plot-out"><img src="images/m1_scatter.png" alt="散布図" loading="lazy"></div><p><code>alpha</code>は透明度（0〜1）です。点が重なるときは小さくすると見やすくなります。<code>plt.colorbar()</code>で色と値の対応を表示します。</p><div class="warn-box">⚠️ 点の数が数万を超えるなら、<code>scatter</code>より<code>plt.plot(x, y, 'o')</code>のほうが速いです（点ごとの大きさ・色が要らないとき）。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>scatter</code>は「1つの点に、大きさと色という2つの追加情報を持たせられる」のが強みです。</p></div><div class="practice-card" id="p-m1-u3">
+    <div class="ptitle">💻 ミニ練習：散布図</div>
+    <p class="ptask"><code>x</code>と<code>y</code>の散布図を、透明度0.5で描いてください。</p>
+    <textarea class="code-editor" id="p-m1-u3-input" rows="7">import numpy as np
+import matplotlib.pyplot as plt
+x = np.arange(10)
+y = x ** 2
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m1-u3", ["plt.scatter", "alpha=0.5"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m1-u3-result"></div>
+    <div class="answer-reveal" id="p-m1-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">plt.scatter(x, y, alpha=<span class="nm">0.5</span>)</span>
+</pre>
+      <p class="answer-note">alphaで透明度を指定します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>Figure と Axes：2つの書き方</h2><div class="unit-sub">pyplotスタイルとオブジェクト指向スタイル</div></div>
+  </div>
+<p>Matplotlibには2つの書き方があります。1つ目は<code>plt.plot(...)</code>のような<strong>簡易スタイル</strong>。もう1つは、<code>fig</code>（図全体）と<code>ax</code>（1つのグラフ領域）を作って、<code>ax</code>に命令する<strong>オブジェクト指向スタイル</strong>です。</p><pre class="code-block">
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.plot(x, np.sin(x))</span>
+<span class="cl">ax.set_title(<span class="st">'Title'</span>)</span>
+<span class="cl">ax.set_xlabel(<span class="st">'x'</span>)</span>
+<span class="cl">ax.set_ylabel(<span class="st">'sin(x)'</span>)</span>
+</pre><div class="plot-out"><img src="images/m1_oo.png" alt="オブジェクト指向スタイル" loading="lazy"></div><div class="teal-box">📌 対応：<code>plt.title</code> → <code>ax.set_title</code>、<code>plt.xlabel</code> → <code>ax.set_xlabel</code>、<code>plt.xlim</code> → <code>ax.set_xlim</code>。複数のグラフを扱うときは、<code>ax</code>で書くのが基本になります。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>fig</code>は「額縁（キャンバス全体）」、<code>ax</code>は「その中の1枚の絵」。</p></div><div class="practice-card" id="p-m1-u4">
+    <div class="ptitle">💻 ミニ練習：fig と ax</div>
+    <p class="ptask"><code>fig, ax = plt.subplots()</code> で作り、<code>ax</code>に<code>x, y</code>の線を描いてタイトルを <code>My plot</code> にしてください。</p>
+    <textarea class="code-editor" id="p-m1-u4-input" rows="7">import numpy as np
+import matplotlib.pyplot as plt
+x = np.arange(5)
+y = x * 2
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-m1-u4", ["plt.subplots()", "ax.plot", "ax.set_title"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m1-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m1-u4-result"></div>
+    <div class="answer-reveal" id="p-m1-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">fig, ax = plt.subplots()</span>
+<span class="cl">ax.plot(x, y)</span>
+<span class="cl">ax.set_title(<span class="st">'My plot'</span>)</span>
+</pre>
+      <p class="answer-note">axのメソッドは<code>set_</code>が付きます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the standard way to import the plotting interface?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>import matplotlib.pyplot as plt</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>import pyplot as plt, taken from numpy</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>from plt import matplotlib</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>import plt.matplotlib as pyplot</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How do you show two labelled lines on one plot with a legend?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Call plot twice with label=..., then plt.legend()</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Call plot once for each figure and merge them</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Use plt.scatter instead of plot for the second line</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The legend appears automatically with no call</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does the alpha argument control?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The size of each marker only</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The transparency of the drawn items</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The font that is used for all of the labels</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>How many points are drawn on the figure</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What is the extra power of plt.scatter compared with plt.plot?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is always faster when the data is big</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It can draw straight lines between the points</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Each point may have its own size and colour</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It works without any x values at all</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In fig, ax = plt.subplots(), what is ax?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The whole canvas that holds the figure</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A single set of axes where you draw</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The list of all the figure colours</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The file that is saved on disk</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which ax method corresponds to plt.xlabel?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>ax.xlabel, with the same name as in pyplot</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ax.label_x, with the words reversed</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>ax.set_xlabel</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>ax.add_xlabel, which appends a new label</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 0, 1, 2, 1, 2];
+var FEEDBACKS=["The convention is import matplotlib.pyplot as plt.", "Give each line a label argument and call plt.legend() once.", "alpha runs from 0 (invisible) to 1 (opaque), which helps when points overlap.", "scatter accepts arrays for s (size) and c (colour), so each point can carry extra information.", "fig is the container for everything, and ax is one plotting area inside it.", "Object-oriented methods that set properties are prefixed with set_."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">pyplot</div><div class="term-en">パイプロット</div><div class="term-def">MATLAB風の簡易描画インターフェース。plt.plot()など。</div></div>
+    <div class="term-item"><div class="term-name">Figure</div><div class="term-en">図</div><div class="term-def">キャンバス全体。fig。</div></div>
+    <div class="term-item"><div class="term-name">Axes</div><div class="term-en">軸（グラフ領域）</div><div class="term-def">1つのグラフを描く領域。ax。</div></div>
+    <div class="term-item"><div class="term-name">label / legend</div><div class="term-en">ラベル／凡例</div><div class="term-def">線に名前を付け、legend()で一覧を表示する。</div></div>
+    <div class="term-item"><div class="term-name">alpha</div><div class="term-en">透明度</div><div class="term-def">0〜1。重なる点を見やすくする。</div></div>
+    <div class="term-item"><div class="term-name">scatter</div><div class="term-en">散布図</div><div class="term-def">点ごとに大きさ(s)や色(c)を変えられる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>タイトル・軸ラベル・凡例の3点セットを習慣にしましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：Matplotlib① 線と散布図</p>
+  <p style="margin-top:.5rem;"><a href="pd_text_time.html">← ⑧ 文字列・時系列</a> · <a href="mpl_dist.html">② 分布・誤差・等高線 →</a> · <a href="mpl_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

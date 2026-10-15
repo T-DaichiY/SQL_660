@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 推測の基礎②　片側/両側検定・α・第1種第2種の誤り</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 ⚖️ 片側/両側・α・誤り <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Inference Foundations ② — Tails, the α Level &amp; Type I / II Errors</div>
+  <h1>🎯 推測の基礎②：片側／両側検定・α・第1種／第2種の誤り</h1>
+  <p>仮説検定の「ルール」を決める3つの道具を学びます。<strong>どちらの端を見るか</strong>（片側・両側）、<strong>どこから「珍しい」と呼ぶか</strong>（有意水準 α = 0.05 の由来）、そして<strong>検定が間違うとき、どんな間違い方があるか</strong>（第1種・第2種の誤り）です。</p>
+  <p style="font-size:.9rem">📺 講義動画: One and two tail tests ／ 0.05 alpha level ／ Type 1 and type 2 errors</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 片側と両側</a><a href="#unit2">② 臨界値とp値</a><a href="#unit3">③ α = 0.05 の由来</a><a href="#unit4">④ 2種類の誤り</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 片側と両側：One and two tail tests（α の置き方：2.5% + 2.5% か 5% か）</li><li>② 臨界値とp値の読み方：One and two tail tests（t の表の「両側」「片側」の列）＋Rで確認</li><li>③ α = 0.05 の由来：0.05 alpha level（Fisher・印刷された表・Neyman と Pearson）</li><li>④ 第1種／第2種の誤り：Type 1 and type 2 errors（2×2 の表と妊娠の例え）</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>片側検定と両側検定</h2><div class="unit-sub">仮説に「向き」があるか？</div></div>
+  </div>
+  <p>帰無仮説（<strong>null hypothesis, H₀</strong>）と対立仮説（<strong>alternative hypothesis, H₁</strong>）は、ふつう「<strong>差はない</strong> vs <strong>何か差がある</strong>」の形です。ただし対立仮説には<strong>向き（direction）</strong>を付けることもできます。</p>
+  <ul>
+    <li><strong>向きなし：</strong>H₀「身長に男女差はない」 vs H₁「男性と女性では身長が<strong>違う</strong>」。女性が高くても男性が高くても H₁ に当てはまります。→ <strong>両側検定（two-tailed test）</strong></li>
+    <li><strong>向きあり：</strong>H₀「身長に男女差はない」 vs H₁「男性の方が女性より<strong>高い</strong>」。片方のグループがもう一方より上だ、と方向まで言っています。→ <strong>片側検定（one-tailed test）</strong></li>
+  </ul>
+  <p>両側検定では、検定統計量（test statistic）が帰無仮説の値より<strong>高すぎても低すぎても</strong>「珍しい」と判断します。この違いは、<strong>分布のどの端（tail）に確率を置くか</strong>を変えます。有意水準を <strong>α = 0.05</strong>（5%）とすると、置き方は次のとおりです。</p>
+  <ul>
+    <li><strong>両側：</strong>上側 <strong>2.5%</strong> ＋ 下側 <strong>2.5%</strong>（合計 5%）。どちらの端に入っても仮説の条件を満たす。</li>
+    <li><strong>片側：</strong>仮説の方向の端に <strong>5% を全部</strong>置く。反対側の 2.5% は使わず、その分を仮説の側に足して「広げる」。</li>
+  </ul>
+  <div class="viz">
+    <div class="viz-title">α = 0.05 の置き方（標準正規分布の例：赤い部分が「棄却域」）</div>
+    <div style="display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center"><div style="text-align:center"><svg viewBox="0 0 300 150" width="300" height="150" role="img" aria-label="両側検定のグラフ"><path d="M14.0,124.0 L14.0,124.0 L15.2,124.0 L16.3,124.0 L17.5,123.9 L18.6,123.9 L19.8,123.9 L20.9,123.9 L22.1,123.9 L23.2,123.9 L24.4,123.9 L25.6,123.9 L26.7,123.9 L27.9,123.8 L29.0,123.8 L30.2,123.8 L31.3,123.8 L32.5,123.7 L33.7,123.7 L34.8,123.7 L36.0,123.6 L37.1,123.6 L38.3,123.5 L39.4,123.5 L40.6,123.4 L41.7,123.3 L42.9,123.3 L44.1,123.2 L45.2,123.1 L46.4,123.0 L47.5,122.9 L48.7,122.8 L49.8,122.6 L51.0,122.5 L52.1,122.3 L53.3,122.2 L54.5,122.0 L55.6,121.8 L56.8,121.6 L57.9,121.3 L59.1,121.1 L60.2,120.8 L61.4,120.5 L62.6,120.2 L63.7,119.8 L64.9,119.5 L66.0,119.1 L67.2,118.6 L68.3,118.2 L69.5,117.7 L70.6,117.1 L71.8,116.6 L73.0,116.0 L74.1,115.3 L75.3,114.7 L76.4,113.9 L77.6,113.2 L78.7,112.4 L79.9,111.5 L81.0,110.6 L82.2,109.7 L83.4,108.7 L83.4,124.0 Z" fill="#ef4444" opacity=".75"/><path d="M216.6,124.0 L216.6,108.7 L217.8,109.7 L219.0,110.6 L220.1,111.5 L221.3,112.4 L222.4,113.2 L223.6,113.9 L224.7,114.7 L225.9,115.3 L227.0,116.0 L228.2,116.6 L229.4,117.1 L230.5,117.7 L231.7,118.2 L232.8,118.6 L234.0,119.1 L235.1,119.5 L236.3,119.8 L237.4,120.2 L238.6,120.5 L239.8,120.8 L240.9,121.1 L242.1,121.3 L243.2,121.6 L244.4,121.8 L245.5,122.0 L246.7,122.2 L247.9,122.3 L249.0,122.5 L250.2,122.6 L251.3,122.8 L252.5,122.9 L253.6,123.0 L254.8,123.1 L255.9,123.2 L257.1,123.3 L258.3,123.3 L259.4,123.4 L260.6,123.5 L261.7,123.5 L262.9,123.6 L264.0,123.6 L265.2,123.7 L266.3,123.7 L267.5,123.7 L268.7,123.8 L269.8,123.8 L271.0,123.8 L272.1,123.8 L273.3,123.9 L274.4,123.9 L275.6,123.9 L276.8,123.9 L277.9,123.9 L279.1,123.9 L280.2,123.9 L281.4,123.9 L282.5,123.9 L283.7,124.0 L284.8,124.0 L286.0,124.0 L286.0,124.0 Z" fill="#ef4444" opacity=".75"/><path d="M14.0,124.0 L15.7,124.0 L17.4,123.9 L19.1,123.9 L20.8,123.9 L22.5,123.9 L24.2,123.9 L25.9,123.9 L27.6,123.8 L29.3,123.8 L31.0,123.8 L32.7,123.7 L34.4,123.7 L36.1,123.6 L37.8,123.5 L39.5,123.5 L41.2,123.4 L42.9,123.3 L44.6,123.1 L46.3,123.0 L48.0,122.8 L49.7,122.7 L51.4,122.4 L53.1,122.2 L54.8,121.9 L56.5,121.6 L58.2,121.3 L59.9,120.9 L61.6,120.4 L63.3,120.0 L65.0,119.4 L66.7,118.8 L68.4,118.1 L70.1,117.4 L71.8,116.6 L73.5,115.7 L75.2,114.7 L76.9,113.6 L78.6,112.5 L80.3,111.2 L82.0,109.9 L83.7,108.4 L85.4,106.8 L87.1,105.1 L88.8,103.3 L90.5,101.4 L92.2,99.4 L93.9,97.2 L95.6,94.9 L97.3,92.6 L99.0,90.1 L100.7,87.5 L102.4,84.8 L104.1,82.0 L105.8,79.1 L107.5,76.2 L109.2,73.1 L110.9,70.1 L112.6,66.9 L114.3,63.8 L116.0,60.6 L117.7,57.5 L119.4,54.3 L121.1,51.2 L122.8,48.1 L124.5,45.1 L126.2,42.2 L127.9,39.4 L129.6,36.7 L131.3,34.2 L133.0,31.8 L134.7,29.6 L136.4,27.5 L138.1,25.7 L139.8,24.1 L141.5,22.7 L143.2,21.6 L144.9,20.7 L146.6,20.0 L148.3,19.6 L150.0,19.5 L151.7,19.6 L153.4,20.0 L155.1,20.7 L156.8,21.6 L158.5,22.7 L160.2,24.1 L161.9,25.7 L163.6,27.5 L165.3,29.6 L167.0,31.8 L168.7,34.2 L170.4,36.7 L172.1,39.4 L173.8,42.2 L175.5,45.1 L177.2,48.1 L178.9,51.2 L180.6,54.3 L182.3,57.5 L184.0,60.6 L185.7,63.8 L187.4,66.9 L189.1,70.1 L190.8,73.1 L192.5,76.2 L194.2,79.1 L195.9,82.0 L197.6,84.8 L199.3,87.5 L201.0,90.1 L202.7,92.6 L204.4,94.9 L206.1,97.2 L207.8,99.4 L209.5,101.4 L211.2,103.3 L212.9,105.1 L214.6,106.8 L216.3,108.4 L218.0,109.9 L219.7,111.2 L221.4,112.5 L223.1,113.6 L224.8,114.7 L226.5,115.7 L228.2,116.6 L229.9,117.4 L231.6,118.1 L233.3,118.8 L235.0,119.4 L236.7,120.0 L238.4,120.4 L240.1,120.9 L241.8,121.3 L243.5,121.6 L245.2,121.9 L246.9,122.2 L248.6,122.4 L250.3,122.7 L252.0,122.8 L253.7,123.0 L255.4,123.1 L257.1,123.3 L258.8,123.4 L260.5,123.5 L262.2,123.5 L263.9,123.6 L265.6,123.7 L267.3,123.7 L269.0,123.8 L270.7,123.8 L272.4,123.8 L274.1,123.9 L275.8,123.9 L277.5,123.9 L279.2,123.9 L280.9,123.9 L282.6,123.9 L284.3,124.0 L286.0,124.0" fill="none" stroke="#334155" stroke-width="1.6"/><line x1="14" y1="124.0" x2="286" y2="124.0" stroke="#64748b"/><line x1="83.4" y1="124.0" x2="83.4" y2="128.0" stroke="#64748b"/><text x="83.4" y="140.0" font-size="10" text-anchor="middle" fill="#475569">-1.96</text><line x1="150.0" y1="124.0" x2="150.0" y2="128.0" stroke="#64748b"/><text x="150.0" y="140.0" font-size="10" text-anchor="middle" fill="#475569">0</text><line x1="216.6" y1="124.0" x2="216.6" y2="128.0" stroke="#64748b"/><text x="216.6" y="140.0" font-size="10" text-anchor="middle" fill="#475569">1.96</text><text x="48.0" y="92.0" font-size="11" text-anchor="middle" font-weight="700" fill="#ef4444">2.5%</text><text x="252.0" y="92.0" font-size="11" text-anchor="middle" font-weight="700" fill="#ef4444">2.5%</text><text x="150.0" y="60.0" font-size="11" text-anchor="middle" font-weight="700" fill="#0f766e">95%</text></svg><div style="font-size:.85rem"><strong>両側検定</strong>：上 2.5% ＋ 下 2.5%<br>臨界値 ±1.96</div></div><div style="text-align:center"><svg viewBox="0 0 300 150" width="300" height="150" role="img" aria-label="片側検定(右側)のグラフ"><path d="M205.9,124.0 L205.9,97.0 L207.3,98.7 L208.6,100.3 L209.9,101.9 L211.3,103.4 L212.6,104.8 L213.9,106.2 L215.3,107.5 L216.6,108.7 L217.9,109.8 L219.3,110.9 L220.6,111.9 L221.9,112.9 L223.3,113.8 L224.6,114.6 L225.9,115.4 L227.3,116.1 L228.6,116.8 L230.0,117.4 L231.3,118.0 L232.6,118.5 L234.0,119.0 L235.3,119.5 L236.6,119.9 L238.0,120.3 L239.3,120.7 L240.6,121.0 L242.0,121.3 L243.3,121.6 L244.6,121.8 L246.0,122.1 L247.3,122.3 L248.6,122.4 L250.0,122.6 L251.3,122.8 L252.6,122.9 L254.0,123.0 L255.3,123.1 L256.6,123.2 L258.0,123.3 L259.3,123.4 L260.6,123.5 L262.0,123.5 L263.3,123.6 L264.6,123.6 L266.0,123.7 L267.3,123.7 L268.7,123.8 L270.0,123.8 L271.3,123.8 L272.7,123.8 L274.0,123.9 L275.3,123.9 L276.7,123.9 L278.0,123.9 L279.3,123.9 L280.7,123.9 L282.0,123.9 L283.3,124.0 L284.7,124.0 L286.0,124.0 L286.0,124.0 Z" fill="#ef4444" opacity=".75"/><path d="M14.0,124.0 L15.7,124.0 L17.4,123.9 L19.1,123.9 L20.8,123.9 L22.5,123.9 L24.2,123.9 L25.9,123.9 L27.6,123.8 L29.3,123.8 L31.0,123.8 L32.7,123.7 L34.4,123.7 L36.1,123.6 L37.8,123.5 L39.5,123.5 L41.2,123.4 L42.9,123.3 L44.6,123.1 L46.3,123.0 L48.0,122.8 L49.7,122.7 L51.4,122.4 L53.1,122.2 L54.8,121.9 L56.5,121.6 L58.2,121.3 L59.9,120.9 L61.6,120.4 L63.3,120.0 L65.0,119.4 L66.7,118.8 L68.4,118.1 L70.1,117.4 L71.8,116.6 L73.5,115.7 L75.2,114.7 L76.9,113.6 L78.6,112.5 L80.3,111.2 L82.0,109.9 L83.7,108.4 L85.4,106.8 L87.1,105.1 L88.8,103.3 L90.5,101.4 L92.2,99.4 L93.9,97.2 L95.6,94.9 L97.3,92.6 L99.0,90.1 L100.7,87.5 L102.4,84.8 L104.1,82.0 L105.8,79.1 L107.5,76.2 L109.2,73.1 L110.9,70.1 L112.6,66.9 L114.3,63.8 L116.0,60.6 L117.7,57.5 L119.4,54.3 L121.1,51.2 L122.8,48.1 L124.5,45.1 L126.2,42.2 L127.9,39.4 L129.6,36.7 L131.3,34.2 L133.0,31.8 L134.7,29.6 L136.4,27.5 L138.1,25.7 L139.8,24.1 L141.5,22.7 L143.2,21.6 L144.9,20.7 L146.6,20.0 L148.3,19.6 L150.0,19.5 L151.7,19.6 L153.4,20.0 L155.1,20.7 L156.8,21.6 L158.5,22.7 L160.2,24.1 L161.9,25.7 L163.6,27.5 L165.3,29.6 L167.0,31.8 L168.7,34.2 L170.4,36.7 L172.1,39.4 L173.8,42.2 L175.5,45.1 L177.2,48.1 L178.9,51.2 L180.6,54.3 L182.3,57.5 L184.0,60.6 L185.7,63.8 L187.4,66.9 L189.1,70.1 L190.8,73.1 L192.5,76.2 L194.2,79.1 L195.9,82.0 L197.6,84.8 L199.3,87.5 L201.0,90.1 L202.7,92.6 L204.4,94.9 L206.1,97.2 L207.8,99.4 L209.5,101.4 L211.2,103.3 L212.9,105.1 L214.6,106.8 L216.3,108.4 L218.0,109.9 L219.7,111.2 L221.4,112.5 L223.1,113.6 L224.8,114.7 L226.5,115.7 L228.2,116.6 L229.9,117.4 L231.6,118.1 L233.3,118.8 L235.0,119.4 L236.7,120.0 L238.4,120.4 L240.1,120.9 L241.8,121.3 L243.5,121.6 L245.2,121.9 L246.9,122.2 L248.6,122.4 L250.3,122.7 L252.0,122.8 L253.7,123.0 L255.4,123.1 L257.1,123.3 L258.8,123.4 L260.5,123.5 L262.2,123.5 L263.9,123.6 L265.6,123.7 L267.3,123.7 L269.0,123.8 L270.7,123.8 L272.4,123.8 L274.1,123.9 L275.8,123.9 L277.5,123.9 L279.2,123.9 L280.9,123.9 L282.6,123.9 L284.3,124.0 L286.0,124.0" fill="none" stroke="#334155" stroke-width="1.6"/><line x1="14" y1="124.0" x2="286" y2="124.0" stroke="#64748b"/><line x1="150.0" y1="124.0" x2="150.0" y2="128.0" stroke="#64748b"/><text x="150.0" y="140.0" font-size="10" text-anchor="middle" fill="#475569">0</text><line x1="205.9" y1="124.0" x2="205.9" y2="128.0" stroke="#64748b"/><text x="205.9" y="140.0" font-size="10" text-anchor="middle" fill="#475569">1.645</text><text x="248.6" y="92.0" font-size="11" text-anchor="middle" font-weight="700" fill="#ef4444">5%</text><text x="133.0" y="60.0" font-size="11" text-anchor="middle" font-weight="700" fill="#0f766e">95%</text></svg><div style="font-size:.85rem"><strong>片側検定（H₁：上側が大きい）</strong>：上 5%<br>臨界値 +1.645</div></div></div>
+    <div class="viz-cap">棄却域の合計はどちらも 5%。片側では全部を仮説の方向に集めるので、その方向では臨界値が小さくなります（1.96 → 1.645）。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>帰無仮説</th><th>対立仮説</th><th>検定の種類</th><th>α = 0.05 の置き方</th></tr>
+    <tr><td>H₀：男女で身長に差はない</td><td>H₁：男女で身長が違う</td><td><strong>両側</strong>（two-tailed）</td><td>上 2.5% ＋ 下 2.5%</td></tr>
+    <tr><td>H₀：男女で身長に差はない</td><td>H₁：男性の方が女性より高い</td><td><strong>片側</strong>（one-tailed）</td><td>上 5%（仮説の方向）</td></tr>
+  </table>
+  <p><strong>いつ使い分けるか？</strong>差がどちらに出るか分からない探索的な状況では、少し「釣り（fishing）」をするように「上でも下でも、何か珍しいことが起きていないか」を見ます。このときは<strong>両側</strong>です。一方、<strong>データを見る前に</strong>理論や先行研究から「こちらが高いはずだ」という方向が決まっているなら、下側の 2.5% を使わずに上側へ 5% 全部を置く<strong>片側</strong>が使えます。</p>
+  <div class="warn-box">⚠️ <strong>入門レベルでは、基本的に両側検定を使います。</strong>片側検定は「向きを事前に決めてあった」ときだけです。データを見てから「女性の方が高そうだから、女性＞男性の片側にしよう」と選ぶのは、5% を都合よく動かすことになり、してはいけません。また、仮説と<strong>逆の方向</strong>に差が出たときは、どれだけ大きな差でも片側検定では「有意」になりません（②で確認します）。</div>
+  <div class="note-box">📌 なぜ知っておく必要があるか：検定の出力を読むときと、t の表で<strong>臨界値（critical value）</strong>を引くときです。表には 0.05・0.01 などの列が<strong>両側用と片側用</strong>に分かれているので、どちらの列を見るかを知っている必要があります。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>両側は「どっちかに珍しければOK」で、5% を<strong>両端に半分ずつ</strong>。片側は「この方向だけ見る」と決めて、5% を<strong>片端にまとめて</strong>置く。迷ったら両側。</p></div>
+  <div class="practice-card" id="p-m3b-u1">
+    <div class="ptitle">💻 ミニ練習：z の臨界値を求める</div>
+    <p class="ptask">標準正規分布で、<strong>α = 0.01</strong> のときの臨界値を、<strong>両側</strong>と<strong>片側</strong>の2つ、R（<code>qnorm</code>）で求めてください。両側は <code>1 - α/2</code>、片側は <code>1 - α</code> の分位点を使います。</p>
+    <textarea class="code-editor" id="p-m3b-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3b-u1', ['qnorm', '0.01', '/ 2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3b-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3b-u1-result"></div>
+    <div class="answer-reveal" id="p-m3b-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">1</span> - <span class="nm">0.01</span>/<span class="nm">2</span>)   <span class="cm"># two-tailed, alpha = 0.01</span></span>
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">1</span> - <span class="nm">0.01</span>)     <span class="cm"># one-tailed, alpha = 0.01</span></span>
+</pre><div class="output-reveal">[1] 2.575829
+[1] 2.326348</div>
+      <p class="answer-note">両側 2.576（約2.58）、片側 2.326（約2.33）。同じ α でも片側の方が臨界値が小さく、仮説の方向では「有意」になりやすくなります。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>臨界値とp値をRで確かめる</h2><div class="unit-sub">t の表の「両側」「片側」の列、そして向きを間違えると…</div></div>
+  </div>
+  <p>まず、α = 0.05 の分布の端の面積が本当に 5% になっているかを確かめましょう。<code>pnorm(…, lower.tail = FALSE)</code> は「その値より右側の面積」を返します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="nm">2</span> * <span class="kw">pnorm</span>(<span class="nm">1.96</span>, lower.tail = FALSE)   <span class="cm"># two-tailed: 2.5% + 2.5%</span></span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">1.645</span>, lower.tail = FALSE)      <span class="cm"># one-tailed: 5% in one tail</span></span>
+</pre><div class="output-reveal">[1] 0.04999579
+[1] 0.04998491</div>
+  <p>両側では 1.96 の外側（上 2.5% ＋ 下 2.5%）、片側では 1.645 の右側が、ともに約 0.05 です。同じことを <code>qnorm()</code>（面積から臨界値を求める関数）で逆向きに確かめます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">1</span> - <span class="nm">0.05</span>/<span class="nm">2</span>)   <span class="cm"># two-tailed, alpha = 0.05</span></span>
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">1</span> - <span class="nm">0.05</span>)     <span class="cm"># one-tailed, alpha = 0.05</span></span>
+</pre><div class="output-reveal">[1] 1.959964
+[1] 1.644854</div>
+  <p>t 分布では、臨界値は自由度（df）によって変わります。自由度 20 での t の表を R で作ってみましょう。教科書や講義の t の表と同じく、<strong>両側</strong>の行と<strong>片側</strong>の行があります。</p>
+  <pre class="code-block">
+<span class="cl">alpha &lt;- <span class="kw">c</span>(<span class="nm">0.05</span>, <span class="nm">0.01</span>)</span>
+<span class="cl">crit &lt;- <span class="kw">rbind</span>(two_tailed = <span class="kw">qt</span>(<span class="nm">1</span> - alpha/<span class="nm">2</span>, df = <span class="nm">20</span>),</span>
+<span class="cl">              one_tailed = <span class="kw">qt</span>(<span class="nm">1</span> - alpha,   df = <span class="nm">20</span>))</span>
+<span class="cl"><span class="kw">colnames</span>(crit) &lt;- <span class="kw">c</span>(<span class="st">"alpha=0.05"</span>, <span class="st">"alpha=0.01"</span>)</span>
+<span class="cl"><span class="kw">round</span>(crit, <span class="nm">3</span>)</span>
+</pre><div class="output-reveal">           alpha=0.05 alpha=0.01
+two_tailed      2.086      2.845
+one_tailed      1.725      2.528</div>
+  <div class="note-box">📖 読み方：α = 0.05 で自由度 20 のとき、両側検定なら |t| ≥ <strong>2.086</strong>、片側検定なら t ≥ <strong>1.725</strong>（仮説の方向）で「有意」。同じ t の値でも、<strong>どちらの列を見るかで結論が変わりうる</strong>のが、この単元のポイントです。</div>
+  <p>次は、講義の男女のテスト得点の例です。女性の平均が 60 点、男性の平均が 50 点。H₀「男女で得点に差はない」 vs H₁「差がある（両側）」を検定します（R では <code>t.test()</code> が既定で両側）。</p>
+  <pre class="code-block">
+<span class="cl">women &lt;- <span class="kw">c</span>(<span class="nm">64</span>, <span class="nm">58</span>, <span class="nm">66</span>, <span class="nm">55</span>, <span class="nm">62</span>, <span class="nm">57</span>, <span class="nm">60</span>, <span class="nm">63</span>, <span class="nm">59</span>, <span class="nm">56</span>)</span>
+<span class="cl">men   &lt;- <span class="kw">c</span>(<span class="nm">52</span>, <span class="nm">49</span>, <span class="nm">57</span>, <span class="nm">45</span>, <span class="nm">53</span>, <span class="nm">50</span>, <span class="nm">48</span>, <span class="nm">55</span>, <span class="nm">47</span>, <span class="nm">44</span>)</span>
+<span class="cl"><span class="kw">mean</span>(women)</span>
+<span class="cl"><span class="kw">mean</span>(men)</span>
+</pre><div class="output-reveal">[1] 60
+[1] 50</div><pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(women, men)</span>
+</pre><div class="output-reveal">	Welch Two Sample t-test
+
+data:  women and men
+t = 5.6493, df = 17.609, p-value = 2.528e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  6.275189 13.724811
+sample estimates:
+mean of x mean of y 
+       60        50 </div>
+  <p>p = 2.528e-05（= 0.00002528）で、α = 0.05 よりずっと小さいので H₀ を棄却します。次に、<strong>向きを間違えた片側検定</strong>をしてみます。「女性が男性より低い」（<code>alternative = "less"</code>）という仮説を立てると…</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(women, men, alternative = <span class="st">"less"</span>)$p.value</span>
+</pre><div class="output-reveal">[1] 0.9999874</div>
+  <p>p ≈ 1 です。データは女性の方が 10 点も高いので、「女性が低い」という向きの仮説には全く支持がありません。<strong>片側検定は、決めた方向にしか反応しません。</strong></p>
+  <p>最後に、片側検定の「落とし穴」を見ましょう。次の2グループでは、<strong>両側 p = 0.0697</strong>（5% を超える）なのに、片側にすると p が半分の <strong>0.0348</strong> になって「有意」になります。</p>
+  <pre class="code-block">
+<span class="cl">x &lt;- <span class="kw">c</span>(<span class="nm">14</span>, <span class="nm">11</span>, <span class="nm">13</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">10</span>, <span class="nm">16</span>, <span class="nm">12</span>)</span>
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="nm">12</span>, <span class="nm">9</span>, <span class="nm">12</span>, <span class="nm">9</span>, <span class="nm">13</span>, <span class="nm">9</span>, <span class="nm">13</span>, <span class="nm">11</span>)</span>
+<span class="cl"><span class="kw">t.test</span>(x, y)$p.value                          <span class="cm"># two-tailed</span></span>
+<span class="cl"><span class="kw">t.test</span>(x, y, alternative = <span class="st">"greater"</span>)$p.value <span class="cm"># one-tailed (x &gt; y)</span></span>
+</pre><div class="output-reveal">[1] 0.06967655
+[1] 0.03483828</div>
+  <div class="warn-box">⚠️ <strong>片側 p 値は、（差が仮説の方向にあるとき）両側 p 値のちょうど半分</strong>になります。だからこそ、「両側では有意にならなかったので、後から片側に切り替える」ことは許されません。片側にするかどうかは、<strong>データを見る前</strong>に理論で決めておきます。迷ったら両側（t.test の既定）を使います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>t.test()</code>は何も言わなければ<strong>両側</strong>。<code>alternative = "greater"</code> や <code>"less"</code> を付けると片側になり、p 値は（方向が合っていれば）半分になる。ただし片側は<strong>事前に方向を決めたときだけ</strong>。</p></div>
+  <div class="practice-card" id="p-m3b-u2">
+    <div class="ptitle">💻 ミニ練習：片側検定の p 値</div>
+    <p class="ptask"><code>x &lt;- c(14, 11, 13, 15, 12, 10, 16, 12)</code> と <code>y &lt;- c(12, 9, 12, 9, 13, 9, 13, 11)</code> について、<strong>「x の平均が y より大きい」</strong>という向きの仮説（片側）の p 値を <code>t.test()</code> で求めてください（<code>$p.value</code> を使います）。</p>
+    <textarea class="code-editor" id="p-m3b-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3b-u2', ['t.test', 'alternative', 'greater', 'p.value'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3b-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3b-u2-result"></div>
+    <div class="answer-reveal" id="p-m3b-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x &lt;- <span class="kw">c</span>(<span class="nm">14</span>, <span class="nm">11</span>, <span class="nm">13</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">10</span>, <span class="nm">16</span>, <span class="nm">12</span>)</span>
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="nm">12</span>, <span class="nm">9</span>, <span class="nm">12</span>, <span class="nm">9</span>, <span class="nm">13</span>, <span class="nm">9</span>, <span class="nm">13</span>, <span class="nm">11</span>)</span>
+<span class="cl"><span class="kw">t.test</span>(x, y, alternative = <span class="st">"greater"</span>)$p.value</span>
+</pre><div class="output-reveal">[1] 0.03483828</div>
+      <p class="answer-note">p = 0.0348。両側の p 値（0.0697）のちょうど半分です。向きを事前に決めていた場合に限り、この値で判断できます。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>α = 0.05 はどこから来たのか</h2><div class="unit-sub">Fisher・印刷された表・「ただの慣習」</div></div>
+  </div>
+  <p>仮説検定の考え方を、もう一度「モデルの当てはまり」で眺めてみましょう。対立仮説は<strong>モデル（model）</strong>で表せます。独立2標本の t 検定なら、「データは<strong>全体の平均（grand mean）</strong>1つで説明できる」（帰無仮説：差なし）か、「<strong>グループごとの平均</strong>で説明した方がよい」（対立仮説：差あり）かを比べます。</p>
+  <pre class="code-block">
+<span class="cl">score &lt;- <span class="kw">c</span>(women, men)</span>
+<span class="cl">group &lt;- <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"women"</span>, <span class="st">"men"</span>), each = <span class="nm">10</span>)</span>
+<span class="cl"><span class="kw">sum</span>((score - <span class="kw">mean</span>(score))^<span class="nm">2</span>)        <span class="cm"># error if we use ONE grand mean</span></span>
+<span class="cl"><span class="kw">sum</span>((score - <span class="kw">ave</span>(score, group))^<span class="nm">2</span>)  <span class="cm"># error if we use the TWO group means</span></span>
+</pre><div class="output-reveal">[1] 782
+[1] 282</div>
+  <p>全体平均1つで説明すると、各データとのズレ（誤差）の二乗和が 782、グループごとの平均だと 282 に減りました。グループ平均を使うと、データへの当てはまりがずっと良くなっています。当てはまりが良いほど、対立仮説への信頼が増します。</p>
+  <p>ただし、どちらの仮説が正しいかを確実には言えません。そこで、<strong>「もし母集団に効果がなかったら（H₀ が真なら）、このくらい良く当てはまる確率はどれだけか」</strong>を計算します。これが p 値（p-value）です。<code>anova()</code>で2つのモデルを比べると、その確率が出ます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">anova</span>(<span class="kw">lm</span>(score ~ <span class="nm">1</span>), <span class="kw">lm</span>(score ~ group))</span>
+</pre><div class="output-reveal">Analysis of Variance Table
+
+Model 1: score ~ 1
+Model 2: score ~ group
+  Res.Df RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     19 782                                  
+2     18 282  1       500 31.915 2.329e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div>
+  <p>p = 2.329e-05。これは等分散を仮定した t 検定（<code>var.equal = TRUE</code>）の p 値と同じです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(score ~ group, var.equal = TRUE)$p.value</span>
+</pre><div class="output-reveal">[1] 2.329275e-05</div>
+  <p>では、p がどれだけ小さければ「偶然ではない」と呼ぶのでしょうか。その線引きが 0.05 です。</p>
+  <ul>
+    <li><strong>Ronald Fisher</strong> が、結果を「本物」と受け入れる基準として <strong>95% の閾値（threshold）</strong>、つまり <strong>p = 0.05</strong> を使うよう提案しました。しかしこれは<strong>厳格な規則ではありません</strong>。現在 0.05 を使うのは、主に<strong>慣習（convention）</strong>であり、強い根拠があるわけではありません。</li>
+    <li>現代の有意性検定（significance testing）は、<strong>Jerzy Neyman と Egon Pearson</strong> の考え方と Fisher の考え方を<strong>組み合わせた</strong>ものです。</li>
+    <li>0.05 が定着した理由はおそらく、<strong>印刷された表</strong>です。約 100 年前、研究者は電卓もコンピュータも持っていませんでした。有意かどうかを調べる唯一の方法は、<strong>0.05・0.02・0.01</strong> の列が並んだ印刷物の表を引くことでした。便利な列として 0.05 が選ばれ続けたのです。</li>
+  </ul>
+  <p>Fisher 自身も、こう述べています。</p>
+  <div class="note-box">💬 <em>“No scientific worker has a fixed level of significance, at which, from year to year and in all circumstances, he rejects hypotheses. He rather gives his mind to each particular case in light of his evidence and his ideas.”</em><br>（どの科学者も、毎年・あらゆる状況で仮説を棄却する、固定の有意水準など持っていない。むしろ個々のケースで、証拠と自分の考えに照らして判断する。）― Ronald Fisher</div>
+  <p>だから私たちは、<strong>効果量（effect size）</strong>のような追加の指標も使います（次の講義で学びます）。有意性（statistical significance）が重要なのは、(1) <strong>簡単な目安（benchmark）</strong>になるから、(2) みんながそう<strong>教わっている</strong>から、の2つの理由が主です。p 値は役に立ちますが、<strong>万能ではありません</strong>。</p>
+  <div class="warn-box">⚠️ p 値だけを示して、ほかの情報（効果量など）を添えない人は、「何をしているか分かっていない」か「誤解させようとしている」かのどちらかです。p 値の良い点と限界の両方を理解し、より良い報告の仕方を身につけましょう。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>0.05 は<strong>神様が決めた線ではなく</strong>、Fisher が目安にしたものが、100年前の<strong>印刷された表</strong>の便利さもあって定着した<strong>習慣</strong>。使うときは「5% は絶対ではない」と覚えておく。</p></div>
+  <div class="practice-card" id="p-m3b-u3">
+    <div class="ptitle">💻 ミニ練習：当てはまりの比較</div>
+    <p class="ptask"><code>women</code> と <code>men</code> から <code>score</code>（20人分を連結したベクトル）と <code>group</code>（<code>"women"</code>/<code>"men"</code> を各10回）を作り、<code>lm()</code> で<strong>全体平均だけのモデル</strong>（<code>score ~ 1</code>）と<strong>グループ別平均のモデル</strong>（<code>score ~ group</code>）を <code>anova()</code> で比較するコードを書いてください。</p>
+    <textarea class="code-editor" id="p-m3b-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3b-u3', ['anova', 'lm', 'score', 'group'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3b-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3b-u3-result"></div>
+    <div class="answer-reveal" id="p-m3b-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">score &lt;- <span class="kw">c</span>(women, men)</span>
+<span class="cl">group &lt;- <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">"women"</span>, <span class="st">"men"</span>), each = <span class="nm">10</span>)</span>
+<span class="cl"><span class="kw">anova</span>(<span class="kw">lm</span>(score ~ <span class="nm">1</span>), <span class="kw">lm</span>(score ~ group))</span>
+</pre>
+      <p class="answer-note">F = 31.915、p = 2.329e-05。グループ平均のモデルの方が、誤差の二乗和が 782 → 282 に減っており、H₀（差なし）の下ではこんなに良く当てはまる確率はごくわずか、と読みます。</p>
+    </div>
+  </div>
+
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>第1種の誤りと第2種の誤り</h2><div class="unit-sub">Type I error / Type II error</div></div>
+  </div>
+  <p>講義の例に戻ります。男女のテスト得点に差があるかを調べます。H₀「男女に差はない」、H₁「差がある」。女性の平均は 60 点、男性は 50 点で、10 点の差がありました。平均の差だけでは判断できないので、有意性検定を使って<strong>この差が本物か、偶然か</strong>を決めます。</p>
+  <p>細かい技術をいったん忘れて大きく見ると、結論は<strong>正しいか、間違っているか</strong>のどちらかです。そして H₀ が<strong>本当は真の場合も偽の場合も</strong>、私たちは正しくも間違ってもあり得ます。これを整理したのが次の 2×2 の表（decision table）です。</p>
+  <table class="compare-table">
+    <tr><th>私たちの結論 ＼ 本当のこと（unknown）</th><th>H₀ は<strong>真</strong>（本当は差がない）</th><th>H₀ は<strong>偽</strong>（本当は差がある）</th></tr>
+    <tr><td><strong>H₀ を棄却する</strong><br>（reject H₀：差があると結論）</td><td><strong>第1種の誤り（Type I error）</strong><br>false positive・確率 α</td><td>誤りなし（正しい）<br>確率 1 − β ＝ 検出力（power）</td></tr>
+    <tr><td><strong>H₀ を棄却しない</strong><br>（fail to reject H₀）</td><td>誤りなし（正しい）<br>確率 1 − α</td><td><strong>第2種の誤り（Type II error）</strong><br>false negative・確率 β</td></tr>
+  </table>
+  <p>表の列（本当のこと）は<strong>「不明（unknown）」</strong>です。本当のことが分かっているなら、そもそも検定はいりません。分からないから検定をし、分からないから間違いが起こりえます。</p>
+  <ul>
+    <li><strong>第1種の誤り（Type I error）＝ 真の H₀ を棄却してしまう</strong>（false positive：本当は何も起きていないのに「ある」と言う）。α = 0.05 なら、効果が全くなくても、<strong>偶然だけで約 5% の割合</strong>でこの誤りが起こります。</li>
+    <li><strong>第2種の誤り（Type II error）＝ 偽の H₀ を棄却しない</strong>（false negative：本当は何か起きているのに「ない」と言う）。</li>
+  </ul>
+  <p>覚え方は<strong>妊娠の例え</strong>です。</p>
+  <table class="compare-table">
+    <tr><th>場面</th><th>検定の言い方</th><th>誤りの種類</th></tr>
+    <tr><td>妊娠していない人に「妊娠しています」と言う</td><td>何も起きていないのに「ある」と言った</td><td><strong>第1種の誤り</strong>（false positive）</td></tr>
+    <tr><td>妊娠している人に「妊娠していません」と言う</td><td>確かに何か起きているのに「ない」と言った</td><td><strong>第2種の誤り</strong>（false negative）</td></tr>
+  </table>
+  <p>この2つの誤りの確率に名前が付いています。<strong>α ＝ 第1種の誤りの確率</strong>、<strong>β ＝ 第2種の誤りの確率</strong>、そして <strong>検出力 power ＝ 1 − β</strong>（本当に効果があるとき、それを見つける確率）です。下の図は、帰無仮説が真の世界（左の山）と偽の世界（右の山）を重ね、臨界値（点線）で線を引いたものです。</p>
+  <div class="viz">
+    <div class="viz-title">α と β の位置（模式図）</div>
+    <div style="text-align:center"><svg viewBox="0 0 440 170" width="440" height="170" role="img" aria-label="H0とH1の分布とα・βの位置"><path d="M239.0,140.0 L239.0,122.7 L242.1,125.2 L245.2,127.3 L248.3,129.2 L251.4,130.9 L254.5,132.3 L257.7,133.6 L260.8,134.7 L263.9,135.6 L267.0,136.4 L270.1,137.1 L273.2,137.6 L276.4,138.1 L279.5,138.5 L282.6,138.8 L285.7,139.0 L288.8,139.2 L291.9,139.4 L295.1,139.5 L298.2,139.6 L301.3,139.7 L304.4,139.8 L307.5,139.8 L310.7,139.9 L313.8,139.9 L316.9,139.9 L320.0,139.9 L323.1,140.0 L326.2,140.0 L329.4,140.0 L332.5,140.0 L335.6,140.0 L338.7,140.0 L341.8,140.0 L344.9,140.0 L348.1,140.0 L351.2,140.0 L354.3,140.0 L357.4,140.0 L360.5,140.0 L363.7,140.0 L366.8,140.0 L369.9,140.0 L373.0,140.0 L376.1,140.0 L379.2,140.0 L382.4,140.0 L385.5,140.0 L388.6,140.0 L391.7,140.0 L394.8,140.0 L397.9,140.0 L401.1,140.0 L404.2,140.0 L407.3,140.0 L410.4,140.0 L413.5,140.0 L416.6,140.0 L419.8,140.0 L422.9,140.0 L426.0,140.0 L426.0,140.0 Z" fill="#ef4444" opacity=".7"/><path d="M14.0,140.0 L14.0,140.0 L17.7,140.0 L21.5,140.0 L25.2,140.0 L29.0,140.0 L32.7,140.0 L36.5,140.0 L40.2,140.0 L44.0,140.0 L47.7,140.0 L51.5,140.0 L55.2,140.0 L59.0,140.0 L62.7,140.0 L66.5,140.0 L70.2,140.0 L74.0,140.0 L77.7,140.0 L81.5,140.0 L85.2,140.0 L89.0,140.0 L92.7,140.0 L96.5,140.0 L100.2,140.0 L104.0,140.0 L107.7,140.0 L111.5,139.9 L115.2,139.9 L119.0,139.9 L122.7,139.9 L126.5,139.8 L130.2,139.7 L134.0,139.6 L137.7,139.5 L141.5,139.3 L145.2,139.1 L149.0,138.8 L152.7,138.4 L156.5,137.9 L160.2,137.3 L164.0,136.6 L167.7,135.7 L171.5,134.5 L175.2,133.2 L179.0,131.6 L182.7,129.6 L186.5,127.4 L190.2,124.8 L194.0,121.8 L197.7,118.4 L201.5,114.5 L205.2,110.3 L209.0,105.5 L212.7,100.4 L216.5,94.9 L220.2,89.1 L224.0,82.9 L227.7,76.6 L231.5,70.1 L235.2,63.6 L239.0,57.2 L239.0,140.0 Z" fill="#f59e0b" opacity=".7"/><path d="M14.0,139.7 L16.1,139.7 L18.1,139.6 L20.2,139.6 L22.2,139.5 L24.3,139.4 L26.4,139.3 L28.4,139.2 L30.5,139.0 L32.5,138.9 L34.6,138.7 L36.7,138.5 L38.7,138.2 L40.8,138.0 L42.8,137.7 L44.9,137.3 L47.0,136.9 L49.0,136.5 L51.1,136.0 L53.1,135.4 L55.2,134.8 L57.3,134.1 L59.3,133.4 L61.4,132.6 L63.4,131.6 L65.5,130.6 L67.6,129.5 L69.6,128.3 L71.7,127.0 L73.7,125.6 L75.8,124.1 L77.9,122.4 L79.9,120.6 L82.0,118.7 L84.0,116.7 L86.1,114.5 L88.2,112.2 L90.2,109.8 L92.3,107.3 L94.3,104.6 L96.4,101.8 L98.5,98.8 L100.5,95.8 L102.6,92.6 L104.6,89.4 L106.7,86.1 L108.8,82.7 L110.8,79.2 L112.9,75.7 L114.9,72.1 L117.0,68.6 L119.1,65.0 L121.1,61.4 L123.2,57.9 L125.2,54.5 L127.3,51.1 L129.4,47.8 L131.4,44.6 L133.5,41.6 L135.5,38.7 L137.6,36.1 L139.7,33.6 L141.7,31.3 L143.8,29.2 L145.8,27.4 L147.9,25.8 L150.0,24.5 L152.0,23.5 L154.1,22.8 L156.1,22.4 L158.2,22.2 L160.3,22.4 L162.3,22.8 L164.4,23.5 L166.4,24.5 L168.5,25.8 L170.6,27.4 L172.6,29.2 L174.7,31.3 L176.7,33.6 L178.8,36.1 L180.9,38.7 L182.9,41.6 L185.0,44.6 L187.0,47.8 L189.1,51.1 L191.2,54.5 L193.2,57.9 L195.3,61.4 L197.3,65.0 L199.4,68.6 L201.5,72.1 L203.5,75.7 L205.6,79.2 L207.6,82.7 L209.7,86.1 L211.8,89.4 L213.8,92.6 L215.9,95.8 L217.9,98.8 L220.0,101.8 L222.1,104.6 L224.1,107.3 L226.2,109.8 L228.2,112.2 L230.3,114.5 L232.4,116.7 L234.4,118.7 L236.5,120.6 L238.5,122.4 L240.6,124.1 L242.7,125.6 L244.7,127.0 L246.8,128.3 L248.8,129.5 L250.9,130.6 L253.0,131.6 L255.0,132.6 L257.1,133.4 L259.1,134.1 L261.2,134.8 L263.3,135.4 L265.3,136.0 L267.4,136.5 L269.4,136.9 L271.5,137.3 L273.6,137.7 L275.6,138.0 L277.7,138.2 L279.7,138.5 L281.8,138.7 L283.9,138.9 L285.9,139.0 L288.0,139.2 L290.0,139.3 L292.1,139.4 L294.2,139.5 L296.2,139.6 L298.3,139.6 L300.3,139.7 L302.4,139.7 L304.5,139.8 L306.5,139.8 L308.6,139.8 L310.6,139.9 L312.7,139.9 L314.8,139.9 L316.8,139.9 L318.9,139.9 L320.9,140.0 L323.0,140.0 L325.1,140.0 L327.1,140.0 L329.2,140.0 L331.2,140.0 L333.3,140.0 L335.4,140.0 L337.4,140.0 L339.5,140.0 L341.5,140.0 L343.6,140.0 L345.7,140.0 L347.7,140.0 L349.8,140.0 L351.8,140.0 L353.9,140.0 L356.0,140.0 L358.0,140.0 L360.1,140.0 L362.1,140.0 L364.2,140.0 L366.3,140.0 L368.3,140.0 L370.4,140.0 L372.4,140.0 L374.5,140.0 L376.6,140.0 L378.6,140.0 L380.7,140.0 L382.7,140.0 L384.8,140.0 L386.9,140.0 L388.9,140.0 L391.0,140.0 L393.0,140.0 L395.1,140.0 L397.2,140.0 L399.2,140.0 L401.3,140.0 L403.3,140.0 L405.4,140.0 L407.5,140.0 L409.5,140.0 L411.6,140.0 L413.6,140.0 L415.7,140.0 L417.8,140.0 L419.8,140.0 L421.9,140.0 L423.9,140.0 L426.0,140.0" fill="none" stroke="#334155" stroke-width="1.8"/><path d="M14.0,140.0 L16.1,140.0 L18.1,140.0 L20.2,140.0 L22.2,140.0 L24.3,140.0 L26.4,140.0 L28.4,140.0 L30.5,140.0 L32.5,140.0 L34.6,140.0 L36.7,140.0 L38.7,140.0 L40.8,140.0 L42.8,140.0 L44.9,140.0 L47.0,140.0 L49.0,140.0 L51.1,140.0 L53.1,140.0 L55.2,140.0 L57.3,140.0 L59.3,140.0 L61.4,140.0 L63.4,140.0 L65.5,140.0 L67.6,140.0 L69.6,140.0 L71.7,140.0 L73.7,140.0 L75.8,140.0 L77.9,140.0 L79.9,140.0 L82.0,140.0 L84.0,140.0 L86.1,140.0 L88.2,140.0 L90.2,140.0 L92.3,140.0 L94.3,140.0 L96.4,140.0 L98.5,140.0 L100.5,140.0 L102.6,140.0 L104.6,140.0 L106.7,140.0 L108.8,140.0 L110.8,140.0 L112.9,139.9 L114.9,139.9 L117.0,139.9 L119.1,139.9 L121.1,139.9 L123.2,139.8 L125.2,139.8 L127.3,139.8 L129.4,139.7 L131.4,139.7 L133.5,139.6 L135.5,139.6 L137.6,139.5 L139.7,139.4 L141.7,139.3 L143.8,139.2 L145.8,139.0 L147.9,138.9 L150.0,138.7 L152.0,138.5 L154.1,138.2 L156.1,138.0 L158.2,137.7 L160.3,137.3 L162.3,136.9 L164.4,136.5 L166.4,136.0 L168.5,135.4 L170.6,134.8 L172.6,134.1 L174.7,133.4 L176.7,132.6 L178.8,131.6 L180.9,130.6 L182.9,129.5 L185.0,128.3 L187.0,127.0 L189.1,125.6 L191.2,124.1 L193.2,122.4 L195.3,120.6 L197.3,118.7 L199.4,116.7 L201.5,114.5 L203.5,112.2 L205.6,109.8 L207.6,107.3 L209.7,104.6 L211.8,101.8 L213.8,98.8 L215.9,95.8 L217.9,92.6 L220.0,89.4 L222.1,86.1 L224.1,82.7 L226.2,79.2 L228.2,75.7 L230.3,72.1 L232.4,68.6 L234.4,65.0 L236.5,61.4 L238.5,57.9 L240.6,54.5 L242.7,51.1 L244.7,47.8 L246.8,44.6 L248.8,41.6 L250.9,38.7 L253.0,36.1 L255.0,33.6 L257.1,31.3 L259.1,29.2 L261.2,27.4 L263.3,25.8 L265.3,24.5 L267.4,23.5 L269.4,22.8 L271.5,22.4 L273.6,22.2 L275.6,22.4 L277.7,22.8 L279.7,23.5 L281.8,24.5 L283.9,25.8 L285.9,27.4 L288.0,29.2 L290.0,31.3 L292.1,33.6 L294.2,36.1 L296.2,38.7 L298.3,41.6 L300.3,44.6 L302.4,47.8 L304.5,51.1 L306.5,54.5 L308.6,57.9 L310.6,61.4 L312.7,65.0 L314.8,68.6 L316.8,72.1 L318.9,75.7 L320.9,79.2 L323.0,82.7 L325.1,86.1 L327.1,89.4 L329.2,92.6 L331.2,95.8 L333.3,98.8 L335.4,101.8 L337.4,104.6 L339.5,107.3 L341.5,109.8 L343.6,112.2 L345.7,114.5 L347.7,116.7 L349.8,118.7 L351.8,120.6 L353.9,122.4 L356.0,124.1 L358.0,125.6 L360.1,127.0 L362.1,128.3 L364.2,129.5 L366.3,130.6 L368.3,131.6 L370.4,132.6 L372.4,133.4 L374.5,134.1 L376.6,134.8 L378.6,135.4 L380.7,136.0 L382.7,136.5 L384.8,136.9 L386.9,137.3 L388.9,137.7 L391.0,138.0 L393.0,138.2 L395.1,138.5 L397.2,138.7 L399.2,138.9 L401.3,139.0 L403.3,139.2 L405.4,139.3 L407.5,139.4 L409.5,139.5 L411.6,139.6 L413.6,139.6 L415.7,139.7 L417.8,139.7 L419.8,139.8 L421.9,139.8 L423.9,139.8 L426.0,139.9" fill="none" stroke="#0f766e" stroke-width="1.8"/><line x1="14" y1="140.0" x2="426" y2="140.0" stroke="#64748b"/><line x1="239.0" y1="10" x2="239.0" y2="140.0" stroke="#111" stroke-dasharray="4 3"/><text x="239.0" y="8" font-size="10" text-anchor="middle">臨界値</text><text x="158.2" y="156.0" font-size="11" text-anchor="middle" fill="#334155" font-weight="700">H0 が真の世界</text><text x="306.5" y="156.0" font-size="11" text-anchor="middle" fill="#0f766e" font-weight="700">H0 が偽（効果あり）の世界</text><text x="261.2" y="116.2" font-size="11" fill="#ef4444" font-weight="700">α</text><text x="203.5" y="110.6" font-size="11" fill="#b45309" font-weight="700">β</text></svg></div>
+    <div class="viz-cap">点線より右を「棄却」と呼ぶ。左の山（H₀ が真）で点線より右にはみ出した赤い部分が α（第1種の誤り）。右の山（H₀ が偽）で点線より左にある黄色い部分が β（第2種の誤り）。右の山の点線より右側の面積が検出力。図では、右の山の中心を 2.8 に置いており、片側 α = 0.025（臨界値 1.96）のとき検出力は約 0.80 です。</div>
+  </div>
+  <p>α が「偶然の 5%」であることを、Rで実験して確かめましょう。<strong>H₀ が本当に真</strong>（2グループを同じ分布 rnorm から取る）という状況で t 検定を 10000 回繰り返し、p &lt; 0.05 になった割合を数えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">p &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, <span class="kw">t.test</span>(<span class="kw">rnorm</span>(<span class="nm">20</span>), <span class="kw">rnorm</span>(<span class="nm">20</span>))$p.value)  <span class="cm"># H0 is TRUE</span></span>
+<span class="cl"><span class="kw">mean</span>(p &lt; <span class="nm">0.05</span>)   <span class="cm"># proportion of false positives (Type I errors)</span></span>
+<span class="cl"><span class="kw">mean</span>(p &lt; <span class="nm">0.01</span>)</span>
+</pre><div class="output-reveal">[1] 0.05
+[1] 0.0094</div>
+  <p>p &lt; 0.05 の割合はほぼ 0.05、p &lt; 0.01 の割合はほぼ 0.01 です。<strong>効果が全くなくても、α の割合で「有意」が出る</strong>、これが第1種の誤りです。</p>
+  <p>次は反対に、<strong>H₀ が偽</strong>（2グループの真の平均が 0.5 違う）で、各グループ n = 20 のとき、検定が見逃す（p ≥ 0.05 になる）割合です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2</span>)</span>
+<span class="cl">p<span class="nm">2</span> &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, <span class="kw">t.test</span>(<span class="kw">rnorm</span>(<span class="nm">20</span>, mean = <span class="nm">0</span>), <span class="kw">rnorm</span>(<span class="nm">20</span>, mean = <span class="nm">0.5</span>))$p.value)  <span class="cm"># H0 is FALSE</span></span>
+<span class="cl"><span class="kw">mean</span>(p<span class="nm">2</span> &gt;= <span class="nm">0.05</span>)  <span class="cm"># proportion of misses (Type II errors)</span></span>
+</pre><div class="output-reveal">[1] 0.6676</div>
+  <p>約 67% は見逃しています。これが第2種の誤りで、<code>power.t.test()</code> の理論値とも合います。</p>
+  <pre class="code-block">
+<span class="cl">pw &lt;- <span class="kw">power.t.test</span>(n = <span class="nm">20</span>, delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>)</span>
+<span class="cl">pw$power        <span class="cm"># power = 1 - beta</span></span>
+<span class="cl"><span class="nm">1</span> - pw$power    <span class="cm"># beta (Type II error rate)</span></span>
+</pre><div class="output-reveal">[1] 0.3377084
+[1] 0.6622916</div>
+  <p>検出力は約 0.34、つまり β ≈ 0.66 です。n が小さいと、本物の効果も見逃しやすいのです。検出力 0.80 を目指すには、各グループ何人必要でしょうか。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">power.t.test</span>(power = <span class="nm">0.80</span>, delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>)$n</span>
+</pre><div class="output-reveal">[1] 63.76576</div>
+  <p>約 63.77 → 切り上げて<strong>各グループ 64 人</strong>です。検出力と効果量、サンプルサイズは、次の講義の主題です。</p>
+  <div class="warn-box">⚠️ 今の段階では、<strong>第1種とは何か・第2種とは何か</strong>を例と一緒に言えれば十分です。α と β、検出力の計算は後で重要になります。また、<strong>「α を 0.05 に設定する」と言うべきところを「p 値を 0.05 に設定する」と言わない</strong>ようにしましょう。設定するのは有意水準 α で、p 値はデータから計算される値です。</div>
+  <div class="note-box">📌 結論の読み方：<strong>H₀ を棄却したとき</strong>に起こりうる誤りは第1種、<strong>棄却しなかったとき</strong>に起こりうる誤りは第2種です。同時に両方を犯すことはありません。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>第1種＝<strong>ないのに「ある」</strong>と言う（誤報）。第2種＝<strong>あるのに「ない」</strong>と言う（見逃し）。α は誤報の率、β は見逃しの率。</p></div>
+  <div class="practice-card" id="p-m3b-u4">
+    <div class="ptitle">💻 ミニ練習：第2種の誤りの確率 β</div>
+    <p class="ptask"><code>power.t.test()</code> を使って、<strong>効果量 delta = 0.5、sd = 1、α = 0.05、各グループ n = 64</strong> のときの第2種の誤りの確率 β（= 1 − 検出力）を求めてください。</p>
+    <textarea class="code-editor" id="p-m3b-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3b-u4', ['power.t.test', 'n = 64', '$power', '1 -'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3b-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3b-u4-result"></div>
+    <div class="answer-reveal" id="p-m3b-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="nm">1</span> - <span class="kw">power.t.test</span>(n = <span class="nm">64</span>, delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>)$power</span>
+</pre><div class="output-reveal">[1] 0.1985414</div>
+      <p class="answer-note">β ≈ 0.199（約 0.20）。n = 64 で検出力が約 0.80 になるので、見逃しの確率は約 20% です。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which alternative hypothesis leads to a two-tailed test?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Men are taller than women</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Men and women differ in height</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Women are taller than men</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Men are exactly 10 cm taller than women</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">With α = 0.05, how is the rejection region placed in a two-tailed test?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>5% in each tail (10% in total)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All 5% in the upper tail only</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.5% in each tail (1% in total)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>2.5% in each tail (5% in total)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">For α = 0.05, what is the critical z for a one-tailed test (upper tail)?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About 1.645</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 1.960</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 2.576</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 0.050</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">When is it appropriate to use a one-tailed test?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>After looking at the data to see which group’s mean is higher</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Whenever the two-tailed p-value is just a little above 0.05</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only when the direction was stated before collecting data</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Always, since it makes the p-value smaller</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is a Type I error?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Failing to reject a false null hypothesis</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rejecting a false null hypothesis</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Failing to reject a true null hypothesis</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Rejecting a true null hypothesis</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A doctor tells a pregnant woman that she is not pregnant. Which error is this?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Type II error</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Type I error</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>No error — the doctor’s conclusion was correct</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Neither — pregnancy tests cannot cause errors</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Why did 0.05 become the standard significance level?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is the value that makes Type II errors impossible</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A mathematical proof showed it is the best cut-off for every study</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Mostly convention, helped by early printed tables listing 0.05</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Fisher decreed that no other significance level may ever be used</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">H₀ is true and α = 0.05. In the long run, how often will the test wrongly reject H₀?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Never</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 5% of the time</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 95% of the time</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 50% of the time</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 3, 0, 2, 1];
+var FEEDBACKS=["A two-tailed test has no direction: a difference in either direction fits H₁, so extreme values in the upper or the lower tail count.", "The 5% is split: 2.5% in the upper tail and 2.5% in the lower tail. A one-tailed test puts all 5% in the tail of the hypothesised direction.", "qnorm(0.95) = 1.645. The two-tailed critical values are ±1.96 (qnorm(0.975)) because only 2.5% sits in each tail.", "The direction must come from theory before the data are seen. Choosing the tail afterwards is cheating on α. At introductory level, use two-tailed by default.", "A Type I error is a false positive: rejecting a null hypothesis that is actually true. Its probability is α.", "Something is really going on (H₀ “not pregnant” is false) but we fail to reject it: a false negative, i.e. a Type II error (probability β).", "Fisher suggested a 95% threshold but not as a hard rule; printed tables with 0.05, 0.02, 0.01 about 100 years ago made it convenient, and it stuck by convention. Fisher himself said a fixed level should not be used in all circumstances.", "α is the Type I error rate. In the R simulation with H₀ true, p < 0.05 occurred in about 5% of 10000 tests."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">one-tailed test</div><div class="term-en">片側検定</div><div class="term-def">仮説に方向がある検定。α = 0.05 を片側に 5% 置く。</div></div>
+    <div class="term-item"><div class="term-name">two-tailed test</div><div class="term-en">両側検定</div><div class="term-def">方向なしの検定。上 2.5% ＋ 下 2.5%。入門では基本これ。</div></div>
+    <div class="term-item"><div class="term-name">critical value</div><div class="term-en">臨界値</div><div class="term-def">これを超えたら H₀ を棄却する境目。例：z = ±1.96（両側）、1.645（片側）。</div></div>
+    <div class="term-item"><div class="term-name">significance level (α)</div><div class="term-en">有意水準</div><div class="term-def">第1種の誤りを許す確率の上限。慣習は 0.05。</div></div>
+    <div class="term-item"><div class="term-name">p-value</div><div class="term-en">p値</div><div class="term-def">H₀ が真だと仮定したとき、データがこれほど極端になる確率。</div></div>
+    <div class="term-item"><div class="term-name">Type I error</div><div class="term-en">第1種の誤り</div><div class="term-def">真の H₀ を棄却する（false positive）。確率 α。</div></div>
+    <div class="term-item"><div class="term-name">Type II error</div><div class="term-en">第2種の誤り</div><div class="term-def">偽の H₀ を棄却しない（false negative）。確率 β。</div></div>
+    <div class="term-item"><div class="term-name">power</div><div class="term-en">検出力</div><div class="term-def">本当に効果があるとき見つける確率 = 1 − β。</div></div>
+    <div class="term-item"><div class="term-name">grand mean</div><div class="term-en">全体平均</div><div class="term-def">全グループをまとめた平均。H₀ のモデル。</div></div>
+    <div class="term-item"><div class="term-name">convention</div><div class="term-en">慣習</div><div class="term-def">根拠が弱くても皆が使う決まり。0.05 はこれ。</div></div>
+    <div class="term-item"><div class="term-name">Fisher</div><div class="term-en">フィッシャー</div><div class="term-def">0.05 を目安に提案した統計学者。固定の水準には反対。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>迷ったら<strong>両側</strong>。片側は「データを見る前に方向が決まっていた」ときだけ。第1種は「ないのに『ある』」、第2種は「あるのに『ない』」。0.05 は絶対の線ではなく慣習。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🎯 統計レッスン：M3 推測の基礎② 片側/両側検定・α・第1種第2種の誤り</p>
+  <p style="margin-top:.5rem;"><a href="m3_basics.html">← M3 推測の基礎①</a> · <a href="m3_estimation.html">M3 推測の基礎③ →</a> · <a href="m3_testing_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

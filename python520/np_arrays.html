@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 NumPy① 配列の基本</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main active" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · NumPy — Arrays</div>
+  <h1>🔢 NumPy①：配列の作り方と取り出し方</h1>
+  <p>NumPy配列の作り方、形・型・インデックス・スライス、そして「ビュー」と「コピー」の違いを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① なぜNumPy</a><a href="#unit2">② 作る</a><a href="#unit3">③ 取り出す</a><a href="#unit4">④ ビュー</a><a href="#quiz">📝 Quiz</a><a href="np_arrays_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 2.01 Understanding Data Types in Python</li><li>Handbook 2.02 The Basics of NumPy Arrays</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>なぜNumPyを使うのか</h2><div class="unit-sub">リストより速く、型がそろった配列</div></div>
+  </div>
+<p>Pythonのリストは何でも入れられて便利ですが、中の要素は1つ1つが「Pythonのオブジェクト」で、型の情報も持ち歩いています。数値計算では、この柔軟さが<strong>遅さ</strong>の原因になります。</p><p>NumPyの<strong>配列（ndarray）</strong>は、<strong>すべて同じ型</strong>の値を、メモリの中に<strong>ぎっしり並べて</strong>持ちます。だから、まとめて計算するのが速く、型も1つだけ覚えておけば済みます。</p><pre class="code-block">
+<span class="cl"><span class="kw">import</span> numpy <span class="kw">as</span> np</span>
+<span class="cl"></span>
+<span class="cl">L = [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>]</span>
+<span class="cl">L2 = [<span class="nm">1</span>, <span class="st">"two"</span>, <span class="nm">3.0</span>, <span class="kw">True</span>]     <span class="cm"># リストは型が混ざってもよい</span></span>
+<span class="cl"><span class="kw">print</span>(type(L2[<span class="nm">1</span>]))</span>
+<span class="cl"></span>
+<span class="cl">a = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>])</span>
+<span class="cl">a.dtype</span>
+</pre><div class="output-reveal">&lt;class 'str'&gt;
+dtype('int64')</div><p>配列には<strong>型（dtype）が1つだけ</strong>あります。整数だけなら<code>int64</code>などの整数型です（WindowsやPythonの古い環境では<code>int32</code>と表示されることもあります）。</p><pre class="code-block">
+<span class="cl">b = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3.5</span>])    <span class="cm"># 小数が1つ混ざると、全体が float になる</span></span>
+<span class="cl">b</span>
+</pre><div class="output-reveal">array([1. , 2. , 3.5])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>リストは「何でも入る買い物袋」、NumPy配列は「同じサイズの卵がきれいに並んだパック」。パックのほうが、数えるのも運ぶのも速い。</p></div><div class="practice-card" id="p-n1-u1">
+    <div class="ptitle">💻 ミニ練習：配列を作る</div>
+    <p class="ptask">整数 <code>10, 20, 30</code> からなるNumPy配列を作り、変数 <code>a</code> に入れてください（<code>import numpy as np</code>も書く）。</p>
+    <textarea class="code-editor" id="p-n1-u1-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n1-u1", ["import numpy as np", "np.array", "10", "20", "30"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n1-u1-result"></div>
+    <div class="answer-reveal" id="p-n1-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">import</span> numpy <span class="kw">as</span> np</span>
+<span class="cl"></span>
+<span class="cl">a = np.array([<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>])</span>
+</pre>
+      <p class="answer-note"><code>np.array(リスト)</code>でリストから配列を作ります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>配列を作る</h2><div class="unit-sub">リストから、ゼロから、連番から</div></div>
+  </div>
+<p>配列の作り方は大きく3つです。</p><pre class="code-block">
+<span class="cl">np.array([[<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>], [<span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>]])   <span class="cm"># リストのリスト → 2次元</span></span>
+</pre><div class="output-reveal">array([[1, 2, 3],
+       [4, 5, 6]])</div><table class="compare-table"><thead><tr><th>関数</th><th>できるもの</th></tr></thead><tbody><tr><td><code>np.zeros(5)</code></td><td>0が5個（float）</td></tr><tr><td><code>np.ones((2, 3))</code></td><td>1が2行3列</td></tr><tr><td><code>np.full((2, 2), 7)</code></td><td>7で埋めた2行2列</td></tr><tr><td><code>np.arange(0, 10, 2)</code></td><td>0から10手前まで2ずつ（<code>range</code>と同じ感覚）</td></tr><tr><td><code>np.linspace(0, 1, 5)</code></td><td>0から1まで<strong>終点を含めて</strong>5等分</td></tr></tbody></table><pre class="code-block">
+<span class="cl">np.zeros(<span class="nm">5</span>)</span>
+</pre><div class="output-reveal">array([0., 0., 0., 0., 0.])</div><pre class="code-block">
+<span class="cl">np.arange(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">2</span>)</span>
+</pre><div class="output-reveal">array([0, 2, 4, 6, 8])</div><pre class="code-block">
+<span class="cl">np.linspace(<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">5</span>)</span>
+</pre><div class="output-reveal">array([0.  , 0.25, 0.5 , 0.75, 1.  ])</div><div class="warn-box">⚠️ <code>arange</code>は終点を<strong>含みません</strong>（<code>range</code>と同じ）。<code>linspace</code>は終点を<strong>含みます</strong>。間違えやすいので、並べて覚えましょう。</div><p>乱数の配列もよく使います。<code>np.random.seed</code>で種を固定すると、毎回同じ結果になります。</p><pre class="code-block">
+<span class="cl">np.random.seed(<span class="nm">0</span>)</span>
+<span class="cl">np.random.randint(<span class="nm">0</span>, <span class="nm">10</span>, size=(<span class="nm">2</span>, <span class="nm">3</span>))</span>
+</pre><div class="output-reveal">array([[5, 0, 3],
+       [3, 7, 9]])</div><p><code>dtype=</code>で型を指定することもできます。</p><pre class="code-block">
+<span class="cl">np.zeros(<span class="nm">3</span>, dtype=int)</span>
+</pre><div class="output-reveal">array([0, 0, 0])</div><div class="practice-card" id="p-n1-u2">
+    <div class="ptitle">💻 ミニ練習：連番と等分</div>
+    <p class="ptask"><code>0, 5, 10, 15, 20</code>の配列を、<code>arange</code>と<code>linspace</code>の<strong>両方</strong>で作ってください（<code>linspace</code>は5個）。</p>
+    <textarea class="code-editor" id="p-n1-u2-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n1-u2", ["np.arange", "np.linspace"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n1-u2-result"></div>
+    <div class="answer-reveal" id="p-n1-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">np.arange(<span class="nm">0</span>, <span class="nm">21</span>, <span class="nm">5</span>)</span>
+<span class="cl">np.linspace(<span class="nm">0</span>, <span class="nm">20</span>, <span class="nm">5</span>)</span>
+</pre>
+      <p class="answer-note"><code>arange</code>は終点を含まないので21（20より大きい値）にします。<code>linspace</code>は終点20を含みます。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>配列の属性と、インデックス・スライス</h2><div class="unit-sub">形（shape）と、取り出し方</div></div>
+  </div>
+<p>配列は次の属性を持ちます。</p><pre class="code-block">
+<span class="cl">x = np.array([[<span class="nm">3</span>, <span class="nm">1</span>, <span class="nm">4</span>, <span class="nm">1</span>], [<span class="nm">5</span>, <span class="nm">9</span>, <span class="nm">2</span>, <span class="nm">6</span>], [<span class="nm">5</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">8</span>]])</span>
+<span class="cl"><span class="kw">print</span>(x.ndim)     <span class="cm"># 次元の数</span></span>
+<span class="cl"><span class="kw">print</span>(x.shape)    <span class="cm"># 形（行, 列）</span></span>
+<span class="cl"><span class="kw">print</span>(x.size)     <span class="cm"># 要素の総数</span></span>
+<span class="cl"><span class="kw">print</span>(x.dtype)    <span class="cm"># 型</span></span>
+</pre><div class="output-reveal">2
+(3, 4)
+12
+int64</div><p>取り出しは、リストと同じ<code>[ ]</code>です。2次元では<strong>カンマで区切って（行, 列）</strong>と書きます。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(x[<span class="nm">0</span>, <span class="nm">0</span>])     <span class="cm"># 1行目・1列目</span></span>
+<span class="cl"><span class="kw">print</span>(x[-<span class="nm">1</span>, -<span class="nm">1</span>])   <span class="cm"># 最後の行・最後の列</span></span>
+<span class="cl">x[<span class="nm">1</span>, <span class="nm">2</span>]</span>
+</pre><div class="output-reveal">3
+8
+2</div><p><strong>スライス</strong>は<code>開始:終了:ステップ</code>で、終了は含みません。</p><pre class="code-block">
+<span class="cl">y = np.arange(<span class="nm">10</span>)</span>
+<span class="cl"><span class="kw">print</span>(y[<span class="nm">2</span>:<span class="nm">5</span>])      <span class="cm"># 2, 3, 4</span></span>
+<span class="cl"><span class="kw">print</span>(y[::<span class="nm">2</span>])      <span class="cm"># 1つおき</span></span>
+<span class="cl"><span class="kw">print</span>(y[::-<span class="nm">1</span>])     <span class="cm"># 逆順</span></span>
+</pre><div class="output-reveal">[2 3 4]
+[0 2 4 6 8]
+[9 8 7 6 5 4 3 2 1 0]</div><pre class="code-block">
+<span class="cl">x[:<span class="nm">2</span>, :<span class="nm">3</span>]      <span class="cm"># 上の2行、左の3列</span></span>
+</pre><div class="output-reveal">array([[3, 1, 4],
+       [5, 9, 2]])</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(x[:, <span class="nm">0</span>])     <span class="cm"># 0列目だけ（すべての行）</span></span>
+<span class="cl">x[<span class="nm">1</span>]             <span class="cm"># 1行目だけ</span></span>
+</pre><div class="output-reveal">[3 5 5]
+array([5, 9, 2, 6])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>x[行, 列]</code>。<code>:</code>は「全部」。<code>x[:, 0]</code>は「全部の行の、0列目」と読みます。</p></div><div class="practice-card" id="p-n1-u3">
+    <div class="ptitle">💻 ミニ練習：スライス</div>
+    <p class="ptask">上の配列 <code>x</code> から、<strong>2行目（行番号1）の全体</strong>と、<strong>最後の列のすべての行</strong>を取り出すコードを2行で書いてください。</p>
+    <textarea class="code-editor" id="p-n1-u3-input" rows="7"># x は 3行4列の配列
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n1-u3", ["x[1]", "x[:, -1]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n1-u3-result"></div>
+    <div class="answer-reveal" id="p-n1-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x[<span class="nm">1</span>]</span>
+<span class="cl">x[:, -<span class="nm">1</span>]</span>
+</pre>
+      <p class="answer-note">行は0から数えるので2行目は<code>x[1]</code>。最後の列は<code>-1</code>です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>スライスは「コピー」ではなく「ビュー」</h2><div class="unit-sub">reshape と copy</div></div>
+  </div>
+<p>NumPyのスライスは、元の配列と<strong>同じデータを見ているだけ（ビュー）</strong>です。ここがリストと違う大事な点です。</p><pre class="code-block">
+<span class="cl">a = np.arange(<span class="nm">5</span>)</span>
+<span class="cl">b = a[:<span class="nm">3</span>]       <span class="cm"># ビュー</span></span>
+<span class="cl">b[<span class="nm">0</span>] = <span class="nm">99</span>       <span class="cm"># b を変更すると…</span></span>
+<span class="cl">a               <span class="cm"># a も変わる！</span></span>
+</pre><div class="output-reveal">array([99,  1,  2,  3,  4])</div><p>コピーが欲しいときは<code>.copy()</code>を使います。</p><pre class="code-block">
+<span class="cl">a = np.arange(<span class="nm">5</span>)</span>
+<span class="cl">c = a[:<span class="nm">3</span>].copy()</span>
+<span class="cl">c[<span class="nm">0</span>] = <span class="nm">99</span></span>
+<span class="cl">a               <span class="cm"># a は変わらない</span></span>
+</pre><div class="output-reveal">array([0, 1, 2, 3, 4])</div><p>形を変えるには<code>reshape</code>。要素の数が合っている必要があります。</p><pre class="code-block">
+<span class="cl">np.arange(<span class="nm">1</span>, <span class="nm">7</span>).reshape(<span class="nm">2</span>, <span class="nm">3</span>)</span>
+</pre><div class="output-reveal">array([[1, 2, 3],
+       [4, 5, 6]])</div><pre class="code-block">
+<span class="cl">v = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>])</span>
+<span class="cl">v.reshape(<span class="nm">1</span>, <span class="nm">3</span>)      <span class="cm"># 行ベクトル（1行3列）</span></span>
+</pre><div class="output-reveal">array([[1, 2, 3]])</div><pre class="code-block">
+<span class="cl">np.arange(<span class="nm">5</span>).reshape(<span class="nm">2</span>, <span class="nm">3</span>)</span>
+</pre><div class="output-reveal">ValueError: cannot reshape array of size 5 into shape (2,3)</div><div class="warn-box">⚠️ 5個の要素は2×3=6個の形には並べられません。<code>reshape</code>は「要素の総数が同じ」ときだけ使えます。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>スライスは「窓から元の部屋をのぞいている」状態。窓の中を変えると部屋が変わります。別の部屋が欲しければ<code>copy</code>。</p></div><div class="practice-card" id="p-n1-u4">
+    <div class="ptitle">💻 ミニ練習：コピーする</div>
+    <p class="ptask">配列 <code>a = np.arange(5)</code> の先頭3つを<strong>コピー</strong>して変数 <code>c</code> に入れ、<code>c[0]</code>を100にしても<code>a</code>が変わらないようにしてください。</p>
+    <textarea class="code-editor" id="p-n1-u4-input" rows="7">a = np.arange(5)
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n1-u4", [".copy()", "c[0] = 100"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n1-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n1-u4-result"></div>
+    <div class="answer-reveal" id="p-n1-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">a = np.arange(<span class="nm">5</span>)</span>
+<span class="cl">c = a[:<span class="nm">3</span>].copy()</span>
+<span class="cl">c[<span class="nm">0</span>] = <span class="nm">100</span></span>
+</pre>
+      <p class="answer-note"><code>.copy()</code>を付けると別のデータになります。付けないと<code>a</code>も100になります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why are NumPy arrays usually faster than Python lists for numerical work?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>They store values of one type in a compact block</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They are stored on the hard disk instead of memory</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>They automatically use every CPU core</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They skip type checking by ignoring all errors</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the dtype of np.array([1, 2, 3.5])?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>int64, since most values are whole numbers</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>object, because the types are mixed</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>float64, as all values become floats</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It raises an error</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which call includes the end value 1 in its result?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>np.arange(0, 1, 0.25)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>np.linspace(0, 1, 5)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>range(0, 1)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>np.zeros(1)</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">For x = np.arange(10), what does x[::-1] return?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The array reversed</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The first element only</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An error, since steps cannot be negative</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The same array unchanged</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">b = a[:3] and then b[0] = 99. What happens to a?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Nothing, b is an independent copy</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>a[0] also becomes 99</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An error is raised</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The whole array a becomes 99</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does np.arange(5).reshape(2, 3) fail?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>reshape only works on 1-D arrays of floats</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>arange cannot be used with reshape</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The shape needs 6 elements but there are 5</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Shapes must always be square</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 1, 0, 1, 2];
+var FEEDBACKS=["An ndarray holds one fixed type in contiguous memory, so operations can run on the whole block at once.", "NumPy upcasts to one common type. A single float makes the whole array float64.", "linspace includes the end point. arange stops before it.", "A step of -1 walks backwards through the array.", "Slices are views, so they share data with the original. Use .copy() for an independent array.", "The new shape must hold exactly the same number of elements: 2 x 3 = 6 is not 5."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">ndarray</div><div class="term-en">NumPyの配列</div><div class="term-def">同じ型の値を並べた、NumPyの基本のデータ構造。</div></div>
+    <div class="term-item"><div class="term-name">dtype</div><div class="term-en">データ型</div><div class="term-def">配列の中身の型（int64、float64など）。配列に1つだけ。</div></div>
+    <div class="term-item"><div class="term-name">shape</div><div class="term-en">形</div><div class="term-def">(行, 列)のタプル。reshapeで変えられる。</div></div>
+    <div class="term-item"><div class="term-name">view</div><div class="term-en">ビュー</div><div class="term-def">スライスで得られる、元データを共有した配列。変更が元に伝わる。</div></div>
+    <div class="term-item"><div class="term-name">arange / linspace</div><div class="term-en">連番／等分</div><div class="term-def">arangeは終点を含まず、linspaceは含む。</div></div>
+    <div class="term-item"><div class="term-name">seed</div><div class="term-en">乱数の種</div><div class="term-def">np.random.seed(0)で固定すると、毎回同じ乱数になる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>コードは自分のJupyter／Colabにコピーして実行しましょう。出力を見ながら読むと定着します。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：NumPy① 配列の基本</p>
+  <p style="margin-top:.5rem;"><a href="np_ufuncs.html">② ufunc・集計 →</a> · <a href="np_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

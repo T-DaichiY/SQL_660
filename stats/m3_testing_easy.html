@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M3 推測の基礎②　片側/両側検定・α・第1種第2種の誤り</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 ⚖️ 片側/両側・α・誤り 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy active" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M3 · Tails, α &amp; Errors 🍎</div>
+    <h1>🍎 超やさしい版：片側／両側・α・2つの誤り</h1>
+  <p>「<strong>どっちの端を見る？</strong>」「<strong>どこから珍しいと言う？</strong>」「<strong>どう間違える？</strong>」を、短く確認します。</p>
+    <div class="unit-nav"><a href="#u1">片側と両側</a><a href="#u2">0.05 のひみつ</a><a href="#u3">2つの誤り</a><a href="#u4">Rで確認</a><a href="m3_testing.html" class="easy-toplink">🎯 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①は One and two tail tests、②は 0.05 alpha level、③は Type 1 and type 2 errors、④はそれらを R で確かめます。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>片側と両側</h2><div class="unit-sub">どっちの端を見る？</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>両側 = 上下の両はしを見る（2.5% + 2.5%）。片側 = 決めた1方向だけ見る（5% を全部そこへ）。迷ったら両側。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">↔️</div>
+    <div class="ru-text"><strong>両側</strong>：「男女で身長が<strong>違う</strong>」→ 男が高くても女が高くても当てはまる。<br><strong>片側</strong>：「男性の方が<strong>高い</strong>」→ 男が高い方向だけ。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>種類</th><th>α = 0.05 の置き方</th><th>臨界値 (z)</th></tr>
+    <tr><td>両側</td><td>上 2.5% ＋ 下 2.5%</td><td>±1.96</td></tr>
+    <tr><td>片側</td><td>上 5%（または下 5%）</td><td>1.645</td></tr>
+  </table>
+  <div class="warn-box">⚠️ 片側は、<strong>データを見る前に</strong>方向を決めたときだけ。入門ではふつう両側を使います。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>5% の「珍しさの枠」を、両はしに半分ずつ置くのが両側、片はしにまとめて置くのが片側。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 「男性と女性は違う」は両側？片側？<span class="cp-a">A. 両側（向きがない）。</span></div><div class="cp-q">Q2. 「男性の方が高い」は？<span class="cp-a">A. 片側（向きがある）。</span></div><div class="cp-q">Q3. 両側で α = 0.05 のとき、上の端には何%？<span class="cp-a">A. 2.5%（下の端にも 2.5%）。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>0.05 のひみつ</h2><div class="unit-sub">どうして 0.05 なの？</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>0.05 は絶対の線ではなく、Fisher の目安＋100年前の印刷された表から広まった「慣習」。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">📜</div>
+    <div class="ru-text">約100年前、電卓もパソコンもなかったので、研究者は<strong>0.05・0.02・0.01</strong> が並んだ印刷の表を引いて有意かを調べた。便利だった 0.05 が定着。</div>
+  </div>
+  <p><strong>Ronald Fisher</strong> は「95% の閾値＝ p = 0.05」を目安にしました。でも<strong>厳格な規則ではない</strong>、と本人も言っています。現代の検定は <strong>Neyman と Pearson</strong> の考えと Fisher の考えの組み合わせです。</p>
+  <div class="note-box">💬 Fisher：「科学者は、いつでもどんな時でも使う固定の有意水準など持たない。個々のケースで、証拠と考えに照らして判断する。」</div>
+  <div class="warn-box">⚠️ p 値だけを見せて、ほかの情報（効果量など）を出さない人は、よく分かっていないか、誤解させようとしています。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>0.05 は「便利な目安」。p 値は役に立つけれど万能ではないので、<strong>効果量</strong>なども見る（次の講義）。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 0.05 を提案したのは誰？<span class="cp-a">A. Ronald Fisher（でも固定のルールにはしなかった）。</span></div><div class="cp-q">Q2. なぜ 0.05 が広まった？<span class="cp-a">A. 印刷された表に 0.05, 0.02, 0.01 の列があって便利だったから。主に慣習。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>2つの誤り</h2><div class="unit-sub">どう間違える？</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>第1種＝ないのに「ある」（誤報）。第2種＝あるのに「ない」（見逃し）。</strong></p></div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">🤰</div>
+    <div class="ru-text">妊娠していない人に「妊娠しています」→ <strong>第1種</strong>。<br>妊娠している人に「妊娠していません」→ <strong>第2種</strong>。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>結論 ＼ 本当</th><th>H₀ は真（差なし）</th><th>H₀ は偽（差あり）</th></tr>
+    <tr><td>H₀ を棄却</td><td><strong>第1種の誤り</strong>（確率 α）</td><td>正しい（検出力 1 − β）</td></tr>
+    <tr><td>棄却しない</td><td>正しい</td><td><strong>第2種の誤り</strong>（確率 β）</td></tr>
+  </table>
+  <p>本当のことは分からない（unknown）から検定をします。だから間違いも起こりえます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>α は誤報の率、β は見逃しの率。α = 0.05 なら、効果が全くなくても約 5% は偶然「有意」になる。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 真の H₀ を棄却したら？<span class="cp-a">A. 第1種の誤り（false positive）。</span></div><div class="cp-q">Q2. 偽の H₀ を棄却しなかったら？<span class="cp-a">A. 第2種の誤り（false negative）。</span></div><div class="cp-q">Q3. 検出力は β を使うとどう書く？<span class="cp-a">A. 1 − β。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>Rで確かめよう</h2><div class="unit-sub">数字で見ると…</div></div>
+  </div>
+  <p>男女のテスト得点（平均 60 と 50）の両側 t 検定の p 値は 2.528e-05。でも「女性が低い」という向きを仮定した片側検定だと…</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">t.test</span>(women, men, alternative = <span class="st">"less"</span>)$p.value</span>
+</pre><div class="output-reveal">[1] 0.9999874</div>
+  <p>p ≈ 1。<strong>向きが逆だと、どれだけ差があっても有意にならない。</strong></p>
+  <p>次に、効果が<strong>ない</strong>世界で t 検定を 10000 回やると、p &lt; 0.05 になる割合は？</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">p &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, <span class="kw">t.test</span>(<span class="kw">rnorm</span>(<span class="nm">20</span>), <span class="kw">rnorm</span>(<span class="nm">20</span>))$p.value)  <span class="cm"># H0 is TRUE</span></span>
+<span class="cl"><span class="kw">mean</span>(p &lt; <span class="nm">0.05</span>)   <span class="cm"># proportion of false positives (Type I errors)</span></span>
+<span class="cl"><span class="kw">mean</span>(p &lt; <span class="nm">0.01</span>)</span>
+</pre><div class="output-reveal">[1] 0.05
+[1] 0.0094</div>
+  <div class="big-rule down">
+    <div class="ru-arrow">🎲</div>
+    <div class="ru-text">約 <strong>0.05</strong>（p &lt; 0.05）と約 <strong>0.01</strong>（p &lt; 0.01）。効果がなくても、<strong>α の割合で誤報</strong>が出る。</div>
+  </div>
+  <p>逆に、本当に平均が 0.5 違う世界で n = 20 だと、見逃す割合は？</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2</span>)</span>
+<span class="cl">p<span class="nm">2</span> &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, <span class="kw">t.test</span>(<span class="kw">rnorm</span>(<span class="nm">20</span>, mean = <span class="nm">0</span>), <span class="kw">rnorm</span>(<span class="nm">20</span>, mean = <span class="nm">0.5</span>))$p.value)  <span class="cm"># H0 is FALSE</span></span>
+<span class="cl"><span class="kw">mean</span>(p<span class="nm">2</span> &gt;= <span class="nm">0.05</span>)  <span class="cm"># proportion of misses (Type II errors)</span></span>
+</pre><div class="output-reveal">[1] 0.6676</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>見逃し（第2種）は約 67%。n が小さいと本物の効果も見つけにくい。n = 64 にすると見逃しは約 20% に減る（検出力 約 0.80）。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 効果なしの世界で α = 0.05 のとき、有意になる割合は？<span class="cp-a">A. 約 5%（これが第1種の誤り）。</span></div><div class="cp-q">Q2. n = 20、効果 0.5 のとき検出力は？<span class="cp-a">A. 約 0.34（β ≈ 0.66）。</span></div><div class="cp-q">Q3. 検出力 0.80 にするには各グループ何人？<span class="cp-a">A. 64 人（63.77 を切り上げ）。</span></div></div>
+</div>
+<div class="page-nav"><a href="m3_basics.html">← 前の単元へ</a><a href="m3_testing.html">🎯 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 両側：2.5% ＋ 2.5%、片側：5%</p><p style="margin:.4rem 0">• 迷ったら両側</p><p style="margin:.4rem 0">• 0.05 は慣習（Fisher の目安）</p><p style="margin:.4rem 0">• 第1種＝誤報、第2種＝見逃し</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">図解・Rのp値の比較・英語MCQクイズは <a href="m3_testing.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M3 推測の基礎② — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m3_testing.html">← 本編</a> · <a href="m3_estimation.html">M3 推測の基礎③ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

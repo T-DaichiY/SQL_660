@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M6 回帰①　回帰直線と最小二乗法</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 📉 回帰入門 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy active" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Linear Regression — Line of Best Fit 🍎</div>
+    <h1>🍎 超やさしい版：回帰①（回帰直線と最小二乗法）</h1>
+  <p>「<strong>x から y を予想する直線</strong>」を引いて、その直線が「なぜ最良か」を知ります。</p>
+    <div class="unit-nav"><a href="#u1">回帰ってなに？</a><a href="#u2">最良の直線</a><a href="#u3">残差</a><a href="#u4">なぜ最小二乗？</a><a href="m6_reg_intro.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画対応</strong>：① Linear Regression 1「intro to Regression」／ ② Linear Regression 2「The Line of Best Fit」／ ③ Linear Regression 3「Residual」／ ④ Linear Regression 4「Why is the least-squares regression line the best fitting line?」</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>回帰ってなに？</h2><div class="unit-sub">xからyを予想する</div></div>
+  </div>
+
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>回帰は「x から y を予想する」こと。予想したい方が応答変数（y）、予想に使う方が説明変数（x）。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🚌</div>
+    <div class="ru-text"><strong>古いバスほど、維持費が高い</strong>…バスの年数（x）から、年間維持費（y）を予想する。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>名前</th><th>べつの呼び方</th><th>バスの例</th></tr>
+    <tr><td><strong>応答変数</strong>（y）</td><td>dependent、outcome</td><td>年間維持費</td></tr>
+    <tr><td><strong>説明変数</strong>（x）</td><td>independent、predictor、feature</td><td>バスの年数</td></tr>
+  </table>
+  <div class="big-rule mid">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>統計の「error（誤差）」は間違いではない！</strong> 点が線のまわりにばらつくのは、ふつうのこと。</div>
+  </div>
+  <p>結果 = モデル + 誤差（Outcome = Model + Error）。点を全部つなぐ線は「<strong>過学習（overfitting）</strong>」で、新しいデータに合わなくなります。目指すのは<strong>全体の傾向</strong>をとらえた1本の線です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>回帰は「xからyを予想する道具」。ばらつきは自然なもの。点を全部つながず、傾向をとらえる。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. バスの年数と年間維持費。応答変数はどっち？<span class="cp-a">A. 年間維持費。予想したい結果の方。</span></div><div class="cp-q">Q2. 統計での error の意味は？<span class="cp-a">A. 間違いではなく、期待（モデル）からのずれ・ばらつき。</span></div><div class="cp-q">Q3. 点を全部つなぐ線の問題点は？<span class="cp-a">A. 過学習。新しいデータに合わなくなる。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>最良の直線</h2><div class="unit-sub">ŷ = b₀ + b₁x</div></div>
+  </div>
+
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>最良の直線は ŷ = b₀ + b₁x。b₀ が切片、b₁ が傾き。Rでは lm(y ~ x)（yが先！）。</strong></p></div>
+  <p>donors の50人の標本で、<strong>最高寄付額（x）</strong>から<strong>総寄付額（y）</strong>を予想します。</p>
+<pre class="code-block">
+<span class="cl">model &lt;- <span class="kw">lm</span>(sampleDonors$totalGivingAmount ~ sampleDonors$largestGiftAmount)</span>
+<span class="cl">model$coefficients</span>
+</pre>
+<div class="output-reveal">                   (Intercept) sampleDonors$largestGiftAmount 
+                     51.816908                       3.909609 </div>
+  <div class="big-rule ">
+    <div class="ru-arrow">📈</div>
+    <div class="ru-text"><strong>ŷ = 51.8 + 3.9x</strong>　切片 51.8、傾き 3.9。最高寄付額が $1 増えるごとに、予想の総額が約 $3.9 増える、という傾向です。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>名前</th><th>意味</th></tr>
+    <tr><td>b₀（切片）</td><td>直線が y 軸と交わる所（x = 0 のときの予想）</td></tr>
+    <tr><td>b₁（傾き）</td><td>直線の急さ</td></tr>
+    <tr><td>ŷ（y-hat）</td><td>直線から出した<strong>予想値</strong></td></tr>
+  </table>
+  <p>直線の別名：<strong>LSRL</strong>（least squares regression line）、line of best fit、trend line、OLSR。</p>
+  <div class="warn-box">⚠️ 直線は「傾向」であって保証ではありません。同じ最高寄付額でも、総額は人によって違います（ハット ^ が、その誤差を表します）。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>lm(y ~ x)</code>は<strong>yが先、xが後</strong>。出てきた2つの数は、1つ目が切片、2つ目が傾きです。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. lm(y ~ x) で先に書くのはどっち？<span class="cp-a">A. y（応答変数）。</span></div><div class="cp-q">Q2. 最初の係数 51.82 は何？<span class="cp-a">A. y切片 b₀。</span></div><div class="cp-q">Q3. ŷ の「ハット」は何を伝えている？<span class="cp-a">A. 直線は傾向であって、点がぴったり乗るわけではない（誤差がある）ということ。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>残差</h2><div class="unit-sub">実際 − 予想</div></div>
+  </div>
+
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>残差 = 実際の y − 予想の y（y − ŷ）。線の上の点は＋、下の点は−。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🎯</div>
+    <div class="ru-text"><strong>残差 = 実際 − 予想</strong>　引く順番を逆にすると、＋と−が逆になるので注意！</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>点の位置</th><th>残差</th><th>線の予想</th></tr>
+    <tr><td>線の上</td><td>＋</td><td>低く見積もった（under-predict）</td></tr>
+    <tr><td>線の下</td><td>−</td><td>高く見積もった（over-predict）</td></tr>
+    <tr><td>線の上にぴったり</td><td>0</td><td>大当たり</td></tr>
+  </table>
+  <p>例：最高寄付額 $150 の人は、実際の総額が $190。予想は 51.8 + 3.9 × 150 = 636.8。</p>
+<pre class="code-block">
+<span class="cl"><span class="nm">190</span> - (<span class="nm">51.8</span> + <span class="nm">3.9</span> * <span class="nm">150</span>)</span>
+</pre>
+<div class="output-reveal">[1] -446.8</div>
+  <div class="big-rule down">
+    <div class="ru-arrow">✍️</div>
+    <div class="ru-text"><strong>「線は $446.80 だけ過大に予測した」</strong>または<strong>「予想より $446 少なく寄付した」</strong>。マイナス記号は書かず、言葉で向きを表します。</div>
+  </div>
+  <p>Rなら<code>model$residuals[46]</code>で −448.2582（手計算との差は、係数を丸めたため）。最小二乗直線では、<strong>残差の合計は 0</strong> になります。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>残差は「点と線の縦のきょり」に、上＋・下−の向きを付けたもの。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 点が線の下にあるとき、残差の符号は？<span class="cp-a">A. マイナス（−）。線が over-predict した。</span></div><div class="cp-q">Q2. 残差の式は？<span class="cp-a">A. 実際の y − 予想の y。</span></div><div class="cp-q">Q3. 最小二乗直線の残差を全部足すと？<span class="cp-a">A. 0。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>なぜ最小二乗？</h2><div class="unit-sub">二乗の合計を最小に</div></div>
+  </div>
+
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>最良の直線 = 残差を二乗して全部足した値（SSE）がいちばん小さい直線。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🟧</div>
+    <div class="ru-text">残差を<strong>二乗</strong>すると「正方形の面積」。線が点から遠いほど正方形は大きい。<strong>正方形の面積の合計が最小</strong>の線が最良。</div>
+  </div>
+  <p>4点 (1,2), (2,4), (3,3), (4,6) で確かめます。</p>
+  <table class="compare-table">
+    <tr><th>直線</th><th>残差（4点）</th><th>二乗の合計（SSE）</th></tr>
+    <tr><td>ŷ = 1.0 + 1.1x（最小二乗）</td><td>−0.1, 0.8, −1.3, 0.6</td><td><strong>2.7</strong></td></tr>
+    <tr><td>ŷ = 0.5 + 1.5x（別の直線）</td><td>0, 0.5, −2, −0.5</td><td>4.5</td></tr>
+  </table>
+  <p>最小二乗直線の方が SSE が小さくなります。donors の標本では <code>sum(model$residuals^2)</code> が <strong>925380.4</strong> です。</p>
+  <p>便利な式が2つ：<strong>傾き b₁ = r × (s<sub>y</sub> / s<sub>x</sub>)</strong>、<strong>切片 b₀ = ȳ − b₁x̄</strong>。計算はRに任せて、<strong>意味を説明できる</strong>ことが大切です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(model)$coefficients[, <span class="nm">1</span>]    <span class="cm"># Estimate列：切片と傾き</span></span>
+</pre>
+  <div class="warn-box">⚠️ <code>summary(model)</code>では<strong>Estimate列</strong>の1行目が切片、2行目が傾き（変数名の行）です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「最良」とは、<strong>ずれ（残差）を二乗して足した合計が最小</strong>ということ。平均の点 (x̄, ȳ) は、いつも線の上を通ります。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SSE は何の略？何を表す？<span class="cp-a">A. sum of squared errors。残差の二乗和。</span></div><div class="cp-q">Q2. 最良の直線はこの値をどうする？<span class="cp-a">A. いちばん小さくする。</span></div><div class="cp-q">Q3. 傾きを相関から求める式は？<span class="cp-a">A. b₁ = r × (s_y / s_x)。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_corr_calc.html">← 相関の計算と注意</a><a href="m6_reg_intro.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 回帰：xからyを予想</p><p style="margin:.4rem 0">• <code>lm(y ~ x)</code>：yが先</p><p style="margin:.4rem 0">• ŷ = b₀ + b₁x</p><p style="margin:.4rem 0">• 残差 = 実際 − 予想</p><p style="margin:.4rem 0">• 最良 = 残差の二乗和が最小</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">図やRの練習問題、英語MCQクイズは <a href="m6_reg_intro.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M6 回帰① 回帰直線と最小二乗法 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_reg_intro.html">← 本編</a> · <a href="m6_reg_interpret.html">次のレッスンへ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

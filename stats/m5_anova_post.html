@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 ANOVA③　事後検定（Tukey HSD・Bonferroni）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 🔎 ANOVA③ 事後検定 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · ANOVA ③ — Post Hoc Tests: Tukey HSD &amp; Bonferroni</div>
+  <h1>🔍 ANOVA③：事後検定（Tukey HSD・Bonferroni）</h1>
+  <p>ANOVA で「どこかに差がある」と分かったら、次は<strong>「どのグループとどのグループが違うのか」</strong>。それを調べるのが<strong>事後検定（post hoc test）</strong>です。</p>
+  <p style="font-size:.9rem">📺 講義動画: ANOVA 7 (Post Hoc Test) ／ ANOVA 8 (Tukey HSD Test) ／ ANOVA 9 (Bonferroni correction)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 事後検定とは</a><a href="#unit2">② Tukey HSD</a><a href="#unit3">③ Bonferroni 補正</a><a href="#unit4">④ 使い分け</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 事後検定とは：ANOVA 7 (Post Hoc Test)</li><li>② Tukey HSD の実行と読み方：ANOVA 8 (Tukey HSD Test)</li><li>③ Bonferroni 補正：ANOVA 9 (Bonferroni correction)</li><li>④ 使い分け・まとめ：ANOVA 8・9 のまとめ（pairwise.t.test はおまけ）</li></ul></div>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>事後検定とは何か</h2><div class="unit-sub">ANOVA は「どこか」しか教えてくれない</div></div>
+  </div>
+  <p>前回までで、3つのダイエットプランの体重減少（weight loss）を<strong>ANOVA</strong>で比べ、<strong>p = 0.0058</strong>という小さな p値を得ました。これは 5% の有意水準（α）よりずっと小さいので、<strong>「少なくとも2つのグループの母平均が違う」</strong>という証拠があります。</p>
+  <div class="viz"><div class="viz-title">データ：3プランの体重減少（赤線＝各グループの平均）</div><div style="text-align:center"><svg viewBox="0 0 420 200" width="420" height="200" role="img" aria-label="3つのプランの体重減少" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="419" height="199" fill="none" stroke="#cbd5e1"/><line x1="60" y1="170" x2="400" y2="170" stroke="#e2e8f0"/><text x="52" y="174" font-size="10" text-anchor="end" fill="#64748b">0</text><line x1="60" y1="130" x2="400" y2="130" stroke="#e2e8f0"/><text x="52" y="134" font-size="10" text-anchor="end" fill="#64748b">5</text><line x1="60" y1="90" x2="400" y2="90" stroke="#e2e8f0"/><text x="52" y="94" font-size="10" text-anchor="end" fill="#64748b">10</text><line x1="60" y1="50" x2="400" y2="50" stroke="#e2e8f0"/><text x="52" y="54" font-size="10" text-anchor="end" fill="#64748b">15</text><line x1="60" y1="10" x2="400" y2="10" stroke="#e2e8f0"/><text x="52" y="14" font-size="10" text-anchor="end" fill="#64748b">20</text><circle cx="97" cy="114" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="109" cy="98" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="121" cy="130" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="133" cy="114" r="4.5" fill="#0d9488" opacity=".8"/><line x1="85" y1="114.0" x2="145" y2="114.0" stroke="#ef4444" stroke-width="2"/><text x="115" y="188" font-size="11" text-anchor="middle" fill="#334155">Plan 1（平均 7）</text><circle cx="207" cy="98" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="219" cy="82" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="231" cy="114" r="4.5" fill="#0d9488" opacity=".8"/><line x1="195" y1="98.0" x2="255" y2="98.0" stroke="#ef4444" stroke-width="2"/><text x="225" y="188" font-size="11" text-anchor="middle" fill="#334155">Plan 2（平均 9）</text><circle cx="317" cy="50" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="329" cy="74" r="4.5" fill="#0d9488" opacity=".8"/><circle cx="341" cy="26" r="4.5" fill="#0d9488" opacity=".8"/><line x1="305" y1="50.0" x2="365" y2="50.0" stroke="#ef4444" stroke-width="2"/><text x="335" y="188" font-size="11" text-anchor="middle" fill="#334155">Plan 3（平均 15）</text><text x="14" y="95" font-size="10" fill="#64748b" transform="rotate(-90 14 95)">体重減少 (lb)</text></svg></div><div class="viz-cap">Plan 1 = 7, 9, 5, 7（平均7）／ Plan 2 = 9, 11, 7（平均9）／ Plan 3 = 15, 12, 18（平均15）</div></div>
+  <pre class="code-block">
+<span class="cl">weight_loss &lt;- <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">7</span>,  <span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">7</span>,  <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">18</span>)</span>
+<span class="cl">group &lt;- <span class="kw">factor</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>), times = <span class="kw">c</span>(<span class="nm">4</span>, <span class="nm">3</span>, <span class="nm">3</span>)))</span>
+<span class="cl"><span class="kw">summary</span>(<span class="kw">aov</span>(weight_loss ~ group))</span>
+</pre>
+  <div class="output-reveal">            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+group        2    114   57.00   11.73 0.00581 **
+Residuals    7     34    4.86                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div>
+  <p>ところが ANOVA は<strong>「どのペアが違うのか」を教えてくれません</strong>。グループ1と2が違うのか？ 2と3が違うのか？ 全部違うのか？ ANOVA は「どこかに有意な差がある」と言うだけの <strong>omnibus test（総括的な検定）</strong>です。違いの場所を探すには、別の検定 <strong>post hoc test（事後検定）</strong>が必要です。</p>
+  <div class="warn-box">⚠️ <strong>講師の強調：</strong>ANOVA が有意でも、「どのグループ同士が違うか」は分かりません。そこで ANOVA の<strong>あと（post hoc）</strong>に、ペアごとの比較をやり直します。ただし単純に t検定を何本も繰り返すと Type I error が膨らむので、「補正した」やり方を使います。</div>
+  <h3>この講座で学ぶ2つの事後検定</h3>
+  <table class="compare-table">
+    <tr><th>方法</th><th>考え方</th><th>特徴</th></tr>
+    <tr><td><strong>Bonferroni correction</strong><br>（ボンフェローニ補正）</td><td>有意水準 α を<strong>厳しく</strong>（小さく）して、多重比較の誤りを抑える</td><td>ANOVA 以外のどんな検定にも使える。いちばん厳格（stringent）</td></tr>
+    <tr><td><strong>Tukey's HSD</strong><br>（Honestly Significant Difference）</td><td>ペアごとの比較（pairwise comparisons）を、多重比較用の式で行う</td><td>power が高く、比較の数が多い（たとえば10グループ）ときに有効。<strong>より一般的で推奨</strong></td></tr>
+  </table>
+  <p>ほかに <strong>Scheffé's test</strong> や <strong>Fisher's LSD（Least Significant Difference）</strong>などの事後検定もあります（詳しくは講義ノート参照。LSD は薬物の LSD とは無関係）。Tukey は <strong>John Tukey</strong> にちなんだ名前です。</p>
+  <h3>比較の数はどれくらい？</h3>
+  <p>k 個のグループから2つ選ぶペアの数は <strong>k(k − 1) / 2</strong> です。</p>
+  <table class="compare-table">
+    <tr><th>グループ数 k</th><th>比較の数 k(k − 1)/2</th></tr>
+    <tr><td>3</td><td>3（1-2, 1-3, 2-3）</td></tr>
+    <tr><td>4</td><td>6</td></tr>
+    <tr><td>5</td><td>10</td></tr>
+    <tr><td>10</td><td>45</td></tr>
+  </table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">choose</span>(<span class="kw">c</span>(<span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">10</span>), <span class="nm">2</span>)</span>
+</pre>
+  <div class="output-reveal">[1]  3  6 10 45</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>ANOVA は「どこかが違うよ」という<strong>火災報知器</strong>。どの部屋が火事かは教えてくれません。事後検定は、部屋を1つずつ調べる作業です。</p></div>
+  <div class="practice-card" id="p-m5post-u1">
+    <div class="ptitle">💻 ミニ練習：比較の数</div>
+    <p class="ptask">グループが<strong>6つ</strong>あるとき、ペアでの比較は何通りになりますか。R の関数で計算してください（答えは15）。</p>
+    <textarea class="code-editor" id="p-m5post-u1-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5post-u1', ['choose', '6', '2'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5post-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5post-u1-result"></div>
+    <div class="answer-reveal" id="p-m5post-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">choose</span>(<span class="nm">6</span>, <span class="nm">2</span>)</span>
+</pre>
+      <p class="answer-note">6 × 5 / 2 = 15 通り。順序は区別しない（1-2 と 2-1 は同じ）ので 2 で割ります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>Tukey's HSD</h2><div class="unit-sub">結果の読み方と信頼区間</div></div>
+  </div>
+  <p><strong>Tukey's HSD</strong> は最も一般的な事後検定です。計算の中身（adjusted standard error の式）は手計算しませんが、<strong>「事後検定とは何か」と「結果の読み方」</strong>が大切です。通常の two-sample t区間と違って、多重比較に対応した<strong>調整済みの標準誤差の式</strong>を使い、全部のペアをまとめて 95% の信頼度にした<strong>family-wise confidence interval</strong>を作ります。</p>
+  <h3>手順</h3>
+  <ol>
+    <li>実験結果を <strong>data frame</strong> にする。<strong>順序が大事</strong>：先に<strong>応答変数</strong>（weight_loss）、次に<strong>グループ</strong>（group）。</li>
+    <li>ANOVA を実行して結果を保存（<code>aov(lm(...))</code>）。</li>
+    <li><code>TukeyHSD()</code> を実行。<strong>base R の関数</strong>で、追加パッケージは不要。結果は後でプロットできるよう、オブジェクト（<code>tukey_test</code>）に保存する。</li>
+  </ol>
+  <pre class="code-block">
+<span class="cl">results_df &lt;- <span class="kw">data.frame</span>(weight_loss, group)</span>
+<span class="cl">results_aov &lt;- <span class="kw">aov</span>(<span class="kw">lm</span>(weight_loss ~ group, data = results_df))</span>
+<span class="cl">tukey_test &lt;- <span class="kw">TukeyHSD</span>(results_aov)</span>
+<span class="cl">tukey_test</span>
+</pre>
+  <div class="output-reveal">  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = lm(weight_loss ~ group, data = results_df))
+
+$group
+    diff        lwr       upr     p adj
+2-1    2 -2.9572719  6.957272 0.4961594
+3-1    8  3.0427281 12.957272 0.0051155
+3-2    6  0.7004534 11.299547 0.0296150</div>
+  <h3>結果の読み方</h3>
+  <p>各行は1つのペアで、列は <code>diff</code>（平均の差）・<code>lwr</code>/<code>upr</code>（信頼区間の下限・上限）・<code>p adj</code>（調整済み p値）です。<code>2-1</code> は「グループ2 − グループ1」の意味です。</p>
+  <table class="compare-table">
+    <tr><th>ペア</th><th>差</th><th>95% CI</th><th>p adj</th><th>判断（α = 0.05）</th></tr>
+    <tr><td>2-1</td><td>2</td><td>[−2.96, 6.96]</td><td>0.496</td><td>有意でない。CI が 0 を含む。Plan 1 と 2 の差の証拠なし</td></tr>
+    <tr><td>3-1</td><td>8</td><td>[3.04, 12.96]</td><td>0.0051</td><td><strong>有意</strong>。Plan 3 のほうが体重減少が大きい（約3〜13 lb）</td></tr>
+    <tr><td>3-2</td><td>6</td><td>[0.70, 11.30]</td><td>0.030</td><td><strong>有意</strong>。Plan 3 のほうが大きい（約0.7〜11.3 lb）</td></tr>
+  </table>
+  <div class="note-box">💡 <strong>p値と信頼区間は一致します：</strong>p adj &lt; 0.05 ⇔ 95% CI が 0 を含まない。p adj が約 0.50 と大きいときは、区間が 0 を大きくまたぎます。</div>
+  <h3>CI をプロットする</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">plot</span>(tukey_test)</span>
+</pre>
+  <div class="viz"><div class="viz-title">plot(tukey_test) のイメージ（点＝差、線＝95% CI）</div><div style="text-align:center"><svg viewBox="0 0 520 210" width="520" height="210" role="img" aria-label="Tukey HSD の信頼区間" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="519" height="209" fill="none" stroke="#cbd5e1"/><line x1="70.0" y1="20" x2="70.0" y2="160" stroke="#e2e8f0"/><text x="70.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">-5</text><line x1="175.0" y1="20" x2="175.0" y2="160" stroke="#e2e8f0"/><text x="175.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">0</text><line x1="280.0" y1="20" x2="280.0" y2="160" stroke="#e2e8f0"/><text x="280.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">5</text><line x1="385.0" y1="20" x2="385.0" y2="160" stroke="#e2e8f0"/><text x="385.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">10</text><line x1="490.0" y1="20" x2="490.0" y2="160" stroke="#e2e8f0"/><text x="490.0" y="178" font-size="11" text-anchor="middle" fill="#64748b">15</text><line x1="175.0" y1="14" x2="175.0" y2="160" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><text x="175.0" y="12" font-size="10" text-anchor="middle" fill="#ef4444">差 0（差なし）</text><text x="60" y="49" font-size="12" text-anchor="end" fill="#334155" font-weight="700">2-1</text><line x1="112.9" y1="45" x2="321.1" y2="45" stroke="#94a3b8" stroke-width="3"/><line x1="112.9" y1="39" x2="112.9" y2="51" stroke="#94a3b8" stroke-width="3"/><line x1="321.1" y1="39" x2="321.1" y2="51" stroke="#94a3b8" stroke-width="3"/><circle cx="217.0" cy="45" r="4.5" fill="#94a3b8"/><text x="60" y="94" font-size="12" text-anchor="end" fill="#334155" font-weight="700">3-1</text><line x1="238.9" y1="90" x2="447.1" y2="90" stroke="#0d9488" stroke-width="3"/><line x1="238.9" y1="84" x2="238.9" y2="96" stroke="#0d9488" stroke-width="3"/><line x1="447.1" y1="84" x2="447.1" y2="96" stroke="#0d9488" stroke-width="3"/><circle cx="343.0" cy="90" r="4.5" fill="#0d9488"/><text x="60" y="139" font-size="12" text-anchor="end" fill="#334155" font-weight="700">3-2</text><line x1="189.7" y1="135" x2="412.3" y2="135" stroke="#0d9488" stroke-width="3"/><line x1="189.7" y1="129" x2="189.7" y2="141" stroke="#0d9488" stroke-width="3"/><line x1="412.3" y1="129" x2="412.3" y2="141" stroke="#0d9488" stroke-width="3"/><circle cx="301.0" cy="135" r="4.5" fill="#0d9488"/><text x="280.0" y="200" font-size="11" text-anchor="middle" fill="#64748b">平均の差（体重減少 lb）　95% family-wise CI</text></svg></div><div class="viz-cap">2-1 は区間が 0 をまたぐ（証拠なし）。3-1 と 3-2 は区間全体が 0 より右（Plan 3 の方が高い）。</div></div>
+  <p><strong>結論：</strong>ANOVA だけでは分からなかった「差の場所」が分かりました。<strong>Plan 3 は Plan 1 とも Plan 2 とも有意に違い</strong>（体重減少が大きい）、<strong>Plan 1 と Plan 2 の間には差の証拠がない</strong>。Tukey の HSD は、母平均に小さな p値の ANOVA 結果が出た<em>あと</em>に、その差がどこにあるかを調べる定番の方法です。</p>
+  <div class="warn-box">⚠️ <code>data.frame(weight_loss, group)</code> は<strong>応答変数が先</strong>。順序を逆にすると、モデルの式やグループの扱いがずれてしまいます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Tukey は「全員をまとめて比べる安全な比べ方」。<strong>区間が 0 をまたいだら『差があるとは言えない』、またがなければ『差がある』</strong>。これだけで読めます。</p></div>
+  <div class="practice-card" id="p-m5post-u2">
+    <div class="ptitle">💻 ミニ練習：Tukey HSD を実行する</div>
+    <p class="ptask"><code>weight_loss</code> と <code>group</code> から <code>results_df</code> を作り、<code>aov(lm(...))</code> の結果に <code>TukeyHSD()</code> を適用して <code>tukey_test</code> に保存し、CI をプロットしてください。</p>
+    <textarea class="code-editor" id="p-m5post-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5post-u2', ['data.frame', 'aov', 'lm', 'TukeyHSD', 'plot'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5post-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5post-u2-result"></div>
+    <div class="answer-reveal" id="p-m5post-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">results_df &lt;- <span class="kw">data.frame</span>(weight_loss, group)</span>
+<span class="cl">results_aov &lt;- <span class="kw">aov</span>(<span class="kw">lm</span>(weight_loss ~ group, data = results_df))</span>
+<span class="cl">tukey_test &lt;- <span class="kw">TukeyHSD</span>(results_aov)</span>
+<span class="cl"><span class="kw">plot</span>(tukey_test)</span>
+</pre>
+      <p class="answer-note">3-1 と 3-2 の区間が 0 を含まないので、Plan 3 が Plan 1・Plan 2 より有意に大きい。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>Bonferroni correction</h2><div class="unit-sub">α を検定の回数で割る</div></div>
+  </div>
+  <p>多重検定をすると<strong>Type I error（偽陽性）</strong>の確率が増えます。<strong>Bonferroni correction</strong> は、有意水準を<strong>検定の回数で割って</strong>厳しくする方法です。</p>
+  <div class="teal-box" style="text-align:center">調整後の有意水準 = α ÷ 検定の回数　　検定の回数 = k(k − 1) / 2</div>
+  <p>3グループなら検定は 3 × 2 / 2 = <strong>3 回</strong>（たまたまグループ数と同じ）。4グループなら 4 × 3 / 2 = <strong>6 回</strong>（1-2, 1-3, 1-4, 2-3, 2-4, 3-4）。順序を区別すると 12 通りですが、1-2 と 2-1 は同じなので 2 で割ります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="nm">0.05</span> / <span class="nm">3</span></span>
+</pre>
+  <div class="output-reveal">[1] 0.01666667</div>
+  <p>新しい有意水準は<strong>0.0167</strong>（Type I error の確率は 2% 未満）。2標本 t検定のそれぞれの p値が <strong>0.0167 より小さいときだけ</strong>帰無仮説を棄却します。</p>
+  <h3>例：t検定を3本やってみる（本当は避けたいやり方）</h3>
+  <pre class="code-block">
+<span class="cl">plan1 &lt;- <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">7</span>)</span>
+<span class="cl">plan2 &lt;- <span class="kw">c</span>(<span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">7</span>)</span>
+<span class="cl">plan3 &lt;- <span class="kw">c</span>(<span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">18</span>)</span>
+<span class="cl"><span class="kw">t.test</span>(plan1, plan2)</span>
+<span class="cl"><span class="kw">t.test</span>(plan1, plan3)</span>
+<span class="cl"><span class="kw">t.test</span>(plan2, plan3)</span>
+</pre>
+  <div class="output-reveal">	Welch Two Sample t-test
+
+data:  plan1 and plan2
+t = -1.4142, df = 3.8571, p-value = 0.2327
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -5.98451  1.98451
+sample estimates:
+mean of x mean of y 
+        7         9 </div>
+  <div class="output-reveal">	Welch Two Sample t-test
+
+data:  plan1 and plan3
+t = -4.1779, df = 2.8924, p-value = 0.02682
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -14.22416  -1.77584
+sample estimates:
+mean of x mean of y 
+        7        15 </div>
+  <div class="output-reveal">	Welch Two Sample t-test
+
+data:  plan2 and plan3
+t = -2.8823, df = 3.4845, p-value = 0.05298
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -12.1329472   0.1329472
+sample estimates:
+mean of x mean of y 
+        9        15 </div>
+  <p><code>t.test()</code> の既定値は <code>var.equal = FALSE</code>（等分散を仮定しない Welch 検定）と <code>alternative = "two.sided"</code>（両側）。書かなくても同じ結果です。</p>
+  <div class="viz"><div class="viz-title">3本の p値と有意水準</div><div style="text-align:center"><svg viewBox="0 0 520 170" width="520" height="170" role="img" aria-label="p値と有意水準の比較" style="max-width:100%;height:auto"><rect x="0.5" y="0.5" width="519" height="169" fill="none" stroke="#cbd5e1"/><line x1="60" y1="110" x2="500" y2="110" stroke="#475569" stroke-width="1.5"/><line x1="60.0" y1="106" x2="60.0" y2="114" stroke="#475569"/><text x="60.0" y="128" font-size="10" text-anchor="middle" fill="#64748b">0.00</text><line x1="148.0" y1="106" x2="148.0" y2="114" stroke="#475569"/><text x="148.0" y="128" font-size="10" text-anchor="middle" fill="#64748b">0.05</text><line x1="236.0" y1="106" x2="236.0" y2="114" stroke="#475569"/><text x="236.0" y="128" font-size="10" text-anchor="middle" fill="#64748b">0.10</text><line x1="324.0" y1="106" x2="324.0" y2="114" stroke="#475569"/><text x="324.0" y="128" font-size="10" text-anchor="middle" fill="#64748b">0.15</text><line x1="412.0" y1="106" x2="412.0" y2="114" stroke="#475569"/><text x="412.0" y="128" font-size="10" text-anchor="middle" fill="#64748b">0.20</text><line x1="500.0" y1="106" x2="500.0" y2="114" stroke="#475569"/><text x="500.0" y="128" font-size="10" text-anchor="middle" fill="#64748b">0.25</text><line x1="148.0" y1="30" x2="148.0" y2="110" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/><text x="152.0" y="40" font-size="10" fill="#b45309">α = 0.05</text><line x1="89.3" y1="30" x2="89.3" y2="110" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="4 3"/><text x="85.3" y="24" font-size="10" text-anchor="end" fill="#ef4444">0.0167</text><circle cx="469.6" cy="110" r="6" fill="#0d9488"/><text x="469.6" y="85" font-size="11" text-anchor="middle" fill="#0f766e" font-weight="700">1 vs 2</text><text x="469.6" y="98" font-size="10" text-anchor="middle" fill="#0f766e">p=0.233</text><circle cx="107.2" cy="110" r="6" fill="#0d9488"/><text x="107.2" y="85" font-size="11" text-anchor="middle" fill="#0f766e" font-weight="700">1 vs 3</text><text x="107.2" y="98" font-size="10" text-anchor="middle" fill="#0f766e">p=0.027</text><circle cx="153.2" cy="110" r="6" fill="#0d9488"/><text x="153.2" y="70" font-size="11" text-anchor="middle" fill="#0f766e" font-weight="700">2 vs 3</text><text x="153.2" y="83" font-size="10" text-anchor="middle" fill="#0f766e">p=0.053</text><text x="280.0" y="158" font-size="11" text-anchor="middle" fill="#64748b">p 値（Welch の t 検定）</text></svg></div><div class="viz-cap">通常の α = 0.05 なら 1 vs 3（p = 0.027）が有意。でも Bonferroni の 0.0167 では<strong>3本とも有意でない</strong>。</div></div>
+  <table class="compare-table">
+    <tr><th>ペア</th><th>p値</th><th>α = 0.05</th><th>Bonferroni（0.0167）</th></tr>
+    <tr><td>Plan 1 vs 2</td><td>0.233</td><td>有意でない</td><td>有意でない</td></tr>
+    <tr><td>Plan 1 vs 3</td><td>0.027</td><td>有意</td><td>有意でない</td></tr>
+    <tr><td>Plan 2 vs 3</td><td>0.053</td><td>有意でない</td><td>有意でない</td></tr>
+  </table>
+  <div class="warn-box">⚠️ <strong>Tukey と結論が違う！</strong>前の単元では Tukey HSD で 3-1 と 3-2 が有意でした。Bonferroni + 個別 t検定では<strong>何も見つかりません</strong>。ANOVA と Tukey HSD の組み合わせのほうが、差を検出できます。</div>
+  <h3>Bonferroni の代償</h3>
+  <ul>
+    <li>有意水準を小さくすると Type I error は減るが、<strong>Type II error（偽陰性）が増える</strong>。帰無仮説を棄却しにくくなる。</li>
+    <li><strong>検出力（statistical power）</strong>が下がる。「棄却すべきときに棄却できる確率」が下がり、Plan 3 が本当に効くことを見逃すかもしれない。</li>
+    <li>Bonferroni は最も厳格（stringent）な方法の1つ。</li>
+  </ul>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>検定を3回やるなら、1回あたりの合格ラインを 0.05 から 0.0167 に<strong>きびしく</strong>します。そのぶん『差がある』と言いにくくなります。</p></div>
+  <div class="practice-card" id="p-m5post-u3">
+    <div class="ptitle">💻 ミニ練習：調整後の α</div>
+    <p class="ptask">4グループを総当たりで比べるとき、Bonferroni 補正後の有意水準（α = 0.05）を R で計算してください（比較は6回。答えは約 0.00833）。</p>
+    <textarea class="code-editor" id="p-m5post-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5post-u3', ['choose', '0.05', '4'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5post-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5post-u3-result"></div>
+    <div class="answer-reveal" id="p-m5post-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">m &lt;- <span class="kw">choose</span>(<span class="nm">4</span>, <span class="nm">2</span>)   <span class="cm"># 6 回</span></span>
+<span class="cl"><span class="nm">0.05</span> / m</span>
+</pre>
+      <p class="answer-note">0.05 / 6 = 0.008333…。グループが増えると比較の数が増え、基準がどんどん厳しくなります。</p>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>使い分けとまとめ</h2><div class="unit-sub">ANOVA → Tukey を基本に</div></div>
+  </div>
+  <p>2つの事後検定の使い分けを、同じデータで整理しましょう。</p>
+  <table class="compare-table">
+    <tr><th></th><th>t検定を3本 + Bonferroni</th><th>ANOVA → Tukey HSD</th></tr>
+    <tr><td>基準</td><td>各 p値 &lt; 0.0167</td><td>p adj &lt; 0.05（family-wise）</td></tr>
+    <tr><td>Plan 3 vs Plan 1</td><td>p = 0.027 → 有意でない</td><td>p adj = 0.0051 → <strong>有意</strong></td></tr>
+    <tr><td>Plan 3 vs Plan 2</td><td>p = 0.053 → 有意でない</td><td>p adj = 0.030 → <strong>有意</strong></td></tr>
+    <tr><td>Plan 1 vs Plan 2</td><td>p = 0.233 → 有意でない</td><td>p adj = 0.496 → 有意でない</td></tr>
+    <tr><td>Type II error</td><td>多い（保守的）</td><td>比較的少ない（power が高い）</td></tr>
+  </table>
+  <div class="note-box">💡 <strong>講師のまとめ：</strong>多重検定は避ける。やるなら Bonferroni correction を使って Type I error を不必要に増やさない。ただし Type I error を下げると Type II error が上がる。<strong>おすすめは「ANOVA を実行 → 有意なら Tukey HSD」</strong>。</div>
+  <h3>判断フロー</h3>
+  <ol>
+    <li>3グループ以上の平均を比べたい → まず <code>aov()</code> で ANOVA。</li>
+    <li>p値が小さい → 「少なくとも2つの母平均が違う」。</li>
+    <li>「どのペア？」を調べるため <code>TukeyHSD()</code>。p adj と CI（0 を含むか）で読む。</li>
+    <li>CI が 0 を含まないペア → そのペアの母平均に差の証拠あり。</li>
+  </ol>
+  <h3>おまけ：pairwise.t.test()</h3>
+  <p>R には、補正付きのペアごと t検定をまとめて出す <code>pairwise.t.test()</code> があります。既定は<strong>全グループの共通の SD（pooled SD）</strong>を使うので、前の単元の Welch の t検定とは数値が変わります（p値は Bonferroni 補正後）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">pairwise.t.test</span>(weight_loss, group, p.adjust.method = <span class="st">"bonferroni"</span>)</span>
+<span class="cl"><span class="kw">pairwise.t.test</span>(weight_loss, group, p.adjust.method = <span class="st">"bonferroni"</span>, pool.sd = FALSE)</span>
+</pre>
+  <div class="output-reveal">	Pairwise comparisons using t tests with pooled SD 
+
+data:  weight_loss and group 
+
+  1      2     
+2 0.8205 -     
+3 0.0062 0.0376
+
+P value adjustment method: bonferroni </div>
+  <div class="output-reveal">	Pairwise comparisons using t tests with non-pooled SD 
+
+data:  weight_loss and group 
+
+  1    2   
+2 0.70 -   
+3 0.08 0.16
+
+P value adjustment method: bonferroni </div>
+  <div class="warn-box">⚠️ 講義の「3本とも有意でない」は、グループごとの SD を使う Welch の t検定（<code>t.test()</code>）を3本やって 0.0167 と比べた場合の話です。pooled SD では 1 vs 3 と 2 vs 3 が有意になります。pooled SD は「3グループの分散が等しい」という仮定を使うぶん、情報を多く使えるためです。</div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>ANOVA → Tukey</strong> が基本の流れ。Bonferroni は『検定を何本もやってしまったとき』の安全ベルト。ただし安全ベルトは強すぎて、本当の差も見逃しがちです。</p></div>
+  <div class="practice-card" id="p-m5post-u4">
+    <div class="ptitle">💻 ミニ練習：p値と信頼区間</div>
+    <p class="ptask">Tukey の結果で <code>3-1</code> の信頼区間は [3.04, 12.96] でした。<code>tukey_test</code> の中身を数値の行列として取り出して表示する R コードを書いてください（<code>$group</code> を使う）。</p>
+    <textarea class="code-editor" id="p-m5post-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m5post-u4', ['tukey_test', 'group'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m5post-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m5post-u4-result"></div>
+    <div class="answer-reveal" id="p-m5post-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tukey_test$group</span>
+</pre>
+      <p class="answer-note">$group は diff / lwr / upr / p adj の4列の行列です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 8</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In a one-way ANOVA on three weight-loss plans, the p-value is 0.0058. What can we conclude?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>All three plans have different population means</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Some population means differ, but ANOVA does not show which</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Plan 3 is significantly better than both other plans</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>No post hoc test is needed, because a significant ANOVA already locates the differences</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How many pairwise comparisons are there among k = 5 groups?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>5</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>15</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>20</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>10</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which description of the Bonferroni correction is correct?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It multiplies the sample size by the number of groups before testing</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It can only be applied after a one-way ANOVA has been significant</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It divides alpha by the number of tests; it works with any test</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It relaxes the significance level so that more results become significant</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">With three groups and alpha = 0.05, what is the Bonferroni-adjusted significance level?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.05 / 3 = 0.0167</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.05 × 3 = 0.15</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.05 / 2 = 0.025</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.05 / 6 = 0.0083</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why is data.frame(weight_loss, group) written with weight_loss first?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The response variable comes first, then the grouping variable</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>R sorts the columns alphabetically, so the order is irrelevant to the analysis</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The group column must always be the left-most column of any data frame</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Column order only affects how the table is printed on the screen</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In the TukeyHSD output, the row 3-1 shows diff = 8, lwr = 3.04, upr = 12.96, p adj = 0.0051. What is the correct reading?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Plan 3 and Plan 1 do not differ, because the interval is so wide</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Plan 1 loses more weight than Plan 3 according to this row</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Plan 3 gives significantly greater weight loss than Plan 1</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The p-value is unadjusted, so it cannot be compared with 0.05 at all</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">The Tukey interval for 2-1 is [−2.96, 6.96] with p adj = 0.496. What do we conclude?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Plan 2 is significantly better than Plan 1 at the 5% level</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Plan 1 is significantly better than Plan 2 at the 5% level</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The test is invalid because the lower bound is a negative number</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>No evidence that Plan 2 and Plan 1 differ</button></div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Three Welch t-tests on the weight-loss data give p = 0.233, 0.027 and 0.053. Using the Bonferroni level 0.0167, which pairs are significant?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only Plan 1 vs Plan 3</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>None of them</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Plan 1 vs Plan 3 and Plan 2 vs Plan 3</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>All three of the pairs</button></div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 2, 0, 0, 2, 3, 1];
+var FEEDBACKS=["A small ANOVA p-value says only that at least two means differ (an omnibus test). A post hoc test is needed to find which pairs differ.", "k(k − 1)/2 = 5 × 4 / 2 = 10. Order does not matter, so 1-2 and 2-1 count once.", "Adjusted alpha = alpha / (number of tests). It is general-purpose, not limited to ANOVA, and it makes the criterion stricter, not looser.", "Three groups give 3 × 2 / 2 = 3 tests, so alpha = 0.05 / 3 = 0.0167.", "For TukeyHSD the response variable must come first and the grouping variable second; the order matters.", "The interval is entirely above 0 and p adj < 0.05, so there is evidence that Plan 3 leads to higher weight loss than Plan 1.", "The interval contains 0 (no difference is plausible) and 0.496 is far above 0.05, so we fail to reject the null hypothesis.", "None of the p-values is below 0.0167, so Bonferroni finds no difference here, while ANOVA followed by Tukey HSD finds two. The price of a stricter alpha is more Type II errors and lower power."];
+var score=0,done=0,total=8;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">post hoc test</div><div class="term-en">事後検定</div><div class="term-def">ANOVA で有意だったあと、どのペアが違うかを調べる検定。</div></div>
+    <div class="term-item"><div class="term-name">omnibus test</div><div class="term-en">総括的検定</div><div class="term-def">「どこかに差がある」ことだけを調べる検定。ANOVA がこれ。</div></div>
+    <div class="term-item"><div class="term-name">multiple comparisons</div><div class="term-en">多重比較</div><div class="term-def">複数の検定を行うこと。Type I error が増える。</div></div>
+    <div class="term-item"><div class="term-name">Bonferroni correction</div><div class="term-en">ボンフェローニ補正</div><div class="term-def">α を検定の回数で割って厳しくする方法。</div></div>
+    <div class="term-item"><div class="term-name">Tukey's HSD</div><div class="term-en">テューキーの HSD</div><div class="term-def">Honestly Significant Difference。ペアごとの比較を行う代表的な事後検定。</div></div>
+    <div class="term-item"><div class="term-name">pairwise comparison</div><div class="term-en">ペアごとの比較</div><div class="term-def">グループを2つずつ取り出して比べること。k(k−1)/2 通り。</div></div>
+    <div class="term-item"><div class="term-name">family-wise confidence interval</div><div class="term-en">ファミリーワイズ信頼区間</div><div class="term-def">全ペアをまとめて 95% の信頼度にした信頼区間。</div></div>
+    <div class="term-item"><div class="term-name">adjusted p-value (p adj)</div><div class="term-en">調整済み p値</div><div class="term-def">多重比較を考慮した p値。0.05 と比べる。</div></div>
+    <div class="term-item"><div class="term-name">Type I / Type II error</div><div class="term-en">第1種／第2種の過誤</div><div class="term-def">偽陽性／偽陰性。α を下げると第2種が増える。</div></div>
+    <div class="term-item"><div class="term-name">statistical power</div><div class="term-en">検出力</div><div class="term-def">本当に差があるときに、それを検出できる確率。</div></div>
+    <div class="term-item"><div class="term-name">Scheffé / Fisher's LSD</div><div class="term-en">シェッフェ／LSD</div><div class="term-def">ほかの事後検定の例。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>流れは「ANOVA（有意）→ TukeyHSD()」。p adj &lt; 0.05 と「CI が 0 を含まない」はいつも同じ答え。Bonferroni は α ÷ 検定回数、厳しいぶん見逃しも増える。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🔍 統計レッスン：M5 ANOVA③ 事後検定</p>
+  <p style="margin-top:.5rem;"><a href="m5_anova_calc.html">← ANOVA②：計算</a> · <a href="m5_chi_gof.html">χ²適合度検定 →</a> · <a href="m5_anova_post_easy.html">🍎 やさしい版</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

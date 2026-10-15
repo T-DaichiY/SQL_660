@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 ML② ハイパーパラメータとモデル検証</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Machine Learning — Model Validation</div>
+  <h1>🧪 ML②：モデルの検証とハイパーパラメータ</h1>
+  <p>ホールドアウト、交差検証、過学習と未学習、検証曲線、GridSearchCVを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 分割</a><a href="#unit2">② 交差検証</a><a href="#unit3">③ 過学習</a><a href="#unit4">④ グリッド</a><a href="#quiz">📝 Quiz</a><a href="ml_validation_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 5.03 Hyperparameters and Model Validation</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>間違ったやり方と、ホールドアウト法</h2><div class="unit-sub">学習に使ったデータで評価してはいけない</div></div>
+  </div>
+<p>モデルを<strong>学習に使ったデータそのもの</strong>で評価すると、点数が不当に高くなります。最近傍法（1-NN）は訓練データを丸暗記するので、その極端な例です。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.datasets <span class="kw">import</span> load_iris</span>
+<span class="cl"><span class="kw">from</span> sklearn.neighbors <span class="kw">import</span> KNeighborsClassifier</span>
+<span class="cl"><span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score</span>
+<span class="cl">iris = load_iris()</span>
+<span class="cl">X, y = iris.data, iris.target</span>
+<span class="cl"></span>
+<span class="cl">model = KNeighborsClassifier(n_neighbors=<span class="nm">1</span>).fit(X, y)</span>
+<span class="cl"><span class="kw">print</span>(accuracy_score(y, model.predict(X)))   <span class="cm"># 同じデータで評価</span></span>
+</pre><div class="output-reveal">1.0</div><p>正解率100%…ですが、これは<strong>答えを見ながらテストを受けた</strong>ようなものです。そこで、データを2つに分けるのが<strong>ホールドアウト法</strong>です。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split</span>
+<span class="cl">Xtr, Xte, ytr, yte = train_test_split(X, y, random_state=<span class="nm">0</span>, train_size=<span class="nm">0.5</span>)</span>
+<span class="cl">model.fit(Xtr, ytr)</span>
+<span class="cl"><span class="kw">print</span>(Xtr.shape, Xte.shape)</span>
+<span class="cl"><span class="kw">print</span>(accuracy_score(yte, model.predict(Xte)))</span>
+</pre><div class="output-reveal">(75, 4) (75, 4)
+0.9066666666666666</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「勉強に使った問題」ではなく「初めて見る問題」で点数をつける。それがテスト用データです。</p></div><div class="practice-card" id="p-ml1v-u1">
+    <div class="ptitle">💻 ミニ練習：分割</div>
+    <p class="ptask"><code>X, y</code> を<strong>7:3</strong>に分けて（テスト用が30%）、<code>random_state=0</code> で <code>Xtr, Xte, ytr, yte</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1v-u1-input" rows="7">from sklearn.model_selection import train_test_split
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1v-u1", ["train_test_split", "test_size=0.3"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1v-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1v-u1-result"></div>
+    <div class="answer-reveal" id="p-ml1v-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=<span class="nm">0.3</span>, random_state=<span class="nm">0</span>)</span>
+</pre>
+      <p class="answer-note">test_sizeかtrain_sizeのどちらかを指定します。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>交差検証：cross_val_score</h2><div class="unit-sub">分け方に左右されない評価</div></div>
+  </div>
+<p>1回の分割だと、たまたまの偶然に左右されます。<strong>交差検証</strong>は、データを<code>k</code>個に分け、<strong>順番にテスト役を交代</strong>して、k回の点数を平均します。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.datasets <span class="kw">import</span> load_iris</span>
+<span class="cl"><span class="kw">from</span> sklearn.neighbors <span class="kw">import</span> KNeighborsClassifier</span>
+<span class="cl">iris = load_iris()</span>
+<span class="cl">X, y = iris.data, iris.target</span>
+</pre><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> cross_val_score</span>
+<span class="cl">model = KNeighborsClassifier(n_neighbors=<span class="nm">1</span>)</span>
+<span class="cl">scores = cross_val_score(model, X, y, cv=<span class="nm">5</span>)</span>
+<span class="cl"><span class="kw">print</span>(scores)</span>
+<span class="cl"><span class="kw">print</span>(scores.mean().round(<span class="nm">3</span>))</span>
+</pre><div class="output-reveal">[0.96666667 0.96666667 0.93333333 0.93333333 1.        ]
+0.96</div><p>5回の点数のばらつきも見えます。平均を代表値にします。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>5分割なら、「5回テスト」して平均。どのデータも1回ずつテスト役になります。</p></div><div class="practice-card" id="p-ml1v-u2">
+    <div class="ptitle">💻 ミニ練習：5分割で平均</div>
+    <p class="ptask"><code>KNeighborsClassifier(n_neighbors=3)</code> を5分割の交差検証で評価し、点数の平均を <code>m</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1v-u2-input" rows="7">from sklearn.model_selection import cross_val_score
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1v-u2", ["cross_val_score", "cv=5", "mean"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1v-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1v-u2-result"></div>
+    <div class="answer-reveal" id="p-ml1v-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">m = cross_val_score(KNeighborsClassifier(n_neighbors=<span class="nm">3</span>), X, y, cv=<span class="nm">5</span>).mean()</span>
+</pre>
+      <p class="answer-note">約0.967です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>過学習と未学習</h2><div class="unit-sub">モデルの複雑さを動かして見る</div></div>
+  </div>
+<p>モデルが単純すぎると<strong>未学習（高バイアス）</strong>、複雑すぎて訓練データのノイズまで覚えると<strong>過学習（高バリアンス）</strong>になります。多項式の<strong>次数</strong>を動かして、訓練点数と検証点数を並べてみましょう。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> PolynomialFeatures</span>
+<span class="cl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression</span>
+<span class="cl"><span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> make_pipeline</span>
+<span class="cl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> validation_curve</span>
+<span class="cl"></span>
+<span class="cl">rng = np.random.RandomState(<span class="nm">1</span>)</span>
+<span class="cl">Xd = rng.rand(<span class="nm">40</span>, <span class="nm">1</span>) * <span class="nm">6</span> - <span class="nm">3</span></span>
+<span class="cl">yd = np.sin(Xd).ravel() + <span class="nm">0.3</span> * rng.randn(<span class="nm">40</span>)</span>
+</pre><pre class="code-block">
+<span class="cl">model = make_pipeline(PolynomialFeatures(), LinearRegression())</span>
+<span class="cl">degree = np.arange(<span class="nm">0</span>, <span class="nm">16</span>)</span>
+<span class="cl">train, val = validation_curve(model, Xd, yd, param_name=<span class="st">'polynomialfeatures__degree'</span>, param_range=degree, cv=<span class="nm">5</span>)</span>
+<span class="cl">plt.plot(degree, train.mean(axis=<span class="nm">1</span>), label=<span class="st">'training'</span>)</span>
+<span class="cl">plt.plot(degree, val.mean(axis=<span class="nm">1</span>), label=<span class="st">'validation'</span>)</span>
+<span class="cl">plt.ylim(-<span class="nm">1</span>, <span class="nm">1</span>)</span>
+<span class="cl">plt.xlabel(<span class="st">'degree'</span>)</span>
+<span class="cl">plt.ylabel(<span class="st">'R^2 score'</span>)</span>
+<span class="cl">plt.legend()</span>
+</pre><div class="plot-out"><img src="images/ml2_valcurve.png" alt="検証曲線" loading="lazy"></div><p>訓練の点数は次数とともに上がり続けますが、<strong>検証の点数はある次数でピーク</strong>になり、その後下がります。このピークがちょうどよい複雑さです。</p><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>訓練点数だけ高い→過学習、両方低い→未学習。<strong>検証点数</strong>で選びます。</p></div><div class="teal-box">📈 <strong>学習曲線</strong>（learning curve）：訓練データの量を増やしたときの点数の変化を見る方法です。データを増やせば良くなるのか、モデルを変えるべきかの判断材料になります。</div><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> learning_curve</span>
+<span class="cl">sizes, tr, va = learning_curve(make_pipeline(PolynomialFeatures(<span class="nm">3</span>), LinearRegression()), Xd, yd, cv=<span class="nm">5</span>, train_sizes=[<span class="nm">0.3</span>, <span class="nm">0.6</span>, <span class="nm">1.0</span>])</span>
+<span class="cl"><span class="kw">print</span>(sizes)</span>
+</pre><div class="output-reveal">[ 9 19 32]</div><div class="practice-card" id="p-ml1v-u3">
+    <div class="ptitle">💻 ミニ練習：過学習の判定</div>
+    <p class="ptask">訓練点数が <code>0.99</code>、検証点数が <code>0.55</code> のとき、過学習か未学習か。変数 <code>state</code> に "overfitting" か "underfitting" を入れてください。</p>
+    <textarea class="code-editor" id="p-ml1v-u3-input" rows="7"># state に文字列
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1v-u3", ["overfitting"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1v-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1v-u3-result"></div>
+    <div class="answer-reveal" id="p-ml1v-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">state = <span class="st">"overfitting"</span></span>
+</pre>
+      <p class="answer-note">訓練だけ高いので過学習です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>グリッドサーチ：GridSearchCV</h2><div class="unit-sub">最良の組み合わせを自動で探す</div></div>
+  </div>
+<p>ハイパーパラメータの候補を<strong>全部の組み合わせ</strong>で試し、交差検証で一番良いものを選ぶ道具が<code>GridSearchCV</code>です。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> GridSearchCV</span>
+<span class="cl">param_grid = {<span class="st">'polynomialfeatures__degree'</span>: np.arange(<span class="nm">0</span>, <span class="nm">9</span>),</span>
+<span class="cl">              <span class="st">'linearregression__fit_intercept'</span>: [<span class="kw">True</span>, <span class="kw">False</span>]}</span>
+<span class="cl">grid = GridSearchCV(make_pipeline(PolynomialFeatures(), LinearRegression()), param_grid, cv=<span class="nm">5</span>)</span>
+<span class="cl">grid.fit(Xd, yd)</span>
+<span class="cl"><span class="kw">print</span>(grid.best_params_)</span>
+</pre><div class="output-reveal">{'linearregression__fit_intercept': False, 'polynomialfeatures__degree': 3}</div><p>最良のモデルで予測するには<code>grid.best_estimator_</code>を使います。</p><pre class="code-block">
+<span class="cl">best = grid.best_estimator_</span>
+<span class="cl"><span class="kw">print</span>(best.predict([[<span class="nm">0.0</span>]]).round(<span class="nm">3</span>))</span>
+</pre><div class="output-reveal">[-0.006]</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「次数は0〜8、切片あり／なし」の全パターンを交差検証して、一番良い設定を教えてくれます。</p></div><div class="practice-card" id="p-ml1v-u4">
+    <div class="ptitle">💻 ミニ練習：候補の辞書</div>
+    <p class="ptask">KNNの <code>n_neighbors</code> を 1, 3, 5 で試すための <code>param_grid</code> 辞書を作ってください。</p>
+    <textarea class="code-editor" id="p-ml1v-u4-input" rows="7"># param_grid を作る
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1v-u4", ["n_neighbors", "[1, 3, 5]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1v-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1v-u4-result"></div>
+    <div class="answer-reveal" id="p-ml1v-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">param_grid = {<span class="st">'n_neighbors'</span>: [<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">5</span>]}</span>
+</pre>
+      <p class="answer-note">キーはパラメータ名、値は候補のリストです。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why is a 1-nearest-neighbour model scored on its own training data misleading?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It never makes any predictions at all</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It can only be used with exactly two features</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It memorises the data</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It always needs a validation curve first</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does train_test_split(X, y, random_state=0) guarantee?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The same split on every run</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A split in which every class has equal counts</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>That the test set is larger than the training set</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>That no samples are ever dropped or duplicated anywhere</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In 5-fold cross-validation, how many times is each data point used for testing?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Five times, once per fold</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is never used for testing, only for training</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Twice, once at the start and once at the end</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Once</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A model has training score 0.99 and validation score 0.55. What is the likely problem?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Underfitting, because the model is too simple</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Overfitting</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The data set is far too clean to learn from</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The learning rate is set too low for the solver</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is a validation curve used for?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Plotting the raw data points of a data set</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Counting the missing values in each column</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Drawing the decision boundary of a classifier</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Showing scores against one hyperparameter</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does GridSearchCV do?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Cross-validates every parameter combination</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Draws a grid of lines over a plot</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Splits the data into a grid of pixels</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes duplicate rows from a DataFrame</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 3, 0];
+var FEEDBACKS=["A 1-NN model returns the stored answer for each training point, so training accuracy is always 100%.", "Fixing random_state makes the random shuffle reproducible.", "The data is split into 5 folds and each fold is the test fold once.", "A large gap with high training score means the model memorised noise: overfitting.", "It plots training and validation scores against a hyperparameter, such as polynomial degree.", "It tries all combinations of the listed hyperparameters and keeps the best one by cross-validation."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">Hold-out set</div><div class="term-en">ホールドアウト</div><div class="term-def">学習に使わず取っておく、評価専用のデータ。</div></div>
+    <div class="term-item"><div class="term-name">Cross-validation</div><div class="term-en">交差検証</div><div class="term-def">テスト役を交代しながら複数回評価して平均する方法。</div></div>
+    <div class="term-item"><div class="term-name">Overfitting</div><div class="term-en">過学習</div><div class="term-def">訓練データに合わせすぎて、新データで性能が落ちる。</div></div>
+    <div class="term-item"><div class="term-name">Underfitting</div><div class="term-en">未学習</div><div class="term-def">モデルが単純すぎて、訓練データにも合わない。</div></div>
+    <div class="term-item"><div class="term-name">Validation curve</div><div class="term-en">検証曲線</div><div class="term-def">1つのハイパーパラメータを動かしたときの点数のグラフ。</div></div>
+    <div class="term-item"><div class="term-name">GridSearchCV</div><div class="term-en">グリッドサーチ</div><div class="term-def">候補の全組み合わせを交差検証で比べて最良を選ぶ。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>評価は必ず「学習に使っていないデータ」で行いましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：ML② ハイパーパラメータとモデル検証</p>
+  <p style="margin-top:.5rem;"><a href="ml_intro.html">← ① 機械学習とは</a> · <a href="ml_features.html">③ 特徴量エンジニアリング →</a> · <a href="ml_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

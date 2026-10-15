@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M5 ANOVA②　RでのANOVAと計算</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M5 🔢 ANOVA② 計算とR 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy active" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M5 · ANOVA ② — ANOVA in R &amp; the Calculation 🍎</div>
+    <h1>🍎 超やさしい版：ANOVA②（Rと計算）</h1>
+  <p>減量プランの例で、「<strong>Rで表を出す → 表を読む → p値 → 手計算</strong>」の流れをつかみます。</p>
+    <div class="unit-nav"><a href="#u1">データ入力</a><a href="#u2">表を読む</a><a href="#u3">p値</a><a href="#u4">計算</a><a href="m5_anova_calc.html" class="easy-toplink">🧮 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+  <div class="teal-box">📖 <strong>講義動画との対応</strong>：①②は ANOVA 4 (ANOVA with R)、③は ANOVA 5 (Using R: p-value and plotting F distribution)、④は ANOVA 6 (ANOVA Math)。</div>
+
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>Rにデータを入れる</h2><div class="unit-sub">group と weight_loss</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>Rには「どの群か（group）」と「はかった数（weight_loss）」の2本を、同じ順番で入れる。群は <code>as.factor()</code> で名前札にする。</strong></p></div>
+  <p>題材は減量プランです。<strong>Plan 1（4人）・Plan 2（3人）・Plan 3（3人）</strong>が、3か月でそれぞれ何ポンド減らしたか。</p>
+<pre class="code-block">
+<span class="cl">group &lt;- <span class="kw">as.factor</span>(c(<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">3</span>))</span>
+<span class="cl">weight_loss &lt;- <span class="kw">c</span>(<span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">9</span>, <span class="nm">11</span>, <span class="nm">7</span>, <span class="nm">15</span>, <span class="nm">12</span>, <span class="nm">18</span>)</span>
+<span class="cl">group</span>
+</pre><div class="output-reveal"> [1] 1 1 1 1 2 2 2 3 3 3
+Levels: 1 2 3</div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🏷️</div>
+    <div class="ru-text"><code>group</code> の 1・2・3 は<strong>名前札</strong>（足したり平均したりしない）。だから <code>as.factor()</code>。</div>
+  </div>
+  <div class="warn-box">⚠️ <code>as.factor()</code> を忘れると、自由度が 2 ではなく 1 になって別の答えが出ます。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p><code>group</code> と <code>weight_loss</code> は<strong>同じ順番・同じ長さ（10個）</strong>。1人目の群と1人目の減量が対応しています。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>Levels: 1 2 3</code> は何を表す？<span class="cp-a">A. 群（水準）が3つある名前の変数（因子）だということ。</span></div><div class="cp-q">Q2. なぜ <code>as.factor()</code> が必要？<span class="cp-a">A. 1・2・3 は数量ではなく群の名前だと R に教えるため。</span></div></div>
+
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ANOVA表を読む</h2><div class="unit-sub">summary(aov())</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong><code>summary(aov(weight_loss ~ group))</code> で表が出る。Mean Sq = Sum Sq ÷ Df、F = 上の Mean Sq ÷ 下の Mean Sq。</strong></p></div>
+<pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(<span class="kw">aov</span>(weight_loss ~ group))</span>
+</pre><div class="output-reveal">            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+group        2    114   57.00   11.73 0.00581 **
+Residuals    7     34    4.86                   
+---
+Signif. codes:  0 &#x27;***&#x27; 0.001 &#x27;**&#x27; 0.01 &#x27;*&#x27; 0.05 &#x27;.&#x27; 0.1 &#x27; &#x27; 1</div>
+  <table class="compare-table">
+    <tr><th>列</th><th>計算</th><th>値</th></tr>
+    <tr><td>Mean Sq（群）</td><td>114 ÷ 2</td><td>57</td></tr>
+    <tr><td>Mean Sq（Residuals）</td><td>34 ÷ 7</td><td>4.86</td></tr>
+    <tr><td>F value</td><td>57 ÷ 4.86</td><td>11.73</td></tr>
+  </table>
+  <div class="big-rule ">
+    <div class="ru-arrow">⭐</div>
+    <div class="ru-text">p値の横の <code>**</code> は「p &lt; 0.01 で有意」の合図。<code>***</code> は付いていないので 0.001 では有意ではない。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>左から順に <strong>Df → Sum Sq → Mean Sq → F → p値</strong>。試験では一部の数字だけ与えて、空欄を計算させます。<code>~</code> の左が応答（減量）、右が群。もう1つの書き方 <code>anova(lm(weight_loss ~ group))</code> でも同じ表になります。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. Df の 2 と 7 はどこから？<span class="cp-a">A. 群は 3 − 1 = 2、残差は 10 − 3 = 7。足すと 9（= 10 − 1）。</span></div><div class="cp-q">Q2. Mean Sq はどう計算する？<span class="cp-a">A. Sum Sq ÷ Df。群は 114 ÷ 2 = 57。</span></div><div class="cp-q">Q3. R の表に Total の行はある？<span class="cp-a">A. ない。群と Residuals の2行だけ。</span></div></div>
+
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>p値を求める</h2><div class="unit-sub">pf() とF分布</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>p値は <code>pf(F, 2, 7, lower.tail = FALSE)</code>。F が 4.74 より大きければ有意。</strong></p></div>
+<pre class="code-block">
+<span class="cl"><span class="kw">pf</span>(<span class="nm">11.735</span>, <span class="nm">2</span>, <span class="nm">7</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 0.005811518</div>
+  <p>F = 11.735、分子の自由度 2（群）、分母の自由度 7（残差）。<code>lower.tail = FALSE</code> は<strong>右側の面積</strong>を求める指定です。</p>
+  <div class="viz"><div class="viz-title">F分布（df1 = 2, df2 = 7）</div><svg viewBox="0 0 480 235" width="100%" style="max-width:520px" role="img" aria-label="F分布 df1=2, df2=7 の密度曲線。F=4.74 より右が有意水準5%の棄却域、F=11.735 に赤い縦線">
+<line x1="50" y1="190" x2="455" y2="190" stroke="#64748b"/><line x1="50" y1="15" x2="50" y2="190" stroke="#64748b"/>
+<line x1="50" y1="190" x2="50" y2="195" stroke="#64748b"/><text x="50" y="208" text-anchor="middle" font-size="11" fill="#64748b">0</text><line x1="117" y1="190" x2="117" y2="195" stroke="#64748b"/><text x="117" y="208" text-anchor="middle" font-size="11" fill="#64748b">2</text><line x1="183" y1="190" x2="183" y2="195" stroke="#64748b"/><text x="183" y="208" text-anchor="middle" font-size="11" fill="#64748b">4</text><line x1="250" y1="190" x2="250" y2="195" stroke="#64748b"/><text x="250" y="208" text-anchor="middle" font-size="11" fill="#64748b">6</text><line x1="317" y1="190" x2="317" y2="195" stroke="#64748b"/><text x="317" y="208" text-anchor="middle" font-size="11" fill="#64748b">8</text><line x1="383" y1="190" x2="383" y2="195" stroke="#64748b"/><text x="383" y="208" text-anchor="middle" font-size="11" fill="#64748b">10</text><line x1="450" y1="190" x2="450" y2="195" stroke="#64748b"/><text x="450" y="208" text-anchor="middle" font-size="11" fill="#64748b">12</text>
+<polygon points="207.9,190 207.9,186.4 210.0,186.5 213.3,186.7 216.7,186.9 220.0,187.0 223.3,187.2 226.7,187.3 230.0,187.5 233.3,187.6 236.7,187.7 240.0,187.8 243.3,187.9 246.7,188.0 250.0,188.1 253.3,188.2 256.7,188.3 260.0,188.3 263.3,188.4 266.7,188.5 270.0,188.6 273.3,188.6 276.7,188.7 280.0,188.7 283.3,188.8 286.7,188.8 290.0,188.9 293.3,188.9 296.7,189.0 300.0,189.0 303.3,189.1 306.7,189.1 310.0,189.1 313.3,189.2 316.7,189.2 320.0,189.2 323.3,189.3 326.7,189.3 330.0,189.3 333.3,189.3 336.7,189.4 340.0,189.4 343.3,189.4 346.7,189.4 350.0,189.4 353.3,189.5 356.7,189.5 360.0,189.5 363.3,189.5 366.7,189.5 370.0,189.6 373.3,189.6 376.7,189.6 380.0,189.6 383.3,189.6 386.7,189.6 390.0,189.6 393.3,189.6 396.7,189.7 400.0,189.7 403.3,189.7 406.7,189.7 410.0,189.7 413.3,189.7 416.7,189.7 420.0,189.7 423.3,189.7 426.7,189.7 430.0,189.7 433.3,189.8 436.7,189.8 440.0,189.8 443.3,189.8 446.7,189.8 450.0,189.8 450,190" fill="#f59e0b" opacity=".35"/>
+<polyline points="50,20 53.3,40.2 56.7,57.6 60,72.6 63.3,85.5 66.7,96.8 70,106.6 73.3,115.2 76.7,122.7 80,129.3 83.3,135.1 86.7,140.3 90,144.9 93.3,149 96.7,152.6 100,155.9 103.3,158.8 106.7,161.4 110,163.7 113.3,165.8 116.7,167.8 120,169.5 123.3,171.1 126.7,172.5 130,173.8 133.3,175 136.7,176 140,177 143.3,177.9 146.7,178.8 150,179.5 153.3,180.2 156.7,180.9 160,181.4 163.3,182 166.7,182.5 170,183 173.3,183.4 176.7,183.8 180,184.1 183.3,184.5 186.7,184.8 190,185.1 193.3,185.4 196.7,185.6 200,185.9 203.3,186.1 206.7,186.3 210,186.5 213.3,186.7 216.7,186.9 220,187 223.3,187.2 226.7,187.3 230,187.5 233.3,187.6 236.7,187.7 240,187.8 243.3,187.9 246.7,188 250,188.1 253.3,188.2 256.7,188.3 260,188.3 263.3,188.4 266.7,188.5 270,188.6 273.3,188.6 276.7,188.7 280,188.7 283.3,188.8 286.7,188.8 290,188.9 293.3,188.9 296.7,189 300,189 303.3,189.1 306.7,189.1 310,189.1 313.3,189.2 316.7,189.2 320,189.2 323.3,189.3 326.7,189.3 330,189.3 333.3,189.3 336.7,189.4 340,189.4 343.3,189.4 346.7,189.4 350,189.4 353.3,189.5 356.7,189.5 360,189.5 363.3,189.5 366.7,189.5 370,189.6 373.3,189.6 376.7,189.6 380,189.6 383.3,189.6 386.7,189.6 390,189.6 393.3,189.6 396.7,189.7 400,189.7 403.3,189.7 406.7,189.7 410,189.7 413.3,189.7 416.7,189.7 420,189.7 423.3,189.7 426.7,189.7 430,189.7 433.3,189.8 436.7,189.8 440,189.8 443.3,189.8 446.7,189.8 450,189.8" fill="none" stroke="#2563eb" stroke-width="2"/>
+<line x1="207.9" y1="60" x2="207.9" y2="190" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="211.9" y="70" font-size="11" fill="#b45309">臨界値 4.74</text>
+<line x1="441.2" y1="110" x2="441.2" y2="190" stroke="#dc2626" stroke-width="2"/>
+<text x="435.2" y="104" text-anchor="end" font-size="11" fill="#dc2626">F = 11.735（p = 0.0058 はこの右の面積）</text>
+<text x="252" y="228" text-anchor="middle" font-size="12" fill="#334155">F</text>
+<text x="56" y="30" font-size="11" fill="#64748b">密度 df(x, 2, 7)</text>
+</svg><div class="viz-cap">赤線より右の細い面積が p値 = 0.0058。</div></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🔴</div>
+    <div class="ru-text">p = 0.0058 → H₀（みんな同じ平均）を棄却。<strong>少なくとも1組は違う</strong>。</div>
+  </div>
+  <div class="warn-box">⚠️ 0.0058 は 5.8% ではなく <strong>0.58%</strong> です。</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>臨界値は <code>qf(0.95, 2, 7)</code> = 4.74。F = 11.7 は 4.74 より右なので有意。ただし<strong>「どのプランが違うか」はまだ分かりません</strong>（次のページで調べます）。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>lower.tail = FALSE</code> は何のため？<span class="cp-a">A. 観測した F より右側（もっと極端な側）の面積を求めるため。</span></div><div class="cp-q">Q2. p = 0.0058 は何％？<span class="cp-a">A. 0.58%。</span></div><div class="cp-q">Q3. ANOVA で「どの群が違うか」は分かる？<span class="cp-a">A. 分からない。多重比較（post hoc test）で調べる。</span></div></div>
+
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>計算してみる</h2><div class="unit-sub">SST・SSM・SSR・F</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>ばらつきを「群で説明できる分」と「説明できない分」に分け、自由度で割って割り算したものが F。</strong></p></div>
+  <p>例：3群・15人（各5人）。群の平均は 2.2、3.2、5.0、全体平均は 3.47。</p>
+  <table class="compare-table">
+    <tr><th>ステップ</th><th>やること</th><th>値</th></tr>
+    <tr><td>① SST</td><td>全員 − 全体平均 を二乗して足す</td><td>43.74</td></tr>
+    <tr><td>② SSM</td><td>人数 × (群平均 − 全体平均)² を足す</td><td>20.13</td></tr>
+    <tr><td>③ SSR</td><td>SST − SSM</td><td>23.61</td></tr>
+    <tr><td>④ MS</td><td>SSM ÷ 2、SSR ÷ 12</td><td>10.07、1.97</td></tr>
+    <tr><td>⑤ F</td><td>10.07 ÷ 1.97</td><td>5.12</td></tr>
+  </table>
+  <div class="big-rule ">
+    <div class="ru-arrow">⚖️</div>
+    <div class="ru-text">自由度：全体 N − 1 = 14、モデル k − 1 = 2、残差 N − k = 12（14 = 2 + 12）。</div>
+  </div>
+  <p>F表の臨界値（分子 2、分母 12、α = 0.05）は <strong>3.89</strong>。5.12 &gt; 3.89 なので H₀ を棄却します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">qf</span>(<span class="nm">0.95</span>, <span class="nm">2</span>, <span class="nm">12</span>)</span>
+<span class="cl"><span class="kw">pf</span>(<span class="nm">5.12</span>, <span class="nm">2</span>, <span class="nm">12</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+</pre><div class="output-reveal">[1] 3.885294
+[1] 0.02467623</div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>F が臨界値より大きければ「群の違いは偶然ではなさそう」。試験では <strong>F を計算 → 臨界値を探す → 仮説の判断</strong>ができればOKです。減量データ（3プラン）では SST = 148、SSB = 114、SSW = 34、F = 11.73 でした。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SSR はどう求める？<span class="cp-a">A. SST − SSM（43.74 − 20.13 = 23.61）。</span></div><div class="cp-q">Q2. df（モデル）と df（残差）は？<span class="cp-a">A. 2 と 12。</span></div><div class="cp-q">Q3. F = 5.12 と臨界値 3.89 から何が言える？<span class="cp-a">A. F が大きいので H₀ を棄却。少なくとも1群の平均が違う。</span></div></div>
+
+</div>
+
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m5_anova_calc.html">🧮 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• <code>summary(aov(y ~ group))</code> で表</p><p style="margin:.4rem 0">• Mean Sq = Sum Sq ÷ Df、F = MS群 ÷ MS残差</p><p style="margin:.4rem 0">• p値：<code>pf(F, df1, df2, lower.tail = FALSE)</code></p><p style="margin:.4rem 0">• ANOVA は「どこかに差」まで。どのペアかは次のページ</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">練習問題や英語MCQクイズは <a href="m5_anova_calc.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M5 ANOVA② RでのANOVAと計算 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m5_anova_concept.html">← ANOVA①</a> · <a href="m5_anova_post.html">ANOVA③へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

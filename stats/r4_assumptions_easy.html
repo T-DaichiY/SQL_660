@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：650 M4 回帰の仮定検定・非正規性と不等分散</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 650 M4 🧪 仮定の検証 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy active" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">650 M4 · Testing Assumptions 🍎</div>
+    <h1>🍎 超やさしい版：回帰の仮定を調べる</h1>
+  <p>回帰の結果を信じてよいかを、<strong>残差</strong>でチェックします。グラフと 3 つの検定でやさしく確認しましょう。</p>
+    <div class="unit-nav"><a href="#u1">5 つの前提</a><a href="#u2">正規性</a><a href="#u3">等分散・自己相関</a><a href="#u4">検定</a><a href="r4_assumptions.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①②③は Testing assumptions、④は Non-Normality and heteroskedasticity。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>5 つの前提</h2><div class="unit-sub">推論のときだけ確認</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>仮定チェックは、信頼区間・検定・p 値を使う「推論」のときだけ。確認するのは残差の 5 つの条件。</strong></p></div>
+  <p>天気が良いと自転車が借りられる…その関係を直線で表しました（<code>rentals ~ temperature</code>、731 日分）。この直線の「信頼区間や p 値」を信じてよいか、残差でチェックします。</p>
+  <table class="compare-table">
+    <tr><th>#</th><th>条件</th><th>ひとこと</th></tr>
+    <tr><td>①</td><td>線形</td><td>曲がっていたら直線はダメ</td></tr>
+    <tr><td>②</td><td>残差の平均が 0</td><td>OLS なら自動で OK（7.0e-13 ≒ 0）</td></tr>
+    <tr><td>③</td><td>残差がほぼ正規</td><td>ヒストグラムと Q-Q で見る</td></tr>
+    <tr><td>④</td><td>等分散</td><td>残差の幅がどこでも同じ</td></tr>
+    <tr><td>⑤</td><td>自己相関なし</td><td>時系列データのときだけ</td></tr>
+  </table>
+  <div class="warn-box">⚠️ 探索だけ（どの変数が強いか比べる）なら、前提はそこまで気にしなくて OK。気にするのは「母集団への推論」や「原因と結果」を言いたいときです。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>前提は「推論するときの条件」。探索だけなら重要度は低い。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 前提を確認する必要があるのはいつ？<span class="cp-a">A. 信頼区間・有意性検定・p 値で推論するとき。</span></div><div class="cp-q">Q2. lm() の残差の平均はいくつ？<span class="cp-a">A. ほぼ 0（切片のある OLS なら常に）。リッジ・ラッソ・切片なしは別。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>残差の正規性</h2><div class="unit-sub">5 数要約と Q-Q プロット</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>正規性は「5 数要約 → ヒストグラム → Q-Q プロット」で見る。Q-Q は点が赤線に沿えば OK。</strong></p></div>
+  <p><code>summary(temp_model)</code> の残差：</p>
+<div class="output-reveal">    Min      1Q  Median      3Q     Max 
+-4615.3 -1134.9  -104.4  1044.3  3737.8 </div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">📏</div>
+    <div class="ru-text"><strong>最小 −4615.3：過大予測。最大 3737.8：過小予測。</strong><br>残差が正 ＝ 点が線の上 ＝ 過小予測。中央値 −104.4 は「たいてい過大予測」。</div>
+  </div>
+<pre class="code-block">
+<span class="cl"><span class="kw">qqnorm</span>(temp_model$residuals)</span>
+<span class="cl"><span class="kw">qqline</span>(temp_model$residuals, col = <span class="st">"red"</span>)</span>
+</pre>
+  <p>気温モデルの Q-Q プロットは、両端が赤い線から曲がって離れます。ヒストグラムも左に裾があり、山がとがっているので、<strong>ほぼ正規とは言いにくい</strong>です。</p>
+  <div class="note-box">💡 自転車が余るのと足りないのと、どちらが困る？ これは統計ではなく<strong>ビジネスの判断</strong>です。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Q-Q プロットは「点が赤い線に沿えば正規、端が曲がれば非正規」の図。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 残差が正のとき、モデルは過大？過小？<span class="cp-a">A. 過小予測（点が線の上にある）。</span></div><div class="cp-q">Q2. Q-Q プロットで端が曲がっていたら？<span class="cp-a">A. 正規ではない（歪みや裾の重さ）サイン。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>等分散と自己相関</h2><div class="unit-sub">残差プロットと Durbin-Watson</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>等分散＝残差の幅が一定。残差プロットには平滑化曲線を足す。D-W は 2 なら OK、0 に近いと正の自己相関。</strong></p></div>
+  <p><strong>homo ＝同じ、skedastic ＝ばらつき</strong>。ばらつきがどこでも同じなら等分散、広がったり狭まったりするなら不等分散です。データが大きいほど影響は小さくなります。</p>
+  <div class="warn-box">⚠️ 残差プロットの点だけ見るとランダムに見えても、<strong>geom_smooth の青い線</strong>を足すと隠れた曲線が見えます（気温モデルは山なりの曲線）。</div>
+  <p>自己相関は「今日の残差が明日の残差に似ている」こと。<code>durbinWatsonTest(temp_model, max.lag = 1)</code> の結果：</p>
+<div class="output-reveal"> lag Autocorrelation D-W Statistic p-value
+   1       0.7641582     0.4678707       0
+ Alternative hypothesis: rho != 0</div>
+  <table class="compare-table">
+    <tr><th>D-W</th><th>意味</th></tr>
+    <tr><td>約 2</td><td>自己相関なし</td></tr>
+    <tr><td>0〜2</td><td>正の自己相関</td></tr>
+    <tr><td>2〜4</td><td>負の自己相関</td></tr>
+  </table>
+  <p>D-W = 0.47（自己相関 0.76）は 0〜2 なので<strong>正の自己相関</strong>。季節性などの時間の効果があるので、気温以外の変数も必要かもしれません。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>残差の幅が一定か、日々の残差が似ていないかを確かめる。どちらも崩れていたらモデルは信号を取りこぼしている。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 等分散とは？<span class="cp-a">A. 残差の分散がどの x でも同じこと。</span></div><div class="cp-q">Q2. D-W = 0.47 の意味は？<span class="cp-a">A. 正の自己相関。今日の残差と明日の残差が似ている。</span></div></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>検定とやり直し方</h2><div class="unit-sub">SW・KS・BP</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>検定の H₀ は「前提が成り立つ」。p が小さい＝前提が崩れている。SW と KS は正規性、BP は等分散。</strong></p></div>
+  <table class="compare-table">
+    <tr><th>検定</th><th>調べること</th><th>気温モデルの結果</th></tr>
+    <tr><td><code>shapiro.test()</code></td><td>残差は正規？（n &lt; 5,000）</td><td>W = 0.98671、p = 3.392e-06 → 正規でない</td></tr>
+    <tr><td><code>ks.test(res, "pnorm", mean, sd)</code></td><td>指定した分布と一致？</td><td>D = 0.058722、p = 0.01293 → 一致しない</td></tr>
+    <tr><td><code>bptest()</code></td><td>分散は一定？</td><td>BP = 9.5279、p = 0.002024 → 不等分散</td></tr>
+  </table>
+  <div class="big-rule down">
+    <div class="ru-arrow">🛠️</div>
+    <div class="ru-text"><strong>前提が崩れたら</strong>：影響点分析／多重共線性チェック／多項式回帰などの非線形モデル／変換／交互作用／もっと良いデータ。<br>ただし<strong>推論が目的でなければ</strong>、そこまで気にしなくてよい。</div>
+  </div>
+  <div class="note-box">🔑 <code>plot(temp_model)</code> の 4 枚：残差プロット／Q-Q／Scale-Location（不等分散）／Residuals vs Leverage（影響点、Cook の距離）。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>グラフ（目）と検定（数字）の両方で確かめる。気温モデルは、正規性も等分散も満たしませんでした。</p></div>
+<div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. p = 3.392e-06 の Shapiro-Wilk 検定の結論は？<span class="cp-a">A. H₀（残差は正規）を棄却。正規でない証拠がある。</span></div><div class="cp-q">Q2. Breusch-Pagan の H₀ は？<span class="cp-a">A. 残差の分散が一定（等分散）。</span></div><div class="cp-q">Q3. Scale-Location は何を見る図？<span class="cp-a">A. 不等分散（heteroscedasticity）。</span></div></div>
+</div>
+
+<div class="page-nav"><a href="m6_reg_more.html">← M6 回帰④</a><a href="r4_assumptions.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 前提は推論のときだけ</p><p style="margin:.4rem 0">• 残差平均は OLS なら 0</p><p style="margin:.4rem 0">• Q-Q は線に沿えば正規</p><p style="margin:.4rem 0">• 検定は p が小さい＝前提崩れ</p><p style="margin:.4rem 0">• D-W は 2 なら OK</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">グラフ、練習問題、英語MCQクイズは <a href="r4_assumptions.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：650 M4 回帰の仮定検定・非正規性と不等分散 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="r4_assumptions.html">← 本編</a> · <a href="m6_reg_more.html">M6 回帰④</a> · <a href="r4_prediction.html">予測区間・信頼区間 →</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

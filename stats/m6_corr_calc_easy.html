@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M6 相関②　手計算と注意点</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 🧮 相関の計算と注意 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy active" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Correlation ② 🍎</div>
+    <h1>🍎 超やさしい版：相関②（手計算と注意点）</h1>
+  <p>r は「<strong>平均からのズレ</strong>を掛けて、標準偏差で割った数」。そして<strong>使うときの落とし穴</strong>を覚えます。</p>
+    <div class="unit-nav"><a href="#u1">r の手計算</a><a href="#u2">r の性質</a><a href="#u3">注意点</a><a href="#u4">曲線と Anscombe</a><a href="m6_corr_calc.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>動画対応</strong>：①は Correlation 5、②は Correlation 6、③④は Correlation 7（と Correlation 6 の「主な注意」）。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>r の手計算</h2><div class="unit-sub">共分散 → 標準化</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>共分散 = Σ(x − x̄)(y − ȳ) ／ (n − 1)。r = 共分散 ／ (x の標準偏差 × y の標準偏差)。</strong></p></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🧮</div>
+    <div class="ru-text"><strong>位置とクリック率（10 組）</strong>：x の平均 5.5、y の平均 7.387。共分散 = −177.835 ÷ 9 = <strong>−19.76</strong>。標準偏差は 3.0277 と 7.2320 なので、<strong>r = −19.76 ÷ (3.0277 × 7.2320) = −0.90</strong>。</div>
+  </div>
+<pre class="code-block">
+<span class="cl">sd_position &lt;- <span class="kw">sd</span>(position)</span>
+<span class="cl">sd_rate &lt;- <span class="kw">sd</span>(rate)</span>
+<span class="cl">sd_position</span>
+<span class="cl">sd_rate</span>
+<span class="cl">my_covariance / (sd_position * sd_rate)</span>
+<span class="cl"><span class="kw">cor</span>(rate, position)</span>
+</pre><div class="output-reveal">[1] 3.02765
+[1] 7.232038
+[1] -0.9024191
+[1] -0.9024191</div>
+  <p><strong>なぜ共分散のままではダメ？</strong> ① 上限下限がない　② 単位が変（年・ドル）　③ 別々の変数の強さを比べられない。→ 標準偏差で割れば<strong>単位が消えて</strong>（unitless）、比べられます。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>共分散は「一緒に平均から離れる度合い」。それを<strong>標準化</strong>したものが r。実務ではもちろん<code>cor()</code>を使います。n − 1 で割るのは、標本から母集団を<strong>偏りなく</strong>推定するためです。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 共分散がマイナスとは？<span class="cp-a">A. 平均的に、片方が平均より上のとき、もう片方は下（負の関係）。</span></div><div class="cp-q">Q2. 共分散より r を使う理由は？<span class="cp-a">A. r は単位がなく −1〜+1 なので、別々の変数の強さを比べられる。</span></div><div class="cp-q">Q3. 位置×クリック率の r は？<span class="cp-a">A. −0.90（共分散 −19.76 ÷ (3.0277 × 7.2320)）。</span></div></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>r の性質</h2><div class="unit-sub">変わらないもの・変わるもの</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>量的変数だけ／x と y を入れ替えても同じ／単位を変えても同じ／単位も % もない／外れ値には弱い。</strong></p></div>
+  <table class="compare-table">
+    <tr><th>やってみたこと</th><th>r</th></tr>
+    <tr><td>もとのデータ（x = 1〜10）</td><td>0.8746</td></tr>
+    <tr><td>x と y を入れ替える</td><td>0.8746（同じ）</td></tr>
+    <tr><td>x を 2 倍、y を 10 で割る</td><td>0.8746（同じ）</td></tr>
+    <tr><td>6 点のデータ</td><td>0.994</td></tr>
+    <tr><td>そのうち 1 点だけ 7 → 20 に変更</td><td><strong>0.79</strong>（大きく下がる）</td></tr>
+  </table>
+  <div class="big-rule mid">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>r = 0.875 を「87.5%」と書かない！</strong> r は単位なしの数です。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>r は<strong>単位なし</strong>だから、cm でも m でも同じ。でも<strong>1 個の外れ値で大きく変わる</strong>から、グラフで外れ値を探そう。カテゴリ変数は 0/1 などに直さないと入れられません（色のような順序のないカテゴリは数にしない）。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. x を 2 倍にしたら r は？<span class="cp-a">A. 変わらない（0.8746 のまま）。</span></div><div class="cp-q">Q2. 外れ値を 1 個足したら？<span class="cp-a">A. r は大きく変わることがある（0.994 → 0.79）。</span></div><div class="cp-q">Q3. r = 0.6 を「60%」と書いてよい？<span class="cp-a">A. ダメ。r には単位も % もない。</span></div></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>注意：因果とカテゴリ</h2><div class="unit-sub">相関＝原因、ではない</div></div>
+  </div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>相関があっても「原因」とは限らない！</strong><br>気温が高いとアイスが売れ、水難事故も増える。アイスと事故は連動するけれど、アイスが事故の原因ではなく、原因は<strong>気温（第三の変数 lurking variable）</strong>です。</div>
+  </div>
+  <p>x と y の関係は、「x → y？」「y → x？」「第三の z → 両方？」のどれかを考えます。原因を確かめたいなら、ランダム化実験（A/B テストなど）を使います。</p>
+  <div class="big-rule down">
+    <div class="ru-arrow">🏷️</div>
+    <div class="ru-text">髪の色と目の色のように<strong>カテゴリ変数</strong>には、「相関」でなく<strong>「関連（association）」</strong>と言います。相関は量的変数だけ。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「相関があるね」は「一緒に動くね」。「原因だね」とは別の話。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 強い相関があれば、x が y の原因？<span class="cp-a">A. 言えない。逆かも、第三の変数かも、偶然かもしれない。</span></div><div class="cp-q">Q2. 髪の色と目の色に使う言葉は？<span class="cp-a">A. 「関連（association）」。「相関」は量的変数だけ。</span></div></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>曲線と Anscombe</h2><div class="unit-sub">必ず散布図を描く</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>r は「直線」の強さだけ。曲線なら Spearman などを検討。まず散布図！</strong></p></div>
+  <table class="compare-table">
+    <tr><th>データ</th><th>Pearson</th><th>Spearman</th></tr>
+    <tr><td>位置×クリック率（曲線）</td><td>−0.90</td><td>−1</td></tr>
+    <tr><td>y = x²（x は 0〜10）</td><td>0.963</td><td>1</td></tr>
+    <tr><td>y = x²（x は −5〜5）</td><td>0（でも関係はある！）</td><td>―</td></tr>
+  </table>
+<pre class="code-block">
+<span class="cl"><span class="kw">cor</span>(anscombe$x1, anscombe$y1)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x2, anscombe$y2)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x3, anscombe$y3)</span>
+<span class="cl"><span class="kw">cor</span>(anscombe$x4, anscombe$y4)</span>
+</pre><div class="output-reveal">[1] 0.8164205
+[1] 0.8162365
+[1] 0.8162867
+[1] 0.8165214</div>
+  <div class="big-rule">
+    <div class="ru-arrow">📊</div>
+    <div class="ru-text"><strong>Anscombe の 4 組はどれも r ≈ 0.816。</strong>でも散布図は直線・曲線・外れ値あり・1 点だけ離れた形と、全部ちがう。<strong>数字だけでは分からない。必ずプロット！</strong>（現代版は Datasaurus）</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>r が −1 に近くても曲線かもしれないし、0 でも曲線の関連があるかもしれない。<strong>グラフを描いてから r</strong>。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. Pearson −0.90、Spearman −1。何が分かる？<span class="cp-a">A. 曲線だけど、いつも下がる関係。ピアソンだけでは不十分。</span></div><div class="cp-q">Q2. Anscombe の教訓は？<span class="cp-a">A. r が同じでもグラフは全然違う。いつもデータをプロットする。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_corr_basics.html">← 相関の基本へ</a><a href="m6_corr_calc.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• r = 共分散 ／ (s<sub>x</sub> s<sub>y</sub>)</p><p style="margin:.4rem 0">• 単位なし、入れ替えても同じ</p><p style="margin:.4rem 0">• 外れ値に弱い</p><p style="margin:.4rem 0">• 相関≠原因、曲線は直線でない</p><p style="margin:.4rem 0">• まず散布図</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">手計算の表・R のコード・英語MCQクイズは <a href="m6_corr_calc.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M6 相関② 手計算と注意点 — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_corr_calc.html">← 本編</a> · <a href="m6_reg_intro.html">回帰入門へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

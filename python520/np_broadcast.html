@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 NumPy③ ブロードキャスト</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · NumPy — Broadcasting</div>
+  <h1>📐 NumPy③：ブロードキャスト</h1>
+  <p>形の違う配列を計算する仕組みと、3つのルール、データの中心化を学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① とは</a><a href="#unit2">② ルール</a><a href="#unit3">③ 中心化</a><a href="#quiz">📝 Quiz</a><a href="np_broadcast_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 2.05 Computation on Arrays: Broadcasting</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ブロードキャストとは</h2><div class="unit-sub">形が違う配列でも計算できる</div></div>
+  </div>
+<p>これまでは同じ形の配列どうしを計算してきました。NumPyは、形が違っていても<strong>小さいほうを自動で引き伸ばして</strong>計算してくれます。これが<strong>ブロードキャスト</strong>です。</p><pre class="code-block">
+<span class="cl">a = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>])</span>
+<span class="cl">a + <span class="nm">5</span>        <span class="cm"># 数1つが [5, 5, 5] に引き伸ばされる</span></span>
+</pre><div class="output-reveal">array([6, 7, 8])</div><pre class="code-block">
+<span class="cl">M = np.ones((<span class="nm">3</span>, <span class="nm">3</span>))</span>
+<span class="cl">M + a        <span class="cm"># a が3行ぶんに引き伸ばされる</span></span>
+</pre><div class="output-reveal">array([[2., 3., 4.],
+       [2., 3., 4.],
+       [2., 3., 4.]])</div><p>実際にコピーが作られるわけではなく、「そう見なして」計算します。だからメモリも節約できます。</p><pre class="code-block">
+<span class="cl">col = np.arange(<span class="nm">3</span>).reshape(<span class="nm">3</span>, <span class="nm">1</span>)   <span class="cm"># 縦ベクトル</span></span>
+<span class="cl">row = np.arange(<span class="nm">3</span>)                      <span class="cm"># 横ベクトル</span></span>
+<span class="cl">col + row                               <span class="cm"># 両方が引き伸ばされて 3×3</span></span>
+</pre><div class="output-reveal">array([[0, 1, 2],
+       [1, 2, 3],
+       [2, 3, 4]])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>九九の表のように、縦の列と横の行を組み合わせて、一気に表を作れます。</p></div><div class="practice-card" id="p-n3-u1">
+    <div class="ptitle">💻 ミニ練習：九九の表</div>
+    <p class="ptask"><code>np.arange(1, 4)</code> を縦ベクトルと横ベクトルにして掛け合わせ、3×3の掛け算表を作ってください。</p>
+    <textarea class="code-editor" id="p-n3-u1-input" rows="7">r = np.arange(1, 4)
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n3-u1", ["reshape(3, 1)", "*"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n3-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n3-u1-result"></div>
+    <div class="answer-reveal" id="p-n3-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">r.reshape(<span class="nm">3</span>, <span class="nm">1</span>) * r</span>
+</pre>
+      <p class="answer-note">縦（3×1）と横（3,）を掛けると3×3になります。結果は[[1,2,3],[2,4,6],[3,6,9]]。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>3つのルール</h2><div class="unit-sub">右から揃えて、1か同じなら通る</div></div>
+  </div>
+<p>ブロードキャストが成立するかは、次の3つのルールで決まります。</p><ol><li>次元の数が違うときは、少ないほうの<strong>左側に1を足して</strong>次元数を揃える。</li><li>ある次元の大きさが<strong>1</strong>なら、もう片方の大きさに<strong>引き伸ばす</strong>。</li><li>どちらの大きさも1でなく、かつ違う値なら<strong>エラー</strong>。</li></ol><div class="teal-box">📌 形を<strong>右端から比べて</strong>、各位置で「同じ」か「どちらかが1」ならOK、と覚えると速く判断できます。</div><pre class="code-block">
+<span class="cl">M = np.ones((<span class="nm">3</span>, <span class="nm">3</span>))</span>
+<span class="cl"><span class="kw">print</span>(M.shape, np.arange(<span class="nm">3</span>).shape)   <span class="cm"># (3, 3) と (3,)</span></span>
+<span class="cl">(M + np.arange(<span class="nm">3</span>)).shape         <span class="cm"># (3,) は (1, 3) とみなされ、行方向に引き伸ばされる</span></span>
+</pre><div class="output-reveal">(3, 3) (3,)
+(3, 3)</div><pre class="code-block">
+<span class="cl">A = np.ones((<span class="nm">3</span>, <span class="nm">2</span>))</span>
+<span class="cl">B = np.arange(<span class="nm">3</span>)</span>
+<span class="cl">A.shape, B.shape</span>
+</pre><div class="output-reveal">((3, 2), (3,))</div><pre class="code-block">
+<span class="cl">np.ones((<span class="nm">3</span>, <span class="nm">2</span>)) + np.arange(<span class="nm">3</span>)</span>
+</pre><div class="output-reveal">ValueError: operands could not be broadcast together with shapes (3,2) (3,)</div><p>この失敗は、右端の2と3が「同じでも1でもない」からです。<code>np.newaxis</code>（または<code>reshape</code>）で縦ベクトルにすれば通ります。</p><pre class="code-block">
+<span class="cl">(np.ones((<span class="nm">3</span>, <span class="nm">2</span>)) + np.arange(<span class="nm">3</span>)[:, np.newaxis]).shape</span>
+</pre><div class="output-reveal">(3, 2)</div><div class="warn-box">⚠️ 形のエラーは<code>ValueError: operands could not be broadcast together</code>と出ます。まず<code>.shape</code>を印字して、右端から見比べましょう。</div><div class="practice-card" id="p-n3-u2">
+    <div class="ptitle">💻 ミニ練習：形を判断</div>
+    <p class="ptask">形 <code>(4, 1)</code> の配列と、形 <code>(3,)</code> の配列を足すと、結果の形は何になりますか？ 実際に<code>np.ones</code>で作って<code>.shape</code>を確かめるコードを書いてください。</p>
+    <textarea class="code-editor" id="p-n3-u2-input" rows="7"># ここに書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n3-u2", ["np.ones", ".shape"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n3-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n3-u2-result"></div>
+    <div class="answer-reveal" id="p-n3-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">(np.ones((<span class="nm">4</span>, <span class="nm">1</span>)) + np.ones(<span class="nm">3</span>)).shape   <span class="cm"># (4, 3)</span></span>
+</pre>
+      <p class="answer-note">右端：1と3 → 3。次：4と（補われた1）→ 4。結果は(4, 3)です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>使いどころ：データのセンタリング</h2><div class="unit-sub">列ごとの平均を引く</div></div>
+  </div>
+<p>ブロードキャストの代表的な使い方は、各列から<strong>その列の平均を引く</strong>（中心化）です。統計や機械学習の前処理でよく使います。</p><pre class="code-block">
+<span class="cl">np.random.seed(<span class="nm">0</span>)</span>
+<span class="cl">X = np.random.randint(<span class="nm">0</span>, <span class="nm">10</span>, size=(<span class="nm">4</span>, <span class="nm">3</span>))</span>
+<span class="cl"><span class="kw">print</span>(X)</span>
+<span class="cl">mean = X.mean(axis=<span class="nm">0</span>)     <span class="cm"># 形(3,)  列ごとの平均</span></span>
+<span class="cl"><span class="kw">print</span>(mean)</span>
+<span class="cl">X - mean                  <span class="cm"># 形(4,3) - 形(3,) → 各行から引かれる</span></span>
+</pre><div class="output-reveal">[[5 0 3]
+ [3 7 9]
+ [3 5 2]
+ [4 7 6]]
+[3.75 4.75 5.  ]
+array([[ 1.25, -4.75, -2.  ],
+       [-0.75,  2.25,  4.  ],
+       [-0.75,  0.25, -3.  ],
+       [ 0.25,  2.25,  1.  ]])</div><pre class="code-block">
+<span class="cl">(X - mean).mean(axis=<span class="nm">0</span>)    <span class="cm"># 中心化後の列ごとの平均は 0</span></span>
+</pre><div class="output-reveal">array([0., 0., 0.])</div><p>行ごとに引きたいときは、<code>keepdims=True</code>で形を保つと、ブロードキャストの形が揃います。</p><pre class="code-block">
+<span class="cl">row_mean = X.mean(axis=<span class="nm">1</span>, keepdims=<span class="kw">True</span>)   <span class="cm"># 形(4,1)</span></span>
+<span class="cl">X - row_mean</span>
+</pre><div class="output-reveal">array([[ 2.33333333, -2.66666667,  0.33333333],
+       [-3.33333333,  0.66666667,  2.66666667],
+       [-0.33333333,  1.66666667, -1.33333333],
+       [-1.66666667,  1.33333333,  0.33333333]])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>平均を引いたあとは、データの「真ん中」が0になります。値の大小を比べやすくするための下ごしらえです。</p></div><div class="practice-card" id="p-n3-u3">
+    <div class="ptitle">💻 ミニ練習：行ごとの中心化</div>
+    <p class="ptask">配列 <code>X</code> の<strong>各行から、その行の平均を引いた</strong>配列を作ってください。</p>
+    <textarea class="code-editor" id="p-n3-u3-input" rows="7">X = np.arange(6).reshape(2, 3)
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-n3-u3", ["keepdims=True", "X - "])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-n3-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-n3-u3-result"></div>
+    <div class="answer-reveal" id="p-n3-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">X - X.mean(axis=<span class="nm">1</span>, keepdims=<span class="kw">True</span>)</span>
+</pre>
+      <p class="answer-note"><code>keepdims=True</code>で平均の形が(2, 1)になり、各行に正しく引かれます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does broadcasting allow NumPy to do?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Print an array on the screen in a nice table format</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Combine arrays of different but compatible shapes</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Copy an array over the network to another computer</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Convert all floating point values into integers</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">np.ones((3, 3)) + np.arange(3) works. How is np.arange(3) treated?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>As an array of shape (3, 1) that is stretched sideways</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>As shape (1, 3), stretched down the rows</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>As one single number that is repeated nine times</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is not allowed because the shapes differ</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What is the shape of np.ones((4, 1)) + np.ones(3)?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>(4, 3)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>(4, 1)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>(3,)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It raises an error</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why does np.ones((3, 2)) + np.arange(3) fail?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The arrays have different dtypes</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>ones() cannot be added</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The last dimensions are 2 and 3</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>arange always makes 2-D arrays</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">For X of shape (4, 3), what does X - X.mean(axis=0) do?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Subtracts each column mean from that column</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Subtracts each row mean from that row</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Subtracts the overall mean from one row</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Gives an error</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does keepdims=True do in X.mean(axis=1, keepdims=True)?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Keeps the dtype as an integer</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Keeps the result as 2-D with shape (4, 1)</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Stops the mean from using nan</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Returns a copy of X</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 0, 2, 0, 1];
+var FEEDBACKS=["Smaller arrays are virtually stretched so that element-wise operations work.", "Rule 1 adds a 1 on the left: (3,) becomes (1, 3), then stretches across 3 rows.", "Compare from the right: 1 and 3 give 3; 4 and the implied 1 give 4.", "The trailing dimensions 2 and 3 are different and neither is 1, so the shapes are incompatible.", "The column means have shape (3,), which broadcasts across all 4 rows.", "The reduced axis is kept with size 1, so the result broadcasts correctly against X."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">broadcasting</div><div class="term-en">ブロードキャスト</div><div class="term-def">形の違う配列を、小さいほうを自動で引き伸ばして計算する仕組み。</div></div>
+    <div class="term-item"><div class="term-name">newaxis</div><div class="term-en">軸の追加</div><div class="term-def">x[:, np.newaxis]のように、大きさ1の軸を足して縦ベクトルなどにする。</div></div>
+    <div class="term-item"><div class="term-name">keepdims</div><div class="term-en">次元を保つ</div><div class="term-def">集計のあとも、潰した軸を大きさ1で残す。ブロードキャストの形が揃う。</div></div>
+    <div class="term-item"><div class="term-name">centering</div><div class="term-en">中心化</div><div class="term-def">各列から平均を引いて、平均を0にする前処理。</div></div>
+    <div class="term-item"><div class="term-name">ValueError</div><div class="term-en">形のエラー</div><div class="term-def">形が合わないときのエラー。.shapeを右端から比べて原因を探す。</div></div>
+    <div class="term-item"><div class="term-name">stretch</div><div class="term-en">引き伸ばし</div><div class="term-def">コピーではなく、同じ値を繰り返したように見なして計算する。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>エラーが出たら、まず2つの配列の.shapeを右端から見比べます。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：NumPy③ ブロードキャスト</p>
+  <p style="margin-top:.5rem;"><a href="np_ufuncs.html">← ② ufunc・集計</a> · <a href="np_masks.html">④ マスク →</a> · <a href="np_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

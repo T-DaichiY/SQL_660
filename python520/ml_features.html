@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC520 ML③ 特徴量エンジニアリング</title>
+<link rel="stylesheet" href="style.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC520 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m2"><span class="nav-mod">M2 NumPy</span><span class="navg"><a class="n-main" href="np_arrays.html">① 配列</a><a class="n-easy" href="np_arrays_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_ufuncs.html">② ufunc・集計</a><a class="n-easy" href="np_ufuncs_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_broadcast.html">③ ブロードキャスト</a><a class="n-easy" href="np_broadcast_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_masks.html">④ マスク</a><a class="n-easy" href="np_masks_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="np_sort.html">⑤ 並べ替え・構造化</a><a class="n-easy" href="np_sort_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M3 Pandas</span><span class="navg"><a class="n-main" href="pd_objects.html">① Series・DataFrame</a><a class="n-easy" href="pd_objects_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_indexing.html">② 選ぶ・絞る</a><a class="n-easy" href="pd_indexing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_ops.html">③ 計算・並べ替え</a><a class="n-easy" href="pd_ops_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_missing.html">④ 欠損値</a><a class="n-easy" href="pd_missing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_hier.html">⑤ 階層索引</a><a class="n-easy" href="pd_hier_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_combine.html">⑥ 連結・結合</a><a class="n-easy" href="pd_combine_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_groupby.html">⑦ 集計・ピボット</a><a class="n-easy" href="pd_groupby_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="pd_text_time.html">⑧ 文字列・時系列</a><a class="n-easy" href="pd_text_time_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M4 Matplotlib</span><span class="navg"><a class="n-main" href="mpl_basics.html">① 線・散布図</a><a class="n-easy" href="mpl_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_dist.html">② 分布・誤差・等高線</a><a class="n-easy" href="mpl_dist_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_legend_color.html">③ 凡例・カラーバー</a><a class="n-easy" href="mpl_legend_color_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_layout.html">④ 複数グラフ・注釈</a><a class="n-easy" href="mpl_layout_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_style3d.html">⑤ スタイル・棒・3D</a><a class="n-easy" href="mpl_style3d_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="mpl_seaborn.html">⑥ Seaborn</a><a class="n-easy" href="mpl_seaborn_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M5 機械学習</span><span class="navg"><a class="n-main" href="ml_intro.html">① 機械学習とは</a><a class="n-easy" href="ml_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_validation.html">② モデルの検証</a><a class="n-easy" href="ml_validation_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="ml_features.html">③ 特徴量エンジニアリング</a><a class="n-easy" href="ml_features_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_linreg.html">④ 線形回帰</a><a class="n-easy" href="ml_linreg_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_cluster.html">⑤ K-Means</a><a class="n-easy" href="ml_cluster_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="ml_pca.html">⑥ 主成分分析</a><a class="n-easy" href="ml_pca_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="np_practice.html">🏋️ NumPy</a></span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ Pandas</a></span><span class="navg"><a class="n-main" href="mpl_practice.html">🏋️ Matplotlib</a></span><span class="navg"><a class="n-main" href="ml_practice.html">🏋️ 機械学習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 · Machine Learning — Feature Engineering</div>
+  <h1>🛠️ ML③：特徴量エンジニアリング</h1>
+  <p>ワンホット表現、テキストの数値化、派生特徴、欠損の補完、パイプラインを学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① カテゴリ</a><a href="#unit2">② テキスト</a><a href="#unit3">③ 派生・補完</a><a href="#unit4">④ パイプライン</a><a href="#quiz">📝 Quiz</a><a href="ml_features_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>VanderPlas, <em>Python Data Science Handbook</em>（<a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>Handbook 5.04 Feature Engineering</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>カテゴリ特徴：ワンホット表現</h2><div class="unit-sub">文字を数に変える</div></div>
+  </div>
+<p>「地区名」のような<strong>カテゴリ（文字）</strong>は、そのままでは計算できません。かといって Queen Anne=1, Fremont=2 と番号を振ると、「Fremont は Queen Anne の2倍」のような<strong>偽の大小関係</strong>が生まれます。そこで<strong>1カテゴリ＝1列</strong>にする<strong>ワンホット表現</strong>を使います。</p><pre class="code-block">
+<span class="cl">data = [</span>
+<span class="cl">    {<span class="st">'price'</span>: <span class="nm">850000</span>, <span class="st">'rooms'</span>: <span class="nm">4</span>, <span class="st">'neighborhood'</span>: <span class="st">'Queen Anne'</span>},</span>
+<span class="cl">    {<span class="st">'price'</span>: <span class="nm">700000</span>, <span class="st">'rooms'</span>: <span class="nm">3</span>, <span class="st">'neighborhood'</span>: <span class="st">'Fremont'</span>},</span>
+<span class="cl">    {<span class="st">'price'</span>: <span class="nm">650000</span>, <span class="st">'rooms'</span>: <span class="nm">3</span>, <span class="st">'neighborhood'</span>: <span class="st">'Wallingford'</span>},</span>
+<span class="cl">    {<span class="st">'price'</span>: <span class="nm">600000</span>, <span class="st">'rooms'</span>: <span class="nm">2</span>, <span class="st">'neighborhood'</span>: <span class="st">'Fremont'</span>},</span>
+<span class="cl">]</span>
+</pre><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.feature_extraction <span class="kw">import</span> DictVectorizer</span>
+<span class="cl">vec = DictVectorizer(sparse=<span class="kw">False</span>, dtype=int)</span>
+<span class="cl">vec.fit_transform(data)</span>
+</pre><div class="output-reveal">array([[     0,      1,      0, 850000,      4],
+       [     1,      0,      0, 700000,      3],
+       [     0,      0,      1, 650000,      3],
+       [     1,      0,      0, 600000,      2]])</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(vec.get_feature_names_out())</span>
+</pre><div class="output-reveal">['neighborhood=Fremont' 'neighborhood=Queen Anne'
+ 'neighborhood=Wallingford' 'price' 'rooms']</div><p>数値の列はそのまま、<code>neighborhood</code>は3つの0/1の列になりました。pandasなら<code>get_dummies</code>でも同じことができます。</p><pre class="code-block">
+<span class="cl">pd.get_dummies(pd.DataFrame(data), columns=[<span class="st">'neighborhood'</span>], dtype=int)</span>
+</pre><div class="output-reveal">    price  rooms  neighborhood_Fremont  neighborhood_Queen Anne  \
+0  850000      4                     0                        1   
+1  700000      3                     1                        0   
+2  650000      3                     0                        0   
+3  600000      2                     1                        0   
+
+   neighborhood_Wallingford  
+0                         0  
+1                         0  
+2                         1  
+3                         0  </div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「どの地区か」を、<strong>当てはまる列だけ1</strong>、他は0で表します。</p></div><div class="practice-card" id="p-ml1f-u1">
+    <div class="ptitle">💻 ミニ練習：get_dummies</div>
+    <p class="ptask">Series <code>s</code> をワンホット表現にして <code>d</code> に入れてください（整数で）。</p>
+    <textarea class="code-editor" id="p-ml1f-u1-input" rows="7">s = pd.Series(['red', 'blue', 'red'])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1f-u1", ["get_dummies", "dtype=int"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1f-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1f-u1-result"></div>
+    <div class="answer-reveal" id="p-ml1f-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">d = pd.get_dummies(s, dtype=int)</span>
+</pre>
+      <p class="answer-note">列は blue, red の2つです。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>テキスト特徴：単語の数え上げ</h2><div class="unit-sub">CountVectorizer</div></div>
+  </div>
+<p>文章は<strong>単語の出現回数</strong>に直すと、機械学習に使えます（Bag of Words）。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.feature_extraction.text <span class="kw">import</span> CountVectorizer</span>
+<span class="cl">sample = [<span class="st">'problem of evil'</span>, <span class="st">'evil queen'</span>, <span class="st">'horizon problem'</span>]</span>
+<span class="cl">vec = CountVectorizer()</span>
+<span class="cl">X = vec.fit_transform(sample)</span>
+<span class="cl"><span class="kw">print</span>(vec.get_feature_names_out())</span>
+<span class="cl">X.toarray()</span>
+</pre><div class="output-reveal">['evil' 'horizon' 'of' 'problem' 'queen']
+array([[1, 0, 1, 1, 0],
+       [1, 0, 0, 0, 1],
+       [0, 1, 0, 1, 0]])</div><p>各行が1つの文、各列が1つの単語です。表にすると見やすくなります。</p><pre class="code-block">
+<span class="cl">pd.DataFrame(X.toarray(), columns=vec.get_feature_names_out())</span>
+</pre><div class="output-reveal">   evil  horizon  of  problem  queen
+0     1        0   1        1      0
+1     1        0   0        0      1
+2     0        1   0        1      0</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>文章を「単語の出席簿」にする。何回出たかを数えます。</p></div><div class="teal-box">🔎 よく出る単語の影響を弱める<code>TfidfVectorizer</code>もあります。使い方はCountVectorizerと同じです。</div><div class="practice-card" id="p-ml1f-u2">
+    <div class="ptitle">💻 ミニ練習：単語の種類数</div>
+    <p class="ptask"><code>docs</code> を CountVectorizer で変換し、<strong>単語の種類数</strong>（列数）を <code>n</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1f-u2-input" rows="7">from sklearn.feature_extraction.text import CountVectorizer
+docs = ['cat dog', 'dog bird']
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1f-u2", ["CountVectorizer", "fit_transform", "shape[1]"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1f-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1f-u2-result"></div>
+    <div class="answer-reveal" id="p-ml1f-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">n = CountVectorizer().fit_transform(docs).shape[<span class="nm">1</span>]</span>
+</pre>
+      <p class="answer-note">cat, dog, bird の3種類です。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>派生特徴と欠損の補完</h2><div class="unit-sub">特徴量を作る・埋める</div></div>
+  </div>
+<p>直線では表せない関係も、<strong>特徴量を足す</strong>と直線モデルで扱えます。たとえば x から x², x³ を作る<code>PolynomialFeatures</code>です。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> PolynomialFeatures</span>
+<span class="cl">x = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>])</span>
+<span class="cl">poly = PolynomialFeatures(degree=<span class="nm">3</span>, include_bias=<span class="kw">False</span>)</span>
+<span class="cl">poly.fit_transform(x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>))</span>
+</pre><div class="output-reveal">array([[  1.,   1.,   1.],
+       [  2.,   4.,   8.],
+       [  3.,   9.,  27.],
+       [  4.,  16.,  64.],
+       [  5.,  25., 125.]])</div><p>次に<strong>欠損値</strong>。多くのモデルはNaNを受け付けないので、平均などで埋める<code>SimpleImputer</code>を使います。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.impute <span class="kw">import</span> SimpleImputer</span>
+<span class="cl">Xm = np.array([[<span class="nm">1.0</span>, <span class="nm">2.0</span>], [np.nan, <span class="nm">3.0</span>], [<span class="nm">7.0</span>, np.nan]])</span>
+<span class="cl">imp = SimpleImputer(strategy=<span class="st">'mean'</span>)</span>
+<span class="cl">imp.fit_transform(Xm)</span>
+</pre><div class="output-reveal">array([[1. , 2. ],
+       [4. , 3. ],
+       [7. , 2.5]])</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>fit</code>で「平均の値」を覚え、<code>transform</code>でNaNをその値に置き換えます。</p></div><div class="warn-box">平均などの値は<strong>訓練データだけ</strong>から計算するのが原則です（テスト用の情報を漏らさないため）。パイプラインに入れると自動でそうなります。</div><div class="practice-card" id="p-ml1f-u3">
+    <div class="ptitle">💻 ミニ練習：中央値で埋める</div>
+    <p class="ptask"><code>Xm</code> の欠損を<strong>中央値</strong>で埋めた配列を <code>filled</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-ml1f-u3-input" rows="7">from sklearn.impute import SimpleImputer
+Xm = np.array([[1.0, 2.0], [np.nan, 3.0], [7.0, np.nan]])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1f-u3", ["strategy='median'", "fit_transform"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1f-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1f-u3-result"></div>
+    <div class="answer-reveal" id="p-ml1f-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">filled = SimpleImputer(strategy=<span class="st">'median'</span>).fit_transform(Xm)</span>
+</pre>
+      <p class="answer-note">列ごとの中央値（4.0と2.5）で埋まります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>パイプライン</h2><div class="unit-sub">前処理＋モデルを1つにまとめる</div></div>
+  </div>
+<p>「欠損を埋める→特徴量を作る→回帰する」のような一連の手順を、<code>make_pipeline</code>で<strong>1つのモデル</strong>のように扱えます。</p><pre class="code-block">
+<span class="cl"><span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> make_pipeline</span>
+<span class="cl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression</span>
+<span class="cl"></span>
+<span class="cl">x = np.array([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, np.nan, <span class="nm">5</span>])</span>
+<span class="cl">y = np.array([<span class="nm">14</span>, <span class="nm">16</span>, -<span class="nm">1</span>, <span class="nm">8</span>, -<span class="nm">5</span>])</span>
+<span class="cl">model = make_pipeline(SimpleImputer(strategy=<span class="st">'mean'</span>),</span>
+<span class="cl">                      PolynomialFeatures(degree=<span class="nm">2</span>),</span>
+<span class="cl">                      LinearRegression())</span>
+<span class="cl">model.fit(x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>), y)</span>
+<span class="cl"><span class="kw">print</span>(model.predict(x.reshape(-<span class="nm">1</span>, <span class="nm">1</span>)).round(<span class="nm">2</span>))</span>
+</pre><div class="output-reveal">[16.2  10.46  4.88  6.26 -5.79]</div><p>NaN入りのデータでも、そのまま<code>fit</code>と<code>predict</code>が使えます。各段の名前は小文字のクラス名になります。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(list(model.named_steps))</span>
+</pre><div class="output-reveal">['simpleimputer', 'polynomialfeatures', 'linearregression']</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>パイプラインは「ベルトコンベア」。データが前処理を通ってからモデルに入ります。</p></div><div class="practice-card" id="p-ml1f-u4">
+    <div class="ptitle">💻 ミニ練習：パイプライン</div>
+    <p class="ptask"><code>StandardScaler</code> と <code>LinearRegression</code> をこの順でつないだパイプラインを <code>model</code> に作ってください。</p>
+    <textarea class="code-editor" id="p-ml1f-u4-input" rows="7">from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-ml1f-u4", ["make_pipeline", "StandardScaler()", "LinearRegression()"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1f-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1f-u4-result"></div>
+    <div class="answer-reveal" id="p-ml1f-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">model = make_pipeline(StandardScaler(), LinearRegression())</span>
+</pre>
+      <p class="answer-note">最後の段だけがモデル、前は変換器です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why is one-hot encoding preferred over numbering categories 1, 2, 3?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It makes the data set much smaller in memory</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It avoids a false order between categories</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes all of the missing values automatically</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is the only encoding that works with text</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does CountVectorizer produce for a list of sentences?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The length of each sentence in characters</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A list of the sentences sorted alphabetically</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The grammar tree of each of the sentences</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A word-count matrix</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does PolynomialFeatures(degree=3) add to a single feature x?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Powers of x</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Three new columns filled with random noise values</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean of x repeated down a new column</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Flags that mark the missing values of x</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which class replaces NaN values with a column mean or median?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>StandardScaler, which rescales every column</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>DictVectorizer, which turns dictionaries into arrays</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>SimpleImputer</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>GridSearchCV, which searches over parameters</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why is a Pipeline useful?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It makes any kind of model more accurate</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It chains steps into one estimator</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It automatically plots every result for you</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It stores the data on disk between runs</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Where should imputation values (such as column means) be computed from?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The test data only, to match its distribution</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The full data set including the test data</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The training data only</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A random sample of the labels</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 1, 2];
+var FEEDBACKS=["Numbers imply order and distance. One-hot columns treat categories as independent.", "Each row is a document and each column counts one word.", "It creates the powers of x up to degree 3 (and optionally a bias column).", "SimpleImputer fills missing values using a chosen strategy such as mean or median.", "A pipeline runs the steps in order and exposes a single fit/predict interface.", "Statistics from the test set would leak information; fit the imputer on the training data."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">One-hot encoding</div><div class="term-en">ワンホット表現</div><div class="term-def">カテゴリを「1カテゴリ＝1列」の0/1で表す。</div></div>
+    <div class="term-item"><div class="term-name">Bag of words</div><div class="term-en">単語の袋</div><div class="term-def">語順を捨て、単語の出現回数だけを特徴にする。</div></div>
+    <div class="term-item"><div class="term-name">Derived feature</div><div class="term-en">派生特徴</div><div class="term-def">元の特徴量から作った新しい特徴量（x²など）。</div></div>
+    <div class="term-item"><div class="term-name">Imputation</div><div class="term-en">補完</div><div class="term-def">欠損値を平均などで埋めること。</div></div>
+    <div class="term-item"><div class="term-name">Pipeline</div><div class="term-en">パイプライン</div><div class="term-def">前処理とモデルを順番につないで1つにしたもの。</div></div>
+    <div class="term-item"><div class="term-name">Data leakage</div><div class="term-en">データ漏洩</div><div class="term-def">テスト用の情報が学習に混ざってしまうこと。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>前処理は訓練データだけで学習し、パイプラインにまとめると安全です。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🐼 DTSC520 レッスン：ML③ 特徴量エンジニアリング</p>
+  <p style="margin-top:.5rem;"><a href="ml_validation.html">← ② モデルの検証</a> · <a href="ml_linreg.html">④ 線形回帰 →</a> · <a href="ml_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

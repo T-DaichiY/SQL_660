@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M3 推測の基礎③　標準誤差・信頼区間・効果量と検出力</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 📏 SE・信頼区間・検出力 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy active" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M3 · Foundations of Inference ③ — SE, CI, Effect Size &amp; Power 🍎</div>
+    <h1>🍎 超やさしい版：標準誤差・信頼区間・効果量と検出力</h1>
+  <p>「<strong>標本はどれくらいゆれる？ 母平均はどこにありそう？ 差はどれくらい大きい？</strong>」を、4つのステップで。</p>
+    <div class="unit-nav"><a href="#u1">標準誤差とCLT</a><a href="#u2">信頼区間</a><a href="#u3">効果量</a><a href="#u4">検出力</a><a href="m3_estimation.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong>：①Standard error ／ ②Confidence interval ／ ③④Effect size and power</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>標準誤差と中心極限定理</h2><div class="unit-sub">平均のゆれを測る</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>SE ＝ s ÷ √n。標本平均が「どれくらいゆれるか」の大きさ。人数が多いほど小さくなる。</strong></p></div><div class="big-rule "><div class="ru-arrow">🎯</div><div class="ru-text">クラスから5人ずつ何回も選んで平均を出すと、毎回ちがう。その<strong>平均たちのばらつき</strong>が<strong>標準誤差（SE）</strong>。</div></div>
+  <p>標本を何回も取ると、標本平均は毎回少しずつちがいます。これが<strong>標本のばらつき</strong>。平均たちを並べた分布が<strong>標本分布</strong>で、そのSDが<strong>SE</strong>です。</p>
+  <div class="big-rule mid"><div class="ru-arrow">🔔</div><div class="ru-text"><strong>中心極限定理（CLT）</strong>：n が十分大きいとき、<br>① 標本平均の分布は<strong>正規分布</strong>　② 中心は<strong>母平均 μ</strong>　③ 広がりは<strong>SE ＝ s/√n</strong></div></div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">pop &lt;- <span class="kw">rexp</span>(<span class="nm">100000</span>, rate = <span class="nm">1</span>/<span class="nm">10</span>)</span>
+<span class="cl">means &lt;- <span class="kw">replicate</span>(<span class="nm">10000</span>, mean(<span class="kw">sample</span>(pop, <span class="nm">25</span>)))</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(mea<span class="kw">n</span>s), <span class="kw">sd</span>(mea<span class="kw">n</span>s))</span>
+</pre>
+  <div class="output-reveal">[1] 10.035030  2.008706</div>
+  <p>母集団は右に歪んでいる（平均10、SD約10）のに、n = 25 の標本平均は中心が約10、SDが約2.0（= 10/√25 = 2）になりました。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>SD は「個々のデータ」のばらつき、SE は「<strong>平均</strong>」のばらつき。SE は人数が増えると小さくなる（n が4倍で半分）。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. SE を表す式は？<span class="cp-a">A. SE ＝ s ÷ √n。</span></div><div class="cp-q">Q2. n を25から100にするとSEは？<span class="cp-a">A. 半分になる（√4 ＝ 2 で割られる）。</span></div><div class="cp-q">Q3. CLT の3つの事実は？<span class="cp-a">A. 正規分布・平均＝母平均 μ・SD＝SE。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>信頼区間</h2><div class="unit-sub">1.96 × SE</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>95% 信頼区間 ＝ 標本平均 ± 1.96 × SE。区間が狭いほど、くわしく分かっている。</strong></p></div><div class="big-rule "><div class="ru-arrow">📐</div><div class="ru-text">正規分布の真ん中 <strong>95%</strong> は <strong>−1.96〜+1.96</strong> に入る。だから <strong>1.96 × SE</strong> を平均の前後にとる。</div></div>
+  <p>GPA の例：標本平均 2.75、s ＝ 0.6、n ＝ 36。SE ＝ 0.6/√36 ＝ 0.1。</p>
+  <pre class="code-block">
+<span class="cl">xbar &lt;- <span class="nm">2.75</span>; s &lt;- <span class="nm">0.6</span>; n &lt;- <span class="nm">36</span></span>
+<span class="cl">se &lt;- s / <span class="kw">sqrt</span>(n)</span>
+<span class="cl">xbar + <span class="kw">c</span>(-<span class="nm">1</span>, <span class="nm">1</span>) * <span class="nm">1.96</span> * se</span>
+</pre>
+  <div class="output-reveal">[1] 2.554 2.946</div>
+  <p>95% 信頼区間は <strong>[2.554, 2.946]</strong>。適当な「±0.2」や「±1」と違い、<strong>理由のある幅</strong>です。</p>
+  <div class="big-rule mid"><div class="ru-arrow">⚠️</div><div class="ru-text"><strong>「95%」の意味：</strong>同じやり方で区間を何回も作ると、<strong>そのうち約95%が本当の母平均をつかまえる</strong>。手元の1本が当たる確率が95%、という意味ではありません。</div></div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>釣りのあみを100回投げると、だいたい95回は魚（本当の平均）がかかる、というイメージ。あみ（区間）を細くするには、人数 n を増やす。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 95%CIの式は？<span class="cp-a">A. x̄ ± 1.96 × SE。</span></div><div class="cp-q">Q2. 1.96 はどこから？<span class="cp-a">A. 標準正規分布の真ん中95%の境界（qnorm(0.975)）。</span></div><div class="cp-q">Q3. 区間が狭いと？<span class="cp-a">A. 推定の精度が高い（標本が代表的）。</span></div></div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>効果量</h2><div class="unit-sub">p 値だけでは分からない</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>p 値は人数 n で変わる。効果量は「差の大きさ」。d の目安は 0.2 / 0.5 / 0.8、r の目安は 0.1 / 0.3 / 0.5。</strong></p></div><div class="big-rule "><div class="ru-arrow">⚖️</div><div class="ru-text">同じ「平均の差2・SD10」でも、1群 n＝20 なら p ＝ 0.531、n＝500 なら p ＝ 0.0016。<strong>差の大きさ（d ＝ 0.2）は同じ</strong>。</div></div>
+  <table class="compare-table">
+    <tr><th>効果量</th><th>small</th><th>medium</th><th>large</th></tr>
+    <tr><td>Cohen's d</td><td>0.2</td><td>0.5</td><td>0.8</td></tr>
+    <tr><td>Pearson's r</td><td>0.1</td><td>0.3</td><td>0.5</td></tr>
+  </table>
+  <div class="warn-box">⚠️ d と r は<strong>別のものさし</strong>。混ぜないこと。</div>
+  <div class="big-rule down"><div class="ru-arrow">🙋</div><div class="ru-text">「有意だから重要」と言われたら →「<strong>効果量は？</strong>」</div></div>
+  <p>人数が足りなくて p ＝ 0.063（有意でない）でも、d ＝ 0.8（大）ということがあります（平均の差8、SD10、1群n＝12）。逆に、人数を増やして無理に有意にするのは<strong>p-hacking</strong>で、やってはいけません。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>p 値＝「差がありそうか」、効果量＝「差はどれくらいか」。両方見る。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. d＝0.5 は？<span class="cp-a">A. medium（中）。r の medium は 0.3。</span></div><div class="cp-q">Q2. n を増やすと p と d はどうなる？<span class="cp-a">A. p は小さくなりやすいが、d はほとんど変わらない。</span></div><div class="cp-q">Q3. 有意でない（p＝0.06）なら効果はゼロ？<span class="cp-a">A. いいえ。人数不足で効果を見逃しているだけかもしれない。</span></div></div>
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>検出力</h2><div class="unit-sub">見つけられる確率</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>検出力 ＝ 本当にある効果を見つける確率。目安は 0.8。効果量・n・α・検出力は、3つ決まれば残り1つが決まる。</strong></p></div>
+  <table class="compare-table">
+    <tr><th>効果量 d</th><th>必要な n（1群、α＝0.05、power＝0.8）</th></tr>
+    <tr><td>0.2（small）</td><td>394</td></tr>
+    <tr><td>0.5（medium）</td><td>64</td></tr>
+    <tr><td>0.8（large）</td><td>26</td></tr>
+  </table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">power.t.test</span>(delta = <span class="nm">0.5</span>, sd = <span class="nm">1</span>, sig.level = <span class="nm">0.05</span>, power = <span class="nm">0.8</span>)$n</span>
+</pre>
+  <div class="output-reveal">[1] 63.76576</div>
+  <p>小さな効果を見つけたいなら、たくさんの人が必要。n＝20 では d＝0.5 の効果を見つける確率は約 34%（0.3377）しかありません。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>検出力は「ちゃんと見つけられる力」。ちいさな効果ほど、たくさんの人が必要。有意かどうかより、効果量・人数・検出力を一緒に見るのが大人の統計。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 検出力の目安は？<span class="cp-a">A. 0.8。</span></div><div class="cp-q">Q2. 効果量を小さくすると必要な n は？<span class="cp-a">A. 大きくなる（d＝0.2で394、d＝0.8で26）。</span></div><div class="cp-q">Q3. 検出力＝？（βとの関係）<span class="cp-a">A. 1 − β（βは効果を見逃す確率）。</span></div></div>
+</div>
+<div class="page-nav"><a href="m3_testing.html">← 前のレッスン</a><a href="m3_estimation.html">📊 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• SE ＝ s/√n</p><p style="margin:.4rem 0">• 95%CI ＝ x̄ ± 1.96×SE</p><p style="margin:.4rem 0">• d：0.2/0.5/0.8　r：0.1/0.3/0.5</p><p style="margin:.4rem 0">• 検出力の目安 0.8</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">図解・ミニ練習・英語MCQクイズは <a href="m3_estimation.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M3 推測の基礎③ — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m3_testing.html">← M3 推測の基礎②</a> · <a href="m5_t_intro.html">M5 t検定の入口 →</a> · <a href="m3_estimation.html">📊 本編</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>

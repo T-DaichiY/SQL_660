@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：M6 相関① 散布図と相関係数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M6 📈 相関の基本 🍎 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M3 推測の基礎</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy active" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">650 M4 予測と仮定</span><span class="navg"><a class="n-main" href="r4_assumptions.html">🧪 仮定の検証</a><a class="n-easy" href="r4_assumptions_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r4_prediction.html">🔮 予測区間・信頼区間</a><a class="n-easy" href="r4_prediction_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">650 M5 重回帰</span><span class="navg"><a class="n-main" href="r5_multiple.html">🧱 重回帰・診断</a><a class="n-easy" href="r5_multiple_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_special.html">🧩 VIF・多項・交互作用</a><a class="n-easy" href="r5_special_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r5_selection.html">🪜 変数選択・評価</a><a class="n-easy" href="r5_selection_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">650 M6 ロジスティック回帰</span><span class="navg"><a class="n-main" href="r6_logit_intro.html">🎚️ ロジスティック入門</a><a class="n-easy" href="r6_logit_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_assess.html">📊 モデル評価</a><a class="n-easy" href="r6_logit_assess_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="r6_logit_examples.html">🧪 実例・Shiny</a><a class="n-easy" href="r6_logit_examples_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span><span class="navg"><a class="n-main" href="ex_650_m4.html">650 M4</a></span><span class="navg"><a class="n-main" href="ex_650_m5.html">650 M5</a></span><span class="navg"><a class="n-main" href="ex_650_m6.html">650 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M6 · Correlation ① — Scatterplots &amp; r 🍎</div>
+    <h1>🍎 超やさしい版：相関①（散布図と相関係数）</h1>
+  <p>「<strong>2つの数は、いっしょに動く？</strong>」を、まず<strong>図</strong>で見て、次に<strong>r という1つの数</strong>で表します。</p>
+    <div class="unit-nav"><a href="#u1">散布図</a><a href="#u2">相関係数 r</a><a href="#u3">donorsで探索</a><a href="#u4">相関行列</a><a href="m6_corr_basics.html" class="easy-toplink">📈 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画対応</strong>：①は Correlation 1 (Scatterplots)、②は Correlation 2 (Correlation)、③は Correlation 3 (Exploring with Scatter plots)、④は Correlation 4 (Correlation Matrices and scatterplot matrices)。</div>
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>散布図ってなに？</h2><div class="unit-sub">2つの数を点で描く</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>散布図は「向き・形・強さ・特別な点」の4つを見る。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🖼️</div>
+    <div class="ru-text"><strong>数字の表だけだと気づけないことも、図にするとすぐ分かる。</strong>2つの数の関係を見るには<strong>散布図</strong>を描こう。</div>
+  </div>
+  <p>散布図は、<strong>同じ人（もの）で測った2つの数</strong>を、横軸と縦軸にして点で描いた図です。例：検索結果の「順位（1〜10位）」と「クリックした人の割合」。</p>
+  <table class="compare-table">
+    <tr><th>見るところ</th><th>ひとこと</th><th>順位とクリック率の例</th></tr>
+    <tr><td>向き direction</td><td>左から右へ見て、上がる？下がる？</td><td>下がる（negative）</td></tr>
+    <tr><td>形 form</td><td>まっすぐ？曲がってる？</td><td>曲がってる（non-linear）</td></tr>
+    <tr><td>強さ strength</td><td>点が1本の線にどれだけ近い？</td><td>近い（strong）</td></tr>
+    <tr><td>特別な点</td><td>はずれた点（outlier）・かたまり（cluster）</td><td>なし</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><code>plot(x, y, pch = 16)</code> で散布図。<code>pch = 16</code> は塗りつぶしの丸。<code>xlab</code>・<code>ylab</code> で軸の名前を付けます。</p></div>
+  <div class="big-rule mid">
+    <div class="ru-arrow">📝</div>
+    <div class="ru-text"><strong>There is a strong negative non-linear association between position and click-through rate.</strong></div>
+  </div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 散布図に使うのは、どんな種類の変数2つ？<span class="cp-a">A. 量的変数（数）2つ。</span></div><div class="cp-q">Q2. 「下がっている」は向きで言うと？<span class="cp-a">A. negative（負）。左から右へ読んで下りなら負、上りなら正。</span></div><div class="cp-q">Q3. 「correlation（相関）」という言葉は、どんな変数に使える？<span class="cp-a">A. 量的変数のときだけ。カテゴリ変数なら association か relationship。</span></div></div>
+
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>相関係数 r</h2><div class="unit-sub">いっしょに動く度合いを1つの数で</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>r は −1 〜 +1。符号が向き、大きさ（|r|）が強さ。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🔢</div>
+    <div class="ru-text"><strong>相関係数 r：−1 〜 +1 の数。</strong>＋は右上がり、−は右下がり、0は「直線の関係なし」。</div>
+  </div>
+  <table class="compare-table">
+    <tr><th>|r|（符号をとった大きさ）</th><th>強さ（この授業の基準）</th></tr>
+    <tr><td>0.5 以下</td><td>weak（弱い）</td></tr>
+    <tr><td>0.5 〜 0.8</td><td>moderate（中くらい）</td></tr>
+    <tr><td>0.8 より大きい</td><td>strong（強い）</td></tr>
+  </table>
+  <p>順位とクリック率は曲線でも、<code>cor(position, rate)</code> は <strong>−0.902</strong>（強い負）。r = ±1 になるのは、点が<strong>ぴったり一直線</strong>のときだけです。</p>
+  <div class="big-rule mid">
+    <div class="ru-arrow">⚠️</div>
+    <div class="ru-text"><strong>r = 0 は「線形の関係がない」だけ。</strong>U字のカーブがあっても r はほぼ 0（例：0.006）。だから先に散布図を見る。</div>
+  </div>
+  <div class="big-rule down">
+    <div class="ru-arrow">🎯</div>
+    <div class="ru-text"><strong>外れ値に弱い！</strong>たった1点で r が <strong>−0.235</strong> から <strong>−0.968</strong> に変わる例。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>試験では、<strong>散布図の画像を見て r を当てる</strong>問題が出ます。「右上がりで点が線に近い → 1 に近い正の数」のように、向きと強さから推理しよう。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. r = −0.97 はどんな関係？<span class="cp-a">A. 強い負の相関（右下がりで、点がほぼ一直線）。</span></div><div class="cp-q">Q2. r = 0.3 は強い？弱い？<span class="cp-a">A. 弱い（0.5 以下）。</span></div><div class="cp-q">Q3. 外れ値を1つ除くと r はどう変わった？<span class="cp-a">A. −0.235 から −0.968 へ。外れ値が相関を弱めていた。r は外れ値に強くない（not resistant）。</span></div></div>
+
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>donors で探索</h2><div class="unit-sub">実データで散布図と cor</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>summary → 散布図 → cor の順。列は donors$列名。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🔍</div>
+    <div class="ru-text"><strong>データを手に入れたら：summary → 散布図 → cor。</strong></div>
+  </div>
+  <p>donors は、退役軍人の団体にダイレクトメールで寄付を募った結果のデータ（95,412人、22変数）です。</p>
+<pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl"><span class="kw">summary</span>(donors)</span>
+<span class="cl"><span class="kw">plot</span>(donors$averageGiftAmount, donors$numberGifts,</span>
+<span class="cl">     cex = <span class="nm">0.5</span>, las = <span class="nm">1</span>, pch = <span class="nm">16</span>)</span>
+<span class="cl"><span class="kw">cor</span>(donors$averageGiftAmount, donors$numberGifts)</span>
+</pre><div class="output-reveal">[1] -0.2569922</div>
+  <ul>
+    <li><code>donors$列名</code> と書かないと「object not found」。R はどのデータか分からないから。</li>
+    <li>r は負だけど弱い（−0.26）。形は曲線。大多数は「平均 $100 未満・100回未満」のかたまり。</li>
+    <li>ほかに、回数は多いけど金額が小さい人、金額は大きいけど回数が少ない人もいる。→ 図にしないと分からない発見！</li>
+    <li><strong>jitter</strong>：重なった点を少しずらして、点の多さ（密度）を見えるようにする。</li>
+  </ul>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p><strong>Your turn</strong>：donors から好きな2変数を選んで、散布図と相関を。自分のデータで練習して、LinkedIn やポートフォリオに載せるのもおすすめ。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. <code>plot(averageGiftAmount, numberGifts)</code> がエラーになるのはなぜ？<span class="cp-a">A. R がどのデータフレームか分からないから。<code>donors$averageGiftAmount</code> のように書く。</span></div><div class="cp-q">Q2. jitter って何のため？<span class="cp-a">A. 重なった点を少しずらして、点がどれだけ集まっているか見やすくするため。</span></div></div>
+
+</div>
+<div class="unit" id="u4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>相関行列と散布図行列</h2><div class="unit-sub">たくさんの変数を一度に</div></div>
+  </div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>cor() に量的な列をまとめて入れると相関行列。NA があるなら use = "complete.obs"。</strong></p></div>
+  <div class="big-rule ">
+    <div class="ru-arrow">🧮</div>
+    <div class="ru-text"><strong>相関行列：全部の組み合わせの r を表にしたもの。</strong></div>
+  </div>
+  <p>量的変数だけを選んで <code>cor()</code> に入れます。欠損値（NA）があると NA だらけになるので、<code>use = "complete.obs"</code> を付けます。</p>
+<pre class="code-block">
+<span class="cl">donorsNumeric &lt;- donors[ , <span class="kw">c</span>(<span class="st">"numberChildren"</span>, <span class="st">"incomeRating"</span>,</span>
+<span class="cl">                             <span class="st">"wealthRating"</span>, <span class="st">"smallestGiftAmount"</span>,</span>
+<span class="cl">                             <span class="st">"yrsFirstDon"</span>)]</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(donorsNumeric, use = <span class="st">"complete.obs"</span>), <span class="nm">2</span>)</span>
+</pre>
+  <table class="compare-table">
+    <tr><th></th><th>incomeRating</th><th>wealthRating</th><th>smallestGiftAmount</th><th>yrsFirstDon</th></tr>
+    <tr><th>incomeRating</th><td>1.00</td><td><strong>0.45</strong></td><td>0.11</td><td>−0.06</td></tr>
+    <tr><th>wealthRating</th><td><strong>0.45</strong></td><td>1.00</td><td>0.06</td><td>−0.02</td></tr>
+    <tr><th>smallestGiftAmount</th><td>0.11</td><td>0.06</td><td>1.00</td><td><strong>−0.46</strong></td></tr>
+    <tr><th>yrsFirstDon</th><td>−0.06</td><td>−0.02</td><td>−0.46</td><td>1.00</td></tr>
+  </table>
+  <p style="font-size:.85rem">（5変数のうち、説明に使う4つだけ抜き出した表。numberChildren は他とほぼ無関係。）</p>
+  <ul>
+    <li>対角線はいつも <strong>1</strong>（自分自身との相関）。</li>
+    <li>折り返すと同じ値（A と B の相関＝B と A の相関）。</li>
+    <li>いちばん強い正：income と wealth（0.45）。絶対値で最大：yrsFirstDon と smallestGiftAmount（−0.46）。どちらも weak。</li>
+  </ul>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>散布図をまとめて見るなら <code>pairs()</code>。<code>pairs(~ a + b + c, data = donors, na.action = na.omit)</code> の書き方もあります。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 相関行列の対角線は？<span class="cp-a">A. いつも 1。</span></div><div class="cp-q">Q2. <code>cor(donorsNumeric)</code> が NA だらけのとき、付ける引数は？<span class="cp-a">A. <code>use = "complete.obs"</code></span></div><div class="cp-q">Q3. 散布図をまとめて描く関数は？<span class="cp-a">A. <code>pairs()</code></span></div></div>
+
+</div>
+<div class="page-nav"><a href="index.html">🏠 概要へ</a><a href="m6_corr_basics.html">📈 本編を読む →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 散布図：向き・形・強さ・特別な点</p><p style="margin:.4rem 0">• r：−1〜+1、|r| ≤ 0.5 weak、&gt; 0.8 strong</p><p style="margin:.4rem 0">• r = 0 は「直線の関係なし」</p><p style="margin:.4rem 0">• 外れ値で r は大きく変わる</p><p style="margin:.4rem 0">• 相関行列：対角線は1、折り返すと同じ</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">図・練習問題・英語MCQクイズは <a href="m6_corr_basics.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 統計レッスン：M6 相関① — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_corr_basics.html">← 本編</a> · <a href="m5_chi_two_easy.html">← χ²②</a> · <a href="m6_corr_calc.html">相関②へ →</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){
+  q.addEventListener('click', function(){ q.classList.toggle('open'); });
+});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+</body></html>
