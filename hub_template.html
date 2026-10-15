@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>データサイエンス 学習ハブ</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1e293b;--sub:#64748b;--line:#e2e8f0;--acc:#2563eb;--ok:#16a34a;--star:#f59e0b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#1e293b;--ink:#e2e8f0;--sub:#94a3b8;--line:#334155;--acc:#60a5fa}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.6}
+.hero{background:linear-gradient(135deg,#1e293b,#1d4ed8 55%,#7c3aed);color:#fff;padding:2.2rem 16px 4.5rem;text-align:center}
+.hero h1{margin:0 0 .4rem;font-size:1.9rem}.hero p{margin:0;opacity:.9;font-size:.95rem}
+.wrap{max-width:1100px;margin:-3rem auto 3rem;padding:0 16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;box-shadow:0 4px 14px rgba(0,0,0,.06);margin-bottom:1rem}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+input[type=search]{flex:1;min-width:200px;padding:.65rem .9rem;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:1rem}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:.35rem .85rem;font-size:.85rem;cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn{border:0;background:var(--acc);color:#fff;border-radius:10px;padding:.55rem 1rem;font-size:.9rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.alt{background:var(--star)}
+.prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem}
+.pc{background:var(--bg);border-radius:12px;padding:.7rem .9rem}.pc b{font-size:.95rem}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:.4rem}.bar i{display:block;height:100%;background:var(--ok)}
+.pc small{color:var(--sub)}
+h2.mod{margin:1.6rem 0 .6rem;font-size:1.05rem;border-left:4px solid var(--acc);padding-left:.6rem}
+.cname{margin:2rem 0 0;font-size:1.3rem}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:.7rem}
+.it{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem .9rem;display:flex;flex-direction:column;gap:.3rem}
+.it.done{opacity:.62}.it .tt{font-weight:700}.it .tt a{color:inherit;text-decoration:none}.it .tt a:hover{color:var(--acc)}
+.it .tg{font-size:.72rem;color:var(--sub)}.it .ds{font-size:.82rem;color:var(--sub)}
+.acts{display:flex;gap:.4rem;margin-top:.2rem;flex-wrap:wrap}
+.acts a,.acts button{font-size:.78rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:.2rem .6rem;cursor:pointer;text-decoration:none}
+.acts .on-done{background:var(--ok);color:#fff;border-color:var(--ok)}.acts .on-star{background:var(--star);color:#fff;border-color:var(--star)}
+.none{text-align:center;color:var(--sub);padding:2rem}
+@media(max-width:600px){.hero h1{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<div class="hero"><h1>🎓 データサイエンス 学習ハブ</h1><p>SQL・統計・Python の全レッスンを1か所に。検索して、復習済み✓／要復習★を付けながら復習できます。</p></div>
+<div class="wrap">
+ <div class="panel">
+  <div class="row"><input type="search" id="q" placeholder="🔍 キーワードで検索（例：JOIN、t検定、groupby、ロジスティック）"></div>
+  <div class="row" style="margin-top:.6rem" id="crs"></div>
+  <div class="row" style="margin-top:.5rem">
+   <button class="chip" id="fUn">未復習のみ</button><button class="chip" id="fSt">★要復習のみ</button><button class="chip" id="fPr">🏋️ 演習のみ</button><button class="chip" id="fLe">📘 レッスンのみ</button>
+   <span style="flex:1"></span>
+   <a class="btn" id="cont" href="#" hidden>▶ 続きから</a><button class="btn alt" id="rnd">🎲 ★からランダム復習</button>
+  </div>
+ </div>
+ <div class="panel"><div class="prog" id="prog"></div></div>
+ <div id="out"></div>
+</div>
+<script>
+var D=/*DATA*/null;
+var KEY='dsHub:status',VK='dsHub:last';
+function ld(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var st=ld(KEY,{}),flt={c:'all',un:0,star:0,pr:0,le:0},q='';
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function lessons(){return D.items.filter(function(i){return !i.practice})}
+function render(){
+  var items=D.items.filter(function(i){
+    if(flt.c!=='all'&&i.course!==flt.c)return false;
+    if(flt.un&&st[i.id]==='done')return false;
+    if(flt.star&&st[i.id]!=='star')return false;
+    if(flt.pr&&!i.practice)return false;
+    if(flt.le&&i.practice)return false;
+    if(q){var h=(i.title+' '+i.desc+' '+i.tag+' '+i.mod).toLowerCase();return q.toLowerCase().split(/\s+/).every(function(w){return h.indexOf(w)>=0})}
+    return true});
+  var html='';
+  D.courses.forEach(function(c){
+    var ci=items.filter(function(i){return i.course===c.id});if(!ci.length)return;
+    html+='<h2 class="cname">'+c.icon+' '+esc(c.name)+' <a class="chip" style="text-decoration:none;font-size:.75rem" href="'+c.home+'">概要ページ</a></h2>';
+    var mods=[];ci.forEach(function(i){if(mods.indexOf(i.mod)<0)mods.push(i.mod)});
+    mods.forEach(function(m){
+      html+='<h2 class="mod">'+esc(m||'レッスン')+'</h2><div class="list">';
+      ci.filter(function(i){return i.mod===m}).forEach(function(i){
+        var s=st[i.id];
+        html+='<div class="it'+(s==='done'?' done':'')+'"><div class="tg">'+i.icon+' '+esc(i.tag)+'</div><div class="tt"><a href="'+i.id+'">'+esc(i.title)+'</a></div><div class="ds">'+esc(i.desc)+'</div><div class="acts"><a href="'+i.id+'">'+(i.practice?'🏋️ 演習へ':'📘 本編')+'</a>'+(i.easy?'<a href="'+i.easy+'">🍎 やさしい版</a>':'')+'<button data-id="'+i.id+'" data-a="done" class="'+(s==='done'?'on-done':'')+'">✓ 復習済み</button><button data-id="'+i.id+'" data-a="star" class="'+(s==='star'?'on-star':'')+'">★ 要復習</button></div></div>'});
+      html+='</div>'});
+  });
+  $('out').innerHTML=html||'<div class="none">該当するページがありません</div>';
+  var ph='';
+  D.courses.forEach(function(c){var all=lessons().filter(function(i){return i.course===c.id}),dn=all.filter(function(i){return st[i.id]==='done'}).length,sr=all.filter(function(i){return st[i.id]==='star'}).length;
+    ph+='<div class="pc"><b>'+c.icon+' '+esc(c.name)+'</b><div class="bar"><i style="width:'+(all.length?100*dn/all.length:0)+'%"></i></div><small>復習済み '+dn+' / '+all.length+' レッスン · ★ '+sr+'</small></div>'});
+  $('prog').innerHTML=ph;
+}
+$('out').addEventListener('click',function(e){var b=e.target.closest('button[data-id]');if(!b)return;var id=b.dataset.id,a=b.dataset.a;st[id]=st[id]===a?undefined:a;if(!st[id])delete st[id];sv(KEY,st);render()});
+$('q').addEventListener('input',function(){q=this.value.trim();render()});
+[['fUn','un'],['fSt','star'],['fPr','pr'],['fLe','le']].forEach(function(p){$(p[0]).onclick=function(){flt[p[1]]=flt[p[1]]?0:1;this.classList.toggle('on',!!flt[p[1]]);render()}});
+var cr=$('crs');[{id:'all',name:'すべて'}].concat(D.courses).forEach(function(c){var b=document.createElement('button');b.className='chip'+(c.id==='all'?' on':'');b.textContent=(c.icon?c.icon+' ':'')+c.name;b.onclick=function(){flt.c=c.id;[].forEach.call(cr.children,function(x){x.classList.remove('on')});b.classList.add('on');render()};cr.appendChild(b)});
+$('rnd').onclick=function(){var s=D.items.filter(function(i){return st[i.id]==='star'});if(!s.length){alert('★要復習のページがまだありません。各ページの ★ ボタンで追加できます。');return}location.href=s[Math.floor(Math.random()*s.length)].id};
+var last=ld(VK,null);if(last&&last.id){var a=$('cont');a.hidden=false;a.href=last.id;a.textContent='▶ 続きから：'+(last.title||last.id).slice(0,24)}
+render();
+</script>
+</body>
+</html>
