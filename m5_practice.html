@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 演習アリーナ — テーブル設計と制約</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=10">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="sql_index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ M5 演習アリーナ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m2_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m4_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m8"><span class="nav-mod">M9 Python×SQL</span><span class="navg"><a class="n-main" href="m9_setup.html">🔌 つなぐ準備</a><a class="n-easy" href="m9_setup_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_connect.html">🔗 接続</a><a class="n-easy" href="m9_connect_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_execute.html">▶️ 実行</a><a class="n-easy" href="m9_execute_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M5 演習アリーナ · テーブル設計と制約</div>
+  <h1>🏗️ M5 演習アリーナ — テーブル設計と制約</h1>
+  <p>命名規則・主キー・複合キー・外部キー・ON DELETE CASCADE・制約（NOT NULL / UNIQUE / CHECK）・ERD・インデックスを、実際に <code>CREATE TABLE</code> を書いて練習します。基礎5問・中級5問・上級5問の計15問。テーブルを作る問題は、できあがった構造（と削除後のデータ）で自動採点します。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="primary_key.html">🔑 レッスンへ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <p style="margin-top:.5rem">🏗️ このブラウザ版の SQLite は PostgreSQL ではないので、<code>GENERATED ALWAYS AS IDENTITY</code> や <code>SERIAL</code> は使いません（主キーは <code>INTEGER PRIMARY KEY</code>）。構造の確認には <code>pragma_table_info</code>・<code>pragma_foreign_key_list</code>・<code>sqlite_master</code> を使います。</p>
+  <p style="margin-top:.5rem">⚠️ <strong>外部キーの動作確認（ON DELETE CASCADE）</strong>：SQLite は初期状態で外部キー制約がオフです（PostgreSQL では常にオン）。カスケード削除を試す問題では、スクリプトの<strong>先頭に <code>PRAGMA foreign_keys = ON;</code></strong> を書いてください。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏗️ SQLレッスン：M5 演習アリーナ — テーブル設計と制約</p>
+  <p style="margin-top:.5rem;"><a href="naming.html">📝 命名</a> · <a href="primary_key.html">🔑 PK①</a> · <a href="key_types.html">🗝️ キー分類</a> · <a href="composite_surrogate.html">🧩 PK②</a> · <a href="foreign_key.html">🔗 FK</a> · <a href="cascade.html">🌊 Cascade</a> · <a href="constraints.html">🛡️ 制約</a> · <a href="erd.html">🗺️ ERD</a> · <a href="indexes.html">📇 Index</a> · <a href="sql_index.html">🏠 概要へ</a></p>
+</footer>
+
+<script>window.ARENA_OPTS = { pgCompat: true, schemaGroups: ["company", "banking", "university"] };</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js?v=15"></script>
+<script>
+var SQL_PROBLEMS = [
+ {
+  "id": "m5-b1",
+  "tier": "basic",
+  "title": "snake_caseの列名だけを取り出す",
+  "scenario": "命名規則（snake_case）の確認です。<code>employees</code>テーブルの列名のうち、<strong>アンダースコア <code>_</code> を含む列名</strong>だけを取り出してください（<code>pragma_table_info('employees')</code>の<code>name</code>列を使います）。結果は<strong>3行</strong>のはずです。",
+  "concept": "命名規則（snake_case）／pragma_table_info",
+  "hint": "LIKE の <code>_</code> は「任意の1文字」というワイルドカードです。<code>LIKE '%_%'</code> だと全列にマッチしてしまうので、<code>INSTR(name, '_') &gt; 0</code> を使うか <code>ESCAPE</code> を指定しましょう。",
+  "starter": "SELECT name\nFROM pragma_table_info('employees')\nWHERE ",
+  "solution": "SELECT name\nFROM pragma_table_info('employees')\nWHERE INSTR(name, '_') > 0\nORDER BY cid;"
+ },
+ {
+  "id": "m5-b2",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "主キー付きの projects テーブルを作る",
+  "scenario": "<code>projects</code>テーブルを作ってください。列は <strong>project_id TEXT（主キー）</strong>、<strong>project_name TEXT</strong>、<strong>budget INTEGER</strong> の3つです（列名・型・順番はこの通りに）。",
+  "concept": "PRIMARY KEY（列制約）",
+  "hint": "project_id TEXT PRIMARY KEY のように、列の定義の後ろに制約を書きます。",
+  "starter": "-- projects テーブルを作成\n",
+  "solution": "CREATE TABLE projects (\n  project_id TEXT PRIMARY KEY,\n  project_name TEXT,\n  budget INTEGER\n);",
+  "verify": "SELECT name, type, pk FROM pragma_table_info('projects') ORDER BY cid"
+ },
+ {
+  "id": "m5-b3",
+  "tier": "basic",
+  "title": "department テーブルの主キーを調べる",
+  "scenario": "<code>department</code>テーブルの<strong>主キー列</strong>の名前と型を調べてください（<code>pragma_table_info('department')</code>の<code>pk</code>列が0より大きい行）。<code>dept_name</code>のような意味を持つ値のキーは<strong>自然キー</strong>です。結果は<strong>1行（name, type）</strong>のはずです。",
+  "concept": "主キー・自然キー（key_types）",
+  "hint": "SELECT name, type FROM pragma_table_info('department') WHERE pk &gt; 0",
+  "starter": "SELECT name, type\nFROM pragma_table_info('department')\nWHERE ",
+  "solution": "SELECT name, type\nFROM pragma_table_info('department')\nWHERE pk > 0;"
+ },
+ {
+  "id": "m5-b4",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "NOT NULL と UNIQUE を付けた members",
+  "scenario": "<code>members</code>テーブルを作ってください。<strong>member_id INTEGER PRIMARY KEY</strong>、<strong>email TEXT</strong>（<strong>NOT NULL かつ UNIQUE</strong>）、<strong>member_name TEXT</strong>（<strong>NOT NULL</strong>）の3列です。",
+  "concept": "NOT NULL / UNIQUE 制約",
+  "hint": "email TEXT NOT NULL UNIQUE — 制約は続けて何個でも書けます。",
+  "starter": "-- members テーブルを作成\n",
+  "solution": "CREATE TABLE members (\n  member_id INTEGER PRIMARY KEY,\n  email TEXT NOT NULL UNIQUE,\n  member_name TEXT NOT NULL\n);",
+  "verify": "SELECT 'column' AS kind, name AS a, \"notnull\" AS b FROM pragma_table_info('members')\nUNION ALL\nSELECT 'unique_index', origin, \"unique\" FROM pragma_index_list('members')\nORDER BY 1, 2"
+ },
+ {
+  "id": "m5-b5",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "外部キー列にインデックスを作る",
+  "scenario": "<code>employees</code>テーブルの<code>department_id</code>列にインデックスを作ってください。名前は <strong>idx_employees_department_id</strong> にします。",
+  "concept": "CREATE INDEX",
+  "hint": "CREATE INDEX 名前 ON テーブル名 (列名);",
+  "starter": "-- インデックスを作成\n",
+  "solution": "CREATE INDEX idx_employees_department_id ON employees (department_id);",
+  "verify": "SELECT m.name, m.tbl_name, c.name AS column_name\nFROM sqlite_master m, pragma_index_info(m.name) c\nWHERE m.type = 'index' AND m.name NOT LIKE 'sqlite_autoindex%'\nORDER BY m.name",
+  "requireKeywords": [
+   "CREATE INDEX"
+  ]
+ },
+ {
+  "id": "m5-i1",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "複合主キーのテーブルを作る",
+  "scenario": "社員が複数のプロジェクトに参加する記録を持つ <code>assignments</code> テーブルを作ってください。列は <strong>employee_id INTEGER</strong>、<strong>project_id TEXT</strong>、<strong>role TEXT</strong>。<strong>(employee_id, project_id) の2列で1つの主キー</strong>（複合主キー）にします。",
+  "concept": "複合主キー（テーブル制約）",
+  "hint": "列定義の後ろに <code>PRIMARY KEY (employee_id, project_id)</code> をテーブル制約として書きます。列制約の PRIMARY KEY を2つ書くことはできません。",
+  "starter": "-- assignments を作成（複合主キー）\n",
+  "solution": "CREATE TABLE assignments (\n  employee_id INTEGER,\n  project_id TEXT,\n  role TEXT,\n  PRIMARY KEY (employee_id, project_id)\n);",
+  "verify": "SELECT name, type, pk FROM pragma_table_info('assignments') ORDER BY cid"
+ },
+ {
+  "id": "m5-i2",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "外部キーで employees とつなぐ",
+  "scenario": "社員の扶養家族を記録する <code>dependents</code> テーブルを作ってください。列は <strong>dependent_id INTEGER PRIMARY KEY</strong>、<strong>employee_id INTEGER NOT NULL</strong>、<strong>dependent_name TEXT</strong>。<code>employee_id</code> は <strong>employees(employee_id) を参照する外部キー</strong>にします。",
+  "concept": "FOREIGN KEY / REFERENCES",
+  "hint": "employee_id INTEGER NOT NULL REFERENCES employees (employee_id)、または末尾に FOREIGN KEY (employee_id) REFERENCES employees (employee_id)。",
+  "starter": "-- dependents を作成（employee_id は外部キー）\n",
+  "solution": "CREATE TABLE dependents (\n  dependent_id INTEGER PRIMARY KEY,\n  employee_id INTEGER NOT NULL,\n  dependent_name TEXT,\n  FOREIGN KEY (employee_id) REFERENCES employees (employee_id)\n);",
+  "verify": "SELECT \"from\", \"table\", \"to\" FROM pragma_foreign_key_list('dependents')\nUNION ALL\nSELECT name, type, \"notnull\" FROM pragma_table_info('dependents')\nORDER BY 1"
+ },
+ {
+  "id": "m5-i3",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "CHECK と DEFAULT のあるボーナス表",
+  "scenario": "<code>bonuses</code> テーブルを作ってください。<strong>bonus_id INTEGER PRIMARY KEY</strong>、<strong>employee_id INTEGER NOT NULL</strong>、<strong>amount INTEGER NOT NULL</strong>（<strong>CHECK (amount &gt; 0)</strong>）、<strong>status TEXT</strong>（<strong>DEFAULT 'pending'</strong>）の4列です。続けて <code>(1, 5, 3000)</code> を、<code>employee_id</code> と <code>amount</code> だけを指定して1行 INSERT してください（status は DEFAULT に任せる）。",
+  "concept": "CHECK 制約 / DEFAULT",
+  "hint": "amount INTEGER NOT NULL CHECK (amount &gt; 0)、status TEXT DEFAULT 'pending'。INSERT INTO bonuses (bonus_id, employee_id, amount) VALUES (1, 5, 3000);",
+  "starter": "-- bonuses を作成して1行追加\n",
+  "solution": "CREATE TABLE bonuses (\n  bonus_id INTEGER PRIMARY KEY,\n  employee_id INTEGER NOT NULL,\n  amount INTEGER NOT NULL CHECK (amount > 0),\n  status TEXT DEFAULT 'pending'\n);\nINSERT INTO bonuses (bonus_id, employee_id, amount) VALUES (1, 5, 3000);",
+  "verify": "SELECT 'row' AS k, bonus_id || '/' || employee_id || '/' || amount || '/' || status AS v FROM bonuses\nUNION ALL\nSELECT 'has_check', instr(lower(replace(replace(sql, ' ', ''), char(10), '')), 'check(amount>0)') > 0 FROM sqlite_master WHERE name = 'bonuses'\nUNION ALL\nSELECT 'notnull_' || name, \"notnull\" FROM pragma_table_info('bonuses')\nORDER BY 1"
+ },
+ {
+  "id": "m5-i4",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "ON DELETE CASCADE：親を消すと子も消える",
+  "scenario": "<code>teams</code>（<strong>team_id INTEGER PRIMARY KEY, team_name TEXT</strong>）と <code>team_members</code>（<strong>member_id INTEGER PRIMARY KEY, team_id INTEGER, member_name TEXT</strong>）を作ります。<code>team_members.team_id</code> は <code>teams</code> を参照し、<strong>ON DELETE CASCADE</strong> を付けてください。チーム (1,'Alpha')・(2,'Beta') と、メンバー (1,1,'Ann')・(2,1,'Bob')・(3,2,'Cid') を追加し、<strong>チーム1を削除</strong>します。<br>⚠️ SQLite（このブラウザ版）は外部キーの動作が初期状態でオフなので、スクリプトの<strong>最初に <code>PRAGMA foreign_keys = ON;</code></strong> を書いてください（PostgreSQLでは常にオンです）。",
+  "concept": "ON DELETE CASCADE（実演）",
+  "hint": "PRAGMA foreign_keys = ON; → CREATE TABLE ×2 → INSERT → DELETE FROM teams WHERE team_id = 1; 最後に残るメンバーは Cid だけのはずです。",
+  "starter": "PRAGMA foreign_keys = ON;\n-- teams / team_members を作成 → INSERT → チーム1を削除\n",
+  "solution": "PRAGMA foreign_keys = ON;\nCREATE TABLE teams (team_id INTEGER PRIMARY KEY, team_name TEXT);\nCREATE TABLE team_members (\n  member_id INTEGER PRIMARY KEY,\n  team_id INTEGER REFERENCES teams (team_id) ON DELETE CASCADE,\n  member_name TEXT\n);\nINSERT INTO teams VALUES (1, 'Alpha'), (2, 'Beta');\nINSERT INTO team_members VALUES (1, 1, 'Ann'), (2, 1, 'Bob'), (3, 2, 'Cid');\nDELETE FROM teams WHERE team_id = 1;",
+  "verify": "SELECT 'team' AS k, team_name AS v FROM teams\nUNION ALL\nSELECT 'member', member_name FROM team_members\nUNION ALL\nSELECT 'on_delete', on_delete FROM pragma_foreign_key_list('team_members')\nORDER BY 1, 2",
+  "requireKeywords": [
+   "CASCADE"
+  ]
+ },
+ {
+  "id": "m5-i5",
+  "tier": "intermediate",
+  "title": "ERDを読む：customer を参照している表",
+  "scenario": "銀行DBのERDで、<code>customer</code>テーブルを<strong>外部キーで参照している子テーブル</strong>とその<strong>外部キー列</strong>を調べてください（<code>sqlite_master</code>と<code>pragma_foreign_key_list</code>を組み合わせます）。列は <strong>child_table, fk_column</strong> の2つ、結果は<strong>2行</strong>（depositor・borrower）です。",
+  "concept": "ERDの読み方（親子関係）／pragma_foreign_key_list",
+  "hint": "FROM sqlite_master m, pragma_foreign_key_list(m.name) f WHERE m.type = 'table' AND f.\"table\" = 'customer'",
+  "starter": "SELECT m.name AS child_table, f.\"from\" AS fk_column\nFROM sqlite_master m, pragma_foreign_key_list(m.name) f\nWHERE ",
+  "solution": "SELECT m.name AS child_table, f.\"from\" AS fk_column\nFROM sqlite_master m, pragma_foreign_key_list(m.name) f\nWHERE m.type = 'table' AND f.\"table\" = 'customer'\nORDER BY m.name;"
+ },
+ {
+  "id": "m5-a1",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "多対多の中間テーブルを設計する",
+  "scenario": "社員とスキルの多対多を表します。<code>skills</code>（<strong>skill_id INTEGER PRIMARY KEY, skill_name TEXT NOT NULL UNIQUE</strong>）と、中間テーブル <code>employee_skills</code>（<strong>employee_id INTEGER, skill_id INTEGER, level INTEGER</strong>）を作ってください。<code>employee_skills</code> は <strong>(employee_id, skill_id) の複合主キー</strong>で、<strong>employee_id → employees(employee_id)</strong>、<strong>skill_id → skills(skill_id)</strong> の2つの外部キーを持ちます。skills に (1,'SQL')・(2,'Python')、employee_skills に (1,1,5)・(1,2,4)・(2,1,3) を追加してください。",
+  "concept": "中間テーブル（複合PK＋2つのFK）",
+  "hint": "PRIMARY KEY (employee_id, skill_id), FOREIGN KEY (employee_id) REFERENCES employees (employee_id), FOREIGN KEY (skill_id) REFERENCES skills (skill_id)。親（skills）を先に作ります。",
+  "starter": "-- skills → employee_skills の順に作成して INSERT\n",
+  "solution": "CREATE TABLE skills (\n  skill_id INTEGER PRIMARY KEY,\n  skill_name TEXT NOT NULL UNIQUE\n);\nCREATE TABLE employee_skills (\n  employee_id INTEGER,\n  skill_id INTEGER,\n  level INTEGER,\n  PRIMARY KEY (employee_id, skill_id),\n  FOREIGN KEY (employee_id) REFERENCES employees (employee_id),\n  FOREIGN KEY (skill_id) REFERENCES skills (skill_id)\n);\nINSERT INTO skills VALUES (1, 'SQL'), (2, 'Python');\nINSERT INTO employee_skills VALUES (1, 1, 5), (1, 2, 4), (2, 1, 3);",
+  "verify": "SELECT 'fk' AS k, \"from\" AS a, \"table\" AS b FROM pragma_foreign_key_list('employee_skills')\nUNION ALL\nSELECT 'pk', name, pk FROM pragma_table_info('employee_skills') WHERE pk > 0\nUNION ALL\nSELECT 'skill_unique', origin, \"unique\" FROM pragma_index_list('skills')\nUNION ALL\nSELECT 'row', employee_id, skill_id || ':' || level FROM employee_skills\nORDER BY 1, 2, 3"
+ },
+ {
+  "id": "m5-a2",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "3階層のカスケード削除",
+  "scenario": "<code>depts</code>（<strong>dept_id INTEGER PRIMARY KEY</strong>）→ <code>staff</code>（<strong>staff_id INTEGER PRIMARY KEY, dept_id INTEGER</strong>）→ <code>timesheets</code>（<strong>sheet_id INTEGER PRIMARY KEY, staff_id INTEGER</strong>）の3つを作り、子の外部キーには<strong>どちらも ON DELETE CASCADE</strong> を付けてください。depts に 1・2、staff に (10,1)・(11,1)・(20,2)、timesheets に (100,10)・(101,11)・(102,11)・(200,20) を入れ、<strong>dept 1 を削除</strong>します。最初に <code>PRAGMA foreign_keys = ON;</code> を忘れずに。dept 1 を消すと staff 10・11、timesheets 100〜102 まで連鎖して消えます。",
+  "concept": "連鎖するON DELETE CASCADE",
+  "hint": "staff.dept_id → depts、timesheets.staff_id → staff の両方に ON DELETE CASCADE。削除は DELETE FROM depts WHERE dept_id = 1; の1文だけです。",
+  "starter": "PRAGMA foreign_keys = ON;\n-- 3テーブルを作成 → INSERT → dept 1 を削除\n",
+  "solution": "PRAGMA foreign_keys = ON;\nCREATE TABLE depts (dept_id INTEGER PRIMARY KEY);\nCREATE TABLE staff (\n  staff_id INTEGER PRIMARY KEY,\n  dept_id INTEGER REFERENCES depts (dept_id) ON DELETE CASCADE\n);\nCREATE TABLE timesheets (\n  sheet_id INTEGER PRIMARY KEY,\n  staff_id INTEGER REFERENCES staff (staff_id) ON DELETE CASCADE\n);\nINSERT INTO depts VALUES (1), (2);\nINSERT INTO staff VALUES (10, 1), (11, 1), (20, 2);\nINSERT INTO timesheets VALUES (100, 10), (101, 11), (102, 11), (200, 20);\nDELETE FROM depts WHERE dept_id = 1;",
+  "verify": "SELECT 'depts' AS t, COUNT(*) AS n FROM depts\nUNION ALL SELECT 'staff', COUNT(*) FROM staff\nUNION ALL SELECT 'timesheets', COUNT(*) FROM timesheets\nUNION ALL SELECT 'cascade_fk', COUNT(*) FROM pragma_foreign_key_list('staff') WHERE on_delete = 'CASCADE'\nUNION ALL SELECT 'cascade_fk2', COUNT(*) FROM pragma_foreign_key_list('timesheets') WHERE on_delete = 'CASCADE'\nORDER BY 1",
+  "requireKeywords": [
+   "CASCADE"
+  ]
+ },
+ {
+  "id": "m5-a3",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "インデックスが使われる検索にする",
+  "scenario": "<code>employees</code>で <code>WHERE salary = 50000</code> と検索すると、インデックスがなければ全行を走査（SCAN）します。<code>salary</code>列に <strong>idx_employees_salary</strong> という名前のインデックスを作り、実行計画（<code>EXPLAIN QUERY PLAN</code>）が <strong>SEARCH … USING INDEX idx_employees_salary</strong> になるようにしてください（PostgreSQLの EXPLAIN ANALYZE で Seq Scan が Index Scan に変わるのと同じ考え方です）。",
+  "concept": "CREATE INDEX と実行計画（EXPLAIN）",
+  "hint": "CREATE INDEX idx_employees_salary ON employees (salary); 作成後にもう一度実行計画を見ると、SCAN が SEARCH に変わります。",
+  "starter": "-- salary にインデックスを作成\n",
+  "solution": "CREATE INDEX idx_employees_salary ON employees (salary);",
+  "verify": "EXPLAIN QUERY PLAN SELECT * FROM employees WHERE salary = 50000",
+  "requireKeywords": [
+   "CREATE INDEX"
+  ]
+ },
+ {
+  "id": "m5-a4",
+  "tier": "advanced",
+  "title": "ERDを読む：複合主キーを持つ表を全部探す",
+  "scenario": "データベース全体のうち、<strong>主キーが2列以上の複合主キー</strong>になっている表を探してください。列は <strong>table_name, pk_columns</strong>（主キーを構成する列の数）、表名順に並べます。<code>sqlite_master</code>と<code>pragma_table_info</code>を組み合わせ、<code>pk &gt; 0</code>の列を数えます。結果は<strong>7行</strong>（borrower・depositor・employee_projects・prereq・section・takes・teaches）です。",
+  "concept": "複合主キーの探索（sqlite_master × pragma）",
+  "hint": "FROM sqlite_master m, pragma_table_info(m.name) p WHERE m.type = 'table' AND p.pk &gt; 0 GROUP BY m.name HAVING COUNT(*) &gt; 1 ORDER BY m.name",
+  "starter": "SELECT m.name AS table_name, COUNT(*) AS pk_columns\nFROM sqlite_master m, pragma_table_info(m.name) p\nWHERE ",
+  "solution": "SELECT m.name AS table_name, COUNT(*) AS pk_columns\nFROM sqlite_master m, pragma_table_info(m.name) p\nWHERE m.type = 'table' AND p.pk > 0\nGROUP BY m.name\nHAVING COUNT(*) > 1\nORDER BY m.name;",
+  "orderSensitive": true
+ },
+ {
+  "id": "m5-a5",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "総合：仕入先と部品の設計",
+  "scenario": "次の設計を実装してください。<br>① <code>suppliers</code>：<strong>supplier_id INTEGER PRIMARY KEY, supplier_name TEXT NOT NULL UNIQUE</strong><br>② <code>parts</code>：<strong>part_id INTEGER PRIMARY KEY, part_name TEXT NOT NULL, unit_price INTEGER CHECK (unit_price &gt; 0), supplier_id INTEGER NOT NULL</strong>。<code>supplier_id</code> は suppliers を参照し <strong>ON DELETE CASCADE</strong><br>③ <code>parts.supplier_id</code> に <strong>idx_parts_supplier_id</strong> インデックス<br>④ suppliers に (1,'Acme')・(2,'Globex')、parts に (1,'Bolt',10,1)・(2,'Nut',5,1)・(3,'Gear',50,2) を追加し、<strong>supplier 1 を削除</strong>（先頭に <code>PRAGMA foreign_keys = ON;</code>）。",
+  "concept": "制約・外部キー・CASCADE・インデックスの総合",
+  "hint": "PRAGMA → CREATE TABLE suppliers → CREATE TABLE parts → CREATE INDEX → INSERT ×2 → DELETE FROM suppliers WHERE supplier_id = 1; Bolt と Nut が連鎖して消え、Gear だけ残ります。",
+  "starter": "PRAGMA foreign_keys = ON;\n-- ①②③④の順に\n",
+  "solution": "PRAGMA foreign_keys = ON;\nCREATE TABLE suppliers (\n  supplier_id INTEGER PRIMARY KEY,\n  supplier_name TEXT NOT NULL UNIQUE\n);\nCREATE TABLE parts (\n  part_id INTEGER PRIMARY KEY,\n  part_name TEXT NOT NULL,\n  unit_price INTEGER CHECK (unit_price > 0),\n  supplier_id INTEGER NOT NULL REFERENCES suppliers (supplier_id) ON DELETE CASCADE\n);\nCREATE INDEX idx_parts_supplier_id ON parts (supplier_id);\nINSERT INTO suppliers VALUES (1, 'Acme'), (2, 'Globex');\nINSERT INTO parts VALUES (1, 'Bolt', 10, 1), (2, 'Nut', 5, 1), (3, 'Gear', 50, 2);\nDELETE FROM suppliers WHERE supplier_id = 1;",
+  "verify": "SELECT 'supplier' AS k, supplier_name AS v FROM suppliers\nUNION ALL SELECT 'part', part_name FROM parts\nUNION ALL SELECT 'on_delete', on_delete FROM pragma_foreign_key_list('parts')\nUNION ALL SELECT 'index', name FROM sqlite_master WHERE type = 'index' AND tbl_name = 'parts' AND name NOT LIKE 'sqlite_autoindex%'\nUNION ALL SELECT 'check', instr(lower(replace(replace(sql, ' ', ''), char(10), '')), 'check(unit_price>0)') > 0 FROM sqlite_master WHERE name = 'parts'\nUNION ALL SELECT 'supplier_unique', origin FROM pragma_index_list('suppliers')\nORDER BY 1, 2",
+  "requireKeywords": [
+   "CASCADE",
+   "CREATE INDEX"
+  ]
+ }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+<script src="hub-fab.js"></script>
+</body></html>

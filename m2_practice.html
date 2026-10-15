@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M1・M2 演習アリーナ — データ型・INSERT・CAST</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=10">
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SQL <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="sql_index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">🏋️ M1·M2 演習アリーナ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m1"><span class="nav-mod">M1·M2 データ型</span><span class="navg"><a class="n-main" href="insert.html">✏️ INSERT</a><a class="n-easy" href="insert_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_char.html">🔤 文字型</a><a class="n-easy" href="datatypes_char_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_numbers.html">🔢 数値型</a><a class="n-easy" href="datatypes_numbers_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_dates.html">📅 日付型</a><a class="n-easy" href="datatypes_dates_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="datatypes_casting.html">🔄 CAST</a><a class="n-easy" href="datatypes_casting_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m2_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">M3 クエリ</span><span class="navg"><a class="n-main" href="m3_intro.html">📥 導入・取込</a><a class="n-easy" href="m3_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="select.html">🔍 Select</a><a class="n-easy" href="select_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="order_by.html">🔽 Order By</a><a class="n-easy" href="order_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="distinct.html">✨ Distinct</a><a class="n-easy" href="distinct_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_basics.html">🎯 Where①</a><a class="n-easy" href="where_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_operators.html">🔗 Where②</a><a class="n-easy" href="where_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_like.html">🃏 Where③</a><a class="n-easy" href="where_like_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="where_examples.html">🧪 Where演習</a><a class="n-easy" href="where_examples_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">M4 集計</span><span class="navg"><a class="n-main" href="alias.html">🏷️ Aliasing</a><a class="n-easy" href="alias_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="math_columns.html">➗ Math</a><a class="n-easy" href="math_columns_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="aggregate.html">📊 Aggregate</a><a class="n-easy" href="aggregate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="max_min.html">📈 Max/Min</a><a class="n-easy" href="max_min_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="group_by.html">🗂️ Group By</a><a class="n-easy" href="group_by_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="sum.html">➕ Sum</a><a class="n-easy" href="sum_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="having.html">🚦 Having</a><a class="n-easy" href="having_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="percentiles.html">📐 Percentile</a><a class="n-easy" href="percentiles_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m4_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">M5 テーブル設計</span><span class="navg"><a class="n-main" href="naming.html">📝 命名</a><a class="n-easy" href="naming_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="primary_key.html">🔑 PK①</a><a class="n-easy" href="primary_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="key_types.html">🗝️ キー分類</a><a class="n-easy" href="key_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="composite_surrogate.html">🧩 PK②</a><a class="n-easy" href="composite_surrogate_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="foreign_key.html">🔗 FK</a><a class="n-easy" href="foreign_key_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="cascade.html">🌊 Cascade</a><a class="n-easy" href="cascade_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="constraints.html">🛡️ 制約</a><a class="n-easy" href="constraints_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="erd.html">🗺️ ERD</a><a class="n-easy" href="erd_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="indexes.html">📇 Index</a><a class="n-easy" href="indexes_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">M6 JOIN・サブクエリ</span><span class="navg"><a class="n-main" href="relational_db.html">🗄️ RDB入門</a><a class="n-easy" href="relational_db_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_types.html">🔗 JOIN①</a><a class="n-easy" href="joins_types_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="joins_relationships.html">🧬 JOIN②</a><a class="n-easy" href="joins_relationships_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="self_join.html">🔁 JOIN③</a></span><span class="navg"><a class="n-main" href="set_operators.html">➕ SET演算</a><a class="n-easy" href="set_operators_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_basics.html">🎯 サブクエリ①</a><a class="n-easy" href="subqueries_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_sets.html">🧮 サブクエリ②</a><a class="n-easy" href="subqueries_sets_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="subqueries_strategy.html">🧭 サブクエリ③</a><a class="n-easy" href="subqueries_strategy_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_plus.html">🧩 M6+</a><a class="n-easy" href="m6_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">M7 データ整形</span><span class="navg"><a class="n-main" href="m7_wrangling_intro.html">🔎 探索</a><a class="n-easy" href="m7_wrangling_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_clean.html">🧹 クリーニング</a><a class="n-easy" href="m7_wrangling_clean_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_wrangling_txn.html">🔒 Txn・分割</a><a class="n-easy" href="m7_wrangling_txn_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_plus.html">🧩 M7+①</a><a class="n-easy" href="m7_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_text.html">🔤 M7+②</a><a class="n-easy" href="m7_text_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m7_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">M8 統計・CTE</span><span class="navg"><a class="n-main" href="m8_stats_intro.html">📈 相関</a><a class="n-easy" href="m8_stats_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_regression.html">📉 回帰</a><a class="n-easy" href="m8_regression_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_variance.html">📊 分散・SD</a><a class="n-easy" href="m8_variance_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte.html">🧱 CTE①</a><a class="n-easy" href="m8_cte_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_cte_multi.html">🧱 CTE②</a><a class="n-easy" href="m8_cte_multi_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_plus.html">🧩 M8+</a><a class="n-easy" href="m8_plus_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m8_practice.html">🏋️ 演習</a></span></div>
+      <div class="nav-row m8"><span class="nav-mod">M9 Python×SQL</span><span class="navg"><a class="n-main" href="m9_setup.html">🔌 つなぐ準備</a><a class="n-easy" href="m9_setup_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_connect.html">🔗 接続</a><a class="n-easy" href="m9_connect_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_execute.html">▶️ 実行</a><a class="n-easy" href="m9_execute_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m9_practice.html">🏋️ 演習</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M1・M2 演習 · INSERT とデータ型</div>
+  <h1>🔤 M1・M2 演習アリーナ — INSERT・データ型・CAST</h1>
+  <p>INSERT（列リスト・複数行）、文字型・数値型・日付型の選び方、CASTを練習します。基礎5問・中級5問・上級5問の計15問。テーブルを作る問題は、<strong>実行後のテーブルの列の型と入れた値</strong>で自動採点します。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎</a><a href="#intermediate">🟡 中級</a><a href="#advanced">🔴 上級</a><a href="insert.html">✏️ INSERT</a><a href="datatypes_char.html">🔤 文字型</a><a href="datatypes_numbers.html">🔢 数値型</a><a href="datatypes_dates.html">📅 日付型</a><a href="datatypes_casting.html">🔄 CAST</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>▶ <strong>実行</strong>：書いたSQLを実際に動かして結果を見ます。✅ <strong>採点</strong>：模範解答と結果を比較して正解／不正解を判定します。💡 <strong>答えを見る</strong>：模範解答のSQLを表示します。</p>
+  <p style="margin-top:.5rem">⚠️ 採点は結果の「値」を比較します。問題文で指定された列と順番でSELECTしてください。列の順番や別名が異なると不一致と判定されることがあります。</p>
+  <p style="margin-top:.5rem">🧱 型の採点は、<code>CHAR(2)</code>と<code>char(2)</code>のような大文字小文字、<code>NUMERIC(8,2)</code>のスペースの違いは気にしません。ただし型の<strong>種類と桁数</strong>は一致させてください。このアリーナはSQLiteで動くため、<code>VARCHAR(n)</code>の長さ制限や<code>SERIAL</code>の自動採番、<code>interval</code>は動きません（型の宣言と値の確認が目的です）。</p>
+  <span class="sql-engine-status">🔄 SQLエンジンを読み込み中...</span>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎</h2><span class="tier-badge basic">Basic</span></div>
+  <div id="basics-container"></div>
+</div>
+
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級</h2><span class="tier-badge intermediate">Intermediate</span></div>
+  <div id="intermediate-container"></div>
+</div>
+
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級</h2><span class="tier-badge advanced">Advanced</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🔤 SQLレッスン：M1・M2 演習 — INSERT とデータ型</p>
+  <p style="margin-top:.5rem;"><a href="insert.html">✏️ INSERT</a> · <a href="datatypes_char.html">🔤 文字型</a> · <a href="datatypes_numbers.html">🔢 数値型</a> · <a href="datatypes_dates.html">📅 日付型</a> · <a href="datatypes_casting.html">🔄 CAST</a> · <a href="sql_index.html">🏠 概要へ</a></p>
+</footer>
+
+<script>window.ARENA_OPTS = { pgCompat: true, schemaGroups: ["university", "banking"] };</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.14.2/sql-wasm.js"></script>
+<script src="sql-engine.js?v=15"></script>
+<script>
+var SQL_PROBLEMS = [
+ {
+  "id": "m2-b1",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "部署を1件追加する（列リストなし）",
+  "scenario": "<code>department</code>テーブル（列の定義順は<strong>dept_name, building, budget</strong>）に、<strong>'Music'・'Taylor'・60000</strong>の1行を追加してください。列名は書かず、定義順どおりに値を並べます。追加後は9行になります。",
+  "concept": "INSERT INTO ... VALUES の基本",
+  "hint": "INSERT INTO department VALUES (…, …, …); 文字列は引用符、数値はそのまま。",
+  "starter": "-- department に (Music, Taylor, 60000) を追加\n",
+  "solution": "INSERT INTO department VALUES ('Music', 'Taylor', 60000);",
+  "verify": "SELECT dept_name, building, budget FROM department ORDER BY dept_name",
+  "requireKeywords": [
+   "INSERT INTO"
+  ]
+ },
+ {
+  "id": "m2-b2",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "国コード表：CHARとVARCHARを選ぶ",
+  "scenario": "<code>country</code>テーブルを作ってください。列は<strong>code</strong>（<strong>固定長2文字</strong>の国コード、例 'JP'）と<strong>name</strong>（最大100文字までの<strong>可変長</strong>の国名）の2つです。型は<code>CHAR(n)</code>と<code>VARCHAR(n)</code>から選びます。",
+  "concept": "CHAR(n)=固定長 / VARCHAR(n)=可変長",
+  "hint": "code は CHAR(2)、name は VARCHAR(100)。",
+  "starter": "-- country(code, name) を作成\n",
+  "solution": "CREATE TABLE country (\n  code CHAR(2),\n  name VARCHAR(100)\n);",
+  "verify": "SELECT name, replace(upper(type),' ','') AS type FROM pragma_table_info('country') ORDER BY cid"
+ },
+ {
+  "id": "m2-b3",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "商品テーブルの数値型を選ぶ",
+  "scenario": "<code>product</code>テーブルを作ってください。<strong>product_id</strong>は自動採番の主キー（<code>SERIAL PRIMARY KEY</code>）、<strong>price</strong>は最大<strong>999999.99</strong>までの金額（全8桁・小数点以下2桁の固定小数点）、<strong>stock</strong>は在庫数で0〜数千の小さな整数（<code>SMALLINT</code>）です。",
+  "concept": "serial・numeric(precision, scale)・smallint",
+  "hint": "price は NUMERIC(8, 2)。precision=全体の桁数、scale=小数点以下の桁数。",
+  "starter": "-- product(product_id, price, stock)\n",
+  "solution": "CREATE TABLE product (\n  product_id SERIAL PRIMARY KEY,\n  price NUMERIC(8, 2),\n  stock SMALLINT\n);",
+  "verify": "SELECT name, replace(upper(type),' ','') AS type FROM pragma_table_info('product') ORDER BY cid"
+ },
+ {
+  "id": "m2-b4",
+  "tier": "basic",
+  "mode": "mutate",
+  "title": "イベント表：4つの日付・時刻型から選ぶ",
+  "scenario": "<code>event</code>テーブルを作ってください。列は<strong>event_id</strong>（<code>INTEGER</code>）、<strong>event_date</strong>（日付だけ → <code>DATE</code>）、<strong>starts_at</strong>（時刻だけ → <code>TIME</code>）、<strong>created_at</strong>（日付と時刻の両方 → <code>TIMESTAMP</code>）の4つです。",
+  "concept": "date / time / timestamp の使い分け",
+  "hint": "日付だけ=DATE、時刻だけ=TIME、両方=TIMESTAMP。",
+  "starter": "-- event(event_id, event_date, starts_at, created_at)\n",
+  "solution": "CREATE TABLE event (\n  event_id INTEGER,\n  event_date DATE,\n  starts_at TIME,\n  created_at TIMESTAMP\n);",
+  "verify": "SELECT name, replace(upper(type),' ','') AS type FROM pragma_table_info('event') ORDER BY cid"
+ },
+ {
+  "id": "m2-b5",
+  "tier": "basic",
+  "mode": "select",
+  "title": "文字列のIDを整数にCASTする",
+  "scenario": "<code>customer</code>テーブルの<code>customer_id</code>は<strong>文字列（TEXT）</strong>です。<code>customer_id</code>をそのまま出力し、さらに<strong>整数にCASTして10を引いた値</strong>を列名<strong>adjusted</strong>で出力してください（8行）。<code>CAST(… AS integer)</code>でも<code>::integer</code>でも構いません。",
+  "concept": "CAST(列 AS 型) と :: の2つの書き方",
+  "hint": "CAST(customer_id AS integer) - 10 AS adjusted",
+  "starter": "-- customer_id, adjusted\n",
+  "solution": "SELECT customer_id, CAST(customer_id AS integer) - 10 AS adjusted\nFROM customer;"
+ },
+ {
+  "id": "m2-i1",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "列を指定して一部だけ挿入する",
+  "scenario": "<code>course</code>テーブルに、<strong>course_id = 'MUS-101'、title = 'Music Theory'、dept_name = 'Music'</strong>の科目を追加してください。<strong>credits列は指定しません</strong>（NULLのまま）。列リストを書き、<strong>値の順番を列リストと一致</strong>させます。<br>※先に<code>department</code>へ'Music'を入れる必要はありません（ここでは外部キーは強制されません）。",
+  "concept": "INSERT INTO t (列, ...) VALUES — 列リストと値の対応",
+  "hint": "INSERT INTO course (course_id, title, dept_name) VALUES (…);",
+  "starter": "-- credits を省略して MUS-101 を追加\n",
+  "solution": "INSERT INTO course (course_id, title, dept_name)\nVALUES ('MUS-101', 'Music Theory', 'Music');",
+  "verify": "SELECT course_id, title, dept_name, credits FROM course WHERE course_id = 'MUS-101'",
+  "requireKeywords": [
+   "INSERT INTO",
+   "VALUES"
+  ]
+ },
+ {
+  "id": "m2-i2",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "郵便番号は数値ではなく文字型：先頭の0を守る",
+  "scenario": "<code>address</code>テーブルを作り、1行追加してください。列は<strong>zip_code</strong>（<strong>固定長5文字</strong>：<code>CHAR(5)</code>）と<strong>prefecture</strong>（<code>VARCHAR(20)</code>）。追加する行は<strong>'01234'、'Hokkaido'</strong>です。郵便番号は足し算や引き算をしないので文字型で持ちます（数値にすると先頭の0が消えます）。",
+  "concept": "ラベルは数字でも文字型 / CREATE + INSERT",
+  "hint": "CREATE TABLE address (zip_code CHAR(5), prefecture VARCHAR(20)); → INSERT INTO address VALUES ('01234', 'Hokkaido');",
+  "starter": "-- address を作成して (01234, Hokkaido) を追加\n",
+  "solution": "CREATE TABLE address (\n  zip_code CHAR(5),\n  prefecture VARCHAR(20)\n);\nINSERT INTO address VALUES ('01234', 'Hokkaido');",
+  "verify": "SELECT 'col' AS k, name AS a, replace(upper(type),' ','') AS b FROM pragma_table_info('address') UNION ALL SELECT 'row', zip_code, prefecture FROM address ORDER BY 1, 2, 3"
+ },
+ {
+  "id": "m2-i3",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "センサー表：numeric・bigint・doubleを選ぶ",
+  "scenario": "<code>sensor_log</code>テーブルを作ってください。<strong>log_id</strong>：自動採番の大きな連番（<code>BIGSERIAL PRIMARY KEY</code>）、<strong>temperature</strong>：最大<strong>999.9</strong>度、小数点以下1桁の正確な値（<code>NUMERIC(4, 1)</code>）、<strong>distance_km</strong>：多少の誤差が許される小数（<code>DOUBLE PRECISION</code>）。作成後、<strong>temperature = 25.5、distance_km = 12.75</strong>の1行を、列リストを使って追加してください。",
+  "concept": "numeric(4,1)=4桁中小数1桁 / bigserial / double precision",
+  "hint": "INSERT INTO sensor_log (temperature, distance_km) VALUES (25.5, 12.75); log_id は自動採番の列なので指定しません。",
+  "starter": "-- sensor_log を作成 → 1行追加\n",
+  "solution": "CREATE TABLE sensor_log (\n  log_id BIGSERIAL PRIMARY KEY,\n  temperature NUMERIC(4, 1),\n  distance_km DOUBLE PRECISION\n);\nINSERT INTO sensor_log (temperature, distance_km) VALUES (25.5, 12.75);",
+  "verify": "SELECT 'col' AS k, name AS a, replace(upper(type),' ','') AS b FROM pragma_table_info('sensor_log') UNION ALL SELECT 'row', CAST(temperature AS TEXT), CAST(distance_km AS TEXT) FROM sensor_log ORDER BY 1, 2, 3"
+ },
+ {
+  "id": "m2-i4",
+  "tier": "intermediate",
+  "mode": "mutate",
+  "title": "タイムゾーン付きの提出時刻と日付",
+  "scenario": "<code>form_submission</code>テーブルを作ってください。<strong>submission_id</strong>：<code>INTEGER</code>、<strong>submitted_at</strong>：<strong>タイムゾーン付きの日時</strong>（<code>TIMESTAMP WITH TIME ZONE</code>）、<strong>deadline</strong>：日付だけ（<code>DATE</code>）。その後、<strong>(1, '2024-05-01 09:30:00+09', '2024-05-31')</strong>の1行を追加してください。",
+  "concept": "timestamptz と date / 日時リテラル",
+  "hint": "型は TIMESTAMP WITH TIME ZONE（略して TIMESTAMPTZ も可）。日時の値は文字列として書く。",
+  "starter": "-- form_submission を作成 → 1行追加\n",
+  "solution": "CREATE TABLE form_submission (\n  submission_id INTEGER,\n  submitted_at TIMESTAMP WITH TIME ZONE,\n  deadline DATE\n);\nINSERT INTO form_submission VALUES (1, '2024-05-01 09:30:00+09', '2024-05-31');",
+  "verify": "SELECT 'col' AS k, name AS a, CASE WHEN replace(upper(type),' ','') IN ('TIMESTAMPTZ','TIMESTAMPWITHTIMEZONE') THEN 'TIMESTAMPTZ' ELSE replace(upper(type),' ','') END AS b FROM pragma_table_info('form_submission') UNION ALL SELECT 'row', CAST(submission_id AS TEXT), submitted_at || ' / ' || deadline FROM form_submission ORDER BY 1, 2, 3"
+ },
+ {
+  "id": "m2-i5",
+  "tier": "intermediate",
+  "mode": "select",
+  "title": "文字列の部屋番号を数値として比較する",
+  "scenario": "<code>section</code>テーブルの<code>room_number</code>は<strong>TEXT</strong>です（'50'、'100'、'201'など）。文字列のままだと<code>'50' &gt; '100'</code>のように辞書順で比べられてしまいます。<code>room_number</code>を整数にCASTして<strong>100以上</strong>の開講（section）だけを選び、<strong>course_id, semester, room_number</strong>を出力してください（8行）。",
+  "concept": "CASTしてから比較する（文字順の罠）",
+  "hint": "WHERE CAST(room_number AS integer) >= 100",
+  "starter": "-- course_id, semester, room_number\n",
+  "solution": "SELECT course_id, semester, room_number\nFROM section\nWHERE CAST(room_number AS integer) >= 100;"
+ },
+ {
+  "id": "m2-a1",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "複数行を列リスト付きで1回のINSERTで追加",
+  "scenario": "<code>customer</code>テーブル（定義順：customer_id, customer_name, customer_street, customer_city）に、渡されたデータは<strong>customer_name, customer_city, customer_id, customer_street</strong>の順です。この順番どおりの列リストを書き、1つの<code>INSERT</code>で次の<strong>2行</strong>を追加してください。<br>('Yuki Sato', 'Queens', '10009', 'Main St') と ('Ken Ito', 'Queens', '10010', 'Oak St')。<br>⚠️ 列リストを書かずに値を並べると、同じ文字型どうしなのでエラーにならず、誤った列に入ってしまいます。",
+  "concept": "転記ミスの防止 / 複数行INSERT",
+  "hint": "INSERT INTO customer (customer_name, customer_city, customer_id, customer_street) VALUES (…), (…);",
+  "starter": "-- 列リスト付きで2行を1つのINSERTで追加\n",
+  "solution": "INSERT INTO customer (customer_name, customer_city, customer_id, customer_street)\nVALUES ('Yuki Sato', 'Queens', '10009', 'Main St'),\n       ('Ken Ito', 'Queens', '10010', 'Oak St');",
+  "verify": "SELECT customer_id, customer_name, customer_street, customer_city FROM customer WHERE customer_id > '10008' ORDER BY customer_id",
+  "requireKeywords": [
+   "INSERT INTO",
+   "VALUES"
+  ]
+ },
+ {
+  "id": "m2-a2",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "会員表：CHAR・VARCHAR・TEXTを使い分けて2行追加",
+  "scenario": "<code>member</code>テーブルを作り、2行追加してください。列：<strong>member_code</strong>＝<strong>固定長3文字</strong>の会員コード（<code>CHAR(3)</code>）、<strong>email</strong>＝最長255文字の<strong>可変長</strong>（<code>VARCHAR(255)</code>）、<strong>phone</strong>＝ハイフンなしで10〜11桁、先頭の0を保つ文字列（<code>VARCHAR(11)</code>）、<strong>bio</strong>＝自己紹介（長さの上限なし → <code>TEXT</code>）。<br>追加する行：('A01', 'a@example.com', '09012345678', 'Hello') と ('B02', 'b@example.com', '0312345678', 'I like SQL')。<strong>1つのINSERTで、列リストを書いて</strong>追加します。",
+  "concept": "文字型3種の選択 + 複数行INSERT",
+  "hint": "電話番号は計算しないので文字型。bio は TEXT。",
+  "starter": "-- member を作成 → 2行を1つのINSERTで追加\n",
+  "solution": "CREATE TABLE member (\n  member_code CHAR(3),\n  email VARCHAR(255),\n  phone VARCHAR(11),\n  bio TEXT\n);\nINSERT INTO member (member_code, email, phone, bio)\nVALUES ('A01', 'a@example.com', '09012345678', 'Hello'),\n       ('B02', 'b@example.com', '0312345678', 'I like SQL');",
+  "verify": "SELECT 'col' AS k, name AS a, replace(upper(type),' ','') AS b FROM pragma_table_info('member') UNION ALL SELECT 'row', member_code, email || ' | ' || phone || ' | ' || bio FROM member ORDER BY 1, 2, 3",
+  "requireKeywords": [
+   "INSERT INTO",
+   "VALUES"
+  ]
+ },
+ {
+  "id": "m2-a3",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "再生数はintegerに入らない：整数型の選び分け",
+  "scenario": "<code>video_stats</code>テーブルを作ってください。<strong>video_id</strong>：<code>SERIAL PRIMARY KEY</code>、<strong>views</strong>：最大<strong>30億</strong>（integerの上限約21億を超える）→ <code>BIGINT</code>、<strong>rating</strong>：1〜5の評価 → <code>SMALLINT</code>、<strong>revenue</strong>：最大<strong>99999999.99</strong>の収益（全10桁・小数点以下2桁）→ <code>NUMERIC(10, 2)</code>。作成後、<strong>views = 3000000000、rating = 5、revenue = 1234.50</strong>の1行を、列リストを使って追加してください。",
+  "concept": "integerの範囲を超えたらbigint / 'とりあえずbigint'はNG",
+  "hint": "BIGINT は大きな値用、評価のような小さな値は SMALLINT。video_id は自動採番なので INSERT の列リストから外す。",
+  "starter": "-- video_stats を作成 → 1行追加\n",
+  "solution": "CREATE TABLE video_stats (\n  video_id SERIAL PRIMARY KEY,\n  views BIGINT,\n  rating SMALLINT,\n  revenue NUMERIC(10, 2)\n);\nINSERT INTO video_stats (views, rating, revenue) VALUES (3000000000, 5, 1234.50);",
+  "verify": "SELECT 'col' AS k, name AS a, replace(upper(type),' ','') AS b FROM pragma_table_info('video_stats') UNION ALL SELECT 'row', CAST(views AS TEXT), CAST(rating AS TEXT) || ' / ' || CAST(revenue AS TEXT) FROM video_stats ORDER BY 1, 2, 3"
+ },
+ {
+  "id": "m2-a4",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "請求書表：日付型を選んで2行追加",
+  "scenario": "<code>invoice</code>テーブルを作り、2行追加してください。列：<strong>invoice_id</strong>＝<code>INTEGER</code>、<strong>invoice_date</strong>＝日付だけ（<code>DATE</code>）、<strong>due_date</strong>＝日付だけ（<code>DATE</code>）、<strong>paid_at</strong>＝支払った日時（<code>TIMESTAMP</code>）。<br>追加する行：(1, '2022-12-01', '2022-12-31', '2022-12-20 14:05:00') と (2, '2023-01-15', '2023-02-14', '2023-02-01 09:00:00')。<br>（講義では<code>invoice_date + interval '30 days'</code>で期日を計算しましたが、このアリーナでは<code>interval</code>は動かないため、期日は値として直接入れます。）",
+  "concept": "date と timestamp / 複数行INSERT",
+  "hint": "日付の値は 'YYYY-MM-DD'、日時は 'YYYY-MM-DD HH:MM:SS' の文字列で書く。",
+  "starter": "-- invoice を作成 → 2行を追加\n",
+  "solution": "CREATE TABLE invoice (\n  invoice_id INTEGER,\n  invoice_date DATE,\n  due_date DATE,\n  paid_at TIMESTAMP\n);\nINSERT INTO invoice VALUES\n  (1, '2022-12-01', '2022-12-31', '2022-12-20 14:05:00'),\n  (2, '2023-01-15', '2023-02-14', '2023-02-01 09:00:00');",
+  "verify": "SELECT 'col' AS k, name AS a, replace(upper(type),' ','') AS b FROM pragma_table_info('invoice') UNION ALL SELECT 'row', CAST(invoice_id AS TEXT), invoice_date || ' ' || due_date || ' ' || paid_at FROM invoice ORDER BY 1, 2, 3"
+ },
+ {
+  "id": "m2-a5",
+  "tier": "advanced",
+  "mode": "mutate",
+  "title": "CASTで文字列のIDを整数列に移し替える",
+  "scenario": "<code>customer</code>の<code>customer_id</code>は文字列ですが、新しいテーブル<code>customer_num</code>では整数で持ちたいとします。<code>customer_num</code>を作り（<strong>cust_no INTEGER, cust_name VARCHAR(100)</strong>）、<code>customer</code>の全8行を<strong><code>CAST(… AS integer)</code>で整数に変換して</strong><code>INSERT INTO … SELECT</code>で入れてください。確認では、値が数値（integer）として入っているかも見ます。<br>※CASTは応急処置です。本来は最初から正しい型でテーブルを作るのが望ましい、というレッスンの注意点を思い出しましょう。",
+  "concept": "CAST + INSERT ... SELECT（型の移し替え）",
+  "hint": "INSERT INTO customer_num (cust_no, cust_name) SELECT CAST(customer_id AS integer), customer_name FROM customer;",
+  "starter": "-- customer_num を作成 → CASTして移す\n",
+  "solution": "CREATE TABLE customer_num (\n  cust_no INTEGER,\n  cust_name VARCHAR(100)\n);\nINSERT INTO customer_num (cust_no, cust_name)\nSELECT CAST(customer_id AS integer), customer_name\nFROM customer;",
+  "verify": "SELECT cust_no, typeof(cust_no) AS t, cust_name FROM customer_num ORDER BY cust_no",
+  "requireKeywords": [
+   "INSERT INTO",
+   "SELECT",
+   "CAST"
+  ]
+ }
+];
+
+renderPracticeArena(SQL_PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+<script src="hub-fab.js"></script>
+</body></html>
