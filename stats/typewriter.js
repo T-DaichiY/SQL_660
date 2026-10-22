@@ -16,6 +16,10 @@
     margin:0 0 .5rem;transition:all .2s;}
   .tw-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
   .tw-btn:disabled{opacity:.6;cursor:default;transform:none;}
+  .tw-btn.tw-instant{background:#7c3aed;margin-left:.4rem;}
+  .tw-all{position:fixed;left:14px;bottom:14px;z-index:9998;background:#7c3aed;color:#fff;border:none;border-radius:99px;
+    padding:.5rem .95rem;font-weight:700;font-size:.8rem;cursor:pointer;font-family:inherit;box-shadow:0 3px 10px rgba(0,0,0,.3);}
+  .tw-all:hover{filter:brightness(1.1);}
   .code-block.tw-dim{opacity:.4;transition:opacity .25s;}
   .tw-caret{display:inline-block;width:7px;height:1em;background:#86efac;margin-left:1px;
     animation:twblink 1s step-end infinite;vertical-align:text-bottom;}
@@ -81,6 +85,8 @@
   }
 
   function typeLines(block, lines, btn){
+    block._twRun=(block._twRun||0)+1;
+    const run=block._twRun;
     block.innerHTML='';
     block.classList.remove('tw-dim');
     const caret=document.createElement('span'); caret.className='tw-caret';
@@ -103,6 +109,7 @@
     }
 
     function step(){
+      if(block._twRun!==run) return;   // cancelled (instant display / restart)
       if(li>=lines.length){
         caret.classList.add('tw-done');
         if(btn){ btn.disabled=false; btn.innerHTML='↻ もう一度'; }
@@ -139,6 +146,7 @@
     if(block.closest('.tw-shell')) return;
     const lines=buildLines(block);
     if(lines.length===0) return;
+    const original=block.innerHTML;
 
     // Pair with a following .output-reveal box (must be authored right after the code-block in the HTML).
     const outBlock = block.nextElementSibling && block.nextElementSibling.classList.contains('output-reveal')
@@ -148,7 +156,18 @@
     block.parentNode.insertBefore(shell, block);
     const btn=document.createElement('button'); btn.className='tw-btn'; btn.innerHTML='▶ コードを打つ';
     shell.appendChild(btn);
+    const inBtn=document.createElement('button'); inBtn.className='tw-btn tw-instant'; inBtn.innerHTML='⚡ 一発表示';
+    inBtn.title='タイピングを待たずに、コードを一度に表示します';
+    shell.appendChild(inBtn);
     shell.appendChild(block);
+    function showAll(){
+      block._twRun=(block._twRun||0)+1;      // stop any typing in progress
+      block.innerHTML=original;
+      block.classList.remove('tw-dim');
+      btn.disabled=false; btn.innerHTML='↻ もう一度';
+    }
+    block._twShowAll=showAll;
+    inBtn.addEventListener('click', showAll);
     block.classList.add('tw-dim');
 
     btn.addEventListener('click', ()=>{
@@ -164,8 +183,20 @@
         const open=outBlock.classList.toggle('or-open');
         outBtn.innerHTML = open ? '▲ 実行結果を隠す' : '▶ 実行結果を見る';
       });
+      block._twOpenOut=()=>{ outBlock.classList.add('or-open'); outBtn.innerHTML='▲ 実行結果を隠す'; };
     }
   });
+})();
+
+// ===== Review helper: show every code block (and its output) at once =====
+(function(){
+  const blocks=Array.from(document.querySelectorAll('.code-block')).filter(b=>b._twShowAll);
+  if(!blocks.length) return;
+  const b=document.createElement('button'); b.className='tw-all'; b.type='button';
+  b.textContent='⚡ 全コードを一括表示';
+  b.title='このページのコードと実行結果をすべて一度に表示します（復習用）';
+  b.addEventListener('click', ()=>{ blocks.forEach(x=>{ x._twShowAll(); if(x._twOpenOut) x._twOpenOut(); }); });
+  document.body.appendChild(b);
 })();
 
 // ===== Randomize MCQ option order =====
