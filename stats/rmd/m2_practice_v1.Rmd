@@ -1,0 +1,395 @@
+---
+title: "550 M2 — Descriptive Statistics: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Uses `donors.csv` (Brightspace). Save it in the same folder as this notebook and run Q1 first.
+>
+> ✅ Check your numbers on the website: https://t-daichiy.github.io/SQL_660/stats/ex_550_m2.html
+
+------------------------------------------------------------------------
+
+
+# Topic A — Measures of Center
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Compute the sample mean age of the first 20 donors and compare it with the population mean.
+
+```{r q1-data, eval=TRUE}
+donors <- read.csv("donors.csv")
+donors1_20 <- donors[1:20, ]
+```
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+mean(donors1_20$age)                       # NA: there are missing ages
+xbar <- mean(donors1_20$age, na.rm = TRUE) # sample statistic
+mu   <- mean(donors$age, na.rm = TRUE)     # population parameter
+round(xbar, 2)
+round(mu, 2)
+sum(!is.na(donors1_20$age))                # how many ages were used
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Find the mean, median and 10% trimmed mean of `numberGifts`.
+
+```{r q2-l2}
+m  <- ___(donors$numberGifts)
+md <- ___(donors$numberGifts)
+tm <- mean(donors$numberGifts, trim = ___)
+round(c(m, md, tm), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** With `set.seed(10)`, draw a random sample of 100 donors. Compare the sample mean of `totalGivingAmount` with the population mean (2 decimals) and compute the difference.
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** A small company's 9 salaries (in $1,000) include the CEO. Compare mean and median with and without the CEO and recommend which center to report.
+
+```{r q4-data, eval=TRUE}
+salary <- c(42, 45, 47, 48, 50, 52, 55, 58, 410)   # last value is the CEO
+```
+
+```{r q4-l4}
+# 1. Mean and median of all 9 salaries (2 decimals)
+# 2. Mean without the CEO
+# 3. Which measure changed more? Why?
+# 4. Recommendation (comment): which center should HR report?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** Summarise `averageGiftAmount`: mean, median, 5% and 25% trimmed means. Decide the shape from these numbers and write a 3-sentence report for the fundraising team.
+
+```{r q5-l5}
+# 1. Mean and median (2 decimals)
+# 2. Trimmed means with trim = 0.05 and trim = 0.25
+# 3. Shape: compare mean vs median
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Graphs & Categorical Data
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Make a frequency table, a percentage table and a barplot of `urbanicity`.
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+t_urban <- table(donors$urbanicity)
+t_urban
+pct <- round(proportions(t_urban) * 100, 1)
+pct
+pct_urban <- pct[["urban"]]
+barplot(t_urban, las = 1, ylab = "Count", main = "Donors by urbanicity")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Make a two-way table of urbanicity × respondedMailing and find the response rate in the suburbs.
+
+```{r q7-l2}
+tab <- table(donors$___, donors$respondedMailing)
+rates <- round(proportions(tab, margin = ___), 3)
+rates
+suburb_rate <- rates["suburb", "___"]
+suburb_rate
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Draw a histogram of donor ages, then count how many donors are aged 70–79 and what percentage of donors with a known age that is (1 decimal).
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** The team wants to know whether women or men responded more often. Compute the response rate for female and male donors (3 decimals) and conclude.
+
+```{r q9-l4}
+# 1. Two-way table of gender x respondedMailing
+# 2. Row proportions
+# 3. Response rate for female and male
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** For the 20 first donors, draw a dotplot and a stemplot of `totalGivingAmount`. Then compute mean − median for the 20 donors and for all donors, and explain what the sign tells you about shape.
+
+```{r q10-l5}
+# 1. stripchart(..., method = "stack") of the 20 donors
+# 2. stem() of the 20 donors
+# 3. mean - median for the 20 donors and for all donors (2 decimals)
+# 4. Report (3 sentences as comments): shape, which center to use, why
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Measures of Spread
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Compute the five-number summary of age, the IQR and the 1.5·IQR fences.
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+summary(donors$age)
+q1 <- quantile(donors$age, 0.25, na.rm = TRUE)
+q3 <- quantile(donors$age, 0.75, na.rm = TRUE)
+iqr <- IQR(donors$age, na.rm = TRUE)
+lower_fence <- q1 - 1.5 * iqr
+upper_fence <- q3 + 1.5 * iqr
+c(lower_fence, upper_fence)
+boxplot(donors$age, horizontal = TRUE, col = "lightblue", xlab = "Age")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Find Q3, the IQR, the upper fence and the number of high outliers in `totalGivingAmount`.
+
+```{r q12-l2}
+x <- donors$totalGivingAmount
+q3  <- quantile(x, ___)
+iqr <- ___(x)
+upper <- q3 + ___ * iqr
+n_high <- sum(x ___ upper)
+upper; n_high
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** For `x <- c(4, 8, 6, 5, 3, 10)`, compute the population SD (divide by n) and the sample SD (divide by n − 1) step by step, and check the second one with `sd()`. Round to 3 decimals.
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** Two machines fill 500 ml bottles. Compare their means, SDs and IQRs and decide which machine is more consistent.
+
+```{r q14-data, eval=TRUE}
+machine_a <- c(498, 502, 501, 499, 500, 503, 497, 500, 501, 499)
+machine_b <- c(490, 510, 505, 495, 500, 512, 488, 503, 497, 500)
+```
+
+```{r q14-l4}
+# 1. Mean of each machine
+# 2. SD of each machine (2 decimals)
+# 3. IQR of each machine
+# 4. Side-by-side boxplot
+# 5. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Compare `numberGifts` across urbanicity groups with a comparative boxplot and `tapply()`. Report the median and IQR for urban and rural donors and write a 3-sentence summary.
+
+```{r q15-l5}
+# 1. boxplot(numberGifts ~ urbanicity, data = donors)
+# 2. Median of numberGifts in each group with tapply()
+# 3. IQR in each group with tapply()
+# 4. Summary (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Normal Distribution & z-scores
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Check the 68-95-99.7 rule for IQ ~ N(100, 15) with `pnorm()`.
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+within1 <- pnorm(115, 100, 15) - pnorm(85, 100, 15)
+within2 <- pnorm(130, 100, 15) - pnorm(70, 100, 15)
+within3 <- pnorm(145, 100, 15) - pnorm(55, 100, 15)
+round(c(within1, within2, within3), 4)
+curve(dnorm(x, 100, 15), from = 40, to = 160, xlab = "IQ", ylab = "")
+abline(v = c(85, 115), col = "red")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** English: 82 (mean 70, SD 8). Math: 90 (mean 85, SD 4). Which result is better relative to the class?
+
+```{r q17-l2}
+z_eng  <- (82 - ___) / ___
+z_math <- (___ - 85) / ___
+c(z_eng, z_math)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Compute the z-score of a donor with 31 gifts, then count how many donors have |z| > 3 for `numberGifts`.
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** Runner A ran 195 min in a race with mean 240 and SD 30. Runner B ran 175 min in a race with mean 210 and SD 20. Lower times are better. Who did better relative to their race?
+
+```{r q19-l4}
+# 1. z-score for each runner (2 decimals)
+# 2. Which z is better here? (lower time = better)
+# 3. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Standardize `numberGifts` with `scale()`. Check the new mean and SD, compute the share within ±1 SD and compare it with the empirical rule's 68%. Write 3 sentences on whether the variable is normal.
+
+```{r q20-l5}
+# 1. z <- as.vector(scale(...))
+# 2. mean and sd of z (round)
+# 3. proportion with |z| <= 1 (3 decimals)
+# 4. histogram of z
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  M2 QUICK REFERENCE                                  ║
+║  mean(x, na.rm = TRUE)  median(x)  mean(x, trim=.1)  ║
+║  table(x)  proportions(table(x))  barplot(table(x))  ║
+║  proportions(table(a, b), margin = 1)   row %        ║
+║  hist(x)  stripchart(x, method='stack')  stem(x)     ║
+║  summary(x)  quantile(x, .25)  IQR(x)  range(x)      ║
+║  fences: Q1 - 1.5*IQR   Q3 + 1.5*IQR                 ║
+║  boxplot(y ~ group, data = df)  tapply(y, g, median) ║
+║  sd(x) (n-1)   var(x)                                ║
+║  pnorm(q, mean, sd)  68-95-99.7 within 1/2/3 SD      ║
+║  z = (x - mean) / sd     scale(x)                    ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*550 M2 — Descriptive Statistics: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

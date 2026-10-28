@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演習 550 M3 確率と分布</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=1">
+<style>.arena-data{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.6rem .8rem;margin:.5rem 0 0;font-size:.82rem;white-space:pre-wrap;overflow-x:auto}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 演習 550 M3 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m1.html">550 M1</a></span><span class="navg"><a class="n-main" href="ex_550_m2.html">550 M2</a></span><span class="navg"><a class="n-main active" href="ex_550_m3_prob.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M4</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">演習 · 550 M3</div>
+  <h1>🏋️ M3 演習 — 確率と分布</h1>
+  <p>練習ノートブック <a href="rmd/m3_practice_v1.Rmd" download style="color:inherit;font-weight:700">📥 m3_practice_v1.Rmd</a> の20問（4トピック × 5段階）と<strong>同じ問題・同じ番号</strong>です。RStudio で解いて、出た数値を入力すると自動採点されます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎（L1–L2）</a><a href="#intermediate">🟡 中級（L3–L4）</a><a href="#advanced">🔴 上級（L5）</a><a href="exercises.html">🏋️ 演習ハブ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>✍️ <strong>使い方：</strong>ノートブックの各問（Q1〜Q20）を RStudio で解き、ここに数値を入力して<strong>✅ 採点</strong>。<strong>L1</strong> は完成した見本（実行して値を確認）、<strong>L2</strong> は <code>___</code> の穴埋め、<strong>L3</strong> は自分で全部書く、<strong>L4・L5</strong> はシナリオ問題（最後に結論や報告をコメントで書く）。分からなければ<strong>💡 ヒント</strong>、最後に<strong>🔑 答えを見る</strong>で解答コードと実行結果を確認できます。</p>
+  <p style="margin-top:.5rem">📂 データファイルは不要です（すべて架空のデータかシミュレーション）。<code>set.seed()</code> の値と <code>sample()</code> を呼ぶ順番をノートブックと同じにすると、同じ答えになります。</p>
+  <p style="margin-top:.5rem">📚 対応するレッスン：<a href="m3_prob.html">確率の基本</a>（Topic A）・<a href="m3_cond.html">条件付き確率・独立</a>／<a href="m3_bayes.html">頻度論とベイズ</a>（B）・<a href="m3_discrete.html">二項・幾何・ポアソン</a>（C）・<a href="m3_normal.html">正規分布</a>／<a href="m3_tchif.html">t・χ²・F</a>（D）</p>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎（L1 見本・L2 穴埋め）</h2><span class="tier-badge basic">Basic · 8</span></div>
+  <div id="basics-container"></div>
+</div>
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級（L3 自由記述・L4 シナリオ1）</h2><span class="tier-badge intermediate">Intermediate · 8</span></div>
+  <div id="intermediate-container"></div>
+</div>
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級（L5 シナリオ2）</h2><span class="tier-badge advanced">Advanced · 4</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ 統計レッスン：演習 — 550 M3 確率と分布</p>
+  <p style="margin-top:.5rem;"><a href="exercises.html">🏋️ 演習ハブ</a> · <a href="index.html">🏠 概要へ</a> · <a href="rmd/m3_practice_v1.Rmd" download>📥 練習ノートブック</a></p>
+</footer>
+
+<script src="stats-arena.js?v=1"></script>
+<script>
+var PROBLEMS = [
+ {
+  "id": "m3-q1",
+  "tier": "basic",
+  "title": "Q1 · L1 サイコロを600回（見本）",
+  "concept": "Topic A — Probability & Simulation",
+  "scenario": "<code>set.seed(42)</code> でサイコロを600回振り、6 が出た割合 <code>prop_six</code>（小数第3位）を入力してください（見本を実行）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "prop_six",
+    "value": 0.165,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "<code>mean(rolls == 6)</code> は TRUE の割合。",
+  "rcode": "# === Complete example — read and run ===\ndie <- 1:6\nset.seed(42)\nrolls <- sample(die, size = 600, replace = TRUE)\ntable(rolls)\nprop_six <- mean(rolls == 6)\nprop_six\n1 / 6\n# rolls\n#   1   2   3   4   5   6 \n# 100 117  91  92 101  99 \n# [1] 0.165\n# [1] 0.1666667",
+  "explain": "6 の割合は 0.165。理論値 1/6 ≈ 0.167 に近い値です。"
+ },
+ {
+  "id": "m3-q2",
+  "tier": "basic",
+  "title": "Q2 · L2 コイン投げとオッズ（穴埋め）",
+  "concept": "Topic A — Probability & Simulation",
+  "scenario": "<code>set.seed(7)</code> でコインを1,000回投げ、表の割合 <code>p_heads</code> とオッズ <code>odds_heads</code>（どちらも小数第3位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_heads",
+    "value": 0.484,
+    "tol": 0.0011
+   },
+   {
+    "label": "odds_heads",
+    "value": 0.938,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "オッズ = p ÷ (1 − p)。",
+  "rcode": "set.seed(7)\nflips <- sample(c(\"H\", \"T\"), size = 1000, replace = TRUE)\np_heads <- mean(flips == \"H\")\nodds_heads <- p_heads / (1 - p_heads)\nround(c(p_heads, odds_heads), 3)\n# [1] 0.484 0.938",
+  "explain": "表の割合 0.484、オッズ 0.938。確率 0.5 ならオッズは 1（1:1）。"
+ },
+ {
+  "id": "m3-q3",
+  "tier": "intermediate",
+  "title": "Q3 · L3 サイコロ2個の和（自由記述）",
+  "concept": "Topic A — Probability & Simulation",
+  "scenario": "<code>set.seed(2026)</code> で2個のサイコロを10,000回投げ、和が 7 になる確率の推定値 <code>est7</code>（小数第3位）を求めてください（d1 → d2 の順に <code>sample()</code>）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "est7",
+    "value": 0.165,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "2つのベクトルを足すと、1回ごとの和のベクトルになります。",
+  "rcode": "set.seed(2026)\nd1 <- sample(1:6, 10000, replace = TRUE)\nd2 <- sample(1:6, 10000, replace = TRUE)\nest7 <- round(mean(d1 + d2 == 7), 3)\nexact7 <- round(6 / 36, 3)\nest7; exact7\n# [1] 0.165\n# [1] 0.167",
+  "explain": "推定値 0.165、正確な値は 6/36 ≈ 0.167。"
+ },
+ {
+  "id": "m3-q4",
+  "tier": "intermediate",
+  "title": "Q4 · L4 返品の確率（シナリオ1）",
+  "concept": "Topic A — Probability & Simulation",
+  "scenario": "2,500件中175件が返品でした（架空）。返品の確率 <code>p_return</code>・オッズ <code>odds_return</code>（小数第3位）と、次の400件での返品の期待数 <code>expected_400</code> を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_return",
+    "value": 0.07,
+    "tol": 0.0011
+   },
+   {
+    "label": "odds_return",
+    "value": 0.075,
+    "tol": 0.0011
+   },
+   {
+    "label": "expected_400",
+    "value": 28.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "確率は ÷ 全体、オッズは ÷ 失敗（返品されなかった数）。",
+  "rcode": "orders <- 2500; returns <- 175\np_return <- round(returns / orders, 3)\nodds_return <- round(returns / (orders - returns), 3)\nexpected_400 <- 400 * returns / orders\np_return; odds_return; expected_400\n# Conclusion: about 7% of orders come back, so plan for about 28 returns per 400 orders.\n# [1] 0.07\n# [1] 0.075\n# [1] 28",
+  "explain": "確率 0.070、オッズ 0.075、400件中の期待数 28 件。"
+ },
+ {
+  "id": "m3-q5",
+  "tier": "advanced",
+  "title": "Q5 · L5 大数の法則（シナリオ2）",
+  "concept": "Topic A — Probability & Simulation",
+  "scenario": "<code>set.seed(550)</code> で <code>sample(c(0, 1), 10000, replace = TRUE)</code> を実行し、100回時点の表の割合 <code>p_after_100</code>（小数第2位）と、10,000回時点の 0.5 との差の絶対値 <code>err_10000</code>（小数第4位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_after_100",
+    "value": 0.52,
+    "tol": 0.011
+   },
+   {
+    "label": "err_10000",
+    "value": 0.0038,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "<code>cumsum(flips) / seq_along(flips)</code> が「その時点までの割合」。",
+  "rcode": "set.seed(550)\nflips <- sample(c(0, 1), 10000, replace = TRUE)\nrunning <- cumsum(flips) / seq_along(flips)\nround(running[c(10, 100, 1000, 10000)], 4)\nerr_10000 <- round(abs(running[10000] - 0.5), 4)\nerr_10000\nplot(running, type = \"l\", ylim = c(0, 1), xlab = \"Flips\", ylab = \"Proportion of heads\")\nabline(h = 0.5, col = \"red\", lty = 2)\n# With few flips the proportion jumps around a lot.\n# As the number of flips grows it settles close to 0.5.\n# This is the law of large numbers: long-run relative frequency approaches the probability.\n# [1] 0.6000 0.5200 0.4900 0.4962\n# [1] 0.0038",
+  "explain": "100回で 0.52、10,000回での誤差は 0.0038。回数が増えるほど 0.5 に近づきます。"
+ },
+ {
+  "id": "m3-q6",
+  "tier": "basic",
+  "title": "Q6 · L1 加法定理（見本）",
+  "concept": "Topic B — Conditional Probability, Independence & Bayes",
+  "scenario": "ショップの二元表（架空）で、加法定理から P(購入 ∪ スマホ) <code>p_union</code>（小数第2位）を求めてください（見本を実行）。<pre class=\"arena-data\">shop &lt;- matrix(c(90, 30, 60, 20,\n                 110, 90, 40, 60), nrow = 2, byrow = TRUE,\n               dimnames = list(device = c(&quot;Phone&quot;, &quot;Computer&quot;),\n                               result = c(&quot;Bought&quot;, &quot;Browsed&quot;, &quot;Cart&quot;, &quot;Left&quot;)))</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_union",
+    "value": 0.62,
+    "tol": 0.011
+   }
+  ],
+  "hint": "P(A ∪ B) = P(A) + P(B) − P(A ∩ B)。",
+  "rcode": "shop <- matrix(c(90, 30, 60, 20,\n                 110, 90, 40, 60), nrow = 2, byrow = TRUE,\n               dimnames = list(device = c(\"Phone\", \"Computer\"),\n                               result = c(\"Bought\", \"Browsed\", \"Cart\", \"Left\")))\n# === Complete example — read and run ===\naddmargins(shop)\nn <- sum(shop)\np_B  <- sum(shop[, \"Bought\"]) / n\np_Ph <- sum(shop[\"Phone\", ]) / n\np_B_and_Ph <- shop[\"Phone\", \"Bought\"] / n\np_union <- p_B + p_Ph - p_B_and_Ph   # subtract the overlap once\np_union\n#           result\n# device     Bought Browsed Cart Left Sum\n#   Phone        90      30   60   20 200\n#   Computer    110      90   40   60 300\n#   Sum         200     120  100   80 500\n# [1] 0.62",
+  "explain": "P(購入 ∪ スマホ) = 0.62。重なり（スマホで購入した人）を1回引いています。"
+ },
+ {
+  "id": "m3-q7",
+  "tier": "basic",
+  "title": "Q7 · L2 条件付き確率（穴埋め）",
+  "concept": "Topic B — Conditional Probability, Independence & Bayes",
+  "scenario": "ショップの表から P(購入 | スマホ) <code>p_b_phone</code> と P(購入 | パソコン) <code>p_b_comp</code>（小数第3位）を求めてください。<pre class=\"arena-data\">shop &lt;- matrix(c(90, 30, 60, 20,\n                 110, 90, 40, 60), nrow = 2, byrow = TRUE,\n               dimnames = list(device = c(&quot;Phone&quot;, &quot;Computer&quot;),\n                               result = c(&quot;Bought&quot;, &quot;Browsed&quot;, &quot;Cart&quot;, &quot;Left&quot;)))</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_b_phone",
+    "value": 0.45,
+    "tol": 0.0011
+   },
+   {
+    "label": "p_b_comp",
+    "value": 0.367,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "条件（| の後ろ）の行の合計が分母。",
+  "rcode": "shop <- matrix(c(90, 30, 60, 20,\n                 110, 90, 40, 60), nrow = 2, byrow = TRUE,\n               dimnames = list(device = c(\"Phone\", \"Computer\"),\n                               result = c(\"Bought\", \"Browsed\", \"Cart\", \"Left\")))\np_b_phone <- shop[\"Phone\", \"Bought\"] / sum(shop[\"Phone\", ])\np_b_comp  <- shop[\"Computer\", \"Bought\"] / sum(shop[\"Computer\", ])\nround(c(p_b_phone, p_b_comp), 3)\nround(proportions(shop, margin = 1), 3)   # all row proportions\n# [1] 0.450 0.367\n#           result\n# device     Bought Browsed  Cart Left\n#   Phone     0.450    0.15 0.300  0.1\n#   Computer  0.367    0.30 0.133  0.2",
+  "explain": "スマホ 0.450、パソコン 0.367。端末によって購入率が違います。"
+ },
+ {
+  "id": "m3-q8",
+  "tier": "intermediate",
+  "title": "Q8 · L3 ジムの更新（自由記述）",
+  "concept": "Topic B — Conditional Probability, Independence & Bayes",
+  "scenario": "会員240人（年間プラン90人中72人更新、月額プラン150人中84人更新、架空）。P(更新) <code>p_renew</code> と P(更新 | 年間) <code>p_renew_annual</code>（小数第3位）を求め、独立か判断してください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_renew",
+    "value": 0.65,
+    "tol": 0.0011
+   },
+   {
+    "label": "p_renew_annual",
+    "value": 0.8,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "独立なら P(更新 | 年間) = P(更新)。",
+  "rcode": "gym <- matrix(c(72, 18, 84, 66), nrow = 2, byrow = TRUE,\n              dimnames = list(plan = c(\"Annual\", \"Monthly\"), renewed = c(\"Yes\", \"No\")))\naddmargins(gym)\np_renew <- round(sum(gym[, \"Yes\"]) / sum(gym), 3)\np_renew_annual <- round(gym[\"Annual\", \"Yes\"] / sum(gym[\"Annual\", ]), 3)\np_renew; p_renew_annual\n# Not independent: P(renew | annual) is not equal to P(renew).\n#          renewed\n# plan      Yes No Sum\n#   Annual   72 18  90\n#   Monthly  84 66 150\n#   Sum     156 84 240\n# [1] 0.65\n# [1] 0.8",
+  "explain": "P(更新) = 0.650、P(更新 | 年間) = 0.800。等しくないので独立ではありません。"
+ },
+ {
+  "id": "m3-q9",
+  "tier": "intermediate",
+  "title": "Q9 · L4 少なくとも1個の不良（シナリオ1）",
+  "concept": "Topic B — Conditional Probability, Independence & Bayes",
+  "scenario": "不良率 0.04（独立）の部品5個の箱で、少なくとも1個不良の確率 <code>p_atleast1</code>（小数第4位）と、その確率が初めて 0.5 を超える個数 <code>first_n</code> を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_atleast1",
+    "value": 0.1846,
+    "tol": 0.00011
+   },
+   {
+    "label": "first_n",
+    "value": 17.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "「少なくとも1個」の余事象は「1個もない」＝ (1 − 0.04)^n。",
+  "rcode": "p_none5 <- (1 - 0.04)^5\np_atleast1 <- round(1 - p_none5, 4)\np_atleast1\nn <- 1:30\nprobs <- 1 - (1 - 0.04)^n\nfirst_n <- min(n[probs > 0.5])\nfirst_n\n# Conclusion: with 17 or more parts, a defect is more likely than not.\n# [1] 0.1846\n# [1] 17",
+  "explain": "5個で 0.1846。17 個以上で 0.5 を超えます。"
+ },
+ {
+  "id": "m3-q10",
+  "tier": "advanced",
+  "title": "Q10 · L5 ベイズと検査（シナリオ2）",
+  "concept": "Topic B — Conditional Probability, Independence & Bayes",
+  "scenario": "有病率 2%、検出率 90%、偽陽性率 8%（架空）の検査で、陽性のとき本当に該当する確率 <code>post_low</code> と、有病率 20% の集団での同じ確率 <code>post_high</code>（小数第3位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "post_low",
+    "value": 0.187,
+    "tol": 0.0011
+   },
+   {
+    "label": "post_high",
+    "value": 0.738,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "P(陽性) = 0.90 × 事前 + 0.08 × (1 − 事前)。事後 = 0.90 × 事前 ÷ P(陽性)。",
+  "rcode": "posterior <- function(prior, sens = 0.90, fpr = 0.08) {\n  p_pos <- sens * prior + fpr * (1 - prior)\n  sens * prior / p_pos\n}\npost_low  <- round(posterior(0.02), 3)\npost_high <- round(posterior(0.20), 3)\npost_low; post_high\n# In the general population most positives are false positives.\n# In the high-risk group a positive result is far more convincing.\n# Always consider the base rate before telling a patient what a positive means.\n# [1] 0.187\n# [1] 0.738",
+  "explain": "有病率 2% では 0.187、20% では 0.738。基準率が低いと陽性の多くは偽陽性です。"
+ },
+ {
+  "id": "m3-q11",
+  "tier": "basic",
+  "title": "Q11 · L1 二項分布：クーポンメール（見本）",
+  "concept": "Topic C — Discrete Distributions",
+  "scenario": "X ~ B(12, 0.2) で、ちょうど 3 人がクーポンを使う確率 <code>p3</code>（小数第4位）を入力してください（見本を実行）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p3",
+    "value": 0.2362,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "「ちょうど」は d。",
+  "rcode": "# === Complete example — read and run ===\np3     <- dbinom(3, size = 12, prob = 0.2)                     # exactly 3\np_le3  <- pbinom(3, size = 12, prob = 0.2)                     # at most 3\np_ge4  <- pbinom(3, size = 12, prob = 0.2, lower.tail = FALSE) # 4 or more\nmed    <- qbinom(0.5, size = 12, prob = 0.2)                   # median\nround(c(p3, p_le3, p_ge4), 4); med\nplot(0:12, dbinom(0:12, 12, 0.2), type = \"h\", lwd = 5, xlab = \"Coupons used\", ylab = \"P\")\n# [1] 0.2362 0.7946 0.2054\n# [1] 2",
+  "explain": "P(X = 3) = 0.2362。「以下」は p、「以上」は p(k − 1, lower.tail = FALSE)。"
+ },
+ {
+  "id": "m3-q12",
+  "tier": "basic",
+  "title": "Q12 · L2 二項分布：以上と平均（穴埋め）",
+  "concept": "Topic C — Discrete Distributions",
+  "scenario": "X ~ B(20, 0.35) で P(X ≥ 8) <code>p_ge8</code>（小数第4位）と、平均 np <code>mean_x</code>（小数第1位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_ge8",
+    "value": 0.399,
+    "tol": 0.00011
+   },
+   {
+    "label": "mean_x",
+    "value": 7.0,
+    "tol": 0.11
+   }
+  ],
+  "hint": "「8 以上」は q = 7 で <code>lower.tail = FALSE</code>。",
+  "rcode": "p_ge8 <- pbinom(7, size = 20, prob = 0.35, lower.tail = FALSE)\nmean_x <- 20 * 0.35\nround(p_ge8, 4); mean_x\n# [1] 0.399\n# [1] 7",
+  "explain": "P(X ≥ 8) = 0.3990、平均は 7.0。"
+ },
+ {
+  "id": "m3-q13",
+  "tier": "intermediate",
+  "title": "Q13 · L3 ポアソン：サポート窓口（自由記述）",
+  "concept": "Topic C — Discrete Distributions",
+  "scenario": "1時間に平均4件の問い合わせ。ちょうど2件 <code>p2</code>、6件より多い <code>p_gt6</code>、30分で0件 <code>p0_30</code> の確率（小数第4位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p2",
+    "value": 0.1465,
+    "tol": 0.00011
+   },
+   {
+    "label": "p_gt6",
+    "value": 0.1107,
+    "tol": 0.00011
+   },
+   {
+    "label": "p0_30",
+    "value": 0.1353,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "区間を変えたら λ も比例させる：30分なら λ = 2。",
+  "rcode": "p2 <- round(dpois(2, lambda = 4), 4)\np_gt6 <- round(ppois(6, lambda = 4, lower.tail = FALSE), 4)\np0_30 <- round(dpois(0, lambda = 4 * 30 / 60), 4)\np2; p_gt6; p0_30\n# [1] 0.1465\n# [1] 0.1107\n# [1] 0.1353",
+  "explain": "P(2件) = 0.1465、P(6件超) = 0.1107、P(30分で0件) = 0.1353。"
+ },
+ {
+  "id": "m3-q14",
+  "tier": "intermediate",
+  "title": "Q14 · L4 幾何分布：営業電話（シナリオ1）",
+  "concept": "Topic C — Discrete Distributions",
+  "scenario": "成約率 10% の営業電話で、5本目で初めて成約する確率 <code>p_call5</code>、最初の10本で1件も成約しない確率 <code>p_none10</code>（小数第4位）、初成約までの期待本数 <code>expected_calls</code> を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_call5",
+    "value": 0.0656,
+    "tol": 0.00011
+   },
+   {
+    "label": "p_none10",
+    "value": 0.3487,
+    "tol": 0.00011
+   },
+   {
+    "label": "expected_calls",
+    "value": 10.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "R の <code>dgeom(x)</code> は「成功の前の失敗の数」。5本目 → x = 4。",
+  "rcode": "p <- 0.1\np_call5 <- round(dgeom(4, prob = p), 4)\np_none10 <- round(pgeom(9, prob = p, lower.tail = FALSE), 4)   # 10+ failures\nexpected_calls <- 1 / p\np_call5; p_none10; expected_calls\n# Conclusion: going 10 calls without a sale happens about 35% of the time, so it is not unusual.\n# [1] 0.0656\n# [1] 0.3487\n# [1] 10",
+  "explain": "5本目で初成約 0.0656、10本連続で不成約 0.3487、期待本数 10。"
+ },
+ {
+  "id": "m3-q15",
+  "tier": "advanced",
+  "title": "Q15 · L5 品質管理（シナリオ2）",
+  "concept": "Topic C — Discrete Distributions",
+  "scenario": "不良率 3% の部品50個で「不良 2 個以下」の確率を、正確な二項 <code>exact</code>、シミュレーション <code>sim</code>（<code>set.seed(1)</code>、<code>rbinom(10000, 50, 0.03)</code>）、ポアソン近似 <code>pois</code>（λ = np）で求めてください（小数第4位）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "exact",
+    "value": 0.8108,
+    "tol": 0.00011
+   },
+   {
+    "label": "sim",
+    "value": 0.8034,
+    "tol": 0.00011
+   },
+   {
+    "label": "pois",
+    "value": 0.8088,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "ポアソン近似は n が大きく p が小さいときに使えます。",
+  "rcode": "exact <- round(pbinom(2, size = 50, prob = 0.03), 4)\nset.seed(1)\nsim <- round(mean(rbinom(10000, size = 50, prob = 0.03) <= 2), 4)\npois <- round(ppois(2, lambda = 50 * 0.03), 4)\nexact; sim; pois\n# The simulation lands close to the exact binomial value.\n# The Poisson approximation is also close because n is large and p is small.\n# A box with 3 or more defects happens only about 1 time in 5.\n# [1] 0.8108\n# [1] 0.8034\n# [1] 0.8088",
+  "explain": "正確 0.8108、シミュレーション 0.8034、ポアソン 0.8088。3つとも近い値になります。"
+ },
+ {
+  "id": "m3-q16",
+  "tier": "basic",
+  "title": "Q16 · L1 正規分布の確率（見本）",
+  "concept": "Topic D — Continuous Distributions",
+  "scenario": "配達時間 ~ N(30, 5) で、28〜35分に届く確率 <code>p_28_35</code>（小数第4位）を入力してください（見本を実行）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_28_35",
+    "value": 0.4968,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "あいだ＝大きい方の累積 − 小さい方の累積。",
+  "rcode": "# === Complete example — read and run ===\np_le25 <- pnorm(25, mean = 30, sd = 5)                     # 25 min or less\np_ge40 <- pnorm(40, mean = 30, sd = 5, lower.tail = FALSE) # 40 min or more\np_28_35 <- pnorm(35, 30, 5) - pnorm(28, 30, 5)             # between\nq95 <- qnorm(0.95, mean = 30, sd = 5)                      # 95th percentile\nround(c(p_le25, p_ge40, p_28_35, q95), 4)\n# [1]  0.1587  0.0228  0.4968 38.2243",
+  "explain": "P(28 ≤ X ≤ 35) = 0.4968。連続分布では「ちょうど」の確率は 0 なので dnorm は使いません。"
+ },
+ {
+  "id": "m3-q17",
+  "tier": "basic",
+  "title": "Q17 · L2 試験の得点（穴埋め）",
+  "concept": "Topic D — Continuous Distributions",
+  "scenario": "得点 ~ N(500, 100) で、650 点を超える割合 <code>p_above650</code>（小数第4位）と、上位 10% に入る最低点 <code>cutoff_top10</code>（小数第1位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_above650",
+    "value": 0.0668,
+    "tol": 0.00011
+   },
+   {
+    "label": "cutoff_top10",
+    "value": 628.2,
+    "tol": 0.11
+   }
+  ],
+  "hint": "上位 10% ＝ 下から 90%。",
+  "rcode": "p_above650 <- pnorm(650, mean = 500, sd = 100, lower.tail = FALSE)\ncutoff_top10 <- qnorm(0.90, mean = 500, sd = 100)\nround(p_above650, 4); round(cutoff_top10, 1)\n# [1] 0.0668\n# [1] 628.2",
+  "explain": "650 点超は 0.0668、上位 10% の境目は 628.2 点。"
+ },
+ {
+  "id": "m3-q18",
+  "tier": "intermediate",
+  "title": "Q18 · L3 二項の正規近似（自由記述）",
+  "concept": "Topic D — Continuous Distributions",
+  "scenario": "X ~ B(100, 0.4) の P(X ≤ 45) を、正確な値 <code>exact45</code> と、連続性補正つきの正規近似 <code>approx45</code>（平均 np、SD √(np(1 − p))、45.5 を使う）で求めてください（小数第4位）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "exact45",
+    "value": 0.8689,
+    "tol": 0.00011
+   },
+   {
+    "label": "approx45",
+    "value": 0.8692,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "正規近似は <code>pnorm(45.5, n*p, sqrt(n*p*(1-p)))</code>。",
+  "rcode": "n <- 100; p <- 0.4\nc(n * p, n * (1 - p))                     # both >= 10\nexact45 <- round(pbinom(45, n, p), 4)\napprox45 <- round(pnorm(45.5, mean = n * p, sd = sqrt(n * p * (1 - p))), 4)\nexact45; approx45\n# [1] 40 60\n# [1] 0.8689\n# [1] 0.8692",
+  "explain": "正確 0.8689、近似 0.8692。np = 40、n(1 − p) = 60 でどちらも 10 以上なので近似がよく合います。"
+ },
+ {
+  "id": "m3-q19",
+  "tier": "intermediate",
+  "title": "Q19 · L4 t の臨界値（シナリオ1）",
+  "concept": "Topic D — Continuous Distributions",
+  "scenario": "n = 12 のとき、両側 95% の t 臨界値 <code>t_star</code>（小数第3位）と、df = 20 で T &gt; 2.5 となる確率 <code>p_t25</code>（小数第4位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "t_star",
+    "value": 2.201,
+    "tol": 0.0011
+   },
+   {
+    "label": "p_t25",
+    "value": 0.0106,
+    "tol": 0.00011
+   }
+  ],
+  "hint": "df = n − 1 = 11。右側の確率は <code>lower.tail = FALSE</code>。",
+  "rcode": "df <- 12 - 1\nt_star <- round(qt(0.975, df = df), 3)\nz_star <- round(qnorm(0.975), 3)\np_t25 <- round(pt(2.5, df = 20, lower.tail = FALSE), 4)\nt_star; z_star; p_t25\n# Conclusion: t has heavier tails, so it must go further out to leave 2.5% in each tail.\n# [1] 2.201\n# [1] 1.96\n# [1] 0.0106",
+  "explain": "t* = 2.201（z* = 1.960 より大きい）、P(T &gt; 2.5) = 0.0106。"
+ },
+ {
+  "id": "m3-q20",
+  "tier": "advanced",
+  "title": "Q20 · L5 χ² と F（シナリオ2）",
+  "concept": "Topic D — Continuous Distributions",
+  "scenario": "df = 4 の χ² で 9.5 以上の確率 <code>p_chi</code>、F(3, 8) で 4.5 以上の確率 <code>p_f</code>（小数第4位）、<code>set.seed(550)</code> で作った z1² + z2² + z3²（各 <code>rnorm(5000)</code> を順に）の平均 <code>mean_chi3</code>（小数第2位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "p_chi",
+    "value": 0.0497,
+    "tol": 0.00011
+   },
+   {
+    "label": "p_f",
+    "value": 0.0395,
+    "tol": 0.00011
+   },
+   {
+    "label": "mean_chi3",
+    "value": 3.0,
+    "tol": 0.011
+   }
+  ],
+  "hint": "χ²・F は右側の面積なので <code>lower.tail = FALSE</code>。",
+  "rcode": "p_chi <- round(pchisq(9.5, df = 4, lower.tail = FALSE), 4)\np_f   <- round(pf(4.5, df1 = 3, df2 = 8, lower.tail = FALSE), 4)\nset.seed(550)\nchi3 <- rnorm(5000)^2 + rnorm(5000)^2 + rnorm(5000)^2\nmean_chi3 <- round(mean(chi3), 2)\nhist(chi3, breaks = 50, freq = FALSE, col = \"lightblue\")\ncurve(dchisq(x, df = 3), add = TRUE, col = \"red\", lwd = 2)\np_chi; p_f; mean_chi3\n# Both chi-square and F are right-skewed and non-negative, so we look at the right tail.\n# A chi-square of 9.5 (df = 4) and an F of 4.5 (3, 8) are both fairly rare, about 5% or less.\n# The simulated sum of 3 squared normals has a mean close to 3, as the theory says (mean = df).\n# [1] 0.0497\n# [1] 0.0395\n# [1] 3",
+  "explain": "P(χ² ≥ 9.5) = 0.0497、P(F ≥ 4.5) = 0.0395、シミュレーションの平均 3.00（理論値 df = 3）。"
+ }
+];
+renderStatsArena(PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

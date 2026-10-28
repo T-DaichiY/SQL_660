@@ -43,6 +43,7 @@
   function card(p) {
     var el = document.createElement("div");
     el.className = "practice-card sql-practice-card";
+    el.id = p.id;
     var h = '<div class="ptitle">' + esc(p.title) + ' <span class="ptier">' + esc(p.tier) + "</span>" + (solved[p.id] ? '<span class="done-badge">✓ 正解済み</span>' : "") + "</div>" +
       '<p class="ptask">' + p.scenario + "</p>" + (p.concept ? '<p class="pconcept">🎯 <strong>スキル:</strong> ' + esc(p.concept) + "</p>" : "");
     if (p.type === "mcq") {
@@ -97,5 +98,6 @@
       var t = p.tier === "basic" ? c.basicsEl : p.tier === "intermediate" ? c.intermediateEl : c.advancedEl;
       t.appendChild(card(p));
     });
+    if (location.hash) { var tgt = document.getElementById(decodeURIComponent(location.hash.slice(1))); if (tgt) tgt.scrollIntoView(); }
   };
 })();

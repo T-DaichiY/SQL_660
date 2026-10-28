@@ -1,0 +1,436 @@
+---
+title: "550 M1 — R Basics, Vectors, Data Frames & Levels of Measurement: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Topic D uses `donors.csv` (Brightspace). Save it in the same folder as this notebook.
+>
+> ✅ Check your numbers on the website: https://t-daichiy.github.io/SQL_660/stats/ex_550_m1.html
+
+------------------------------------------------------------------------
+
+
+# Topic A — R as a Calculator & Assignment
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Store the Earth's radius (3,963 miles) and compute the circumference and the surface area, rounded to 2 decimals.
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+# Step 1: store values with <-
+radius <- 3963
+# Step 2: use the built-in constant pi
+circumference <- 2 * pi * radius
+area <- 4 * pi * radius^2
+# Step 3: round and print
+round(circumference, 2)
+round(area, 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** A notebook costs $12.50 and a school buys 40. Compute the subtotal and the total with 8% tax, rounded to 2 decimals.
+
+```{r q2-l2}
+price <- 12.50
+qty   <- 40
+subtotal <- ___ * ___
+total    <- round(subtotal * ___, 2)   # add 8% tax
+total
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Convert 98.6 °F to Celsius with C = (F − 32) × 5 / 9. Store it as `temp_c` and round to 1 decimal. Also compute `sqrt(abs(-50))` rounded to 3 decimals and store it as `root`.
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** A café sold 230 coffees at $4.25 and 85 cakes at $5.50 today. Costs are 35% of revenue. Compute revenue and profit (2 decimals).
+
+```{r q4-l4}
+# 1. Store prices and quantities in well-named variables
+# 2. Compute revenue
+# 3. Compute cost (35% of revenue) and profit
+# 4. Conclusion (comment): what was today's profit?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** You invest $5,000 at 3.5% per year for 10 years. Compare compound interest A = P(1 + r)^n with simple interest P(1 + r·n). Report both and the difference (2 decimals) and write a 2-sentence recommendation.
+
+```{r q5-l5}
+# 1. Store P, r, n
+# 2. Compute the compound amount
+# 3. Compute the simple-interest amount
+# 4. Compute the difference
+# 5. Report (2 sentences as comments):
+# Result:
+# Recommendation:
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Vectors & Indexing
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Store 7 daily high temperatures in a vector and summarise them.
+
+```{r q6-data, eval=TRUE}
+temps <- c(24.5, 26.1, 23.8, 27.4, 28.0, 25.2, 22.9)
+days  <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+length(temps)
+mean(temps)
+max(temps)
+days[which.max(temps)]        # the hottest day
+temps > 25                    # logical vector
+hot_days <- sum(temps > 25)   # TRUE counts as 1
+hot_days
+days[temps > 25]              # names of the hot days
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Find the weekend total (days 6–7) and how many days reached 8,000 steps.
+
+```{r q7-data, eval=TRUE}
+steps <- c(6500, 9200, 8100, 4300, 10050, 12000, 7300)
+```
+
+```{r q7-l2}
+weekend_total <- sum(steps[___])
+goal_days <- sum(steps ___ 8000)
+weekend_total
+goal_days
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Ten quiz scores are out of 80. Convert them to percentages, then find how many students scored at least 70% and the mean percentage (1 decimal).
+
+```{r q8-data, eval=TRUE}
+scores <- c(56, 72, 64, 49, 80, 68, 59, 75, 61, 44)
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** A shop records units sold for 12 months and a price that rose in July. Compute monthly revenue, the total, and the months whose revenue is above the average.
+
+```{r q9-data, eval=TRUE}
+units <- c(120, 95, 130, 150, 160, 140, 110, 105, 170, 180, 200, 230)
+price <- c(rep(15, 6), rep(17, 6))
+months <- month.abb
+```
+
+```{r q9-l4}
+# 1. Compute the revenue for each month (vectorized)
+# 2. Compute the total revenue
+# 3. Which months are above the average revenue? How many?
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Survey answers arrive as text. Convert them to logical, find the proportion of 'yes', then explore what happens when types are mixed. Write a 2-sentence note on coercion.
+
+```{r q10-data, eval=TRUE}
+answers <- c("yes", "no", "yes", "yes", "no", "yes", "no", "yes", "yes", "no")
+mixed <- c(10, "20", 30)
+```
+
+```{r q10-l5}
+# 1. Convert answers to a logical vector (TRUE = "yes")
+# 2. Proportion of yes (use mean on the logical vector)
+# 3. What is class(mixed)? Why?
+# 4. Convert mixed to numbers and sum them
+# 5. Note (2 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Data Frames
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Combine vectors into a data frame and inspect it.
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+students <- data.frame(
+  name  = c("Ana", "Ben", "Chen", "Dee", "Eli", "Fay"),
+  class = c("A", "B", "A", "B", "A", "B"),
+  score = c(78, 85, 62, 91, 70, 88),
+  hours = c(3, 5, 1, 6, 2, 4))
+str(students)
+summary(students$score)
+mean_score <- mean(students$score)
+mean_score
+students[students$hours > 3, ]     # rows: more than 3 hours of study
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Select products that cost more than $100 and find their average stock.
+
+```{r q12-data, eval=TRUE}
+products <- data.frame(
+  item  = c("desk", "lamp", "chair", "shelf", "sofa", "rug"),
+  price = c(220, 35, 140, 95, 650, 120),
+  stock = c(12, 40, 25, 18, 4, 9))
+```
+
+```{r q12-l2}
+pricey <- products[products$___ > 100, ___]
+n_pricey <- nrow(___)
+mean_stock <- mean(pricey$___)
+n_pricey
+mean_stock
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Use the built-in `mtcars` data: how many rows and columns? What is the mean mpg of 6-cylinder cars (2 decimals)? How many cars have a manual transmission (`am == 1`)?
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** HR gives a 5% bonus. Build the data frame, add a `bonus` column, then report the mean salary in Sales and the total bonus cost.
+
+```{r q14-data, eval=TRUE}
+staff <- data.frame(
+  name   = c("Kim", "Lee", "Max", "Noa", "Oto", "Pia", "Ray", "Sam"),
+  dept   = c("Sales", "IT", "Sales", "HR", "IT", "Sales", "HR", "IT"),
+  salary = c(52000, 68000, 49000, 45000, 72000, 55000, 47000, 63000))
+```
+
+```{r q14-l4}
+# 1. Add a new column bonus = 5% of salary
+# 2. Mean salary of the Sales department
+# 3. Total bonus cost
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Use the built-in `airquality` data. Count the missing Ozone values, compute the mean Ozone (ignoring NA), the mean July temperature, and the number of days with Ozone above 100. Write a 3-sentence summary.
+
+```{r q15-l5}
+# 1. How many NA values are in Ozone?
+# 2. Mean Ozone, ignoring NA (2 decimals)
+# 3. Mean Temp in July (Month == 7), 2 decimals
+# 4. How many days had Ozone > 100? (careful with NA!)
+# 5. Summary (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — CSV Files & Levels of Measurement
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Read the donors data and inspect its size and variable types.
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+donors <- read.csv("donors.csv")   # the file must be in your working directory
+n_rows <- nrow(donors)
+n_rows
+ncol(donors)
+str(donors[, c("age", "state", "urbanicity", "incomeRating", "totalGivingAmount")])
+table(donors$urbanicity)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Count the missing ages, compute the mean age without them, and the proportion of female donors.
+
+```{r q17-l2}
+n_missing <- sum(is.na(donors$___))
+mean_age  <- round(mean(donors$age, na.rm = ___), 2)
+prop_female <- round(mean(donors$gender == "___", na.rm = TRUE), 3)
+n_missing; mean_age; prop_female
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** For `state`, `socioEconomicStatus`, `age` and `incomeRating`, decide the level of measurement (write it as a comment). Then count the number of different states and the number of 'highest' socio-economic status donors.
+
+```{r q18-l3}
+# Write all your code here
+# state:               (nominal / ordinal / interval / ratio?)
+# socioEconomicStatus:
+# age:
+# incomeRating:
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** How many donors responded to the mailing, what proportion is that, and do responders give more in total on average?
+
+```{r q19-l4}
+# 1. Number of donors with respondedMailing == TRUE
+# 2. Proportion who responded (3 decimals)
+# 3. Mean totalGivingAmount for responders and non-responders (2 decimals)
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Treat `incomeRating` (1–7) as ordinal: make a frequency table, find the median rating, and the share of donors (with a rating) who are rated 5 or higher. Explain in 3 sentences why the mean is less meaningful here.
+
+```{r q20-l5}
+# 1. Frequency table of incomeRating
+# 2. Median rating (ignore NA)
+# 3. Proportion rated 5+ among donors with a rating (3 decimals)
+# 4. Convert to an ordered factor with factor(..., ordered = TRUE) and check levels()
+# 5. Explanation (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  M1 QUICK REFERENCE                                  ║
+║  x <- 5            assign        x            print  ║
+║  round(x, 2)  sqrt(x)  abs(x)  pi  ^ (power)         ║
+║  v <- c(1, 2, 3)   vector        v[2]  v[2:3]        ║
+║  v[c(1, 3)]        several       v[v > 1]  logical   ║
+║  length(v)  sum(v > 1)  mean(v)  which.max(v)        ║
+║  as.numeric()  class()  (one type per vector)        ║
+║  df <- data.frame(a, b)          df$a   df[1, ]      ║
+║  df[df$a > 1, ]  rows by condition  nrow() ncol()    ║
+║  str(df)  summary(df)  names(df)  head(df)           ║
+║  read.csv(\"file.csv\")  getwd()  list.files()          ║
+║  sum(is.na(x))   mean(x, na.rm = TRUE)               ║
+║  install.packages(\"pkg\") once / library(pkg) each    ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*550 M1 — R Basics, Vectors, Data Frames & Levels of Measurement: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

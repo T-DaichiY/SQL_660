@@ -13,6 +13,19 @@ def load():
         import c_m3; MODS["m3"] = (c_m3.LESSONS, None)
     except ImportError: pass
 
+EX = {"m1": ("ex_550_m1.html", "m1_practice_v1.Rmd", "550 M1"), "m2": ("ex_550_m2.html", "m2_practice_v1.Rmd", "550 M2"),
+      "m3": ("ex_550_m3_prob.html", "m3_practice_v1.Rmd", "550 M3")}
+EXQ = {"m1_rbasics": (1, 5), "m1_vectors": (6, 10), "m1_dataframe": (11, 15), "m1_levels": (16, 20), "m1_workflow": (16, 20),
+       "m2_center": (1, 5), "m2_graphs": (6, 10), "m2_spread": (11, 15), "m2_sd_normal": (13, 16), "m2_z": (16, 20),
+       "m3_prob": (1, 5), "m3_cond": (6, 9), "m3_bayes": (10, 10), "m3_discrete": (11, 15), "m3_normal": (16, 18), "m3_tchif": (19, 20)}
+
+def ex_box(k, slug):
+    page, rmd, mod = EX[k]; a, b = EXQ[slug]
+    qs = f"Q{a}" if a == b else f"Q{a}〜Q{b}"
+    return (f'<div class="teal-box">🏋️ <strong>この回の R 演習：</strong><a href="{page}#{k}-q{a}">{mod} 演習 {qs}</a>'
+            f'（練習ノートブック <a href="rmd/{rmd}" download>📥 {rmd}</a> と同じ問題・同じ番号）。'
+            f'RStudio で解いて、数値を入力すると自動採点されます。</div>\n')
+
 def clean(o):
     return re.sub(r'/\S*?/r550_[^/\s]+/c\d+\.R', '<text>', o)
 
@@ -30,7 +43,7 @@ def main(which):
         if k in which: built.append((k, fn, P, L, body, q))
     names = [fn.__name__ for _, fn in seq]
     for k, fn, P, L, body, q in built:
-        body += "\n" + quiz(L["slug"], q)
+        body += "\n" + ex_box(k, L["slug"]) + quiz(L["slug"], q)
         filled, outs = P.fill(body)
         filled = clean(filled)
         i = names.index(fn.__name__)

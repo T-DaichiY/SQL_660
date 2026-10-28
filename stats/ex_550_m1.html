@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演習 550 M1 R入門・データフレーム・測定水準</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="practice-arena.css?v=1">
+<style>.arena-data{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.6rem .8rem;margin:.5rem 0 0;font-size:.82rem;white-space:pre-wrap;overflow-x:auto}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 演習 550 M1 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main active" href="ex_550_m1.html">550 M1</a></span><span class="navg"><a class="n-main" href="ex_550_m2.html">550 M2</a></span><span class="navg"><a class="n-main" href="ex_550_m3_prob.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M4</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">演習 · 550 M1</div>
+  <h1>🏋️ M1 演習 — R入門・データフレーム・測定水準</h1>
+  <p>練習ノートブック <a href="rmd/m1_practice_v1.Rmd" download style="color:inherit;font-weight:700">📥 m1_practice_v1.Rmd</a> の20問（4トピック × 5段階）と<strong>同じ問題・同じ番号</strong>です。RStudio で解いて、出た数値を入力すると自動採点されます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#basics">🟢 基礎（L1–L2）</a><a href="#intermediate">🟡 中級（L3–L4）</a><a href="#advanced">🔴 上級（L5）</a><a href="exercises.html">🏋️ 演習ハブ</a>
+  </div>
+</div>
+</div>
+<div class="container">
+
+<div class="arena-intro">
+  <p>✍️ <strong>使い方：</strong>ノートブックの各問（Q1〜Q20）を RStudio で解き、ここに数値を入力して<strong>✅ 採点</strong>。<strong>L1</strong> は完成した見本（実行して値を確認）、<strong>L2</strong> は <code>___</code> の穴埋め、<strong>L3</strong> は自分で全部書く、<strong>L4・L5</strong> はシナリオ問題（最後に結論や報告をコメントで書く）。分からなければ<strong>💡 ヒント</strong>、最後に<strong>🔑 答えを見る</strong>で解答コードと実行結果を確認できます。</p>
+  <p style="margin-top:.5rem">📂 Topic D（Q16〜Q20）は <code>donors.csv</code>（Brightspace で配布）を使います。ノートブックと同じフォルダに置いてください。Topic A〜C はデータ不要（R 組み込みデータと自分で作るベクトル）。</p>
+  <p style="margin-top:.5rem">📚 対応するレッスン：<a href="m1_rbasics.html">R の基本</a>（Topic A）・<a href="m1_vectors.html">ベクトル</a>（B）・<a href="m1_dataframe.html">データフレーム</a>（C）・<a href="m1_levels.html">測定水準</a>／<a href="m1_workflow.html">作業ディレクトリ</a>（D）</p>
+</div>
+
+<div class="tier-section" id="basics">
+  <div class="tier-header"><h2>🟢 基礎（L1 見本・L2 穴埋め）</h2><span class="tier-badge basic">Basic · 8</span></div>
+  <div id="basics-container"></div>
+</div>
+<div class="tier-section" id="intermediate">
+  <div class="tier-header"><h2>🟡 中級（L3 自由記述・L4 シナリオ1）</h2><span class="tier-badge intermediate">Intermediate · 8</span></div>
+  <div id="intermediate-container"></div>
+</div>
+<div class="tier-section" id="advanced">
+  <div class="tier-header"><h2>🔴 上級（L5 シナリオ2）</h2><span class="tier-badge advanced">Advanced · 4</span></div>
+  <div id="advanced-container"></div>
+</div>
+
+</div>
+
+<footer>
+  <p>🏋️ 統計レッスン：演習 — 550 M1 R入門・データフレーム・測定水準</p>
+  <p style="margin-top:.5rem;"><a href="exercises.html">🏋️ 演習ハブ</a> · <a href="index.html">🏠 概要へ</a> · <a href="rmd/m1_practice_v1.Rmd" download>📥 練習ノートブック</a></p>
+</footer>
+
+<script src="stats-arena.js?v=1"></script>
+<script>
+var PROBLEMS = [
+ {
+  "id": "m1-q1",
+  "tier": "basic",
+  "title": "Q1 · L1 地球の円周（見本）",
+  "concept": "Topic A — R as a Calculator & Assignment",
+  "scenario": "地球の半径を 3,963 マイルとして、円周 <code>2 * pi * radius</code> を求め、小数第2位まで入力してください（ノートブックの見本を実行すれば出ます）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "circumference",
+    "value": 24900.26,
+    "tol": 0.011
+   }
+  ],
+  "hint": "<code>pi</code> は R に組み込まれた円周率。<code>round(x, 2)</code> で丸めます。",
+  "rcode": "# === Complete example — read and run ===\n# Step 1: store values with <-\nradius <- 3963\n# Step 2: use the built-in constant pi\ncircumference <- 2 * pi * radius\narea <- 4 * pi * radius^2\n# Step 3: round and print\nround(circumference, 2)\nround(area, 2)\n# [1] 24900.26\n# [1] 197359487",
+  "explain": "円周は 24900.26 マイル。<code>&lt;-</code> で保存した値は名前で何度でも使えます。"
+ },
+ {
+  "id": "m1-q2",
+  "tier": "basic",
+  "title": "Q2 · L2 税込み合計（穴埋め）",
+  "concept": "Topic A — R as a Calculator & Assignment",
+  "scenario": "1冊 \\$12.50 のノートを 40 冊買います。小計 <code>subtotal</code> と、8% の税を加えた合計 <code>total</code>（小数第2位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "total",
+    "value": 540.0,
+    "tol": 0.011
+   }
+  ],
+  "hint": "8% 加えるには 1.08 を掛けます。",
+  "rcode": "price <- 12.50\nqty   <- 40\nsubtotal <- price * qty\ntotal    <- round(subtotal * 1.08, 2)   # add 8% tax\ntotal\n# [1] 540",
+  "explain": "小計 500、合計 540.00。<code>___</code> を埋めるときも、演算子の前後に空白を入れる書き方を守りましょう。"
+ },
+ {
+  "id": "m1-q3",
+  "tier": "intermediate",
+  "title": "Q3 · L3 華氏を摂氏に（自由記述）",
+  "concept": "Topic A — R as a Calculator & Assignment",
+  "scenario": "98.6°F を摂氏に変換して <code>temp_c</code>（小数第1位）に保存し、<code>sqrt(abs(-50))</code> を小数第3位で <code>root</code> に保存してください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "temp_c",
+    "value": 37.0,
+    "tol": 0.11
+   },
+   {
+    "label": "root",
+    "value": 7.071,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "かっこを忘れると計算の順番が変わります：<code>(temp_f - 32) * 5 / 9</code>。",
+  "rcode": "temp_f <- 98.6\ntemp_c <- round((temp_f - 32) * 5 / 9, 1)\ntemp_c\nroot <- round(sqrt(abs(-50)), 3)\nroot\n# [1] 37\n# [1] 7.071",
+  "explain": "temp_c = 37.0、root = 7.071。関数は内側（abs）から先に計算されます。"
+ },
+ {
+  "id": "m1-q4",
+  "tier": "intermediate",
+  "title": "Q4 · L4 カフェの1日の利益（シナリオ1）",
+  "concept": "Topic A — R as a Calculator & Assignment",
+  "scenario": "コーヒー \\$4.25 を 230 杯、ケーキ \\$5.50 を 85 個売りました。費用は売上の 35%。売上 <code>revenue</code> と利益 <code>profit</code>（小数第2位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "revenue",
+    "value": 1445.0,
+    "tol": 0.011
+   },
+   {
+    "label": "profit",
+    "value": 939.25,
+    "tol": 0.011
+   }
+  ],
+  "hint": "利益 = 売上 − 0.35 × 売上 = 0.65 × 売上。",
+  "rcode": "coffee_price <- 4.25; coffee_qty <- 230\ncake_price   <- 5.50; cake_qty   <- 85\nrevenue <- coffee_price * coffee_qty + cake_price * cake_qty\ncost    <- 0.35 * revenue\nprofit  <- round(revenue - cost, 2)\nrevenue\nprofit\n# Conclusion: revenue was $1,445 and today's profit was $939.25.\n# [1] 1445\n# [1] 939.25",
+  "explain": "売上 1445.00、利益 939.25。変数名を意味のある名前にすると、あとで読み返しやすくなります。"
+ },
+ {
+  "id": "m1-q5",
+  "tier": "advanced",
+  "title": "Q5 · L5 複利と単利（シナリオ2）",
+  "concept": "Topic A — R as a Calculator & Assignment",
+  "scenario": "\\$5,000 を年利 3.5% で 10 年運用します。複利 <code>P * (1 + r)^n</code> と単利 <code>P * (1 + r * n)</code> を計算し、複利の金額と差額（小数第2位）を入力してください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "compound",
+    "value": 7052.99,
+    "tol": 0.011
+   },
+   {
+    "label": "difference",
+    "value": 302.99,
+    "tol": 0.011
+   }
+  ],
+  "hint": "べき乗は <code>^</code>。<code>(1 + r)^n</code> のかっこを忘れずに。",
+  "rcode": "P <- 5000; r <- 0.035; n <- 10\ncompound <- round(P * (1 + r)^n, 2)\nsimple   <- round(P * (1 + r * n), 2)\ndifference <- round(compound - simple, 2)\ncompound; simple; difference\n# Result: after 10 years compound interest gives $7,052.99, simple gives $6,750.\n# Recommendation: choose the compounding account; it earns about $303 more.\n# [1] 7052.99\n# [1] 6750\n# [1] 302.99",
+  "explain": "複利 7052.99、差額 302.99。報告は「結果→おすすめ」の2文で、数字を入れて書きましょう。"
+ },
+ {
+  "id": "m1-q6",
+  "tier": "basic",
+  "title": "Q6 · L1 1週間の気温（見本）",
+  "concept": "Topic B — Vectors & Indexing",
+  "scenario": "7日分の最高気温のベクトルで、25℃ を超えた日数 <code>hot_days</code> を求めてください（見本を実行）。<pre class=\"arena-data\">temps &lt;- c(24.5, 26.1, 23.8, 27.4, 28.0, 25.2, 22.9)\ndays  &lt;- c(&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;, &quot;Sun&quot;)</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "hot_days",
+    "value": 4.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "<code>sum(temps &gt; 25)</code> は TRUE の個数を数えます。",
+  "rcode": "temps <- c(24.5, 26.1, 23.8, 27.4, 28.0, 25.2, 22.9)\ndays  <- c(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\")\n# === Complete example — read and run ===\nlength(temps)\nmean(temps)\nmax(temps)\ndays[which.max(temps)]        # the hottest day\ntemps > 25                    # logical vector\nhot_days <- sum(temps > 25)   # TRUE counts as 1\nhot_days\ndays[temps > 25]              # names of the hot days\n# [1] 7\n# [1] 25.41429\n# [1] 28\n# [1] \"Fri\"\n# [1] FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE\n# [1] 4\n# [1] \"Tue\" \"Thu\" \"Fri\" \"Sat\"",
+  "explain": "25℃ 超えは 4 日。<code>days[temps &gt; 25]</code> で曜日名も取り出せます。"
+ },
+ {
+  "id": "m1-q7",
+  "tier": "basic",
+  "title": "Q7 · L2 歩数計（穴埋め）",
+  "concept": "Topic B — Vectors & Indexing",
+  "scenario": "1週間の歩数です。週末（6・7日目）の合計 <code>weekend_total</code> と、8,000 歩以上の日数 <code>goal_days</code> を求めてください。<pre class=\"arena-data\">steps &lt;- c(6500, 9200, 8100, 4300, 10050, 12000, 7300)</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "weekend_total",
+    "value": 19300.0,
+    "tol": 0.5
+   },
+   {
+    "label": "goal_days",
+    "value": 4.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "連番の添字は <code>6:7</code>、「以上」は <code>&gt;=</code>。",
+  "rcode": "steps <- c(6500, 9200, 8100, 4300, 10050, 12000, 7300)\nweekend_total <- sum(steps[6:7])\ngoal_days <- sum(steps >= 8000)\nweekend_total\ngoal_days\n# [1] 19300\n# [1] 4",
+  "explain": "週末の合計 19300 歩、目標達成は 4 日。"
+ },
+ {
+  "id": "m1-q8",
+  "tier": "intermediate",
+  "title": "Q8 · L3 小テストの得点率（自由記述）",
+  "concept": "Topic B — Vectors & Indexing",
+  "scenario": "80 点満点の小テスト10人分です。得点率（%）に変換し、70% 以上の人数 <code>n_pass</code> と平均得点率 <code>mean_pct</code>（小数第1位）を求めてください。<pre class=\"arena-data\">scores &lt;- c(56, 72, 64, 49, 80, 68, 59, 75, 61, 44)</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_pass",
+    "value": 8.0,
+    "tol": 0.5
+   },
+   {
+    "label": "mean_pct",
+    "value": 78.5,
+    "tol": 0.11
+   }
+  ],
+  "hint": "ベクトル全体に <code>/ 80 * 100</code> を一度に適用できます（ベクトル化演算）。",
+  "rcode": "scores <- c(56, 72, 64, 49, 80, 68, 59, 75, 61, 44)\npct <- scores / 80 * 100\nn_pass <- sum(pct >= 70)\nmean_pct <- round(mean(pct), 1)\nn_pass\nmean_pct\n# [1] 8\n# [1] 78.5",
+  "explain": "70% 以上は 8 人、平均は 78.5%。"
+ },
+ {
+  "id": "m1-q9",
+  "tier": "intermediate",
+  "title": "Q9 · L4 月別の売上（シナリオ1）",
+  "concept": "Topic B — Vectors & Indexing",
+  "scenario": "12か月の販売数と、7月に値上げした単価のベクトルです。月別売上を作り、年間売上 <code>total_revenue</code> と、平均を上回った月の数 <code>n_above</code> を求めてください。<pre class=\"arena-data\">units &lt;- c(120, 95, 130, 150, 160, 140, 110, 105, 170, 180, 200, 230)\nprice &lt;- c(rep(15, 6), rep(17, 6))\nmonths &lt;- month.abb</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "total_revenue",
+    "value": 28840.0,
+    "tol": 0.5
+   },
+   {
+    "label": "n_above",
+    "value": 4.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "<code>units * price</code> は同じ位置どうしで掛け算されます。<code>month.abb</code> は R 組み込みの月の略称。",
+  "rcode": "units <- c(120, 95, 130, 150, 160, 140, 110, 105, 170, 180, 200, 230)\nprice <- c(rep(15, 6), rep(17, 6))\nmonths <- month.abb\nrevenue <- units * price\ntotal_revenue <- sum(revenue)\nabove <- months[revenue > mean(revenue)]\nn_above <- length(above)\ntotal_revenue\nabove\n# Conclusion: Sep-Dec are above average; total revenue was $28,840.\n# [1] 28840\n# [1] \"Sep\" \"Oct\" \"Nov\" \"Dec\"",
+  "explain": "年間売上は 28840、平均を上回ったのは 4 か月。"
+ },
+ {
+  "id": "m1-q10",
+  "tier": "advanced",
+  "title": "Q10 · L5 アンケートと型（シナリオ2）",
+  "concept": "Topic B — Vectors & Indexing",
+  "scenario": "文字で届いたアンケート回答です。\"yes\" を TRUE にした論理ベクトルの平均で賛成の割合 <code>prop_yes</code>（小数第1位）を、また <code>mixed</code> を数値に変換した合計 <code>total_mixed</code> を求めてください。<pre class=\"arena-data\">answers &lt;- c(&quot;yes&quot;, &quot;no&quot;, &quot;yes&quot;, &quot;yes&quot;, &quot;no&quot;, &quot;yes&quot;, &quot;no&quot;, &quot;yes&quot;, &quot;yes&quot;, &quot;no&quot;)\nmixed &lt;- c(10, &quot;20&quot;, 30)</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "prop_yes",
+    "value": 0.6,
+    "tol": 0.11
+   },
+   {
+    "label": "total_mixed",
+    "value": 60.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "<code>answers == \"yes\"</code> は論理ベクトル。<code>mean()</code> で TRUE の割合。<code>as.numeric()</code> で数値へ。",
+  "rcode": "answers <- c(\"yes\", \"no\", \"yes\", \"yes\", \"no\", \"yes\", \"no\", \"yes\", \"yes\", \"no\")\nmixed <- c(10, \"20\", 30)\nsaid_yes <- answers == \"yes\"\nprop_yes <- mean(said_yes)\nprop_yes\nclass(mixed)                 # \"character\": one text value coerces all\ntotal_mixed <- sum(as.numeric(mixed))\ntotal_mixed\n# Note: a vector holds one type, so one \"20\" turned every value into text.\n# Use as.numeric() to convert explicitly before calculating.\n# [1] 0.6\n# [1] \"character\"\n# [1] 60",
+  "explain": "賛成は 0.6、合計は 60。<code>class(mixed)</code> は \"character\"：1つの文字が混じると全体が文字になります（型の強制変換）。"
+ },
+ {
+  "id": "m1-q11",
+  "tier": "basic",
+  "title": "Q11 · L1 データフレームを作る（見本）",
+  "concept": "Topic C — Data Frames",
+  "scenario": "6人の生徒のデータフレームを作り、点数の平均 <code>mean_score</code>（小数第2位）を求めてください（見本を実行）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "mean_score",
+    "value": 79.0,
+    "tol": 0.011
+   }
+  ],
+  "hint": "<code>students$score</code> は列をベクトルとして取り出します。",
+  "rcode": "# === Complete example — read and run ===\nstudents <- data.frame(\n  name  = c(\"Ana\", \"Ben\", \"Chen\", \"Dee\", \"Eli\", \"Fay\"),\n  class = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  score = c(78, 85, 62, 91, 70, 88),\n  hours = c(3, 5, 1, 6, 2, 4))\nstr(students)\nsummary(students$score)\nmean_score <- mean(students$score)\nmean_score\nstudents[students$hours > 3, ]     # rows: more than 3 hours of study\n# 'data.frame':\t6 obs. of  4 variables:\n#  $ name : chr  \"Ana\" \"Ben\" \"Chen\" \"Dee\" ...\n#  $ class: chr  \"A\" \"B\" \"A\" \"B\" ...\n#  $ score: num  78 85 62 91 70 88\n#  $ hours: num  3 5 1 6 2 4\n#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n#   62.00   72.00   81.50   79.00   87.25   91.00 \n# [1] 79\n#   name class score hours\n# 2  Ben     B    85     5\n# 4  Dee     B    91     6\n# 6  Fay     B    88     4",
+  "explain": "平均は 79.00。<code>[行, 列]</code> の行に条件を入れると、その条件の行だけ取り出せます。"
+ },
+ {
+  "id": "m1-q12",
+  "tier": "basic",
+  "title": "Q12 · L2 商品在庫（穴埋め）",
+  "concept": "Topic C — Data Frames",
+  "scenario": "価格 \\$100 超の商品を取り出し、その数 <code>n_pricey</code> と在庫の平均 <code>mean_stock</code>（小数第2位）を求めてください。<pre class=\"arena-data\">products &lt;- data.frame(\n  item  = c(&quot;desk&quot;, &quot;lamp&quot;, &quot;chair&quot;, &quot;shelf&quot;, &quot;sofa&quot;, &quot;rug&quot;),\n  price = c(220, 35, 140, 95, 650, 120),\n  stock = c(12, 40, 25, 18, 4, 9))</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_pricey",
+    "value": 4.0,
+    "tol": 0.5
+   },
+   {
+    "label": "mean_stock",
+    "value": 12.5,
+    "tol": 0.011
+   }
+  ],
+  "hint": "行を条件で選び、列は空欄（すべて）：<code>products[条件, ]</code>。カンマを忘れずに。",
+  "rcode": "products <- data.frame(\n  item  = c(\"desk\", \"lamp\", \"chair\", \"shelf\", \"sofa\", \"rug\"),\n  price = c(220, 35, 140, 95, 650, 120),\n  stock = c(12, 40, 25, 18, 4, 9))\npricey <- products[products$price > 100, ]\nn_pricey <- nrow(pricey)\nmean_stock <- mean(pricey$stock)\nn_pricey\nmean_stock\n# [1] 4\n# [1] 12.5",
+  "explain": "該当は 4 商品、平均在庫 12.50。"
+ },
+ {
+  "id": "m1-q13",
+  "tier": "intermediate",
+  "title": "Q13 · L3 mtcars を調べる（自由記述）",
+  "concept": "Topic C — Data Frames",
+  "scenario": "組み込みデータ <code>mtcars</code> で、6気筒車の燃費（mpg）の平均 <code>mpg6</code>（小数第2位）と、マニュアル車（<code>am == 1</code>）の台数 <code>n_manual</code> を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "mpg6",
+    "value": 19.74,
+    "tol": 0.011
+   },
+   {
+    "label": "n_manual",
+    "value": 13.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "列のベクトルに論理添字：<code>mtcars$mpg[mtcars$cyl == 6]</code>。",
+  "rcode": "dim(mtcars)\nmpg6 <- round(mean(mtcars$mpg[mtcars$cyl == 6]), 2)\nn_manual <- sum(mtcars$am == 1)\nmpg6\nn_manual\n# [1] 32 11\n# [1] 19.74\n# [1] 13",
+  "explain": "6気筒の平均燃費は 19.74 mpg、マニュアル車は 13 台（全 32 台・11 列）。"
+ },
+ {
+  "id": "m1-q14",
+  "tier": "intermediate",
+  "title": "Q14 · L4 社員のボーナス（シナリオ1）",
+  "concept": "Topic C — Data Frames",
+  "scenario": "社員8人のデータに、給与の 5% の <code>bonus</code> 列を追加します。営業部（Sales）の平均給与 <code>sales_mean</code> と、ボーナス総額 <code>total_bonus</code> を求めてください。<pre class=\"arena-data\">staff &lt;- data.frame(\n  name   = c(&quot;Kim&quot;, &quot;Lee&quot;, &quot;Max&quot;, &quot;Noa&quot;, &quot;Oto&quot;, &quot;Pia&quot;, &quot;Ray&quot;, &quot;Sam&quot;),\n  dept   = c(&quot;Sales&quot;, &quot;IT&quot;, &quot;Sales&quot;, &quot;HR&quot;, &quot;IT&quot;, &quot;Sales&quot;, &quot;HR&quot;, &quot;IT&quot;),\n  salary = c(52000, 68000, 49000, 45000, 72000, 55000, 47000, 63000))</pre>",
+  "type": "num",
+  "answers": [
+   {
+    "label": "sales_mean",
+    "value": 52000.0,
+    "tol": 0.5
+   },
+   {
+    "label": "total_bonus",
+    "value": 22550.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "新しい列は <code>staff$bonus &lt;- …</code> で作れます。",
+  "rcode": "staff <- data.frame(\n  name   = c(\"Kim\", \"Lee\", \"Max\", \"Noa\", \"Oto\", \"Pia\", \"Ray\", \"Sam\"),\n  dept   = c(\"Sales\", \"IT\", \"Sales\", \"HR\", \"IT\", \"Sales\", \"HR\", \"IT\"),\n  salary = c(52000, 68000, 49000, 45000, 72000, 55000, 47000, 63000))\nstaff$bonus <- staff$salary * 0.05\nsales_mean <- mean(staff$salary[staff$dept == \"Sales\"])\ntotal_bonus <- sum(staff$bonus)\nsales_mean\ntotal_bonus\n# Conclusion: the bonus costs $22,550 in total.\n# [1] 52000\n# [1] 22550",
+  "explain": "営業部の平均給与は 52000、ボーナス総額は 22550。"
+ },
+ {
+  "id": "m1-q15",
+  "tier": "advanced",
+  "title": "Q15 · L5 airquality と欠損値（シナリオ2）",
+  "concept": "Topic C — Data Frames",
+  "scenario": "組み込みデータ <code>airquality</code> で、Ozone の欠損数 <code>n_na</code>、欠損を除いた平均 <code>mean_ozone</code>（小数第2位）、Ozone が 100 を超えた日数 <code>high_days</code> を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_na",
+    "value": 37.0,
+    "tol": 0.5
+   },
+   {
+    "label": "mean_ozone",
+    "value": 42.13,
+    "tol": 0.011
+   },
+   {
+    "label": "high_days",
+    "value": 7.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "<code>sum(is.na(x))</code> で NA の数。条件の合計にも <code>na.rm = TRUE</code> が必要です。",
+  "rcode": "n_na <- sum(is.na(airquality$Ozone))\nmean_ozone <- round(mean(airquality$Ozone, na.rm = TRUE), 2)\njuly_temp <- round(mean(airquality$Temp[airquality$Month == 7]), 2)\nhigh_days <- sum(airquality$Ozone > 100, na.rm = TRUE)\nn_na; mean_ozone; july_temp; high_days\n# Summary: 37 of 153 Ozone values are missing, so we used na.rm = TRUE.\n# Mean ozone was about 42 ppb; July averaged about 84 degrees F.\n# Only 7 days had ozone above 100.\n# [1] 37\n# [1] 42.13\n# [1] 83.9\n# [1] 7",
+  "explain": "欠損 37 件、平均 Ozone 42.13、100 超は 7 日。NA があると <code>sum(x &gt; 100)</code> は NA になる点に注意。"
+ },
+ {
+  "id": "m1-q16",
+  "tier": "basic",
+  "title": "Q16 · L1 donors.csv を読み込む（見本）",
+  "concept": "Topic D — CSV Files & Levels of Measurement",
+  "scenario": "<code>donors.csv</code> を読み込み、行数 <code>n_rows</code> を確認してください（見本を実行）。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_rows",
+    "value": 95412.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "<code>read.csv()</code> が失敗するときは、<code>getwd()</code> と <code>list.files()</code> で作業ディレクトリを確認。",
+  "rcode": "# === Complete example — read and run ===\ndonors <- read.csv(\"donors.csv\")   # the file must be in your working directory\nn_rows <- nrow(donors)\nn_rows\nncol(donors)\nstr(donors[, c(\"age\", \"state\", \"urbanicity\", \"incomeRating\", \"totalGivingAmount\")])\ntable(donors$urbanicity)\n# [1] 95412\n# [1] 22\n# 'data.frame':\t95412 obs. of  5 variables:\n#  $ age              : int  60 46 NA 70 78 NA 38 NA NA 65 ...\n#  $ state            : chr  \"IL\" \"CA\" \"NC\" \"CA\" ...\n#  $ urbanicity       : chr  \"town\" \"suburb\" \"rural\" \"rural\" ...\n#  $ incomeRating     : int  NA 6 3 1 3 NA 4 2 3 NA ...\n#  $ totalGivingAmount: num  240 47 202 109 254 51 107 31 199 28 ...\n# \n#   city  rural suburb   town  urban \n#  19689  19790  21924  19527  12166 ",
+  "explain": "95412 行。<code>str()</code> で各列の型（int / chr / num）も確認しましょう。"
+ },
+ {
+  "id": "m1-q17",
+  "tier": "basic",
+  "title": "Q17 · L2 年齢の欠損（穴埋め）",
+  "concept": "Topic D — CSV Files & Levels of Measurement",
+  "scenario": "<code>donors</code> の年齢の欠損数 <code>n_missing</code>、欠損を除いた平均年齢 <code>mean_age</code>（小数第2位）、性別が記録されている人のうち女性の割合 <code>prop_female</code>（小数第3位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_missing",
+    "value": 23665.0,
+    "tol": 0.5
+   },
+   {
+    "label": "mean_age",
+    "value": 61.61,
+    "tol": 0.011
+   },
+   {
+    "label": "prop_female",
+    "value": 0.565,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "論理ベクトルの <code>mean()</code> は TRUE の割合です。gender にも NA があるので <code>na.rm = TRUE</code> を付けます。",
+  "rcode": "n_missing <- sum(is.na(donors$age))\nmean_age  <- round(mean(donors$age, na.rm = TRUE), 2)\nprop_female <- round(mean(donors$gender == \"female\", na.rm = TRUE), 3)\nn_missing; mean_age; prop_female\n# [1] 23665\n# [1] 61.61\n# [1] 0.565",
+  "explain": "欠損 23665 件、平均 61.61 歳、女性の割合 0.565。"
+ },
+ {
+  "id": "m1-q18",
+  "tier": "intermediate",
+  "title": "Q18 · L3 donors の測定水準（自由記述）",
+  "concept": "Topic D — CSV Files & Levels of Measurement",
+  "scenario": "4つの変数の測定水準をコメントで書いたうえで、州の種類の数 <code>n_states</code> と、socioEconomicStatus が \"highest\" の人数 <code>n_highest</code> を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_states",
+    "value": 57.0,
+    "tol": 0.5
+   },
+   {
+    "label": "n_highest",
+    "value": 28498.0,
+    "tol": 0.5
+   }
+  ],
+  "hint": "<code>length(unique(x))</code> で異なる値の数。incomeRating は数字でも順序尺度です。",
+  "rcode": "# state: nominal | socioEconomicStatus: ordinal | age: ratio | incomeRating: ordinal (coded 1-7)\nn_states <- length(unique(donors$state))\nn_highest <- sum(donors$socioEconomicStatus == \"highest\", na.rm = TRUE)\nn_states\nn_highest\n# [1] 57\n# [1] 28498",
+  "explain": "州は 57 種類、highest は 28498 人。state＝名義、socioEconomicStatus・incomeRating＝順序、age＝比率。"
+ },
+ {
+  "id": "m1-q19",
+  "tier": "intermediate",
+  "title": "Q19 · L4 郵送に反応した人（シナリオ1）",
+  "concept": "Topic D — CSV Files & Levels of Measurement",
+  "scenario": "郵送に反応した人数 <code>n_resp</code>、その割合 <code>prop_resp</code>（小数第3位）、反応した人の寄付総額の平均 <code>giving_yes</code>（小数第2位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "n_resp",
+    "value": 4843.0,
+    "tol": 0.5
+   },
+   {
+    "label": "prop_resp",
+    "value": 0.051,
+    "tol": 0.0011
+   },
+   {
+    "label": "giving_yes",
+    "value": 112.0,
+    "tol": 0.011
+   }
+  ],
+  "hint": "<code>respondedMailing</code> はもともと論理型（TRUE/FALSE）。<code>!</code> で反転できます。",
+  "rcode": "n_resp <- sum(donors$respondedMailing)\nprop_resp <- round(mean(donors$respondedMailing), 3)\ngiving_yes <- round(mean(donors$totalGivingAmount[donors$respondedMailing]), 2)\ngiving_no  <- round(mean(donors$totalGivingAmount[!donors$respondedMailing]), 2)\nn_resp; prop_resp; giving_yes; giving_no\n# Conclusion: only about 5% responded; responders gave slightly more on average.\n# [1] 4843\n# [1] 0.051\n# [1] 112\n# [1] 104.09",
+  "explain": "反応 4843 人（0.051）。反応した人の平均寄付総額は 112.00。"
+ },
+ {
+  "id": "m1-q20",
+  "tier": "advanced",
+  "title": "Q20 · L5 incomeRating を順序尺度として（シナリオ2）",
+  "concept": "Topic D — CSV Files & Levels of Measurement",
+  "scenario": "incomeRating（1〜7）を順序尺度として扱い、中央値 <code>med_rating</code> と、評価のある人のうち 5 以上の割合 <code>prop_high</code>（小数第3位）を求めてください。",
+  "type": "num",
+  "answers": [
+   {
+    "label": "med_rating",
+    "value": 4.0,
+    "tol": 0.5
+   },
+   {
+    "label": "prop_high",
+    "value": 0.414,
+    "tol": 0.0011
+   }
+  ],
+  "hint": "NA を先に除く：<code>rated &lt;- x[!is.na(x)]</code>。",
+  "rcode": "table(donors$incomeRating)\nmed_rating <- median(donors$incomeRating, na.rm = TRUE)\nrated <- donors$incomeRating[!is.na(donors$incomeRating)]\nprop_high <- round(mean(rated >= 5), 3)\ninc_f <- factor(donors$incomeRating, ordered = TRUE)\nlevels(inc_f)\nmed_rating; prop_high\n# The numbers 1-7 are codes for ordered income groups.\n# The gaps between groups are not known to be equal, so a mean of 3.9 has little meaning.\n# Counts, proportions and the median describe an ordinal variable better.\n#     1     2     3     4     5     6     7 \n#  9022 13114  8558 12732 15451  7778  7471 \n# [1] \"1\" \"2\" \"3\" \"4\" \"5\" \"6\" \"7\"\n# [1] 4\n# [1] 0.414",
+  "explain": "中央値は 4、5 以上は 0.414。順序尺度は段階の間隔が等しいとは限らないので、平均より中央値や割合で要約します。"
+ }
+];
+renderStatsArena(PROBLEMS, {
+  basicsEl: document.getElementById("basics-container"),
+  intermediateEl: document.getElementById("intermediate-container"),
+  advancedEl: document.getElementById("advanced-container")
+});
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

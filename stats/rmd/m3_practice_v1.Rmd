@@ -1,0 +1,396 @@
+---
+title: "550 M3 — Probability & Probability Distributions: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> No data files are needed: every data set is made up or simulated.
+>
+> ✅ Check your numbers on the website: https://t-daichiy.github.io/SQL_660/stats/ex_550_m3_prob.html
+
+------------------------------------------------------------------------
+
+
+# Topic A — Probability & Simulation
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Simulate 600 rolls of a fair die and compare the proportion of sixes with 1/6.
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+die <- 1:6
+set.seed(42)
+rolls <- sample(die, size = 600, replace = TRUE)
+table(rolls)
+prop_six <- mean(rolls == 6)
+prop_six
+1 / 6
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Flip a coin 1,000 times with `set.seed(7)`. Find the proportion of heads and the odds of heads.
+
+```{r q2-l2}
+set.seed(7)
+flips <- sample(c("H", "T"), size = ___, replace = ___)
+p_heads <- mean(flips == "___")
+odds_heads <- p_heads / (1 - ___)
+round(c(p_heads, odds_heads), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** With `set.seed(2026)`, simulate 10,000 throws of two dice. Estimate P(sum = 7) and compare it with the exact value 6/36 (3 decimals).
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** An online shop had 2,500 orders last month and 175 were returned (made-up data). Estimate the probability and the odds of a return, and the expected returns among the next 400 orders.
+
+```{r q4-l4}
+# 1. Probability of a return (3 decimals)
+# 2. Odds of a return (3 decimals)
+# 3. Expected number of returns in 400 orders
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** With `set.seed(550)`, flip a coin 10,000 times. Report the running proportion of heads after 10, 100, 1,000 and 10,000 flips, the absolute error after 10,000 flips, and plot the running proportion. Write 3 sentences.
+
+```{r q5-l5}
+# 1. flips <- sample(c(0, 1), 10000, replace = TRUE)   (1 = heads)
+# 2. running proportion: cumsum(flips) / seq_along(flips)
+# 3. values after 10, 100, 1000, 10000 flips
+# 4. absolute error after 10000 flips (4 decimals)
+# 5. plot with a red line at 0.5
+# 6. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Conditional Probability, Independence & Bayes
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Use the shop table (made-up data) to find P(Bought ∪ Phone) with the general addition rule.
+
+```{r q6-data, eval=TRUE}
+shop <- matrix(c(90, 30, 60, 20,
+                 110, 90, 40, 60), nrow = 2, byrow = TRUE,
+               dimnames = list(device = c("Phone", "Computer"),
+                               result = c("Bought", "Browsed", "Cart", "Left")))
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+addmargins(shop)
+n <- sum(shop)
+p_B  <- sum(shop[, "Bought"]) / n
+p_Ph <- sum(shop["Phone", ]) / n
+p_B_and_Ph <- shop["Phone", "Bought"] / n
+p_union <- p_B + p_Ph - p_B_and_Ph   # subtract the overlap once
+p_union
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Find P(Bought | Phone) and P(Bought | Computer) from the shop table.
+
+```{r q7-data, eval=TRUE}
+shop <- matrix(c(90, 30, 60, 20,
+                 110, 90, 40, 60), nrow = 2, byrow = TRUE,
+               dimnames = list(device = c("Phone", "Computer"),
+                               result = c("Bought", "Browsed", "Cart", "Left")))
+```
+
+```{r q7-l2}
+p_b_phone <- shop["Phone", "___"] / sum(shop["___", ])
+p_b_comp  <- shop["Computer", "Bought"] / sum(shop[___, ])
+round(c(p_b_phone, p_b_comp), 3)
+round(proportions(shop, margin = ___), 3)   # all row proportions
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** A gym (made-up data) has 240 members: 90 annual-plan members (72 renewed) and 150 monthly-plan members (84 renewed). Build the table, find P(renew), P(renew | annual) and decide whether plan and renewal are independent.
+
+```{r q8-l3}
+# Write all your code here
+# Hint: matrix(c(72, 18, 84, 66), nrow = 2, byrow = TRUE, dimnames = ...)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** Each part is defective with probability 0.04, independently. In a box of 5 parts, what is P(at least one defect)? How many parts can a box hold before P(at least one defect) exceeds 0.5?
+
+```{r q9-l4}
+# 1. P(no defect in 5) and P(at least one) using the complement
+# 2. Try n = 1:30 and find the first n where P(at least one) > 0.5
+# 3. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** A condition affects 2% of people. A test detects 90% of true cases and gives a false positive for 8% of healthy people (made-up numbers). Find P(condition | positive). Then repeat for a high-risk group with 20% prevalence. Write a 3-sentence note for a clinic.
+
+```{r q10-l5}
+# 1. Store prior, sensitivity, false-positive rate
+# 2. P(positive) by the law of total probability
+# 3. Posterior P(condition | positive)  (3 decimals)
+# 4. Repeat with prior = 0.20
+# 5. Note (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Discrete Distributions
+
+
+## Q11 · L1 · Reference
+
+**Goal:** 12 customers each use a coupon with probability 0.2. Use the binomial functions.
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+p3     <- dbinom(3, size = 12, prob = 0.2)                     # exactly 3
+p_le3  <- pbinom(3, size = 12, prob = 0.2)                     # at most 3
+p_ge4  <- pbinom(3, size = 12, prob = 0.2, lower.tail = FALSE) # 4 or more
+med    <- qbinom(0.5, size = 12, prob = 0.2)                   # median
+round(c(p3, p_le3, p_ge4), 4); med
+plot(0:12, dbinom(0:12, 12, 0.2), type = "h", lwd = 5, xlab = "Coupons used", ylab = "P")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** For X ~ B(20, 0.35), find P(X ≥ 8) and the mean np.
+
+```{r q12-l2}
+p_ge8 <- pbinom(___, size = 20, prob = 0.35, lower.tail = ___)
+mean_x <- ___ * ___
+round(p_ge8, 4); mean_x
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** A help desk gets 4 calls per hour on average. Find P(exactly 2 calls in an hour), P(more than 6 calls in an hour) and P(no calls in 30 minutes) (4 decimals).
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A salesperson closes a sale on 10% of calls (independent). Find P(first sale on call 5) and P(no sale in the first 10 calls). How many calls are expected until the first sale?
+
+```{r q14-l4}
+# 1. P(first success on call 5) — remember R counts failures before success
+# 2. P(no sale in the first 10 calls)
+# 3. Expected number of calls until the first sale (1/p)
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Parts are defective with p = 0.03. In a sample of 50, find P(at most 2 defects) exactly (binomial), with a simulation (`set.seed(1)`, 10,000 samples) and with a Poisson approximation (λ = np). Write 3 sentences comparing them.
+
+```{r q15-l5}
+# 1. Exact: pbinom
+# 2. Simulation: rbinom(10000, 50, 0.03), proportion <= 2
+# 3. Poisson approximation with lambda = 50 * 0.03
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Continuous Distributions
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Delivery time ~ N(30, 5) minutes (made-up). Use pnorm() and qnorm().
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+p_le25 <- pnorm(25, mean = 30, sd = 5)                     # 25 min or less
+p_ge40 <- pnorm(40, mean = 30, sd = 5, lower.tail = FALSE) # 40 min or more
+p_28_35 <- pnorm(35, 30, 5) - pnorm(28, 30, 5)             # between
+q95 <- qnorm(0.95, mean = 30, sd = 5)                      # 95th percentile
+round(c(p_le25, p_ge40, p_28_35, q95), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Scores ~ N(500, 100). Find the share scoring above 650 and the score needed for the top 10%.
+
+```{r q17-l2}
+p_above650 <- pnorm(___, mean = 500, sd = 100, lower.tail = ___)
+cutoff_top10 <- qnorm(___, mean = 500, sd = 100)
+round(p_above650, 4); round(cutoff_top10, 1)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** For X ~ B(100, 0.4), check the conditions np ≥ 10 and n(1 − p) ≥ 10, then compare the exact P(X ≤ 45) with the normal approximation using the continuity correction (4 decimals).
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** A researcher has n = 12 observations. Find the t critical value for a 95% two-sided interval and compare it with z. Then find P(T > 2.5) for df = 20.
+
+```{r q19-l4}
+# 1. df for one sample of 12
+# 2. t* = qt(0.975, df) and z* = qnorm(0.975)  (3 decimals)
+# 3. P(T > 2.5) with df = 20  (4 decimals)
+# 4. Conclusion (comment): why is t* larger than z*?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Find P(χ² ≥ 9.5) for df = 4 and P(F ≥ 4.5) for F(3, 8). Then, with `set.seed(550)`, simulate 5,000 values of z1² + z2² + z3² and check that their mean is close to df = 3. Write 3 sentences.
+
+```{r q20-l5}
+# 1. pchisq(9.5, df = 4, lower.tail = FALSE)   (4 decimals)
+# 2. pf(4.5, df1 = 3, df2 = 8, lower.tail = FALSE)   (4 decimals)
+# 3. chi3 <- rnorm(5000)^2 + rnorm(5000)^2 + rnorm(5000)^2 ; mean(chi3)
+# 4. hist(chi3) with curve(dchisq(x, 3), add = TRUE)
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  M3 QUICK REFERENCE                                  ║
+║  sample(x, size, replace = TRUE)   set.seed(n)       ║
+║  probability = success / total   odds = s / f        ║
+║  P(A or B) = P(A) + P(B) - P(A and B)                ║
+║  P(A | B) = P(A and B) / P(B)   independent: = P(A)  ║
+║  proportions(table, margin = 1)  addmargins(table)   ║
+║  Bayes: P(H|D) = P(D|H) P(H) / P(D)                  ║
+║  r d p q :  random / exactly / at most / percentile  ║
+║  dbinom pbinom qbinom   (at least k: q = k - 1,      ║
+║                          lower.tail = FALSE)         ║
+║  dpois ppois   dgeom (failures before 1st success)   ║
+║  pnorm qnorm   pt qt   pchisq   pf                   ║
+║  normal approx: np >= 10 and n(1-p) >= 10            ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*550 M3 — Probability & Probability Distributions: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*
