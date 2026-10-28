@@ -5,7 +5,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 cfg=json.load(open('site.json',encoding='utf-8'))
 files={f for f in glob.glob('*.html') if not f.startswith('_')}
 def row(m,active):
-    out='<div class="nav-row %s"><span class="nav-mod">%s</span>'%(m['cls'],m['title'])
+    out='<div class="nav-row %s%s"><span class="nav-mod">%s</span>'%(m['cls'],' sep' if m.get('sep') else '',m['title'])
     for p in m['pages']:
         k=p['key']
         if p.get('href'):

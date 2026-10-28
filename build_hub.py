@@ -4,7 +4,7 @@ Run in the repo root. SQL index must be sql_index.html; stats/index.html, python
 import re, os, json, html
 COURSES = [
     dict(id='sql', name='SQL（660）', icon='🗄️', index='sql_index.html', prefix=''),
-    dict(id='stats', name='統計・回帰（550／650）', icon='📊', index='stats/index.html', prefix='stats/'),
+    dict(id='stats', name='統計・回帰（550）', icon='📊', index='stats/index.html', prefix='stats/'),
     dict(id='py', name='Python（520）', icon='🐍', index='python520/index.html', prefix='python520/'),
     dict(id='r650', name='R データ分析（650）', icon='📈', index='r650/index.html', prefix='r650/'),
 ]
@@ -48,6 +48,12 @@ for p in sorted(glob.glob('m[678]_practice_*.html')):
     items.append(page_item(p, 'sql', '', '🏋️ SQL 演習（スキル別）', '🏋️'))
 for p in sorted(glob.glob('stats/ex_*.html')):
     items.append(page_item(p, 'stats', 'stats/', '🏋️ 統計・回帰 演習（各15問）', '🏋️'))
+for i in items:
+    if i['course'] == 'stats' and (i['mod'].startswith('650') or '/ex_650_' in i['id']):
+        i['course'] = 'r650'
+        if '/ex_650_' in i['id']: i['mod'] = '🏋️ R 演習（650 M4–M6）'
+    elif i['course'] == 'stats' and '/ex_550_' in i['id']:
+        i['mod'] = '🏋️ 統計 演習（550）'
 seen = set(); out = []
 for i in items:
     if i['id'] in seen: continue
