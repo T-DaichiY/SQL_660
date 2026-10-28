@@ -8,6 +8,8 @@ def row(m,active):
     out='<div class="nav-row %s"><span class="nav-mod">%s</span>'%(m['cls'],m['title'])
     for p in m['pages']:
         k=p['key']
+        if p.get('href'):
+            out+='<span class="navg"><a class="n-main" href="%s">%s</a></span>'%(p['href'],p['label']); continue
         if k+'.html' not in files and k+'_easy.html' not in files: continue
         a=' active' if active==k+'.html' else ''
         e=' active' if active==k+'_easy.html' else ''
