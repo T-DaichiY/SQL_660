@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M3 確率の基本：標本空間・事象・確率とオッズ</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 🎲 確率の基本 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main active" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Probability — Probability Terms, Probability &amp; Odds, the Law of Large Numbers</div>
+  <h1>🎲 確率の基本：標本空間・事象・確率とオッズ</h1>
+  <p>確率の言葉（<strong>ランダムな試行・標本空間・事象</strong>）を R の <code>sample()</code> で体験し、<strong>確率</strong>と<strong>オッズ</strong>の違い、たくさんくり返すと割合が確率に近づく<strong>大数の法則</strong>を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Notes: Intro to Probability ／ Probability Terms ／ Probability &amp; Odds</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 試行・標本空間・事象</a><a href="#unit2">② R でシミュレーション</a><a href="#unit3">③ 確率とオッズ</a><a href="#unit4">④ 大数の法則</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>①② 550_Notes_Intro to Probability ／ Probability Terms</li><li>③④ Probability &amp; Odds</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ランダムな試行・標本空間・事象</h2><div class="unit-sub">確率の言葉をそろえる</div></div>
+  </div>
+
+  <p><strong>ランダムな試行（random experiment）</strong>は、結果がはっきり決まっていて、どれになるかは<strong>偶然</strong>で決まる手続きです。コイン投げ、サイコロ、Web 広告のクリック（する／しない）、株価の1年後（上がる／下がる／変わらない）など。</p>
+  <table class="compare-table">
+<tr><th>用語</th><th>意味</th><th>サイコロ1個の例</th></tr>
+<tr><td>標本空間 S</td><td>起こりうる結果すべて</td><td>S = {1, 2, 3, 4, 5, 6}</td></tr><tr><td>結果 outcome</td><td>S の要素1つ</td><td>4</td></tr><tr><td>事象 event</td><td>結果の集まり</td><td>偶数 E = {2, 4, 6}</td></tr><tr><td>根元事象 simple event</td><td>結果1つだけの事象</td><td>{6}</td></tr>
+</table>
+  <p>コインを2回投げると、S = {(表,表), (表,裏), (裏,表), (裏,裏)} の<strong>4通り</strong>です。「(表,裏)」と「(裏,表)」は別の結果であることに注意しましょう。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>標本空間＝くじ箱の中身全部、事象＝その中で「当たり」と決めたくじの集まり。</p></div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>R でランダムな試行をシミュレーションする</h2><div class="unit-sub">sample() と set.seed()</div></div>
+  </div>
+
+  <p><code>sample(候補, size = 回数, replace = TRUE)</code> で、候補から無作為に選べます。<code>replace = TRUE</code> は<strong>復元抽出</strong>（選んだものを戻す＝サイコロをくり返し振る）です。</p>
+  <pre class="code-block">
+<span class="cl">die &lt;- <span class="nm">1</span>:<span class="nm">6</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2026</span>)</span>
+<span class="cl"><span class="kw">sample</span>(die, size = <span class="nm">10</span>, replace = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal"> [1] 5 1 1 6 5 3 4 4 5 4</div>
+  <p>乱数は実行のたびに変わります。<code>set.seed()</code> で<strong>種</strong>を決めると、同じ結果を再現できます（レポートや課題で大切）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">sample</span>(die, size = <span class="nm">6</span>, replace = <span class="kw">FALSE</span>)</span>
+<span class="cl"><span class="kw">sample</span>(die, size = <span class="nm">7</span>, replace = <span class="kw">FALSE</span>)</span>
+</pre>
+<div class="output-reveal">[1] 2 6 4 3 1 5
+Error: cannot take a sample larger than the population when 'replace = FALSE' </div>
+  <div class="warn-box">⚠️ <code>replace = FALSE</code>（<strong>非復元抽出</strong>）では、一度選んだものは戻らないので、候補の数（6）より多くは選べずエラーになります。名簿から重複なく人を選ぶときは FALSE、サイコロのようにくり返すときは TRUE。</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>確率とオッズ</h2><div class="unit-sub">分母が違う2つの表し方</div></div>
+  </div>
+
+  <div class="note-box">📐 <strong>確率</strong> P(A) ＝ A に当てはまる結果の数 ÷ 全部の結果の数（すべて同じ確からしさのとき）<br>📐 <strong>オッズ</strong> ＝ 成功の数 ÷ 失敗の数（「成功:失敗」とも書く）</div>
+  <p>サイコロで偶数が出る確率は 3/6 = 0.5、オッズは 3:3 = 1:1。6 が出る確率は 1/6、オッズは 1:5 です。</p>
+  <p>データから確率を<strong>推定</strong>することもできます。あるオンラインショップの1か月の注文 2,500 件のうち、返品が 175 件だったとします（架空のデータ）。</p>
+  <pre class="code-block">
+<span class="cl">orders &lt;- <span class="nm">2500</span></span>
+<span class="cl">returns &lt;- <span class="nm">175</span></span>
+<span class="cl">returns / orders                  <span class="cm"># probability of a return</span></span>
+<span class="cl">returns / (orders - returns)      <span class="cm"># odds of a return</span></span>
+</pre>
+<div class="output-reveal">[1] 0.07
+[1] 0.07526882</div>
+  <p>「無作為に1件選ぶと、約 7% の確率で返品」「長い目で見ると約 7% が返品」と解釈します。オッズは約 0.075（≒ 1:13）。</p>
+  <div class="warn-box">⚠️ R に <code>175 / 2,500</code> とカンマ付きで書くとエラーです。また <code>a + b + c / total</code> は「c だけを total で割ってから足す」計算になります。<strong>分子全体をかっこで囲む</strong>：<code>(a + b + c) / total</code>。</div>
+  <table class="compare-table">
+<tr><th></th><th>範囲</th><th>例</th></tr>
+<tr><td>確率 probability</td><td>0〜1（0＝起こらない、1＝必ず起こる）</td><td>0.07</td></tr><tr><td>百分率 percentage</td><td>0%〜100%</td><td>7%</td></tr><tr><td>割合 proportion</td><td>確率と同じ数値。ただし「偶然」の意味は含まない</td><td>全注文の 7% が返品</td></tr>
+</table>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>大数の法則</h2><div class="unit-sub">くり返すほど確率に近づく</div></div>
+  </div>
+
+  <p>コインを投げた回数が少ないと、表の割合は 0.5 から大きくずれます。回数を増やすと、割合はだんだん 0.5 に近づきます。これが<strong>大数の法則（law of large numbers）</strong>で、確率を「<strong>長い目で見た相対度数</strong>」と解釈する根拠です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">550</span>)</span>
+<span class="cl">flips &lt;- <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">"H"</span>, <span class="st">"T"</span>), size = <span class="nm">2000</span>, replace = <span class="kw">TRUE</span>)</span>
+<span class="cl">prop_heads &lt;- <span class="kw">cumsum</span>(flips == <span class="st">"H"</span>) / <span class="kw">seq_along</span>(flips)</span>
+<span class="cl">prop_heads[<span class="kw">c</span>(<span class="nm">10</span>, <span class="nm">100</span>, <span class="nm">1000</span>, <span class="nm">2000</span>)]</span>
+<span class="cl"><span class="kw">plot</span>(prop_heads, type = <span class="st">"l"</span>, ylim = <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">1</span>), las = <span class="nm">1</span>,</span>
+<span class="cl">     xlab = <span class="st">"Number of flips"</span>, ylab = <span class="st">"Proportion of heads"</span>)</span>
+<span class="cl"><span class="kw">abline</span>(h = <span class="nm">0.5</span>, col = <span class="st">"red"</span>, lty = <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal">[1] 0.400 0.480 0.510 0.499</div>
+<figure class="r-fig"><img src="img550/m3_prob_3.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <div class="warn-box">⚠️ 大数の法則は「<strong>長い目で見ると</strong>」の話です。「表が5回続いたから次は裏が出やすい」という考えは<strong>ギャンブラーの誤謬</strong>。コインに記憶はなく、次の1回の確率は 0.5 のままです。</div>
+  <div class="practice-card" id="p-m3pr-u4">
+    <div class="ptitle">💻 ミニ練習：サイコロの大数の法則</div>
+    <p class="ptask"><code>set.seed(1)</code> のあと、サイコロを <strong>6000 回</strong>振るシミュレーションをして、<strong>6 が出た割合</strong>を求めてください（理論値は 1/6 ≈ 0.167）。</p>
+    <textarea class="code-editor" id="p-m3pr-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3pr-u4', ['set.seed', 'sample', 'replace = TRUE', 'mean'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3pr-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3pr-u4-result"></div>
+    <div class="answer-reveal" id="p-m3pr-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">rolls &lt;- <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">6</span>, size = <span class="nm">6000</span>, replace = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">mean</span>(rolls == <span class="nm">6</span>)</span>
+</pre>
+      <p class="answer-note"><code>rolls == 6</code> は TRUE/FALSE のベクトル。<code>mean()</code> を取ると TRUE の割合になる。結果は 1/6 に近い値になる。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>事象を組み合わせると、「AかつB」「AまたはB」「Bのときの A」の確率が考えられます。次の <a href="m3_cond.html">余事象・加法定理・条件付き確率・独立</a>へ。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the sample space for tossing a coin twice?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>HH, HT, TT</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>H, T</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>HH, HT, TH, TT</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0, 1 or 2 heads</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does set.seed(2026) do before sample()?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Makes random results repeatable</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Makes the results more random</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Removes duplicates from the sample</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sorts the sampled values for you</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">sample(1:6, size = 7, replace = FALSE) gives an error. Why?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>size must be smaller than five</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>replace must always be TRUE</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>1:6 is not a valid vector</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only six values exist to draw</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">The probability of an event is 1/4. What are the odds?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>1:4</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>1:3</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>3:1</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>4:1</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">175 of 2,500 orders were returned. What is the estimated probability of a return?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.075</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.07</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.175</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.93</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A fair coin lands heads 5 times in a row. What is P(heads) on the next toss?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Less than 0.5</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>More than 0.5</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.5</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 1, 3];
+var FEEDBACKS=["There are four equally likely outcomes; HT and TH are different outcomes.", "Fixing the seed lets you (and others) reproduce the same random numbers.", "Without replacement each value can be drawn once, so you cannot draw 7 from 6 values.", "Probability 1/4 means 1 success for every 3 failures, so the odds are 1:3.", "175 / 2500 = 0.07; 0.075 is the odds (175 / 2325).", "Tosses are independent, so the probability stays 0.5. Expecting tails is the gambler's fallacy."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">random experiment</div><div class="term-en">ランダムな試行</div><div class="term-def">結果が偶然で決まる手続き（コイン投げ・営業電話）。</div></div>
+    <div class="term-item"><div class="term-name">sample space (S)</div><div class="term-en">標本空間</div><div class="term-def">起こりうる結果すべての集まり。</div></div>
+    <div class="term-item"><div class="term-name">outcome</div><div class="term-en">結果</div><div class="term-def">標本空間の1つの要素。</div></div>
+    <div class="term-item"><div class="term-name">event</div><div class="term-en">事象</div><div class="term-def">結果の集まり（例：奇数が出る＝{1, 3, 5}）。</div></div>
+    <div class="term-item"><div class="term-name">simple event</div><div class="term-en">根元事象</div><div class="term-def">結果1つだけからなる事象。</div></div>
+    <div class="term-item"><div class="term-name">probability</div><div class="term-en">確率</div><div class="term-def">成功数 ÷ 全体。0 以上 1 以下。</div></div>
+    <div class="term-item"><div class="term-name">odds</div><div class="term-en">オッズ</div><div class="term-def">成功数 ÷ 失敗数（成功:失敗）。</div></div>
+    <div class="term-item"><div class="term-name">law of large numbers</div><div class="term-en">大数の法則</div><div class="term-def">くり返すほど相対度数が確率に近づく。</div></div>
+    <div class="term-item"><div class="term-name">set.seed()</div><div class="term-en">乱数の種</div><div class="term-def">乱数の結果を再現できるようにする。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>確率＝成功 ÷ 全体</strong>、<strong>オッズ＝成功 ÷ 失敗</strong>。確率 1/6 のオッズは 1:5。オッズ 1:3 の確率は 1/4。分母の違いを意識する。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M3 確率の基本：標本空間・事象・確率とオッズ</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m2_z.html">← z スコア</a> · <a href="m3_cond.html">余事象・和と積・加法定理・条件付き確率・独立 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

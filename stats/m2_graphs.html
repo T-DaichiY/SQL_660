@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M2 基本のグラフ：ヒストグラム・ドット／幹葉・棒グラフ</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M2 📊 基本のグラフ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main active" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Basic Graphs — Describing Shape with Histograms, Dotplots &amp; Stemplots, Barplots for Categorical Data</div>
+  <h1>📊 基本のグラフ：ヒストグラム・ドット／幹葉・棒グラフ</h1>
+  <p>グラフの選び方は<strong>データの種類</strong>で決まります。量的データには<strong>ヒストグラム・ドットプロット・幹葉図</strong>、カテゴリには<strong>度数表と棒グラフ</strong>。分布の<strong>形（右に歪む・左に歪む・左右対称）</strong>の読み方も学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Describing Shape with Histograms ／ Dotplots &amp; Stemplots ／ Graphs for Categorical Data: Barplots</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ヒストグラムと形</a><a href="#unit2">② ドットプロットと幹葉図</a><a href="#unit3">③ カテゴリのグラフ</a><a href="#unit4">④ 2つのカテゴリ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① Describing Shape with Histograms</li><li>② Dotplots &amp; Stemplots</li><li>③④ Graphs for Categorical Data: Barplots</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ヒストグラムで形を見る</h2><div class="unit-sub">右に歪む・左に歪む・左右対称</div></div>
+  </div>
+
+  <p><strong>ヒストグラム</strong>は量的データを<strong>区間（bin）</strong>に分けて、各区間の個数を柱にしたグラフです。たくさんのデータの<strong>形</strong>をつかむのに向いています（個々の値は見えなくなる）。</p>
+  <pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl">donors1_20 &lt;- donors[<span class="nm">1</span>:<span class="nm">20</span>, ]</span>
+<span class="cl"><span class="kw">par</span>(mfrow = <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">3</span>))</span>
+<span class="cl"><span class="kw">hist</span>(donors$totalGivingAmount[donors$totalGivingAmount &lt; <span class="nm">600</span>], main = <span class="st">"Right-skewed"</span>,</span>
+<span class="cl">     xlab = <span class="st">"Total $ given (&lt; 600)"</span>, col = <span class="st">"lightblue"</span>)</span>
+<span class="cl"><span class="kw">hist</span>(donors$wealthRating, main = <span class="st">"Left-skewed"</span>, xlab = <span class="st">"Wealth rating"</span>, col = <span class="st">"lightblue"</span>)</span>
+<span class="cl"><span class="kw">hist</span>(donors$incomeRating, main = <span class="st">"Roughly symmetric"</span>, xlab = <span class="st">"Income rating"</span>, col = <span class="st">"lightblue"</span>)</span>
+<span class="cl"><span class="kw">par</span>(mfrow = <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">1</span>))</span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_graphs_0.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>（寄付総額は最大 9,485 まであり柱がつぶれるので、600 未満だけを描いています。）</p>
+  <table class="compare-table">
+<tr><th>形</th><th>見た目</th><th>平均と中央値</th></tr>
+<tr><td>右に歪む（right / positive skew）</td><td>裾が<strong>右</strong>に長い</td><td>平均 &gt; 中央値</td></tr><tr><td>左に歪む（left / negative skew）</td><td>裾が<strong>左</strong>に長い</td><td>平均 &lt; 中央値</td></tr><tr><td>ほぼ左右対称</td><td>真ん中で折ると重なる</td><td>平均 ≈ 中央値</td></tr>
+</table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">c</span>(mean = <span class="kw">mean</span>(donors$wealthRating, na.rm = <span class="kw">TRUE</span>), median = <span class="kw">median</span>(donors$wealthRating, na.rm = <span class="kw">TRUE</span>))</span>
+</pre>
+<div class="output-reveal">    mean   median 
+5.345699 6.000000 </div>
+  <p>wealthRating は平均が中央値より小さく、左に歪んでいることと一致します。ほかに、山の数（<strong>単峰・二峰</strong>）や、どの値もほぼ同じ高さの<strong>一様（uniform）</strong>という形もあります。</p>
+  <div class="warn-box">⚠️ 歪みの向きは<strong>裾（tail）がある側</strong>で呼びます。山が右に寄っていると「右に歪んでいる」と言いたくなりますが、それは<strong>左に歪んだ</strong>分布です。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ドットプロットと幹葉図</h2><div class="unit-sub">少ないデータなら値まで見える</div></div>
+  </div>
+
+  <p>データが少ないときは、<strong>1つ1つの値が見える</strong>グラフが便利です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">stripchart</span>(donors1_20$age, method = <span class="st">"stack"</span>, pch = <span class="nm">16</span>, cex = <span class="nm">2</span>,</span>
+<span class="cl">           ylim = <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">3</span>), xlab = <span class="st">"Age (first 20 donors)"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_graphs_2.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p><strong>幹葉図（stemplot）</strong>は、十の位を<strong>幹</strong>、一の位を<strong>葉</strong>として並べます。横に倒したヒストグラムに、実際の値が書き込まれたものです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">stem</span>(donors1_20$age)</span>
+</pre>
+<div class="output-reveal">  The decimal point is 1 digit(s) to the right of the |
+
+  3 | 8
+  4 | 466
+  5 | 
+  6 | 025
+  7 | 00258</div>
+  <p>読み方：「<code>3 | 8</code>」は 38 歳、「<code>7 | 00258</code>」は 70, 70, 72, 75, 78 歳です。</p>
+  <table class="compare-table">
+<tr><th></th><th>ドットプロット・幹葉図</th></tr>
+<tr><td>良い点</td><td>実際の値が見える／形がわかる／すき間（gap）やかたまり（cluster）が見える</td></tr><tr><td>弱い点</td><td>データが多いと使えない／幹葉図は読みにくい（上司への報告には不向き）</td></tr>
+</table>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>カテゴリのグラフ：度数表と棒グラフ</h2><div class="unit-sub">ヒストグラムは使えない</div></div>
+  </div>
+
+  <p><code>urbanicity</code>（都市度）のようなカテゴリ変数に、<code>hist()</code> や <code>stripchart()</code> は使えません。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">hist</span>(donors$urbanicity)</span>
+</pre>
+<div class="output-reveal">Error: 'x' must be numeric </div>
+  <p>カテゴリはまず<strong>数えます</strong>。<code>table()</code> で度数、<code>proportions()</code> で割合です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">table</span>(donors$urbanicity)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(<span class="kw">table</span>(donors$urbanicity)), <span class="nm">3</span>) * <span class="nm">100</span></span>
+</pre>
+<div class="output-reveal">  city  rural suburb   town  urban 
+ 19689  19790  21924  19527  12166 
+
+  city  rural suburb   town  urban 
+  21.1   21.3   23.5   21.0   13.1 </div>
+  <p>棒グラフは<strong>表を作ってから</strong> <code>barplot()</code> に渡します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">barplot</span>(<span class="kw">table</span>(donors$urbanicity), las = <span class="nm">1</span>, ylab = <span class="st">"Count"</span>,</span>
+<span class="cl">        main = <span class="st">"How do we increase the number of urban donors?"</span>,</span>
+<span class="cl">        col = <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">"gray"</span>, <span class="nm">4</span>), <span class="st">"red"</span>))</span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_graphs_6.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <div class="warn-box">⚠️ 棒グラフには「中心」も「歪み」もありません。カテゴリの<strong>並び順は自由</strong>なので、並べ替えれば形が変わるからです。また<strong>ヒストグラムは棒グラフではない</strong>（柱が接していて、横軸は数直線）。</div>
+  <div class="note-box">🥧 <strong>円グラフ</strong>はよく見かけますが、人は角度から量を読み取るのが苦手で、棒の長さのほうが比べやすいです。カテゴリが互いに重ならず合計100% になる場合にしか使えない点にも注意。</div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>2つのカテゴリ変数</h2><div class="unit-sub">二元表と積み上げ棒グラフ</div></div>
+  </div>
+
+  <p>「住んでいる地域」と「郵送に反応したか」の関係を見るには、<strong>二元表（two-way table）</strong>を作ります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">table</span>(donors$urbanicity, donors$respondedMailing)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(<span class="kw">table</span>(donors$urbanicity, donors$respondedMailing), margin = <span class="nm">1</span>), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">        
+         FALSE  TRUE
+  city   18683  1006
+  rural  18863   927
+  suburb 20737  1187
+  town   18521  1006
+  urban  11589   577
+        
+         FALSE  TRUE
+  city   0.949 0.051
+  rural  0.953 0.047
+  suburb 0.946 0.054
+  town   0.948 0.052
+  urban  0.953 0.047</div>
+  <p><code>margin = 1</code> は「<strong>行ごと</strong>に割合を出す」指定です。各地域のうち何割が反応したかを比べられます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">barplot</span>(<span class="kw">table</span>(donors$respondedMailing, donors$urbanicity), legend.text = <span class="kw">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>),</span>
+<span class="cl">        las = <span class="nm">1</span>, ylab = <span class="st">"Count"</span>, main = <span class="st">"Responded to mailing, by urbanicity"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_graphs_8.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <div class="teal-box">📗 <strong>R4DS（Wickham &amp; Grolemund, <em>R for Data Science</em>）より：</strong>EDA は「データについて問いを立て、図と変換で答えを探し、答えから次の問いを作る」くり返し。まず<strong>1つの変数のばらつき（variation）</strong>を見て、次に<strong>2つの変数がいっしょに変わるか（covariation）</strong>を見る。カテゴリ×カテゴリなら度数の表、カテゴリ×量なら箱ひげ図が出発点。<br><span style="font-size:.85rem">出典: R4DS Ch.5 Exploratory Data Analysis（内容を要約・日本語で再構成）</span></div>
+  <div class="practice-card" id="p-m2gr-u4">
+    <div class="ptitle">💻 ミニ練習：カテゴリの度数と割合</div>
+    <p class="ptask"><code>donors$socioEconomicStatus</code> の<strong>度数表</strong>と、<strong>割合（%・小数第1位）</strong>を求め、棒グラフを描いてください。</p>
+    <textarea class="code-editor" id="p-m2gr-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m2gr-u4', ['table', 'proportions', 'socioEconomicStatus', 'barplot'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m2gr-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m2gr-u4-result"></div>
+    <div class="answer-reveal" id="p-m2gr-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">t &lt;- <span class="kw">table</span>(donors$socioEconomicStatus)</span>
+<span class="cl">t</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(t) * <span class="nm">100</span>, <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">barplot</span>(t)</span>
+</pre>
+      <p class="answer-note">average が約52%、highest が約31%、lowest が約17%（NA を除く）。順序のあるカテゴリなので、lowest → average → highest に並べ替えると読みやすい：<code>t[c("lowest", "average", "highest")]</code>。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>中心だけでなく<strong>ばらつき</strong>も要約しましょう。次の <a href="m2_spread.html">5数要約・箱ひげ図・IQR</a>へ。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which graph is best for showing the shape of 90,000 donors' ages?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A stemplot</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A pie chart</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A histogram</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A barplot</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">A histogram has a long tail to the right. How is it described?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Right-skewed</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Left-skewed</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Evenly spread</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Bell-shaped</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In a left-skewed distribution, how do the mean and median usually compare?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean is above the median</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>They are always identical</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The median is undefined</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The mean is below the median</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why can't hist() be used for the urbanicity variable?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It has too many rows to plot</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is a categorical variable</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It contains no missing values</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is already sorted by R</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In a stemplot with stems in tens, what does '7 | 25' show?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The values 7, 2 and 5</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The values 72 and 75</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The value 725</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The values 27 and 57</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What must you pass to barplot() for a categorical variable?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The raw text column</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A numeric vector</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A histogram object</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A table of counts</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 1, 3];
+var FEEDBACKS=["Histograms group many numeric values into bins, so the shape is clear even for large data sets.", "Skew is named after the side with the tail, so a long right tail means right (positive) skew.", "The long left tail pulls the mean down toward the small values.", "Histograms need numbers on a number line. For categories, count them with table() and use barplot().", "The stem is the tens digit and each leaf is a ones digit, so 7 | 25 means 72 and 75.", "barplot() draws bar heights from counts, so make the table first: barplot(table(x))."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">histogram</div><div class="term-en">ヒストグラム</div><div class="term-def">量的データを区間（bin）に分けた度数の柱。</div></div>
+    <div class="term-item"><div class="term-name">right-skewed</div><div class="term-en">右に歪んだ</div><div class="term-def">右に長い裾。平均 > 中央値。positive skew。</div></div>
+    <div class="term-item"><div class="term-name">left-skewed</div><div class="term-en">左に歪んだ</div><div class="term-def">左に長い裾。平均 < 中央値。negative skew。</div></div>
+    <div class="term-item"><div class="term-name">symmetric</div><div class="term-en">左右対称</div><div class="term-def">中央で折ると重なる形。平均 ≈ 中央値。</div></div>
+    <div class="term-item"><div class="term-name">unimodal / bimodal</div><div class="term-en">単峰／二峰</div><div class="term-def">山が1つ／2つ。</div></div>
+    <div class="term-item"><div class="term-name">dotplot (stripchart)</div><div class="term-en">ドットプロット</div><div class="term-def">1つの値を1つの点で積む。少量データ向き。</div></div>
+    <div class="term-item"><div class="term-name">stemplot</div><div class="term-en">幹葉図</div><div class="term-def">幹（十の位）と葉（一の位）で値を並べる。</div></div>
+    <div class="term-item"><div class="term-name">barplot</div><div class="term-en">棒グラフ</div><div class="term-def">カテゴリの度数・割合の棒。順番や間隔に意味はない。</div></div>
+    <div class="term-item"><div class="term-name">two-way table</div><div class="term-en">二元表（クロス表）</div><div class="term-def">2つのカテゴリ変数の組み合わせの度数。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>ヒストグラムは「量的」、棒グラフは「カテゴリ」。棒グラフに<strong>中心</strong>や<strong>歪み</strong>はない（並べ替えれば形が変わるから）。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M2 基本のグラフ：ヒストグラム・ドット／幹葉・棒グラフ</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m2_center.html">← 中心の指標</a> · <a href="m2_spread.html">5数要約・箱ひげ図・範囲と IQR・外れ値 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

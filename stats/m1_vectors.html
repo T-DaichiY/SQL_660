@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M1 ベクトル：まとめて計算・型・取り出し</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M1 🔢 ベクトル <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main active" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M1 · R Introduction — Vectors, Vectorized Operations, Data Types &amp; Indexing</div>
+  <h1>🔢 ベクトル：まとめて計算・型・取り出し</h1>
+  <p>R の基本単位は<strong>ベクトル</strong>（同じ型の値の並び）です。<code>c()</code> で作り、<strong>まとめて計算（ベクトル化演算）</strong>し、<strong>文字・論理値</strong>も扱い、<code>[ ]</code> で<strong>番号や条件で取り出す</strong>ところまで進みます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Vectorized Operations ／ Vectors &amp; Other Data Types ／ Indexing Vectors</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ベクトルを作る</a><a href="#unit2">② ベクトル化演算</a><a href="#unit3">③ 文字と論理値</a><a href="#unit4">④ 添字で取り出す</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>①② Vectorized Operations</li><li>③ Vectors &amp; Other Data Types</li><li>④ Indexing Vectors</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ベクトルを作る</h2><div class="unit-sub">c() で値を並べる</div></div>
+  </div>
+
+  <p>ある本の月別販売数が、1月 0冊、2月 100冊、3月 200冊、4月 50冊、あとは 0冊だったとします。12個の値を1つの名前で持つには <code>c()</code>（combine）を使います。</p>
+  <pre class="code-block">
+<span class="cl">sales.by.month &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">100</span>, <span class="nm">200</span>, <span class="nm">50</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">0</span>)</span>
+<span class="cl">sales.by.month</span>
+<span class="cl"><span class="kw">length</span>(sales.by.month)</span>
+</pre>
+<div class="output-reveal"> [1]   0 100 200  50   0   0   0   0   0   0   0   0
+[1] 12</div>
+  <p>要素は <code>[番号]</code> で取り出せます。<strong>R の番号は 1 から</strong>始まります（Python は 0 から）。</p>
+  <pre class="code-block">
+<span class="cl">sales.by.month[<span class="nm">2</span>]</span>
+<span class="cl">sales.by.month[<span class="nm">7</span>:<span class="nm">12</span>]</span>
+</pre>
+<div class="output-reveal">[1] 100
+[1] 0 0 0 0 0 0</div>
+  <p><code>7:12</code> は 7, 8, …, 12 の連番を作る書き方です。要素の値を書き換えることもできます。存在しない番号を指定すると <code>NA</code>（欠損）が返ります。</p>
+  <pre class="code-block">
+<span class="cl">sales.by.month[<span class="nm">5</span>] &lt;- <span class="nm">25</span></span>
+<span class="cl">sales.by.month</span>
+<span class="cl">sales.by.month[<span class="nm">13</span>]</span>
+</pre>
+<div class="output-reveal"> [1]   0 100 200  50  25   0   0   0   0   0   0   0
+[1] NA</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ベクトル化演算</h2><div class="unit-sub">ループなしで全部に計算</div></div>
+  </div>
+
+  <p>ベクトルに計算をすると、<strong>すべての要素に同時に</strong>適用されます。1冊の利益が \$7 なら、月ごとの利益は1行で出ます。</p>
+  <pre class="code-block">
+<span class="cl">profit &lt;- sales.by.month * <span class="nm">7</span></span>
+<span class="cl">profit</span>
+</pre>
+<div class="output-reveal"> [1]    0  700 1400  350  175    0    0    0    0    0    0    0</div>
+  <p>同じ長さのベクトルどうしなら、<strong>同じ位置どうし</strong>で計算されます。月ごとの1日あたり利益を出してみます。</p>
+  <pre class="code-block">
+<span class="cl">days.per.month &lt;- <span class="kw">c</span>(<span class="nm">31</span>, <span class="nm">28</span>, <span class="nm">31</span>, <span class="nm">30</span>, <span class="nm">31</span>, <span class="nm">30</span>, <span class="nm">31</span>, <span class="nm">31</span>, <span class="nm">30</span>, <span class="nm">31</span>, <span class="nm">30</span>, <span class="nm">31</span>)</span>
+<span class="cl"><span class="kw">round</span>(profit / days.per.month, <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal"> [1]  0.00 25.00 45.16 11.67  5.65  0.00  0.00  0.00  0.00  0.00  0.00
+[12]  0.00</div>
+  <div class="teal-box">📗 <strong>R4DS（Wickham &amp; Grolemund, <em>R for Data Science</em>）より：</strong>長さの違うベクトルで計算すると、R は<strong>短い方をくり返して（recycling）</strong>長さをそろえる。<code>sales.by.month * 7</code> は「7」を12回くり返した計算と同じ。長さが割り切れないと警告が出るので、意図しない recycling に注意。<br><span style="font-size:.85rem">出典: R4DS Ch.16 Vectors（Recycling）（内容を要約・日本語で再構成）</span></div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>) + <span class="kw">c</span>(<span class="nm">10</span>, <span class="nm">20</span>)</span>
+<span class="cl"><span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>) + <span class="kw">c</span>(<span class="nm">10</span>, <span class="nm">20</span>)</span>
+</pre>
+<div class="output-reveal">[1] 11 22 13 24
+Warning message:
+ longer object length is not a multiple of shorter object length 
+[1] 11 22 13</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>文字と論理値</h2><div class="unit-sub">数値以外の型</div></div>
+  </div>
+
+  <h3>文字型（character）</h3>
+  <p>文字は <code>"…"</code> または <code>'…'</code> で囲みます。</p>
+  <pre class="code-block">
+<span class="cl">months &lt;- <span class="kw">c</span>(<span class="st">"Jan"</span>, <span class="st">"Feb"</span>, <span class="st">"Mar"</span>, <span class="st">"Apr"</span>, <span class="st">"May"</span>, <span class="st">"Jun"</span>, <span class="st">"Jul"</span>, <span class="st">"Aug"</span>, <span class="st">"Sep"</span>, <span class="st">"Oct"</span>, <span class="st">"Nov"</span>, <span class="st">"Dec"</span>)</span>
+<span class="cl">months[<span class="nm">2</span>:<span class="nm">5</span>]</span>
+<span class="cl"><span class="kw">length</span>(months)</span>
+<span class="cl"><span class="kw">nchar</span>(<span class="st">"hello"</span>)</span>
+</pre>
+<div class="output-reveal">[1] "Feb" "Mar" "Apr" "May"
+[1] 12
+[1] 5</div>
+  <p><code>length()</code> は<strong>要素の数</strong>、<code>nchar()</code> は<strong>文字数</strong>です。混同しやすいので注意。</p>
+  <h3>論理型（logical）と比較</h3>
+  <p>比較の結果は <code>TRUE</code> か <code>FALSE</code> です。等しいかどうかは <code>==</code>（<code>=</code> は代入）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="nm">2</span> + <span class="nm">2</span> == <span class="nm">4</span></span>
+<span class="cl"><span class="kw">sqrt</span>(<span class="nm">25</span>) == <span class="nm">5</span></span>
+<span class="cl"><span class="nm">100</span> &lt; <span class="nm">100</span></span>
+<span class="cl"><span class="nm">100</span> &lt;= <span class="nm">100</span></span>
+<span class="cl"><span class="nm">25</span> != <span class="nm">30</span></span>
+</pre>
+<div class="output-reveal">[1] TRUE
+[1] TRUE
+[1] FALSE
+[1] TRUE
+[1] TRUE</div>
+  <p>論理値は計算すると <code>TRUE = 1</code>、<code>FALSE = 0</code> として扱われます。だから <code>sum()</code> で「TRUE の個数」が数えられます。</p>
+  <pre class="code-block">
+<span class="cl">x &lt;- <span class="kw">c</span>(<span class="kw">TRUE</span>, <span class="kw">TRUE</span>, <span class="kw">FALSE</span>)</span>
+<span class="cl"><span class="kw">sum</span>(x)</span>
+<span class="cl"><span class="kw">mean</span>(x)</span>
+</pre>
+<div class="output-reveal">[1] 2
+[1] 0.6666667</div>
+  <div class="teal-box">📗 <strong>R4DS（Wickham &amp; Grolemund, <em>R for Data Science</em>）より：</strong>1つのベクトルには<strong>1つの型</strong>しか入らない。型を混ぜると、<strong>logical → integer → double → character</strong> の順に、より一般的な型へ自動でそろえられる（暗黙の型変換）。数値の列に文字が1つでも混じると、列全体が文字になるのはこのため。<br><span style="font-size:.85rem">出典: R4DS Ch.16 Vectors（Coercion）（内容を要約・日本語で再構成）</span></div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">c</span>(<span class="nm">1</span>, <span class="st">"a"</span>, <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">class</span>(<span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2.5</span>, <span class="kw">TRUE</span>))</span>
+</pre>
+<div class="output-reveal">[1] "1"    "a"    "TRUE"
+[1] "numeric"</div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>添字で取り出す</h2><div class="unit-sub">番号で・条件で</div></div>
+  </div>
+
+  <h3>複数の番号で取り出す</h3>
+  <p>複数の要素は<strong>番号のベクトル</strong>で指定します。<strong><code>c()</code> を忘れやすい</strong>ので注意。</p>
+  <pre class="code-block">
+<span class="cl">sales.by.month[<span class="kw">c</span>(<span class="nm">2</span>, <span class="nm">7</span>, <span class="nm">12</span>)]</span>
+<span class="cl">sales.by.month[<span class="nm">4</span>:<span class="nm">2</span>]</span>
+<span class="cl">sales.by.month[<span class="nm">2</span>, <span class="nm">7</span>, <span class="nm">12</span>]</span>
+</pre>
+<div class="output-reveal">[1] 100   0   0
+[1]  50 200 100
+Error: incorrect number of dimensions </div>
+  <p><code>[2, 7, 12]</code> は「2次元以上の表の位置」と解釈され、ベクトルには使えずエラーになります。</p>
+  <h3>論理添字（条件で取り出す）</h3>
+  <p>「販売数が 0 より大きい月」を数百万行のデータで目で探すのは無理です。<strong>条件</strong>を角かっこに入れます。</p>
+  <pre class="code-block">
+<span class="cl">sales.by.month &gt; <span class="nm">0</span></span>
+<span class="cl">sales.by.month[sales.by.month &gt; <span class="nm">0</span>]</span>
+<span class="cl">months[sales.by.month &gt; <span class="nm">0</span>]</span>
+</pre>
+<div class="output-reveal"> [1] FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+[12] FALSE
+[1] 100 200  50  25
+[1] "Feb" "Mar" "Apr" "May"</div>
+  <div class="warn-box">⚠️ <strong>何を返したいか</strong>で角かっこの外側を選びます。販売数そのものが欲しいなら <code>sales.by.month[...]</code>、月の名前が欲しいなら <code>months[...]</code>。条件（中身）は同じでも答えが変わります。</div>
+  <div class="practice-card" id="p-m1vc-u4">
+    <div class="ptitle">💻 ミニ練習：条件に合う要素を取り出す</div>
+    <p class="ptask"><code>scores &lt;- c(72, 95, 58, 88, 64)</code> から、<strong>70 点以上の点数</strong>を取り出し、さらにその<strong>人数</strong>を <code>sum()</code> で数えてください。</p>
+    <textarea class="code-editor" id="p-m1vc-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m1vc-u4', ['scores', '>=', '70', 'sum'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m1vc-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m1vc-u4-result"></div>
+    <div class="answer-reveal" id="p-m1vc-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">scores &lt;- <span class="kw">c</span>(<span class="nm">72</span>, <span class="nm">95</span>, <span class="nm">58</span>, <span class="nm">88</span>, <span class="nm">64</span>)</span>
+<span class="cl">scores[scores &gt;= <span class="nm">70</span>]</span>
+<span class="cl"><span class="kw">sum</span>(scores &gt;= <span class="nm">70</span>)</span>
+</pre>
+      <p class="answer-note"><code>scores[scores &gt;= 70]</code> は 72, 95, 88。<code>scores &gt;= 70</code> は論理値なので、<code>sum()</code> で TRUE の数＝3人が出る。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>コードが増えてきたら、ファイルの置き場所や作業環境の管理が大切です。次の <a href="m1_workflow.html">作業ディレクトリ・パッケージ</a>へ。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In R, what is the index of the first element of a vector?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Index 0</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Index -1</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Index 1</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Index 12</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">sales has 12 numbers. What does sales * 7 return?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>12 values, each multiplied by 7</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>One number: total sales times 7</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An error, as 7 is not a vector</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Just the first value times 7</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does sum(c(TRUE, FALSE, TRUE, TRUE)) return?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It returns 4</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It returns NA</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It returns 1</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It returns 3</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What is the type of c(1, "a", TRUE)?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>numeric</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>character</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>logical</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>a mixture</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why does sales.by.month[2, 7, 12] give an error?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Vectors cannot hold more than 10 values</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Several positions need c() around them</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Index 12 is outside the vector</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Square brackets only accept one number</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which code returns the names of the months that had positive sales?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>sales.by.month[months > 0]</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>sum(sales.by.month > 0)</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>months > sales.by.month</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>months[sales.by.month > 0]</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 1, 3];
+var FEEDBACKS=["R counts from 1, so x[1] is the first element (Python starts from 0).", "Arithmetic on a vector is vectorized: R applies it to every element at once.", "TRUE is treated as 1 and FALSE as 0, so the sum counts the TRUE values.", "A vector holds one type only. Mixing types coerces everything to the most general type, which is character here.", "Commas inside [ ] mean extra dimensions. Use sales.by.month[c(2, 7, 12)] to pick several elements.", "The condition goes inside the brackets; the vector outside the brackets (months) decides what is returned."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">vector</div><div class="term-en">ベクトル</div><div class="term-def">同じ型の値を並べたもの。c() で作る。</div></div>
+    <div class="term-item"><div class="term-name">c()</div><div class="term-en">combine</div><div class="term-def">値をつなげてベクトルにする関数。</div></div>
+    <div class="term-item"><div class="term-name">index</div><div class="term-en">添字（インデックス）</div><div class="term-def">要素の番号。R は 1 から数える。</div></div>
+    <div class="term-item"><div class="term-name">vectorized operation</div><div class="term-en">ベクトル化演算</div><div class="term-def">全要素に同じ計算を一度に行う。</div></div>
+    <div class="term-item"><div class="term-name">character</div><div class="term-en">文字型</div><div class="term-def">"hello" のような文字列。</div></div>
+    <div class="term-item"><div class="term-name">logical</div><div class="term-en">論理型</div><div class="term-def">TRUE / FALSE（と NA）。</div></div>
+    <div class="term-item"><div class="term-name">==, !=, <, <=</div><div class="term-en">比較演算子</div><div class="term-def">結果は論理値。= は代入なので比較に使えない。</div></div>
+    <div class="term-item"><div class="term-name">logical indexing</div><div class="term-en">論理添字</div><div class="term-def">x[x > 0] のように条件で取り出す。</div></div>
+    <div class="term-item"><div class="term-name">coercion</div><div class="term-en">型の強制変換</div><div class="term-def">型が混ざると、より一般的な型にそろえられる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><code>x[x &gt; 0]</code> は「x のうち 0 より大きい<strong>値</strong>」、<code>months[x &gt; 0]</code> は「x が 0 より大きい<strong>位置の月名</strong>」。<strong>角かっこの外側</strong>が何を返すかを決める。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M1 ベクトル：まとめて計算・型・取り出し</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m1_rbasics.html">← R の基本</a> · <a href="m1_workflow.html">作業ディレクトリ・コメント・パッケージ・環境の整理 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

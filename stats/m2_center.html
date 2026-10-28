@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M2 中心の指標：平均・中央値・トリム平均・最頻値</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M2 🎯 平均・中央値 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main active" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Measures of Center — Mean, Statistics vs Parameters, Median, Trimmed Mean &amp; Mode</div>
+  <h1>🎯 中心の指標：平均・中央値・トリム平均・最頻値</h1>
+  <p>データの「真ん中」を1つの数で表す方法を比べます。<strong>平均</strong>と <code>na.rm = TRUE</code>、<strong>統計量と母数</strong>（標本と母集団）、外れ値に強い<strong>中央値</strong>、その中間の<strong>トリム平均</strong>、形を示す<strong>最頻値</strong>です。</p>
+  <p style="font-size:.9rem">📺 講義動画: The Donors Dataset ／ Measures of Center: The Mean ／ Statistics vs Parameters &amp; Samples vs Populations ／ The Median ／ The Trimmed Mean &amp; Mode</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 平均と NA</a><a href="#unit2">② 統計量と母数</a><a href="#unit3">③ 中央値と頑健性</a><a href="#unit4">④ トリム平均と最頻値</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① The Donors Dataset ／ Measures of Center: The Mean</li><li>② Statistics vs Parameters &amp; Sample vs Populations</li><li>③ Measures of Center: The Median</li><li>④ The Trimmed Mean &amp; the Mode</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>平均と NA</h2><div class="unit-sub">R が「計算しない」のは親切</div></div>
+  </div>
+
+  <p><strong>記述統計（descriptive statistics）</strong>は、データを数値やグラフで<strong>要約・描写</strong>することです。データを調べ始める段階は<strong>探索的データ分析（EDA）</strong>とも呼ばれます。まず <code>donors</code> の最初の20人を取り出します。</p>
+  <pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl">donors1_20 &lt;- donors[<span class="nm">1</span>:<span class="nm">20</span>, ]</span>
+<span class="cl">donors1_20$age</span>
+</pre>
+<div class="output-reveal"> [1] 60 46 NA 70 78 NA 38 NA NA 65 NA 75 72 NA 70 NA 44 46 62 NA</div>
+  <p><strong>平均（mean）</strong>は「合計 ÷ 個数」です。式で書くと <span style="white-space:nowrap">x̄ = Σxᵢ / n</span>。ところが <code>mean()</code> をそのまま使うと…</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">mean</span>(donors1_20$age)</span>
+<span class="cl"><span class="kw">mean</span>(donors1_20$age, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal">[1] NA
+[1] 60.5</div>
+  <p>年齢に <code>NA</code>（欠損）が混じっているので、R は <code>NA</code> を返します。「データがまだきれいではない」と教えてくれているのです。<code>na.rm = TRUE</code>（NA を remove）で、欠損を除いた12人の平均 <strong>60.5 歳</strong>が出ます。</p>
+  <div class="warn-box">⚠️ <code>length(donors1_20$age)</code> は NA を含めて 20 を返します。手計算するときは「合計 ÷ 20」ではなく「合計 ÷ <strong>NA でない個数</strong>（12）」です。<code>sum(!is.na(x))</code> で NA でない個数を数えられます。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>統計量と母数、標本と母集団</h2><div class="unit-sub">x̄ で μ を推定する</div></div>
+  </div>
+
+  <p>最初の20人は<strong>標本（sample）</strong>、95,412人全体を<strong>母集団（population）</strong>と考えてみます。</p>
+  <table class="compare-table">
+<tr><th></th><th>標本 sample</th><th>母集団 population</th></tr>
+<tr><td>計算した値の名前</td><td><strong>統計量</strong> statistic</td><td><strong>母数</strong> parameter</td></tr><tr><td>平均の記号</td><td>x̄（エックスバー）</td><td>μ（ミュー）</td></tr><tr><td>ふつうは</td><td>手元にある</td><td>わからない（推定したい）</td></tr>
+</table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">mean</span>(donors1_20$age, na.rm = <span class="kw">TRUE</span>)   <span class="cm"># 統計量 x-bar</span></span>
+<span class="cl"><span class="kw">mean</span>(donors$age, na.rm = <span class="kw">TRUE</span>)       <span class="cm"># 母数 mu</span></span>
+</pre>
+<div class="output-reveal">[1] 60.5
+[1] 61.61165</div>
+  <p>x̄ = 60.5、μ ≈ 61.61 で近い値です。ただしこれは<strong>運が良かった</strong>だけかもしれません。「最初の20行」は便宜的に選んだだけで、母集団を代表する保証がないからです。<strong>ランダム標本</strong>なら代表的になりやすいです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">550</span>)</span>
+<span class="cl">rand20 &lt;- donors[<span class="kw">sample</span>(<span class="kw">nrow</span>(donors), <span class="nm">20</span>), ]</span>
+<span class="cl"><span class="kw">mean</span>(rand20$age, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal">[1] 59.41176</div>
+  <div class="note-box">📚 統計学の2本柱：<strong>記述統計</strong>（データを描写する）と<strong>推測統計</strong>（標本から母集団を推測する：信頼区間・仮説検定。M4 以降）。</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>中央値と「外れ値への強さ」</h2><div class="unit-sub">平均と中央値がずれるとき</div></div>
+  </div>
+
+  <p><strong>中央値（median）</strong>は、値を<strong>小さい順に並べた真ん中</strong>です。個数が偶数なら真ん中2つの平均です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">median</span>(<span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">10</span>, <span class="nm">12</span>))</span>
+<span class="cl"><span class="kw">median</span>(<span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">10</span>))</span>
+</pre>
+<div class="output-reveal">[1] 7
+[1] 6</div>
+  <p>最初の20人の寄付総額で、平均と中央値を比べます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">mean</span>(donors1_20$totalGivingAmount)</span>
+<span class="cl"><span class="kw">median</span>(donors1_20$totalGivingAmount)</span>
+</pre>
+<div class="output-reveal">[1] 97.65
+[1] 62.5</div>
+  <p>平均 97.65 に対して中央値 62.5。大きく違うのは、200ドル超の寄付者が数人いるからです。<strong>ドットプロット</strong>（R では <code>stripchart()</code>）で見てみます。</p>
+  <pre class="code-block">
+<span class="cl">x &lt;- donors1_20$totalGivingAmount</span>
+<span class="cl"><span class="kw">stripchart</span>(x, method = <span class="st">"stack"</span>, pch = <span class="nm">16</span>, cex = <span class="nm">1.4</span>, ylim = <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">3</span>),</span>
+<span class="cl">           xlab = <span class="st">"Total $ given (first 20 donors)"</span>)</span>
+<span class="cl"><span class="kw">abline</span>(v = <span class="kw">mean</span>(x), col = <span class="st">"red"</span>, lwd = <span class="nm">2</span>)       <span class="cm"># mean</span></span>
+<span class="cl"><span class="kw">abline</span>(v = <span class="kw">median</span>(x), col = <span class="st">"darkgreen"</span>, lwd = <span class="nm">2</span>) <span class="cm"># median</span></span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_center_6.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>平均（赤）は右の大きな値に<strong>引っぱられ</strong>、中央値（緑）は多数派の近くにとどまります。平均は外れ値に<strong>敏感（sensitive）</strong>、中央値は<strong>頑健（resistant）</strong>です。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>10人のうち1人が大金持ちだと、平均年収はぐっと上がるけど、真ん中の人の年収（中央値）はほとんど変わらない。</p></div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>トリム平均と最頻値</h2><div class="unit-sub">平均と中央値のあいだ</div></div>
+  </div>
+
+  <p><strong>トリム平均（trimmed mean）</strong>は、上下の端を一定割合<strong>切り捨ててから</strong>平均をとります。平均より頑健で、中央値より多くのデータを使います。よく使うのは 10% トリム（上10%・下10% を除く）です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">mean</span>(donors$totalGivingAmount)</span>
+<span class="cl"><span class="kw">mean</span>(donors$totalGivingAmount, trim = <span class="nm">0.10</span>)</span>
+<span class="cl"><span class="kw">mean</span>(donors$totalGivingAmount, trim = <span class="nm">0.25</span>)</span>
+<span class="cl"><span class="kw">median</span>(donors$totalGivingAmount)</span>
+</pre>
+<div class="output-reveal">[1] 104.4894
+[1] 86.2409
+[1] 80.13649
+[1] 78</div>
+  <p>切る割合を増やすほど、値は中央値（78）に近づきます（<code>trim = 0.5</code> にすると中央値と同じ）。</p>
+  <h3>最頻値（mode）</h3>
+  <p>いちばん多く現れる値です。量的・質的どちらにも使えますが、R に組み込みの関数はありません。<code>table()</code> で数えて最大のものを探します。山が2つあれば<strong>二峰性（bimodal）</strong>で、「中心」より<strong>形</strong>の情報として役立ちます。</p>
+  <pre class="code-block">
+<span class="cl">bimodal_data &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="nm">0</span>, <span class="nm">9</span>), <span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>, <span class="nm">8</span>, <span class="kw">rep</span>(<span class="nm">10</span>, <span class="nm">9</span>))</span>
+<span class="cl"><span class="kw">table</span>(bimodal_data)</span>
+<span class="cl"><span class="kw">mean</span>(bimodal_data); <span class="kw">median</span>(bimodal_data)</span>
+</pre>
+<div class="output-reveal">bimodal_data
+ 0  1  3  4  5  6  8 10 
+ 9  1  1  1  1  1  1  9 
+[1] 4.875
+[1] 4.5</div>
+  <div class="warn-box">⚠️ この二峰性データは平均も中央値も 5 前後ですが、<strong>実際に 5 付近の値はほとんどありません</strong>。中心の指標だけで要約すると誤解を生むことがあるので、必ずグラフも見ましょう。</div>
+  <div class="practice-card" id="p-m2ct-u4">
+    <div class="ptitle">💻 ミニ練習：3つの中心を比べる</div>
+    <p class="ptask"><code>donors$numberGifts</code>（寄付回数）の<strong>平均・中央値・10%トリム平均</strong>を求めてください。</p>
+    <textarea class="code-editor" id="p-m2ct-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m2ct-u4', ['mean', 'median', 'trim', 'numberGifts'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m2ct-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m2ct-u4-result"></div>
+    <div class="answer-reveal" id="p-m2ct-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">mean</span>(donors$numberGifts)</span>
+<span class="cl"><span class="kw">median</span>(donors$numberGifts)</span>
+<span class="cl"><span class="kw">mean</span>(donors$numberGifts, trim = <span class="nm">0.1</span>)</span>
+</pre>
+      <p class="answer-note">平均 9.6、中央値 7、10%トリム平均 8.3（その間）。平均 &gt; 中央値なので右に裾が長い分布と予想できる（次の回でヒストグラムで確認）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>数値だけでは形がわかりません。次の <a href="m2_graphs.html">基本のグラフ</a>で、ヒストグラムや棒グラフを描きます。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">mean(x) returns NA. What is the most likely reason?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>x is stored as a data frame</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>x has too many observations</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>x contains negative numbers</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>x contains missing values</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">A number calculated from a sample, used to estimate a population value, is called a…</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>parameter</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>statistic</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>census</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>residual</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which symbol stands for the population mean?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>x̄ (x-bar)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>μ (Greek mu)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>s (sample SD)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>n (count)</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A data set has a few very large values. Which measure of center is most resistant to them?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The maximum</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The range</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The median</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">For right-skewed data, which is usually true?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean is larger than the median</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The median is larger than the mean</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean and median are always equal</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The mean is always zero</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does mean(x, trim = 0.10) do?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Drops only the largest 10% first</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Rounds the mean to one decimal</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Drops 10% from each end first</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Uses only the first 10% of x</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 1, 1, 3, 0, 2];
+var FEEDBACKS=["Any NA in the data makes mean() return NA. Add na.rm = TRUE to ignore missing values.", "Statistics come from samples; parameters describe populations. x̄ estimates μ.", "μ is the population mean; x̄ is the sample mean.", "The median depends only on the middle position, so extreme values barely move it.", "The long right tail pulls the mean toward the large values, above the median.", "A 10% trimmed mean removes 10% from each end and averages the rest, so it is more resistant than the mean."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">descriptive statistics</div><div class="term-en">記述統計</div><div class="term-def">データを要約して描写する数値・グラフ。</div></div>
+    <div class="term-item"><div class="term-name">inferential statistics</div><div class="term-en">推測統計</div><div class="term-def">標本から母集団について推論する（信頼区間・検定）。</div></div>
+    <div class="term-item"><div class="term-name">mean (x̄, μ)</div><div class="term-en">平均</div><div class="term-def">合計 ÷ 個数。標本は x̄、母集団は μ。</div></div>
+    <div class="term-item"><div class="term-name">na.rm = TRUE</div><div class="term-en">欠損を除く</div><div class="term-def">NA を除いて計算する引数。</div></div>
+    <div class="term-item"><div class="term-name">statistic / parameter</div><div class="term-en">統計量／母数</div><div class="term-def">標本から計算した値／母集団の真の値。</div></div>
+    <div class="term-item"><div class="term-name">median</div><div class="term-en">中央値</div><div class="term-def">並べたときの真ん中の値。</div></div>
+    <div class="term-item"><div class="term-name">resistant</div><div class="term-en">頑健（外れ値に強い）</div><div class="term-def">極端な値にあまり動かされない性質。</div></div>
+    <div class="term-item"><div class="term-name">trimmed mean</div><div class="term-en">トリム平均</div><div class="term-def">両端を一定割合切り捨てた平均。</div></div>
+    <div class="term-item"><div class="term-name">mode</div><div class="term-en">最頻値</div><div class="term-def">いちばん多く出る値。二峰性は bimodal。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>平均は<strong>てこの釣り合う点</strong>、中央値は<strong>面積を半分に分ける点</strong>。外れ値や長い裾があると、平均だけが裾の方へ引っぱられる。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M2 中心の指標：平均・中央値・トリム平均・最頻値</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m1_dataframe.html">← データフレーム</a> · <a href="m2_graphs.html">基本のグラフ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

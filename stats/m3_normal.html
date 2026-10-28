@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M3 正規分布：pnorm・qnorm と二項／ポアソンの正規近似</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 🔔 正規分布 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main active" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Probability Distributions — Normal Distributions, Modeling Binomial &amp; Poisson with Normal Curves</div>
+  <h1>🔔 正規分布：pnorm・qnorm と二項／ポアソンの正規近似</h1>
+  <p>連続分布の代表<strong>正規分布</strong>で、「〜以下」「〜以上」「〜の間」の確率を <code>pnorm()</code>、パーセンタイルを <code>qnorm()</code> で求めます。さらに、<strong>二項分布やポアソン分布を正規分布で近似</strong>できる条件と、<strong>標準正規分布</strong>を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Normal Distributions ／ Modeling Binomial &amp; Poisson with Normal Curves</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 正規分布の性質</a><a href="#unit2">② pnorm で確率</a><a href="#unit3">③ qnorm でパーセンタイル</a><a href="#unit4">④ 正規近似と標準正規</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>①②③ Normal Distributions</li><li>④ Modeling Binomial &amp; Poisson with Normal Curves</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>正規分布の性質</h2><div class="unit-sub">2つの母数で決まる釣鐘</div></div>
+  </div>
+
+  <p><strong>正規分布</strong>（ガウス分布）は、連続・単峰・左右対称の<strong>釣鐘型</strong>で、<strong>平均＝中央値＝最頻値</strong>です。身長、測定誤差、試験の得点などが近い形になります。信頼区間や多くの検定も、正規分布（に近い標本分布）を前提にしています。</p>
+  <p>形を決めるのは<strong>平均 μ と標準偏差 σ</strong> の2つで、X ~ N(μ, σ) と書きます（分散 σ² で書く本もあるので注意）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">curve</span>(<span class="kw">dnorm</span>(x, mean = <span class="nm">30</span>, sd = <span class="nm">5</span>), from = <span class="nm">10</span>, to = <span class="nm">50</span>, lwd = <span class="nm">2</span>, las = <span class="nm">1</span>,</span>
+<span class="cl">      xlab = <span class="st">"Delivery time (minutes)"</span>, ylab = <span class="st">"Density"</span>, main = <span class="st">"X ~ N(30, 5)"</span>)</span>
+<span class="cl"><span class="kw">curve</span>(<span class="kw">dnorm</span>(x, mean = <span class="nm">30</span>, sd = <span class="nm">8</span>), add = <span class="kw">TRUE</span>, lwd = <span class="nm">2</span>, lty = <span class="nm">2</span>, col = <span class="st">"red"</span>)</span>
+<span class="cl"><span class="kw">legend</span>(<span class="st">"topright"</span>, <span class="kw">c</span>(<span class="st">"sd = 5"</span>, <span class="st">"sd = 8"</span>), lty = <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>), col = <span class="kw">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>), bty = <span class="st">"n"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m3_normal_0.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>標準偏差が大きいほど、低く横に広い曲線になります。曲線の下の<strong>面積は常に 1</strong>（100%）です。</p>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>pnorm() で確率を求める</h2><div class="unit-sub">以下・以上・あいだ</div></div>
+  </div>
+
+  <p>ある料理宅配の配達時間は、平均 <strong>30 分</strong>・標準偏差 <strong>5 分</strong>の正規分布に従うとします（架空）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">25</span>, mean = <span class="nm">30</span>, sd = <span class="nm">5</span>)                      <span class="cm"># P(X &lt;= 25)</span></span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">40</span>, mean = <span class="nm">30</span>, sd = <span class="nm">5</span>, lower.tail = <span class="kw">FALSE</span>)   <span class="cm"># P(X &gt;= 40)</span></span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">35</span>, <span class="nm">30</span>, <span class="nm">5</span>) - <span class="kw">pnorm</span>(<span class="nm">28</span>, <span class="nm">30</span>, <span class="nm">5</span>)                <span class="cm"># P(28 &lt;= X &lt;= 35)</span></span>
+</pre>
+<div class="output-reveal">[1] 0.1586553
+[1] 0.02275013
+[1] 0.4967665</div>
+  <table class="compare-table">
+<tr><th>問い</th><th>コード</th><th>答え</th></tr>
+<tr><td>25分以内</td><td><code>pnorm(25, 30, 5)</code></td><td>約 0.159</td></tr><tr><td>40分以上</td><td><code>pnorm(40, 30, 5, lower.tail = FALSE)</code></td><td>約 0.023</td></tr><tr><td>28〜35分</td><td><code>pnorm(35, …) − pnorm(28, …)</code></td><td>約 0.497</td></tr>
+</table>
+  <p>「あいだ」は<strong>大きい方の累積 − 小さい方の累積</strong>です。図で確かめましょう。</p>
+  <pre class="code-block">
+<span class="cl">mu &lt;- <span class="nm">30</span>; sigma &lt;- <span class="nm">5</span>; lo &lt;- <span class="nm">28</span>; hi &lt;- <span class="nm">35</span></span>
+<span class="cl">xs &lt;- <span class="kw">seq</span>(lo, hi, length.out = <span class="nm">200</span>)</span>
+<span class="cl"><span class="kw">curve</span>(<span class="kw">dnorm</span>(x, mu, sigma), from = mu - <span class="nm">3.5</span> * sigma, to = mu + <span class="nm">3.5</span> * sigma,</span>
+<span class="cl">      las = <span class="nm">1</span>, xlab = <span class="st">"Delivery time (minutes)"</span>, ylab = <span class="st">"Density"</span>)</span>
+<span class="cl"><span class="kw">polygon</span>(<span class="kw">c</span>(lo, xs, hi), <span class="kw">c</span>(<span class="nm">0</span>, <span class="kw">dnorm</span>(xs, mu, sigma), <span class="nm">0</span>), col = <span class="st">"skyblue"</span>)</span>
+<span class="cl"><span class="kw">text</span>(<span class="kw">c</span>(lo, hi), <span class="nm">0.002</span>, <span class="kw">c</span>(lo, hi), col = <span class="st">"red"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m3_normal_2.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <div class="warn-box">⚠️ 連続分布では、ちょうど 1 点の確率は <strong>0</strong> です（面積がない）。そのため「以下」と「未満」の区別は気にしなくてよく、<code>dnorm()</code> は<strong>グラフを描くため</strong>に使い、確率の計算には使いません。（離散分布の二項・ポアソンとは違うので注意！）</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>qnorm() でパーセンタイルを求める</h2><div class="unit-sub">確率から値へ</div></div>
+  </div>
+
+  <p><code>qnorm()</code> は <code>pnorm()</code> の<strong>逆</strong>で、「下から何% の位置の値は？」に答えます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">0.75</span>, mean = <span class="nm">30</span>, sd = <span class="nm">5</span>)     <span class="cm"># third quartile (75th percentile)</span></span>
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">0.95</span>, mean = <span class="nm">30</span>, sd = <span class="nm">5</span>)     <span class="cm"># 95% of deliveries are faster than this</span></span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="kw">qnorm</span>(<span class="nm">0.95</span>, <span class="nm">30</span>, <span class="nm">5</span>), <span class="nm">30</span>, <span class="nm">5</span>)   <span class="cm"># round trip back to 0.95</span></span>
+</pre>
+<div class="output-reveal">[1] 33.37245
+[1] 38.22427
+[1] 0.95</div>
+  <p>第3四分位（Q3）は <strong>75 パーセンタイル</strong>なので約 33.4 分。「95% の配達がこの時間内に届く」は約 38.2 分です。お店の「○分以内にお届け」の約束を決めるのに使えます。</p>
+  <div class="practice-card" id="p-m3nm-u3">
+    <div class="ptitle">💻 ミニ練習：正規分布の確率とパーセンタイル</div>
+    <p class="ptask">ある試験の得点が N(500, 100) に従うとします。（1）650 点以上の割合、（2）上位 10% に入るための最低点、を求めてください。</p>
+    <textarea class="code-editor" id="p-m3nm-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3nm-u3', ['pnorm', 'lower.tail = FALSE', 'qnorm', '0.9'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3nm-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3nm-u3-result"></div>
+    <div class="answer-reveal" id="p-m3nm-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">650</span>, mean = <span class="nm">500</span>, sd = <span class="nm">100</span>, lower.tail = <span class="kw">FALSE</span>)</span>
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">0.90</span>, mean = <span class="nm">500</span>, sd = <span class="nm">100</span>)</span>
+</pre>
+      <p class="answer-note">（1）約 0.067（6.7%）。（2）上位 10% ＝ 下から 90% なので <code>qnorm(0.90, …)</code> で約 628 点。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>正規近似と標準正規分布</h2><div class="unit-sub">離散分布を曲線で表す</div></div>
+  </div>
+
+  <p>離散分布も、条件を満たせば<strong>正規分布で近似</strong>できます。</p>
+  <table class="compare-table">
+<tr><th>分布</th><th>正規近似できる目安</th><th>近似する正規分布</th></tr>
+<tr><td>二項 B(n, p)</td><td>成功数 np と失敗数 n(1 − p) が<strong>どちらも 10 以上</strong></td><td>平均 np、SD √(np(1 − p))</td></tr><tr><td>ポアソン(λ)</td><td>λ が<strong>大きい</strong>（目安 10 以上）</td><td>平均 λ、SD √λ</td></tr>
+</table>
+  <pre class="code-block">
+<span class="cl">n &lt;- <span class="nm">100</span>; p &lt;- <span class="nm">0.4</span></span>
+<span class="cl">k &lt;- <span class="nm">0</span>:n</span>
+<span class="cl"><span class="kw">plot</span>(k, <span class="kw">dbinom</span>(k, n, p), type = <span class="st">"h"</span>, lwd = <span class="nm">2</span>, las = <span class="nm">1</span>, col = <span class="st">"gray40"</span>,</span>
+<span class="cl">     xlab = <span class="st">"Number of successes"</span>, ylab = <span class="st">"Probability"</span>, xlim = <span class="kw">c</span>(<span class="nm">20</span>, <span class="nm">60</span>),</span>
+<span class="cl">     main = <span class="st">"B(100, 0.4) and its normal approximation"</span>)</span>
+<span class="cl"><span class="kw">curve</span>(<span class="kw">dnorm</span>(x, n * p, <span class="kw">sqrt</span>(n * p * (<span class="nm">1</span> - p))), add = <span class="kw">TRUE</span>, col = <span class="st">"red"</span>, lwd = <span class="nm">2</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m3_normal_4.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <pre class="code-block">
+<span class="cl"><span class="kw">pbinom</span>(<span class="nm">45</span>, <span class="nm">100</span>, <span class="nm">0.4</span>)                          <span class="cm"># exact</span></span>
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">45.5</span>, mean = <span class="nm">40</span>, sd = <span class="kw">sqrt</span>(<span class="nm">100</span> * <span class="nm">0.4</span> * <span class="nm">0.6</span>))   <span class="cm"># normal approx. (+0.5 continuity correction)</span></span>
+</pre>
+<div class="output-reveal">[1] 0.8689095
+[1] 0.8692139</div>
+  <p>np = 40、n(1 − p) = 60 で条件を満たし、正確な値（約 0.869）と近似（約 0.870）はほぼ一致します（離散を連続で近似するので 0.5 を足す<strong>連続性補正</strong>を使っています）。</p>
+  <h3>標準正規分布 N(0, 1)</h3>
+  <p>平均 0・標準偏差 1 の正規分布を<strong>標準正規分布</strong>といい、z スコアの分布です。<code>pnorm()</code> は <code>mean</code> と <code>sd</code> を省くと標準正規分布になります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">pnorm</span>(<span class="nm">1.96</span>)</span>
+<span class="cl"><span class="kw">qnorm</span>(<span class="nm">0.975</span>)</span>
+</pre>
+<div class="output-reveal">[1] 0.9750021
+[1] 1.959964</div>
+  <div class="warn-box">⚠️ 標準化（z スコアに変換）しただけでは「標準<strong>正規</strong>」にはなりません。平均 0・SD 1 になるだけで、<strong>形は元のまま</strong>です（M2 の z スコアの回を参照）。</div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>推測統計でよく使う「正規分布の親戚」、<a href="m3_tchif.html">t 分布・χ² 分布・F 分布</a>へ。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">For a normal distribution, how are the mean, median and mode related?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Mean > median > mode</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Mode > median > mean</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All three are equal</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>They differ at random</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Delivery time ~ N(30, 5). Which code gives P(X ≥ 40)?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pnorm(40, 30, 5, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>pnorm(40, 30, 5, lower.tail = TRUE)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>dnorm(40, 30, 5, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>qnorm(40, 30, 5, lower.tail = FALSE)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why don't we use dnorm() to find P(X = 20) for a normal variable?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>dnorm only works with N(0, 1)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>dnorm always returns exactly 1</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>dnorm needs at least two values</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>One point has zero probability</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which code finds the 75th percentile of N(30, 5)?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pnorm(0.75, 30, 5)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>qnorm(0.75, 30, 5)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>dnorm(0.75, 30, 5)</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>rnorm(0.75, 30, 5)</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">When is B(n, p) approximately normal?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>If n is less than 30 in total</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>If np and n(1 − p) are both ≥ 10</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>If p is exactly 0.5 for every trial</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>If the trials are all dependent</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does pnorm(1.96) return (standard normal)?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>About 0.950</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>About 0.025</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 1.960</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 0.975</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 0, 3, 1, 1, 3];
+var FEEDBACKS=["A normal curve is symmetric and unimodal, so the mean, median and mode are at the same point.", "pnorm gives areas; lower.tail = FALSE gives the area above 40.", "For a continuous variable, probability is area; one point has no area. dnorm gives the curve's height.", "q functions turn a cumulative probability into a value: about 33.4 minutes.", "With at least 10 expected successes and 10 expected failures, the binomial is close to normal.", "About 97.5% of the standard normal lies below z = 1.96, leaving 2.5% in the upper tail."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">normal N(μ, σ)</div><div class="term-en">正規分布</div><div class="term-def">単峰・左右対称の釣鐘型。平均＝中央値＝最頻値。</div></div>
+    <div class="term-item"><div class="term-name">density curve</div><div class="term-en">密度曲線</div><div class="term-def">下の面積が確率。全体の面積は 1。</div></div>
+    <div class="term-item"><div class="term-name">pnorm()</div><div class="term-en">累積確率</div><div class="term-def">その値以下の確率（下側の面積）。</div></div>
+    <div class="term-item"><div class="term-name">qnorm()</div><div class="term-en">分位点</div><div class="term-def">累積確率からその値を求める。</div></div>
+    <div class="term-item"><div class="term-name">dnorm()</div><div class="term-en">密度</div><div class="term-def">曲線の高さ。グラフ用で、確率ではない。</div></div>
+    <div class="term-item"><div class="term-name">normal approximation</div><div class="term-en">正規近似</div><div class="term-def">条件を満たせば二項・ポアソンを正規分布で近似。</div></div>
+    <div class="term-item"><div class="term-name">standard normal N(0, 1)</div><div class="term-en">標準正規分布</div><div class="term-def">平均 0、標準偏差 1。z の分布。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>連続分布では「<strong>ちょうど 20</strong>」の確率は 0。だから正規分布の確率計算に <code>dnorm()</code> は使わない。<strong>面積＝確率</strong>で、<code>pnorm()</code> の差を取る。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M3 正規分布：pnorm・qnorm と二項／ポアソンの正規近似</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m3_discrete.html">← 確率変数と離散分布</a> · <a href="m3_tchif.html">t 分布・χ² 分布・F 分布 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

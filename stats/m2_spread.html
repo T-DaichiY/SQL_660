@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M2 5数要約・箱ひげ図・範囲と IQR・外れ値</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M2 📦 箱ひげ図・IQR <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main active" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M2 · Measures of Spread — Five-Number Summary, Boxplots, Range &amp; IQR, Outliers with 1.5(IQR)</div>
+  <h1>📦 5数要約・箱ひげ図・範囲と IQR・外れ値</h1>
+  <p>平均が同じでも、ばらつきが違えば別のデータです。<strong>5数要約</strong>と<strong>四分位数</strong>、それを絵にした<strong>箱ひげ図</strong>、ばらつきの指標<strong>範囲と IQR</strong>、そして<strong>1.5×IQR ルール</strong>で外れ値を決める方法を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: The Five-Number Summary ／ Boxplots ／ Measures of Variability: Range &amp; IQR ／ Calculating Outliers with 1.5(IQR)</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 5数要約</a><a href="#unit2">② 箱ひげ図</a><a href="#unit3">③ 範囲と IQR</a><a href="#unit4">④ 1.5×IQR の外れ値</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① The Five-Number Summary</li><li>② Boxplots</li><li>③ Measures of Variability: Range &amp; IQR</li><li>④ Calculating Outliers with 1.5(IQR)</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>5数要約とパーセンタイル</h2><div class="unit-sub">min・Q1・median・Q3・max</div></div>
+  </div>
+
+  <p>中心の指標だけでは、データの広がりがわかりません。<strong>5数要約（five-number summary）</strong>は、データを4等分する5つの値です。</p>
+  <pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl">donors1_20 &lt;- donors[<span class="nm">1</span>:<span class="nm">20</span>, ]</span>
+<span class="cl"><span class="kw">min</span>(donors$age, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">quantile</span>(donors$age, probs = <span class="kw">c</span>(<span class="nm">0.25</span>, <span class="nm">0.50</span>, <span class="nm">0.75</span>), na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">max</span>(donors$age, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal">[1] 1
+25% 50% 75% 
+ 48  62  75 
+[1] 98</div>
+  <table class="compare-table">
+<tr><th>値</th><th>意味</th><th>donors の年齢</th></tr>
+<tr><td>最小 min</td><td>いちばん小さい値</td><td>1</td></tr><tr><td>Q1（25パーセンタイル）</td><td>25% がこれより下</td><td>48</td></tr><tr><td>中央値（50パーセンタイル）</td><td>半分がこれより下</td><td>62</td></tr><tr><td>Q3（75パーセンタイル）</td><td>75% がこれより下</td><td>75</td></tr><tr><td>最大 max</td><td>いちばん大きい値</td><td>98</td></tr>
+</table>
+  <p>解釈の例：「寄付者の<strong>4人に1人は48歳以下</strong>、<strong>半数は62歳以上</strong>」。<code>summary()</code> なら平均と NA の数もまとめて出ます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">summary</span>(donors$age)</span>
+</pre>
+<div class="output-reveal">   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   1.00   48.00   62.00   61.61   75.00   98.00   23665 </div>
+  <div class="warn-box">⚠️ 最小値が <strong>1 歳</strong>？ 寄付者として不自然です。入力ミスかもしれません。要約の数値は、<strong>データの品質チェック</strong>にも使えます。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>箱ひげ図</h2><div class="unit-sub">5数要約を絵にする</div></div>
+  </div>
+
+  <pre class="code-block">
+<span class="cl"><span class="kw">boxplot</span>(donors$age, horizontal = <span class="kw">TRUE</span>, pch = <span class="nm">16</span>, col = <span class="st">"lightblue"</span>,</span>
+<span class="cl">        xlab = <span class="st">"Age"</span>, main = <span class="st">"Half of our donors are over 60 years old"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_spread_2.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>箱の左端が <strong>Q1</strong>、中の太線が<strong>中央値</strong>、右端が <strong>Q3</strong>。ひげは外れ値でない範囲の最小・最大まで伸び、その外側の点が<strong>外れ値</strong>です。タイトルに<strong>結論</strong>を書くと伝わりやすいグラフになります。</p>
+  <h3>比較箱ひげ図：量 ~ グループ</h3>
+  <p><code>boxplot(量 ~ カテゴリ, data = df)</code> で、グループごとの分布を並べて比べられます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">boxplot</span>(incomeRating ~ gender, data = donors, col = <span class="st">"lightblue"</span>, las = <span class="nm">1</span>,</span>
+<span class="cl">        main = <span class="st">"Income rating by gender"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m2_spread_3.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <table class="compare-table">
+<tr><th></th><th>箱ひげ図</th></tr>
+<tr><td>良い点</td><td>最小・最大・中央値がすぐわかる／大きなデータでも使える／グループ比較に強い／外れ値が見える／形（歪み）のヒント</td></tr><tr><td>弱い点</td><td>何人分かわからない／すき間や山（二峰性）が隠れる／外れ値が多いと読みにくい</td></tr>
+</table>
+  <div class="warn-box">⚠️ 両方とも量的な変数（例：最小寄付額 ~ 最大寄付額）で箱ひげ図を描くと、何百ものグループができて意味のない図になります。量×量には<strong>散布図</strong>（M6）を使います。</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>ばらつきの指標：範囲と IQR</h2><div class="unit-sub">平均が同じでも違うデータ</div></div>
+  </div>
+
+  <pre class="code-block">
+<span class="cl">data1 &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">50</span>, <span class="nm">100</span>)</span>
+<span class="cl">data2 &lt;- <span class="kw">c</span>(<span class="nm">50</span>, <span class="nm">50</span>, <span class="nm">50</span>)</span>
+<span class="cl"><span class="kw">c</span>(<span class="kw">mean</span>(data1), <span class="kw">mean</span>(data2))</span>
+</pre>
+<div class="output-reveal">[1] 50 50</div>
+  <p>どちらも平均 50 ですが、ばらつきはまったく違います。これを数で表すのが<strong>ばらつきの指標（measures of variability / spread）</strong>です。</p>
+  <h3>範囲（range）＝ 最大 − 最小</h3>
+  <pre class="code-block">
+<span class="cl"><span class="kw">range</span>(donors$age, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">diff</span>(<span class="kw">range</span>(donors$age, na.rm = <span class="kw">TRUE</span>))</span>
+</pre>
+<div class="output-reveal">[1]  1 98
+[1] 97</div>
+  <div class="warn-box">⚠️ R の <code>range()</code> は<strong>最小と最大の2つ</strong>を返します。統計の「範囲」は<strong>1つの数</strong>（差）なので、<code>diff(range(x))</code> か <code>max(x) - min(x)</code> で求めます。範囲は2つの値しか使わず、外れ値で簡単にふくらむのが弱点。</div>
+  <h3>四分位範囲（IQR）＝ Q3 − Q1</h3>
+  <p>IQR は<strong>真ん中50%のデータの幅</strong>です。端の値を使わないので<strong>頑健</strong>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">IQR</span>(donors$age, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">IQR</span>(donors1_20$age, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal">[1] 27
+[1] 24.5</div>
+  <p>母集団の IQR は 27（＝75 − 48）、最初の20人の IQR は 24.5。標本の値は母集団の値の<strong>推定</strong>です。ばらつきの指標にはほかに、平均絶対偏差や<strong>標準偏差</strong>（次の回）があります。</p>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>1.5 × IQR ルールで外れ値を決める</h2><div class="unit-sub">フェンスを計算する</div></div>
+  </div>
+
+  <p>箱ひげ図の点は、次の<strong>フェンス（境界）</strong>の外側にある値です。</p>
+  <div class="note-box">📐 <strong>下のフェンス</strong> ＝ Q1 − 1.5 × IQR　　<strong>上のフェンス</strong> ＝ Q3 + 1.5 × IQR</div>
+  <pre class="code-block">
+<span class="cl">my_IQR &lt;- <span class="kw">IQR</span>(donors$age, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl">my_Q1  &lt;- <span class="kw">quantile</span>(donors$age, <span class="nm">0.25</span>, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl">my_Q3  &lt;- <span class="kw">quantile</span>(donors$age, <span class="nm">0.75</span>, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl">lower_fence &lt;- my_Q1 - <span class="nm">1.5</span> * my_IQR</span>
+<span class="cl">upper_fence &lt;- my_Q3 + <span class="nm">1.5</span> * my_IQR</span>
+<span class="cl"><span class="kw">c</span>(lower_fence, upper_fence)</span>
+<span class="cl"><span class="kw">sum</span>(donors$age &lt; lower_fence, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl"><span class="kw">sum</span>(donors$age &gt; upper_fence, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal">  25%   75% 
+  7.5 115.5 
+[1] 20
+[1] 0</div>
+  <p>7.5 歳未満が外れ値（20人）、115.5 歳を超える人はいないので上の外れ値はなし。箱ひげ図の左側の点と一致します。年齢が7歳以下の寄付者は、入力ミスの可能性を調べる価値があります。</p>
+  <div class="teal-box">📗 <strong>R4DS（Wickham &amp; Grolemund, <em>R for Data Science</em>）より：</strong>外れ値は<strong>入力ミス</strong>のこともあれば、<strong>重要な新事実</strong>のこともある。外れ値を除いた分析と含めた分析の両方を行い、結果が大きく変わるなら、除いた理由を必ず説明する。理由なく消してはいけない。<br><span style="font-size:.85rem">出典: R4DS Ch.5 Exploratory Data Analysis（Unusual Values）（内容を要約・日本語で再構成）</span></div>
+  <div class="practice-card" id="p-m2sp-u4">
+    <div class="ptitle">💻 ミニ練習：寄付総額の外れ値フェンス</div>
+    <p class="ptask"><code>donors$totalGivingAmount</code> の <strong>IQR</strong> と <strong>上のフェンス</strong>を求め、上のフェンスを超える人数を数えてください。</p>
+    <textarea class="code-editor" id="p-m2sp-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m2sp-u4', ['IQR', 'quantile', '1.5', 'sum'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m2sp-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m2sp-u4-result"></div>
+    <div class="answer-reveal" id="p-m2sp-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">q3 &lt;- <span class="kw">quantile</span>(donors$totalGivingAmount, <span class="nm">0.75</span>)</span>
+<span class="cl">iqr &lt;- <span class="kw">IQR</span>(donors$totalGivingAmount)</span>
+<span class="cl">upper &lt;- q3 + <span class="nm">1.5</span> * iqr</span>
+<span class="cl">upper</span>
+<span class="cl"><span class="kw">sum</span>(donors$totalGivingAmount &gt; upper)</span>
+</pre>
+      <p class="answer-note">Q3 = 131、IQR = 91 なので上のフェンスは 267.5。右に長い裾をもつ分布なので、上の外れ値がたくさんある。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>もっともよく使うばらつきの指標が<strong>標準偏差</strong>です。次の <a href="m2_sd_normal.html">標準偏差と正規分布</a>へ。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which five values make up the five-number summary?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Min, Q1, median, Q3, max</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Min, mean, median, mode, max</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Mean, SD, IQR, range, median</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Q1, Q2, Q3, mean, SD</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">The 25th percentile of donor age is 48. What does this mean?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The average donor is 48</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>25 donors are exactly age 48</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>About 25% are 48 or under</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 48% are under 25</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In a boxplot, what does the line inside the box show?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The maximum</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The median</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The range</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why is the IQR more resistant to outliers than the range?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It ignores the extreme quarters</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It uses only the largest values</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It always equals zero</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It squares every distance</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Q1 = 48, Q3 = 75 and IQR = 27. What is the upper fence?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>102.0</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>88.5</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>121.5</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>115.5</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In R, what does range(x) return?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Only the difference max minus min</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Both the minimum and the maximum</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The middle 50% of the data</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The standard deviation of x</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 2, 0, 3, 1];
+var FEEDBACKS=["The five-number summary splits the data into quarters: minimum, first quartile, median, third quartile and maximum.", "A percentile tells you the share of the data below a value: about a quarter of donors are at or below 48.", "The box runs from Q1 to Q3 and the line inside it marks the median.", "IQR = Q3 − Q1 only uses the middle 50% of the data, so extreme values do not affect it.", "Upper fence = Q3 + 1.5 × IQR = 75 + 40.5 = 115.5.", "range() returns two numbers. Use diff(range(x)) to get the statistical range (one number)."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">five-number summary</div><div class="term-en">5数要約</div><div class="term-def">最小・Q1・中央値・Q3・最大。</div></div>
+    <div class="term-item"><div class="term-name">percentile</div><div class="term-en">パーセンタイル</div><div class="term-def">その値より下にデータの何%があるか。</div></div>
+    <div class="term-item"><div class="term-name">Q1 / Q3</div><div class="term-en">第1／第3四分位数</div><div class="term-def">25／75パーセンタイル。</div></div>
+    <div class="term-item"><div class="term-name">boxplot</div><div class="term-en">箱ひげ図</div><div class="term-def">5数要約と外れ値を描いた図。</div></div>
+    <div class="term-item"><div class="term-name">range</div><div class="term-en">範囲</div><div class="term-def">最大 − 最小。1つの数。</div></div>
+    <div class="term-item"><div class="term-name">IQR</div><div class="term-en">四分位範囲</div><div class="term-def">Q3 − Q1。真ん中50%の幅。頑健。</div></div>
+    <div class="term-item"><div class="term-name">fence</div><div class="term-en">フェンス（境界）</div><div class="term-def">Q1 − 1.5IQR と Q3 + 1.5IQR。</div></div>
+    <div class="term-item"><div class="term-name">outlier</div><div class="term-en">外れ値</div><div class="term-def">フェンスの外側の値。</div></div>
+    <div class="term-item"><div class="term-name">comparative boxplot</div><div class="term-en">比較箱ひげ図</div><div class="term-def">y ~ group でグループごとに並べる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>外れ値の判定は<strong>「1.5 × IQR を Q1 から引き、Q3 に足す」</strong>。1.5 は経験上の目安で、数学的な理由はない。外れ値を見つけたら、まず<strong>なぜその値なのか</strong>を調べる。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M2 5数要約・箱ひげ図・範囲と IQR・外れ値</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m2_graphs.html">← 基本のグラフ</a> · <a href="m2_sd_normal.html">標準偏差・正規分布・経験則・歪度と尖度 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

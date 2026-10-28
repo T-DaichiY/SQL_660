@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M3 余事象・和と積・加法定理・条件付き確率・独立</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 🔗 条件付き確率・独立 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main active" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Probability — Complements, Intersections &amp; Unions, the General Addition Rule, Conditional Probability, Independent Events</div>
+  <h1>🔗 余事象・和と積・加法定理・条件付き確率・独立</h1>
+  <p>架空のオンラインショップの<strong>二元表</strong>を使って、<strong>余事象</strong>、<strong>積（かつ）と和（または）</strong>、<strong>加法定理</strong>、<strong>排反</strong>、<strong>条件付き確率</strong>、<strong>独立</strong>を順に計算します。最後に「排反」と「独立」の違いを整理します。</p>
+  <p style="font-size:.9rem">📺 講義動画: Complements, Intersections, and Unions ／ The General Addition Rule ／ Conditional Probability ／ Independent Events: Using Technology ／ Using Formulas</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 余事象</a><a href="#unit2">② 積・和と加法定理</a><a href="#unit3">③ 条件付き確率</a><a href="#unit4">④ 独立と排反</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① Complements, Intersections, and Unions</li><li>② The General Addition Rule</li><li>③ Conditional Probability</li><li>④ Independent Events — Using Technology ／ Using Formulas</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>余事象</h2><div class="unit-sub">「〜でない」から計算する</div></div>
+  </div>
+
+  <p>事象 A の<strong>余事象（complement）</strong> Aᶜ は「<strong>A でない</strong>」結果すべてです。すべての結果の確率の合計は 1 なので：</p>
+  <div class="note-box">📐 P(A) + P(Aᶜ) = 1　　→　P(A) = 1 − P(Aᶜ)</div>
+  <p>サイコロ2個の和が 2 になる確率は 1/36 なので、「和が 2 <strong>以外</strong>」の確率は 1 − 1/36 = 35/36。35通りを数えるより速いです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="nm">1</span> - <span class="nm">1</span>/<span class="nm">36</span></span>
+<span class="cl"><span class="cm"># P(at least one 6 in 4 rolls) = 1 - P(no 6 in 4 rolls)</span></span>
+<span class="cl"><span class="nm">1</span> - (<span class="nm">5</span>/<span class="nm">6</span>)^<span class="nm">4</span></span>
+</pre>
+<div class="output-reveal">[1] 0.9722222
+[1] 0.5177469</div>
+  <div class="warn-box">⚠️ 「<strong>少なくとも1つ</strong>」の余事象は「<strong>1つもない</strong>」です。「少なくとも2人」の余事象は「0人または1人」。境目を間違えないように、0, 1, 2, … と書き出して確認しましょう。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>積（かつ）・和（または）と加法定理</h2><div class="unit-sub">二元表で数える</div></div>
+  </div>
+
+  <p>架空のショップで、ある日の訪問者 500 人を<strong>端末</strong>と<strong>行動</strong>で分けた二元表です。</p>
+  <pre class="code-block">
+<span class="cl">shop &lt;- <span class="kw">matrix</span>(<span class="kw">c</span>(<span class="nm">90</span>, <span class="nm">30</span>, <span class="nm">60</span>, <span class="nm">20</span>,</span>
+<span class="cl">                 <span class="nm">110</span>, <span class="nm">90</span>, <span class="nm">40</span>, <span class="nm">60</span>), nrow = <span class="nm">2</span>, byrow = <span class="kw">TRUE</span>,</span>
+<span class="cl">               dimnames = <span class="kw">list</span>(device = <span class="kw">c</span>(<span class="st">"Phone"</span>, <span class="st">"Computer"</span>),</span>
+<span class="cl">                               result = <span class="kw">c</span>(<span class="st">"Bought"</span>, <span class="st">"Browsed"</span>, <span class="st">"Cart"</span>, <span class="st">"Left"</span>)))</span>
+<span class="cl"><span class="kw">addmargins</span>(shop)</span>
+</pre>
+<div class="output-reveal">          result
+device     Bought Browsed Cart Left Sum
+  Phone        90      30   60   20 200
+  Computer    110      90   40   60 300
+  Sum         200     120  100   80 500</div>
+  <p>B = 購入（Bought）、Ph = スマホ（Phone）とします。</p>
+  <table class="compare-table">
+<tr><th>表現</th><th>意味</th><th>人数</th><th>確率</th></tr>
+<tr><td>B ∩ Ph（積・かつ）</td><td>スマホで購入</td><td>90</td><td>90/500 = 0.18</td></tr><tr><td>B ∪ Ph（和・または）</td><td>購入した、またはスマホ（両方も含む）</td><td>200 + 200 − 90 = 310</td><td>0.62</td></tr>
+</table>
+  <p>和を数えるとき、「スマホで購入」の 90 人は<strong>購入者にもスマホ利用者にも入っている</strong>ので、そのまま足すと<strong>2回数えて</strong>しまいます。そこで重なりを1回引きます。</p>
+  <div class="note-box">📐 <strong>加法定理</strong>：P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</div>
+  <pre class="code-block">
+<span class="cl">n &lt;- <span class="kw">sum</span>(shop)</span>
+<span class="cl">p_B  &lt;- <span class="kw">sum</span>(shop[, <span class="st">"Bought"</span>]) / n</span>
+<span class="cl">p_Ph &lt;- <span class="kw">sum</span>(shop[<span class="st">"Phone"</span>, ]) / n</span>
+<span class="cl">p_B_and_Ph &lt;- shop[<span class="st">"Phone"</span>, <span class="st">"Bought"</span>] / n</span>
+<span class="cl">p_B + p_Ph - p_B_and_Ph</span>
+</pre>
+<div class="output-reveal">[1] 0.62</div>
+  <p>確率の「または」は<strong>両方を含む</strong>（inclusive OR）意味です。「ケーキかアイス、どっちにする？」の日常の「または」（どちらか一方）とは違います。</p>
+  <h3>排反（mutually exclusive）</h3>
+  <p>「購入（Bought）」と「途中離脱（Left）」は1人が同時に当てはまりません。このように<strong>共通部分がない</strong>事象を<strong>排反</strong>といい、P(A ∩ B) = 0 なので加法定理の引き算が不要になります。</p>
+  <pre class="code-block">
+<span class="cl">(<span class="kw">sum</span>(shop[, <span class="st">"Bought"</span>]) + <span class="kw">sum</span>(shop[, <span class="st">"Left"</span>])) / n</span>
+</pre>
+<div class="output-reveal">[1] 0.56</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>条件付き確率</h2><div class="unit-sub">条件で分母が変わる</div></div>
+  </div>
+
+  <p><strong>条件付き確率</strong> P(A | B) は、「<strong>B が起きたと分かっているとき</strong>の A の確率」です。縦棒 | は「given（〜のとき）」と読みます。</p>
+  <div class="note-box">📐 P(A | B) = P(A ∩ B) ÷ P(B)　　表で数えるなら：<strong>B の行（列）の中で A の人数 ÷ B の合計</strong></div>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># P(Bought | Phone): only look at the Phone row</span></span>
+<span class="cl">shop[<span class="st">"Phone"</span>, <span class="st">"Bought"</span>] / <span class="kw">sum</span>(shop[<span class="st">"Phone"</span>, ])</span>
+<span class="cl"><span class="cm"># P(Phone | Bought): only look at the Bought column</span></span>
+<span class="cl">shop[<span class="st">"Phone"</span>, <span class="st">"Bought"</span>] / <span class="kw">sum</span>(shop[, <span class="st">"Bought"</span>])</span>
+</pre>
+<div class="output-reveal">[1] 0.45
+[1] 0.45</div>
+  <p>P(購入 | スマホ) = 90/200 = 0.45、P(スマホ | 購入) = 90/200 = 0.45。この表ではたまたま同じですが、<strong>一般には違う値</strong>です（分母が違うから）。</p>
+  <p><code>proportions(表, margin = 1)</code> を使うと、<strong>各行の中での割合</strong>（行を条件とした条件付き分布）が一度に出ます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">round</span>(<span class="kw">proportions</span>(shop, margin = <span class="nm">1</span>), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">          result
+device     Bought Browsed  Cart Left
+  Phone     0.450    0.15 0.300  0.1
+  Computer  0.367    0.30 0.133  0.2</div>
+  <p>スマホ利用者の購入率は 0.45、パソコン利用者は 0.367。端末によって購入の確率が違う、つまり<strong>端末と購入は関連している（独立でない）</strong>ように見えます。</p>
+  <div class="warn-box">⚠️ 「<strong>A のとき B</strong>」と「<strong>B のとき A</strong>」を取り違えるのは、医療や AI でも起こる典型的なミスです。条件（given の後ろ）を先に見つけ、その合計を分母にしましょう。機械学習の<strong>混同行列</strong>（偽陽性率など）も条件付き確率です。</div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>独立と排反</h2><div class="unit-sub">似ているようで正反対</div></div>
+  </div>
+
+  <p>2つの事象が<strong>独立（independent）</strong>とは、片方が起きたと知っても、もう片方の確率が<strong>変わらない</strong>ことです。</p>
+  <div class="note-box">📐 A と B が独立 ⇔ P(A | B) = P(A)　（同じことだが P(A | B) = P(A | Bᶜ)、P(A ∩ B) = P(A) × P(B)）</div>
+  <pre class="code-block">
+<span class="cl">p_B                                               <span class="cm"># P(Bought) overall</span></span>
+<span class="cl">shop[<span class="st">"Phone"</span>, <span class="st">"Bought"</span>] / <span class="kw">sum</span>(shop[<span class="st">"Phone"</span>, ])    <span class="cm"># P(Bought | Phone)</span></span>
+<span class="cl">p_B * p_Ph; p_B_and_Ph                            <span class="cm"># product rule check</span></span>
+</pre>
+<div class="output-reveal">[1] 0.4
+[1] 0.45
+[1] 0.16
+[1] 0.18</div>
+  <p>全体の購入率 0.40 に対して、スマホ利用者では 0.45。等しくないので、この標本では「購入」と「スマホ」は<strong>独立ではありません</strong>（関連がある）。</p>
+  <div class="note-box">🤔 「0.45 と 0.40 くらいの差で関連があると言えるの？」という疑問はもっともです。偶然の差かどうかは、M5 の<strong>カイ二乗独立性検定</strong>で判定します。</div>
+  <h3>排反と独立はちがう</h3>
+  <p>排反な事象（同時に起こらない）は、片方が起きたら<strong>もう片方は確率 0</strong> になります。つまり片方の情報がもう片方の確率を大きく変える＝<strong>独立ではない</strong>のです（どちらかの確率が 0 の場合を除く）。</p>
+  <table class="compare-table">
+<tr><th></th><th>排反 mutually exclusive</th><th>独立 independent</th></tr>
+<tr><td>意味</td><td>同時に起こらない</td><td>片方を知っても確率が変わらない</td></tr><tr><td>式</td><td>P(A ∩ B) = 0</td><td>P(A ∩ B) = P(A) × P(B)</td></tr><tr><td>例</td><td>購入と途中離脱（同じ人）</td><td>2回のコイン投げの表</td></tr>
+</table>
+  <div class="warn-box">⚠️ 独立を<strong>安易に仮定しない</strong>こと。実際には関連している出来事を独立として確率を掛け合わせると、とても小さな（間違った）確率が出て、重大な誤判断につながることがあります。</div>
+  <div class="practice-card" id="p-m3cd-u4">
+    <div class="ptitle">💻 ミニ練習：条件付き確率を表から求める</div>
+    <p class="ptask">上の <code>shop</code> 表で、<strong>P(Left | Computer)</strong>（パソコン利用者のうち途中離脱した割合）と、全体の <strong>P(Left)</strong> を求め、独立かどうか判断してください。</p>
+    <textarea class="code-editor" id="p-m3cd-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3cd-u4', ['shop', 'Computer', 'Left', 'sum'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3cd-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3cd-u4-result"></div>
+    <div class="answer-reveal" id="p-m3cd-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">shop[<span class="st">"Computer"</span>, <span class="st">"Left"</span>] / <span class="kw">sum</span>(shop[<span class="st">"Computer"</span>, ])</span>
+<span class="cl"><span class="kw">sum</span>(shop[, <span class="st">"Left"</span>]) / <span class="kw">sum</span>(shop)</span>
+</pre>
+      <p class="answer-note">P(Left | Computer) = 60/300 = 0.20、P(Left) = 80/500 = 0.16。等しくないので独立ではない（パソコン利用者の方が離脱しやすい）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>そもそも「確率」とは何を意味するのでしょう。次の <a href="m3_bayes.html">頻度論とベイズ</a>で、2つの考え方を比べます。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">P(A) = 0.3. What is P(not A)?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.70</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.30</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>1.30</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.03</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What is the complement of 'at least one defect' in a batch?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Exactly one defect</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>At most one defect</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>No defects at all</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Two or more defects</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Why do we subtract P(A ∩ B) in P(A ∪ B) = P(A) + P(B) − P(A ∩ B)?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Unions must be smaller than one event</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Intersections are always negative</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Outcomes in both were counted twice</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It converts odds into probability</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">In the shop table, which is the denominator of P(Bought | Phone)?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Phone visitors (200)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>All buyers (200 people)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>All 500 of the visitors</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Phone buyers only (90)</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">P(Bought) = 0.40 and P(Bought | Phone) = 0.45. What can you say?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Buying and Phone are mutually exclusive</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Buying and Phone are certainly causal</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The two probabilities must add to one</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Buying and Phone are not independent</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Two events with non-zero probabilities are mutually exclusive. Are they independent?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Yes, always</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No, never</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only if both are rare</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only for coin tosses</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 2, 0, 3, 1];
+var FEEDBACKS=["Complements add to 1, so P(Aᶜ) = 1 − 0.3 = 0.7.", "'At least one' covers 1, 2, 3, …, so its complement is 0 defects.", "Cases in both A and B appear in P(A) and in P(B), so we remove the overlap once.", "The condition after the bar (Phone) defines the group, so divide by the Phone total.", "Independence requires P(A | B) = P(A). The probabilities differ, so the events are associated.", "If one happens the other has probability 0, so knowing one changes the other: they are dependent."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">complement (Aᶜ)</div><div class="term-en">余事象</div><div class="term-def">A でないこと。P(A) + P(Aᶜ) = 1。</div></div>
+    <div class="term-item"><div class="term-name">intersection (A ∩ B)</div><div class="term-en">積事象</div><div class="term-def">A かつ B。同時確率。</div></div>
+    <div class="term-item"><div class="term-name">union (A ∪ B)</div><div class="term-en">和事象</div><div class="term-def">A または B（両方も含む）。</div></div>
+    <div class="term-item"><div class="term-name">general addition rule</div><div class="term-en">加法定理</div><div class="term-def">P(A∪B) = P(A) + P(B) − P(A∩B)。</div></div>
+    <div class="term-item"><div class="term-name">mutually exclusive</div><div class="term-en">排反</div><div class="term-def">同時に起こらない。P(A∩B) = 0。</div></div>
+    <div class="term-item"><div class="term-name">two-way table</div><div class="term-en">二元表</div><div class="term-def">2つのカテゴリ変数のクロス集計。</div></div>
+    <div class="term-item"><div class="term-name">conditional probability</div><div class="term-en">条件付き確率</div><div class="term-def">P(A | B)：B が起きたときの A の確率。</div></div>
+    <div class="term-item"><div class="term-name">independent</div><div class="term-en">独立</div><div class="term-def">P(A | B) = P(A)。B を知っても A の確率は変わらない。</div></div>
+    <div class="term-item"><div class="term-name">addmargins()</div><div class="term-en">周辺合計</div><div class="term-def">表に行・列の合計を追加する R の関数。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>条件付き確率は<strong>「given の後ろ」が分母</strong>。P(購入 | スマホ) なら、分母は<strong>スマホの合計</strong>。まず条件の行（列）だけを見る。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M3 余事象・和と積・加法定理・条件付き確率・独立</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m3_prob.html">← 確率の基本</a> · <a href="m3_bayes.html">頻度論とベイズ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

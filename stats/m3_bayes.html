@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M3 頻度論とベイズ：確率の2つの考え方</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 🧠 頻度論とベイズ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main active" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Probability — The Frequentist Approach, the Bayesian Approach, Frequentist vs. Bayesian in A/B Testing</div>
+  <h1>🧠 頻度論とベイズ：確率の2つの考え方</h1>
+  <p>確率には<strong>2つの解釈</strong>があります。長い目で見た相対度数とみなす<strong>頻度論</strong>と、信念の度合いとみなす<strong>ベイズ</strong>です。それぞれの長所・短所と、<strong>ベイズの定理</strong>の計算（検査の陽性の例）を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: The Frequentist Approach to Probability ／ The Bayesian Approach to Probability ／ Frequentist vs. Bayesian Probability in A/B Testing</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 頻度論</a><a href="#unit2">② ベイズ</a><a href="#unit3">③ ベイズの定理を計算</a><a href="#unit4">④ A/B テストでの違い</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① The Frequentist Approach to Probability</li><li>②③ The Bayesian Approach to Probability</li><li>④ Frequentist vs. Bayesian Probability in A/B Testing</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>頻度論：長い目で見た相対度数</h2><div class="unit-sub">統計学の主流の考え方</div></div>
+  </div>
+
+  <p><strong>頻度論（frequentist）</strong>では、確率を「同じ試行を<strong>無限にくり返したときの相対度数</strong>」と定義します。前回の大数の法則がその土台です。この授業の信頼区間や仮説検定（M4 以降）は頻度論の考え方で組み立てられています。</p>
+  <table class="compare-table">
+<tr><th>長所</th><th>短所</th></tr>
+<tr><td>世界の事実に根ざしている（客観的）</td><td>無限のくり返しは現実には存在しない</td></tr><tr><td>確率は固定で変わらない</td><td>1回きりの出来事（明日の試合の勝率）に確率を付けにくい</td></tr><tr><td>同じデータを見れば誰でも同じ答え</td><td>2人の確率が違えば、どちらかが間違い</td></tr><tr><td></td><td>仮定（例：正規分布）が外れると結論も崩れる</td></tr>
+</table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">7</span>)</span>
+<span class="cl"><span class="kw">sapply</span>(<span class="kw">c</span>(<span class="nm">10</span>, <span class="nm">100</span>, <span class="nm">10000</span>), <span class="kw">function</span>(n) <span class="kw">mean</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">1</span>), n, replace = <span class="kw">TRUE</span>)))</span>
+</pre>
+<div class="output-reveal">[1] 0.6000 0.6100 0.5087</div>
+  <p>コインを 10回・100回・1万回投げたときの表の割合です。回数が増えるほど 0.5 に近づく、これが頻度論の「確率」です。</p>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ベイズ：信念の度合い</h2><div class="unit-sub">新しい情報で確率を更新する</div></div>
+  </div>
+
+  <p><strong>ベイズ（Bayesian）</strong>の考え方では、確率は「ある人が、その出来事が本当だと<strong>どのくらい信じているか</strong>」の度合いです（主観確率）。18世紀のトーマス・ベイズにちなみます。</p>
+  <p>「信念の度合い」は<strong>賭け</strong>で表せます。「このチームが勝てば 5 ドルもらえ、負ければ 5 ドル払う」賭けに乗るかどうかは、あなたが勝つ確率をどう見積もるかで決まります。90% だと思うなら喜んで乗るでしょう。</p>
+  <table class="compare-table">
+<tr><th>長所</th><th>短所</th></tr>
+<tr><td>1回きりの出来事にも確率を付けられる</td><td>完全に客観的にはなれない</td></tr><tr><td>人によって確率が違っても合理的でいられる</td><td>「誰の信念か」を決める必要がある</td></tr><tr><td>事前の情報を使える／新しいデータで更新できる</td><td>概念も計算も（事前分布・事後分布…）初心者には難しい</td></tr><tr><td>機械学習など現代の応用が多い</td><td></td></tr>
+</table>
+  <div class="note-box">⚖️ よく言われるまとめ：頻度論は<strong>狭すぎる</strong>（確率を付けたいものの多くを禁じる）、ベイズは<strong>広すぎる</strong>（観察者による違いを許しすぎる）。どちらが正しいというより、<strong>目的に合わせて使い分ける</strong>ものです。</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>ベイズの定理を計算する</h2><div class="unit-sub">陽性なら本当に病気？</div></div>
+  </div>
+
+  <div class="note-box">📐 <strong>ベイズの定理</strong>：P(H | D) = P(D | H) × P(H) ÷ P(D)<br>　H＝仮説（病気である）、D＝データ（検査が陽性）。P(H)＝<strong>事前確率</strong>、P(D | H)＝<strong>尤度</strong>、P(H | D)＝<strong>事後確率</strong>。</div>
+  <p>ある病気の有病率は <strong>1%</strong>。検査は、病気の人の <strong>95%</strong> を陽性と判定し、病気でない人の <strong>5%</strong> も誤って陽性にします（架空の数値）。陽性と出た人が本当に病気である確率は？</p>
+  <pre class="code-block">
+<span class="cl">prior &lt;- <span class="nm">0.01</span>           <span class="cm"># P(disease)</span></span>
+<span class="cl">sens  &lt;- <span class="nm">0.95</span>           <span class="cm"># P(positive | disease)</span></span>
+<span class="cl">false_pos &lt;- <span class="nm">0.05</span>       <span class="cm"># P(positive | no disease)</span></span>
+<span class="cl">p_pos &lt;- sens * prior + false_pos * (<span class="nm">1</span> - prior)   <span class="cm"># P(positive)</span></span>
+<span class="cl">posterior &lt;- sens * prior / p_pos</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(p_pos = p_pos, posterior = posterior), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">    p_pos posterior 
+    0.059     0.161 </div>
+  <p>答えは約 <strong>16%</strong>。陽性でも、本当に病気なのは6人に1人ほどです。病気の人がもともと少ない（基準率 1%）ため、健康な多数の人から出る「偽陽性」の方が多くなるのです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># Same idea with counts: imagine 10,000 people</span></span>
+<span class="cl">sick &lt;- <span class="nm">10000</span> * <span class="nm">0.01</span>; healthy &lt;- <span class="nm">10000</span> - sick</span>
+<span class="cl">true_pos &lt;- sick * <span class="nm">0.95</span>; false_pos_n &lt;- healthy * <span class="nm">0.05</span></span>
+<span class="cl"><span class="kw">c</span>(true_pos = true_pos, false_pos = false_pos_n, share_sick = <span class="kw">round</span>(true_pos / (true_pos + false_pos_n), <span class="nm">3</span>))</span>
+</pre>
+<div class="output-reveal">  true_pos  false_pos share_sick 
+    95.000    495.000      0.161 </div>
+  <div class="warn-box">⚠️ 「検査の精度 95%」から「陽性なら 95% 病気」と考えるのは、<strong>P(陽性 | 病気)</strong> と <strong>P(病気 | 陽性)</strong> の取り違えです（前回の条件付き確率の注意と同じ）。<strong>基準率の無視（base rate fallacy）</strong>と呼ばれます。</div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>A/B テストでの2つの見方</h2><div class="unit-sub">同じ実験、違う問い</div></div>
+  </div>
+
+  <p>Web サイトのボタンを A 案・B 案で無作為に出し分け、クリック率を比べる<strong>A/B テスト</strong>を考えます。</p>
+  <table class="compare-table">
+<tr><th></th><th>頻度論のアプローチ</th><th>ベイズのアプローチ</th></tr>
+<tr><td>問い</td><td>「差がない」としたら、こんなに差が出る確率は？（p 値）</td><td>データを見た今、B が A より良い確率は？</td></tr><tr><td>事前の知識</td><td>使わない</td><td>過去のテスト結果などを事前分布として使う</td></tr><tr><td>いつ判断？</td><td>あらかじめ決めたサンプルサイズまで集める</td><td>データが集まるたびに更新できる</td></tr><tr><td>答えの形</td><td>有意／有意でない</td><td>「B が良い確率 92%」のような確率</td></tr>
+</table>
+  <p>この授業（M4〜M6）では、主に<strong>頻度論</strong>の道具（信頼区間・仮説検定・p 値）を学びます。ただし「p 値は帰無仮説が正しい確率ではない」など、ベイズの問いと混同しないことが大切です。</p>
+  <div class="practice-card" id="p-m3by-u4">
+    <div class="ptitle">💻 ミニ練習：基準率を変えてみる</div>
+    <p class="ptask">上の検査の例で、有病率（prior）が <strong>10%</strong> の集団だったら、陽性の人が本当に病気である確率はいくつになるか計算してください。</p>
+    <textarea class="code-editor" id="p-m3by-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3by-u4', ['prior', '0.1', '0.95', '0.05'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3by-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3by-u4-result"></div>
+    <div class="answer-reveal" id="p-m3by-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">prior &lt;- <span class="nm">0.10</span></span>
+<span class="cl">p_pos &lt;- <span class="nm">0.95</span> * prior + <span class="nm">0.05</span> * (<span class="nm">1</span> - prior)</span>
+<span class="cl"><span class="nm">0.95</span> * prior / p_pos</span>
+</pre>
+      <p class="answer-note">約 0.679（68%）。基準率が上がると、同じ検査でも陽性の信頼度が大きく上がる。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>ここからは、偶然の結果を数で表す<strong>確率変数</strong>と、その<strong>分布</strong>です。次の <a href="m3_discrete.html">離散分布：一様・二項・幾何・ポアソン</a>へ。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">How does the frequentist view define probability?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A person's degree of belief</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Long-run relative frequency</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The odds offered by a bookmaker</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The number of possible outcomes</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which is an advantage of the Bayesian view?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It is perfectly objective</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It never needs any assumptions</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It forbids subjective beliefs</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It updates with new data</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In Bayes' theorem, what is P(H) called?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The prior probability</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The posterior probability</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The likelihood of data</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The p-value of the test</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A disease affects 1% of people. A test has 95% sensitivity and a 5% false-positive rate. P(disease | positive) is about…</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>95%</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>50%</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>16%</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>5%</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why is P(disease | positive) much lower than the test's 95% sensitivity here?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The test was given incorrectly</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Sensitivity is always overstated</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The base rate of disease is low</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Positive results are independent</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Which question fits a Bayesian A/B test?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>What is the chance B beats A?</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Is the p-value below 0.05?</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>How many visitors saw page A?</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Should α be 0.01 or 0.05?</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 2, 0];
+var FEEDBACKS=["Frequentists define probability as the proportion of times an event occurs over very many repetitions.", "Bayesians start from a prior and update it with data, and can assign probabilities to one-off events.", "P(H) is the probability of the hypothesis before seeing the data: the prior.", "Because the disease is rare, false positives from the healthy 99% outnumber true positives: 0.0095 / 0.059 ≈ 0.16.", "With a low base rate, most positives come from the many healthy people (false positives).", "A Bayesian analysis gives a direct probability that B is better, given the data and the prior."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">frequentist</div><div class="term-en">頻度論</div><div class="term-def">確率＝長い目で見た相対度数。客観的・固定。</div></div>
+    <div class="term-item"><div class="term-name">Bayesian</div><div class="term-en">ベイズ</div><div class="term-def">確率＝ある人の信念の度合い。新しい情報で更新。</div></div>
+    <div class="term-item"><div class="term-name">prior</div><div class="term-en">事前確率</div><div class="term-def">データを見る前の確率 P(H)。</div></div>
+    <div class="term-item"><div class="term-name">likelihood</div><div class="term-en">尤度</div><div class="term-def">仮説のもとでデータが得られる確率 P(D | H)。</div></div>
+    <div class="term-item"><div class="term-name">posterior</div><div class="term-en">事後確率</div><div class="term-def">データを見た後の確率 P(H | D)。</div></div>
+    <div class="term-item"><div class="term-name">Bayes' theorem</div><div class="term-en">ベイズの定理</div><div class="term-def">P(H | D) = P(D | H) P(H) / P(D)。</div></div>
+    <div class="term-item"><div class="term-name">base rate</div><div class="term-en">基準率</div><div class="term-def">そもそもの頻度（有病率など）。無視すると誤る。</div></div>
+    <div class="term-item"><div class="term-name">A/B test</div><div class="term-en">A/B テスト</div><div class="term-def">2案を無作為に比べる実験。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>ベイズの定理は「<strong>事前 × 尤度 → 事後</strong>」。陽性でも病気とは限らないのは、<strong>病気の人がそもそも少ない（基準率が低い）</strong>から。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M3 頻度論とベイズ：確率の2つの考え方</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m3_cond.html">← 余事象・和と積・加法定理・条件付き確率・独立</a> · <a href="m3_discrete.html">確率変数と離散分布 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

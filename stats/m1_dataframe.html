@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M1 データフレーム：作る・取り出す・調べる・CSV を読む</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M1 🧾 データフレーム・CSV <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main active" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M1 · Data Frames in R — Intro, Accessing Data, Analyzing a Data Frame &amp; Loading a CSV</div>
+  <h1>🧾 データフレーム：作る・取り出す・調べる・CSV を読む</h1>
+  <p>ばらばらのベクトルを1つの表にまとめるのが<strong>データフレーム</strong>です。<code>data.frame()</code> で作り、<code>$</code> と <code>[行, 列]</code> で取り出し、<code>dim()</code>・<code>str()</code>・<code>summary()</code> で調べ、最後に <code>read.csv()</code> で <strong>donors.csv</strong> を読み込みます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Intro to Data Frames ／ Accessing Data in Data Frames ／ Analyzing a Data Frame ／ The donors.csv file ／ Loading a CSV into R</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① データフレームを作る</a><a href="#unit2">② 列と行を取り出す</a><a href="#unit3">③ 中身を調べる</a><a href="#unit4">④ CSV を読み込む</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① Intro to Data Frames</li><li>② Accessing Data in Data Frames</li><li>③ Analyzing a Data Frame</li><li>④ The donors.csv file ／ Loading a CSV into R</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>データフレームを作る</h2><div class="unit-sub">ばらばらのベクトルを1つの表に</div></div>
+  </div>
+
+  <p>ある実験で9人の参加者のデータを取りました。4つのベクトルに分けて保存すると、R には「これらが同じ人たちのデータだ」という関係がわかりません。</p>
+  <pre class="code-block">
+<span class="cl">group  &lt;- <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">3</span>)</span>
+<span class="cl">gender &lt;- <span class="kw">c</span>(<span class="st">"male"</span>, <span class="st">"male"</span>, <span class="st">"male"</span>, <span class="st">"male"</span>, <span class="st">"male"</span>, <span class="st">"female"</span>, <span class="st">"female"</span>, <span class="st">"female"</span>, <span class="st">"female"</span>)</span>
+<span class="cl">age    &lt;- <span class="kw">c</span>(<span class="nm">17</span>, <span class="nm">19</span>, <span class="nm">21</span>, <span class="nm">37</span>, <span class="nm">18</span>, <span class="nm">19</span>, <span class="nm">47</span>, <span class="nm">18</span>, <span class="nm">19</span>)</span>
+<span class="cl">score  &lt;- <span class="kw">c</span>(<span class="nm">12</span>, <span class="nm">10</span>, <span class="nm">11</span>, <span class="nm">15</span>, <span class="nm">16</span>, <span class="nm">14</span>, <span class="nm">25</span>, <span class="nm">21</span>, <span class="nm">29</span>)</span>
+<span class="cl">expt &lt;- <span class="kw">data.frame</span>(age, gender, group, score)</span>
+<span class="cl">expt</span>
+</pre>
+<div class="output-reveal">  age gender group score
+1  17   male     1    12
+2  19   male     1    10
+3  21   male     1    11
+4  37   male     2    15
+5  18   male     2    16
+6  19 female     2    14
+7  47 female     3    25
+8  18 female     3    21
+9  19 female     3    29</div>
+  <p><code>data.frame()</code> に入れると、<strong>同じ行＝同じ参加者</strong>として1つの表になります。列（変数）ごとに型が違ってもかまいません（数値と文字が並んでいる）。</p>
+  <div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>データフレーム＝エクセルの表のようなもの。縦の列が「何を測ったか」、横の行が「誰（何）のデータか」。</p></div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>列と行を取り出す</h2><div class="unit-sub">$ と [行, 列]</div></div>
+  </div>
+
+  <h3>列を取り出す</h3>
+  <pre class="code-block">
+<span class="cl">expt$score</span>
+<span class="cl">expt[<span class="nm">1</span>]</span>
+<span class="cl"><span class="kw">class</span>(expt$score)</span>
+<span class="cl"><span class="kw">class</span>(expt[<span class="nm">1</span>])</span>
+</pre>
+<div class="output-reveal">[1] 12 10 11 15 16 14 25 21 29
+  age
+1  17
+2  19
+3  21
+4  37
+5  18
+6  19
+7  47
+8  18
+9  19
+[1] "numeric"
+[1] "data.frame"</div>
+  <p><code>$</code> は<strong>ベクトル</strong>、<code>[1]</code> は<strong>1列のデータフレーム</strong>を返します。平均などを計算するときは <code>$</code> を使います。</p>
+  <h3>行と列を同時に指定する <code>[行, 列]</code></h3>
+  <p>カンマの<strong>左が行、右が列</strong>です。空欄は「すべて」を意味します。</p>
+  <pre class="code-block">
+<span class="cl">expt[<span class="nm">1</span>, ]</span>
+<span class="cl">expt[<span class="nm">3</span>:<span class="nm">7</span>, <span class="nm">3</span>:<span class="nm">4</span>]</span>
+<span class="cl">expt[<span class="nm">3</span>:<span class="nm">7</span>, <span class="kw">c</span>(<span class="st">"score"</span>, <span class="st">"age"</span>)]</span>
+</pre>
+<div class="output-reveal">  age gender group score
+1  17   male     1    12
+  group score
+3     1    11
+4     2    15
+5     2    16
+6     2    14
+7     3    25
+  score age
+3    11  21
+4    15  37
+5    16  18
+6    14  19
+7    25  47</div>
+  <div class="warn-box">⚠️ <code>expt[1, ]</code> の<strong>カンマを忘れる</strong>と <code>expt[1]</code>（1列目）になってしまいます。「1行目」と「1列目」は全然違うので、行がほしいときはカンマを必ず書きましょう。</div>
+  <p>条件で行を選ぶこともできます。ベクトルの論理添字と同じ考え方です。</p>
+  <pre class="code-block">
+<span class="cl">expt[expt$score &gt; <span class="nm">20</span>, ]</span>
+</pre>
+<div class="output-reveal">  age gender group score
+7  47 female     3    25
+8  18 female     3    21
+9  19 female     3    29</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>データフレームを調べる</h2><div class="unit-sub">dim・names・str・summary</div></div>
+  </div>
+
+  <p>知らないデータを受け取ったら、まず<strong>大きさ・列名・型・要約</strong>を確認します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">dim</span>(expt)</span>
+<span class="cl"><span class="kw">nrow</span>(expt)</span>
+<span class="cl"><span class="kw">names</span>(expt)</span>
+<span class="cl"><span class="kw">str</span>(expt)</span>
+<span class="cl"><span class="kw">summary</span>(expt)</span>
+</pre>
+<div class="output-reveal">[1] 9 4
+[1] 9
+[1] "age"    "gender" "group"  "score" 
+'data.frame':	9 obs. of  4 variables:
+ $ age   : num  17 19 21 37 18 19 47 18 19
+ $ gender: chr  "male" "male" "male" "male" ...
+ $ group : num  1 1 1 2 2 2 3 3 3
+ $ score : num  12 10 11 15 16 14 25 21 29
+      age              gender      group       score   
+ Min.   :17.00   Length   :9   Min.   :1   Min.   :10  
+ 1st Qu.:18.00   N.unique :2   1st Qu.:1   1st Qu.:12  
+ Median :19.00   N.blank  :0   Median :2   Median :15  
+ Mean   :23.89   Min.nchar:4   Mean   :2   Mean   :17  
+ 3rd Qu.:21.00   Max.nchar:6   3rd Qu.:3   3rd Qu.:21  
+ Max.   :47.00                 Max.   :3   Max.   :29  </div>
+  <ul><li><code>str()</code>：行数・列数、各列の<strong>型</strong>（<code>num</code>, <code>chr</code>）と先頭の値</li><li><code>summary()</code>：数値列は<strong>最小・第1四分位・中央値・平均・第3四分位・最大</strong>。文字列は長さや種類の数など（R 4.5 以降の表示）</li></ul>
+  <div class="note-box">🧪 CodeGrade の課題では <code>ls.str()</code> を使う指示が出ることがあります。環境にあるオブジェクトの構造をまとめて表示する関数です。</div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>CSV を読み込む：donors.csv</h2><div class="unit-sub">read.csv() と最初のチェック</div></div>
+  </div>
+
+  <p>実際のデータは <strong>CSV（カンマ区切り）</strong>ファイルで渡されることが多いです。この授業の <code>donors.csv</code> は、退役軍人団体がダイレクトメールで寄付を募ったときの見込み寄付者のデータ（Nwanganga &amp; Chapple, <em>Practical Machine Learning in R</em>）です。</p>
+  <p>CSV を <strong>.Rmd と同じフォルダ</strong>に置き、<code>read.csv()</code> で読み込みます。課題で名前が指定されていれば、その名前で保存します。</p>
+  <pre class="code-block">
+<span class="cl">donors &lt;- <span class="kw">read.csv</span>(<span class="st">"donors.csv"</span>)</span>
+<span class="cl"><span class="kw">dim</span>(donors)</span>
+<span class="cl"><span class="kw">names</span>(donors)[<span class="nm">1</span>:<span class="nm">8</span>]</span>
+</pre>
+<div class="output-reveal">[1] 95412    22
+[1] "age"                "numberChildren"     "incomeRating"      
+[4] "wealthRating"       "mailOrderPurchases" "totalGivingAmount" 
+[7] "numberGifts"        "smallestGiftAmount"</div>
+  <p>9万行以上・22列の大きなデータです。全部を表示せず、<code>head()</code> と <code>summary()</code> で様子を見ます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">head</span>(donors[, <span class="nm">1</span>:<span class="nm">6</span>], <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">summary</span>(donors$age)</span>
+</pre>
+<div class="output-reveal">  age numberChildren incomeRating wealthRating mailOrderPurchases
+1  60             NA           NA           NA                  0
+2  46              1            6            9                 16
+3  NA             NA            3            1                  2
+  totalGivingAmount
+1               240
+2                47
+3               202
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   1.00   48.00   62.00   61.61   75.00   98.00   23665 </div>
+  <div class="warn-box">⚠️ <code>summary()</code> の <strong>NA's</strong> に注目。<code>age</code> には欠損値が2万件以上あります。このままでは <code>mean(donors$age)</code> が <code>NA</code> になるので、M2 では <code>na.rm = TRUE</code> を使います。</div>
+  <table class="compare-table">
+<tr><th>read.csv で失敗する原因</th><th>対処</th></tr>
+<tr><td>ファイルが作業ディレクトリにない</td><td><code>list.files()</code> で確認、同じフォルダに置く</td></tr><tr><td>ファイル名のつづり・大文字小文字</td><td><code>"donors.csv"</code> を正確に</td></tr><tr><td>引用符や <code>.csv</code> を忘れた</td><td><code>read.csv("donors.csv")</code> の形を守る</td></tr>
+</table>
+  <div class="practice-card" id="p-m1df-u4">
+    <div class="ptitle">💻 ミニ練習：読み込んだデータを調べる</div>
+    <p class="ptask"><code>donors</code> の<strong>行数</strong>を求め、<code>totalGivingAmount</code>（寄付総額）の <code>summary()</code> を表示してください。</p>
+    <textarea class="code-editor" id="p-m1df-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m1df-u4', ['nrow', 'donors', 'summary', 'totalGivingAmount'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m1df-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m1df-u4-result"></div>
+    <div class="answer-reveal" id="p-m1df-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">nrow</span>(donors)</span>
+<span class="cl"><span class="kw">summary</span>(donors$totalGivingAmount)</span>
+</pre>
+      <p class="answer-note">行数は 95412。寄付総額は中央値が 78 なのに最大は 9,485 もある、右に長い分布（M2 で詳しく扱う）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次のモジュールへ：</strong>データを読み込めたら、次は数字で要約する番です。<a href="m2_center.html">550 M2 記述統計</a>で、平均・中央値とグラフを学びます。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why put the vectors age, gender, group and score into one data frame?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>So R can store more than 100 values</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>So each row is one participant</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>So the vectors become one vector</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>So all columns become the same type</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does expt$score return?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A one-column data frame</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The first row of expt</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The column name as text</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A numeric vector</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which code returns only the first ROW of the data frame expt?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>expt[1, ]</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>expt[1]</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>expt[, 1]</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>expt$1</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Which function shows each column's data type and its first few values?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>dim()</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>head()</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>str()</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>nrow()</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">summary(donors$age) shows NA's 23665. What does this tell you?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Many donors are aged 0</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The mean age is 23,665</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Many ages are missing</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Age is stored as text</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">You run read.csv("Donors.csv") but the file is named donors.csv. What happens?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>R cannot find the file</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>R loads the file anyway</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>R creates an empty file</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>R renames the file for you</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 2, 0];
+var FEEDBACKS=["A data frame tells R that values in the same row belong to the same case. Columns can still have different types.", "The $ operator extracts one column as a plain vector, which you can pass to mean() or sum().", "Inside [row, column], the number before the comma picks rows. expt[1] and expt[, 1] give the first column.", "str() shows the structure: dimensions, column types (num, chr, int) and the first values.", "NA's counts missing values. Functions such as mean() need na.rm = TRUE to ignore them.", "File names must match exactly, including upper- and lower-case letters."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">data frame</div><div class="term-en">データフレーム</div><div class="term-def">列＝変数、行＝ケースの表。列ごとに型が違ってよい。</div></div>
+    <div class="term-item"><div class="term-name">$</div><div class="term-en">ドル記号</div><div class="term-def">df$列名 で1列をベクトルとして取り出す。</div></div>
+    <div class="term-item"><div class="term-name">df[行, 列]</div><div class="term-en">角かっこ添字</div><div class="term-def">行と列を番号や名前で指定する。空欄は「全部」。</div></div>
+    <div class="term-item"><div class="term-name">dim() / nrow() / ncol()</div><div class="term-en">大きさ</div><div class="term-def">行数と列数。</div></div>
+    <div class="term-item"><div class="term-name">names()</div><div class="term-en">列名</div><div class="term-def">列の名前の一覧。colnames() と同じ。</div></div>
+    <div class="term-item"><div class="term-name">str()</div><div class="term-en">構造</div><div class="term-def">各列の型と先頭の値を表示。</div></div>
+    <div class="term-item"><div class="term-name">summary()</div><div class="term-en">要約</div><div class="term-def">数値列は5数要約と平均、NA の数も表示。</div></div>
+    <div class="term-item"><div class="term-name">read.csv()</div><div class="term-en">CSV 読み込み</div><div class="term-def">CSV ファイルをデータフレームにする。</div></div>
+    <div class="term-item"><div class="term-name">CSV</div><div class="term-en">カンマ区切り</div><div class="term-def">表を文字で保存する形式。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><code>df$age</code> は<strong>ベクトル</strong>、<code>df[1]</code> や <code>df["age"]</code> は<strong>データフレーム</strong>が返る。平均など計算に使うのは <code>$</code> の方。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M1 データフレーム：作る・取り出す・調べる・CSV を読む</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m1_workflow.html">← 作業ディレクトリ・コメント・パッケージ・環境の整理</a> · <a href="m2_center.html">中心の指標 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

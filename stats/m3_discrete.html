@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>550 M3 確率変数と離散分布：一様・二項・幾何・ポアソン</title>
+<link rel="stylesheet" href="style.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 550 M3 🧮 二項・幾何・ポアソン <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main active" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · Probability Distributions — Random Variables, Uniform, Binomial Probabilities &amp; Distributions, Geometric, Poisson</div>
+  <h1>🧮 確率変数と離散分布：一様・二項・幾何・ポアソン</h1>
+  <p>結果を数で表した<strong>確率変数</strong>（離散と連続）、R の分布関数の<strong>4つの接頭辞 r・d・p・q</strong>、そして<strong>一様・二項・幾何・ポアソン</strong>の4つの分布を、使える条件と R の計算でまとめます。</p>
+  <p style="font-size:.9rem">📺 講義動画: Random Variables ／ Uniform Distributions ／ Binomial Probabilities ／ Binomial Distributions ／ Geometric Distributions ／ Poisson Distribution</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 確率変数と r・d・p・q</a><a href="#unit2">② 一様分布</a><a href="#unit3">③ 二項分布</a><a href="#unit4">④ 幾何分布とポアソン分布</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📖 <strong>講義動画との対応</strong><ul style="margin:.4rem 0 0 1.2rem"><li>① 550_Probability Distributions ／ Random Variables</li><li>② Uniform Distributions</li><li>③ Binomial Probabilities ／ Binomial Distributions</li><li>④ Geometric Distributions ／ Poisson Distribution</li></ul></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>確率変数と、R の4つの接頭辞</h2><div class="unit-sub">結果を数にする</div></div>
+  </div>
+
+  <p><strong>分布（distribution）</strong>は「変数がどんな値を、どのくらいの頻度でとるか」です。<strong>確率変数（random variable）</strong>は、ランダムな試行の結果で値が決まる<strong>数</strong>です。例：コインを2回投げたときの裏の回数 T（0, 1, 2 のどれか）。</p>
+  <table class="compare-table">
+<tr><th></th><th>離散 discrete</th><th>連続 continuous</th></tr>
+<tr><td>値</td><td>数直線上の飛び飛びの点</td><td>ある区間のすべての値</td></tr><tr><td>イメージ</td><td>数える（購入数、不良品の数、来店者数）</td><td>測る（冷凍庫の温度、重さ、滞在時間）</td></tr><tr><td>グラフ</td><td>棒（確率）</td><td>密度曲線（下の面積が確率、全体で 1）</td></tr><tr><td>この回の分布</td><td>一様・二項・幾何・ポアソン</td><td>一様・正規・t・χ²・F（次の回以降）</td></tr>
+</table>
+  <p>R の分布関数には、すべて<strong>同じ4つの接頭辞</strong>が付きます。二項分布なら <code>rbinom</code>・<code>dbinom</code>・<code>pbinom</code>・<code>qbinom</code>。</p>
+  <table class="compare-table">
+<tr><th>接頭辞</th><th>意味</th><th>問いの形</th></tr>
+<tr><td>r</td><td>random：乱数を生成</td><td>シミュレーションしたい</td></tr><tr><td>d</td><td>density：ちょうどその値の確率（連続なら密度）</td><td>「ちょうど 3 人」</td></tr><tr><td>p</td><td>probability：その値<strong>以下</strong>の累積確率</td><td>「3 人以下」</td></tr><tr><td>q</td><td>quantile：累積確率から値を逆算</td><td>「50 パーセンタイルは何人？」</td></tr>
+</table>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>一様分布</h2><div class="unit-sub">どれも同じ確からしさ</div></div>
+  </div>
+
+  <p><strong>離散一様分布</strong>は、サイコロのように<strong>どの値も同じ確率</strong>の分布です。顧客 ID から無作為に調査対象を選ぶのも、離散一様分布からの抽出です。</p>
+  <pre class="code-block">
+<span class="cl">ids &lt;- <span class="nm">50001</span>:<span class="nm">58000</span>          <span class="cm"># 8,000 customer IDs</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">42</span>)</span>
+<span class="cl">chosen &lt;- <span class="kw">sample</span>(ids, size = <span class="nm">800</span>, replace = <span class="kw">FALSE</span>)</span>
+<span class="cl"><span class="kw">head</span>(chosen, <span class="nm">8</span>)</span>
+<span class="cl"><span class="kw">hist</span>(chosen, col = <span class="st">"lightblue"</span>, main = <span class="st">"Discrete uniform: sampled IDs"</span>, xlab = <span class="st">"ID"</span>)</span>
+</pre>
+<div class="output-reveal">[1] 52609 54069 52369 55273 51098 51252 57314 50634</div>
+<figure class="r-fig"><img src="img550/m3_discrete_0.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>ヒストグラムはほぼ平ら（山がない）です。<strong>連続一様分布</strong>は、区間内の<strong>どの実数も</strong>同じ確からしさでとります。<code>runif()</code> で生成します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">42</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">runif</span>(<span class="nm">6</span>, min = <span class="nm">2</span>, max = <span class="nm">5</span>), <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">punif</span>(<span class="nm">3</span>, min = <span class="nm">2</span>, max = <span class="nm">5</span>)      <span class="cm"># P(X &lt;= 3)</span></span>
+</pre>
+<div class="output-reveal">[1] 4.74 4.81 2.86 4.49 3.93 3.56
+[1] 0.3333333</div>
+  <p>2〜5 の一様分布で 3 以下になる確率は、区間の長さの比 (3 − 2)/(5 − 2) = 1/3 です。連続一様分布は、ベイズ統計の「情報のない事前分布」としても使われます。</p>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>二項分布</h2><div class="unit-sub">n 回中の成功の数</div></div>
+  </div>
+
+  <p>ある通販会社がクーポン付きメールを <strong>12 人</strong>に送り、1人あたり <strong>20%</strong> の確率でクーポンが使われるとします（架空）。クーポンを使う人数 X は<strong>二項分布</strong> X ~ B(n = 12, p = 0.2) に従います。</p>
+  <h3>二項分布の4条件（BINS）</h3>
+  <table class="compare-table">
+<tr><th>条件</th><th>この例</th></tr>
+<tr><td><strong>B</strong>inary：結果が成功／失敗の2つ</td><td>使う／使わない</td></tr><tr><td><strong>I</strong>ndependent：試行どうしが独立</td><td>人どうしは影響しない（母集団が標本の10倍以上なら非復元でも OK＝10% 条件）</td></tr><tr><td><strong>N</strong>umber：試行回数 n が固定</td><td>12 人</td></tr><tr><td><strong>S</strong>ame：成功確率 p が一定</td><td>全員 0.2</td></tr>
+</table>
+  <pre class="code-block">
+<span class="cl"><span class="kw">dbinom</span>(<span class="nm">3</span>, size = <span class="nm">12</span>, prob = <span class="nm">0.2</span>)                     <span class="cm"># exactly 3</span></span>
+<span class="cl"><span class="kw">choose</span>(<span class="nm">12</span>, <span class="nm">3</span>) * <span class="nm">0.2</span>^<span class="nm">3</span> * <span class="nm">0.8</span>^<span class="nm">9</span>                        <span class="cm"># same, by the formula</span></span>
+<span class="cl"><span class="kw">pbinom</span>(<span class="nm">3</span>, size = <span class="nm">12</span>, prob = <span class="nm">0.2</span>)                     <span class="cm"># at most 3</span></span>
+<span class="cl"><span class="kw">pbinom</span>(<span class="nm">3</span>, size = <span class="nm">12</span>, prob = <span class="nm">0.2</span>, lower.tail = <span class="kw">FALSE</span>) <span class="cm"># 4 or more</span></span>
+<span class="cl"><span class="kw">qbinom</span>(<span class="nm">0.5</span>, size = <span class="nm">12</span>, prob = <span class="nm">0.2</span>)                   <span class="cm"># median number</span></span>
+</pre>
+<div class="output-reveal">[1] 0.2362232
+[1] 0.2362232
+[1] 0.7945689
+[1] 0.2054311
+[1] 2</div>
+  <p>公式は P(X = k) = ₙCₖ pᵏ (1 − p)ⁿ⁻ᵏ（<code>choose(n, k)</code> が ₙCₖ）。「ちょうど3人」は約 0.236、「3人以下」は約 0.795、「4人以上」は約 0.205 です。</p>
+  <div class="warn-box">⚠️ 「<strong>4 人以上</strong>」を求めるとき、<code>pbinom(4, …, lower.tail = FALSE)</code> と書くと「<strong>4 より大きい</strong>（5 人以上）」になってしまいます。離散分布では <strong>q = 3</strong> を使うのが正解です。</div>
+  <pre class="code-block">
+<span class="cl">k &lt;- <span class="nm">0</span>:<span class="nm">12</span></span>
+<span class="cl"><span class="kw">plot</span>(k, <span class="kw">dbinom</span>(k, <span class="nm">12</span>, <span class="nm">0.2</span>), type = <span class="st">"h"</span>, lwd = <span class="nm">5</span>, las = <span class="nm">1</span>, col = <span class="st">"steelblue"</span>,</span>
+<span class="cl">     xlab = <span class="st">"Number of customers who use the coupon"</span>, ylab = <span class="st">"Probability"</span>,</span>
+<span class="cl">     main = <span class="st">"X ~ B(12, 0.2)"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/m3_discrete_3.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>シミュレーションでも確かめられます。大数の法則により、くり返しを増やすほど理論値に近づきます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">123</span>)</span>
+<span class="cl">sims &lt;- <span class="kw">rbinom</span>(<span class="nm">10000</span>, size = <span class="nm">12</span>, prob = <span class="nm">0.2</span>)</span>
+<span class="cl"><span class="kw">mean</span>(sims &gt;= <span class="nm">4</span>)</span>
+</pre>
+<div class="output-reveal">[1] 0.2005</div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>幾何分布とポアソン分布</h2><div class="unit-sub">「初めての成功まで」と「一定時間の回数」</div></div>
+  </div>
+
+  <h3>幾何分布：初めて成功するまで</h3>
+  <p>営業電話の成約率が 0.1 のとき、<strong>初めて成約するのが何本目か</strong>は幾何分布に従います。条件は二項分布とほぼ同じ（成功/失敗・独立・p 一定）ですが、試行回数は決まっておらず「<strong>初めての成功</strong>」で止まります。右に歪んだ分布で、平均は 1/p（ここでは 10 本目）です。</p>
+  <pre class="code-block">
+<span class="cl">p &lt;- <span class="nm">0.1</span></span>
+<span class="cl"><span class="cm"># R counts FAILURES before the first success (X &gt;= 0)</span></span>
+<span class="cl"><span class="kw">dgeom</span>(<span class="nm">4</span>, prob = p)                      <span class="cm"># first success on call 5</span></span>
+<span class="cl">p * (<span class="nm">1</span> - p)^<span class="nm">4</span>                           <span class="cm"># same by formula (trial-count version)</span></span>
+<span class="cl"><span class="kw">pgeom</span>(<span class="nm">19</span>, prob = p, lower.tail = <span class="kw">FALSE</span>) <span class="cm"># 20+ failures, i.e. success on call 21 or later</span></span>
+</pre>
+<div class="output-reveal">[1] 0.06561
+[1] 0.06561
+[1] 0.1215767</div>
+  <div class="warn-box">⚠️ R の <code>dgeom()</code> は「<strong>成功の前の失敗の数</strong>（0 から）」で数えます。「<strong>何本目</strong>で初めて成功するか（1 から）」で考えるときは、<strong>1 を引いて</strong>渡します（5本目 → <code>dgeom(4, …)</code>）。シミュレーションでは <code>rgeom(…) + 1</code>。</div>
+  <h3>ポアソン分布：一定の時間・空間での回数</h3>
+  <p>サポート窓口に<strong>1時間あたり平均 4 件</strong>の問い合わせが来るとします。1時間の件数はポアソン分布 X ~ Poisson(λ = 4) で表せます。条件は、①同じ長さの区間なら発生確率が同じ、②区間どうしの発生が独立、の2つです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">dpois</span>(<span class="nm">2</span>, lambda = <span class="nm">4</span>)                    <span class="cm"># exactly 2 in an hour</span></span>
+<span class="cl"><span class="nm">4</span>^<span class="nm">2</span> * <span class="kw">exp</span>(-<span class="nm">4</span>) / <span class="kw">factorial</span>(<span class="nm">2</span>)            <span class="cm"># formula: lambda^x e^-lambda / x!</span></span>
+<span class="cl"><span class="kw">ppois</span>(<span class="nm">6</span>, lambda = <span class="nm">4</span>, lower.tail = <span class="kw">FALSE</span>) <span class="cm"># more than 6 in an hour</span></span>
+<span class="cl"><span class="kw">ppois</span>(<span class="nm">0</span>, lambda = <span class="nm">4</span> * <span class="nm">30</span> / <span class="nm">60</span>)          <span class="cm"># no calls in 30 minutes (lambda = 2)</span></span>
+<span class="cl"><span class="kw">qpois</span>(<span class="nm">0.9</span>, lambda = <span class="nm">4</span>)                  <span class="cm"># 90th percentile</span></span>
+</pre>
+<div class="output-reveal">[1] 0.1465251
+[1] 0.1465251
+[1] 0.110674
+[1] 0.1353353
+[1] 7</div>
+  <p>区間の長さを変えるときは <strong>λ も比例させます</strong>（1時間 4 件 → 30分 2 件）。ポアソン分布は<strong>平均と分散がどちらも λ</strong> という特徴があります。</p>
+  <div class="practice-card" id="p-m3ds-u4">
+    <div class="ptitle">💻 ミニ練習：二項とポアソンを使い分ける</div>
+    <p class="ptask">（1）不良率 3% の部品を 50 個検査したとき、不良品が <strong>2 個以下</strong>の確率。（2）1日平均 1.5 件起こるサーバー障害が、ある日 <strong>ちょうど 0 件</strong>の確率。</p>
+    <textarea class="code-editor" id="p-m3ds-u4-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-m3ds-u4', ['pbinom', '50', '0.03', 'dpois'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-m3ds-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-m3ds-u4-result"></div>
+    <div class="answer-reveal" id="p-m3ds-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">pbinom</span>(<span class="nm">2</span>, size = <span class="nm">50</span>, prob = <span class="nm">0.03</span>)</span>
+<span class="cl"><span class="kw">dpois</span>(<span class="nm">0</span>, lambda = <span class="nm">1.5</span>)</span>
+</pre>
+      <p class="answer-note">（1）は回数が決まった成功/失敗なので二項：約 0.811。（2）は一定時間の発生回数なのでポアソン：約 0.223。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の講義へ：</strong>次はもっとも重要な連続分布、<a href="m3_normal.html">正規分布</a>です。<code>pnorm()</code> と <code>qnorm()</code> で確率とパーセンタイルを計算します。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Which is a discrete random variable?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Weight of a shopping cart in kg</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Time a shopper spends in a store</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Temperature inside a freezer</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Items in a shopping cart</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which R prefix gives the probability of 'at most k'?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>d (dbinom)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>p (pbinom)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>q (qbinom)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>r (rbinom)</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which situation is NOT binomial?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>12 emails, each opened with p = 0.2</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Calls made until the first sale</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>50 parts, each faulty with p = 0.03</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>10 coin tosses counting heads</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">X ~ B(12, 0.2). Which code gives P(X ≥ 4)?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>pbinom(4, 12, 0.2, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>dbinom(4, 12, 0.2, lower.tail = FALSE)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>qbinom(4, 12, 0.2, lower.tail = TRUE)</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>pbinom(3, 12, 0.2, lower.tail = FALSE)</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A help desk gets 4 calls per hour on average. What λ models a 15-minute period?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>λ = 1</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>λ = 4</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>λ = 15</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>λ = 60</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">For a Poisson distribution with λ = 4, what is the variance?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>2.0</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>16</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>4.0</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>8.0</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 1, 1, 3, 0, 2];
+var FEEDBACKS=["Counts take separate whole-number values; weight, time and temperature are measured (continuous).", "p functions give the cumulative probability P(X ≤ k).", "Binomial needs a fixed number of trials; 'until the first success' is geometric.", "lower.tail = FALSE gives P(X > q), so P(X ≥ 4) = P(X > 3) uses q = 3.", "Scale λ with the interval length: 4 × 15/60 = 1.", "A Poisson distribution's mean and variance are both λ."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">random variable</div><div class="term-en">確率変数</div><div class="term-def">偶然の結果で値が決まる数。</div></div>
+    <div class="term-item"><div class="term-name">discrete / continuous</div><div class="term-en">離散／連続</div><div class="term-def">数える値／測る値。</div></div>
+    <div class="term-item"><div class="term-name">r d p q</div><div class="term-en">4つの接頭辞</div><div class="term-def">乱数・ちょうどの確率（密度）・以下の確率・パーセンタイル。</div></div>
+    <div class="term-item"><div class="term-name">uniform</div><div class="term-en">一様分布</div><div class="term-def">どの値も同じ確からしさ。</div></div>
+    <div class="term-item"><div class="term-name">binomial B(n, p)</div><div class="term-en">二項分布</div><div class="term-def">n 回中の成功数。成功/失敗・独立・回数固定・p 一定。</div></div>
+    <div class="term-item"><div class="term-name">lower.tail</div><div class="term-en">下側</div><div class="term-def">TRUE なら「以下」、FALSE なら「より大きい」。</div></div>
+    <div class="term-item"><div class="term-name">geometric</div><div class="term-en">幾何分布</div><div class="term-def">初めて成功するまでの回数（R は失敗の回数）。</div></div>
+    <div class="term-item"><div class="term-name">Poisson (λ)</div><div class="term-en">ポアソン分布</div><div class="term-def">一定の時間・空間での発生回数。平均＝分散＝λ。</div></div>
+    <div class="term-item"><div class="term-name">10% condition</div><div class="term-en">10% 条件</div><div class="term-def">非復元でも標本が母集団の10%以下なら独立とみなせる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>「ちょうど」→ d</strong>、<strong>「以下」→ p</strong>、<strong>「以上」→ 1 − p(k − 1)</strong> か <strong>p(k − 1, lower.tail = FALSE)</strong>。「4以上」は q = 3 を使うのがコツ。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：550 M3 確率変数と離散分布：一様・二項・幾何・ポアソン</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="m3_bayes.html">← 頻度論とベイズ</a> · <a href="m3_normal.html">正規分布 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>
