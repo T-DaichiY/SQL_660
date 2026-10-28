@@ -59,6 +59,24 @@ for i in items:
     if i['id'] in seen: continue
     seen.add(i['id']); out.append(i)
 data = json.dumps(dict(courses=[dict(id=c['id'], name=c['name'], icon=c['icon'], home=c['index']) for c in COURSES], items=out), ensure_ascii=False)
+# next-page map for hub-fab.js: reading order = item order within each course
+NEXT = {}
+for c in COURSES:
+    seq = [i for i in out if i['course'] == c['id']]
+    for k, it in enumerate(seq):
+        if k + 1 < len(seq):
+            nx = seq[k + 1]
+            NEXT[it['id']] = dict(n=nx['id'], t=nx['title'], e=nx.get('easy'))
+    if seq:
+        NEXT[c['index']] = dict(n=seq[0]['id'], t=seq[0]['title'], e=None)
+# pages outside the item list that still get a next button
+for src, dst in [('stats/exercises.html', 'stats/ex_550_m1.html'), ('r650/m5_index.html', 'r650/m5_ch1.html'),
+                 ('r650/m6_index.html', 'r650/m6_ch1.html')]:
+    t = next((i for i in out if i['id'] == dst), None)
+    NEXT[src] = dict(n=dst, t=t['title'] if t else '', e=None)
+fab = open('hub-fab.js', encoding='utf-8').read()
+fab = re.sub(r'/\*NEXT\*/.*?/\*ENDNEXT\*/', lambda m: '/*NEXT*/' + json.dumps(NEXT, ensure_ascii=False, separators=(',', ':')) + '/*ENDNEXT*/', fab, flags=re.S)
+open('hub-fab.js', 'w', encoding='utf-8').write(fab)
 tpl = open('hub_template.html', encoding='utf-8').read()
 open('index.html', 'w', encoding='utf-8').write(tpl.replace('/*DATA*/null', data))
 print(len(out), 'items', {c['id']: sum(1 for i in out if i['course'] == c['id']) for c in COURSES})
