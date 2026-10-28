@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8章 モデル評価③：Z値とR² — ロジスティック回帰 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">Chapter 8</div>
+  <h1>📏 モデル評価③：Z値とR²</h1>
+  <p>個別の予測変数はZ統計量（係数÷SE）で評価。ロジスティック回帰にR²は存在しない理由と代替指標を理解する。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① Z統計量とは</a><a href="#unit2">② Rで手動計算</a><a href="#unit3">③ R²は存在しない</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>個別の予測変数：Z統計量</h2><div class="unit-sub">T検定の代わりにZ検定</div></div>
+  </div>
+  <p>重回帰では個別の予測変数の有意性を<strong>T統計量</strong>で確認しました。ロジスティック回帰では代わりに<strong>Z統計量（Wald統計量）</strong>を使います。</p>
+<div class="note-box" style="text-align:center;font-size:1.1rem;">
+  <strong>Z = 係数（β̂）÷ 標準誤差（SE）</strong>
+</div>
+<p>これは統計学の基本から来ており、見た目は全く同じです。「係数がゼロから何標準誤差分離れているか」を測ります。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Z値は「係数が偶然ゼロになった可能性はどのくらいか」を示します。Z値が大きい（絶対値）ほど、その予測変数は有意です。重回帰のT値と全く同じ発想です🎯</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>RでZ値を手動計算</h2><div class="unit-sub">係数と標準誤差を取り出す</div></div>
+  </div>
+  <p>Z値はsummary()の表に表示されますが、手動で計算して確認してみましょう。</p>
+<div class="code-block"><span class="cl"><span class="cm"># モデルの係数テーブルを取り出す</span></span><span class="cl">coef_table <span class="kw">&lt;-</span> <span class="kw">summary</span>(model1)$coefficients</span><span class="cl"></span><span class="cl"><span class="cm"># Diameterの係数（2行目）</span></span><span class="cl">b_diameter <span class="kw">&lt;-</span> coef_table[<span class="nm">2</span>, <span class="nm">1</span>]   <span class="cm"># Estimate</span></span><span class="cl">se_diameter <span class="kw">&lt;-</span> coef_table[<span class="nm">2</span>, <span class="nm">2</span>]  <span class="cm"># Std. Error</span></span><span class="cl"></span><span class="cl"><span class="cm"># Z値を手計算</span></span><span class="cl">z_val <span class="kw">&lt;-</span> b_diameter <span class="kw">/</span> se_diameter</span><span class="cl">z_val  <span class="cm"># → −5.168（summaryの値と一致）✅</span></span></div>
+<div class="output-text">b_diameter  = −2.847
+se_diameter =  0.551
+z_val       = −5.168  ← summary()と完全一致</div>
+<div class="note-box"><strong>📌 負のZ値：</strong>Diameterが大きい → オスである対数オッズが下がる（負の係数）。符号は関係の方向を示します。</div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>ロジスティック回帰にR²はない</h2><div class="unit-sub">代替指標を使う</div></div>
+  </div>
+<div class="note-box"><strong>📌 擬似R²の中身：</strong>線形回帰のR²は「説明された分散の割合」ですが、二値の結果には分散の分解が当てはまりません。代わりにMcFaddenの擬似R²（<code>1 − LL_model/LL_null</code>）やNagelkerkeの指標を使います。これらは対数尤度の比から作られ、0〜1の目安にはなりますが、線形回帰のR²ほど直接「当てはまりの良さ%」とは読めない点に注意します。</div>
+  <p>重回帰で最重要だった<strong>R²（決定係数）</strong>は、ロジスティック回帰には存在しません。なぜなら、ロジスティック回帰は最小二乗法ではなく最尤推定（MLE）を使うためです。</p>
+<table class="compare-table">
+  <thead><tr><th>指標</th><th>重回帰</th><th>ロジスティック回帰</th></tr></thead>
+  <tbody>
+    <tr><td>全体的な当てはまり</td><td>R²、調整済みR²</td><td>逸脱度（Deviance）</td></tr>
+    <tr><td>モデル比較</td><td>AIC、BIC</td><td>AIC、BIC（同じ）</td></tr>
+    <tr><td>個別予測変数</td><td>T統計量</td><td>Z統計量</td></tr>
+    <tr><td>疑似R²</td><td>—</td><td>McFadden's R²（参考程度）</td></tr>
+  </tbody>
+</table>
+<div class="warn-box"><strong>⚠️ 疑似R²（Pseudo R²）について：</strong>Nagelkerke R²やMcFadden R²など「R²もどき」の指標が存在しますが、本物のR²ではありません。解釈は慎重に行いましょう。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>R²がないことを悲しまないで。逸脱度とAICがちゃんとその役割を果たしてくれます。ロジスティック回帰の世界では「これが当たり前」です🤝</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 10</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+  
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In logistic regression, what statistic is used to test individual predictor significance?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>T-statistic</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>F-statistic</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Z-statistic (Wald statistic)</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Chi-square statistic</button>
+</div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How is the Z-value calculated?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Z = coefficient × standard error</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Z = coefficient / standard error</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Z = log(coefficient)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Z = coefficient²</button>
+</div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">If Z = −5.17 for the Diameter predictor, what can we conclude?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Diameter is not significant</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Diameter has a significant negative relationship with the outcome</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Diameter increases the probability</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Diameter should be removed</button>
+</div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why is there no R² in logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>R² is always zero for binary outcomes</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Logistic regression uses maximum likelihood estimation, not least squares — so R² is not defined</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>R² requires normally distributed residuals</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The glm() function doesn't support R²</button>
+</div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which alternative metrics are used instead of R² in logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Adjusted R² and Mallows' Cp</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Deviance and AIC</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Correlation and covariance</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>RMSE and MAE</button>
+</div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A predictor&#x27;s Z-value is computed as:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>coefficient × standard error</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>coefficient + standard error</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>coefficient ÷ standard error</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>standard error ÷ coefficient</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A large absolute Z-value (e.g. |Z| = 5) suggests the predictor is:</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Statistically insignificant</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Missing from the model</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Perfectly collinear</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Statistically significant</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Why does logistic regression lack a true R²?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because outcomes are binary, not continuous variance</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Because it has no intercept</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because it uses lm() internally</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Because predictors must be categorical</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">Which is a commonly used pseudo-R² for logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Adjusted slope</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Euclidean R²</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Sum of squares R²</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>McFadden&#x27;s R²</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">In logistic regression, individual predictors are tested with a Z-test instead of:</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A chi-square test</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An F-test</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A t-test</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A sign test</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[2, 1, 1, 1, 1, 2, 3, 0, 3, 2];
+var FEEDBACKS=["The Z-statistic (also called Wald statistic) is used: Z = coefficient / standard error.", "Z = β̂ / SE. This measures how many standard errors the coefficient is from zero.", "A Z-value of −5.17 is far from zero, indicating Diameter is highly significant. The negative sign means larger Diameter reduces log odds.", "R² is based on the least squares framework. Logistic regression uses maximum likelihood estimation (MLE), so a true R² doesn\u2019t exist.", "Deviance (−2LL) and AIC are the primary fit metrics used in logistic regression instead of R².", "Z = estimate / standard error, analogous to a t-statistic in linear regression.", "A large |Z| produces a small p-value, indicating the predictor is significant.", "R² is defined via explained variance of a continuous outcome, which does not apply to a binary response.", "McFadden's (and Nagelkerke's) pseudo-R² are common stand-ins built from log-likelihoods.", "Because the sampling distribution is approximately normal, a Z-test replaces the t-test used in linear regression."];
+var score=0,done=0,total=10;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<div class="page-nav"><a href="m6_ch7.html">← 第7章</a><a href="m6_ch9.html">第9章 →</a></div>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">Z統計量</div>
+      <div class="term-en">Z-statistic / Wald statistic</div>
+      <div class="term-def">β̂ / SE。個別の予測変数の有意性を検定する統計量。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">最尤推定</div>
+      <div class="term-en">Maximum Likelihood Estimation (MLE)</div>
+      <div class="term-def">ロジスティック回帰の係数推定法。観測データが最も起こりやすくなるパラメータを求める。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">疑似R²</div>
+      <div class="term-en">Pseudo R²</div>
+      <div class="term-def">McFadden R²やNagelkerke R²など。参考程度の指標で、本物のR²とは異なる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">標準誤差</div>
+      <div class="term-en">Standard Error (SE)</div>
+      <div class="term-def">係数推定値のばらつきを示す値。Z = 係数 ÷ SEで使用。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>概念が難しく感じたら、コードを実際にRで動かして確認してみましょう。手を動かすことで理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_index.html">← 章の一覧に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

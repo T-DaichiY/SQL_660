@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第12章 超やさしい版:モデル性能の評価 — 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy active" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 12 ・ Easy Mode</div>
+    <h1>🎓 第12章 超やさしい版:モデル性能の評価</h1>
+    <p>「練習で満点でも本番でダメ」が過学習。データを分けて本番テストする話。最終章！<a href="m5_ch12.html" class="easy-toplink">🎓 本編はこちら</a></p>
+    <div class="unit-nav">
+      <a href="#u1">⚡ 一言でいうと</a>
+      <a href="#u2">① 丸暗記 vs 理解</a>
+      <a href="#u3">② 分割スライダー</a>
+      <a href="#u4">③ データ漏洩</a>
+      <a href="#u5">④ 30秒セルフ確認</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">本番（未知データ）で良い成績か確かめる</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0;">本当に大事なのは<strong>見たことのない新データでの成績</strong>（汎化）。データを<strong>訓練80% / テスト20%</strong>に分け、テストで評価する。訓練◎なのにテスト✕なら<strong>過学習</strong>。掃除は<strong>分割の後</strong>に（データ漏洩を防ぐ）。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>丸暗記タイプ vs 理解タイプ 🧠</h2><div class="unit-sub">過学習＝丸暗記して理解していない</div></div></div>
+  <p>テスト勉強で「過去問の答えを丸暗記」した人は、過去問では満点でも本番の新問題は解けません。これが<strong>過学習</strong>。モデルがノイズ（たまたまのブレ）を本物のパターンだと勘違いした状態です。</p>
+  <div class="viz">
+    <div class="viz-title">過学習：練習95点 → 本番40点</div>
+    <svg viewBox="0 0 500 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:0 auto;">
+      <rect x="50" y="35" width="140" height="36" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+      <text x="120" y="58" font-size="13" fill="#065f46" text-anchor="middle" font-weight="800">練習 R²=0.95 😄</text>
+      <text x="250" y="58" font-size="20" fill="#94a3b8" text-anchor="middle">→</text>
+      <rect x="310" y="35" width="140" height="36" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <text x="380" y="58" font-size="13" fill="#7f1d1d" text-anchor="middle" font-weight="800">本番 R²=0.4 😱</text>
+      <text x="250" y="100" font-size="11" fill="#dc2626" text-anchor="middle" font-weight="700">この大きな差＝過学習のサイン</text>
+    </svg>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>訓練とテストのR²が<strong>だいたい同じ</strong>なら健全。<strong>大きく差がある</strong>なら過学習（丸暗記）。</p></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>分割スライダーで体感</h2><div class="unit-sub">何%を訓練に回す？</div></div></div>
+  <p>データを「訓練（勉強用）」と「テスト（本番用）」に分けます。スライダーで訓練の割合を変えてみてください。本講義の標準は<strong>80%</strong>です。</p>
+
+  <div class="widget teal">
+    <div class="widget-title">✂️ 訓練・テスト分割シミュレーター</div>
+    <div style="display:flex;height:48px;border-radius:8px;overflow:hidden;border:2px solid var(--border);margin-bottom:.5rem;">
+      <div id="sp-train" style="background:var(--green-light);color:#065f46;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;transition:width .2s;">訓練 80%</div>
+      <div id="sp-test" style="background:var(--red-light);color:#7f1d1d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;transition:width .2s;">テスト 20%</div>
+    </div>
+    <div class="slider-row"><label>訓練の割合</label><input type="range" id="sp-slider" min="50" max="90" step="5" value="80"><span class="slider-val" id="sp-val">80%</span></div>
+    <div style="text-align:center;font-size:.85rem;color:var(--text-sec);">731行のうち → 訓練 <strong id="sp-trainN">585</strong>行 ／ テスト <strong id="sp-testN">146</strong>行</div>
+    <div class="verdict good" id="sp-verdict">標準的な80:20分割 ✅</div>
+  </div>
+  <div class="note-box">Rでは <code>set.seed()</code> で乱数を固定してから分割します。これで誰がやっても同じ結果＝再現できます🎲</div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>データ漏洩に注意 🚧</h2><div class="unit-sub">テストの情報を勉強に混ぜない</div></div></div>
+  <p><strong>データ漏洩</strong>＝テストセットの情報が訓練に漏れること。これが起きると、性能が<strong>実際より良く見えて</strong>しまいます。</p>
+  <table class="compare-table">
+    <tr><th>分割の前にOK</th><th>分割の後にやる</th></tr>
+    <tr><td>列名を直す・重複削除・明らかなミス修正</td><td>欠損値の補完（中央値で埋める等）</td></tr>
+  </table>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「模擬試験の問題をこっそり見ながら勉強」したら、模試で満点でも本番で意味なし。テスト用データは<strong>絶対に勉強に混ぜない</strong>のがコツ。</p></div>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>30秒セルフ確認</h2><div class="unit-sub">クリックで答えが開きます</div></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？</h4>
+    <div class="cp-q">Q1. 「汎化」とは？<span class="cp-a">A. 見たことのない新データでもうまく予測できる能力。</span></div>
+    <div class="cp-q">Q2. 過学習のサインは？<span class="cp-a">A. 訓練のR²は高いのにテストのR²が低い（大きな差）。</span></div>
+    <div class="cp-q">Q3. なぜset.seed()を使う？<span class="cp-a">A. 乱数を固定して再現性を確保するため（誰がやっても同じ分け方）。</span></div>
+    <div class="cp-q">Q4. データ漏洩を防ぐには？<span class="cp-a">A. 欠損値の補完などは分割の後に、訓練セットだけで行う。</span></div>
+  </div>
+  <div class="note-box" style="background:var(--secondary-light);border-color:var(--secondary);">🎓 コードと詳しい手順は <a href="m5_ch12.html">第12章 本編</a> へ。これで全12章 完走です！🎉</div>
+  <div class="page-nav"><a href="m5_ch12.html">← 第12章 本編</a><a href="m5_index.html">🏠 目次に戻る</a></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 結論</h4><p>大事なのは<strong>未知データの成績</strong>（汎化）。<br><br>訓練◎×テスト✕ ＝ <strong>過学習</strong>。<br><br>対策：<strong>80:20</strong>に分割＋<strong>set.seed</strong>。<br><br>掃除は<strong>分割の後</strong>（漏洩防止）🚧</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2);"><h4 style="color:var(--primary-dark);">📖 本編</h4><p style="color:var(--text);">詳しくは <a href="m5_ch12.html">第12章</a> へ。</p></div>
+</aside>
+</div>
+
+<footer><p>重回帰分析 完全ガイド · 第12章 超やさしい版 — 全章 完走！🎉</p><p style="margin-top:.5rem;"><a href="m5_ch12.html">← 本編</a> · <a href="m5_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script>
+(function(){
+  const s=document.getElementById('sp-slider');
+  function upd(){
+    const tr=+s.value, te=100-tr;
+    document.getElementById('sp-val').textContent=tr+'%';
+    document.getElementById('sp-train').style.width=tr+'%';
+    document.getElementById('sp-test').style.width=te+'%';
+    document.getElementById('sp-train').textContent='訓練 '+tr+'%';
+    document.getElementById('sp-test').textContent='テスト '+te+'%';
+    document.getElementById('sp-trainN').textContent=Math.round(731*tr/100);
+    document.getElementById('sp-testN').textContent=731-Math.round(731*tr/100);
+    const v=document.getElementById('sp-verdict');
+    if(tr===80){v.textContent='標準的な80:20分割 ✅';v.className='verdict good';}
+    else if(tr>=70){v.textContent='これもよく使われる割合 🙂';v.className='verdict good';}
+    else if(tr>=60){v.textContent='テストが多め。データが多いときに 🤔';v.className='verdict warn';}
+    else{v.textContent='訓練が少なすぎ。学習データ不足に注意 ⚠️';v.className='verdict bad';}
+  }
+  s.addEventListener('input',upd); upd();
+})();
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

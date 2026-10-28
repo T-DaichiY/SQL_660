@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第4章 係数の解釈：アバロンの例 — ロジスティック回帰 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">Chapter 4</div>
+  <h1>🐚 係数の解釈：アバロンの例</h1>
+  <p>予測変数なしモデルの切片が対数オッズであることを、アバロンの実データで手計算しながら確認。係数→確率への変換を完全マスター。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 切片のみのモデル</a><a href="#unit2">② 比率から手計算</a><a href="#unit3">③ 確率への逆変換</a><a href="#unit4">④ 解釈のまとめ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>まず予測変数なしのモデル</h2><div class="unit-sub">切片だけのモデルが示すもの</div></div>
+  </div>
+  <p>ロジスティック回帰の係数解釈を学ぶために、まず<strong>予測変数が一切ない（切片のみ）モデル</strong>から始めます。実際の分析ではやりませんが、基礎を理解するために重要です。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 予測変数なし（切片のみ）のモデル</span></span><span class="cl">model0 <span class="kw">&lt;-</span> <span class="kw">glm</span>(Type <span class="kw">~</span> <span class="nm">1</span>,</span><span class="cl">              data <span class="kw">=</span> abalone2,</span><span class="cl">              family <span class="kw">=</span> binomial)</span><span class="cl"><span class="kw">summary</span>(model0)</span></div>
+<div class="output-text">Coefficients:
+            Estimate
+(Intercept)   0.1565   ← これが何を意味するか？</div>
+<p>この係数 <strong>0.1565</strong> は何を意味するのでしょうか？答えは<strong>オスである対数オッズ</strong>です。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>予測変数がないと、モデルは「データ全体でオスの割合はどのくらいか？」だけを見ています。それが対数オッズの形で係数に現れます。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>比率から係数を手計算で再現</h2><div class="unit-sub">1307匹と1528匹から出発</div></div>
+  </div>
+  <p>アバロンデータには（不明を除いた）<strong>メス1,307匹・オス1,528匹</strong>がいます。ここからステップごとに確認しましょう。</p>
+<div class="code-block"><span class="cl"><span class="cm"># データの件数確認</span></span><span class="cl"><span class="kw">table</span>(abalone2$Type)</span><span class="cl"><span class="cm">#   F    M </span></span><span class="cl"><span class="cm"># 1307 1528</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 1: 確率（オスの割合）</span></span><span class="cl">P_male <span class="kw">&lt;-</span> <span class="nm">1528</span> <span class="kw">/</span> (<span class="nm">1307</span> <span class="kw">+</span> <span class="nm">1528</span>)</span><span class="cl"><span class="cm"># → 0.5387（約53.9%がオス）</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 2: オッズ</span></span><span class="cl">odds_male <span class="kw">&lt;-</span> P_male <span class="kw">/</span> (<span class="nm">1</span> <span class="kw">-</span> P_male)</span><span class="cl"><span class="cm"># → 1.169</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 3: 対数オッズ</span></span><span class="cl">log_odds_male <span class="kw">&lt;-</span> <span class="kw">log</span>(odds_male)</span><span class="cl"><span class="cm"># → 0.1565　← model0の切片と完全一致！✅</span></span></div>
+<div class="output-text">P_male       = 0.5387
+odds_male    = 1.169
+log_odds_male = 0.1565  ← glmの係数と一致</div>
+<div class="note-box"><strong>📌 ポイント：</strong>予測変数がないとき、切片 = そのカテゴリ（ここではオス）の単純な対数オッズです。</div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>係数から確率に「逆変換」する</h2><div class="unit-sub">exp() と確率の計算</div></div>
+  </div>
+  <p>係数（対数オッズ）から元の確率に戻す手順：</p>
+<div class="code-block"><span class="cl"><span class="cm"># 切片を取り出す</span></span><span class="cl">coef0 <span class="kw">&lt;-</span> <span class="kw">coef</span>(model0)[<span class="st">"(Intercept)"</span>]</span><span class="cl"><span class="cm"># → 0.1565</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 1: 対数オッズ → オッズ（exp()で指数化）</span></span><span class="cl">odds_from_coef <span class="kw">&lt;-</span> <span class="kw">exp</span>(coef0)</span><span class="cl"><span class="cm"># → 1.169</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 2: オッズ → 確率</span></span><span class="cl">p_from_odds <span class="kw">&lt;-</span> odds_from_coef <span class="kw">/</span> (<span class="nm">1</span> <span class="kw">+</span> odds_from_coef)</span><span class="cl"><span class="cm"># → 0.5387（元の確率に一致！）✅</span></span></div>
+<div class="output-text">切片(log odds) = 0.1565
+exp(切片)      = 1.169  (オッズ)
+確率           = 0.5387  ← 1528/(1307+1528) と一致</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>係数を見てもすぐには意味がわからない（対数オッズだから）。exp()でオッズに戻し、さらに odds/(1+odds) で確率に直す。この2ステップが「係数の解釈」の基本です🗝️</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>解釈のまとめと次のステップ</h2><div class="unit-sub">予測変数を追加するとどうなるか</div></div>
+  </div>
+<div class="note-box"><strong>📌 切片の意味が変わる予告：</strong>予測変数なしモデルの切片は「全体の対数オッズ」ですが、予測変数を1つでも加えると、切片は「その予測変数が0（基準）のときの対数オッズ」という<em>条件付き</em>の意味に変わります（第10章で詳述）。同じ「切片」でもモデル構成によって解釈が変わる点が、ロジスティック回帰でつまずきやすい所です。</div>
+  <p>切片のみのモデルでわかったこと：</p>
+<div class="task-grid">
+  <div class="task-card"><div class="tc-icon">📊</div><div class="tc-name">切片 = 対数オッズ</div><div class="tc-example">予測変数が0のときの log odds</div></div>
+  <div class="task-card"><div class="tc-icon">🔢</div><div class="tc-name">exp(切片) = オッズ</div><div class="tc-example">指数化で元のオッズに戻る</div></div>
+  <div class="task-card"><div class="tc-icon">📐</div><div class="tc-name">確率への変換</div><div class="tc-example">P = odds / (1 + odds)</div></div>
+</div>
+<div class="warn-box"><strong>⚠️ 次の章以降：</strong>予測変数（例：diameter）を追加すると、切片の意味が変わります。「その予測変数がゼロのときの対数オッズ」になります。係数の解釈には注意が必要です。</div>
+<div class="teal-box"><strong>🔵 覚えておくべき式：</strong><br>対数オッズ → オッズ：exp(係数)<br>オッズ → 確率：P = odds / (1 + odds)</div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 10</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+  
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">In a logistic regression with no predictors, what does the intercept represent?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The mean of the response variable</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The log odds of being in category 1</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The probability of the outcome directly</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The odds ratio between groups</button>
+</div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">If the intercept is 0.1565, what is the corresponding odds?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.1565</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>1.169 (= exp(0.1565))</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.5387</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.4613</button>
+</div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you convert odds back to probability?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>P = odds × 2</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>P = log(odds)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>P = odds / (1 + odds)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>P = 1 / odds</button>
+</div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">The abalone dataset has 1307 females and 1528 males (coded as 1). What is the probability of male?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.461</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.539 (= 1528/2835)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>1.169</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.156</button>
+</div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In logistic regression, what function in R is used to exponentiate coefficients?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>log()</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>sqrt()</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>exp()</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>abs()</button>
+</div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">In an intercept-only logistic model, the intercept equals:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The residual deviance value</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The raw count of successes</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The mean of the predictors</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The log-odds of the outcome overall</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">How do you turn an odds value back into a probability?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>P = odds / (1 + odds)</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>P = odds × 2</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>P = 1 − odds</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>P = log(odds)</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Which R function exponentiates a coefficient to obtain odds?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>log()</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>sqrt()</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>abs()</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>exp()</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">With 1528 males (coded 1) out of 2835 abalone, the proportion of 1s is about:</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.30</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.46</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.54</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.72</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">What does exp(intercept) give you in an intercept-only model?</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The probability directly</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The number of predictors</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The log-likelihood</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The odds of the outcome</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 2, 1, 2, 3, 0, 3, 2, 3];
+var FEEDBACKS=["With no predictors, the intercept equals the log odds of the outcome (being in category 1).", "exp(0.1565) ≈ 1.169. To convert log odds to odds, use the exponential function.", "P = odds / (1 + odds). For odds = 1.169: P = 1.169 / 2.169 ≈ 0.539.", "P(male) = 1528 / (1307+1528) = 1528/2835 ≈ 0.539.", "exp() computes e^x, converting log odds back to odds.", "With no predictors, the intercept is simply the log-odds of the outcome across all observations.", "Probability is recovered from odds with P = odds/(1+odds).", "exp() reverses the natural log, converting log-odds (a coefficient) into odds.", "1528/2835 ≈ 0.539, so roughly 0.54 of the observations are coded 1.", "exp() of the intercept (log-odds) returns the odds; convert further to get the probability."];
+var score=0,done=0,total=10;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<div class="page-nav"><a href="m6_ch3.html">← 第3章</a><a href="m6_ch5.html">第5章 →</a></div>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">切片</div>
+      <div class="term-en">Intercept</div>
+      <div class="term-def">予測変数がゼロのときの対数オッズ。予測変数なしモデルでは単純な対数オッズ。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">exp()</div>
+      <div class="term-en">Exponential Function</div>
+      <div class="term-def">eのx乗を計算する関数。対数オッズをオッズに変換する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">オッズ比</div>
+      <div class="term-en">Odds Ratio</div>
+      <div class="term-def">2つのオッズの比率。係数をexp()した値。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">対数変換</div>
+      <div class="term-en">Log Transformation</div>
+      <div class="term-def">自然対数を取ること。オッズを対数オッズに変換する際に使う。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>概念が難しく感じたら、コードを実際にRで動かして確認してみましょう。手を動かすことで理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_index.html">← 章の一覧に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

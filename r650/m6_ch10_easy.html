@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第10章 超やさしい版：バイナリ予測変数①：切片の解釈</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy active" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 10 · Easy Mode 🍎</div>
+    <h1>🍎 第10章 超やさしい版：バイナリ予測変数①：切片の解釈</h1>
+    <p>contrasts()を確認してから切片を解釈。FW=0（外国人）のとき切片→確率を手計算で再現しよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">contrasts()確認</a><a href="#u3">切片から確率再現</a><a href="m6_ch10.html" class="easy-toplink">🔀 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">予測変数を追加すると切片の「条件」が変わる</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">バイナリ予測変数X₁を追加すると、切片はもはや「全体の対数オッズ」ではなく「X₁=0のときの対数オッズ」になる。GermanCreditでは切片2.11 → exp → 8.25 → 0.891が「外国人労働者（FW=0）の良い信用確率」と一致する。</p></div>
+  <p>第9章では切片のみのモデルで切片が「全体の対数オッズ」だと学びました。でも予測変数を加えると変わります。それが<strong>「条件付き切片」</strong>の考え方です。</p>
+  <div class="big-rule down">
+    <div class="ru-arrow">📐</div>
+    <div class="ru-text">
+      <strong>logit(P) = β₀ + β₁×X₁</strong><br>
+      X₁=0 のとき → logit(P) = β₀ のみ<br>
+      → <strong>切片 = X₁=0のときの対数オッズ</strong>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>contrasts()を必ず確認</h2><div class="unit-sub">ForeignWorker: 0=外国人、1=国内（直感と逆！）</div></div></div>
+  <p>このデータでは<strong>ForeignWorker: 0=yes（外国人）、1=no（国内）</strong>という直感と逆のコーディング。確認しないと解釈が完全に逆になります。</p>
+  <p class="code-label">▶ contrasts()でコーディング確認</p>
+  <pre class="code-block"><span class="cl"><span class="cm"># contrasts()で必ずコーディングを確認</span></span><span class="cl"><span class="kw">contrasts</span>(GermanCredit<span class="kw">$</span>ForeignWorker)</span><span class="cl"><span class="cm">#     yes</span></span><span class="cl"><span class="cm"># no    0  ← no=参照（外国人でない）</span></span><span class="cl"><span class="cm"># yes   1  ← yes=予測対象（外国人）</span></span><span class="cl"><span class="cm"># ← 注意：yesが外国人！（直感と逆）</span></span></pre>
+  <div class="warn-box">⚠️ 「ForeignWorker=yes」が外国人です。contrasts()を見ると、「yes=1」なので外国人が1。つまり係数が<strong>マイナス</strong>＝外国人（1）の方が信用が悪い……ではなく、係数のマイナスはFW=1（外国人）と定義された場合の話。混乱したら実際の確率で確認！</div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>切片から確率を再現する</h2><div class="unit-sub">FW=0のときの確率を手計算で確認</div></div></div>
+  <div class="widget green">
+    <div class="widget-title">🏦 ForeignWorker=0 の確率チェーン</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:1rem;text-align:center">
+      <div style="background:var(--yellow-light);border-radius:10px;padding:1rem">
+        <div style="font-size:.75rem;font-weight:800;color:var(--yellow)">切片（対数オッズ）</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--yellow)">2.11</div>
+      </div>
+      <div style="background:var(--green-light);border-radius:10px;padding:1rem">
+        <div style="font-size:.75rem;font-weight:800;color:var(--green)">オッズ（exp）</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--green)">8.25</div>
+      </div>
+      <div style="background:var(--primary-light);border-radius:10px;padding:1rem">
+        <div style="font-size:.75rem;font-weight:800;color:var(--primary-dark)">確率</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--primary-dark)">0.891</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;font-size:.88rem">実データ確認：FW=0の行のGood比率 = 33/37 = <strong>0.891 ✅</strong></div>
+  </div>
+  <p class="code-label">▶ 切片から確率を計算するRコード</p>
+  <pre class="code-block"><span class="cl"><span class="cm"># ForeignWorker=0のとき（外国人）の確率→切片再現</span></span><span class="cl">intercept &lt;- <span class="nm">2.1102</span></span><span class="cl">odds_fw0  &lt;- <span class="kw">exp</span>(intercept)<span class="cm">        # → 8.25</span></span><span class="cl">prob_fw0  &lt;- odds_fw0 / (<span class="nm">1</span> + odds_fw0)<span class="cm"> # → 0.891</span></span><span class="cl"><span class="cm"># 実際のデータ：33/37 ≈ 0.891 と一致！</span></span></pre>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 予測変数を追加した後、切片は何を表す？<span class="cp-a">A. 「追加した予測変数=0のときの対数オッズ」。バイナリ変数が0の状態の切片。第9章とは意味が変わることに注意。</span></div><div class="cp-q">Q2. ForeignWorker=0のとき確率を求める計算は？<span class="cp-a">A. intercept=2.11 → exp(2.11)=8.25（オッズ） → 8.25/9.25=0.891（確率）。実データの33/37と一致する。</span></div><div class="cp-q">Q3. なぜcontrasts()の確認が必須か？<span class="cp-a">A. ForeignWorkerのコーディングが直感と逆（0=外国人）だから。確認しないと係数の解釈が完全に逆になる。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch9_easy.html">← 第9章 やさしい版</a><a href="m6_ch11_easy.html">第11章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 切片 = 追加した予測変数=0のときの対数オッズ</p><p style="margin:.4rem 0">• 切片2.11→exp→8.25→0.891（確率）</p><p style="margin:.4rem 0">• 33/37=0.891と一致！</p><p style="margin:.4rem 0">• contrasts()を必ず確認すること</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch10.html">第10章 本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第10章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch10.html">← 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script></script>
+<script src="../hub-fab.js"></script>
+</body></html>

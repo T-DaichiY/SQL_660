@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第7章 超やさしい版：RでAICを使う：2つのK</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy active" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 7 · Easy Mode 🍎</div>
+    <h1>🍎 第7章 超やさしい版：RでAICを使う：2つのK</h1>
+    <p>数式のK（パラメータ数）とRのk（ペナルティの強さ）は別物。ボタンで違いを確認してRコードで使い方を理解しよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">kを変えてみる</a><a href="#u3">実際の使い方</a><a href="m6_ch7.html" class="easy-toplink">🔧 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">数式のK（パラメータ数）とRのk（ペナルティ強さ）は別物</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">AICの数式に出てくるK（パラメータ数）と、RのAIC()関数の引数k（ペナルティの強さ）は同じ文字で全く別の意味。Rのkのデフォルトは2で、通常そのまま使えばOK。混乱の原因はここだけ。</p></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.5rem 0">
+    <div style="background:var(--primary-light);border-radius:12px;padding:1.25rem;border:2px solid var(--primary)">
+      <div style="font-size:1.5rem;font-weight:900;color:var(--primary);margin-bottom:.5rem">K（大文字）</div>
+      <div style="font-size:.88rem">数式の中のK<br><strong>= パラメータ数</strong><br>（切片 + 予測変数の数）<br><br>例：切片1＋予測変数2 → K=3<br><span style="font-size:.8rem;color:var(--text-sec)">Rが自動でカウントする</span></div>
+    </div>
+    <div style="background:var(--red-light);border-radius:12px;padding:1.25rem;border:2px solid var(--red)">
+      <div style="font-size:1.5rem;font-weight:900;color:var(--red);margin-bottom:.5rem">k（小文字）</div>
+      <div style="font-size:.88rem">Rの引数のk<br><strong>= ペナルティの強さ</strong><br>（デフォルト = 2）<br><br>例：AIC(model, k=2) ← 変えなくてOK<br><span style="font-size:.8rem;color:var(--text-sec)">k=log(n)にするとBICになる</span></div>
+    </div>
+  </div>
+  <div class="warn-box">⚠️ 同じ文字なのに意味が全く違う！これだけ覚えれば混乱しない。</div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>kの値を変えるとAICはどうなる？</h2><div class="unit-sub">ボタンで切り替えて違いを確認</div></div></div>
+  <p>k=2が古典的AIC、k=log(n)がBIC（ベイズ情報量規準）に相当します。サンプルサイズが大きいほどBICのペナルティが強くなります。</p>
+  <div class="widget teal">
+    <div class="widget-title">🔧 RのAIC()関数 kシミュレーター</div>
+    <div class="btn-row" style="margin-bottom:1rem">
+      <button class="btn-step k-btn active-k" data-k="2">k=2（デフォルト・古典的AIC）</button>
+      <button class="btn-step k-btn" data-k="3" style="background:var(--secondary)">k=3（強めのペナルティ）</button>
+      <button class="btn-step k-btn" data-k="6" style="background:var(--teal)">k≈log(n)（BIC相当）</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.78rem;color:var(--text-sec);font-weight:700">ペナルティ（k×params）</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--red)" id="k-penalty">6</div>
+      </div>
+      <div style="background:var(--primary-light);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.78rem;color:var(--primary-dark);font-weight:700">AIC値</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--primary-dark)" id="k-result">—</div>
+      </div>
+    </div>
+    <div style="margin-top:.75rem;font-size:.83rem;color:var(--text-sec)" id="k-note">—</div>
+  </div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>実際の使い方</h2><div class="unit-sub">課題では何も変えなくてOK</div></div></div>
+  <div class="big-rule">
+    <div class="ru-arrow">✅</div>
+    <div class="ru-text">
+      <code>AIC(model)</code> だけで古典的AIC（k=2）<br>
+      <span style="font-size:.83rem;color:var(--text-sec)">課題で「k=2を使う」と指示されても → 何も変えなくてOK</span>
+    </div>
+  </div>
+  <p class="code-label">▶ AIC()の使い方とNYCフライト例</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 古典的AIC（k=2、デフォルト）</span></span>
+<span class="cl"><span class="kw">AIC</span>(model)<span class="cm">           # k=2がデフォルト</span></span>
+<span class="cl"><span class="kw">AIC</span>(model, k=<span class="nm">2</span>)<span class="cm">    # 同じ結果</span></span>
+<span class="cl"><span class="cm"></span></span>
+<span class="cl"><span class="cm"># k=log(n) → BIC（ベイズ情報量規準）に相当</span></span>
+<span class="cl">n &lt;- <span class="kw">nrow</span>(Abalone)</span>
+<span class="cl"><span class="kw">AIC</span>(model, k=<span class="kw">log</span>(n))<span class="cm">  # ペナルティが強くなる</span></span>
+</pre>
+  <p class="code-label">▶ 2モデルをAIC()で一括比較</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># NYC flightsの例でAICを比較</span></span>
+<span class="cl">m1 &lt;- <span class="kw">glm</span>(delayed ~ dep_hour + month,</span>
+<span class="cl">       <span class="kw">data</span>=flights, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl">m2 &lt;- <span class="kw">glm</span>(delayed ~ dep_hour + month + carrier,</span>
+<span class="cl">       <span class="kw">data</span>=flights, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="cm"># AICで比較（課題ではk=2のまま使う）</span></span>
+<span class="cl"><span class="kw">AIC</span>(m1, m2)</span>
+</pre>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. RのAIC()関数の引数kは何を表す？<span class="cp-a">A. ペナルティの強さ（デフォルト=2）。数式のK（パラメータ数）とは全く別の意味。</span></div><div class="cp-q">Q2. AIC(model)とAIC(model, k=2)の結果は？<span class="cp-a">A. 完全に同じ。k=2がデフォルトなので、何も指定しなくても古典的AICが計算される。</span></div><div class="cp-q">Q3. k=log(n)にするとどうなる？<span class="cp-a">A. BIC（ベイズ情報量規準）に相当する値が計算される。サンプルサイズnが大きいほどペナルティが強くなる。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch6_easy.html">← 第6章 やさしい版</a><a href="m6_ch8_easy.html">第8章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 数式のK = パラメータ数（Rが自動カウント）</p><p style="margin:.4rem 0">• Rのk = ペナルティの強さ（デフォルト2）</p><p style="margin:.4rem 0">• AIC(model)だけで古典的AIC</p><p style="margin:.4rem 0">• k=log(n)にするとBIC相当</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch7.html">第7章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第7章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch7.html">← 第7章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initKDemo();</script>
+<script src="../hub-fab.js"></script>
+</body></html>

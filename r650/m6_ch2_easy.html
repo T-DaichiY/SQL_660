@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第2章 超やさしい版：ロジスティック回帰モデルの仕組み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy active" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 2 · Easy Mode 🍎</div>
+    <h1>🍎 第2章 超やさしい版：ロジスティック回帰モデルの仕組み</h1>
+    <p>確率・オッズ・対数オッズの3変換をスライダーとRコードで理解。式を覚える前に「変換の感覚」を身につけよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">3変換をリアルタイム確認</a><a href="#u3">Rで手計算</a><a href="m6_ch2.html" class="easy-toplink">📐 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">確率→オッズ→対数オッズの3変換が核心</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">確率を直接回帰式に使えないので「オッズ」→「対数オッズ（logit）」と変換する。この3ステップで、0〜1の確率を−∞〜+∞の回帰式のスケールに合わせられる。最後にシグモイド関数で確率に戻す。</p></div>
+  <p>ロジスティック回帰の「仕組み」はこの変換の往復です。一度マスターすれば、係数の解釈も出力の理解も全部つながります。</p>
+  <div class="flow-diagram" style="flex-direction:column;gap:0;align-items:stretch">
+    <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;background:var(--primary-light);border-radius:10px 10px 0 0;border:1.5px solid var(--primary)">
+      <span style="font-size:1.6rem">📊</span>
+      <div><strong>① 確率 P　　（0〜1）</strong><br><span style="font-size:.83rem;color:var(--text-sec)">例：P = 0.70（70%がオス）</span></div>
+    </div>
+    <div style="text-align:center;padding:.25rem;color:var(--primary);font-weight:800;font-size:.9rem">↓ オッズ = P / (1−P)</div>
+    <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;background:var(--green-light);border:1.5px solid var(--green)">
+      <span style="font-size:1.6rem">⚖️</span>
+      <div><strong>② オッズ　　（0〜+∞）</strong><br><span style="font-size:.83rem;color:var(--text-sec)">例：0.70/0.30 = 2.33　「1より大きい＝成功が多い」</span></div>
+    </div>
+    <div style="text-align:center;padding:.25rem;color:var(--green);font-weight:800;font-size:.9rem">↓ 対数オッズ = log(オッズ)</div>
+    <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;background:var(--yellow-light);border-radius:0 0 10px 10px;border:1.5px solid var(--yellow)">
+      <span style="font-size:1.6rem">📐</span>
+      <div><strong>③ 対数オッズ（logit）　（−∞〜+∞）</strong><br><span style="font-size:.83rem;color:var(--text-sec)">例：log(2.33) = 0.847 ← 回帰係数はこのスケール</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>3変換をリアルタイムで確認</h2><div class="unit-sub">スライダーで確率を変えて変換を体感</div></div></div>
+  <p>スライダーで確率Pを変えると、オッズと対数オッズが即座に変わります。<strong>P=0.5を境目</strong>に、対数オッズが0から正負に分かれる点に注目してください。</p>
+  <div class="widget purple">
+    <div class="widget-title">🎛️ 確率 → オッズ → 対数オッズ 変換機</div>
+    <div class="slider-row">
+      <label>📊 確率 P</label>
+      <input type="range" id="tr-prob" min="0.01" max="0.99" step="0.01" value="0.70">
+      <span class="slider-val" id="tr-prob-v">0.700</span>
+    </div>
+    <div style="height:10px;background:var(--border);border-radius:5px;margin:.5rem 0">
+      <div id="tr-bar" style="height:10px;background:var(--primary);border-radius:5px;transition:width .15s;width:70%"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:1rem">
+      <div style="background:var(--primary-light);border-radius:10px;padding:.9rem;text-align:center">
+        <div style="font-size:.72rem;font-weight:800;color:var(--primary-dark);margin-bottom:.3rem">① 確率 P</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--primary-dark)" id="tr-prob-v2">0.700</div>
+        <div style="font-size:.7rem;color:var(--text-sec)">0 〜 1</div>
+      </div>
+      <div style="background:var(--green-light);border-radius:10px;padding:.9rem;text-align:center">
+        <div style="font-size:.72rem;font-weight:800;color:var(--green);margin-bottom:.3rem">② オッズ</div>
+        <div style="font-size:1.6rem;font-weight:900;color:var(--green)" id="tr-odds-v">2.333</div>
+        <div style="font-size:.7rem;color:var(--text-sec)">P / (1-P)</div>
+      </div>
+      <div style="background:var(--yellow-light);border-radius:10px;padding:.9rem;text-align:center">
+        <div style="font-size:.72rem;font-weight:800;color:var(--yellow);margin-bottom:.3rem">③ 対数オッズ</div>
+        <div style="font-size:1.6rem;font-weight:900" id="tr-logodds-v">0.847</div>
+        <div style="font-size:.7rem;color:var(--text-sec)">log(オッズ)</div>
+      </div>
+    </div>
+  </div>
+  <div class="note-box">📌 <strong>P=0.5のとき：</strong>オッズ=1、対数オッズ=0。P>0.5なら対数オッズはプラス、P&lt;0.5ならマイナス。これが「係数の正負」の意味です。</div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>Rで手計算してみよう</h2><div class="unit-sub">確率からオッズ・対数オッズへ</div></div></div>
+  <p>コードを手打ちアニメーションで見てみましょう。「▶ コードを打つ」ボタンを押してください。</p>
+  <p class="code-label">▶ 確率（P=0.7）からオッズを計算</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 確率からオッズへ</span></span>
+<span class="cl">p &lt;- <span class="nm">0.70</span></span>
+<span class="cl">odds &lt;- p / (<span class="nm">1</span> - p)</span>
+<span class="cl">odds<span class="cm">  # → 2.333</span></span>
+</pre>
+  <p class="code-label">▶ オッズから対数オッズ → さらに逆変換で確率に戻す</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># オッズから対数オッズ（logit）へ</span></span>
+<span class="cl">log_odds &lt;- <span class="kw">log</span>(odds)</span>
+<span class="cl">log_odds<span class="cm">  # → 0.8473</span></span>
+<span class="cl"><span class="cm"># 逆変換：対数オッズ → 確率</span></span>
+<span class="cl">p_back &lt;- <span class="nm">1</span> / (<span class="nm">1</span> + <span class="kw">exp</span>(-log_odds))</span>
+<span class="cl">p_back<span class="cm">  # → 0.70（元に戻った！）</span></span>
+</pre>
+  <p class="code-label">▶ 重要な基準点：P=0.5のとき</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># P=0.5のときを確認</span></span>
+<span class="cl">p &lt;- <span class="nm">0.5</span></span>
+<span class="cl">odds &lt;- p / (<span class="nm">1</span> - p)<span class="cm">  # → 1.0</span></span>
+<span class="cl">log_odds &lt;- <span class="kw">log</span>(odds)<span class="cm">  # → 0（重要な基準点）</span></span>
+<span class="cl"><span class="cm"># 覚え方：P=0.5 ↔ オッズ=1 ↔ 対数オッズ=0</span></span>
+</pre>
+  <div class="simple-box"><div class="simple-title">🍎 ポイント</div><p>変換は「往復できる」（可逆）。確率→対数オッズ→確率、と変換して戻ると元の値に戻ります。glm()はこの変換を内部で自動的にやっています。</p></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. オッズの計算式は？<span class="cp-a">A. オッズ = P / (1-P)。確率0.7なら 0.7/0.3 ≈ 2.33。「1より大きい＝成功の方が多い」。</span></div><div class="cp-q">Q2. 対数オッズ（logit）とは何？<span class="cp-a">A. オッズの自然対数。log(2.33) ≈ 0.847。ロジスティック回帰の係数はこのスケールで出てくる。</span></div><div class="cp-q">Q3. P=0.5のとき対数オッズはいくつ？なぜ重要？<span class="cp-a">A. オッズ=1、log(1)=0。対数オッズ=0がP=0.5（ちょうど50%）の境目。係数の正負の意味がここにある。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch1_easy.html">← 第1章 やさしい版</a><a href="m6_ch3_easy.html">第3章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 確率P → オッズP/(1-P) → 対数オッズlog(odds)</p><p style="margin:.4rem 0">• P=0.5のとき対数オッズ=0</p><p style="margin:.4rem 0">• 対数オッズは−∞〜+∞の範囲を持つ</p><p style="margin:.4rem 0">• 変換は可逆（往復できる）</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch2.html">第2章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第2章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch2.html">← 第2章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initTransformCalc(); var tp=document.getElementById("tr-prob"); if(tp) tp.addEventListener("input",function(){var v=document.getElementById("tr-prob-v2");if(v)v.textContent=document.getElementById("tr-prob-v").textContent;});</script>
+<script src="../hub-fab.js"></script>
+</body></html>

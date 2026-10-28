@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第5章 多項式回帰 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 5</div>
+<h1>〰️ 多項式回帰（Polynomial Regression）</h1>
+<p>線形回帰は「直線の関係」を前提にする。でも気温とレンタル数は“ある気温まで増えて、暑すぎると減る”曲線。直線では捉えられない関係を扱う方法を学ぶ。</p>
+<div class="unit-nav">
+<a href="#unit1">① 直線の限界</a>
+<a href="#unit2">② 曲線を見つける</a>
+<a href="#unit3">③ 2乗項を加える</a>
+<a href="#unit4">④ 後退消去</a>
+<a href="#unit5">⑤ 多項式のVIF問題</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch5_easy.html">▶ 第5章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>直線の限界</h2><div class="unit-sub">線形回帰の大前提は「直線の関係」</div></div>
+</div>
+<p>線形回帰の主な前提は、<strong>予測変数と応答変数の関係が直線（線形）である</strong>こと。でも現実はいつも直線とは限りません。対処法は2つあります。</p>
+<ul>
+<li><strong>データを変換する：</strong>対数変換などで、データを直線パターンに近づける。</li>
+<li><strong>非線形の関係を使う（この章）：</strong>多項式回帰で、曲線そのものをモデルに取り込む。</li>
+</ul>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>アイスの売上を考えてみて。寒い→売れない、暖かい→よく売れる、でも<strong>暑すぎると</strong>外に出たくなくて逆に減る。これは直線じゃなく「山なりの曲線」。直線の定規ではこの山を測れません🍦</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>曲線を見つける（geom_smooth）</h2><div class="unit-sub">散布図に滑らかな線を引いて、形を確かめる</div></div>
+</div>
+<p><code>geom_smooth</code> を使い、各予測変数（湿度・風速・気温）を個別にレンタル数と散布図にすると、関係の形が見えます。</p>
+<div class="code-block"><span class="cl"><span class="kw">ggplot</span>(bikes, <span class="kw">aes</span>(x <span class="kw">=</span> temperature, y <span class="kw">=</span> rentals)) <span class="kw">+</span></span><span class="cl"> <span class="kw">geom_point</span>() <span class="kw">+</span></span><span class="cl"> <span class="kw">geom_smooth</span>()   <span class="cm"># 滑らかな曲線で関係を可視化</span></span></div>
+<div class="viz">
+<div class="viz-title">気温とレンタル数の関係（直線では足りない！）</div>
+<svg style="width:100%;max-width:520px;display:block;margin:0 auto;" viewbox="0 0 520 220" xmlns="http://www.w3.org/2000/svg">
+<line stroke="#94a3b8" stroke-width="1.5" x1="50" x2="490" y1="185" y2="185"></line>
+<line stroke="#94a3b8" stroke-width="1.5" x1="50" x2="50" y1="25" y2="185"></line>
+<text fill="#64748b" font-size="11" text-anchor="middle" x="270" y="210">気温 →</text>
+<text fill="#64748b" font-size="11" text-anchor="middle" transform="rotate(-90 22 105)" x="22" y="105">レンタル数 →</text>
+<!-- scattered points roughly following a parabola -->
+<circle cx="80" cy="165" fill="#2563eb" opacity=".6" r="3"></circle><circle cx="110" cy="150" fill="#2563eb" opacity=".6" r="3"></circle>
+<circle cx="140" cy="130" fill="#2563eb" opacity=".6" r="3"></circle><circle cx="175" cy="105" fill="#2563eb" opacity=".6" r="3"></circle>
+<circle cx="210" cy="85" fill="#2563eb" opacity=".6" r="3"></circle><circle cx="250" cy="68" fill="#2563eb" opacity=".6" r="3"></circle>
+<circle cx="290" cy="60" fill="#2563eb" opacity=".6" r="3"></circle><circle cx="330" cy="62" fill="#2563eb" opacity=".6" r="3"></circle>
+<circle cx="370" cy="78" fill="#2563eb" opacity=".6" r="3"></circle><circle cx="410" cy="100" fill="#2563eb" opacity=".6" r="3"></circle>
+<circle cx="445" cy="125" fill="#2563eb" opacity=".6" r="3"></circle>
+<!-- straight line (bad fit) -->
+<line stroke="#dc2626" stroke-dasharray="6" stroke-width="2.5" x1="60" x2="470" y1="150" y2="95"></line>
+<text fill="#dc2626" font-size="10" font-weight="700" x="380" y="150">直線（合ってない）</text>
+<!-- curve (good fit) -->
+<path class="draw" d="M70,168 Q270,40 460,128" fill="none" stroke="#059669" stroke-width="3"></path>
+<text fill="#059669" font-size="10" font-weight="700" x="240" y="48">曲線（ピッタリ！）</text>
+</svg>
+<div class="viz-cap">気温が約65度まではレンタル増。暑すぎると減る → 放物線（2次曲線）の形。直線では捉えられない。</div>
+</div>
+<p>結果：<strong>湿度</strong>はやや曲線、<strong>風速</strong>もわずかに曲線、<strong>気温</strong>ははっきりした曲線パターンでした。気温は約65度まで上がり、暑すぎると減る——<strong>放物線（2次）のような形</strong>です。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>geom_smoothは「点々を結ぶ、なめらかなロープ」。点をバラまいてロープを乗せると、それが直線なのか山なりなのか一目でわかります。気温は見事に「山」の形でした⛰️</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>2乗項（多項式）を加える</h2><div class="unit-sub">予測変数を2乗して、曲線を表現する</div></div>
+</div>
+<p>放物線のような曲がりを捉えるため、各予測変数を<strong>2乗</strong>した新しい列を作ってモデルに加えます。これが<strong>多項式回帰</strong>です。</p>
+<div class="code-block"><span class="cl">bikes <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">mutate</span>(humidity2 <span class="kw">=</span> humidity<span class="kw">^</span><span class="nm">2</span>,</span><span class="cl">         windspeed2 <span class="kw">=</span> windspeed<span class="kw">^</span><span class="nm">2</span>,</span><span class="cl">         temperature2 <span class="kw">=</span> temperature<span class="kw">^</span><span class="nm">2</span>)</span><span class="cl"></span><span class="cl">bikes_model_3 <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> humidity <span class="kw">+</span> temperature <span class="kw">+</span> windspeed <span class="kw">+</span></span><span class="cl">                     humidity2 <span class="kw">+</span> temperature2 <span class="kw">+</span> windspeed2,</span><span class="cl">                   data <span class="kw">=</span> bikes)</span></div>
+<table class="compare-table">
+<tr><th>モデル</th><th>予測変数</th><th>調整済みR²</th></tr>
+<tr><td>気温のみ</td><td>1個</td><td>0.50</td></tr>
+<tr><td>モデル2</td><td>気温+湿度+風速</td><td>0.52</td></tr>
+<tr><td><strong>モデル3（多項式）</strong></td><td>上記＋3つの2乗項</td><td><strong>増加！（より説明できた）</strong></td></tr>
+</table>
+<div class="note-box">
+<strong>📌 ただし注意：</strong>モデル3では <code>windspeed2</code>（風速の2乗）の<strong>p値が大きく、有意ではありません</strong>（星なし）。散布図でも風速は一番曲がりが弱かったですね。だから風速の2乗は不要かもしれません。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>直線しか描けないクレヨンに、「2乗」という魔法をかけると、急にカーブが描けるようになります。気温の山も、湿度のゆるいカーブも、これでバッチリ描けます🖍️</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>後退消去（いらない項を削る）</h2><div class="unit-sub">有意でない予測変数を取り除く</div></div>
+</div>
+<p>有意でない予測変数を取り除くことを<strong>後退消去（backwards elimination）</strong>と呼びます（詳しくは<a href="m5_ch10.html">第10章</a>）。ここでは有意でなかった <code>windspeed2</code> を削ってみます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># windspeed2（風速の2乗）を取り除く</span></span><span class="cl">bikes_model_3b <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> humidity <span class="kw">+</span> temperature <span class="kw">+</span> windspeed <span class="kw">+</span></span><span class="cl">                      humidity2 <span class="kw">+</span> temperature2,</span><span class="cl">                    data <span class="kw">=</span> bikes)</span><span class="cl"><span class="cm"># → 残りの予測変数はすべて有意（星つき）に！</span></span></div>
+<p>削った結果、<strong>すべての予測変数が有意</strong>になり、R²もわずかに上がりました。無駄な項を取り除いて、すっきり良いモデルになりました。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>料理に入れた調味料の中で「これ、味に関係ないな」というもの（windspeed2）を取り除く作業。余計なものを抜くと、かえって味（モデル）が引き締まります🧂</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>多項式回帰のVIF問題</h2><div class="unit-sub">気温と気温²は当然相関する</div></div>
+</div>
+<p>多項式回帰には<strong>避けられない問題</strong>があります。VIF（許容度）を計算すると、<strong>気温と気温²、湿度と湿度²</strong>が多重共線性を示します。VIFが非常に大きくなるのです。</p>
+<div class="warn-box">
+<strong>⚠️ なぜ起きる？</strong> 気温²は気温から作った変数なので、<strong>自動的に相関します</strong>（気温なしに気温²は計算できない）。これは構造上当たり前のことです。
+  </div>
+<div class="note-box">
+<strong>📌 重要なポイント：</strong>多項式回帰でVIFが高くても、<strong>モデルがよく機能し、未知のデータ（テストセット）でもうまく一般化するなら、この共線性を必ずしも除く必要はありません</strong>。気温²のような自然な相関は許容されることが多いのです。
+  </div>
+<p>気になるなら、湿度や気温の項を削って調整済みR²が改善するか試せます。例では湿度を削っても調整済みR²はほぼ変わらず（改善せず）。一方で湿度と風速は、他の変数が捉えていないシグナルをうまく捉えていました。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>「身長」と「身長の2乗」が似ているのは当たり前ですよね（同じ人の数字だから）。これは“悪い共線性”ではなく“自然な親子関係”。テストでちゃんと点が取れる（よく機能する）なら、この親子はそのまま残してOKです👨‍👦</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第5章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">What assumption of linear regression does polynomial regression address?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> That every one of the predictor variables in the model is a categorical factor variable</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> That the relationship between predictors and the response is linear (a straight line)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> That the residuals are correlated with one another across the different observations</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> That the model must contain exactly one predictor variable and never any more than that</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">In the bikes data, which predictor showed the clearest curved (quadratic) pattern with rentals?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> The intercept — its value bends as the other predictors change</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> The date column — rentals curve upward as the season progresses</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> Temperature — rentals rise then taper off when it gets too hot</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> Windspeed — rentals fall and then sharply rise again at high speeds</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">How do you create a quadratic term for temperature in R?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> mutate(temperature2 = sqrt(temperature))</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> mutate(temperature2 = temperature / 2)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> mutate(temperature2 = log(temperature))</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> mutate(temperature2 = temperature^2)</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">In the polynomial model, windspeed² had a large p-value. What does this suggest?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> Windspeed² is not significant and may be removed (windspeed was the least curved)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> The whole model is invalid and every coefficient must now be discarded</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> Windspeed² is the most important predictor and should never be removed</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> You must square the term again to make its p-value small enough</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">Why do temperature and temperature² show high VIF, and is it always a problem?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> It is a coding error in the mutate step, so the squared term must always be deleted from the model</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> temperature² comes from temperature, so they correlate naturally; if it generalizes well, keep it</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> Because both of the terms are categorical factors, and VIF is always inflated whenever factors appear</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> Because VIF can only ever apply to the response variable, and never to any predictor term in the model</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch4.html">← 第4章：多重共線性とVIF</a>
+<a href="m5_ch6.html">第6章：カテゴリ変数の変換 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">多項式回帰</div><div class="term-en">Polynomial Regression</div><div class="term-def">2乗などの項を加え、曲線（非線形）の関係を捉える回帰。</div></div>
+<div class="term-item"><div class="term-name">非線形</div><div class="term-en">Non-linear</div><div class="term-def">直線でない関係。例：気温が高すぎるとレンタルが減る山なり。</div></div>
+<div class="term-item"><div class="term-name">geom_smooth</div><div class="term-en">geom_smooth()</div><div class="term-def">ggplotで滑らかな曲線を描き、関係の形を可視化する。</div></div>
+<div class="term-item"><div class="term-name">2乗項</div><div class="term-en">Quadratic term (x²)</div><div class="term-def">予測変数を2乗した項。放物線状の関係を表現できる。</div></div>
+<div class="term-item"><div class="term-name">後退消去</div><div class="term-en">Backwards Elimination</div><div class="term-def">有意でない予測変数を取り除く手順（第10章で詳説）。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 ポイント</h4>
+<p>
+    曲線が見えたら <strong>x² の項</strong>を追加。<br/><br/>
+    有意でない2乗項は削る（後退消去）。<br/><br/>
+    x と x² のVIFが高いのは<strong>自然</strong>。よく機能するなら無理に消さなくてOK。
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第5章：多項式回帰</p>
+<p style="margin-top:.5rem;"><a href="m5_ch4.html">← 第4章</a> · <a href="m5_ch6.html">第6章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Linear regression assumes a straight-line relationship. Polynomial regression extends the model to capture curved (non-linear) relationships.",
+  2:"Correct! Temperature showed the clearest curve — rentals rise up to about 65°, then taper off when it's too hot.",
+  3:"Correct! mutate(temperature2 = temperature^2) creates the squared term you add to the model.",
+  4:"Correct! A large p-value means windspeed² isn't significant — windspeed had the least curvature, so the squared term can be removed.",
+  5:"Correct! temperature² is built from temperature, so they're inherently correlated. If the model performs/generalizes well, this natural collinearity doesn't have to be removed."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

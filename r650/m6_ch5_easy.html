@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第5章 超やさしい版：モデル評価①：逸脱度</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy active" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 5 · Easy Mode 🍎</div>
+    <h1>🍎 第5章 超やさしい版：モデル評価①：逸脱度</h1>
+    <p>逸脱度（Deviance）= −2LL。スライダーで予測変数を追加して逸脱度が下がる様子を体感・Rコードで確認しよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">逸脱度の変化を体感</a><a href="#u3">Rで確認・検定</a><a href="m6_ch5.html" class="easy-toplink">📉 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">逸脱度 = モデルの「ズレの大きさ」。小さいほど良い。</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">重回帰のR²の代わりに「逸脱度（Deviance）= −2 × 対数尤度」でモデルを評価する。小さいほど良いモデル。ヌル逸脱度（変数なし）と残差逸脱度（現在のモデル）の差が「予測変数による改善量」。</p></div>
+  <div class="big-rule down">
+    <div class="ru-arrow">📉</div>
+    <div class="ru-text">
+      <strong>逸脱度が小さい</strong> → モデルの当てはまりが良い<br>
+      <strong>逸脱度が大きい</strong> → モデルが外れている<br>
+      <span style="font-size:.83rem;color:var(--text-sec)">Deviance = −2 × Log Likelihood（−2LL）</span>
+    </div>
+  </div>
+  <p>「尤度（ゆうど）」とは「データがこのモデルから生まれた確からしさ」です。尤度が高い（データをよく説明できる）ほど対数尤度は0に近く、逸脱度は小さくなります。</p>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>ヌル逸脱度 vs 残差逸脱度</h2><div class="unit-sub">スライダーで変数を追加して逸脱度の変化を体感</div></div></div>
+  <p>予測変数を追加するほど残差逸脱度は下がります（モデルが改善する）。ただし変数が多すぎると過学習になるため、AICなど別の指標も必要です。</p>
+  <div class="widget purple">
+    <div class="widget-title">📉 逸脱度シミュレーター</div>
+    <div class="slider-row">
+      <label>追加する予測変数の数</label>
+      <input type="range" id="dv-pred" min="0" max="5" step="1" value="1">
+      <span class="slider-val" id="dv-pred-v">1</span>
+    </div>
+    <div style="margin:1rem 0">
+      <div style="font-size:.8rem;font-weight:700;color:var(--text-sec);margin-bottom:.3rem">ヌル逸脱度（切片のみ）</div>
+      <div style="height:30px;background:var(--bg);border-radius:6px;overflow:hidden;position:relative">
+        <div id="dv-null" style="height:30px;background:#dc2626;border-radius:6px;transition:width .4s"></div>
+        <span style="position:absolute;right:8px;top:6px;font-size:.8rem;font-weight:800;color:white" id="dv-null-v">3,924</span>
+      </div>
+      <div style="font-size:.8rem;font-weight:700;color:var(--text-sec);margin:.6rem 0 .3rem">残差逸脱度（現在のモデル）</div>
+      <div style="height:30px;background:var(--bg);border-radius:6px;overflow:hidden;position:relative">
+        <div id="dv-resid" style="height:30px;background:var(--green);border-radius:6px;transition:width .4s"></div>
+        <span style="position:absolute;right:8px;top:6px;font-size:.8rem;font-weight:800;color:white" id="dv-resid-v">3,604</span>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.88rem">改善量（逸脱度の差）：<strong id="dv-diff-v" style="font-size:1.3rem;color:var(--primary)">320</strong></div>
+    <div class="verdict" id="dv-verdict">—</div>
+  </div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>Rで逸脱度を確認・検定する</h2><div class="unit-sub">summary()の読み方とpchisq()による検定</div></div></div>
+  <p class="code-label">▶ summary()で逸脱度を読む</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># モデルを実行してdeviance（逸脱度）を確認</span></span>
+<span class="cl">model &lt;- <span class="kw">glm</span>(Sex ~ Diameter, <span class="kw">data</span>=Abalone, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="kw">summary</span>(model)</span>
+<span class="cl"><span class="cm"># Null deviance:     3923.7  on 2834 degrees of freedom</span></span>
+<span class="cl"><span class="cm"># Residual deviance: 3603.5  on 2833 degrees of freedom</span></span>
+</pre>
+  <p class="code-label">▶ 逸脱度を直接取り出して改善量を計算</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># deviance を直接取り出す</span></span>
+<span class="cl">model<span class="kw">$</span>null.deviance<span class="cm">  # ヌル逸脱度</span></span>
+<span class="cl">model<span class="kw">$</span>deviance<span class="cm">       # 残差逸脱度</span></span>
+<span class="cl"><span class="cm"># 差（改善量）を計算</span></span>
+<span class="cl">diff_dev &lt;- model<span class="kw">$</span>null.deviance - model<span class="kw">$</span>deviance</span>
+<span class="cl">diff_dev<span class="cm">  # → 320.2</span></span>
+</pre>
+  <p class="code-label">▶ カイ二乗検定で「改善が有意か」確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 改善量がカイ二乗分布で有意か検定</span></span>
+<span class="cl">p_val &lt;- <span class="kw">pchisq</span>(diff_dev, df=<span class="nm">1</span>, lower.tail=<span class="kw">FALSE</span>)</span>
+<span class="cl">p_val<span class="cm">  # → 非常に小さい → 有意！</span></span>
+<span class="cl"><span class="cm"># あるいはaov()でまとめて検定</span></span>
+<span class="cl"><span class="kw">anova</span>(model0, model, test=<span class="st">"Chisq"</span>)</span>
+</pre>
+  <div class="note-box">📌 <code>pchisq(diff, df=1, lower.tail=FALSE)</code>のp値が0.05未満なら「予測変数を追加した効果が統計的に有意」。<code>anova(model0, model, test="Chisq")</code>でもっと簡単に確認できます。</div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 逸脱度の計算式は？<span class="cp-a">A. Deviance = −2 × Log Likelihood（−2LL）。小さいほど良いモデル。</span></div><div class="cp-q">Q2. ヌル逸脱度と残差逸脱度の違いは？<span class="cp-a">A. ヌル=切片のみ（変数なし）のモデルの逸脱度。残差=現在のモデルの逸脱度。その差が予測変数による改善量。</span></div><div class="cp-q">Q3. Rで逸脱度の差を検定するコードは？<span class="cp-a">A. pchisq(diff_dev, df=1, lower.tail=FALSE) または anova(model0, model, test="Chisq")。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch4_easy.html">← 第4章 やさしい版</a><a href="m6_ch6_easy.html">第6章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 逸脱度 = −2×対数尤度</p><p style="margin:.4rem 0">• 小さいほど良いモデル</p><p style="margin:.4rem 0">• ヌル逸脱度（変数なし）vs 残差逸脱度</p><p style="margin:.4rem 0">• 差をpchisq()で検定</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch5.html">第5章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第5章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch5.html">← 第5章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initDevianceBar();</script>
+<script src="../hub-fab.js"></script>
+</body></html>

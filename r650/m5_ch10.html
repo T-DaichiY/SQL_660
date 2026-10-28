@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第10章 後退選択 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 10</div>
+<h1>⬅️ 変数選択：後退選択（Backward）</h1>
+<p>前進選択が「空から足す」なら、後退選択は「全部入りから削る」。最も役立たない予測変数を1つずつ取り除いていく、もう一つの賢い変数選択法を学ぶ。</p>
+<div class="unit-nav">
+<a href="#unit1">① 後退選択とは</a>
+<a href="#unit2">② 手動でやってみる</a>
+<a href="#unit3">③ step関数で自動後退</a>
+<a href="#unit4">④ 前進との違い</a>
+<a href="#unit5">⑤ 残された課題</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch10_easy.html">▶ 第10章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>後退選択とは</h2><div class="unit-sub">全部入りから、いらない変数を削っていく</div></div>
+</div>
+<p><strong>後退選択（backward selection）</strong>は、前進選択の逆です。<strong>すべての予測変数を入れたモデルから始めて</strong>、逆向きに進みながら<strong>変数を1つずつ削って</strong>いきます。基準は<strong>p値</strong>：最も有意でない（p値が大きい）予測変数を1つずつ取り除き、停止条件まで繰り返します。</p>
+<div class="flow-diagram">
+<div class="flow-box input">全部入りモデル<br/><small>全予測変数</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box model">最も非有意な<br/>変数を削除<br/><small>p値が最大</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box model">繰り返す<br/><small>↺</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box output">最終モデル<br/><small>停止条件で完成</small></div>
+</div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>前進選択は「空のリュックに足していく」。後退選択は「パンパンに詰めたリュックから、いらない物を1つずつ捨てていく」。ゴールは同じ「ちょうどいい中身」だけど、スタートが真逆です🎒</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>手動でやってみる</h2><div class="unit-sub">全変数モデルを作り、p値を見る</div></div>
+</div>
+<p>まず全部入りモデル（<code>~ .</code>）を作ります。例では調整済みR²が<strong>0.88</strong>ととても良好。でもp値を見ると、有意でない変数があります（星★の数で有意性がわかる）。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 全部入りモデルから出発</span></span><span class="cl">backward_model <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> ., data <span class="kw">=</span> bikes_encoded)</span><span class="cl"><span class="kw">summary</span>(backward_model)   <span class="cm"># 調整済みR²=0.88、でも非有意な変数あり</span></span><span class="cl"></span><span class="cl"><span class="cm"># 最も非有意な変数（例:month4, p=0.55）を削除したいが…</span></span><span class="cl"><span class="cm"># rentals ~ . - month4 → エラー！month4は単独の列ではない</span></span></div>
+<div class="warn-box">
+<strong>⚠️ 月の問題：</strong>「month4（4月）だけ削りたい」と思っても、month4は単独の列ではありません。月を<strong>ワンホットエンコーディング（11列、12列ではない）</strong>しないと、特定の月だけ削除できません（第6章参照）。1月列・2月列…と分けて初めて、1つの月だけ取り除けます。
+</div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>p値は「その変数、どれくらい役立ってる？」のテスト。p値が大きい＝あまり役立っていない＝最初にクビ候補。後退選択は「一番サボってる人から順に外していく」やり方です✂️</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>step関数で自動後退</h2><div class="unit-sub">全部入りから始めてAICで削る</div></div>
+</div>
+<p>手動は大変なので <code>step()</code> で自動化します。前進選択との違いは<strong>出発点が全部入りモデル</strong>で、<code>direction = "backward"</code> を指定すること。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 全部入りモデルから後退（前進は ~1 から、後退は全部から）</span></span><span class="cl">backward_model <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> ., data <span class="kw">=</span> bikes_encoded)</span><span class="cl"></span><span class="cl"><span class="kw">step</span>(backward_model, direction <span class="kw">=</span> <span class="st">"backward"</span>)</span></div>
+<div class="note-box">
+<strong>📌 前進は「＋」、後退は「−」：</strong>前進選択の出力には変数を足す <strong>＋（プラス）</strong> が並びましたが、後退選択では変数を引く <strong>−（マイナス）</strong> が並びます。
+  </div>
+<p>処理の流れ：全部入りでAIC 9160からスタート → <strong>weekdaySaturdayを引く</strong>とAICが下がる → 次に<strong>real_feelを引く</strong>とさらに下がる…と削り続けます。そして「<strong>none（何も削らない）</strong>」が最良になった時点、つまり<strong>どの変数を削ってもAICが増えてしまう</strong>点で停止。それが後退選択の最終モデルです。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>step関数（後退版）は「断捨離ロボット」。一番いらない物（AICを下げる物）から捨てていき、「これ以上捨てると不便になる」ところで自動的に手を止めてくれます🤖🗑️</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>前進選択との違い</h2><div class="unit-sub">スタート地点と進む方向が逆</div></div>
+</div>
+<table class="compare-table">
+<tr><th></th><th>前進選択（第9章）</th><th>後退選択（この章）</th></tr>
+<tr><td>出発点</td><td>空モデル（~ 1）</td><td>全部入りモデル（~ .）</td></tr>
+<tr><td>進む方向</td><td>変数を<strong>足す（＋）</strong></td><td>変数を<strong>削る（−）</strong></td></tr>
+<tr><td>direction</td><td>"forward"</td><td>"backward"</td></tr>
+<tr><td>判断基準</td><td>AIC（既定）/ BIC / p値など</td><td>AIC（既定）/ p値など</td></tr>
+<tr><td>停止</td><td>足してもAICが下がらない</td><td>削ってもAICが下がらない</td></tr>
+</table>
+<p>BICに切り替えたいときは、前進選択と同様に <code>k = log(行数)</code> を指定します（複雑さへのペナルティが強まり、より少ない変数を選ぶ）。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>前進＝「ゼロから組み立てる」、後退＝「全部作ってから削る」。彫刻に例えると、前進は「粘土を足していく」、後退は「大きな石を削って形を出す」ようなもの。どちらもゴールは美しい作品（良いモデル）です🗿</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>残された課題 — 多重共線性</h2><div class="unit-sub">後退選択も共線性は見てくれない</div></div>
+</div>
+<p>後退選択の最終モデルを見ると、まだ<strong>非有意な（p値が大きい）変数</strong>が残っていることがあります。月をワンホット化すれば、「効く月だけ残し、効かない月を削る」ことができます。</p>
+<div class="warn-box">
+<strong>⚠️ 後退選択も多重共線性を扱わない：</strong>前進選択と同じく、後退選択も<strong>多重共線性を考慮しません</strong>。たとえば「月」は不要かもしれません。なぜなら<strong>月は気温と交絡（こうらく）している</strong>可能性があるから——夏の月はレンタルが多いですが、それは「月」のせいではなく<strong>「気温」のせい</strong>かもしれません。あるいは「季節」を入れた時点で、その変動はすでに説明済みかもしれません。
+</div>
+<p>だから「季節は残し、月は削る」ほうが、より良い調整済みR²とより簡潔なモデルにつながる可能性があります。最終的には<strong>VIF（第4章）</strong>で共線性をチェックし、より<strong>パーシモニアス（簡潔）</strong>なモデルを目指しましょう。</p>
+<div class="note-box">
+<strong>🎓 全11章のまとめ：</strong>モデルを<strong>作り</strong>（第1章）、<strong>診断し</strong>（第2章）、影響度を<strong>比べ</strong>（第3章）、外れ値を<strong>扱い</strong>（第3.1章）、共線性を<strong>直し</strong>（第4章）、曲線・カテゴリ・日付・交互作用で<strong>拡張し</strong>（第5〜8章）、最後に変数を<strong>選び抜く</strong>（第9〜10章）。これで重回帰分析の全工程を一周しました！🎉
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>「夏は自転車がよく借りられる」のは「8月だから」じゃなくて「暑いから」かもしれない。これが交絡。後退選択は便利だけど、こういう“見えない裏のつながり（共線性）”までは見抜けません。だから最後は自分の頭とVIFで仕上げをするのが大事です🧠</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第10章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">How does backward selection work?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> Tests every possible subset of the predictors at the very same time, then picks the best</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> Starts with no predictors at all and adds the best one available at each successive step</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> Starts with all predictors and removes the least significant one at a time</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> Randomly removes predictor variables one by one until the model finally stops improving</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">Which criterion is commonly used to decide which predictor to remove first?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> The variable with the longest name, since it clutters the summary table</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> The smallest (most significant) p-value, dropping the strongest predictor first</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> The response variable, which is removed before the predictors are ranked</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> The largest (least significant) p-value, or the variable whose removal lowers AIC most</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">In R, how do you run automated backward selection from a full model?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> step(null_model, direction = "forward")</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> step(full_model, direction = "backward")</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> lm(rentals ~ 1, direction = "backward")</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> vif(full_model, direction = "backward")</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">In backward step() output, what symbol appears next to variables (vs forward's +)?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> A minus sign (−), because variables are being removed</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> An asterisk (*), because each step adds an interaction term</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> A plus sign (+), exactly the same as in forward selection</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> A colon (:), because each line marks a new interaction</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">What limitation do BOTH forward and backward selection share?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> They both require a categorical response variable rather than a continuous numeric outcome</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> They only ever keep a single predictor variable in the final model that they select for you</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> Neither accounts for multicollinearity, so you should still check VIF for a simpler model</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> They cannot use AIC at all, so there is no objective way to compare the candidate models</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch9.html">← 第9章:前進選択</a>
+<a href="m5_ch11.html">第11章 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">後退選択</div><div class="term-en">Backward Selection</div><div class="term-def">全部入りモデルから最も非有意な変数を1つずつ削る手法。</div></div>
+<div class="term-item"><div class="term-name">p値</div><div class="term-en">p-value</div><div class="term-def">変数の有意性の指標。大きいほど非有意＝削除候補。</div></div>
+<div class="term-item"><div class="term-name">交絡</div><div class="term-en">Confounding</div><div class="term-def">見かけの関係が、別の変数（例:気温）によって生じている状態。</div></div>
+<div class="term-item"><div class="term-name">パーシモニアス</div><div class="term-en">Parsimonious</div><div class="term-def">必要十分な変数だけのシンプルなモデル。</div></div>
+<div class="term-item"><div class="term-name">direction</div><div class="term-en">step() argument</div><div class="term-def">"forward"（前進）/"backward"（後退）を指定する引数。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 ポイント</h4>
+<p>
+    後退 ＝ <strong>全部から削る</strong>（~ . が出発点）。<br/><br/>
+    出力は <strong>−（マイナス）</strong>で削除。<br/><br/>
+    前進＝＋、後退＝− と覚える。<br/><br/>
+    両方とも <strong>共線性は見ない</strong> → VIFで仕上げ！
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第10章:後退選択 — これで全11章完了！🎉</p>
+<p style="margin-top:.5rem;"><a href="m5_ch9.html">← 第9章</a> · <a href="m5_index.html">🏠 目次へ</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Backward selection starts with ALL predictors and removes the least significant one at a time until a stopping rule is met.",
+  2:"Correct! You remove the variable with the largest (least significant) p-value, or the one whose removal lowers AIC the most.",
+  3:"Correct! step(full_model, direction = \"backward\") runs automated backward selection starting from the full model.",
+  4:"Correct! Backward output shows a minus sign (−) because variables are being removed, whereas forward shows a plus (+).",
+  5:"Correct! Neither forward nor backward selection accounts for multicollinearity, so check VIF afterward to reach a more parsimonious model."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

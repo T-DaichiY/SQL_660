@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第10章：バイナリ予測変数①：切片の解釈 — ロジスティック回帰ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 10</div>
+    <h1>🔀 第10章：バイナリ予測変数①：切片の解釈</h1>
+    <p>予測変数を追加すると切片の意味が変わる。ForeignWorkerを例に「条件付き切片」を手計算で再現する。</p>
+    <div class="unit-nav"><a href="#u1">Unit 1</a><a href="#u2">Unit 2</a></div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">01</div><div><h2>バイナリ予測変数を追加する</h2><div class="unit-sub">ForeignWorkerをGermanCreditモデルに追加</div></div></div>
+  <p>第9章では切片のみのモデルを確認しました。ここではバイナリ変数（0/1の2値変数）<code>ForeignWorker</code>を予測変数として追加します。</p>
+  <div class="warn-box"><strong>⚠️ contrasts()の確認が必須！</strong><br>
+  このデータでは <code>ForeignWorker: 0=yes（外国人）、1=no（国内労働者）</code> という<em>直感と逆</em>のコーディングになっています。解釈前に必ず確認してください。</div>
+  <div class="code-block"><span class="cl"><span class="cm"># ForeignWorkerを予測変数として追加</span></span><span class="cl">mod_fw &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker,</span><span class="cl">           <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span><span class="cl"><span class="kw">summary</span>(mod_fw)</span><span class="cl"><span class="cm"># 注: ForeignWorker: 0=yes(外国人), 1=no(国内)</span></span><span class="cl"><span class="cm"># contrasts()で必ず確認！</span></span></div>
+  <div class="note-box">係数が<strong>マイナス</strong>であることに注目。ForeignWorkerが0→1に増加（つまり外国人→国内労働者）すると、良い信用の対数オッズが<em>減少</em>する。つまり外国人労働者の方が良い信用の確率が高い。</div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">02</div><div><h2>切片の解釈（バイナリ予測変数追加後）</h2><div class="unit-sub">切片は「追加した予測変数=0のときの対数オッズ」</div></div></div>
+  <p>予測変数を追加すると、切片の意味が変わります。以前は「全体の対数オッズ」でしたが、バイナリ予測変数を加えると<strong>「その予測変数=0のときの対数オッズ」</strong>になります。</p>
+  <div class="big-rule down">
+    <div class="ru-arrow">📐</div>
+    <div class="ru-text">
+      <strong>切片の新しい意味：</strong><br>
+      logit(P) = β₀ + β₁×X₁ において、X₁=0 のとき<br>
+      logit(P) = β₀ のみ → 切片だけが残る<br>
+      <span style="font-size:.85rem;color:var(--text-sec)">例：ForeignWorker=0（外国人）の場合の対数オッズ</span>
+    </div>
+  </div>
+  <div class="code-block"><span class="cl"><span class="cm"># 切片の解釈（ForeignWorker=0のとき）</span></span><span class="cl">intercept &lt;- <span class="kw">coef</span>(mod_fw)[<span class="nm">1</span>]<span class="cm">  # → 2.1102</span></span><span class="cl">odds_fw0  &lt;- <span class="kw">exp</span>(intercept)<span class="cm">        # → 8.25</span></span><span class="cl">prob_fw0  &lt;- odds_fw0 / (<span class="nm">1</span> + odds_fw0)<span class="cm"> # → 0.891</span></span><span class="cl"><span class="cm"># 確認：ForeignWorker=0の行の実際の比率</span></span><span class="cl"><span class="kw">prop.table</span>(<span class="kw">table</span>(GermanCredit$ForeignWorker, GermanCredit$Class), <span class="nm">1</span>)</span><span class="cl"><span class="cm"># Good比率: 33/37 ≈ 0.891 ← 一致！</span></span></div>
+  <div class="note-box">切片=2.11 → exp(2.11)=8.25（オッズ）→ 8.25/9.25=0.891（確率）。実際のデータでForeignWorker=0の行のGood比率（33/37≈0.891）と一致します。</div>
+<div class="note-box"><strong>📌 条件付き切片の要点：</strong>バイナリ予測変数 X₁ を加えると、X₁=0 のとき予測変数項が消え、切片だけが残ります。だから切片は「X₁=0グループの対数オッズ」を表します。全体の対数オッズではなく<em>基準グループ限定</em>の値になる、という発想の転換が次章（係数＝グループ間の差）の理解につながります。
+</div>
+
+</div>
+<section class="quiz-section">
+  <h2>🎯 確認クイズ（英語）</h2>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-container" id="quiz">
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">When a binary predictor is added to a logistic model, what does the intercept represent?</div>
+  <button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The overall log odds of the outcome</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The log odds of the outcome when the binary predictor equals 0</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The coefficient of the binary predictor</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The probability when the binary predictor equals 1</button>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In GermanCredit, ForeignWorker=0 means the person IS a foreign worker. The intercept is 2.11. What is P(Good | ForeignWorker=0)?</div>
+  <button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.55</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.70</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.89</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.27</button>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">The coefficient for ForeignWorker is negative. What does this mean?</div>
+  <button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Foreign workers have better credit than native workers</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Native workers (FW=1) have higher probability of Good credit</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Foreign workers (FW=0) have higher probability of Good credit</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Both A and C are correct</button>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">How do you convert the intercept (log odds) to probability?</div>
+  <button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>P = intercept / (1 + intercept)</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>P = exp(intercept)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>P = exp(intercept) / (1 + exp(intercept))</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>P = log(intercept)</button>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why must you always check contrasts() before interpreting logistic regression with categorical predictors?</div>
+  <button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To check multicollinearity</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To verify which category is coded as 0 (reference) and which as 1</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To calculate AIC</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To find the intercept value</button>
+<div class="q-feedback" id="fb5"></div>
+</div>
+  </div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">After adding a binary predictor, the intercept represents the log-odds when that predictor equals:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>1</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>its mean</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>its maximum</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A negative coefficient for a binary predictor means that level:</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Increases the odds of the outcome</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Has no effect at all</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Decreases the odds of the outcome</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes the intercept</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">To turn the intercept (log-odds) into a probability you:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Apply the logistic/sigmoid transform</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Square it</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Multiply it by 2</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Take its absolute value</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">Adding a binary predictor changes the intercept&#x27;s meaning to:</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The overall log-odds ignoring groups</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The chi-square statistic</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of parameters</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The conditional log-odds at the baseline group</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">Checking contrasts() for a categorical predictor tells you:</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Which level is the reference (0)</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The model&#x27;s AIC</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The residual deviance</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The total sample size</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+  <div class="quiz-score" id="score">0 / 10</div>
+</section>
+
+<div class="page-nav">
+  <a href="m6_ch9.html">← 第9章</a>
+  <a href='m6_ch11.html'>第11章 →</a>
+</div>
+</main>
+
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">バイナリ予測変数</div>
+      <div class="term-en">Binary Predictor</div>
+      <div class="term-def">0または1の2値をとる予測変数。例：ForeignWorker（0=外国人、1=国内）</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">条件付き切片</div>
+      <div class="term-en">Conditional Intercept</div>
+      <div class="term-def">バイナリ予測変数=0のときの対数オッズ。単純な全体の対数オッズとは異なる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">contrasts()</div>
+      <div class="term-en">Contrast Coding Check</div>
+      <div class="term-def">Rでカテゴリ変数のコーディング（参照カテゴリ）を確認する関数。解釈前に必ず確認。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">オッズ比</div>
+      <div class="term-en">Odds Ratio</div>
+      <div class="term-def">exp(係数)。予測変数が1増えたときのオッズの倍率。1より大きければ正の効果。</div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第10章</p>
+<p style="margin-top:.5rem"><a href="m6_ch10_easy.html">🍎 やさしい版へ</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script>
+var ANSWERS=[1, 2, 3, 2, 1, 1, 2, 0, 3, 0];
+var FEEDBACKS=["With a binary predictor X₁ in the model, when X₁=0 the predictor term vanishes, leaving only the intercept. So the intercept = log odds given X₁=0.", "exp(2.11)=8.25 (odds), then 8.25/(1+8.25)≈0.891. This matches 33/37 from the cross-table.", "A negative coefficient means increasing X (going from FW=0 to FW=1, i.e. from foreign to native) decreases the log odds. So FW=0 (foreign workers) have higher probability of Good credit.", "odds = exp(intercept), then P = odds/(1+odds) = exp(β₀)/(1+exp(β₀)). This is the sigmoid/logistic function.", "contrasts() shows the coding. If 0=yes and 1=no (as in ForeignWorker), the interpretation is the opposite of what you'd intuitively expect. Always check before interpreting.", "The intercept is now the conditional log-odds at the predictor's baseline level (0).", "A negative coefficient lowers the log-odds (and odds) relative to the reference level.", "Apply P = exp(b)/(1+exp(b)), the inverse logit, to the intercept.", "The intercept becomes group-specific: the log-odds for the reference (=0) category.", "contrasts() shows the coding so you know which group is the baseline."];
+var score=0,done=0,total=10;
+</script>
+<script>
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='\u2705 Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='\u274c '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+setTimeout(function(){units.forEach(function(u){u.classList.add('visible');});},600);
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1章 超やさしい版：重回帰分析 — 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy active" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 1 ・ Easy Mode</div>
+    <h1>🍎 第1章 超やさしい版：重回帰分析</h1>
+    <p>むずかしい式は後回し。まずは「重回帰って、要するに何?」を、絵とスライダーで体感しよう。<a href="m5_ch1.html" class="easy-toplink">📈 本編（詳しい版）はこちら</a></p>
+    <div class="unit-nav">
+      <a href="#u1">⚡ 一言でいうと</a>
+      <a href="#u2">① 探偵の手がかり</a>
+      <a href="#u3">② 予測を体感（スライダー）</a>
+      <a href="#u4">③ 残差ってなに</a>
+      <a href="#u5">④ 30秒セルフ確認</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<!-- U1 -->
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">重回帰＝たくさんの手がかりで予測する</div></div></div>
+  <div class="tldr">
+    <h3>🎯 これだけ覚えればOK</h3>
+    <p style="margin:0;"><strong>単回帰</strong>は手がかり1つ（気温だけ）で予測。<strong>重回帰</strong>は手がかりをたくさん（気温＋湿度＋風速…）使って予測する。手がかりが増えるほど、当てやすくなる。それだけ！</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">手がかり1つ vs たくさん</div>
+    <svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
+      <rect x="20" y="50" width="130" height="50" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+      <text x="85" y="72" font-size="11" fill="#7f1d1d" text-anchor="middle" font-weight="800">単回帰</text>
+      <text x="85" y="90" font-size="9" fill="#7f1d1d" text-anchor="middle">気温だけ 🌡️</text>
+      <text x="180" y="80" font-size="13" fill="#64748b" text-anchor="middle">より</text>
+      <rect x="230" y="40" width="270" height="70" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+      <text x="365" y="62" font-size="11" fill="#065f46" text-anchor="middle" font-weight="800">重回帰</text>
+      <text x="365" y="82" font-size="12" fill="#065f46" text-anchor="middle">🌡️ + 💧 + 💨 + 📅</text>
+      <text x="365" y="100" font-size="9" fill="#065f46" text-anchor="middle">手がかりが多い＝当てやすい</text>
+    </svg>
+  </div>
+</div>
+
+<!-- U2 -->
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>探偵の手がかり 🕵️</h2><div class="unit-sub">なぜ手がかりは多い方がいいのか</div></div></div>
+  <p>探偵が犯人を当てるとき、手がかりは1つより多い方が正確ですよね。重回帰も同じ。「湿度」「気温」「風速」という複数の手がかりを集めて、より正確に「今日のレンタル数」を当てます。</p>
+  <div class="flow-diagram">
+    <div class="flow-box input">💧 湿度</div>
+    <div class="flow-box input">🌡️ 気温</div>
+    <div class="flow-box input">💨 風速</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box model">重回帰モデル<br><small>手がかりを合体</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box output">🚲 レンタル数</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>料理のレシピと同じ。「湿度を◯倍、気温を◯倍、風速を◯倍して全部足す」と、その日のレンタル数が出てくる。</p></div>
+</div>
+
+<!-- U3 interactive -->
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>予測を体感してみよう（スライダー）</h2><div class="unit-sub">3つのつまみを動かすと、予測が変わる</div></div></div>
+  <p>下のスライダーを動かしてみてください。湿度・気温・風速を変えると、<strong>予測レンタル数がリアルタイムで変わります</strong>。これが重回帰の「予測」です（係数は学習用のだいたいの値）。</p>
+
+  <div class="widget green">
+    <div class="widget-title">🎛️ レンタル数 予測シミュレーター</div>
+    <div class="slider-row"><label>💧 湿度</label><input type="range" id="rc-hum" min="0" max="1" step="0.01" value="0.5"><span class="slider-val" id="rc-hum-v">0.50</span></div>
+    <div class="slider-row"><label>🌡️ 気温</label><input type="range" id="rc-temp" min="0" max="40" step="1" value="20"><span class="slider-val" id="rc-temp-v">20°</span></div>
+    <div class="slider-row"><label>💨 風速</label><input type="range" id="rc-wind" min="0" max="30" step="1" value="8"><span class="slider-val" id="rc-wind-v">8 mph</span></div>
+    <div class="result-big" id="rc-out">—</div>
+    <div class="result-label">台のレンタルが予測されます 🚲</div>
+  </div>
+
+  <div class="note-box">気温を上げると予測が増え、湿度や風速を上げると減るのがわかりますか？これが「各手がかりがレンタル数に与える影響」です。本物のRでは <code>predict()</code> という関数がこの計算を自動でやってくれます。</div>
+</div>
+
+<!-- U4 -->
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>残差（ざんさ）ってなに？</h2><div class="unit-sub">予測と実際の「ズレ」のこと</div></div></div>
+  <p><strong>残差 ＝ 実際の値 − 予測の値</strong>。予測が3,300で実際が1,248なら、大きくズレています。これが残差。予測が大きすぎる（過大評価）なら「負の残差」です。</p>
+  <div class="viz">
+    <div class="viz-title">残差＝点と線のすき間</div>
+    <svg viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;display:block;margin:0 auto;">
+      <line x1="40" y1="120" x2="440" y2="40" stroke="#2563eb" stroke-width="2.5"/>
+      <text x="380" y="40" font-size="10" fill="#2563eb">予測の線</text>
+      <circle cx="150" cy="95" r="5" fill="#dc2626"/><line x1="150" y1="95" x2="150" y2="103" stroke="#dc2626" stroke-width="2" stroke-dasharray="3"/>
+      <circle cx="280" cy="50" r="5" fill="#dc2626"/><line x1="280" y1="50" x2="280" y2="72" stroke="#dc2626" stroke-width="2" stroke-dasharray="3"/>
+      <text x="215" y="135" font-size="10" fill="#dc2626" text-anchor="middle">赤い点線が「残差」＝ズレの大きさ</text>
+    </svg>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>残差は「予想が何点ハズれたか」。小さいほど予測が上手なモデル。</p></div>
+</div>
+
+<!-- U5 -->
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>30秒セルフ確認</h2><div class="unit-sub">クリックで答えが開きます</div></div></div>
+  <div class="checkpoint">
+    <h4>🤔 答えられるかな？</h4>
+    <div class="cp-q">Q1. 単回帰と重回帰の違いは？<span class="cp-a">A. 単回帰は手がかり1つ、重回帰は手がかりが2つ以上。</span></div>
+    <div class="cp-q">Q2. 残差がプラスとマイナスで何が違う？<span class="cp-a">A. マイナス＝予測が大きすぎ（過大評価）、プラス＝予測が小さすぎ（過小評価）。</span></div>
+    <div class="cp-q">Q3. データに無い値でも予測したい。どの関数？<span class="cp-a">A. predict()。fitted.valuesはデータにある行しか予測できない。</span></div>
+  </div>
+  <div class="note-box" style="background:var(--secondary-light);border-color:var(--secondary);">🎓 もっと詳しく（回帰式・3つの予測方法・コード）は <a href="m5_ch1.html">第1章 本編</a> へ。英語MCQクイズもあります。</div>
+  <div class="page-nav"><a href="m5_ch1.html">← 第1章 本編</a><a href="m5_ch2_easy.html">第2章 やさしい版 →</a></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 結論</h4><p>重回帰 ＝ <strong>手がかりをたくさん使う予測</strong>。<br><br>式は「各手がかり×係数を全部足す」だけ。<br><br>予測は <strong>predict()</strong> におまかせ。<br><br>残差 ＝ 実際 − 予測（ズレ）。</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2);"><h4 style="color:var(--primary-dark);">📖 本編</h4><p style="color:var(--text);">詳しい解説は <a href="m5_ch1.html">第1章</a> へ。このやさしい版は予習・復習用です。</p></div>
+</aside>
+</div>
+
+<footer><p>重回帰分析 完全ガイド · 第1章 超やさしい版</p><p style="margin-top:.5rem;"><a href="m5_ch1.html">← 第1章 本編</a> · <a href="m5_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script>initRentalCalc();</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

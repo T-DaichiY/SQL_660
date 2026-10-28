@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2章 超やさしい版 — 診断 — 重回帰分析 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* このページ専用の追加スタイル（図解多め） */
+.big-rule{display:flex;align-items:center;gap:1rem;background:linear-gradient(135deg,var(--green-light),#ecfdf5);border:2px solid var(--green);border-radius:14px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+.big-rule.down{background:linear-gradient(135deg,var(--primary-light),#eff6ff);border-color:var(--primary);}
+.big-rule .ru-arrow{font-size:2.4rem;line-height:1;flex-shrink:0;}
+.big-rule .ru-text{font-size:1rem;}
+.big-rule .ru-text strong{font-size:1.1rem;}
+.metric-hero{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem;}
+.metric-hero .mh-emoji{font-size:2.6rem;line-height:1;}
+.metric-hero .mh-name{font-size:1.15rem;font-weight:800;}
+.metric-hero .mh-tag{font-size:.78rem;font-weight:700;padding:.2rem .7rem;border-radius:20px;}
+.tag-up{background:var(--green-light);color:var(--green);}
+.tag-down{background:var(--primary-light);color:var(--primary);}
+.tag-mid{background:var(--yellow-light);color:var(--yellow);}
+.tldr{background:#fff;border:2px dashed var(--secondary);border-radius:12px;padding:1.25rem 1.5rem;margin:1.5rem 0;}
+.tldr h3{color:var(--secondary);margin-top:0;}
+.scorecard{width:100%;border-collapse:separate;border-spacing:0 .5rem;margin:1rem 0;}
+.scorecard td{background:var(--white);padding:.85rem 1rem;font-size:.92rem;box-shadow:var(--shadow);}
+.scorecard td:first-child{border-radius:10px 0 0 10px;font-weight:800;width:42%;}
+.scorecard td:last-child{border-radius:0 10px 10px 0;}
+.arrow-pill{display:inline-block;font-size:.8rem;font-weight:800;padding:.15rem .6rem;border-radius:20px;}
+.checkpoint{background:var(--secondary-light);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.checkpoint h4{color:var(--secondary);margin-top:0;}
+.checkpoint .cp-q{background:white;border-radius:8px;padding:.75rem 1rem;margin:.5rem 0;font-size:.9rem;cursor:pointer;border:1.5px solid var(--border);transition:all .2s;}
+.checkpoint .cp-q:hover{border-color:var(--secondary);}
+.checkpoint .cp-a{display:none;margin-top:.5rem;padding:.6rem .9rem;background:var(--green-light);border-radius:6px;font-size:.85rem;color:#065f46;}
+.checkpoint .cp-q.open .cp-a{display:block;}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy active" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner" style="background:linear-gradient(135deg,#0f766e,#0891b2);">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 2 ・ Easy Mode</div>
+    <h1>🍎 第2章 超やさしい版：診断</h1>
+    <p>「コードを覚えなきゃ」と不安？大丈夫。この章で本当に大事なのは<strong>各指標が何を見ているか（特性）</strong>だけ。コードはRが計算してくれる“ボタン”にすぎません。図と例え話だけで、判断できる力をつけよう。</p>
+    <div class="unit-nav">
+      <a href="#tldr">⚡ 結論から</a>
+      <a href="#why">① なぜ診断するの</a>
+      <a href="#code">② コードは怖くない</a>
+      <a href="#metrics">③ 6指標を絵で覚える</a>
+      <a href="#scorecard">④ 早見表</a>
+      <a href="#check">⑤ 30秒セルフ確認</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<!-- TLDR -->
+<div class="unit" id="tldr">
+  <div class="unit-header">
+    <div class="unit-num">⚡</div>
+    <div><h2>先に結論：あなたが覚えるべきは「方向」だけ</h2><div class="unit-sub">コードの暗記は不要。指標が高い方がいいか低い方がいいか、それだけ</div></div>
+  </div>
+
+  <div class="tldr">
+    <h3>🎯 この章のたった1つの本質</h3>
+    <p style="margin-bottom:.5rem;">第2章は「<strong>どっちのモデルが良い？</strong>」を判断する章です。判断の道具が6つの指標。コードはどれも「指標を取り出す1行」だけ。<strong>計算はRがやる</strong>ので、あなたは数字を見て良し悪しを言えればOK。</p>
+    <p style="margin:0;">つまり覚えるのは <strong>「⬆️高いほど良い」か「⬇️低いほど良い」か</strong> という<strong>矢印の向き</strong>だけ。これだけで第2章は8割クリアです。</p>
+  </div>
+
+  <div class="big-rule">
+    <div class="ru-arrow">⬆️</div>
+    <div class="ru-text"><strong>高いほど良い：</strong>調整済みR²、F統計量<br><span style="color:var(--text-sec);font-size:.85rem;">＝「よく説明できてる」「モデル全体が効いてる」を表す指標</span></div>
+  </div>
+  <div class="big-rule down">
+    <div class="ru-arrow">⬇️</div>
+    <div class="ru-text"><strong>低いほど良い：</strong>AIC、BIC、S、RMSE<br><span style="color:var(--text-sec);font-size:.85rem;">＝「ズレ」「複雑さ」を表す指標。小さいほど良い（ゴルフのスコアと同じ）</span></div>
+  </div>
+  <div class="big-rule" style="background:linear-gradient(135deg,var(--yellow-light),#fffbeb);border-color:var(--yellow);">
+    <div class="ru-arrow">🎯</div>
+    <div class="ru-text"><strong>ちょうどが良い：</strong>MallowのCp<br><span style="color:var(--text-sec);font-size:.85rem;">＝予測変数の数とほぼ同じならOK。多すぎ＝過学習、少なすぎ＝過小学習</span></div>
+  </div>
+</div>
+
+<!-- WHY -->
+<div class="unit" id="why">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>なぜ「診断」するの？ — 健康診断と同じ</h2><div class="unit-sub">1つの数字だけ見て判断しちゃダメ、という話</div></div>
+  </div>
+
+  <p>モデルは作れる。でも「これ、良いモデル？」をどう判断する？答えは<strong>健康診断とまったく同じ</strong>です。</p>
+
+  <div class="viz">
+    <div class="viz-title">体温だけで健康は決まらない 🩺</div>
+    <svg viewBox="0 0 540 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto;">
+      <!-- person -->
+      <circle cx="70" cy="55" r="22" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
+      <rect x="52" y="78" width="36" height="50" rx="10" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
+      <text x="70" y="150" font-size="11" fill="#1e293b" text-anchor="middle" font-weight="700">モデル</text>
+      <!-- gauges -->
+      <g font-size="10" fill="#1e293b" text-anchor="middle">
+        <rect x="150" y="35" width="110" height="34" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+        <text x="205" y="50" font-weight="700">調整済みR²</text><text x="205" y="63" font-size="8">説明力</text>
+        <rect x="150" y="78" width="110" height="34" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="205" y="93" font-weight="700">AIC / BIC</text><text x="205" y="106" font-size="8">バランス</text>
+        <rect x="280" y="35" width="110" height="34" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="335" y="50" font-weight="700">S / RMSE</text><text x="335" y="63" font-size="8">ズレ</text>
+        <rect x="280" y="78" width="110" height="34" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+        <text x="335" y="93" font-weight="700">F統計量</text><text x="335" y="106" font-size="8">全体の有意性</text>
+        <rect x="410" y="56" width="110" height="34" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+        <text x="465" y="71" font-weight="700">MallowのCp</text><text x="465" y="84" font-size="8">過/過小学習</text>
+      </g>
+      <line x1="92" y1="75" x2="148" y2="55" stroke="#94a3b8"/><line x1="92" y1="85" x2="148" y2="95" stroke="#94a3b8"/>
+      <line x1="92" y1="80" x2="278" y2="55" stroke="#94a3b8" opacity=".4"/>
+    </svg>
+    <div class="viz-cap">お医者さんが体温・血圧・心拍…を「合わせて」見るように、モデルも複数の指標を合わせて診断する。</div>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠️ よくある失敗：</strong>p値（★の数）だけ見て「有意だからOK!」と決めること。これは「体温が平熱だから健康!」と言うようなもの。<strong>1つの指標だけに頼らない</strong>——これが第2章で一番大事な心構えです。
+  </div>
+
+  <div class="simple-box">
+    <div class="simple-title">🍎 ひとことで</div>
+    <p>診断＝モデルの健康診断。いろんな数値を<strong>合わせて</strong>見るから、本当に良いモデルかわかる。</p>
+  </div>
+</div>
+
+<!-- CODE -->
+<div class="unit" id="code">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>コードは怖くない — 「ボタンを押すだけ」</h2><div class="unit-sub">計算するのはR。あなたは数字を読むだけ</div></div>
+  </div>
+
+  <p>「コードを理解しなきゃ…」と身構えなくて大丈夫。第2章のコードは、ほぼ全部<strong>「指標を取り出す1行」</strong>です。電卓の「＝」ボタンを押すのと同じ。</p>
+
+  <div class="viz">
+    <div class="viz-title">あなたがやること vs Rがやること</div>
+    <svg viewBox="0 0 540 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto;">
+      <rect x="20" y="30" width="150" height="70" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+      <text x="95" y="55" font-size="11" fill="#065f46" text-anchor="middle" font-weight="800">あなた 🙂</text>
+      <text x="95" y="74" font-size="9" fill="#065f46" text-anchor="middle">ボタンを押す</text>
+      <text x="95" y="88" font-size="9" fill="#065f46" text-anchor="middle">数字を読んで判断</text>
+      <text x="195" y="70" font-size="22" fill="#7c3aed" text-anchor="middle">→</text>
+      <rect x="225" y="30" width="150" height="70" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="300" y="55" font-size="11" fill="#5b21b6" text-anchor="middle" font-weight="800">R 🤖</text>
+      <text x="300" y="74" font-size="9" fill="#5b21b6" text-anchor="middle">むずかしい計算を</text>
+      <text x="300" y="88" font-size="9" fill="#5b21b6" text-anchor="middle">全部やってくれる</text>
+      <text x="400" y="70" font-size="22" fill="#d97706" text-anchor="middle">→</text>
+      <rect x="430" y="30" width="100" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+      <text x="480" y="60" font-size="11" fill="#92400e" text-anchor="middle" font-weight="800">数字</text>
+      <text x="480" y="78" font-size="9" fill="#92400e" text-anchor="middle">0.52 など</text>
+    </svg>
+    <div class="viz-cap">むずかしい計算はRの担当。あなたの仕事は「出てきた数字で良し悪しを言う」こと。</div>
+  </div>
+
+  <div class="code-block"><span class="cl"><span class="cm"># 全部この形。「model から ○○を取り出して」と頼むだけ</span></span><span class="cl"><span class="kw">summary</span>(model)<span class="kw">$</span>adj.r.squared   <span class="cm"># 調整済みR²をちょうだい</span></span><span class="cl"><span class="kw">AIC</span>(model)                     <span class="cm"># AICをちょうだい</span></span><span class="cl"><span class="kw">BIC</span>(model)                     <span class="cm"># BICをちょうだい（大文字に注意!）</span></span><span class="cl"><span class="kw">summary</span>(model)<span class="kw">$</span>sigma           <span class="cm"># S をちょうだい</span></span></div>
+
+  <div class="note-box">
+    <strong>📌 “ルールだけ”覚えたい3つ（コードというより豆知識）：</strong><br>
+    ① <strong>RMSE</strong>は組み込み関数が無いので自作（残差→二乗→平均→平方根。平方根は単位を戻すため）。<br>
+    ② <strong>BICは大文字</strong> <code>BIC()</code>（小文字はエラー）。<br>
+    ③ <strong>MallowのCp</strong>も組み込み関数が無いので自作（判定は「Cp≒予測変数の数なら良い」）。<br>
+    → これらも「書けること」より「<strong>そういう特性がある</strong>と知ってること」が大事。
+  </div>
+
+  <div class="simple-box">
+    <div class="simple-title">🍎 ひとことで</div>
+    <p>コードは“電卓のボタン”。押せば答えが出る。あなたは答えを読むだけ。</p>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="unit" id="metrics">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>6つの指標を「絵」で覚える</h2><div class="unit-sub">それぞれ1枚の絵と1つの例えだけ</div></div>
+  </div>
+
+  <!-- adj R2 -->
+  <div class="metric-hero">
+    <span class="mh-emoji">🎒</span>
+    <span class="mh-name">調整済みR²</span>
+    <span class="mh-tag tag-up">⬆️ 高いほど良い</span>
+  </div>
+  <p><strong>見ているもの：</strong>モデルがデータをどれだけうまく説明できているか。ただし<strong>無駄な変数を入れるとペナルティで下がる</strong>賢いR²。</p>
+  <p><strong>例え：</strong>いらない荷物を入れると重くなって怒るカバン🎒。だから本当に必要な変数だけ入れるようになる。</p>
+
+  <div class="viz">
+    <div class="viz-title">R²（怒らないカバン）vs 調整済みR²（怒るカバン）</div>
+    <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
+      <line x1="50" y1="150" x2="490" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="50" y1="20" x2="50" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="270" y="172" font-size="10" fill="#64748b" text-anchor="middle">変数を足していくと →</text>
+      <path d="M50,130 Q200,60 490,40" fill="none" stroke="#dc2626" stroke-width="3" class="draw"/>
+      <text x="370" y="35" font-size="10" fill="#dc2626" font-weight="700">R²（無駄でも上がる😟）</text>
+      <path d="M50,130 Q190,62 300,66 Q420,72 490,105" fill="none" stroke="#059669" stroke-width="3" class="draw" style="animation-delay:.4s"/>
+      <text x="320" y="120" font-size="10" fill="#059669" font-weight="700">調整済みR²（無駄だと下がる😊）</text>
+    </svg>
+    <div class="viz-cap">役に立つ変数 → 両方上がる。役に立たない変数 → 調整済みR²だけ下がる。だから調整済みを信じる。</div>
+  </div>
+
+  <!-- AIC / BIC -->
+  <div class="metric-hero" style="margin-top:2rem;">
+    <span class="mh-emoji">⛳</span>
+    <span class="mh-name">AIC と BIC</span>
+    <span class="mh-tag tag-down">⬇️ 低いほど良い</span>
+  </div>
+  <p><strong>見ているもの：</strong>「当てはまりの良さ」と「シンプルさ」のバランス。複雑すぎる（変数モリモリ）と罰せられる。</p>
+  <p><strong>例え：</strong>テストの採点者⛳。当てはまりが良いと加点、でも答案が長すぎ（複雑すぎ）ると減点。点数は低いほど良い＝ゴルフのスコア。<strong>BICは特に厳しい先生</strong>で「もっと短く!」と言う。</p>
+
+  <div class="viz">
+    <div class="viz-title">AICは「ちょうどいい複雑さ」で最小になる</div>
+    <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
+      <line x1="50" y1="150" x2="490" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="50" y1="20" x2="50" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="270" y="172" font-size="10" fill="#64748b" text-anchor="middle">モデルの複雑さ →</text>
+      <text x="30" y="90" font-size="10" fill="#64748b" text-anchor="middle" transform="rotate(-90 30 90)">AIC（低いほど良い）</text>
+      <path d="M70,40 Q160,130 270,128 Q380,126 470,55" fill="none" stroke="#2563eb" stroke-width="3" class="draw"/>
+      <circle cx="270" cy="128" r="6" fill="#059669" class="pulse"/>
+      <text x="270" y="118" font-size="10" fill="#059669" font-weight="700" text-anchor="middle">⭐ ここが最良</text>
+      <text x="110" y="50" font-size="9" fill="#dc2626">単純すぎ</text>
+      <text x="420" y="50" font-size="9" fill="#dc2626">複雑すぎ</text>
+    </svg>
+    <div class="viz-cap">シンプルすぎても複雑すぎてもAICは高い。谷の底（ちょうどいい）が最良のモデル。</div>
+  </div>
+
+  <div class="note-box">
+    <strong>📌 大事な特性：</strong>AIC/BICの<strong>数字そのものに意味はない</strong>（例：10,000）。<strong>2つのモデルを比べて、低い方が良い</strong>という“比較専用”の指標。
+  </div>
+
+  <!-- S / RMSE -->
+  <div class="metric-hero" style="margin-top:2rem;">
+    <span class="mh-emoji">🎯</span>
+    <span class="mh-name">S（残差標準誤差）と RMSE</span>
+    <span class="mh-tag tag-down">⬇️ 低いほど良い</span>
+  </div>
+  <p><strong>見ているもの：</strong>予測が実際の点から平均どれくらいズレているか。小さいほど予測が当たっている。</p>
+  <p><strong>例え：</strong>ダーツ🎯。的の中心からの外れ具合を平均したのがRMSE。中心に近い（小さい）ほど上手なプレイヤー＝良いモデル。</p>
+
+  <div class="viz">
+    <div class="viz-title">ズレが小さい＝点が線の近くに集まる</div>
+    <svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
+      <!-- good model -->
+      <text x="135" y="20" font-size="10" fill="#059669" text-anchor="middle" font-weight="700">良いモデル（S小）</text>
+      <line x1="40" y1="120" x2="230" y2="50" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="70" cy="108" r="3" fill="#059669"/><circle cx="110" cy="92" r="3" fill="#059669"/><circle cx="150" cy="78" r="3" fill="#059669"/><circle cx="190" cy="62" r="3" fill="#059669"/>
+      <!-- bad model -->
+      <text x="390" y="20" font-size="10" fill="#dc2626" text-anchor="middle" font-weight="700">悪いモデル（S大）</text>
+      <line x1="300" y1="120" x2="490" y2="50" stroke="#1e293b" stroke-width="2"/>
+      <circle cx="330" cy="70" r="3" fill="#dc2626"/><circle cx="370" cy="118" r="3" fill="#dc2626"/><circle cx="410" cy="55" r="3" fill="#dc2626"/><circle cx="450" cy="110" r="3" fill="#dc2626"/>
+      <line x1="330" y1="70" x2="330" y2="103" stroke="#dc2626" stroke-dasharray="2"/><line x1="370" y1="105" x2="370" y2="118" stroke="#dc2626" stroke-dasharray="2"/>
+    </svg>
+    <div class="viz-cap">左：点が線の近く＝ズレ小＝S小＝良い。右：点が線から遠い＝ズレ大＝S大＝悪い。</div>
+  </div>
+  <p style="font-size:.88rem;color:var(--text-sec);">💡 豆知識：大きなデータでは S と RMSE はほぼ同じ値になる（1509 と 1507 のように）。</p>
+
+  <!-- F -->
+  <div class="metric-hero" style="margin-top:2rem;">
+    <span class="mh-emoji">⚽</span>
+    <span class="mh-name">F統計量</span>
+    <span class="mh-tag tag-up">⬆️ 大きい・p小さいほど良い</span>
+  </div>
+  <p><strong>見ているもの：</strong>モデル<strong>全体</strong>が意味あるか。「予測変数は全部ムダ（係数ゼロ）」を否定できるか。</p>
+  <p><strong>例え：</strong>「このチーム、誰か1人でも仕事してる?」という質問⚽。答えがYESとわかる。でも<strong>誰がエースかまではわからない</strong>。</p>
+
+  <div class="warn-box">
+    <strong>⚠️ ひっかけ注意：</strong>Fが有意でも「<strong>全部の変数が有意</strong>」とは言えない。「少なくとも1つは効いてる」とわかるだけ。← MCQでよく問われるポイント！
+  </div>
+
+  <!-- Cp -->
+  <div class="metric-hero" style="margin-top:2rem;">
+    <span class="mh-emoji">🧳</span>
+    <span class="mh-name">MallowのCp</span>
+    <span class="mh-tag tag-mid">🎯 予測変数の数とほぼ同じが良い</span>
+  </div>
+  <p><strong>見ているもの：</strong>過学習（複雑すぎ）か過小学習（単純すぎ）か。</p>
+  <p><strong>例え：</strong>ちょうどいい荷物の量メーター🧳。多すぎ（過学習）も少なすぎ（過小学習）もダメ。<strong>予測変数の数と同じくらい</strong>が完璧なカバン。</p>
+
+  <table class="compare-table">
+    <tr><th>Cpの値</th><th>判定</th></tr>
+    <tr><td>Cp ≒ 予測変数の数</td><td>✅ ちょうど良い</td></tr>
+    <tr><td>Cp &gt; 予測変数の数</td><td>⚠️ 過学習（詰めすぎ）</td></tr>
+    <tr><td>Cp &lt; 予測変数の数</td><td>⚠️ 過小学習（足りない）</td></tr>
+  </table>
+</div>
+
+<!-- SCORECARD -->
+<div class="unit" id="scorecard">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>これだけ覚えれば合格：早見表</h2><div class="unit-sub">スマホで写真を撮っておこう📸</div></div>
+  </div>
+
+  <table class="scorecard">
+    <tr><td>🎒 調整済みR²</td><td><span class="arrow-pill tag-up">⬆️ 高いほど良い</span> 無駄な変数を罰した説明力</td></tr>
+    <tr><td>⛳ AIC</td><td><span class="arrow-pill tag-down">⬇️ 低いほど良い</span> 当てはまり×シンプルさ（比較専用）</td></tr>
+    <tr><td>⛳ BIC</td><td><span class="arrow-pill tag-down">⬇️ 低いほど良い</span> 同上・シンプルさをもっと重視</td></tr>
+    <tr><td>🎯 S / RMSE</td><td><span class="arrow-pill tag-down">⬇️ 低いほど良い</span> 予測の平均的なズレ</td></tr>
+    <tr><td>⚽ F統計量</td><td><span class="arrow-pill tag-up">⬆️ 大きい・p小</span> 全体が有意か（≠全部が有意）</td></tr>
+    <tr><td>🧳 MallowのCp</td><td><span class="arrow-pill tag-mid">🎯 ≒予測変数の数</span> 過学習/過小学習チェック</td></tr>
+  </table>
+
+  <div class="tldr" style="border-color:var(--green);">
+    <h3 style="color:var(--green);">✅ 合格ライン</h3>
+    <p style="margin:0;">この表の<strong>矢印の向き</strong>が言えて、<strong>「1つの指標に頼らず複数を合わせて見る」</strong>という心構えがあれば、第2章は理解できています。コードを書けなくても大丈夫。</p>
+  </div>
+</div>
+
+<!-- CHECK -->
+<div class="unit" id="check">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>30秒セルフ確認（クリックで答え）</h2><div class="unit-sub">これに答えられたら、特性を理解できています</div></div>
+  </div>
+
+  <div class="checkpoint">
+    <h4>🤔 自分に質問してみよう</h4>
+    <div class="cp-q" onclick="this.classList.toggle('open')">Q1. AICは高い方が良い？低い方が良い？<span class="cp-a">A. ⬇️ 低い方が良い。AICは「ズレ＋複雑さ」を表すので、小さいほど良いモデル。</span></div>
+    <div class="cp-q" onclick="this.classList.toggle('open')">Q2. 調整済みR²がR²より好まれる理由は？<span class="cp-a">A. 無駄な変数を入れると調整済みR²は下がる（ペナルティ）。R²は無駄でも上がってしまうから。</span></div>
+    <div class="cp-q" onclick="this.classList.toggle('open')">Q3. F統計量が有意なら「全部の予測変数が有意」と言える？<span class="cp-a">A. 言えない。「少なくとも1つは効いている」とわかるだけ。誰がエースかは別途分析が必要。</span></div>
+    <div class="cp-q" onclick="this.classList.toggle('open')">Q4. AICの数字「10,000」を見て、良いモデルか判断できる？<span class="cp-a">A. できない。AICは数字単体に意味がなく、別のモデルと比べて低い方を選ぶ“比較専用”の指標。</span></div>
+    <div class="cp-q" onclick="this.classList.toggle('open')">Q5. MallowのCpが予測変数の数より大きいと？<span class="cp-a">A. 過学習（オーバーフィット）。ちょうど＝予測変数の数、が理想。</span></div>
+  </div>
+
+  <div class="note-box" style="background:var(--secondary-light);border-color:var(--secondary);">
+    <strong>🎓 次のステップ：</strong>上の5問に答えられたら、<a href="m5_ch2.html#quiz">第2章の本編クイズ（英語MCQ 5問）</a>に挑戦してみてください。本編のMCQも<strong>すべて「特性を問う問題」で、コードを書かせる問題は1問もありません</strong>。解ければ合格レベルです。
+  </div>
+
+  <div class="simple-box">
+    <div class="simple-title">🍎 最後にひとこと</div>
+    <p>第2章は「<strong>指標が何を見ているか（特性）</strong>」さえわかればOK。コードはRが計算してくれるボタン。あなたは出てきた数字を読んで「こっちのモデルが良いね」と言えれば、もう十分です。自信を持って大丈夫！💪</p>
+  </div>
+
+  <div class="page-nav">
+    <a href="m5_ch2.html">← 第2章（本編）へ</a>
+    <a href="m5_ch3.html">第3章:標準化回帰係数 →</a>
+  </div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📘 矢印だけ早見</h3>
+    <div class="term-item"><div class="term-name">⬆️ 高いほど良い</div><div class="term-def">調整済みR²、F統計量</div></div>
+    <div class="term-item"><div class="term-name">⬇️ 低いほど良い</div><div class="term-def">AIC、BIC、S、RMSE</div></div>
+    <div class="term-item"><div class="term-name">🎯 ちょうどが良い</div><div class="term-def">MallowのCp（≒予測変数の数）</div></div>
+  </div>
+  <div class="tip-box">
+    <h4>💡 結論</h4>
+    <p>
+    コードの暗記は<strong>不要</strong>。<br><br>
+    覚えるのは<strong>矢印の向き</strong>と<strong>「複数を合わせて見る」</strong>こと。<br><br>
+    豆知識3つ：<br>
+    ・RMSEは自作<br>
+    ・BICは大文字<br>
+    ・Cpも自作<br><br>
+    MCQはコードを書かせない＝特性が問われる。
+    </p>
+  </div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2);">
+    <h4 style="color:var(--primary-dark);">📖 本編はこちら</h4>
+    <p style="color:var(--text);">
+    もっと詳しいコードや式が見たくなったら、<a href="m5_ch2.html">第2章（本編）</a>へ。このやさしい版は本編の“予習・復習”用です。
+    </p>
+  </div>
+</aside>
+</div>
+
+<footer>
+  <p>重回帰分析 完全ガイド · 第2章 超やさしい版：診断</p>
+  <p style="margin-top:.5rem;"><a href="m5_ch2.html">← 第2章 本編</a> · <a href="m5_index.html">🏠 目次</a></p>
+</footer>
+
+<script src="quiz.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

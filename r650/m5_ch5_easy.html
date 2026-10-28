@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5章 超やさしい版:多項式回帰 — 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy active" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 5 ・ Easy Mode</div>
+    <h1>〰️ 第5章 超やさしい版:多項式回帰</h1>
+    <p>直線では捉えられない「曲がった関係」を扱う話。スライダーで線を曲げてみよう。<a href="m5_ch5.html" class="easy-toplink">〰️ 本編はこちら</a></p>
+    <div class="unit-nav">
+      <a href="#u1">⚡ 一言でいうと</a>
+      <a href="#u2">① 直線の限界</a>
+      <a href="#u3">② 線を曲げてみる</a>
+      <a href="#u4">③ 自然な共線性</a>
+      <a href="#u5">④ 30秒セルフ確認</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">2乗を足すと、曲線が描ける</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0;">気温とレンタル数は「暑すぎると減る」<strong>山なりの曲線</strong>。直線では捉えられない。だから<strong>2乗の項（気温²）</strong>をモデルに足すと曲線が描ける。これが多項式回帰。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>直線の限界</h2><div class="unit-sub">アイスの売上を思い出して</div></div></div>
+  <p>アイスの売上は、寒い→売れない、暖かい→売れる、でも<strong>暑すぎると</strong>外に出たくなくて逆に減る。これは直線じゃなく「山なり」。直線の定規ではこの山を測れません。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>直線しか描けないクレヨンに「2乗」の魔法をかけると、カーブが描けるようになる🖍️</p></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>線を曲げてみよう（スライダー）</h2><div class="unit-sub">どれだけ曲げると山なりデータに合う?</div></div></div>
+  <p>下のスライダーを動かすと、<strong>青い線が曲がります</strong>。点々（山なりのデータ）にピッタリ合うところを探してみてください。</p>
+
+  <div class="widget">
+    <div class="widget-title">〰️ 直線 → 曲線 スライダー</div>
+    <svg viewBox="0 0 540 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto;">
+      <line x1="50" y1="160" x2="510" y2="160" stroke="#94a3b8"/>
+      <text x="280" y="185" font-size="10" fill="#64748b" text-anchor="middle">気温 →</text>
+      <!-- parabola data points -->
+      <circle cx="80" cy="150" r="3.5" fill="#2563eb" opacity=".6"/><circle cx="120" cy="135" r="3.5" fill="#2563eb" opacity=".6"/>
+      <circle cx="160" cy="115" r="3.5" fill="#2563eb" opacity=".6"/><circle cx="210" cy="92" r="3.5" fill="#2563eb" opacity=".6"/>
+      <circle cx="260" cy="72" r="3.5" fill="#2563eb" opacity=".6"/><circle cx="300" cy="62" r="3.5" fill="#2563eb" opacity=".6"/>
+      <circle cx="340" cy="64" r="3.5" fill="#2563eb" opacity=".6"/><circle cx="380" cy="78" r="3.5" fill="#2563eb" opacity=".6"/>
+      <circle cx="420" cy="100" r="3.5" fill="#2563eb" opacity=".6"/><circle cx="460" cy="128" r="3.5" fill="#2563eb" opacity=".6"/>
+      <!-- adjustable fit -->
+      <path id="cv-fit" d="M70,150 Q270,150 470,150" fill="none" stroke="#dc2626" stroke-width="3.5"/>
+    </svg>
+    <div class="slider-row" style="margin-top:1rem;"><label>曲げ具合</label><input type="range" id="cv-curve" min="0" max="100" step="1" value="0"><span class="slider-val" id="cv-curve-v">0%</span></div>
+    <div class="verdict bad" id="cv-label">—</div>
+  </div>
+  <div class="note-box">曲げ具合を上げると、線が点々（データ）にどんどんフィットしますね。Rでは <code>mutate(temp2 = temperature^2)</code> で2乗の列を作って足すだけです。</div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>気温と気温²が似てるのは「自然」</h2><div class="unit-sub">これは悪い共線性ではない</div></div></div>
+  <p>多項式回帰では、気温と気温²のVIFが高くなります。でもこれは<strong>当たり前</strong>（気温²は気温から作るので）。モデルがちゃんと機能するなら、無理に消さなくてOKです。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「身長」と「身長の2乗」が似てるのは当たり前（同じ人の数字だから）。これは“悪い共線性”じゃなく“自然な親子関係”👨‍👦</p></div>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>30秒セルフ確認</h2><div class="unit-sub">クリックで答えが開きます</div></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？</h4>
+    <div class="cp-q">Q1. 多項式回帰は何を解決する？<span class="cp-a">A. 「直線の関係」という前提。曲がった（非線形）関係を扱える。</span></div>
+    <div class="cp-q">Q2. 気温の2乗項はどう作る？<span class="cp-a">A. mutate(temperature2 = temperature^2)。</span></div>
+    <div class="cp-q">Q3. 気温と気温²のVIFが高いのは問題？<span class="cp-a">A. 自然なこと。モデルがよく機能するなら消さなくてOK。</span></div>
+  </div>
+  <div class="note-box" style="background:var(--secondary-light);border-color:var(--secondary);">🎓 geom_smoothでの発見・後退消去は <a href="m5_ch5.html">第5章 本編</a> へ。</div>
+  <div class="page-nav"><a href="m5_ch5.html">← 第5章 本編</a><a href="m5_ch6_easy.html">第6章 やさしい版 →</a></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 結論</h4><p>曲線が見えたら <strong>x²</strong> を足す。<br><br>有意でない2乗項は削る。<br><br>x と x² のVIF高は<strong>自然</strong>。機能すれば消さなくてOK。</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2);"><h4 style="color:var(--primary-dark);">📖 本編</h4><p style="color:var(--text);">詳しくは <a href="m5_ch5.html">第5章</a> へ。</p></div>
+</aside>
+</div>
+
+<footer><p>重回帰分析 完全ガイド · 第5章 超やさしい版</p><p style="margin-top:.5rem;"><a href="m5_ch5.html">← 本編</a> · <a href="m5_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script>initCurveDemo();</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

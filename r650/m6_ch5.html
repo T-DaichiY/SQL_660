@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5章 モデル評価①：逸脱度（Deviance） — ロジスティック回帰 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">Chapter 5</div>
+  <h1>📉 モデル評価①：逸脱度（Deviance）</h1>
+  <p>対数尤度・逸脱度（−2LL）・ヌル逸脱度vs残差逸脱度・カイ二乗検定でモデルを評価する方法を学ぶ。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① モデル評価の概要</a><a href="#unit2">② 対数尤度と逸脱度</a><a href="#unit3">③ Rで値を取り出す</a><a href="#unit4">④ カイ二乗検定</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>モデル評価の考え方</h2><div class="unit-sub">何を見れば「良いモデル」かわかるか</div></div>
+  </div>
+  <p>重回帰ではR²やAICでモデルを評価しました。ロジスティック回帰でも<strong>モデル全体の当てはまりの良さ</strong>を評価する必要があります。主に使う指標は：</p>
+<div class="task-grid">
+  <div class="task-card"><div class="tc-icon">📉</div><div class="tc-name">逸脱度（Deviance）</div><div class="tc-example">−2LL。小さいほど良い。</div></div>
+  <div class="task-card"><div class="tc-icon">📊</div><div class="tc-name">AIC</div><div class="tc-example">逸脱度+予測変数のペナルティ。</div></div>
+  <div class="task-card"><div class="tc-icon">📏</div><div class="tc-name">Z値</div><div class="tc-example">個別の予測変数の有意性。</div></div>
+  <div class="task-card"><div class="tc-icon">❌</div><div class="tc-name">R²</div><div class="tc-example">ロジスティック回帰には存在しない。</div></div>
+</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>重回帰でR²（決定係数）を使ったように、ロジスティック回帰は「逸脱度」でモデルの良し悪しを測ります。考え方は似ていますが、計算方法が違います。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>対数尤度と逸脱度</h2><div class="unit-sub">−2LL が何を意味するか</div></div>
+  </div>
+  <p><strong>対数尤度（Log Likelihood, LL）</strong>は、モデルが観測データをどのくらいうまく説明できているかを示します。重回帰の「残差平方和」に対応する概念です。</p>
+<ul>
+  <li>対数尤度が<strong>大きい（0に近い）</strong> → モデルの当てはまりが<strong>良い</strong></li>
+  <li>対数尤度が<strong>小さい（大きな負の値）</strong> → 当てはまりが<strong>悪い</strong></li>
+</ul>
+<p><strong>逸脱度（Deviance）</strong>は対数尤度に−2を掛けたものです：</p>
+<div class="note-box" style="text-align:center;font-size:1.1rem;">
+  <strong>Deviance = −2 × Log Likelihood（−2LL）</strong>
+</div>
+<p>逸脱度は<strong>小さいほど良い</strong>モデルです。Rの<code>summary(glm())</code>では：</p>
+<ul>
+  <li><strong>Null deviance</strong>：予測変数なし（切片のみ）のモデルの逸脱度</li>
+  <li><strong>Residual deviance</strong>：現在のモデルの逸脱度</li>
+</ul>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>Rでモデルを比較する</h2><div class="unit-sub">attributes()で値を取り出す</div></div>
+  </div>
+  <p>逸脱度の値をRで正確に取り出して比較するには <code>attributes()</code> を使います。</p>
+<div class="code-block"><span class="cl"><span class="cm"># Model 1: Type ~ Diameter</span></span><span class="cl">model1 <span class="kw">&lt;-</span> <span class="kw">glm</span>(Type <span class="kw">~</span> Diameter, data<span class="kw">=</span>abalone2, family<span class="kw">=</span>binomial)</span><span class="cl"></span><span class="cl"><span class="cm"># モデルに格納されている全属性を確認</span></span><span class="cl"><span class="kw">attributes</span>(model1)</span><span class="cl"></span><span class="cl"><span class="cm"># ヌル逸脱度と残差逸脱度を取り出す</span></span><span class="cl">null_dev <span class="kw">&lt;-</span> model1$null.deviance</span><span class="cl">resid_dev <span class="kw">&lt;-</span> model1$deviance</span><span class="cl"></span><span class="cl"><span class="cm"># 逸脱度の差（改善量）</span></span><span class="cl">dev_diff <span class="kw">&lt;-</span> null_dev <span class="kw">-</span> resid_dev</span><span class="cl">dev_diff  <span class="cm"># → かなり大きな値</span></span></div>
+<div class="output-text">null.deviance  = 3924.2  (予測変数なし)
+deviance       = 3595.8  (diameter追加後)
+diff           =  328.4   (改善量)</div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>カイ二乗検定で有意性を確認</h2><div class="unit-sub">改善量は統計的に有意か</div></div>
+  </div>
+<div class="note-box"><strong>📌 逸脱度の直感：</strong>逸脱度（−2LL）は「モデルがデータをどれだけ説明できていないか」の不一致度で、小さいほど良い当てはまりです。ヌル逸脱度（切片のみ）と残差逸脱度（予測変数あり）の差が大きいほど、その予測変数が効いている証拠になります。差が自由度（追加したパラメータ数）に対して十分大きいかをカイ二乗分布で検定します。</div>
+  <p>逸脱度の差がカイ二乗分布に従うことを利用して、<strong>予測変数を追加したことが有意に改善したか</strong>を検定できます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 自由度 = 追加した予測変数の数</span></span><span class="cl">df <span class="kw">&lt;-</span> model1$df.null <span class="kw">-</span> model1$df.residual</span><span class="cl"></span><span class="cl"><span class="cm"># カイ二乗検定のp値</span></span><span class="cl">p_val <span class="kw">&lt;-</span> <span class="kw">pchisq</span>(dev_diff, df<span class="kw">=</span>df, lower.tail<span class="kw">=</span><span class="kw">FALSE</span>)</span><span class="cl">p_val  <span class="cm"># → 非常に小さい値（有意）</span></span></div>
+<div class="output-text">p_value = 2.3e-73  ← 非常に有意（Diameterは有用な予測変数）</div>
+<div class="note-box"><strong>📌 解釈：</strong>p値が非常に小さい → 逸脱度の減少（改善）は偶然ではない → Diameterを追加することでモデルが有意に改善した。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>切片だけのモデル（何も知らない状態）と、Diameterを使ったモデルを比べています。「Diameterを知ることでオス・メスが予測できる確率が有意に上がった」と言えます🐚</p></div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 10</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+  
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is deviance in logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The sum of squared residuals</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>−2 times the log likelihood</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The R-squared value</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The AIC value</button>
+</div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In R's glm() summary, what is 'null deviance'?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The deviance of the current model</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The deviance of the intercept-only model (no predictors)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The residual standard error</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The AIC of the null model</button>
+</div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you access the null deviance value programmatically in R?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>model$null.deviance</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>model$deviance.null</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>attributes(model)$null</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>summary(model)$null</button>
+</div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What distribution is used to test whether adding a predictor significantly improves the model?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>t-distribution</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>F-distribution</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Chi-square (χ²) distribution</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Normal distribution</button>
+</div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">If a model with a predictor has a much smaller residual deviance than the null deviance, this suggests:</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The predictor makes the model worse</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The predictor significantly improves model fit</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The model is overfitting</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The intercept should be removed</button>
+</div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Deviance in logistic regression is based on which quantity?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The sum of squared residuals</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The mean of the outcome</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of predictors</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The log-likelihood of the model</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A LOWER residual deviance indicates:</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A worse-fitting model</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>More missing data</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A better-fitting model</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Fewer observations</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Null deviance measures the fit of:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The full model with all predictors</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The single best predictor</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A model with random coefficients</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A model with only the intercept</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">The difference (null deviance − residual deviance) approximately follows which distribution?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Chi-square distribution</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Uniform distribution</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Normal distribution</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Exponential distribution</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">Degrees of freedom for the deviance chi-square test equal:</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The total sample size</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Always exactly one</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of added predictors</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The residual deviance value</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 0, 2, 1, 3, 2, 3, 0, 2];
+var FEEDBACKS=["Deviance = −2 × Log Likelihood (−2LL). Smaller deviance means better model fit.", "Null deviance is the deviance when only an intercept (no predictors) is in the model.", "model$null.deviance extracts the null deviance from the glm model object.", "The change in deviance follows a chi-square distribution. pchisq() is used in R to compute the p-value.", "A large decrease in deviance when a predictor is added indicates that the predictor significantly improves model fit.", "Deviance is −2 × log-likelihood, so it is built directly from the model's log-likelihood.", "Smaller deviance means a higher likelihood, i.e. the model fits the data better.", "Null deviance reflects a model containing only the intercept (no predictors).", "Under the null, the drop in deviance is approximately chi-square distributed, enabling a significance test.", "The df equals the number of parameters added between the two nested models."];
+var score=0,done=0,total=10;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<div class="page-nav"><a href="m6_ch4.html">← 第4章</a><a href="m6_ch6.html">第6章 →</a></div>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">逸脱度</div>
+      <div class="term-en">Deviance (−2LL)</div>
+      <div class="term-def">対数尤度を−2倍した値。モデル評価の基本指標。小さいほど良い。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">ヌル逸脱度</div>
+      <div class="term-en">Null Deviance</div>
+      <div class="term-def">予測変数なし（切片のみ）モデルの逸脱度。ベースラインとして使用。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">残差逸脱度</div>
+      <div class="term-en">Residual Deviance</div>
+      <div class="term-def">現在のモデルの逸脱度。ヌル逸脱度との差で改善量を測る。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">pchisq()</div>
+      <div class="term-en">Chi-square p-value</div>
+      <div class="term-def">Rでカイ二乗分布のp値を計算する関数。lower.tail=FALSEに注意。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>概念が難しく感じたら、コードを実際にRで動かして確認してみましょう。手を動かすことで理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_index.html">← 章の一覧に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

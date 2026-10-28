@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2章 ロジスティック回帰モデルの仕組み — ロジスティック回帰 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">Chapter 2</div>
+  <h1>📐 ロジスティック回帰モデルの仕組み</h1>
+  <p>係数を理解するために必須の3変換：確率・オッズ・対数オッズの関係を完全マスターする。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 3つの変換</a><a href="#unit2">② 確率とオッズ</a><a href="#unit3">③ 対数オッズ(Logit)</a><a href="#unit4">④ シグモイド関数</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>3つの変換を理解する</h2><div class="unit-sub">確率 → オッズ → 対数オッズの流れ</div></div>
+  </div>
+  <p>ロジスティック回帰の係数を理解するには、<strong>3つの概念</strong>を順番に理解する必要があります。</p>
+<div class="flow-diagram">
+  <div class="flow-box input">確率 (Probability)<br><small>0 〜 1</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box model">オッズ (Odds)<br><small>0 〜 ∞</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box output">対数オッズ (Log Odds)<br><small>−∞ 〜 +∞</small></div>
+</div>
+<p>これらの変換を経ることで、<strong>「確率を予測する」という問題を、線形回帰と同じ形の式で解ける</strong>ようになります。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>「確率→オッズ→対数オッズ」は、お金の両替みたいなもの。円をドルに換え、さらにユーロに換える。形は変わるけど、本質は同じ情報を持っています💱</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>確率とオッズ</h2><div class="unit-sub">「50%」と「1対1」は同じ意味</div></div>
+  </div>
+  <p><strong>確率</strong>は「事象が起こる割合」（0〜1）。<strong>オッズ</strong>は「起こる確率」÷「起こらない確率」です。</p>
+<table class="compare-table">
+  <thead><tr><th>確率 P</th><th>オッズ P/(1-P)</th><th>解釈</th></tr></thead>
+  <tbody>
+    <tr><td>0.5（50%）</td><td>0.5/0.5 = 1.0</td><td>起こる:起こらない = 1:1</td></tr>
+    <tr><td>0.7（70%）</td><td>0.7/0.3 ≈ 2.33</td><td>起こる:起こらない ≈ 2.3:1</td></tr>
+    <tr><td>0.1（10%）</td><td>0.1/0.9 ≈ 0.11</td><td>起こる:起こらない ≈ 1:9</td></tr>
+  </tbody>
+</table>
+<div class="code-block"><span class="cl"><span class="cm"># 確率→オッズの計算（Rで）</span></span><span class="cl">p <span class="kw">&lt;-</span> <span class="nm">0.7</span></span><span class="cl">odds <span class="kw">&lt;-</span> p <span class="kw">/</span> (<span class="nm">1</span> <span class="kw">-</span> p)</span><span class="cl">odds  <span class="cm"># 2.333...</span></span></div>
+<div class="note-box"><strong>📌 オッズ比の特徴：</strong>確率が0のとき オッズ=0、確率が0.5のとき オッズ=1、確率が1に近づくにつれてオッズは∞に向かいます。</div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>対数オッズ（Log Odds / Logit）</h2><div class="unit-sub">オッズの対数で「−∞〜+∞」に広げる</div></div>
+  </div>
+  <p>オッズは0〜∞の範囲ですが、<strong>自然対数（log）を取る</strong>と−∞〜+∞に広がります。これを<strong>対数オッズ</strong>または<strong>logit</strong>と呼びます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># オッズ→対数オッズ</span></span><span class="cl">log_odds <span class="kw">&lt;-</span> <span class="kw">log</span>(odds)   <span class="cm"># log() は自然対数</span></span><span class="cl"></span><span class="cl"><span class="cm"># 確率 0.5 → オッズ 1.0 → 対数オッズ 0</span></span><span class="cl">log(<span class="nm">0.5</span> / (<span class="nm">1</span> - <span class="nm">0.5</span>))  <span class="cm"># → 0</span></span><span class="cl"></span><span class="cl"><span class="cm"># 確率 0.7 → オッズ 2.33 → 対数オッズ 0.847</span></span><span class="cl">log(<span class="nm">0.7</span> / (<span class="nm">1</span> - <span class="nm">0.7</span>))  <span class="cm"># → 0.847</span></span></div>
+<p>ロジスティック回帰の係数はこの<strong>対数オッズのスケール</strong>で表されます。これが重要です。</p>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>確率は0〜1しか動けなくて窮屈。オッズは0〜∞でまだ不便。対数オッズはマイナスもプラスも自由に動けます。回帰式と組み合わせるために、この「自由な動き」が必要なんです🎯</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>シグモイド関数の式</h2><div class="unit-sub">ロジスティック回帰の核心</div></div>
+  </div>
+<div class="note-box"><strong>📌 3変換を一本につなぐ：</strong>確率 p → オッズ <code>p/(1−p)</code> → 対数オッズ <code>log(p/(1−p))</code>。この対数オッズ（logit）を予測変数の一次式 <code>β₀+β₁x</code> でモデル化するのがロジスティック回帰です。逆向きにたどればシグモイドで確率に戻せます。「係数は対数オッズの世界の言葉」だと覚えておくと、後の章の係数解釈がすべて一貫して理解できます。</div>
+  <p>ロジスティック回帰の予測式はこうなります：</p>
+<div class="note-box" style="text-align:center;font-size:1.1rem;">
+  <strong>P(Y=1) = 1 / (1 + e<sup>−(β₀ + β₁X₁ + β₂X₂ + …)</sup>)</strong>
+</div>
+<p>カッコの中（β₀ + β₁X₁ + …）は、重回帰で見慣れた<strong>回帰式と全く同じ形</strong>です。それをeの指数乗の形に入れることで、出力が必ず0〜1の確率になります。</p>
+<table class="compare-table">
+  <thead><tr><th>処理の段階</th><th>式</th><th>範囲</th></tr></thead>
+  <tbody>
+    <tr><td>① 線形予測子</td><td>β₀ + β₁X₁ + …</td><td>−∞ 〜 +∞</td></tr>
+    <tr><td>② 対数オッズ</td><td>logit(P) = 上記と同じ</td><td>−∞ 〜 +∞</td></tr>
+    <tr><td>③ 確率（最終出力）</td><td>1 / (1 + e<sup>−logit</sup>)</td><td>0 〜 1</td></tr>
+  </tbody>
+</table>
+<div class="note-box"><strong>📌 まとめ：</strong>係数（β）を得るためには 確率→オッズ→対数オッズ の変換が必要。最終的な確率を得るには その逆（シグモイド関数）で戻します。</div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 10</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+  
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the correct order of transformations in logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Log odds → Odds → Probability</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Probability → Odds → Log odds</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Odds → Probability → Log odds</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Log odds → Probability → Odds</button>
+</div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How is 'odds' calculated from probability P?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>P × (1-P)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>P / (1-P)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>log(P)</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>1 / P</button>
+</div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What is the range of log odds (logit)?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0 to 1</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0 to infinity</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Negative infinity to positive infinity</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>−1 to 1</button>
+</div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">If the probability of an event is 0.5, what is the log odds?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.5</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>1.0</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>−0.5</button>
+</div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does the sigmoid function do?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Converts probability to log odds</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Converts log odds back to probability (0–1)</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Calculates the regression coefficients</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes outliers from the data</button>
+</div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What transformation turns a probability into a value ranging from −∞ to +∞?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Taking the square root of P</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Multiplying P by 100</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Subtracting P from 1</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The log-odds (logit) transformation</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Odds of 3 (i.e. 3 to 1) corresponds to what probability?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.75</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.30</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.50</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.90</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Which statement about the sigmoid (logistic) function is correct?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It always outputs negative values</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It converts probability into odds</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It is the inverse of the logit function</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is identical to a straight line</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">As probability approaches 1, what happens to the odds?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The odds approach zero</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The odds stay constant at 1</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The odds become negative</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The odds grow toward infinity</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">Why convert probability to log-odds before fitting a linear equation?</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To force all coefficients to be positive</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To remove the need for an intercept</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To make the relationship linear and unbounded</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To guarantee the data is normally distributed</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 2, 2, 1, 3, 0, 2, 3, 2];
+var FEEDBACKS=["Probability is converted to Odds (P/1-P), then to Log Odds (natural log of odds). This allows a linear regression equation to be used.", "Odds = P / (1-P). If probability is 0.7, odds = 0.7/0.3 = 2.33.", "Log odds can range from −∞ to +∞, which is why it allows a standard linear regression equation to be used.", "Odds = 0.5/0.5 = 1. log(1) = 0. When probability = 0.5, log odds = 0.", "The sigmoid function 1/(1+e^−x) converts any real number back into a probability between 0 and 1.", "The logit, log(P/(1−P)), stretches the bounded probability onto the full real line.", "Odds = P/(1−P) = 3 gives P = 3/4 = 0.75.", "The sigmoid is the inverse of the logit: it maps log-odds back to a probability.", "As P→1, the denominator (1−P)→0, so odds = P/(1−P) grow without bound.", "Modeling log-odds linearly keeps predictions unbounded; the logit link makes the relationship linear in the predictors."];
+var score=0,done=0,total=10;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<div class="page-nav"><a href="m6_ch1.html">← 第1章</a><a href="m6_ch3.html">第3章 →</a></div>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">オッズ</div>
+      <div class="term-en">Odds</div>
+      <div class="term-def">確率Pを(1−P)で割った値。「起こる：起こらない」の比率。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">対数オッズ</div>
+      <div class="term-en">Log Odds / Logit</div>
+      <div class="term-def">オッズの自然対数。−∞〜+∞の範囲を取る。ロジスティック回帰の係数のスケール。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">シグモイド関数</div>
+      <div class="term-en">Sigmoid Function</div>
+      <div class="term-def">1/(1+e^−x)。対数オッズを0〜1の確率に変換する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">e（自然対数の底）</div>
+      <div class="term-en">Euler's number</div>
+      <div class="term-def">≈2.718。自然対数の計算に使われる定数。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>概念が難しく感じたら、コードを実際にRで動かして確認してみましょう。手を動かすことで理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_index.html">← 章の一覧に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

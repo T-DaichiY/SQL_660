@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3.1章 超やさしい版：影響点分析 — 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+<style>
+.cook-bar{display:flex;align-items:flex-end;gap:4px;height:120px;padding:0 .5rem;border-bottom:2px solid #94a3b8;}
+.cook-bar .cb{flex:1;border-radius:3px 3px 0 0;transition:background .2s;}
+.thresh-line{position:relative;height:0;}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy active" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 3.1 ・ Easy Mode</div>
+    <h1>🎯 第3.1章 超やさしい版：影響点分析</h1>
+    <p>「外れ値」と「影響点」は別もの。回帰線をグイッとゆがめる“困った点”を見つける話。<a href="m5_ch3_1.html" class="easy-toplink">🎯 本編はこちら</a></p>
+    <div class="unit-nav">
+      <a href="#u1">⚡ 一言でいうと</a>
+      <a href="#u2">① 外れ値≠影響点</a>
+      <a href="#u3">② クックの距離</a>
+      <a href="#u4">③ しきい値スライダー</a>
+      <a href="#u5">④ 30秒セルフ確認</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">回帰線をゆがめる点を、自動で見つける</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0;"><strong>外れ値</strong>のうち、回帰線を大きくゆがめる困った点が<strong>影響点</strong>。それを自動で見つける道具が<strong>クックの距離（Cook's D）</strong>。値が大きい点が影響点。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>外れ値 ≠ 影響点</h2><div class="unit-sub">外れていても、悪さをしない点もある</div></div></div>
+  <p>クラスの平均身長で、すごく背が高い子（外れ値）がいても、その子が「みんなの傾向」に沿っていれば平均はあまり変わりません。でも1人だけ全然違う場所にいる子は、平均をグイッと動かす。これが影響点。</p>
+  <div class="viz">
+    <div class="viz-title">引っ張る点 🔴 vs 引っ張らない点 🟢</div>
+    <svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:0 auto;">
+      <g><text x="120" y="18" font-size="10" fill="#dc2626" text-anchor="middle" font-weight="700">影響点（線を引っ張る）</text>
+      <circle cx="40" cy="125" r="3" fill="#2563eb"/><circle cx="65" cy="118" r="3" fill="#2563eb"/><circle cx="90" cy="112" r="3" fill="#2563eb"/><circle cx="115" cy="106" r="3" fill="#2563eb"/>
+      <circle cx="215" cy="55" r="6" fill="#dc2626" class="pulse"/>
+      <line x1="35" y1="123" x2="215" y2="55" stroke="#dc2626" stroke-width="2" stroke-dasharray="4"/></g>
+      <g><text x="380" y="18" font-size="10" fill="#059669" text-anchor="middle" font-weight="700">ただの外れ値（影響小）</text>
+      <circle cx="290" cy="125" r="3" fill="#2563eb"/><circle cx="320" cy="108" r="3" fill="#2563eb"/><circle cx="350" cy="92" r="3" fill="#2563eb"/><circle cx="380" cy="76" r="3" fill="#2563eb"/>
+      <circle cx="460" cy="42" r="6" fill="#059669" class="pulse"/>
+      <line x1="285" y1="128" x2="465" y2="40" stroke="#059669" stroke-width="2" stroke-dasharray="4"/></g>
+    </svg>
+    <div class="viz-cap">左：1点が線を自分の方へ引っ張る＝影響点。右：外れているが線の延長上＝影響は小さい。</div>
+  </div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>クックの距離（Cook's D）</h2><div class="unit-sub">「その点を抜いたら、どれだけ変わる?」</div></div></div>
+  <p>クックの距離は「ある点を抜いたとき、モデルがどれだけ変わるか」を測ります。大きいほど、その点の影響が大きい。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「その人がいなくなったら、クラスの雰囲気がどれだけ変わる?」メーター。抜けると一気に変わるムードメーカー＝影響点。</p></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>しきい値スライダーで体感</h2><div class="unit-sub">線を動かすと、影響点の数が変わる</div></div></div>
+  <p>下のスライダーで<strong>しきい値の線</strong>を上下に動かしてみてください。線を超えた赤い棒が「影響点」。線を低くすると影響点が増え、高くすると減ります。実際の授業では <code>4/(N−K−1) ≈ 0.0055</code> を使います。</p>
+
+  <div class="widget teal">
+    <div class="widget-title">📊 クックの距離バーチャート</div>
+    <div style="position:relative;">
+      <div class="cook-bar" id="cook-bars"></div>
+      <div id="thresh" style="position:absolute;left:0;right:0;border-top:2.5px dashed #dc2626;pointer-events:none;">
+        <span style="position:absolute;right:0;top:-18px;font-size:.72rem;color:#dc2626;font-weight:700;">しきい値</span>
+      </div>
+    </div>
+    <div class="slider-row" style="margin-top:1.5rem;"><label>しきい値</label><input type="range" id="cook-th" min="10" max="90" step="1" value="55"><span class="slider-val" id="cook-th-v">55%</span></div>
+    <div class="verdict good" id="cook-verdict">—</div>
+  </div>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>30秒セルフ確認</h2><div class="unit-sub">クリックで答えが開きます</div></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？</h4>
+    <div class="cp-q">Q1. 外れ値は全部、影響点？<span class="cp-a">A. いいえ。線の傾向に沿う外れ値は影響が小さい。</span></div>
+    <div class="cp-q">Q2. 影響点を自動で見つける道具は？<span class="cp-a">A. クックの距離（Cook's D）。値が大きい点が影響点。</span></div>
+    <div class="cp-q">Q3. 影響点を消す前にやるべきことは？<span class="cp-a">A. 「データ入力ミスでは?」と原因を確認する（例：湿度0%は異常）。</span></div>
+  </div>
+  <div class="note-box" style="background:var(--secondary-light);border-color:var(--secondary);">🎓 しきい値の式・除去前後の比較は <a href="m5_ch3_1.html">第3.1章 本編</a> へ。</div>
+  <div class="page-nav"><a href="m5_ch3_1.html">← 第3.1章 本編</a><a href="m5_ch4_easy.html">第4章 やさしい版 →</a></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 結論</h4><p>外れ値 ≠ 影響点。<br><br>影響点 ＝ 線をゆがめる困った点。<br><br>道具は <strong>Cook's D</strong>。<br><br>消す前に<strong>原因チェック</strong>を！</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2);"><h4 style="color:var(--primary-dark);">📖 本編</h4><p style="color:var(--text);">詳しくは <a href="m5_ch3_1.html">第3.1章</a> へ。</p></div>
+</aside>
+</div>
+
+<footer><p>重回帰分析 完全ガイド · 第3.1章 超やさしい版</p><p style="margin-top:.5rem;"><a href="m5_ch3_1.html">← 本編</a> · <a href="m5_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script>
+// Cook's distance bar demo
+(function(){
+  const vals=[12,28,18,45,22,15,88,30,19,52,25,14,38,20,60,17,33,21,48,16];
+  const wrap=document.getElementById('cook-bars');
+  wrap.innerHTML=vals.map(v=>`<div class="cb" data-v="${v}" style="height:${v}%"></div>`).join('');
+  const slider=document.getElementById('cook-th'), th=document.getElementById('thresh');
+  function upd(){
+    const t=+slider.value;
+    document.getElementById('cook-th-v').textContent=t+'%';
+    th.style.bottom=t+'%';
+    let n=0;
+    wrap.querySelectorAll('.cb').forEach(b=>{
+      const v=+b.dataset.v;
+      if(v>t){b.style.background='#dc2626';n++;}else{b.style.background='#93c5fd';}
+    });
+    const ver=document.getElementById('cook-verdict');
+    ver.textContent=`しきい値を超えた影響点：${n} 個`;
+    ver.className='verdict '+(n===0?'good':n<4?'warn':'bad');
+  }
+  slider.addEventListener('input',upd); upd();
+})();
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

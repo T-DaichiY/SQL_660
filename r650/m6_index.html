@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ロジスティック回帰 完全ガイド（M6）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<section class="hero">
+  <div class="hero-content">
+    <h1>ロジスティック<span>回帰分析</span><br>完全ガイド</h1>
+    <p>「合格か不合格か」「クレジットが良いか悪いか」——結果が2択のとき、重回帰ではなくロジスティック回帰を使う。確率・オッズ・対数オッズをRで学ぶ実践的ガイド。</p>
+    <div class="hero-badges">
+      <span class="badge">🐚 アバロン＆ドイツ信用データで学ぶ</span>
+      <span class="badge">🎓 全13章</span>
+      <span class="badge">📊 係数の解釈まで完全網羅</span>
+      <span class="badge">🚀 Shinyデプロイまで</span>
+      <span class="badge">✏️ MCQ確認テスト</span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="intro-section fade-in">
+    <div>
+      <h2>ロジスティック回帰って何？ 🤔</h2>
+      <p>M5では「気温から自転車レンタル数を予測する」という<span class="highlight">量的な予測</span>を学びました。しかし現実には「クレジットは良いか悪いか」「アバロンはオスかメスか」のように、<strong>結果が2択（0か1か）</strong>のケースがたくさんあります。</p>
+      <p>そこで登場するのが<span class="highlight">ロジスティック回帰</span>です。量的な数値を予測するのではなく、<strong>ある結果が起こる確率（0〜1の間の値）</strong>を予測します。</p>
+      <p>M5で学んだ重回帰の知識がベースになるので、「係数とは何か」「モデルを評価するとはどういうことか」という感覚はすでに持っているはずです。このガイドでは、ロジスティック回帰ならではの<strong>確率・オッズ・対数オッズの変換</strong>と<strong>係数の解釈方法</strong>を丁寧に学びます。</p>
+      <p style="background:var(--yellow-light);padding:.85rem 1rem;border-radius:8px;border-left:3px solid var(--yellow);font-size:.9rem;">
+        🌟 <strong>このガイドの目標：</strong>ロジスティック回帰の仕組みを理解し、Rで実装でき、係数を正しく解釈できるようになること。例題は<strong>アバロンのオス・メス判定</strong>と<strong>ドイツのクレジット審査</strong>を使います。
+      </p>
+    </div>
+    <div>
+      <div class="llm-diagram">
+        <div class="diagram-title">ロジスティック回帰の流れ</div>
+        <div class="flow-steps">
+          <div class="flow-step"><span class="step-icon">🎲</span><div class="step-text"><strong>① 確率を理解する</strong><span>binary結果 → 確率(0〜1)</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">📐</span><div class="step-text"><strong>② オッズ・対数オッズへ変換</strong><span>確率 → オッズ → logit</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">🔑</span><div class="step-text"><strong>③ 係数を解釈する</strong><span>切片・傾きの意味を読み解く</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">📉</span><div class="step-text"><strong>④ モデルを評価する</strong><span>逸脱度・AIC・Z値・R²</span></div></div>
+          <div class="flow-arrow-v">↓</div>
+          <div class="flow-step"><span class="step-icon">🚀</span><div class="step-text"><strong>⑤ デプロイする</strong><span>ShinyアプリでWebに公開</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header fade-in stagger-1">
+    <h2>📚 章の一覧</h2>
+    <p>第1章から順番に読むと、確率の基礎からモデル評価まで体系的に学べます。</p>
+  </div>
+
+  <div class="version-index fade-in" style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.25rem;margin-bottom:2.5rem;overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:.9rem;min-width:420px;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--border);">
+          <th style="text-align:left;padding:.6rem .75rem;color:var(--text-sec);font-size:.8rem;">章</th>
+          <th style="text-align:left;padding:.6rem .75rem;">タイトル</th>
+          <th style="text-align:center;padding:.6rem .5rem;width:120px;">📘 本編</th>
+        </tr>
+      </thead>
+      <tbody id="vi-body"></tbody>
+    </table>
+  </div>
+
+  <div class="section-header fade-in" style="margin-bottom:1.5rem;">
+    <h2 style="font-size:1.3rem;">🗂️ カードで見る</h2>
+  </div>
+
+  <div class="chapters-grid">
+    <a href="m6_ch1.html" class="chapter-card c-blue fade-in stagger-1">
+      <div class="card-num">第1章</div><div class="card-icon">🎲</div>
+      <div class="card-title">ロジスティック回帰とは？</div>
+      <div class="card-desc">なぜ重回帰ではダメなのか・確率とは何か・バイナリアウトカム・ロジスティック関数（シグモイド）の形・Rで最初のモデルを作る。</div>
+      <div class="card-topics"><span class="topic-tag">バイナリ</span><span class="topic-tag">確率</span><span class="topic-tag">glm()</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch2.html" class="chapter-card c-purple fade-in stagger-2">
+      <div class="card-num">第2章</div><div class="card-icon">📐</div>
+      <div class="card-title">ロジスティック回帰モデルの仕組み</div>
+      <div class="card-desc">確率・オッズ・対数オッズの3段変換・シグモイド関数の式・係数（log odds）を得る仕組み・なぜこの変換が必要か。</div>
+      <div class="card-topics"><span class="topic-tag">オッズ</span><span class="topic-tag">logit</span><span class="topic-tag">log odds</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch3.html" class="chapter-card c-green fade-in stagger-1">
+      <div class="card-num">第3章</div><div class="card-icon">🔑</div>
+      <div class="card-title">ロジスティック回帰のカギ</div>
+      <div class="card-desc">グラフで直感的に理解する変換の流れ・確率→オッズ→logit→シグモイドの往復・具体的な数値（p=0.5）で手計算して確かめる。</div>
+      <div class="card-topics"><span class="topic-tag">シグモイド</span><span class="topic-tag">link function</span><span class="topic-tag">手計算</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch4.html" class="chapter-card c-teal fade-in stagger-2">
+      <div class="card-num">第4章</div><div class="card-icon">🐚</div>
+      <div class="card-title">係数の解釈：アバロンの例</div>
+      <div class="card-desc">予測変数なしモデルの切片が示すもの・log oddsから確率への変換・指数化（exp）・アバロンデータで手計算を確認。</div>
+      <div class="card-topics"><span class="topic-tag">切片の解釈</span><span class="topic-tag">exp()</span><span class="topic-tag">オッズ比</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch5.html" class="chapter-card c-red fade-in stagger-1">
+      <div class="card-num">第5章</div><div class="card-icon">📉</div>
+      <div class="card-title">モデル評価：逸脱度（Deviance）</div>
+      <div class="card-desc">対数尤度とは・逸脱度（−2LL）・残差逸脱度 vs ヌル逸脱度・カイ二乗検定でモデルを評価・Rのattributes()で値を取り出す。</div>
+      <div class="card-topics"><span class="topic-tag">逸脱度</span><span class="topic-tag">−2LL</span><span class="topic-tag">χ²検定</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch6.html" class="chapter-card c-yellow fade-in stagger-2">
+      <div class="card-num">第6章</div><div class="card-icon">📊</div>
+      <div class="card-title">モデル評価：AIC</div>
+      <div class="card-desc">AICの計算式・予測変数を増やすペナルティ・2つのモデル（diameter vs diameter+rings）をAICで比較・いつAICが有効か。</div>
+      <div class="card-topics"><span class="topic-tag">AIC</span><span class="topic-tag">ペナルティ</span><span class="topic-tag">モデル比較</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch7.html" class="chapter-card c-blue fade-in stagger-1">
+      <div class="card-num">第7章</div><div class="card-icon">🔧</div>
+      <div class="card-title">RでAICを使う：注意点</div>
+      <div class="card-desc">RのAIC()関数の小さなクセ・数式のK（パラメータ数）とR引数のK（ペナルティ）の違い・NYC Flightsで実際に確認する。</div>
+      <div class="card-topics"><span class="topic-tag">AIC()関数</span><span class="topic-tag">Kの違い</span><span class="topic-tag">古典的AIC</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch8.html" class="chapter-card c-purple fade-in stagger-2">
+      <div class="card-num">第8章</div><div class="card-icon">📏</div>
+      <div class="card-title">モデル評価：Z値とR²</div>
+      <div class="card-desc">個別予測変数の有意性はZ統計量で判定・Z＝係数÷標準誤差・なぜT検定でなくZ検定か・ロジスティック回帰にR²が存在しない理由。</div>
+      <div class="card-topics"><span class="topic-tag">Z値</span><span class="topic-tag">標準誤差</span><span class="topic-tag">R²の代替</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch9.html" class="chapter-card c-red fade-in stagger-1">
+      <div class="card-num">第9章</div><div class="card-icon">🏦</div>
+      <div class="card-title">応用例：ドイツ信用データ</div>
+      <div class="card-desc">German Creditデータセットを使ったロジスティック回帰の実践・切片の解釈おさらい・外国人労働者変数の扱い・次のステップへ。</div>
+      <div class="card-topics"><span class="topic-tag">German Credit</span><span class="topic-tag">caretパッケージ</span><span class="topic-tag">実践</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch10.html" class="chapter-card c-purple fade-in stagger-2">
+      <div class="card-num">第10章</div><div class="card-icon">🔀</div>
+      <div class="card-title">バイナリ予測変数①：切片の解釈</div>
+      <div class="card-desc">ForeignWorkerを追加した後の切片の意味・contrasts()の重要性・FW=0のときの確率を手計算で再現・条件付き切片とは何か。</div>
+      <div class="card-topics"><span class="topic-tag">バイナリ予測変数</span><span class="topic-tag">条件付き切片</span><span class="topic-tag">contrasts()</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch11.html" class="chapter-card c-teal fade-in stagger-3">
+      <div class="card-num">第11章</div><div class="card-icon">🧮</div>
+      <div class="card-title">バイナリ予測変数②：係数の解釈</div>
+      <div class="card-desc">係数はオッズ比の対数・3ステップで手計算再現・exp(係数)でオッズ比・確率は直接足し引きできない理由・国内vs外国人労働者の解釈。</div>
+      <div class="card-topics"><span class="topic-tag">オッズ比</span><span class="topic-tag">係数解釈</span><span class="topic-tag">対数オッズ変化</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch12.html" class="chapter-card c-green fade-in stagger-4">
+      <div class="card-num">第12章</div><div class="card-icon">📈</div>
+      <div class="card-title">連続予測変数の解釈</div>
+      <div class="card-desc">Ageを連続予測変数として追加・1単位増加あたりのオッズ比・どの値でも変化量が一定（線形性）・FW+Ageフルモデルとモデル比較。</div>
+      <div class="card-topics"><span class="topic-tag">連続変数</span><span class="topic-tag">線形性</span><span class="topic-tag">フルモデル</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a href="m6_ch13.html" class="chapter-card c-yellow fade-in stagger-1">
+      <div class="card-num">第13章</div><div class="card-icon">🚀</div>
+      <div class="card-title">Shinyアプリでモデルをデプロイする</div>
+      <div class="card-desc">ローンデフォルト予測モデルをLLMの力を借りてWebアプリ化。データ取得→クリーニング→glm→変数選択→Shiny→shinyapps.io公開のエンドツーエンド。</div>
+      <div class="card-topics"><span class="topic-tag">Shiny</span><span class="topic-tag">デプロイ</span><span class="topic-tag">LLM活用</span><span class="topic-tag">ポートフォリオ</span></div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="section-header fade-in" style="margin:2.5rem 0 1.2rem;">
+    <h2 style="font-size:1.3rem;">📚 補足資料</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr;max-width:520px;gap:1rem;">
+    <a href="m6_log_master.html" class="chapter-card c-purple fade-in" style="flex-direction:row;align-items:center;gap:1.5rem;padding:1.5rem 2rem;">
+      <div style="font-size:3rem;flex-shrink:0">㏒</div>
+      <div>
+        <div style="font-size:.78rem;font-weight:700;color:var(--text-sec);margin-bottom:.3rem">SUPPLEMENT</div>
+        <div class="card-title" style="font-size:1.1rem;margin-bottom:.4rem">対数マスター ─ log の世界、ぜんぶ</div>
+        <div class="card-desc">logが苦手な人のための補足ページ。自然対数・常用対数・log の計算ルール・オッズ変換との関係・感染症モデルへの応用をインタラクティブに学ぶ。</div>
+        <div class="card-topics" style="margin-top:.6rem"><span class="topic-tag">自然対数</span><span class="topic-tag">log計算</span><span class="topic-tag">インタラクティブ</span></div>
+      </div>
+      <div class="card-arrow" style="flex-shrink:0">→</div>
+    </a>
+    <a href="m6_logodds_full_course.html" class="chapter-card c-teal fade-in" style="flex-direction:row;align-items:center;gap:1.5rem;padding:1.5rem 2rem;">
+      <div style="font-size:3rem;flex-shrink:0">🧮</div>
+      <div>
+        <div style="font-size:.78rem;font-weight:700;color:var(--text-sec);margin-bottom:.3rem">SUPPLEMENT</div>
+        <div class="card-title" style="font-size:1.1rem;margin-bottom:.4rem">係数を完全攻略 ─ 二値 &amp; 連続予測子</div>
+        <div class="card-desc">第11〜12章の係数解釈を徹底深掘り。確率・オッズ・ログオッズの3つの罠、手計算による再現、連続変数の線形性までインタラクティブに学ぶ。</div>
+        <div class="card-topics" style="margin-top:.6rem"><span class="topic-tag">第11章</span><span class="topic-tag">第12章</span><span class="topic-tag">係数解釈</span><span class="topic-tag">インタラクティブ</span></div>
+      </div>
+      <div class="card-arrow" style="flex-shrink:0">→</div>
+    </a>
+  </div>
+
+  <div class="quick-ref fade-in">
+    <h3>🗺️ 全13章マップ — このガイドで学ぶこと</h3>
+    <div style="font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.5rem;letter-spacing:.05em;">🧱 基礎（仕組みを理解する）</div>
+    <div class="techniques-list" style="margin-bottom:1rem;">
+      <div class="technique-item">🎲 バイナリ予測と確率</div>
+      <div class="technique-item">📐 オッズ・対数オッズ変換</div>
+      <div class="technique-item">🔑 シグモイド関数</div>
+      <div class="technique-item">🐚 係数の解釈</div>
+    </div>
+    <div style="font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.5rem;letter-spacing:.05em;">📈 評価（モデルの良し悪しを判定する）</div>
+    <div class="techniques-list" style="margin-bottom:1rem;">
+      <div class="technique-item">📉 逸脱度（Deviance）</div>
+      <div class="technique-item">📊 AIC</div>
+      <div class="technique-item">🔧 RでのAIC使用上の注意</div>
+      <div class="technique-item">📏 Z値・R²の扱い</div>
+    </div>
+    <div style="font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.5rem;letter-spacing:.05em;">🎯 実践と応用</div>
+    <div class="techniques-list">
+      <div class="technique-item">🏦 ドイツ信用データ</div>
+      <div class="technique-item">🔀 バイナリ予測変数の切片解釈</div>
+      <div class="technique-item">🧮 係数とオッズ比の手計算</div>
+      <div class="technique-item">📈 連続予測変数とフルモデル</div>
+      <div class="technique-item">🚀 Shinyアプリでデプロイ</div>
+    </div>
+  </div>
+
+  <div class="how-to fade-in">
+    <h3>📖 この教材の使い方</h3>
+    <div class="steps-row">
+      <div class="step-num-card"><div class="num-circle">1</div><h4>理論を読む</h4><p>各セクションで概念を詳しく解説。Rのコード例も豊富。</p></div>
+      <div class="step-num-card"><div class="num-circle">2</div><h4>図で理解</h4><p>確率・オッズ・logitの変換を視覚的にイメージ。</p></div>
+      <div class="step-num-card"><div class="num-circle">3</div><h4>🍎かんたん説明</h4><p>難しい概念もシンプルな例え話でスッキリ整理。</p></div>
+      <div class="step-num-card"><div class="num-circle">4</div><h4>MCQに挑戦</h4><p>各章末に英語で5問のクイズ。理解度をその場で確認。</p></div>
+      <div class="step-num-card"><div class="num-circle">5</div><h4>用語を確認</h4><p>右サイドバーに日英併記の重要用語集。</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_ch1.html">第1章から学習スタート →</a></p>
+</footer>
+
+<script>
+(function(){
+  var chapters = [
+    ['1', '🎲', 'ロジスティック回帰とは？', 'ch1'],
+    ['2', '📐', 'ロジスティック回帰モデルの仕組み', 'ch2'],
+    ['3', '🔑', 'ロジスティック回帰のカギ', 'ch3'],
+    ['4', '🐚', '係数の解釈：アバロンの例', 'ch4'],
+    ['5', '📉', 'モデル評価：逸脱度（Deviance）', 'ch5'],
+    ['6', '📊', 'モデル評価：AIC', 'ch6'],
+    ['7', '🔧', 'RでAICを使う：注意点', 'ch7'],
+    ['8', '📏', 'モデル評価：Z値とR²', 'ch8'],
+    ['9', '🏦', '応用例：ドイツ信用データ', 'ch9'],
+    ['10', '🔀', 'バイナリ予測変数①：切片の解釈', 'ch10'],
+    ['11', '🧮', 'バイナリ予測変数②：係数の解釈', 'ch11'],
+    ['12', '📈', '連続予測変数の解釈', 'ch12'],
+    ['13', '🚀', 'Shinyアプリでモデルをデプロイする', 'ch13']
+  ];
+  var btn = function(href, label, bg, color){
+    return '<a href="'+href+'" style="display:inline-block;padding:.35rem .8rem;border-radius:20px;'
+      +'font-size:.8rem;font-weight:700;text-decoration:none;background:'+bg+';color:'+color+';">'+label+'</a>';
+  };
+  var rows = chapters.map(function(c, i){
+    var num=c[0], icon=c[1], title=c[2], base=c[3];
+    var zebra = (i%2===1) ? 'background:var(--bg);' : '';
+    return '<tr style="border-bottom:1px solid var(--border);'+zebra+'">'
+      + '<td style="padding:.55rem .75rem;font-weight:800;color:var(--text-sec);">'+num+'</td>'
+      + '<td style="padding:.55rem .75rem;">'+icon+' '+title+'</td>'
+      + '<td style="text-align:center;padding:.55rem .5rem;">'+btn(base+'.html','本編', 'var(--primary-light)','var(--primary-dark)')+'</td>'
+      + '</tr>';
+  }).join('');
+  document.getElementById('vi-body').innerHTML = rows;
+})();
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

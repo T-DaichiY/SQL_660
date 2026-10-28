@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第3章 超やさしい版：ロジスティック回帰のカギ：シグモイド関数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy active" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 3 · Easy Mode 🍎</div>
+    <h1>🍎 第3章 超やさしい版：ロジスティック回帰のカギ：シグモイド関数</h1>
+    <p>シグモイド関数（Sカーブ）をスライダーとRコードで動かして「どんな値でも0〜1に変換できる」を体感しよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">Sカーブを動かす</a><a href="#u3">Rで確認する</a><a href="m6_ch3.html" class="easy-toplink">🔑 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">シグモイド関数（Sカーブ）が「何でも確率に変える」</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">シグモイド関数 P = 1/(1+e^(-x)) は、どんな実数（−∞〜+∞）を入れても必ず0〜1の確率として出力する。これがロジスティック回帰の核心。X=0でP=0.5、Xが大きいほどP→1、小さいほどP→0。</p></div>
+  <p>シグモイド関数は「S字カーブ」の形をしています。左端（Xが極端に小さい）では確率がほぼ0、右端（Xが極端に大きい）ではほぼ1、真ん中（X=0）でちょうど0.5です。</p>
+  <div class="viz">
+    <div class="viz-title">シグモイド関数（Sカーブ）の形</div>
+    <svg viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;display:block;margin:0 auto">
+      <line x1="30" y1="165" x2="400" y2="165" stroke="#e2e8f0" stroke-width="1.5"/>
+      <line x1="215" y1="10" x2="215" y2="170" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
+      <line x1="30" y1="90" x2="400" y2="90" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="5"/>
+      <text x="36" y="88" font-size="9" fill="#d97706" font-weight="700">P=0.5</text>
+      <path d="M35,162 C65,161 95,160 130,153 C160,143 180,123 200,104 C220,85 240,65 260,55 C285,45 315,27 345,21 C365,17 385,15 400,14" fill="none" stroke="#2563eb" stroke-width="3"/>
+      <circle id="sg-dot" cx="215" cy="90" r="8" fill="#dc2626" stroke="white" stroke-width="2"/>
+      <line id="sg-vline-x" x1="215" y1="165" x2="215" y2="90" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4"/>
+      <line id="sg-vline-y" x1="30" y1="90" x2="215" y2="90" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="215" y="179" font-size="9" fill="#64748b" text-anchor="middle" font-weight="700">x=0, P=0.5</text>
+      <text x="33" y="169" font-size="9" fill="#64748b">−6</text>
+      <text x="385" y="169" font-size="9" fill="#64748b">+6</text>
+      <text x="20" y="168" font-size="9" fill="#64748b">0</text>
+      <text x="20" y="18" font-size="9" fill="#64748b">1</text>
+      <text x="358" y="16" font-size="9" fill="#2563eb" font-weight="700">P→1</text>
+      <text x="36" y="160" font-size="9" fill="#2563eb" font-weight="700">P→0</text>
+    </svg>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>Sカーブを動かしてみよう</h2><div class="unit-sub">対数オッズ（X値）が変わると確率がどう変わるか</div></div></div>
+  <p>スライダーでXを変えると赤い点がSカーブ上を動きます。<strong>X=0でP=0.5</strong>、X>0でP>0.5（1側）、X&lt;0でP&lt;0.5（0側）を確認しましょう。</p>
+  <div class="widget teal">
+    <div class="widget-title">🎛️ シグモイド関数シミュレーター</div>
+    <div class="slider-row">
+      <label>📐 対数オッズ X</label>
+      <input type="range" id="sg-x" min="-6" max="6" step="0.1" value="0">
+      <span class="slider-val" id="sg-x-v">0.0</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.78rem;font-weight:700;color:var(--text-sec)">入力（対数オッズ X）</div>
+        <div style="font-size:1.9rem;font-weight:900;color:var(--teal)" id="sg-x-v2">0.0</div>
+        <div style="font-size:.72rem;color:var(--text-sec)">−∞ 〜 +∞</div>
+      </div>
+      <div style="background:var(--teal-light);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.78rem;font-weight:700;color:var(--teal)">出力（確率 P）</div>
+        <div style="font-size:1.9rem;font-weight:900;color:var(--teal)" id="sg-p-v">0.500</div>
+        <div style="font-size:.72rem;color:var(--text-sec)">0 〜 1</div>
+      </div>
+    </div>
+    <div class="verdict" id="sg-verdict">—</div>
+  </div>
+  <div class="note-box">📌 Xが±4を超えると確率はほぼ0か1に達します。現実のモデルでは、係数が大きすぎると「完全分離」という問題が起きることがあります。</div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>Rで確認する</h2><div class="unit-sub">シグモイド関数を自分で書いてみよう</div></div></div>
+  <p>Rにはシグモイド関数が標準で入っていません（<code>plogis()</code>という関数がありますが、自分で書くと仕組みが理解できます）。</p>
+  <p class="code-label">▶ シグモイド関数をRで定義して確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># シグモイド関数を自分で計算してみる</span></span>
+<span class="cl">sigmoid &lt;- <span class="kw">function</span>(x) {</span>
+<span class="cl">  <span class="nm">1</span> / (<span class="nm">1</span> + <span class="kw">exp</span>(-x))</span>
+<span class="cl">}</span>
+<span class="cl"><span class="cm"># x=0のとき → P=0.5（ちょうど中間）</span></span>
+<span class="cl">sigmoid(<span class="nm">0</span>)</span>
+<span class="cl"><span class="cm"># x=2のとき → P≈0.88（高確率）</span></span>
+<span class="cl">sigmoid(<span class="nm">2</span>)</span>
+<span class="cl"><span class="cm"># x=-3のとき → P≈0.05（低確率）</span></span>
+<span class="cl">sigmoid(-<span class="nm">3</span>)</span>
+</pre>
+  <p class="code-label">▶ P=0.5で「往復変換」が成り立つことを確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># P=0.5で往復確認（手計算の再現）</span></span>
+<span class="cl">p &lt;- <span class="nm">0.5</span></span>
+<span class="cl">odds &lt;- p / (<span class="nm">1</span> - p)<span class="cm">  # → 1</span></span>
+<span class="cl">logit &lt;- <span class="kw">log</span>(odds)<span class="cm">     # → 0</span></span>
+<span class="cl">p_back &lt;- sigmoid(logit)<span class="cm">  # → 0.5（元に戻る）</span></span>
+<span class="cl"><span class="kw">cat</span>(<span class="st">"往復確認：P ="</span>, p_back)</span>
+</pre>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1.25rem 0">
+    <div style="background:var(--primary-light);border-radius:8px;padding:.75rem;text-align:center;font-size:.82rem">
+      <div style="font-weight:900;font-size:1.1rem;color:var(--primary)">0.5</div>確率 P
+    </div>
+    <div style="background:var(--green-light);border-radius:8px;padding:.75rem;text-align:center;font-size:.82rem">
+      <div style="font-weight:900;font-size:1.1rem;color:var(--green)">1.0</div>オッズ<br><small>0.5/0.5</small>
+    </div>
+    <div style="background:var(--yellow-light);border-radius:8px;padding:.75rem;text-align:center;font-size:.82rem">
+      <div style="font-weight:900;font-size:1.1rem;color:var(--yellow)">0</div>logit<br><small>log(1)</small>
+    </div>
+    <div style="background:var(--teal-light);border-radius:8px;padding:.75rem;text-align:center;font-size:.82rem">
+      <div style="font-weight:900;font-size:1.1rem;color:var(--teal)">0.5</div>sigmoid(0)
+    </div>
+  </div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. シグモイド関数の式は？<span class="cp-a">A. P = 1 / (1 + e^(-x))。xに対数オッズを入れると確率Pが出てくる。Rでは plogis(x) でも計算できる。</span></div><div class="cp-q">Q2. X=0のとき確率はいくつ？なぜ？<span class="cp-a">A. e^0=1なので P = 1/(1+1) = 0.5。X=0は「どちらとも言えない」状態（50%）。</span></div><div class="cp-q">Q3. シグモイド関数の逆関数は何？<span class="cp-a">A. logit関数（対数オッズの計算）。P→logit→sigmoid→P と往復できる。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch2_easy.html">← 第2章 やさしい版</a><a href="m6_ch4_easy.html">第4章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• シグモイド = 1/(1+e^(-x))</p><p style="margin:.4rem 0">• X=0のとき P=0.5（50%）</p><p style="margin:.4rem 0">• Xが大きいほどPは1に近づく</p><p style="margin:.4rem 0">• 変換は可逆（往復できる）</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch3.html">第3章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第3章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch3.html">← 第3章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initSigmoidViz(); var sx=document.getElementById("sg-x"); if(sx) sx.addEventListener("input",function(){var v=document.getElementById("sg-x-v2");if(v)v.textContent=document.getElementById("sg-x-v").textContent;});</script>
+<script src="../hub-fab.js"></script>
+</body></html>

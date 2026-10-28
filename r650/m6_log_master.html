@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>対数マスター ── log の世界、ぜんぶ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141b2e;--ink2:#1c2540;--panel:#222d4d;--line:#33406b;
+    --amber:#f5a623;--amber-soft:#ffce7a;--teal:#48c9b0;--rose:#ef6f6c;
+    --violet:#a78bfa;--text:#e8ecf6;--muted:#9aa6c4;--white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--text);font-family:'Inter','Noto Sans JP',sans-serif;
+    line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+
+  /* hero */
+  .hero{padding:64px 0 22px;text-align:center}
+  .eyebrow{font-family:'JetBrains Mono',monospace;letter-spacing:.35em;font-size:12px;
+    color:var(--amber);text-transform:uppercase;margin-bottom:18px}
+  .hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(40px,8vw,72px);
+    line-height:1.02;letter-spacing:-.02em;color:var(--white)}
+  .hero h1 .glow{color:var(--amber)}
+  .hero .sub{color:var(--muted);font-size:clamp(15px,2.2vw,18px);max-width:560px;margin:16px auto 0}
+
+  /* sticky tabs */
+  .tabbar{position:sticky;top:0;z-index:30;background:rgba(20,27,46,.86);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 0}
+  .tabs{display:flex;gap:6px;overflow-x:auto;max-width:920px;margin:0 auto;padding:0 16px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{font-family:'JetBrains Mono',monospace;font-size:12.5px;white-space:nowrap;
+    background:transparent;color:var(--muted);border:1px solid transparent;
+    padding:8px 14px;border-radius:9px;cursor:pointer;transition:.15s}
+  .tabs button:hover{color:var(--amber)}
+  .tabs button.active{background:var(--amber);color:var(--ink);font-weight:600}
+
+  .page{display:none}
+  .page.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  section{padding:42px 0;border-top:1px solid var(--line)}
+  section:first-child{border-top:none}
+  .tag{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:6px 13px;border-radius:100px;margin-bottom:18px}
+  .tag .dot{width:8px;height:8px;border-radius:50%}
+  .tag.t1{background:rgba(245,166,35,.13);color:var(--amber)} .tag.t1 .dot{background:var(--amber)}
+  .tag.t2{background:rgba(72,201,176,.13);color:var(--teal)} .tag.t2 .dot{background:var(--teal)}
+  .tag.t3{background:rgba(167,139,250,.14);color:var(--violet)} .tag.t3 .dot{background:var(--violet)}
+  .tag.t4{background:rgba(239,111,108,.14);color:var(--rose)} .tag.t4 .dot{background:var(--rose)}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(27px,5vw,40px);
+    line-height:1.12;color:var(--white);margin-bottom:14px;letter-spacing:-.01em}
+  h3{font-family:'Fraunces',serif;font-weight:600;font-size:21px;color:var(--white);margin:28px 0 12px}
+  h4{font-family:'Fraunces',serif;font-size:17px;color:var(--white);margin-bottom:6px}
+  p{margin-bottom:14px} p.lead{font-size:18px;color:var(--muted)}
+  .muted{color:var(--muted)} b,strong{color:var(--white);font-weight:600}
+  .amber{color:var(--amber);font-weight:600}.teal{color:var(--teal);font-weight:600}
+  .violet{color:var(--violet);font-weight:600}.rose{color:var(--rose);font-weight:600}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px;margin:22px 0}
+  .demo{background:var(--ink2);border:1px solid var(--line);border-radius:18px;padding:24px;margin:24px 0}
+  .demo svg{width:100%;height:auto;display:block;overflow:visible}
+  .formula{font-family:'JetBrains Mono',monospace;background:var(--ink2);border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;margin:14px 0;font-size:14px;color:var(--amber-soft);overflow-x:auto;line-height:1.7}
+  .formula .big{font-size:clamp(19px,4vw,24px);color:var(--white)}
+  code{font-family:'JetBrains Mono',monospace;background:var(--ink2);padding:2px 7px;border-radius:6px;font-size:.9em;color:var(--amber-soft)}
+
+  .toggle{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px}
+  .toggle button{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--panel);
+    color:var(--text);border:1px solid var(--line);padding:9px 16px;border-radius:10px;cursor:pointer;transition:.18s}
+  .toggle button:hover{border-color:var(--amber);color:var(--amber)}
+  .toggle button.active{background:var(--amber);color:var(--ink);border-color:var(--amber);font-weight:600}
+  .ctrl{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+  .ctrl label{font-size:13px;color:var(--muted);min-width:70px}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:var(--line);flex:1;min-width:140px;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;border:3px solid var(--ink);box-shadow:0 0 0 1px var(--amber)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;border:3px solid var(--ink)}
+  .readout{font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:14px;text-align:center;color:var(--text)}
+  .readout .hl{color:var(--amber);font-weight:600}
+
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+  th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  td{color:var(--text)} td.mono{font-family:'JetBrains Mono',monospace;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+
+  .callout{border-left:3px solid var(--amber);background:rgba(245,166,35,.07);padding:16px 20px;border-radius:0 12px 12px 0;margin:20px 0}
+  .callout.teal{border-color:var(--teal);background:rgba(72,201,176,.07)}
+  .callout.violet{border-color:var(--violet);background:rgba(167,139,250,.07)}
+  .callout.rose{border-color:var(--rose);background:rgba(239,111,108,.07)}
+  .callout .ct{font-weight:600;color:var(--white);margin-bottom:4px;display:block}
+  .pitfall{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+  .pitfall .ic{flex-shrink:0;font-size:18px}.pitfall .tx{font-size:14px;color:var(--muted)}
+  .pitfall .tx b{color:var(--rose)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .minicard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .minicard p{font-size:14px;color:var(--muted);margin:0}
+
+  .steptag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+    color:var(--teal);background:rgba(72,201,176,.12);padding:3px 9px;border-radius:6px;margin-bottom:6px}
+
+  /* binary search viz */
+  .bsrow{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .bscell{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--muted);transition:.25s}
+  .bscell.range{background:var(--ink2);color:var(--text);border-color:var(--line)}
+  .bscell.mid{background:var(--amber);color:var(--ink);border-color:var(--amber);font-weight:600;transform:scale(1.08)}
+  .bscell.target{box-shadow:0 0 0 2px var(--teal)}
+  .bscell.dead{opacity:.25}
+  .bsbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+  .bsbtns button{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--panel);color:var(--text);
+    border:1px solid var(--line);padding:9px 18px;border-radius:10px;cursor:pointer;transition:.15s}
+  .bsbtns button:hover:not(:disabled){border-color:var(--amber);color:var(--amber)}
+  .bsbtns button:disabled{opacity:.4;cursor:not-allowed}
+  .bslog{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);text-align:center;margin-top:12px;min-height:22px}
+
+  .qbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin:18px 0}
+  .qbox ol{list-style:none;counter-reset:q}.qbox.az ol{counter-reset:az}
+  .qbox li{padding:9px 0 9px 34px;position:relative;border-bottom:1px solid var(--line)}
+  .qbox li:last-child{border-bottom:none}
+  .qbox ol li::before{counter-increment:q;content:counter(q);position:absolute;left:0;top:9px;width:24px;height:24px;
+    background:var(--ink2);border:1px solid var(--amber);color:var(--amber);border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:600}
+  .qbox.az ol li::before{counter-increment:az;content:counter(az,lower-alpha);border-color:var(--teal);color:var(--teal)}
+
+  footer{padding:46px 0 70px;text-align:center;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  footer .fr{font-family:'Fraunces',serif;font-size:24px;color:var(--white);margin-bottom:8px}
+  .reveal{opacity:0;transform:translateY(22px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:560px){.hero{padding:44px 0 18px}section{padding:34px 0}.panel,.demo{padding:18px}.ctrl label{min-width:auto}.bscell{width:32px;height:32px;font-size:12px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="eyebrow">Mathematics · Logarithm · Complete</div>
+  <h1>対数<span class="glow">マスター</span></h1>
+  <p class="sub">基礎 → グラフ → R実データ → 感染症モデル → アルゴリズム。<br>log の世界を、タブで横断する1枚の地図。</p>
+</header>
+
+<div class="tabbar">
+  <div class="tabs" id="tabs">
+    <button data-page="basics" class="active">① 基礎 log</button>
+    <button data-page="graphs">② 対数グラフ</button>
+    <button data-page="rlab">③ R実データ復元</button>
+    <button data-page="epidemic">④ 感染症モデル</button>
+    <button data-page="algo">⑤ O(log n)</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- ============ PAGE 1: BASICS ============ -->
+<div class="page show" id="basics">
+  <section>
+    <span class="tag t1"><span class="dot"></span>基礎</span>
+    <h2>対数は「何回かけたか?」を聞いている</h2>
+    <p class="lead">指数の逆向きの質問です。「2を3回かけたら8」が指数なら、「8は2を何回かけた数?→3」が対数。</p>
+    <div class="formula"><span class="big">log<sub>2</sub> 8 = 3</span> &nbsp;⇔&nbsp; 2<sup>3</sup> = 8</div>
+
+    <div class="demo">
+      <svg viewBox="0 0 520 240" id="invSvg">
+        <line x1="40" y1="200" x2="500" y2="200" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="40" y1="20" x2="40" y2="200" stroke="#33406b" stroke-width="1.5"/>
+        <text x="498" y="218" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">かけた回数 (x)</text>
+        <text x="46" y="32" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">結果 (2ˣ)</text>
+        <path id="invCurve" fill="none" stroke="#f5a623" stroke-width="3" stroke-linecap="round"/>
+        <line id="dropV" stroke="#48c9b0" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line id="dropH" stroke="#48c9b0" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <circle id="invDot" r="7" fill="#f5a623" stroke="#141b2e" stroke-width="2"/>
+        <text id="invLabel" fill="#fff" font-family="JetBrains Mono" font-size="13" text-anchor="middle"></text>
+      </svg>
+      <div class="ctrl"><label>指数 x</label><input type="range" id="invRange" min="0" max="8" step="1" value="3"></div>
+      <div class="readout" id="invOut"></div>
+    </div>
+
+    <h3>かけ算の世界を、たし算の世界へ</h3>
+    <table>
+      <tr><th>かけ算の世界</th><th>対数をとると</th><th>意味</th></tr>
+      <tr><td class="mono">log(A × B)</td><td class="mono">= logA + logB</td><td>かけ算 → たし算</td></tr>
+      <tr><td class="mono">log(A ÷ B)</td><td class="mono">= logA − logB</td><td>割り算 → 引き算</td></tr>
+      <tr><td class="mono">log(Aⁿ)</td><td class="mono">= n × logA</td><td>累乗 → かけ算</td></tr>
+    </table>
+    <div class="callout">
+      <span class="ct">底の3種</span>
+      <span class="amber">log₁₀</span>(桁を数える) / <span class="amber">log₂</span>(情報・コンピュータ) / <span class="amber">ln=logₑ</span>(自然対数, e≈2.718)。
+    </div>
+    <div class="pitfall"><span class="ic">⚠️</span><span class="tx"><b>真数は必ず正</b>。log(0)・log(負)は存在しない。「何回かけても0や負にはならない」から。</span></div>
+  </section>
+</div>
+
+<!-- ============ PAGE 2: GRAPHS ============ -->
+<div class="page" id="graphs">
+  <section>
+    <span class="tag t2"><span class="dot"></span>対数グラフ</span>
+    <h2>軸を変えると、潰れた関係が直線になる</h2>
+    <p class="lead">指数的に増えるデータは線形軸だと序盤が潰れます。y軸を対数にすると<span class="amber">一直線</span>に。</p>
+
+    <div class="demo">
+      <div class="toggle" id="axisToggle">
+        <button data-mode="linear" class="active">線形軸</button>
+        <button data-mode="log">対数軸 (log y)</button>
+      </div>
+      <svg viewBox="0 0 520 300" id="axisSvg">
+        <g id="gridLayer"></g>
+        <line x1="50" y1="260" x2="500" y2="260" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="260" stroke="#33406b" stroke-width="1.5"/>
+        <text x="498" y="285" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">時間 (週)</text>
+        <text id="yAxisLabel" x="8" y="34" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">値</text>
+        <path id="dataPath" fill="none" stroke="#f5a623" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="dotLayer"></g>
+      </svg>
+      <div class="readout" id="axisOut"></div>
+    </div>
+    <div class="callout"><span class="ct">なぜ直線?</span>
+      <code>y=a·bˣ</code> の両辺 log で <code>log y = log a + x·log b</code>。log y を縦軸にすれば x の一次関数=直線。</div>
+
+    <h3>線形・片対数・両対数の見分け</h3>
+    <div class="demo">
+      <div class="toggle" id="kindToggle">
+        <button data-kind="linear" class="active">線形×線形</button>
+        <button data-kind="semilog">片対数</button>
+        <button data-kind="loglog">両対数</button>
+      </div>
+      <svg viewBox="0 0 520 300" id="kindSvg">
+        <line x1="50" y1="260" x2="500" y2="260" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="260" stroke="#33406b" stroke-width="1.5"/>
+        <text id="kxlab" x="498" y="285" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">x</text>
+        <text id="kylab" x="10" y="34" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">y</text>
+        <path id="expPath" fill="none" stroke="#f5a623" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="powPath" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="470" y="55" fill="#f5a623" font-family="JetBrains Mono" font-size="11" text-anchor="end">指数 2ˣ</text>
+        <text x="470" y="75" fill="#a78bfa" font-family="JetBrains Mono" font-size="11" text-anchor="end">べき乗 x²</text>
+      </svg>
+      <div class="readout" id="kindOut"></div>
+    </div>
+    <table>
+      <tr><th>軸</th><th>直線になる式</th><th>正体</th></tr>
+      <tr><td>線形×線形</td><td class="mono">y=ax+b</td><td>一次関数</td></tr>
+      <tr><td><span class="amber">片対数</span></td><td class="mono">y=a·bˣ</td><td><b>指数</b>(感染・複利)</td></tr>
+      <tr><td><span class="violet">両対数</span></td><td class="mono">y=a·xⁿ</td><td><b>べき乗則</b>(スケール則)</td></tr>
+    </table>
+    <div class="pitfall"><span class="ic">⚠️</span><span class="tx"><b>対数軸に0は描けない</b>・<b>中央は√10≈3.16</b>・<b>急増が緩やかに見える錯覚</b>に注意。</span></div>
+  </section>
+</div>
+
+<!-- ============ PAGE 3: R LAB ============ -->
+<div class="page" id="rlab">
+  <section>
+    <span class="tag t3"><span class="dot"></span>R実データ・ハンズオン</span>
+    <h2>グラフの傾きから、式を復元する</h2>
+    <p class="lead">対数グラフの真価は「見て終わり」ではありません。<b>直線の傾きと切片を読めば、元の式の係数が逆算できる</b>。これが分析の核心です。</p>
+
+    <h3><span class="steptag">CASE A · 片対数</span>指数データ y = a·bˣ の復元</h3>
+    <p>下のデータ(<code>x=0..10</code>)を片対数で描くと直線に。<span class="amber">傾き = log₁₀(b)</span>、<span class="amber">切片 = log₁₀(a)</span> から元の <b>a, b</b> が出ます。スライダーで直線化を体感し、ボタンで復元してみてください。</p>
+
+    <div class="demo">
+      <div class="toggle" id="rlabToggle">
+        <button data-mode="linear" class="active">線形で見る</button>
+        <button data-mode="log">片対数で直線化</button>
+      </div>
+      <svg viewBox="0 0 520 280" id="rlabSvg">
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="240" stroke="#33406b" stroke-width="1.5"/>
+        <text x="498" y="264" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">x</text>
+        <text id="rlabYlab" x="8" y="34" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">y</text>
+        <line id="rlabFit" stroke="#48c9b0" stroke-width="2" stroke-dasharray="6 4" opacity="0"/>
+        <path id="rlabPath" fill="none" stroke="#f5a623" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="rlabDots"></g>
+      </svg>
+      <div class="readout" id="rlabOut"></div>
+    </div>
+
+    <div class="formula">
+      <span style="color:#9aa6c4"># R：傾きから指数式を復元</span><br>
+      x &lt;- 0:10<br>
+      y &lt;- c(3, 5.1, 8.7, 14.7, 25.1, 42.6, 72.4, 123.1, 209.3, 355.8, 604.8)<br>
+      fit &lt;- lm(log10(y) ~ x)          <span style="color:#9aa6c4"># log10(y) を直線回帰</span><br>
+      b &lt;- 10^coef(fit)[2]   <span style="color:#9aa6c4"># 傾き → b</span><br>
+      a &lt;- 10^coef(fit)[1]   <span style="color:#9aa6c4"># 切片 → a</span><br>
+      <span style="color:#48c9b0"># 結果: a ≈ 3.00,  b ≈ 1.70  →  y = 3.00 × 1.70^x</span>
+    </div>
+
+    <h3><span class="steptag">CASE B · 両対数</span>べき乗則 y = a·xⁿ の復元</h3>
+    <p>体重と代謝量のような<b>べき乗則</b>は両対数で直線に。このとき <span class="violet">傾きそのものが指数 n</span>、切片が log₁₀(a)。傾きが「スケール則の指数」を直接教えてくれます。</p>
+
+    <div class="demo">
+      <div class="toggle" id="powToggle">
+        <button data-mode="linear" class="active">線形で見る</button>
+        <button data-mode="loglog">両対数で直線化</button>
+      </div>
+      <svg viewBox="0 0 520 280" id="powSvg">
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="240" stroke="#33406b" stroke-width="1.5"/>
+        <text id="powXlab" x="498" y="264" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">x</text>
+        <text id="powYlab" x="8" y="34" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">y</text>
+        <line id="powFit" stroke="#48c9b0" stroke-width="2" stroke-dasharray="6 4" opacity="0"/>
+        <path id="powPath2" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="powDots"></g>
+      </svg>
+      <div class="readout" id="powOut"></div>
+    </div>
+
+    <div class="formula">
+      <span style="color:#9aa6c4"># R：両対数の傾き = べき指数 n</span><br>
+      x &lt;- 1:10<br>
+      y &lt;- c(2, 5.66, 10.39, 16, 22.36, 29.39, 37.04, 45.25, 54, 63.25)<br>
+      fit &lt;- lm(log10(y) ~ log10(x))   <span style="color:#9aa6c4"># x も log に</span><br>
+      n &lt;- coef(fit)[2]                <span style="color:#9aa6c4"># 傾き = n</span><br>
+      a &lt;- 10^coef(fit)[1]<br>
+      <span style="color:#a78bfa"># 結果: n ≈ 1.50,  a ≈ 2.00  →  y = 2.00 × x^1.5</span>
+    </div>
+
+    <div class="callout violet">
+      <span class="ct">この手順が"使える"理由</span>
+      実データを片対数・両対数で描き、<b>どちらで直線になるかを見れば、指数モデルかべき乗モデルかが判定できる</b>。
+      さらに傾きから係数まで取り出せる。これは <code>lm()</code> の前にやる、強力なEDAの型です。
+    </div>
+    <div class="pitfall"><span class="ic">⚠️</span><span class="tx"><code>log10(y)</code> は <b>0・負があると NA / 警告</b>。<code>log1p()</code> 等で前処理を。直線回帰の前に必ず分布を確認。</span></div>
+  </section>
+</div>
+
+<!-- ============ PAGE 4: EPIDEMIC ============ -->
+<div class="page" id="epidemic">
+  <section>
+    <span class="tag t4"><span class="dot"></span>感染症モデル</span>
+    <h2>指数 → ロジスティック。対数が"曲がる瞬間"を暴く</h2>
+    <p class="lead">感染初期は <code>N₀·e^{rt}</code> の指数増殖。しかし感受性人口が尽きると頭打ち(ロジスティック)。線形では潰れて見えませんが、<span class="amber">対数軸では「直線がいつ折れたか」=ピークアウトの瞬間</span>がはっきり読めます。</p>
+
+    <div class="demo">
+      <div class="toggle" id="epiToggle">
+        <button data-mode="linear" class="active">線形表示</button>
+        <button data-mode="log">対数表示</button>
+      </div>
+      <svg viewBox="0 0 520 300" id="epiSvg">
+        <line x1="55" y1="250" x2="500" y2="250" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="55" y1="20" x2="55" y2="250" stroke="#33406b" stroke-width="1.5"/>
+        <text x="498" y="274" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">日数</text>
+        <text id="epiYlab" x="10" y="34" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">感染者数</text>
+        <!-- exponential reference (early) -->
+        <path id="epiExp" fill="none" stroke="#ef6f6c" stroke-width="2" stroke-dasharray="5 4" opacity="0.8"/>
+        <!-- logistic actual -->
+        <path id="epiLog" fill="none" stroke="#48c9b0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="epiDots"></g>
+        <text x="495" y="48" fill="#ef6f6c" font-family="JetBrains Mono" font-size="11" text-anchor="end">指数(初期の予測)</text>
+        <text x="495" y="68" fill="#48c9b0" font-family="JetBrains Mono" font-size="11" text-anchor="end">実際(ロジスティック)</text>
+      </svg>
+      <div class="readout" id="epiOut"></div>
+    </div>
+
+    <div class="formula">
+      <span style="color:#9aa6c4"># ロジスティック：N(t) = K / (1 + ((K−N₀)/N₀)·e^{−rt})</span><br>
+      K &lt;- 5000;  N0 &lt;- 5;  r &lt;- 0.9<br>
+      t &lt;- 0:20<br>
+      N &lt;- K / (1 + ((K-N0)/N0) * exp(-r*t))<br>
+      ggplot(data.frame(t,N), aes(t,N)) + geom_line() + scale_y_log10()
+    </div>
+
+    <table>
+      <tr><th>局面</th><th>対数グラフの見え方</th><th>意味</th></tr>
+      <tr><td>初期</td><td class="mono">直線(右肩上がり)</td><td>指数増殖・増加率 r 一定</td></tr>
+      <tr><td>中盤</td><td class="mono">傾きが寝てくる</td><td>感受性人口が減り減速</td></tr>
+      <tr><td>後期</td><td class="mono">水平に漸近</td><td>収束(Kに到達)</td></tr>
+    </table>
+    <div class="callout teal">
+      <span class="ct">なぜコロナ報道は対数軸だったか</span>
+      指数局面では「直線かどうか」で増加率の一定性が判断でき、<b>傾きが折れた瞬間=対策が効き始めた合図</b>として読めるから。線形軸では序盤の変化が潰れて、この折れ目が見えません。
+    </div>
+    <div class="pitfall"><span class="ic">⚠️</span><span class="tx"><b>初期の指数フィットで未来を外挿すると過大予測になる</b>。赤い破線(指数予測)が実際を大きく上回るのがその証拠。モデルの適用範囲に注意。</span></div>
+  </section>
+</div>
+
+<!-- ============ PAGE 5: ALGORITHM ============ -->
+<div class="page" id="algo">
+  <section>
+    <span class="tag t1"><span class="dot"></span>O(log n) · 9618教材</span>
+    <h2>二分探索：100万件を、約20回で射抜く</h2>
+    <p class="lead">毎回「半分」を捨てるから、データ量 n が増えてもステップ数は <code>log₂ n</code> でしか増えません。これが <b>O(log n)</b> の正体。下で実際に半分ずつ消えていく様子を動かせます。</p>
+
+    <div class="demo">
+      <div class="bsrow" id="bsRow"></div>
+      <div class="bslog" id="bsLog">ターゲット <span class="amber" id="bsTarget"></span> を探します。「次のステップ」を押してください</div>
+      <div class="bsbtns">
+        <button id="bsStep">次のステップ ▶</button>
+        <button id="bsReset">リセット ↺</button>
+      </div>
+      <div class="readout" id="bsCount" style="margin-top:16px"></div>
+    </div>
+
+    <h3>n が増えても、ステップは log でしか伸びない</h3>
+    <div class="demo">
+      <svg viewBox="0 0 520 260" id="ologSvg">
+        <line x1="55" y1="220" x2="500" y2="220" stroke="#33406b" stroke-width="1.5"/>
+        <line x1="55" y1="20" x2="55" y2="220" stroke="#33406b" stroke-width="1.5"/>
+        <text x="498" y="244" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11" text-anchor="end">データ件数 n</text>
+        <text x="12" y="34" fill="#9aa6c4" font-family="JetBrains Mono" font-size="11">ステップ数</text>
+        <path id="linearOp" fill="none" stroke="#ef6f6c" stroke-width="2.5" stroke-linecap="round"/>
+        <path id="logOp" fill="none" stroke="#48c9b0" stroke-width="3" stroke-linecap="round"/>
+        <text x="250" y="55" fill="#ef6f6c" font-family="JetBrains Mono" font-size="11">線形探索 O(n)</text>
+        <text x="430" y="200" fill="#48c9b0" font-family="JetBrains Mono" font-size="11" text-anchor="end">二分探索 O(log n)</text>
+      </svg>
+      <div class="readout">線形探索は n に比例して伸びるが、二分探索はほぼ寝たまま。これが対数の威力</div>
+    </div>
+
+    <table>
+      <tr><th>データ件数 n</th><th>線形探索 O(n)</th><th>二分探索 ⌈log₂(n+1)⌉</th></tr>
+      <tr><td class="mono">10</td><td class="mono">最大 10 回</td><td><span class="teal">4 回</span></td></tr>
+      <tr><td class="mono">100</td><td class="mono">最大 100 回</td><td><span class="teal">7 回</span></td></tr>
+      <tr><td class="mono">1,000</td><td class="mono">最大 1,000 回</td><td><span class="teal">10 回</span></td></tr>
+      <tr><td class="mono">1,000,000</td><td class="mono">最大 100万 回</td><td><span class="teal">20 回</span></td></tr>
+      <tr><td class="mono">1,000,000,000</td><td class="mono">最大 10億 回</td><td><span class="teal">30 回</span></td></tr>
+    </table>
+
+    <div class="callout">
+      <span class="ct">9618 で問われるポイント</span>
+      二分探索は<b>整列済み配列</b>が前提。各ステップで探索範囲が半分になるため、最悪計算量は <code>O(log n)</code>。
+      「n が1000倍になっても、ステップは約10回増えるだけ」と説明できると、対数の意味が腑に落ちます。
+    </div>
+    <div class="pitfall"><span class="ic">⚠️</span><span class="tx"><b>未整列データには使えない</b>。整列コストが別途かかる点も、計算量を語るときの典型的な引っかけ。</span></div>
+  </section>
+</div>
+
+<!-- ============ shared closing ============ -->
+<div class="page show" id="closing" style="display:block">
+  <section>
+    <div class="qbox az">
+      <h3 style="margin-top:0">🤔 本質的な問い</h3>
+      <ol>
+        <li>「直線になる」ことが、なぜ理解・予測・伝達のすべてで価値を持つのか?</li>
+        <li>片対数で直線=指数、両対数で直線=べき乗。この判定を自分のデータでどう使う?</li>
+        <li>対数軸が"緩やかに見せる"性質は、データを見せる側の責任として何を要求する?</li>
+        <li>感染症の初期指数フィットで未来を外挿する危うさは、他のどんな場面に潜む?</li>
+        <li>O(log n) の「桁が増えても少ししか伸びない」感覚を、生徒に体で分からせるには?</li>
+      </ol>
+    </div>
+    <div class="qbox">
+      <h3 style="margin-top:0">次に深掘りするなら(番号で選んでください)</h3>
+      <ol>
+        <li>このR復元手順を、実際のオープンデータ(住宅価格・人口など)で1本通す</li>
+        <li>ロジスティック回帰(分類)へ橋渡し ── 同じ"log"でも役割の違いを整理</li>
+        <li>二分探索デモを生徒配布用に英語化＋ワークシート問題を生成</li>
+        <li>このページ全体をGoogle Slides教材(.gs)に変換</li>
+        <li>前の選択肢をもう一度表示</li>
+      </ol>
+      <p class="muted" style="margin:10px 0 0;font-size:13px">5 = 前の選択肢をもう一度表示</p>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="fr">log は、世界を直線にほどくレンズ。</div>
+  <div>基礎 → グラフ → 復元 → モデル → アルゴリズム。本質はひとつ。</div>
+</footer>
+
+<script>
+// ---------- TAB SWITCHING ----------
+(function(){
+  const tabs=document.querySelectorAll('#tabs button');
+  const pages=['basics','graphs','rlab','epidemic','algo'];
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));t.classList.add('active');
+    const id=t.dataset.page;
+    pages.forEach(p=>document.getElementById(p).classList.toggle('show',p===id));
+    window.scrollTo({top:0,behavior:'smooth'});
+    // trigger any draw refresh
+    document.dispatchEvent(new CustomEvent('pageshow',{detail:id}));
+  }));
+})();
+
+// ---------- helper ----------
+function animatePath(p){const t=p.getTotalLength();p.style.strokeDasharray=t;p.style.strokeDashoffset=t;
+  requestAnimationFrame(()=>{p.style.transition='stroke-dashoffset .9s ease';p.style.strokeDashoffset=0;});}
+
+// ---------- P1 inverse ----------
+(function(){
+  const curve=document.getElementById('invCurve'),dot=document.getElementById('invDot');
+  const dv=document.getElementById('dropV'),dh=document.getElementById('dropH'),lbl=document.getElementById('invLabel');
+  const range=document.getElementById('invRange'),out=document.getElementById('invOut');
+  const ox=40,oy=200,w=460,h=180,maxX=8,maxY=256;
+  const px=x=>ox+(x/maxX)*w, py=y=>oy-(y/maxY)*h;
+  let d='M';for(let i=0;i<=80;i++){const x=i/80*maxX;d+=(i?' L':' ')+px(x).toFixed(1)+','+py(Math.pow(2,x)).toFixed(1);}
+  curve.setAttribute('d',d);
+  function u(){const x=+range.value,y=Math.pow(2,x),X=px(x),Y=py(y);
+    dot.setAttribute('cx',X);dot.setAttribute('cy',Y);
+    dv.setAttribute('x1',X);dv.setAttribute('y1',Y);dv.setAttribute('x2',X);dv.setAttribute('y2',oy);
+    dh.setAttribute('x1',ox);dh.setAttribute('y1',Y);dh.setAttribute('x2',X);dh.setAttribute('y2',Y);
+    lbl.setAttribute('x',X);lbl.setAttribute('y',Y-14);lbl.textContent=`2^${x}=${y}`;
+    out.innerHTML=`指数 <span class="hl">2<sup>${x}</sup>=${y}</span> ／ 対数 <span class="hl">log₂(${y})=${x}</span> — 同じ事実の表裏`;}
+  range.addEventListener('input',u);u();
+})();
+
+// ---------- P2 axis toggle ----------
+(function(){
+  const path=document.getElementById('dataPath'),grid=document.getElementById('gridLayer'),dots=document.getElementById('dotLayer');
+  const out=document.getElementById('axisOut'),ylab=document.getElementById('yAxisLabel'),btns=document.querySelectorAll('#axisToggle button');
+  const x0=50,x1=500,yb=260,yt=30;const data=[];for(let i=0;i<=8;i++)data.push(Math.pow(2,i));const maxY=256;
+  const px=i=>x0+(i/8)*(x1-x0-10);let mode='linear';
+  const py=y=>mode==='linear'?yb-(y/maxY)*(yb-yt):yb-(Math.log2(y)/8)*(yb-yt);
+  function draw(){grid.innerHTML='';const ticks=mode==='linear'?[0,64,128,192,256]:[1,2,4,8,16,32,64,128,256];
+    ticks.forEach(t=>{const Y=py(t);grid.innerHTML+=`<line x1="50" y1="${Y}" x2="500" y2="${Y}" stroke="#2a3559" stroke-width="1"/><text x="46" y="${Y+4}" fill="#6b779c" font-family="JetBrains Mono" font-size="10" text-anchor="end">${t}</text>`;});
+    let d='M';data.forEach((y,i)=>{d+=(i?' L':' ')+px(i).toFixed(1)+','+py(y).toFixed(1);});path.setAttribute('d',d);animatePath(path);
+    dots.innerHTML='';data.forEach((y,i)=>{dots.innerHTML+=`<circle cx="${px(i).toFixed(1)}" cy="${py(y).toFixed(1)}" r="4.5" fill="#f5a623" stroke="#141b2e" stroke-width="1.5"/>`;});
+    ylab.textContent=mode==='linear'?'値 (線形)':'値 (log₂)';
+    out.innerHTML=mode==='linear'?'線形：序盤が底に <span class="hl">つぶれて</span> 見えない':'対数：同じデータが <span class="hl">完全な直線</span> に';}
+  btns.forEach(b=>b.addEventListener('click',()=>{btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;draw();}));draw();
+})();
+
+// ---------- P2 kind toggle ----------
+(function(){
+  const expP=document.getElementById('expPath'),powP=document.getElementById('powPath'),out=document.getElementById('kindOut');
+  const kxl=document.getElementById('kxlab'),kyl=document.getElementById('kylab'),btns=document.querySelectorAll('#kindToggle button');
+  const x0=50,x1=500,yb=260,yt=30;const xs=[];for(let i=1;i<=10;i+=0.25)xs.push(i);let kind='linear';
+  const mapX=x=>kind==='loglog'?x0+(Math.log10(x))*(x1-x0-10):x0+((x-1)/9)*(x1-x0-10);
+  function mapY(y,maxY){if(kind==='linear')return yb-(y/maxY)*(yb-yt);return yb-(Math.log10(y)/Math.log10(maxY))*(yb-yt);}
+  function draw(){const ev=xs.map(x=>Math.pow(2,x)),pv=xs.map(x=>x*x);
+    const build=(v,m)=>{let d='M';xs.forEach((x,i)=>{d+=(i?' L':' ')+mapX(x).toFixed(1)+','+mapY(Math.max(v[i],0.5),m).toFixed(1);});return d;};
+    expP.setAttribute('d',build(ev,Math.pow(2,10)));powP.setAttribute('d',build(pv,100));animatePath(expP);animatePath(powP);
+    kxl.textContent=kind==='loglog'?'x (log)':'x';kyl.textContent=kind==='linear'?'y':'y (log)';
+    out.innerHTML=kind==='linear'?'両方カーブ。区別しにくい':kind==='semilog'?'<span class="hl">片対数</span>：オレンジ(指数)が直線':'<span class="hl">両対数</span>：紫(べき乗)が直線';}
+  btns.forEach(b=>b.addEventListener('click',()=>{btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');kind=b.dataset.kind;draw();}));draw();
+})();
+
+// ---------- P3 rlab semilog ----------
+(function(){
+  const path=document.getElementById('rlabPath'),dots=document.getElementById('rlabDots'),fit=document.getElementById('rlabFit');
+  const out=document.getElementById('rlabOut'),ylab=document.getElementById('rlabYlab'),btns=document.querySelectorAll('#rlabToggle button');
+  const X=[0,1,2,3,4,5,6,7,8,9,10],Y=[3,5.1,8.7,14.7,25.1,42.6,72.4,123.1,209.3,355.8,604.8];
+  const x0=55,x1=495,yb=240,yt=30,maxLin=605,maxLog=Math.log10(605);let mode='linear';
+  const px=x=>x0+(x/10)*(x1-x0);
+  const py=y=>mode==='linear'?yb-(y/maxLin)*(yb-yt):yb-(Math.log10(y)/maxLog)*(yb-yt);
+  function draw(){let d='M';X.forEach((x,i)=>{d+=(i?' L':' ')+px(x).toFixed(1)+','+py(Y[i]).toFixed(1);});path.setAttribute('d',d);animatePath(path);
+    dots.innerHTML='';X.forEach((x,i)=>{dots.innerHTML+=`<circle cx="${px(x).toFixed(1)}" cy="${py(Y[i]).toFixed(1)}" r="4" fill="#f5a623" stroke="#141b2e" stroke-width="1.5"/>`;});
+    ylab.textContent=mode==='linear'?'y (線形)':'y (log₁₀)';
+    if(mode==='log'){fit.setAttribute('x1',px(0));fit.setAttribute('y1',py(Y[0]));fit.setAttribute('x2',px(10));fit.setAttribute('y2',py(Y[10]));fit.setAttribute('opacity','1');
+      out.innerHTML='直線化！ 傾き=log₁₀(1.7)≈0.230, 切片=log₁₀(3)≈0.477 → <span class="hl">y = 3.00 × 1.70ˣ</span>';}
+    else{fit.setAttribute('opacity','0');out.innerHTML='線形：急カーブで序盤が潰れ、式の形が読み取れない';}}
+  btns.forEach(b=>b.addEventListener('click',()=>{btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;draw();}));draw();
+})();
+
+// ---------- P3 power loglog ----------
+(function(){
+  const path=document.getElementById('powPath2'),dots=document.getElementById('powDots'),fit=document.getElementById('powFit');
+  const out=document.getElementById('powOut'),xlab=document.getElementById('powXlab'),ylab=document.getElementById('powYlab'),btns=document.querySelectorAll('#powToggle button');
+  const X=[1,2,3,4,5,6,7,8,9,10],Y=[2,5.66,10.39,16,22.36,29.39,37.04,45.25,54,63.25];
+  const x0=55,x1=495,yb=240,yt=30,maxLin=63.25,maxLogY=Math.log10(63.25),maxLogX=Math.log10(10);let mode='linear';
+  const px=x=>mode==='loglog'?x0+(Math.log10(x)/maxLogX)*(x1-x0):x0+((x-1)/9)*(x1-x0);
+  const py=y=>mode==='linear'?yb-(y/maxLin)*(yb-yt):yb-(Math.log10(y)/maxLogY)*(yb-yt);
+  function draw(){let d='M';X.forEach((x,i)=>{d+=(i?' L':' ')+px(x).toFixed(1)+','+py(Y[i]).toFixed(1);});path.setAttribute('d',d);animatePath(path);
+    dots.innerHTML='';X.forEach((x,i)=>{dots.innerHTML+=`<circle cx="${px(x).toFixed(1)}" cy="${py(Y[i]).toFixed(1)}" r="4" fill="#a78bfa" stroke="#141b2e" stroke-width="1.5"/>`;});
+    xlab.textContent=mode==='loglog'?'x (log₁₀)':'x';ylab.textContent=mode==='loglog'?'y (log₁₀)':'y';
+    if(mode==='loglog'){fit.setAttribute('x1',px(1));fit.setAttribute('y1',py(Y[0]));fit.setAttribute('x2',px(10));fit.setAttribute('y2',py(Y[9]));fit.setAttribute('opacity','1');
+      out.innerHTML='直線化！ 傾き=n≈1.50, 切片=log₁₀(2)≈0.301 → <span class="hl">y = 2.00 × x^1.5</span>';}
+    else{fit.setAttribute('opacity','0');out.innerHTML='線形：ゆるい曲線。べき乗かどうか判定しにくい';}}
+  btns.forEach(b=>b.addEventListener('click',()=>{btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;draw();}));draw();
+})();
+
+// ---------- P4 epidemic ----------
+(function(){
+  const expP=document.getElementById('epiExp'),logP=document.getElementById('epiLog'),dots=document.getElementById('epiDots');
+  const out=document.getElementById('epiOut'),ylab=document.getElementById('epiYlab'),btns=document.querySelectorAll('#epiToggle button');
+  const K=5000,N0=5,r=0.9;const T=[],N=[],E=[];
+  for(let t=0;t<=20;t++){T.push(t);N.push(K/(1+((K-N0)/N0)*Math.exp(-r*t)));E.push(Math.min(N0*Math.exp(r*t),20000));}
+  const x0=55,x1=495,yb=250,yt=30,maxLin=5000,maxLog=Math.log10(20000);let mode='linear';
+  const px=t=>x0+(t/20)*(x1-x0);
+  const py=v=>mode==='linear'?yb-(Math.min(v,maxLin)/maxLin)*(yb-yt):yb-(Math.log10(Math.max(v,1))/maxLog)*(yb-yt);
+  function draw(){
+    let dl='M';N.forEach((v,i)=>{dl+=(i?' L':' ')+px(T[i]).toFixed(1)+','+py(v).toFixed(1);});logP.setAttribute('d',dl);animatePath(logP);
+    let de='M';E.forEach((v,i)=>{de+=(i?' L':' ')+px(T[i]).toFixed(1)+','+py(v).toFixed(1);});expP.setAttribute('d',de);
+    dots.innerHTML='';N.forEach((v,i)=>{dots.innerHTML+=`<circle cx="${px(T[i]).toFixed(1)}" cy="${py(v).toFixed(1)}" r="3" fill="#48c9b0"/>`;});
+    ylab.textContent=mode==='linear'?'感染者数 (線形)':'感染者数 (log)';
+    out.innerHTML=mode==='linear'?'線形：S字。序盤の指数局面が潰れ、いつ折れたか曖昧':'<span class="hl">対数</span>：初期は直線(指数)→中盤で傾きが寝る=ピークアウトが鮮明。赤破線(指数予測)との乖離も一目';}
+  btns.forEach(b=>b.addEventListener('click',()=>{btns.forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;draw();}));draw();
+})();
+
+// ---------- P5 binary search ----------
+(function(){
+  const row=document.getElementById('bsRow'),log=document.getElementById('bsLog'),count=document.getElementById('bsCount');
+  const tgtEl=document.getElementById('bsTarget'),stepBtn=document.getElementById('bsStep'),resetBtn=document.getElementById('bsReset');
+  const N=16;let arr=[],lo,hi,steps,target,found;
+  function init(){arr=Array.from({length:N},(_,i)=>i+1);target=arr[Math.floor(Math.random()*N)];
+    lo=0;hi=N-1;steps=0;found=false;tgtEl.textContent=target;
+    render();log.innerHTML=`ターゲット <span class="amber">${target}</span> を探します。「次のステップ」を押してください`;
+    count.innerHTML=`これまでのステップ：<span class="hl">0</span>　/　最大 ⌈log₂(${N})⌉ = <span class="hl">4</span> 回`;stepBtn.disabled=false;}
+  function render(mid){row.innerHTML='';arr.forEach((v,i)=>{const c=document.createElement('div');c.className='bscell';
+    if(i<lo||i>hi)c.classList.add('dead');else c.classList.add('range');
+    if(i===mid)c.className='bscell mid';if(v===target&&!found)c.classList.add('target');
+    c.textContent=v;row.appendChild(c);});}
+  function step(){if(found||lo>hi){return;}steps++;const mid=Math.floor((lo+hi)/2);render(mid);
+    count.innerHTML=`これまでのステップ：<span class="hl">${steps}</span>　/　最大 ⌈log₂(${N})⌉ = <span class="hl">4</span> 回`;
+    if(arr[mid]===target){found=true;log.innerHTML=`🎯 mid=${arr[mid]} が一致！ <span class="amber">${steps}回</span>で発見（16件でも最大4回）`;stepBtn.disabled=true;}
+    else if(arr[mid]<target){log.innerHTML=`mid=${arr[mid]} は小さい → <b>右半分</b>へ。左を捨てる`;lo=mid+1;}
+    else{log.innerHTML=`mid=${arr[mid]} は大きい → <b>左半分</b>へ。右を捨てる`;hi=mid-1;}}
+  stepBtn.addEventListener('click',step);resetBtn.addEventListener('click',init);init();
+})();
+
+// ---------- P5 O(log n) vs O(n) ----------
+(function(){
+  const linP=document.getElementById('linearOp'),logP=document.getElementById('logOp');
+  const x0=55,x1=495,yb=220,yt=30;const maxN=64;
+  const px=n=>x0+(n/maxN)*(x1-x0);
+  // scale: linear ops up to 64 -> full height; log2 up to 6
+  const pyLin=v=>yb-(v/maxN)*(yb-yt);
+  const pyLog=v=>yb-(v/6)*(yb-yt);
+  let dl='M';for(let n=1;n<=maxN;n++){dl+=(n===1?' ':' L')+px(n).toFixed(1)+','+pyLin(n).toFixed(1);}linP.setAttribute('d',dl);
+  let dg='M';for(let n=1;n<=maxN;n++){dg+=(n===1?' ':' L')+px(n).toFixed(1)+','+pyLog(Math.log2(n+1)).toFixed(1);}logP.setAttribute('d',dg);
+  animatePath(linP);animatePath(logP);
+})();
+
+// ---------- reveal ----------
+(function(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));})();
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

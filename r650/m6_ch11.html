@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第11章：バイナリ予測変数②：係数の解釈 — ロジスティック回帰ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 11</div>
+    <h1>🧮 第11章：バイナリ予測変数②：係数の解釈</h1>
+    <p>係数は「対数オッズの変化量」= log(オッズ比)。ForeignWorkerの係数を3ステップで手計算して再現する。</p>
+    <div class="unit-nav"><a href="#u1">Unit 1</a><a href="#u2">Unit 2</a><a href="#u3">Unit 3</a></div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">01</div><div><h2>バイナリ係数の意味</h2><div class="unit-sub">係数 = 対数オッズの変化量</div></div></div>
+  <p>バイナリ予測変数の係数は<strong>「そのバイナリ変数が0→1に変化したときの対数オッズの変化量」</strong>です。単純な確率の差ではなく、<em>オッズ比の対数</em>になります。</p>
+  <div class="big-rule">
+    <div class="ru-arrow">📐</div>
+    <div class="ru-text">
+      <strong>係数 β₁ = log(odds|X=1) − log(odds|X=0)</strong><br>
+        = log(odds|X=1 / odds|X=0)<br>
+      <span style="font-size:.85rem;color:var(--text-sec)">つまり「2つの状態のオッズ比」の対数</span>
+    </div>
+  </div>
+  <p>重回帰の係数が「Xが1増えたときのYの変化量」だったのと同様に、ロジスティック回帰の係数は「Xが1増えたときの対数オッズの変化量」です。</p>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">02</div><div><h2>手計算で係数を再現する</h2><div class="unit-sub">3ステップで係数を導出</div></div></div>
+  <p>ForeignWorkerの係数（−1.297）を手計算で導出します。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># ForeignWorker係数の解釈：ステップごとに計算</span></span><span class="cl"><span class="cm"># Step1: FW=0（外国人）のとき</span></span><span class="cl">p0   &lt;- <span class="nm">0.891</span><span class="cm">                    # P(Good|FW=0)</span></span><span class="cl">odds0 &lt;- p0 / (<span class="nm">1</span> - p0)<span class="cm">          # → 8.25</span></span><span class="cl">lo0   &lt;- <span class="kw">log</span>(odds0)<span class="cm">              # → 2.11（切片）</span></span></div>
+  <div class="code-block"><span class="cl"><span class="cm"># Step2: FW=1（国内労働者）のとき</span></span><span class="cl">p1   &lt;- <span class="nm">667</span>/<span class="nm">963</span><span class="cm">               # P(Good|FW=1) ≈ 0.693</span></span><span class="cl">odds1 &lt;- p1 / (<span class="nm">1</span> - p1)<span class="cm">          # → 2.255</span></span><span class="cl">lo1   &lt;- <span class="kw">log</span>(odds1)<span class="cm">              # → 0.813</span></span><span class="cl"><span class="cm"># Step3: 係数 = log(新オッズ / 旧オッズ)</span></span><span class="cl">coef_fw &lt;- <span class="kw">log</span>(odds1 / odds0)<span class="cm">    # → -1.297 ← 係数と一致！</span></span></div>
+  <div class="code-block"><span class="cl"><span class="cm"># Rで確認</span></span><span class="cl"><span class="kw">coef</span>(mod_fw)[<span class="st">"ForeignWorkeryes"</span>]<span class="cm">  # → -1.2970</span></span><span class="cl"><span class="cm"># オッズ比に変換（解釈しやすい形）</span></span><span class="cl"><span class="kw">exp</span>(<span class="kw">coef</span>(mod_fw))<span class="cm">  # ForeignWorkeryesのオッズ比 → 0.273</span></span><span class="cl"><span class="cm"># → 国内労働者の良い信用オッズは外国人の0.273倍（外国人の方が有利）</span></span></div>
+  <div class="note-box">
+    <strong>ポイント：</strong>係数を求めるのは「引き算」ではなく「オッズ比の対数」。<br>
+    対数オッズで差をとる = 元のスケールでオッズ同士を割り算することと同じ。<br>
+    exp(係数) = オッズ比 = 0.273 →「国内労働者の良い信用オッズは外国人の27%（＝外国人の方が3.7倍有利）」
+  </div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">03</div><div><h2>係数の解釈まとめ</h2><div class="unit-sub">対数オッズ・オッズ比・確率の3段階</div></div></div>
+<div class="note-box"><strong>📌 係数＝差、exp(係数)＝比：</strong>バイナリ予測変数の係数は「X=1グループとX=0グループの<em>対数オッズの差</em>」です。指数を取った <code>exp(β)</code> は両グループの<em>オッズ比</em>になります。オッズ比が1なら差なし、1より大きければ増加、小さければ減少。確率の差で考えようとすると非線形で破綻するので、必ず「対数オッズ → オッズ → 確率」の順でたどるのが安全です。</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin:1rem 0">
+    <div style="background:var(--yellow-light);border-radius:10px;padding:1rem;text-align:center;border:1.5px solid var(--yellow)">
+      <div style="font-weight:800;color:var(--yellow)">係数（対数オッズ）</div>
+      <div style="font-size:1.6rem;font-weight:900;margin:.5rem 0">−1.297</div>
+      <div style="font-size:.8rem;color:var(--text-sec)">FW: 0→1 の<br>対数オッズ変化</div>
+    </div>
+    <div style="background:var(--green-light);border-radius:10px;padding:1rem;text-align:center;border:1.5px solid var(--green)">
+      <div style="font-weight:800;color:var(--green)">オッズ比</div>
+      <div style="font-size:1.6rem;font-weight:900;margin:.5rem 0">0.273</div>
+      <div style="font-size:.8rem;color:var(--text-sec)">exp(−1.297)<br>国内/外国人のオッズ比</div>
+    </div>
+    <div style="background:var(--primary-light);border-radius:10px;padding:1rem;text-align:center;border:1.5px solid var(--primary)">
+      <div style="font-weight:800;color:var(--primary-dark)">確率の変化</div>
+      <div style="font-size:1.6rem;font-weight:900;margin:.5rem 0">0.89→0.69</div>
+      <div style="font-size:.8rem;color:var(--text-sec)">直接引けない<br>（非線形）</div>
+    </div>
+  </div>
+  <div class="warn-box">⚠️ 確率は直接「足す・引く」できない！係数はあくまで対数オッズのスケール。確率の変化を求めるには2つの状態で確率を別々に計算する必要がある。</div>
+</div>
+
+<section class="quiz-section">
+  <h2>🎯 確認クイズ（英語）</h2>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-container" id="quiz">
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does the coefficient of a binary predictor represent in logistic regression?</div>
+  <button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The change in probability when the predictor increases by 1</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The change in log odds when the predictor increases by 1 (0→1)</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The odds of the outcome when the predictor equals 1</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The probability ratio between group 0 and group 1</button>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">If the coefficient for ForeignWorker is −1.297, what is the odds ratio (exp(β))?</div>
+  <button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>1.297</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>−1.297</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.273</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>3.659</button>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">How do you derive the coefficient for a binary predictor from scratch?</div>
+  <button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Subtract odds(X=1) from odds(X=0)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Subtract P(X=1) from P(X=0)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Calculate log(odds(X=1) / odds(X=0))</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Calculate exp(P(X=1) − P(X=0))</button>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">An odds ratio of 0.273 for ForeignWorker means:</div>
+  <button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Foreign workers have 0.273 times the odds of Good credit vs native workers</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Native workers have 0.273 times the odds of Good credit vs foreign workers</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The probability of Good credit is 27.3% for everyone</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Foreign workers are 0.273 times as likely to be in the sample</button>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Why can't you directly subtract probabilities to get the coefficient?</div>
+  <button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Probabilities are not on the same scale as coefficients</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Coefficients operate on the log-odds scale, which is non-linear relative to probability</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>You can only subtract probabilities in linear regression</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Both A and B are correct</button>
+<div class="q-feedback" id="fb5"></div>
+</div>
+  </div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">The coefficient of a binary predictor equals the change in:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Probability between groups</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Log-odds between the two groups</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The intercept value</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Sample size</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">exp(coefficient) for a binary predictor gives the:</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Probability difference</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Z-value</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Log-likelihood</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Odds ratio</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">An odds ratio of 0.273 means the odds are:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Increased nearly fourfold</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Exactly equal to baseline</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Reduced to about 27% of the baseline</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Completely unrelated</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">Why can&#x27;t you simply subtract probabilities to obtain the coefficient?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The coefficient lives on the log-odds scale, not the probability scale</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Probabilities are always equal</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Subtraction is not allowed in R</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Probabilities cannot be negative numbers</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">An odds ratio greater than 1 indicates the predictor level:</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Lowers the odds of the outcome</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Cannot be interpreted</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Has zero effect</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Raises the odds of the outcome</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+  <div class="quiz-score" id="score">0 / 10</div>
+</section>
+
+<div class="page-nav">
+  <a href="m6_ch10.html">← 第10章</a>
+  <a href='m6_ch12.html'>第12章 →</a>
+</div>
+</main>
+
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">オッズ比</div>
+      <div class="term-en">Odds Ratio</div>
+      <div class="term-def">exp(係数)。バイナリ予測変数が0→1に変わったときのオッズの倍率。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">対数オッズの変化</div>
+      <div class="term-en">Change in Log Odds</div>
+      <div class="term-def">係数の本来の意味。X=0のときとX=1のときの対数オッズの差。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">非線形変換</div>
+      <div class="term-en">Non-linear Transformation</div>
+      <div class="term-def">対数オッズ↔確率の変換はシグモイド関数による非線形変換。確率は直接足し引きできない。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">参照カテゴリ</div>
+      <div class="term-en">Reference Category</div>
+      <div class="term-def">バイナリ変数で=0とされるグループ。係数解釈の基準になる。</div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第11章</p>
+<p style="margin-top:.5rem"><a href="m6_ch11_easy.html">🍎 やさしい版へ</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script>
+var ANSWERS=[1, 2, 2, 1, 3, 1, 3, 2, 0, 3];
+var FEEDBACKS=["The coefficient is the change in log odds for a one-unit increase in the predictor. For binary variables, this means going from 0 to 1.", "exp(−1.297) ≈ 0.273. This means native workers (FW=1) have odds of Good credit that are 0.273 times those of foreign workers (FW=0).", "Coefficient β = log(odds|X=1 / odds|X=0) = log(odds ratio). The log of the new odds divided by the original odds.", "Odds ratio = odds(FW=1)/odds(FW=0) = 0.273. So native workers (FW=1) have 27.3% of the odds that foreign workers have. Foreign workers have much better odds.", "Coefficients are on the log-odds scale. Because the relationship between log-odds and probability is non-linear (sigmoid), you cannot simply add/subtract probabilities. You must work through odds → log-odds.", "A binary predictor's coefficient is the difference in log-odds between its two levels.", "Exponentiating the coefficient yields the odds ratio comparing the two groups.", "OR < 1 means lower odds; 0.273 means about 27% of the reference group's odds.", "Coefficients are differences in log-odds; probability differences do not translate linearly.", "OR > 1 means that level increases the odds relative to the reference."];
+var score=0,done=0,total=10;
+</script>
+<script>
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='\u2705 Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='\u274c '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+setTimeout(function(){units.forEach(function(u){u.classList.add('visible');});},600);
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

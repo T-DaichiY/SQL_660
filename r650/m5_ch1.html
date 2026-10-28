@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第1章 重回帰分析 — 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main active" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 1</div>
+<h1>📈 重回帰分析（Multiple Regression）</h1>
+<p>1つの手がかりだけで予測するのが「単回帰」。複数の手がかりを同時に使うのが「重回帰」。自転車レンタル数を例に、モデルの作り方と予測の仕方をゼロから学ぶ。</p>
+<div class="ch-banner unit-nav" style="background:none;padding:0;">
+<a href="#unit1">① 単回帰のおさらい</a>
+<a href="#unit2">② 重回帰とは</a>
+<a href="#unit3">③ Rでモデルを作る</a>
+<a href="#unit4">④ 係数と回帰式</a>
+<a href="#unit5">⑤ 予測の3つの方法</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch1_easy.html">▶ 第1章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>まずは単回帰のおさらい</h2><div class="unit-sub">1つの予測変数で予測する一番シンプルな形</div></div>
+</div>
+<p>このモジュールではこれまで<strong>単回帰（単純線形回帰 / 最小二乗回帰）</strong>を学びました。式はこんな形でしたね。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 単回帰の式（1つの予測変数 X だけ）</span></span><span class="cl">Yᵢ = B₀ + B₁·Xᵢ + (誤差)</span><span class="cl"></span><span class="cl"><span class="cm"># 例: レンタル数 = 切片 + 傾き×気温 + 誤差</span></span></div>
+<ul>
+<li><strong>Xᵢ</strong>：予測に使う手がかり（予測変数）。例：気温。</li>
+<li><strong>Yᵢ</strong>：予測したい値（応答変数 / 目的変数）。例：その日の自転車レンタル数。</li>
+<li><strong>B₀</strong>：y切片、<strong>B₁</strong>：傾き。</li>
+<li><strong>誤差</strong>：推定にはどうしてもズレ（ばらつき）がある。誤差Eの代わりに「Ŷ（ワイハット＝予測値）」で書くこともできる。</li>
+</ul>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>単回帰は「アイスの売上は気温だけで決まる！」と決めつけて予測するようなもの。たしかに気温は大事だけど…雨の日や曜日も関係するよね？それを全部使おうというのが、次の「重回帰」です。</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>重回帰とは — たくさんの手がかりを使う</h2><div class="unit-sub">気温だけじゃなく、湿度も風速も全部使って予測する</div></div>
+</div>
+<p>重回帰はこう言います。「気温だけからレンタル数を予測するんじゃなくて、<strong>もっとたくさんの予測変数を使おうよ</strong>」。式は単回帰によく似ていますが、予測変数が増えます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 重回帰の式（予測変数が n 個に増える）</span></span><span class="cl">Y = B₀ + B₁·X₁ + B₂·X₂ + B₃·X₃ + … + Bₙ·Xₙ + 誤差</span></div>
+<p>最初の部分は単回帰そっくりですが、X₂、X₃…と<strong>第n番目の予測変数まで</strong>続けられます（添え字は予測変数 Predictor の頭文字Pで書くこともあります）。たくさんの手がかりを使うことで、応答変数Y（＝レンタル数）の推定がよりよくなります。</p>
+<div class="flow-diagram">
+<div class="flow-box input">湿度<br/><small>X₁</small></div>
+<div class="flow-box input">気温<br/><small>X₂</small></div>
+<div class="flow-box input">風速<br/><small>X₃</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box model">重回帰モデル<br/><small>B₀+B₁X₁+B₂X₂+B₃X₃</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box output">レンタル数<br/><small>予測値 Ŷ</small></div>
+</div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>探偵が事件を解くとき、手がかりは1つより多いほうが正しい犯人に近づけますよね。重回帰は「湿度」「気温」「風速」という複数の手がかりを集めて、より正確に「今日のレンタル数」を当てる探偵です🕵️</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>Rで重回帰モデルを作る</h2><div class="unit-sub">じつはとても簡単。+ でつなぐだけ</div></div>
+</div>
+<p>Rで重回帰モデルを作るのは驚くほど簡単です。<code>応答変数 ~ 予測変数1 + 予測変数2 + …</code> と書くだけ。<code>~</code>（チルダ）は「〜で説明する／〜が与えられたとき」という意味です。</p>
+<div class="code-block"><span class="cl"><span class="cm"># rentals（レンタル数）を 湿度+気温+風速 で予測する</span></span><span class="cl">bikes_model_1 <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> humidity <span class="kw">+</span> temperature <span class="kw">+</span> windspeed,</span><span class="cl">                    data <span class="kw">=</span> bikes)</span><span class="cl"></span><span class="cl">bikes_model_1   <span class="cm"># 係数を表示</span></span></div>
+<p>実行すると、<strong>係数（coefficients）</strong>が出てきます。今回は予測変数が3つなので B₁, B₂, B₃ が得られます。これがあなたの重回帰モデルの式になります。さらに詳しい情報を見たいときは <code>summary()</code> を使います。</p>
+<div class="code-block"><span class="cl"><span class="kw">summary</span>(bikes_model_1)</span></div>
+<div class="output-text">Coefficients:
+              Estimate
+(Intercept)    ...      ← B₀（切片）
+humidity      -3100     ← B₁
+temperature    ...      ← B₂
+windspeed      ...      ← B₃</div>
+<p>「Estimate（推定値）」の列に並ぶのが、回帰式に使う係数です。それ以外の部分は単回帰の <code>summary</code> とほぼ同じ。ただ予測変数の行が増えただけです。</p>
+<div class="note-box">
+<strong>📌 4変数の可視化テク：</strong>3つの予測変数＋1つの応答変数＝合計4つの変数は、<code>plotly</code>ライブラリで1つの3D散布図にできます。X・Y・Z軸に湿度・気温・風速、点の色をレンタル数にすると、ドラッグして回転できるインタラクティブな図になります。気温が低いと（青＝レンタル少）、高いと（黄＝レンタル多）という関係が立体的に見えます。
+  </div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>係数と回帰式 — 予測の準備</h2><div class="unit-sub">3つの数字を教えてくれれば予測できる</div></div>
+</div>
+<p>得られた係数を使うと、回帰式はこう書けます。</p>
+<div class="code-block"><span class="cl">予測レンタル数 (rental_hat)</span><span class="cl">  = 切片(B₀)</span><span class="cl"> <span class="kw">+</span> B₁ <span class="kw">×</span> 湿度(humidity)</span><span class="cl"> <span class="kw">+</span> B₂ <span class="kw">×</span> 気温(temperature)</span><span class="cl"> <span class="kw">+</span> B₃ <span class="kw">×</span> 風速(windspeed)</span></div>
+<p>つまり、ある日の<strong>湿度・気温・風速の3つ</strong>さえ教えてもらえれば、その日のレンタル数を予測できるということです。</p>
+<div class="warn-box">
+<strong>⚠️ 係数の大きさ＝重要度ではない！</strong> 「湿度の係数が一番大きいから湿度が一番大事」とは<strong>言えません</strong>。なぜなら湿度・気温・風速は<strong>単位（スケール）が違う</strong>からです。公平に重要度を比べる方法は<a href="m5_ch3.html">第3章（標準化回帰係数）</a>で学びます。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>回帰式は「料理のレシピ」です。「湿度を◯倍、気温を◯倍、風速を◯倍して全部足す」というレシピ通りに計算すれば、その日のレンタル数という料理ができあがります🍳</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>予測の3つの方法</h2><div class="unit-sub">手計算 → fitted.values → predict（だんだん便利に）</div></div>
+</div>
+<p>実際にモデルで予測してみましょう。例として<strong>15番目の観測（15日目）</strong>を使います。その日は寒い日で、実際のレンタル数は<strong>1,248件</strong>でした。予測の方法は3つあります。</p>
+<h3>方法1：手計算（一番長いやり方）</h3>
+<p>回帰式に数字を直接入れて計算します。Rでは係数とカッコの間に必ず <code>*</code>（かけ算）が必要です（数学のように省略できません）。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 15日目の 湿度・気温・風速 を式に代入</span></span><span class="cl">pred <span class="kw">&lt;-</span> B0 <span class="kw">+</span> B1<span class="kw">*</span><span class="nm">0.49</span> <span class="kw">+</span> B2<span class="kw">*</span>(気温) <span class="kw">+</span> B3<span class="kw">*</span>(風速)</span><span class="cl"><span class="cm"># → 予測 約3,300件</span></span></div>
+<div class="note-box">
+<strong>📊 残差（ざんさ）の話：</strong>予測は約3,300件、実際は1,248件。差がとても大きいですね。これを<strong>残差</strong>と呼びます。予測が実際より大きい（過大評価）ので、これは<strong>負の残差</strong>（実際−予測がマイナス）です。この日についてはモデルがあまり役立っていない、ということがわかります。
+  </div>
+<h3>方法2：fitted.values（データにある行だけ）</h3>
+<p>モデルが計算済みの「あてはめ値（予測値）」を取り出します。15番目を見たいなら：</p>
+<div class="code-block"><span class="cl">bikes_model_1<span class="kw">$</span>fitted.values[<span class="nm">15</span>]</span><span class="cl"><span class="cm"># → 3,324（15日目の予測値）</span></span></div>
+<div class="warn-box">
+<strong>⚠️ fitted.values の制限：</strong>これは<strong>データフレームに実際に存在する行</strong>の予測しかできません。「湿度0.65・気温38・風速7」のような、データに無い組み合わせの予測には使えません。
+  </div>
+<h3>方法3：predict（一番便利・おすすめ）</h3>
+<p><code>predict()</code> は手計算を自動でやってくれます。データに無い好きな値でも予測できます。注意点は、新しいデータは<strong>データフレーム</strong>で、列名を正しく指定すること。</p>
+<div class="code-block"><span class="cl"><span class="cm"># データに無い好きな値で予測</span></span><span class="cl">new_data <span class="kw">&lt;-</span> <span class="kw">data.frame</span>(humidity <span class="kw">=</span> <span class="nm">0.65</span>,</span><span class="cl">                       temperature <span class="kw">=</span> <span class="nm">38</span>,</span><span class="cl">                       windspeed <span class="kw">=</span> <span class="nm">7</span>)</span><span class="cl"><span class="kw">predict</span>(bikes_model_1, newdata <span class="kw">=</span> new_data)</span><span class="cl"><span class="cm"># → 2,058件</span></span></div>
+<p>複数の予測を一度にしたいときは <code>c()</code>（連結）で値を並べます。湿度が高め・気温が高め・風速が低めの日なら、レンタル数の予測はぐっと大きくなります。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>3つの予測方法は「電卓のレベルアップ」みたいなもの。<strong>手計算</strong>は紙と鉛筆、<strong>fitted.values</strong>は「過去のテスト結果一覧表」から探すだけ、<strong>predict</strong>は「どんな数字を入れても答えを出す万能電卓」。だから普段は predict を使えばOK！</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第1章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">What is the main difference between simple and multiple regression?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> Multiple regression uses two or more predictor variables instead of just one</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> Simple regression has no error term, while multiple regression always includes one</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> Multiple regression does not need a y-intercept because it has several predictors</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> Multiple regression can only predict categorical outcomes rather than numeric ones</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">In R, which formula correctly builds a multiple regression model predicting rentals from humidity, temperature, and windspeed?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> lm(rentals = humidity, temperature, windspeed, data = bikes)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> predict(rentals ~ humidity * temperature * windspeed, data = bikes)</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> lm(rentals ~ humidity + temperature + windspeed, data = bikes)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> lm(humidity + temperature + windspeed ~ rentals, data = bikes)</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">The model predicts 3,300 rentals but the actual value was 1,248. How is this residual described?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> A large positive residual — the model underestimated the actual value</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> A large negative residual — the model overestimated the actual value</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> A small positive residual — the prediction was only slightly too low</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> A residual of exactly zero — the prediction matched the actual value</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">Why can't you use fitted.values to predict for humidity=0.65, temperature=38, windspeed=7?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> fitted.values only works for simple regression models with a single predictor</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> fitted.values requires a data.frame of new values passed as its newdata argument</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> Those predictor values fall outside the range the model is able to handle</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> fitted.values only returns predictions for rows that actually exist in the data</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">Why is it WRONG to say "humidity has the largest coefficient, so it is the most important predictor"?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> Because the predictors are on different scales/units, so raw coefficients can't be compared directly</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> Because the model's intercept always carries more weight than any individual predictor coefficient</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> Because humidity is a categorical variable, so its coefficient can't be ranked against the others</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> Because regression coefficients are always negative, so the largest one is the least important</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_index.html">← 概要へ戻る</a>
+<a href="m5_ch2.html">第2章：診断 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">重回帰分析</div><div class="term-en">Multiple Regression</div><div class="term-def">2つ以上の予測変数を使って、1つの量的な応答変数を予測する手法。</div></div>
+<div class="term-item"><div class="term-name">予測変数</div><div class="term-en">Predictor / Independent variable</div><div class="term-def">予測の手がかりとして使う変数（X）。説明変数・独立変数とも呼ぶ。</div></div>
+<div class="term-item"><div class="term-name">応答変数</div><div class="term-en">Response / Dependent variable</div><div class="term-def">予測したい対象（Y）。目的変数・従属変数とも呼ぶ。例：レンタル数。</div></div>
+<div class="term-item"><div class="term-name">係数</div><div class="term-en">Coefficient (B₀, B₁…)</div><div class="term-def">各予測変数にかける数字。summaryのEstimate列に出る。</div></div>
+<div class="term-item"><div class="term-name">残差</div><div class="term-en">Residual</div><div class="term-def">実際の値 − 予測値。マイナスなら過大評価、プラスなら過小評価。</div></div>
+<div class="term-item"><div class="term-name">predict関数</div><div class="term-en">predict()</div><div class="term-def">データに無い値でも予測できる、最も便利な予測方法。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 章の進み方</h4>
+<p>
+<strong>第1章（今ここ）</strong>：モデルを作る<br/>
+    第2章：良し悪しを診断する<br/>
+    第3章：影響度を比べる<br/>
+    第3.1章：外れ値を扱う<br/>
+    第4章〜：モデルを改善する<br/><br/>
+    まずは「作る→予測する」を理解しましょう。
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第1章：重回帰分析</p>
+<p style="margin-top:.5rem;"><a href="m5_index.html">← 概要</a> · <a href="m5_ch2.html">第2章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Simple regression uses one predictor; multiple regression adds more (X₁, X₂, X₃…) to better capture the signal in the data.",
+  2:"Correct! The response goes on the left of ~, predictors joined with + on the right, and you specify data = bikes.",
+  3:"Correct! Predicted (3,300) > actual (1,248), so the model overestimated. Actual − predicted is negative → a large negative residual.",
+  4:"Correct! fitted.values only returns predictions for the exact rows in the data frame. For arbitrary new values you must use predict().",
+  5:"Correct! Humidity, temperature, and windspeed are on different scales, so raw coefficients aren't comparable. Use standardized coefficients (Chapter 3)."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

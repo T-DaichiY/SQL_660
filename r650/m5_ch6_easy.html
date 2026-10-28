@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6章 超やさしい版:カテゴリ変数の変換 — 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+<style>
+.season-btns{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+.sb{padding:.6rem 1.1rem;border-radius:10px;border:2px solid var(--border);background:var(--bg);font-weight:700;cursor:pointer;font-family:inherit;font-size:.9rem;transition:all .2s;}
+.sb.on{background:var(--green-light);border-color:var(--green);color:#065f46;}
+.onehot-table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.85rem;}
+.onehot-table td,.onehot-table th{padding:.5rem;text-align:center;border:1px solid var(--border);}
+.onehot-table th{background:var(--primary);color:white;}
+.cell-1{background:var(--green-light);color:#065f46;font-weight:800;}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy active" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 6 ・ Easy Mode</div>
+    <h1>🏷️ 第6章 超やさしい版:カテゴリ変数の変換</h1>
+    <p>「季節=1」みたいな数字のカテゴリを、使える形に直す話。ボタンを押して体感しよう。<a href="m5_ch6.html" class="easy-toplink">🏷️ 本編はこちら</a></p>
+    <div class="unit-nav">
+      <a href="#u1">⚡ 一言でいうと</a>
+      <a href="#u2">① 数字に名前をつける</a>
+      <a href="#u3">② ワンホットを体感</a>
+      <a href="#u4">③ n−1の法則</a>
+      <a href="#u5">④ 30秒セルフ確認</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">数字のカテゴリを「はい/いいえ」の列に分ける</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0;">「季節=1,2,3,4」のままだと意味不明だし、特定の季節だけ削れない。だから<strong>名前をつけて（factor化）</strong>、さらに<strong>「冬?はい/いいえ」の列に分ける（ワンホット）</strong>。ただし列は<strong>n−1個</strong>（1つ減らす）。</p></div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>数字に名前をつける</h2><div class="unit-sub">「1番」より「カレー」の方がわかる</div></div></div>
+  <p>「給食メニューが1番、2番」と言われても何が出るかわからない。「1=カレー」と名前にすればすぐわかる。<code>case_when</code> で数字を名前に変換します。</p>
+  <div class="flow-diagram">
+    <div class="flow-box input">season<br><small>1, 2, 3, 4</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box model">case_when<br><small>翻訳機</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box output">winter, spring,<br>summer, fall</div>
+  </div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>ワンホットを体感（ボタン）</h2><div class="unit-sub">今日の季節を選ぶと、表が変わる</div></div></div>
+  <p>1つの「季節」列を、季節ごとの「はい(1)/いいえ(0)」の列に分けるのが<strong>ワンホット</strong>。下のボタンで今日の季節を選んでみてください。選んだ季節だけ「1」、他は「0」になります。</p>
+
+  <div class="widget green">
+    <div class="widget-title">🔘 ワンホットエンコーディング体験</div>
+    <p style="font-size:.85rem;color:var(--text-sec);text-align:center;margin:0;">今日の季節は？</p>
+    <div class="season-btns" id="season-btns">
+      <button class="sb on" data-s="0">❄️ 冬</button>
+      <button class="sb" data-s="1">🌸 春</button>
+      <button class="sb" data-s="2">☀️ 夏</button>
+      <button class="sb" data-s="3">🍂 秋</button>
+    </div>
+    <table class="onehot-table">
+      <tr><th>winter</th><th>spring</th><th>summer</th><th>fall</th></tr>
+      <tr id="oh-row"><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+    </table>
+  </div>
+  <div class="note-box">こうやって列を分けておくと、「夏だけモデルから削る」といった操作ができます。1つのスイッチを4つのスイッチに分けるイメージ🔘</div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>n−1の法則（1つ削る）</h2><div class="unit-sub">全部入れると逆に困る</div></div>
+  </div>
+  <p>季節4つなら、ダミー列は<strong>4個ではなく3個</strong>。「春でも夏でも冬でもない」なら自動的に秋だから、「秋」列は無くても情報は完全。むしろ残すと<strong>多重共線性</strong>が起きます（ダミー変数トラップ）。</p>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>「右でも左でも真ん中でもないなら…必ず上」。だから「上」のスイッチは省略できる。全部用意すると矛盾が起きる🔼</p></div>
+  <div class="warn-box"><strong>サイン：</strong>係数に <code>NA</code> や "singularity" が出たら、ダミー変数トラップに落ちています。n−1個にすれば解決。</div>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>30秒セルフ確認</h2><div class="unit-sub">クリックで答えが開きます</div></div></div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？</h4>
+    <div class="cp-q">Q1. カテゴリ変数を変換する理由は？<span class="cp-a">A. ①わかりやすくするため ②特定カテゴリだけ削れるようにするため。</span></div>
+    <div class="cp-q">Q2. 曜日(7種)のダミー列は何個必要？<span class="cp-a">A. 6個（n−1）。1つ削ってダミー変数トラップを回避。</span></div>
+    <div class="cp-q">Q3. NAやsingularityが出たら？<span class="cp-a">A. ダミー変数トラップに落ちている。n−1個にする。</span></div>
+  </div>
+  <div class="note-box" style="background:var(--secondary-light);border-color:var(--secondary);">🎓 case_whenのコード・スケーリングは <a href="m5_ch6.html">第6章 本編</a> へ。</div>
+  <div class="page-nav"><a href="m5_ch6.html">← 第6章 本編</a><a href="m5_ch7_easy.html">第7章 やさしい版 →</a></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 結論</h4><p>文字 → <strong>factor化</strong><br>特定カテゴリ操作 → <strong>ワンホット</strong><br>ダミーは <strong>n−1個</strong>（1つ削る）<br>NA/singularity → トラップ注意<br>課題では <strong>手動で</strong>（fastDummies不可）</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2);"><h4 style="color:var(--primary-dark);">📖 本編</h4><p style="color:var(--text);">詳しくは <a href="m5_ch6.html">第6章</a> へ。</p></div>
+</aside>
+</div>
+
+<footer><p>重回帰分析 完全ガイド · 第6章 超やさしい版</p><p style="margin-top:.5rem;"><a href="m5_ch6.html">← 本編</a> · <a href="m5_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script>
+(function(){
+  const btns=document.querySelectorAll('#season-btns .sb');
+  const row=document.getElementById('oh-row');
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    const s=+b.dataset.s;
+    row.innerHTML=[0,1,2,3].map(i=>i===s?'<td class="cell-1">1</td>':'<td>0</td>').join('');
+  }));
+})();
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

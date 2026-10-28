@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第12章 モデル性能の評価 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 12</div>
+<h1>🎓 モデル性能の評価（Evaluating Performance）</h1>
+<p>モデルは作れた。でも「見たことのない新しいデータでもうまくいく？」が本当の問い。訓練・テスト分割で「汎化（はんか）」を確かめ、過学習を見抜く方法を学ぶ。最終章！</p>
+<div class="unit-nav">
+<a href="#unit1">① なぜ評価が必要か</a>
+<a href="#unit2">② 過学習とは</a>
+<a href="#unit3">③ 訓練・テスト分割</a>
+<a href="#unit4">④ Rで実装する</a>
+<a href="#unit5">⑤ データ漏洩に注意</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch12_easy.html">▶ 第12章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>なぜ「性能の評価」が必要なのか</h2><div class="unit-sub">本当に知りたいのは「未知のデータでの成績」</div></div>
+</div>
+<p>これまで診断（第2章）でモデルの選び方を学びました。でも本当に知りたいのは——<strong>このモデル、見たことのない新しいデータでもうまく予測できる？</strong> ということです。</p>
+<p>モデルを実際に<strong>本番（production）で使う</strong>なら、明日来る新しいデータ、今はまだ存在しないデータに対しても、ちゃんと予測してほしい。「学習に使ったデータ」だけでなく「<strong>まったく新しいデータ</strong>」で良い成績を出せるか——これが<strong>汎化（generalization）</strong>です。</p>
+<div class="note-box">
+<strong>📌 汎化（はんか）とは：</strong>モデルが<strong>未知のデータにもうまく対応できる能力</strong>のこと。本番で使うモデルは、この汎化性能が高くなければ意味がありません。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>テスト勉強で「過去問の答えを丸暗記」した人は、過去問では満点でも、<strong>本番の新しい問題</strong>では解けませんよね。モデルも同じ。「練習データで満点」より「<strong>本番の新データで何点取れるか</strong>」が大事なのです📝</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>過学習（オーバーフィッティング）</h2><div class="unit-sub">「丸暗記」して「理解」していない状態</div></div>
+</div>
+<p>データサイエンティストが向き合う大問題が<strong>過学習（overfitting）</strong>です。これは、モデルが<strong>パターン（シグナル）を理解する</strong>のではなく、手元のデータを<strong>丸暗記してしまう</strong>状態です。</p>
+<p>過学習したモデルは、<strong>ノイズ（雑音・たまたまのブレ）をシグナル（本当のパターン）だと勘違い</strong>します。すると、練習データには完璧に合うのに、新しいデータではボロボロになります。</p>
+<div class="viz">
+<div class="viz-title">過学習：練習では満点、本番でガタ落ち</div>
+<svg style="width:100%;max-width:520px;display:block;margin:0 auto;" viewbox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+<!-- training bar -->
+<text fill="#1e293b" font-size="11" font-weight="700" text-anchor="middle" x="130" y="25">訓練データ（練習）</text>
+<rect fill="#d1fae5" height="34" rx="6" stroke="#059669" stroke-width="2" width="140" x="60" y="40"></rect>
+<text fill="#065f46" font-size="13" font-weight="800" text-anchor="middle" x="130" y="62">R² = 0.95 😄</text>
+<!-- test bar -->
+<text fill="#1e293b" font-size="11" font-weight="700" text-anchor="middle" x="390" y="25">テストデータ（本番）</text>
+<rect fill="#fee2e2" height="34" rx="6" stroke="#dc2626" stroke-width="2" width="140" x="320" y="40"></rect>
+<text fill="#7f1d1d" font-size="13" font-weight="800" text-anchor="middle" x="390" y="62">R² = 0.4 😱</text>
+<text fill="#94a3b8" font-size="20" text-anchor="middle" x="260" y="58">→</text>
+<text fill="#dc2626" font-size="12" font-weight="700" text-anchor="middle" x="260" y="120">この大きな差 ＝ 過学習のサイン！</text>
+<text fill="#64748b" font-size="10" text-anchor="middle" x="260" y="145">練習では95点なのに、本番では40点。ノイズを暗記してしまった。</text>
+</svg>
+</div>
+<div class="note-box">
+<strong>📌 過学習の見分け方：</strong>訓練データでR²＝0.95（とても高い）なのに、テストデータでR²＝0.4（低い）。この<strong>大きなギャップ</strong>が過学習のサインです。逆に、訓練とテストのR²が<strong>だいたい同じ</strong>なら、過学習していない良いモデルです。
+  </div>
+<div class="warn-box">
+<strong>⚠️ 補足：</strong>単純な重回帰では過学習はそこまで大きな問題にならないことが多いです。でも今後学ぶ<strong>機械学習モデル</strong>はもっと複雑で、丸暗記しやすい（過学習しやすい）ので、この考え方がとても重要になります。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>過学習は「教科書を丸暗記したけど、意味は理解していない」状態。同じ問題なら満点だけど、ちょっとひねられると解けない。モデルにも「丸暗記タイプ」と「理解タイプ」がいて、私たちは<strong>理解タイプ</strong>を作りたいのです🧠</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>訓練・テスト分割（Train/Test Split）</h2><div class="unit-sub">データを2つに分けて、片方は「本番テスト」用にとっておく</div></div>
+</div>
+<p>過学習を見抜く道具が<strong>訓練・テスト分割</strong>です。データを2つに分けます。</p>
+<div class="flow-diagram">
+<div class="flow-box input">全データ<br/><small>731行</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box model">訓練セット（80%）<br/><small>モデルを学習させる</small></div>
+<div class="flow-box output">テストセット（20%）<br/><small>性能を評価する</small></div>
+</div>
+<ul>
+<li><strong>訓練セット（training set）：</strong>モデルにパターンを学ばせるためのデータ。</li>
+<li><strong>テストセット（test set）：</strong>取っておいて、<strong>モデルが見たことのないデータ</strong>として性能を評価する。「本番」の代わり。</li>
+</ul>
+<p>このクラスでは<strong>80:20分割</strong>（80%を訓練、20%をテスト）を使います。他のコースでは70:30、85:15などもあります。<strong>データが少ないときは分割すべきではありません</strong>（学習に使えるデータが減りすぎるため）。</p>
+<div class="note-box">
+<strong>📌 評価セット・ホールドアウトセット：</strong>もっと高度には「評価（validation）セット」や「ホールドアウトセット」もありますが、この章では入門として訓練・テストの2分割に絞ります。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>試験勉強で問題集を「練習用」と「模擬試験用」に分けるのと同じ。練習用で勉強して、模擬試験用（取っておいた問題）で実力を測る。最初から答えを見ちゃダメ＝テストセットは最後まで取っておきます📚</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>Rで実装する</h2><div class="unit-sub">seedを固定して、ランダムに80:20に分ける</div></div>
+</div>
+<p>分割にはランダム性があるので、<strong>再現性のために <code>set.seed()</code> でシードを固定</strong>します。これでチームの誰が実行しても同じ結果になります。</p>
+<div class="code-block"><span class="cl"><span class="cm"># ① 再現性のためにシードを固定</span></span><span class="cl"><span class="kw">set.seed</span>(<span class="nm">123</span>)</span><span class="cl"></span><span class="cl"><span class="cm"># ② 行数を取得（bikesの行数 = 731）</span></span><span class="cl">n <span class="kw">&lt;-</span> <span class="kw">dim</span>(bikes)[<span class="nm">1</span>]</span><span class="cl"></span><span class="cl"><span class="cm"># ③ 80%の行をランダムに選び、その番号を保存</span></span><span class="cl">train_indices <span class="kw">&lt;-</span> <span class="kw">sample</span>(<span class="nm">1</span><span class="kw">:</span>n, size <span class="kw">=</span> <span class="nm">0.8</span> <span class="kw">*</span> n)</span><span class="cl"></span><span class="cl"><span class="cm"># ④ 訓練セット＝選ばれた行、テストセット＝それ以外</span></span><span class="cl">train_set <span class="kw">&lt;-</span> bikes[train_indices, ]</span><span class="cl">test_set  <span class="kw">&lt;-</span> bikes[<span class="kw">-</span>train_indices, ]</span></div>
+<p>結果、訓練セットは約584行（80%）、テストセットは約147行（20%）になります（ちょうど80:20にはならないこともあります）。</p>
+<h3>訓練 → 予測 → 評価の流れ</h3>
+<div class="code-block"><span class="cl"><span class="cm"># ① 訓練セットでモデルを作る</span></span><span class="cl">model_train <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> temperature, data <span class="kw">=</span> train_set)</span><span class="cl"></span><span class="cl"><span class="cm"># ② テストセット（未知データ）で予測</span></span><span class="cl">predictions <span class="kw">&lt;-</span> <span class="kw">predict</span>(model_train, newdata <span class="kw">=</span> test_set)</span><span class="cl"></span><span class="cl"><span class="cm"># ③ 実測値と予測値の相関からR²を計算</span></span><span class="cl">r_squared <span class="kw">&lt;-</span> <span class="kw">cor</span>(test_set<span class="kw">$</span>rentals, predictions)<span class="kw">^</span><span class="nm">2</span></span></div>
+<div class="note-box">
+<strong>📌 結果の読み方：</strong>テストセットのR²が、訓練セットのR²と<strong>だいたい同じ</strong>なら過学習していません。モデルがノイズに惑わされず、シグナルを捉えている証拠です。完璧なモデルなら、実測値と予測値が一直線に並び R²＝1 になります。R²は <code>cor()</code> を二乗するか、専用パッケージでも計算できます。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p><code>set.seed</code>は「サイコロの出目を固定する魔法」。これがないと、実行するたびに違う分け方になってしまいます。固定すれば、誰がやっても同じ結果＝再現できるので、チームで安心して結果を共有できます🎲</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>データ漏洩（データリーケージ）に注意</h2><div class="unit-sub">分割の「前」と「後」、どっちでデータを掃除する？</div></div>
+</div>
+<p>とても重要なテーマです。「データのクリーニングは、分割の<strong>前</strong>にやる？<strong>後</strong>にやる？」</p>
+<h3>分割の「前」にやってOKなこと</h3>
+<ul>
+<li>列名を直す</li>
+<li>重複行を削除する</li>
+<li>明らかなデータ入力ミスを直す</li>
+</ul>
+<h3>分割の「後」にやるべきこと（テストの情報を使うもの）</h3>
+<p>多くの処理は<strong>分割の後</strong>、訓練セットだけで決めて、その結果をテストセットにも同じように適用します。</p>
+<div class="warn-box">
+<strong>⚠️ データ漏洩（data leakage）とは：</strong><strong>テストセットの情報が訓練セットに漏れてしまう</strong>こと。これが起きると、性能が<strong>実際より良く見えてしまう（過度に楽観的）</strong>のです。<br/><br/>
+    例：欠損値を<strong>全データの中央値</strong>で埋めると、テストセットのデータが中央値に影響し、それが訓練セット→モデルに漏れます。これがデータ漏洩です。NAの補完（imputation）は分割の<strong>後</strong>に、訓練セットだけで決めましょう。
+  </div>
+<p>訓練セットとテストセットの間には<strong>しっかりした仕切り（パーティション）</strong>を保つこと。モデルは「訓練データだけ」で学習し、「テストデータ（未知データ）」で評価する——この境界を守るのが鉄則です。</p>
+<div class="note-box">
+<strong>🎓 全12章 完走！：</strong>モデルを<strong>作り</strong>（1章）、<strong>診断し</strong>（2章）、影響度を<strong>比べ</strong>（3章）、外れ値を<strong>扱い</strong>（3.1章）、共線性を<strong>直し</strong>（4章）、曲線・カテゴリ・日付・交互作用で<strong>拡張し</strong>（5〜8章）、変数を<strong>選び抜き</strong>（9〜11章）、最後に未知データでの性能を<strong>評価する</strong>（12章）。これで重回帰分析の全工程をマスターしました！🎉
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>データ漏洩は「模擬試験の問題をこっそり見ながら勉強する」ようなもの。それで模擬試験が満点でも、本番では意味がないですよね。テストセット（模擬試験）は<strong>絶対に勉強に混ぜない</strong>——これがデータ漏洩を防ぐコツです🚧</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第12章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">What does it mean for a model to "generalize well"?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> It memorizes the training data perfectly and reproduces every value exactly right</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> It performs well on new, unseen data, not just the data it was trained on</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> It always uses every single available predictor variable in the final fitted model</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> It produces a plain R² that is exactly equal to the model's adjusted R² value</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">What is overfitting?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> When a model memorizes the noise in the data instead of learning the real signal</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> When a model is far too simple and uses too few predictors to fit the data well</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> When the response variable is accidentally stored as a categorical factor type</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> When the training and test sets happen to contain the same number of total rows</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">Training R² = 0.95 but test R² = 0.4. What does this signal?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> A perfectly generalizing model that will work great on absolutely any new data</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> Underfitting, because the training R² is clearly far too low to be useful at all</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> Overfitting — the model learned the noise and so it fails on new unseen data</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> A data entry error that can be fixed simply by re-running the random split again</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">Why do we call set.seed() before splitting the data?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> To make the model train noticeably faster whenever you have very large data sets</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> To automatically remove any rows that contain missing or duplicated data values</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> To guarantee the test set will always score a higher R² than the training set does</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> For reproducibility, so the random split is the same every time anyone runs it</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">What is data leakage, and how do you avoid it?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> When test-set info influences training; avoid it by cleaning after the split</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> When the model file becomes corrupted; avoid it by saving frequent backup copies</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> When the training set is larger than the test set; avoid it with a 50:50 split</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> When predictors correlate with each other; avoid it by always checking VIF first</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch11.html">← 第11章：ステップワイズ＆階層的選択</a>
+<a href="m5_index.html">🏠 目次に戻る</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">汎化</div><div class="term-en">Generalization</div><div class="term-def">未知の新しいデータにもうまく対応できるモデルの能力。</div></div>
+<div class="term-item"><div class="term-name">過学習</div><div class="term-en">Overfitting</div><div class="term-def">シグナルでなくノイズを暗記し、新データで性能が落ちる現象。</div></div>
+<div class="term-item"><div class="term-name">訓練・テスト分割</div><div class="term-en">Train/Test Split</div><div class="term-def">データを学習用と評価用に分けること。本講義は80:20。</div></div>
+<div class="term-item"><div class="term-name">set.seed</div><div class="term-en">set.seed()</div><div class="term-def">乱数を固定して再現性を確保するR関数。</div></div>
+<div class="term-item"><div class="term-name">データ漏洩</div><div class="term-en">Data Leakage</div><div class="term-def">テスト情報が訓練に漏れ、性能が過度に楽観的になること。</div></div>
+<div class="term-item"><div class="term-name">imputation</div><div class="term-en">補完</div><div class="term-def">欠損値を埋める処理。分割後に訓練セットだけで決める。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 ポイント</h4>
+<p>
+    本当に大事なのは<strong>未知データでの性能</strong>。<br/><br/>
+    過学習 ＝ 訓練◎なのにテスト✕。<br/><br/>
+    対策：<strong>訓練80% / テスト20%</strong>に分割。<br/><br/>
+<strong>set.seed</strong>で再現性。<br/><br/>
+    クリーニングは<strong>分割の後</strong>（データ漏洩を防ぐ）。
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第12章：モデル性能の評価 — 全12章 完走！🎉</p>
+<p style="margin-top:.5rem;"><a href="m5_ch11.html">← 第11章</a> · <a href="m5_index.html">🏠 目次へ</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Generalizing well means performing on new, unseen data — not just memorizing the training data.",
+  2:"Correct! Overfitting is when a model memorizes the noise instead of learning the true signal, so it fails on new data.",
+  3:"Correct! High training R² but low test R² is the classic sign of overfitting — the model learned noise, not signal.",
+  4:"Correct! set.seed() fixes the randomness so the split is reproducible — everyone on the team gets the same result.",
+  5:"Correct! Data leakage is when test-set information influences training (e.g., imputing with the whole-data median). Clean/impute AFTER the split, using only the training set."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

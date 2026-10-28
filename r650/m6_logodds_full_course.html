@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ロジスティック回帰の係数を完全攻略｜二値 & 連続 予測子（第11–12章）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg:#F4F6FB;
+    --surface:#FFFFFF;
+    --ink:#1A2233;
+    --muted:#5C6779;
+    --hair:#E2E7F1;
+    --hair-strong:#CDD5E4;
+    --p:#2F77C9;      /* Probability  - blue   */
+    --p-soft:#E6F0FB;
+    --o:#DB8A24;      /* Odds         - amber  */
+    --o-soft:#FBF0DD;
+    --l:#7C53D6;      /* Log-odds     - violet */
+    --l-soft:#EFE9FB;
+    --neg:#D84C4C;
+    --pos:#23976A;
+    --navy:#121A2E;
+    --navy-2:#1B2740;
+    --navy-ink:#E8ECF6;
+    --navy-muted:#9AA6C2;
+    --radius:18px;
+    --maxw:980px;
+    --jp:'Noto Sans JP','Hiragino Sans','Yu Gothic',Meiryo,sans-serif;
+    --disp:'Space Grotesk',var(--jp);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--jp);line-height:1.85;
+    font-feature-settings:"palt";
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  section{padding:64px 0}
+  h2{font-family:var(--jp);font-weight:900;font-size:clamp(1.5rem,4.2vw,2.15rem);line-height:1.35;margin:0 0 6px;letter-spacing:.01em}
+  h3{font-weight:700;font-size:1.18rem;margin:34px 0 12px;letter-spacing:.01em}
+  p{margin:14px 0}
+  strong{font-weight:700}
+  .mono{font-family:var(--mono)}
+  .eyebrow{font-family:var(--disp);font-weight:600;font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .lead{font-size:1.06rem;color:#3a4456}
+
+  /* ---------- HERO ---------- */
+  .hero{background:var(--navy);color:var(--navy-ink);padding:74px 0 64px;position:relative;overflow:hidden}
+  .hero:before{content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(60% 50% at 18% 0%,rgba(124,83,214,.22),transparent 60%),
+      radial-gradient(55% 50% at 92% 18%,rgba(219,138,36,.16),transparent 60%);
+    pointer-events:none}
+  .hero .wrap{position:relative}
+  .hero .eyebrow{color:var(--navy-muted)}
+  .hero h1{font-family:var(--jp);font-weight:900;font-size:clamp(2rem,6.6vw,3.4rem);line-height:1.28;margin:16px 0 0;letter-spacing:.005em}
+  .hero h1 .hl{position:relative;white-space:nowrap}
+  .hero h1 .hl.p{color:#7FB6F2}
+  .hero h1 .hl.o{color:#F0B964}
+  .hero h1 .hl.l{color:#B79BF0}
+  .hero .sub{color:var(--navy-muted);font-size:1.08rem;max-width:680px;margin-top:20px}
+  .lang-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:38px}
+  .lang-card{background:var(--navy-2);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px 16px}
+  .lang-card .tag{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  .lang-card.pc .tag{color:#7FB6F2}.lang-card.oc .tag{color:#F0B964}.lang-card.lc .tag{color:#B79BF0}
+  .lang-card .jp{font-weight:700;font-size:1.05rem;margin:6px 0 2px}
+  .lang-card .desc{color:var(--navy-muted);font-size:.86rem;line-height:1.6}
+  .scrollcue{margin-top:40px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--navy-muted)}
+  .scrollcue span{display:inline-block;animation:bob 1.8s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+  /* ---------- generic cards ---------- */
+  .card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:26px 24px}
+  .card+.card{margin-top:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+  /* traps */
+  .trap{position:relative;padding-left:14px}
+  .trap .num{font-family:var(--disp);font-weight:700;font-size:.92rem;color:var(--neg);letter-spacing:.05em}
+  .trap h4{margin:6px 0 8px;font-size:1.04rem;font-weight:700}
+  .trap p{margin:0;color:var(--muted);font-size:.93rem;line-height:1.7}
+  .trap:before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:4px;border-radius:4px;background:var(--neg);opacity:.65}
+
+  /* ---------- THE MACHINE ---------- */
+  .machine{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:26px 24px 30px}
+  .slider-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  .slider-row label{font-weight:700;font-size:.95rem}
+  #ch-binary input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:8px;flex:1;min-width:200px;
+    background:linear-gradient(90deg,var(--p) 0%,var(--p) var(--fill,52%),var(--hair) var(--fill,52%),var(--hair) 100%);cursor:pointer}
+  #ch-binary input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--p);box-shadow:0 2px 8px rgba(47,119,201,.4);cursor:pointer}
+  #ch-binary input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--p);box-shadow:0 2px 8px rgba(47,119,201,.4);cursor:pointer}
+  .pval{font-family:var(--mono);font-weight:700;font-size:1.1rem;color:var(--p);min-width:64px;text-align:right}
+
+  .readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0 8px}
+  .ro{border-radius:14px;padding:16px 14px;text-align:center;border:1px solid var(--hair)}
+  .ro.p{background:var(--p-soft);border-color:#cfe2f7}
+  .ro.o{background:var(--o-soft);border-color:#f0dcb6}
+  .ro.l{background:var(--l-soft);border-color:#ddd0f5}
+  .ro .lab{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  .ro.p .lab{color:var(--p)}.ro.o .lab{color:var(--o)}.ro.l .lab{color:var(--l)}
+  .ro .big{font-family:var(--mono);font-weight:700;font-size:1.7rem;margin:4px 0 2px}
+  .ro.p .big{color:var(--p)}.ro.o .big{color:var(--o)}.ro.l .big{color:var(--l)}
+  .ro .meaning{font-size:.78rem;color:var(--muted);min-height:2.4em;line-height:1.4}
+  .arrowmid{display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700;font-size:1.2rem}
+
+  /* number tracks */
+  .tracks{margin-top:22px;border-top:1px dashed var(--hair-strong);padding-top:20px}
+  .track{margin:0 0 20px}
+  .track .tlab{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:6px;font-family:var(--mono)}
+  .track .tlab b{font-weight:700}
+  .rail{position:relative;height:30px}
+  .rail .line{position:absolute;left:0;right:0;top:50%;height:3px;border-radius:3px;background:var(--hair-strong);transform:translateY(-50%)}
+  .rail .center{position:absolute;top:3px;bottom:3px;width:2px;background:var(--hair-strong)}
+  .rail .center.lbl:after{content:attr(data-l);position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.66rem;color:var(--muted);white-space:nowrap}
+  .dot{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(0,0,0,.18);transition:left .06s linear;border:2px solid #fff}
+  .dot.p{background:var(--p)}.dot.o{background:var(--o)}.dot.l{background:var(--l)}
+  .ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:2px}
+
+  .formula-live{margin-top:20px;background:#0f1626;color:#dfe6f4;border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:.92rem;overflow-x:auto;line-height:2.1}
+  .formula-live .cp{color:#7FB6F2}.formula-live .co{color:#F0B964}.formula-live .cl{color:#B79BF0}.formula-live .cm{color:#8895b3}
+
+  /* math fraction */
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .25em;font-family:var(--mono)}
+  .frac .num{border-bottom:1.6px solid currentColor;padding:0 .45em 1px}
+  .frac .den{padding:1px .45em 0}
+  .eq{font-family:var(--mono);font-size:1rem;background:#f3f5fa;border:1px solid var(--hair);border-radius:12px;padding:16px 18px;overflow-x:auto;line-height:2.3;text-align:center}
+  .eq .res{color:var(--pos);font-weight:700}
+
+  /* journey steps */
+  .journey{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:0;margin-top:8px}
+  .jbox{border-radius:14px;padding:16px 12px;text-align:center;border:1.5px solid var(--hair);background:#fbfcfe;opacity:.45;transition:all .45s ease}
+  .jbox.on{opacity:1;transform:translateY(-2px)}
+  .jbox.p.on{border-color:var(--p);box-shadow:0 6px 18px rgba(47,119,201,.16)}
+  .jbox.o.on{border-color:var(--o);box-shadow:0 6px 18px rgba(219,138,36,.16)}
+  .jbox.l.on{border-color:var(--l);box-shadow:0 6px 18px rgba(124,83,214,.16)}
+  .jbox .jl{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .jbox .jv{font-family:var(--mono);font-weight:700;font-size:1.5rem;margin-top:4px}
+  .jbox.p .jv{color:var(--p)}.jbox.o .jv{color:var(--o)}.jbox.l .jv{color:var(--l)}
+  .jbox .jc{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:4px}
+  .jarrow{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;color:var(--muted)}
+  .jarrow .op{font-family:var(--mono);font-size:.66rem;white-space:nowrap}
+  .jarrow .ar{font-size:1.3rem;line-height:1}
+  .btn{font-family:var(--jp);font-weight:700;font-size:.9rem;border:none;border-radius:10px;padding:11px 20px;cursor:pointer;background:var(--ink);color:#fff;transition:transform .12s ease,background .2s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--hair-strong)}
+  .btnrow{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+
+  /* 2x2 table */
+  .ct{width:100%;border-collapse:collapse;font-family:var(--mono);margin-top:8px}
+  .ct th,.ct td{border:1px solid var(--hair-strong);padding:11px 10px;text-align:center}
+  .ct th{background:#f1f4fa;font-weight:700;font-size:.86rem}
+  .ct .rh{background:#f7f9fc;font-weight:700}
+  .ct .hi-good{background:var(--pos);color:#fff;font-weight:700}
+  .ct .hi-tot{background:#eef2f8;font-weight:700}
+  .ct .note{font-size:.74rem;color:var(--muted);font-family:var(--jp)}
+
+  /* KEY spotlight (dark) */
+  .key{background:var(--navy);color:var(--navy-ink);padding:64px 0;position:relative;overflow:hidden}
+  .key:before{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 80% 10%,rgba(219,138,36,.16),transparent 60%);pointer-events:none}
+  .key .wrap{position:relative}
+  .key .eyebrow{color:var(--navy-muted)}
+  .key h2{color:#fff}
+  .key p{color:var(--navy-muted)}
+  .key .panel{background:var(--navy-2);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px 22px;margin-top:24px}
+  .divbox{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;text-align:center}
+  .divcell{padding:14px 8px}
+  .divcell .dl{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-muted);font-weight:700}
+  .divcell .dv{font-family:var(--mono);font-weight:700;font-size:1.9rem;margin-top:4px}
+  .divcell .dv.o2{color:#F0B964}.divcell .dv.res{color:#6FD3A3}.divcell .dv.coef{color:#B79BF0}
+  .divcell .dn{font-size:.74rem;color:var(--navy-muted);margin-top:4px}
+  .divop{font-family:var(--mono);font-size:1.8rem;color:#fff;font-weight:700}
+  .twin{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  .twin .tcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px}
+  .twin .tcard .tt{font-weight:700;color:#fff;margin-bottom:6px}
+  .twin .tcard.subtr{border-color:rgba(124,83,214,.5)}
+  .twin .tcard.divis{border-color:rgba(219,138,36,.5)}
+  .twin .tcard code{color:#dfe6f4}
+  .aha{margin-top:24px;border-left:4px solid #6FD3A3;background:rgba(111,211,163,.08);padding:16px 20px;border-radius:0 12px 12px 0}
+  .aha b{color:#a9efce}
+
+  /* callouts */
+  .callout{border-radius:14px;padding:16px 18px;margin:18px 0;font-size:.95rem}
+  .callout.info{background:var(--p-soft);border:1px solid #cfe2f7}
+  .callout.warn{background:#fdf0e6;border:1px solid #f3d3b3}
+  .callout .ctitle{font-weight:700;margin-bottom:4px}
+
+  /* recipe */
+  .recipe{counter-reset:step;display:grid;gap:10px}
+  .rstep{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:14px 16px}
+  .rstep .rn{counter-increment:step;font-family:var(--disp);font-weight:700;width:32px;height:32px;border-radius:9px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .rstep .rn:before{content:counter(step)}
+  .rstep .rt{font-size:.95rem;line-height:1.6}
+  .rstep .rt code{font-family:var(--mono);background:#f1f4fa;padding:1px 6px;border-radius:5px;font-size:.85em}
+  .rstep.final{border-color:var(--pos);background:#f0faf5}
+  .rstep.final .rn{background:var(--pos)}
+
+  /* quiz */
+  .quiz{display:grid;gap:18px}
+  .q{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:22px 22px}
+  .q .qh{font-weight:700;font-size:1.02rem;margin-bottom:14px}
+  .q .qh .qn{font-family:var(--disp);color:var(--p);margin-right:8px}
+  .opt{display:block;width:100%;text-align:left;border:1.5px solid var(--hair-strong);background:#fff;border-radius:11px;padding:12px 15px;margin-bottom:9px;cursor:pointer;font-family:var(--jp);font-size:.94rem;line-height:1.5;transition:all .15s ease}
+  .opt:hover{border-color:var(--p);background:var(--p-soft)}
+  .opt .ol{font-family:var(--mono);font-weight:700;margin-right:10px;color:var(--muted)}
+  .opt.correct{border-color:var(--pos);background:#e9f7f0}
+  .opt.correct .ol{color:var(--pos)}
+  .opt.wrong{border-color:var(--neg);background:#fbeaea}
+  .opt.wrong .ol{color:var(--neg)}
+  .opt.disabled{cursor:default;opacity:.85}
+  .qexp{margin-top:12px;font-size:.9rem;color:var(--muted);line-height:1.7;display:none;border-top:1px dashed var(--hair-strong);padding-top:12px}
+  .qexp.show{display:block}
+  .qexp b{color:var(--ink)}
+
+  /* source quote */
+  .quote{font-family:var(--mono);font-size:.85rem;background:#f3f5fa;border-left:3px solid var(--l);padding:12px 16px;border-radius:0 10px 10px 0;color:#3a4456;margin:14px 0;line-height:1.7}
+  .quote .src{display:block;font-size:.72rem;color:var(--muted);margin-top:6px}
+
+  footer{background:var(--navy);color:var(--navy-muted);padding:40px 0;text-align:center;font-size:.85rem}
+  footer .mono{color:var(--navy-ink)}
+
+  .tag-pill{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:3px 9px;border-radius:20px;font-weight:700;vertical-align:middle}
+  .tag-pill.p{background:var(--p-soft);color:var(--p)}
+  .tag-pill.o{background:var(--o-soft);color:var(--o)}
+  .tag-pill.l{background:var(--l-soft);color:var(--l)}
+
+  @media(max-width:720px){
+    section{padding:48px 0}
+    .grid3,.grid2,.lang-strip,.readouts,.twin{grid-template-columns:1fr}
+    .journey{grid-template-columns:1fr;gap:8px}
+    .jarrow{transform:rotate(90deg);padding:2px 0}
+    .divbox{grid-template-columns:1fr;gap:6px}
+    .divop{transform:rotate(90deg)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+
+/* ===== continuous chapter styles ===== */
+
+  :root{
+    --bg:#F4F6FB;--surface:#FFFFFF;--ink:#1A2233;--muted:#5C6779;
+    --hair:#E2E7F1;--hair-strong:#CDD5E4;
+    --p:#2F77C9;--p-soft:#E6F0FB;
+    --o:#DB8A24;--o-soft:#FBF0DD;
+    --l:#7C53D6;--l-soft:#EFE9FB;
+    --grow:#1FA37A;--grow-soft:#E5F6EF;   /* 成長/複利アクセント */
+    --neg:#D84C4C;--pos:#23976A;
+    --navy:#121A2E;--navy-2:#1B2740;--navy-ink:#E8ECF6;--navy-muted:#9AA6C2;
+    --radius:18px;--maxw:980px;
+    --jp:'Noto Sans JP','Hiragino Sans','Yu Gothic',Meiryo,sans-serif;
+    --disp:'Space Grotesk',var(--jp);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);line-height:1.85;font-feature-settings:"palt";-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  section{padding:64px 0}
+  h2{font-weight:900;font-size:clamp(1.5rem,4.2vw,2.15rem);line-height:1.35;margin:0 0 6px;letter-spacing:.01em}
+  h3{font-weight:700;font-size:1.18rem;margin:34px 0 12px}
+  p{margin:14px 0}
+  strong{font-weight:700}
+  .mono{font-family:var(--mono)}
+  .eyebrow{font-family:var(--disp);font-weight:600;font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .lead{font-size:1.06rem;color:#3a4456}
+
+  /* HERO */
+  .hero{background:var(--navy);color:var(--navy-ink);padding:74px 0 60px;position:relative;overflow:hidden}
+  .hero:before{content:"";position:absolute;inset:0;background:
+    radial-gradient(58% 50% at 12% 0%,rgba(31,163,122,.20),transparent 60%),
+    radial-gradient(55% 50% at 94% 16%,rgba(124,83,214,.18),transparent 60%);pointer-events:none}
+  .hero .wrap{position:relative}
+  .hero .eyebrow{color:var(--navy-muted)}
+  .hero h1{font-weight:900;font-size:clamp(1.9rem,6vw,3.1rem);line-height:1.3;margin:16px 0 0}
+  .hero h1 .g{color:#5BD4A8}.hero h1 .v{color:#B79BF0}
+  .hero .sub{color:var(--navy-muted);font-size:1.08rem;max-width:700px;margin-top:20px}
+  .prevlink{display:inline-flex;align-items:center;gap:8px;margin-top:26px;font-family:var(--mono);font-size:.8rem;color:var(--navy-muted);border:1px solid rgba(255,255,255,.12);padding:8px 14px;border-radius:20px}
+  .prevlink b{color:#7FB6F2}
+
+  .bignum{display:flex;align-items:baseline;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .bignum .x{font-family:var(--mono);font-weight:700;font-size:clamp(2.6rem,9vw,4.4rem);color:#5BD4A8;line-height:1}
+  .bignum .cap{color:var(--navy-muted);font-size:.95rem;max-width:360px;line-height:1.6}
+
+  /* cards */
+  .card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:26px 24px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+  .tag-pill{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:3px 9px;border-radius:20px;font-weight:700;vertical-align:middle}
+  .tag-pill.p{background:var(--p-soft);color:var(--p)}
+  .tag-pill.o{background:var(--o-soft);color:var(--o)}
+  .tag-pill.l{background:var(--l-soft);color:var(--l)}
+  .tag-pill.g{background:var(--grow-soft);color:var(--grow)}
+
+  /* what's same / new */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+  .ccard{border-radius:16px;padding:22px 20px;border:1.5px solid var(--hair)}
+  .ccard.same{background:var(--p-soft);border-color:#cfe2f7}
+  .ccard.diff{background:var(--grow-soft);border-color:#bce6d6}
+  .ccard h4{margin:0 0 10px;font-size:1.05rem}
+  .ccard.same h4{color:var(--p)}.ccard.diff h4{color:var(--grow)}
+  .ccard ul{margin:0;padding-left:1.1em}
+  .ccard li{margin:7px 0;font-size:.93rem;line-height:1.6}
+
+  /* S-CURVE explorer */
+  .explorer{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:26px 24px 28px;margin-top:24px}
+  .svgwrap{width:100%;overflow-x:auto}
+  svg .axis{stroke:var(--hair-strong);stroke-width:1.5}
+  svg .grid{stroke:var(--hair);stroke-width:1;stroke-dasharray:4 4}
+  svg .curve{fill:none;stroke:var(--l);stroke-width:3}
+  svg .band{fill:var(--p);opacity:.05}
+  svg .axlab{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+  svg .dot1{fill:var(--p);stroke:#fff;stroke-width:2}
+  svg .dot2{fill:var(--grow);stroke:#fff;stroke-width:2}
+  svg .conn{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:3 3;opacity:.5}
+  svg .dplab{font-family:var(--mono);font-size:11px;fill:var(--ink);font-weight:700}
+
+  .slider-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:18px 0 4px}
+  .slider-row label{font-weight:700;font-size:.95rem}
+  #ch-continuous input[type=range]{-webkit-appearance:none;appearance:none;height:8px;border-radius:8px;flex:1;min-width:200px;background:linear-gradient(90deg,var(--l) 0%,var(--l) var(--fill,40%),var(--hair) var(--fill,40%),var(--hair) 100%);cursor:pointer}
+  #ch-continuous input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--l);box-shadow:0 2px 8px rgba(124,83,214,.4);cursor:pointer}
+  #ch-continuous input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--l);box-shadow:0 2px 8px rgba(124,83,214,.4);cursor:pointer}
+  .ageval{font-family:var(--mono);font-weight:700;font-size:1.1rem;color:var(--l);min-width:90px;text-align:right}
+
+  .exgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  .exrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mini{border-radius:12px;padding:13px 12px;text-align:center;border:1px solid var(--hair)}
+  .mini.a{background:var(--p-soft);border-color:#cfe2f7}
+  .mini.b{background:var(--grow-soft);border-color:#bce6d6}
+  .mini .ml{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .mini .mv{font-family:var(--mono);font-weight:700;font-size:1.25rem;margin-top:2px}
+  .mini.a .mv{color:var(--p)}.mini.b .mv{color:var(--grow)}
+  .mini .ms{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:1px}
+
+  .pinbox{border-radius:14px;padding:18px;border:2px solid var(--o);background:var(--o-soft);text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .pinbox .pl{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--o)}
+  .pinbox .pv{font-family:var(--mono);font-weight:700;font-size:2.1rem;color:var(--o);margin:4px 0}
+  .pinbox .ps{font-size:.82rem;color:#8a6a26;line-height:1.4}
+  .dpnote{border-radius:14px;padding:16px;background:#f3f5fa;border:1px solid var(--hair);font-size:.88rem;line-height:1.6}
+  .dpnote b{color:var(--ink)}
+  .dpval{font-family:var(--mono);font-weight:700;color:var(--l)}
+
+  /* eq */
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .25em;font-family:var(--mono)}
+  .frac .num{border-bottom:1.6px solid currentColor;padding:0 .45em 1px}
+  .frac .den{padding:1px .45em 0}
+  .eq{font-family:var(--mono);font-size:1rem;background:#f3f5fa;border:1px solid var(--hair);border-radius:12px;padding:16px 18px;overflow-x:auto;line-height:2.3;text-align:center}
+  .eq .res{color:var(--pos);font-weight:700}
+
+  /* journey */
+  .journey{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;margin-top:8px}
+  .jbox{border-radius:14px;padding:16px 12px;text-align:center;border:1.5px solid var(--hair);background:#fbfcfe;opacity:.45;transition:all .45s ease}
+  .jbox.on{opacity:1;transform:translateY(-2px)}
+  .jbox.p.on{border-color:var(--p);box-shadow:0 6px 18px rgba(47,119,201,.16)}
+  .jbox.o.on{border-color:var(--o);box-shadow:0 6px 18px rgba(219,138,36,.16)}
+  .jbox.l.on{border-color:var(--l);box-shadow:0 6px 18px rgba(124,83,214,.16)}
+  .jbox .jl{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .jbox .jv{font-family:var(--mono);font-weight:700;font-size:1.45rem;margin-top:4px}
+  .jbox.p .jv{color:var(--p)}.jbox.o .jv{color:var(--o)}.jbox.l .jv{color:var(--l)}
+  .jbox .jc{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:4px}
+  .jarrow{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;color:var(--muted)}
+  .jarrow .op{font-family:var(--mono);font-size:.66rem;white-space:nowrap}
+  .jarrow .ar{font-size:1.3rem;line-height:1}
+  .btn{font-family:var(--jp);font-weight:700;font-size:.9rem;border:none;border-radius:10px;padding:11px 20px;cursor:pointer;background:var(--ink);color:#fff;transition:transform .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--hair-strong)}
+  .btnrow{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+
+  /* KEY dark */
+  .key{background:var(--navy);color:var(--navy-ink);padding:64px 0;position:relative;overflow:hidden}
+  .key:before{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 82% 8%,rgba(31,163,122,.16),transparent 60%);pointer-events:none}
+  .key .wrap{position:relative}
+  .key .eyebrow{color:var(--navy-muted)}.key h2{color:#fff}.key p{color:var(--navy-muted)}
+  .key .panel{background:var(--navy-2);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px 22px;margin-top:24px}
+  .divbox{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;text-align:center}
+  .divcell{padding:14px 8px}
+  .divcell .dl{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-muted);font-weight:700}
+  .divcell .dv{font-family:var(--mono);font-weight:700;font-size:1.85rem;margin-top:4px}
+  .divcell .dv.o2{color:#F0B964}.divcell .dv.res{color:#6FD3A3}
+  .divcell .dn{font-size:.74rem;color:var(--navy-muted);margin-top:4px}
+  .divop{font-family:var(--mono);font-size:1.8rem;color:#fff;font-weight:700}
+  .aha{margin-top:24px;border-left:4px solid #6FD3A3;background:rgba(111,211,163,.08);padding:16px 20px;border-radius:0 12px 12px 0}
+  .aha b{color:#a9efce}
+
+  /* compounding */
+  .compound{margin-top:22px}
+  .yrs{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .yrs label{font-weight:700;font-size:.95rem}
+  .yrs input[type=range]{background:linear-gradient(90deg,var(--grow) 0%,var(--grow) var(--cfill,20%),var(--hair) var(--cfill,20%),var(--hair) 100%)}
+  .yrs input[type=range]::-webkit-slider-thumb{border-color:var(--grow);box-shadow:0 2px 8px rgba(31,163,122,.4)}
+  .yrs input[type=range]::-moz-range-thumb{border-color:var(--grow);box-shadow:0 2px 8px rgba(31,163,122,.4)}
+  .yrsval{font-family:var(--mono);font-weight:700;color:var(--grow);min-width:70px;text-align:right}
+  .growbar-wrap{margin-top:16px;background:#f3f5fa;border-radius:12px;padding:16px;border:1px solid var(--hair)}
+  .growbar-track{height:30px;border-radius:8px;background:#e6eaf2;position:relative;overflow:hidden}
+  .growbar-fill{height:100%;background:linear-gradient(90deg,#5BD4A8,var(--grow));border-radius:8px;width:10%;transition:width .25s ease;min-width:2px}
+  .growbar-base{position:absolute;top:0;bottom:0;left:0;width:2px;background:var(--ink);opacity:.3}
+  .growout{display:flex;justify-content:space-between;margin-top:12px;font-family:var(--mono);font-size:.9rem;flex-wrap:wrap;gap:8px}
+  .growout .ov{font-weight:700;color:var(--grow)}
+
+  /* callouts */
+  .callout{border-radius:14px;padding:16px 18px;margin:18px 0;font-size:.95rem}
+  .callout.info{background:var(--p-soft);border:1px solid #cfe2f7}
+  .callout.warn{background:#fdf0e6;border:1px solid #f3d3b3}
+  .callout.grow{background:var(--grow-soft);border:1px solid #bce6d6}
+  .callout .ctitle{font-weight:700;margin-bottom:4px}
+
+  /* recipe */
+  .recipe{counter-reset:step;display:grid;gap:10px}
+  .rstep{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:14px 16px}
+  .rstep .rn{counter-increment:step;font-family:var(--disp);font-weight:700;width:32px;height:32px;border-radius:9px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .rstep .rn:before{content:counter(step)}
+  .rstep .rt{font-size:.95rem;line-height:1.6}
+  .rstep .rt code{font-family:var(--mono);background:#f1f4fa;padding:1px 6px;border-radius:5px;font-size:.85em}
+  .rstep.final{border-color:var(--pos);background:#f0faf5}
+  .rstep.final .rn{background:var(--pos)}
+
+  /* code block with line numbers */
+  .codeblk{background:#0f1626;border-radius:12px;padding:14px 0;margin:14px 0;overflow-x:auto;font-family:var(--mono);font-size:.85rem;line-height:1.9}
+  .codeblk .ln{display:grid;grid-template-columns:38px 1fr}
+  .codeblk .n{color:#4b5a7a;text-align:right;padding-right:14px;user-select:none}
+  .codeblk .c{color:#dfe6f4;white-space:pre}
+  .codeblk .kw{color:#B79BF0}.codeblk .fn{color:#7FB6F2}.codeblk .st{color:#5BD4A8}.codeblk .cm{color:#5a6party}
+
+  /* quiz */
+  .quiz{display:grid;gap:18px}
+  .q{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:22px}
+  .q .qh{font-weight:700;font-size:1.02rem;margin-bottom:14px}
+  .q .qh .qn{font-family:var(--disp);color:var(--l);margin-right:8px}
+  .opt{display:block;width:100%;text-align:left;border:1.5px solid var(--hair-strong);background:#fff;border-radius:11px;padding:12px 15px;margin-bottom:9px;cursor:pointer;font-family:var(--jp);font-size:.94rem;line-height:1.5;transition:all .15s ease}
+  .opt:hover{border-color:var(--l);background:var(--l-soft)}
+  .opt .ol{font-family:var(--mono);font-weight:700;margin-right:10px;color:var(--muted)}
+  .opt.correct{border-color:var(--pos);background:#e9f7f0}
+  .opt.correct .ol{color:var(--pos)}
+  .opt.wrong{border-color:var(--neg);background:#fbeaea}
+  .opt.wrong .ol{color:var(--neg)}
+  .opt.disabled{cursor:default;opacity:.85}
+  .qexp{margin-top:12px;font-size:.9rem;color:var(--muted);line-height:1.7;display:none;border-top:1px dashed var(--hair-strong);padding-top:12px}
+  .qexp.show{display:block}
+  .qexp b{color:var(--ink)}
+
+  .quote{font-family:var(--mono);font-size:.85rem;background:#f3f5fa;border-left:3px solid var(--grow);padding:12px 16px;border-radius:0 10px 10px 0;color:#3a4456;margin:14px 0;line-height:1.7}
+  .quote .src{display:block;font-size:.72rem;color:var(--muted);margin-top:6px}
+
+  footer{background:var(--navy);color:var(--navy-muted);padding:40px 0;text-align:center;font-size:.85rem}
+  footer .mono{color:var(--navy-ink)}
+
+  @media(max-width:720px){
+    section{padding:48px 0}
+    .grid3,.grid2,.compare,.exgrid,.divbox{grid-template-columns:1fr}
+    .journey{grid-template-columns:1fr}
+    .jarrow{transform:rotate(90deg);padding:2px 0}
+    .divop{transform:rotate(90deg)}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ===== chapter / tab shell ===== */
+.chapter{display:none}
+.chapter.active{display:block}
+.topnav{position:sticky;top:0;z-index:50;background:rgba(18,26,46,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 22px;flex-wrap:wrap}
+.topnav .brand{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;color:var(--navy-muted);white-space:nowrap}
+.topnav .tabs{display:flex;gap:8px;flex-wrap:wrap}
+.topnav .tab{font-family:var(--jp);font-weight:700;font-size:.84rem;border:1px solid rgba(255,255,255,.16);background:transparent;color:var(--navy-muted);padding:8px 15px;border-radius:22px;cursor:pointer;transition:all .15s ease}
+.topnav .tab:hover{color:#fff;border-color:rgba(255,255,255,.45)}
+.topnav .tab.active{background:#fff;color:var(--navy);border-color:#fff}
+@media(max-width:600px){.topnav .brand{display:none}}
+
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">DTSC-650 · Logistic Regression 解説シリーズ</div>
+  <div class="tabs">
+    <button class="tab active" data-target="ch-binary">第11章 · 二値予測子</button>
+    <button class="tab" data-target="ch-continuous">第12章 · 連続予測子</button>
+  </div>
+</nav>
+
+<main>
+  <div class="chapter active" id="ch-binary">
+
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">DTSC-650 · Logistic Regression · Binary Predictor</div>
+    <h1>係数（coefficient）は<br><span class="hl p">確率</span>でも <span class="hl o">オッズ</span>でもなく<br><span class="hl l">ログオッズ</span>で話している。</h1>
+    <p class="sub">あのレクチャーが意味不明だったのは、あなたの頭が悪いからじゃない。
+    <strong>3つの言語</strong>を区別せずに、しかも係数を「引き算」だと思って聞いていたから。
+    そこさえ直せば、すべてが一本の線でつながる。</p>
+
+    <div class="lang-strip">
+      <div class="lang-card pc">
+        <div class="tag">Probability</div>
+        <div class="jp">確率</div>
+        <div class="desc">0〜1。「良い信用である見込みは89%」。人間が普段話す言葉。</div>
+      </div>
+      <div class="lang-card oc">
+        <div class="tag">Odds</div>
+        <div class="jp">オッズ</div>
+        <div class="desc">0〜∞。「8.25倍 起こりやすい」。ギャンブラーの言葉。1が五分五分。</div>
+      </div>
+      <div class="lang-card lc">
+        <div class="tag">Log&nbsp;Odds</div>
+        <div class="jp">ログオッズ</div>
+        <div class="desc">-∞〜+∞。回帰係数が住んでいる場所。0が五分五分。機械の言葉。</div>
+      </div>
+    </div>
+    <div class="scrollcue">↓ まずは「3つの言語」を体で覚える <span>↓</span></div>
+  </div>
+</header>
+
+<!-- ================= WHY HARD ================= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why it felt impossible</div>
+    <h2>このレクチャーが「3つの罠」</h2>
+    <p class="lead">講師本人も「複雑だ、何度も見直していい」と言っていた箇所。難しいのは内容ではなく、暗黙に飛ばされた3つの前提です。</p>
+    <div class="grid3" style="margin-top:24px">
+      <div class="card trap">
+        <div class="num">TRAP 01</div>
+        <h4>「単位」が見えない</h4>
+        <p>係数 -1.30 は確率の話でもオッズの話でもなく、<strong>ログオッズ（log odds）</strong>の話。同じ出来事を3つの言語で言い直しているだけ、と気づかないと一生ハマる。</p>
+      </div>
+      <div class="card trap">
+        <div class="num">TRAP 02</div>
+        <h4>「引き算」だと思ってしまう</h4>
+        <p>係数は2つの状態の差。だが講師は「引き算じゃない、<strong>割り算</strong>だ」と言う。これは“オッズの世界では割り算 = ログの世界では引き算”という同じ操作の言い換え。ここが最大の山。</p>
+      </div>
+      <div class="card trap">
+        <div class="num">TRAP 03</div>
+        <h4>「73%減」の出どころ不明</h4>
+        <p>最後に出てくる「オッズが約73%減る」。これは <span class="mono">e<sup>係数</sup> = 0.273</span>、つまり「元の0.273倍になる」=「27.3%しか残らない」=「72.7%減る」。1行で説明できる。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= THE MACHINE ================= -->
+<section style="background:#fff;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)">
+  <div class="wrap">
+    <div class="eyebrow">Interactive · 変換マシン</div>
+    <h2>確率 → オッズ → ログオッズ<br>を“体で”理解する</h2>
+    <p class="lead">スライダーを動かすと、同じ1つの出来事が3つの言語で同時に翻訳されます。下の3本のレールで、点が同じ位置を指していることに注目。これが「3つは同じものの言い換え」という意味です。</p>
+
+    <div class="machine" style="margin-top:24px">
+      <div class="slider-row">
+        <label for="pslider">確率 p（良い信用である見込み）</label>
+        <input type="range" id="pslider" min="1" max="99" value="89" step="1">
+        <div class="pval" id="pout">0.89</div>
+      </div>
+
+      <div class="readouts">
+        <div class="ro p">
+          <div class="lab">Probability 確率</div>
+          <div class="big" id="ro-p">0.89</div>
+          <div class="meaning" id="me-p">100回中およそ89回</div>
+        </div>
+        <div class="ro o">
+          <div class="lab">Odds オッズ</div>
+          <div class="big" id="ro-o">8.25</div>
+          <div class="meaning" id="me-o">起こる方が 8.25 倍 ありそう</div>
+        </div>
+        <div class="ro l">
+          <div class="lab">Log Odds ログオッズ</div>
+          <div class="big" id="ro-l">2.11</div>
+          <div class="meaning" id="me-l">正の値 → 五分五分より起こりやすい</div>
+        </div>
+      </div>
+
+      <div class="tracks">
+        <div class="track">
+          <div class="tlab"><b style="color:var(--p)">確率 (linear 0–1)</b><span>中央 0.5 = 五分五分</span></div>
+          <div class="rail">
+            <div class="line"></div>
+            <div class="center lbl" data-l="0.5" style="left:50%"></div>
+            <div class="dot p" id="dot-p" style="left:89%"></div>
+          </div>
+          <div class="ends"><span>0</span><span>1</span></div>
+        </div>
+        <div class="track">
+          <div class="tlab"><b style="color:var(--o)">オッズ (log scale!)</b><span>中央 1 = 五分五分</span></div>
+          <div class="rail">
+            <div class="line"></div>
+            <div class="center lbl" data-l="1" style="left:50%"></div>
+            <div class="dot o" id="dot-o" style="left:75%"></div>
+          </div>
+          <div class="ends"><span>0⁺</span><span>∞</span></div>
+          <div style="font-size:.74rem;color:var(--muted);margin-top:4px">↑ オッズは“対数目盛り”にしないと左右対称に見えない。<strong>だからこそログを取る</strong>──対称な直線の世界（下のレール）に変身させるため。</div>
+        </div>
+        <div class="track">
+          <div class="tlab"><b style="color:var(--l)">ログオッズ (linear −5〜+5)</b><span>中央 0 = 五分五分</span></div>
+          <div class="rail">
+            <div class="line"></div>
+            <div class="center lbl" data-l="0" style="left:50%"></div>
+            <div class="dot l" id="dot-l" style="left:71%"></div>
+          </div>
+          <div class="ends"><span>−∞</span><span>+∞</span></div>
+        </div>
+      </div>
+
+      <div class="formula-live" id="flive"></div>
+    </div>
+
+    <div class="callout info">
+      <div class="ctitle">読み解きのコツ 🧭</div>
+      3本のレールで「同じ出来事」の点は必ず同じ側（中央より右か左か）にいます。
+      <span class="tag-pill p">確率&gt;0.5</span> なら必ず <span class="tag-pill o">オッズ&gt;1</span> で <span class="tag-pill l">ログオッズ&gt;0</span>。3つは<strong>完全に連動する1つの量</strong>の言い換えにすぎません。
+    </div>
+  </div>
+</section>
+
+<!-- ================= STAGE SETUP ================= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The stage · German Credit データ</div>
+    <h2>舞台設定：<br>「外国人労働者」かどうかで、<br>良い信用になる確率は変わるか？</h2>
+    <p class="lead">qmd の <span class="mono">Logistic regression with one binary predictor</span> セクション。予測子は <span class="mono">ForeignWorker</span>（外国人労働者か）という二値変数ひとつだけ。Rが吐いた式はこれです。</p>
+
+    <div class="eq" style="margin-top:18px">
+      p = <span class="frac"><span class="num">1</span><span class="den">1 + e<sup>−(b₀ + b₁·x)</sup></span></span>
+      &nbsp;=&nbsp;
+      <span class="frac"><span class="num">1</span><span class="den">1 + e<sup>−(<span style="color:var(--l)">2.11</span> + (<span style="color:var(--neg)">−1.30</span>)·x)</sup></span></span>
+    </div>
+    <p style="font-size:.92rem;color:var(--muted)">
+      <span class="tag-pill l">b₀ = 2.11</span> 切片（intercept）＝ x=0 のときのログオッズ。
+      <span class="tag-pill" style="background:#fbeaea;color:var(--neg)">b₁ = −1.30</span> 係数（coefficient）＝ x が1増えたときの「ログオッズの変化」。<strong>今日の主役。</strong>
+    </p>
+
+    <div class="callout warn">
+      <div class="ctitle">⚠️ このデータの“ねじれ”に注意</div>
+      このコースのコーディングでは <strong>x = 0 が「外国人労働者（foreign）」、x = 1 が「自国民（local）」</strong>です。直感と逆なので混乱しやすいポイント。「x が0→1に増える＝外国人から自国民に変わる」と読み替えてください。
+    </div>
+
+    <h3>すべての数字の出どころ＝この2×2の表</h3>
+    <p>講師が出す .891 や .693 という確率は、魔法ではなく単なる「数えた割合」です。<span class="mono">table(gc2$Class, gc2$ForeignWorker)</span> の中身がこれ。</p>
+
+    <table class="ct">
+      <thead>
+        <tr>
+          <th></th>
+          <th>x=0<br><span class="note">外国人 foreign</span></th>
+          <th>x=1<br><span class="note">自国民 local</span></th>
+          <th class="hi-tot">合計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="rh">bad（悪い信用）</td><td>4</td><td>296</td><td class="hi-tot">300</td></tr>
+        <tr><td class="rh">good（良い信用）</td><td class="hi-good">33</td><td class="hi-good">667</td><td class="hi-tot">700</td></tr>
+        <tr><td class="rh hi-tot">合計</td><td class="hi-tot">37</td><td class="hi-tot">963</td><td class="hi-tot">1000</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.9rem;color:var(--muted);margin-top:10px">
+      外国人で良い信用 = <span class="mono">33 / 37 = 0.891</span>。自国民で良い信用 = <span class="mono">667 / 963 = 0.693</span>。
+      Rの予測確率はこの“ナマの割合”とピッタリ一致します。だから「データを数えただけ」だと腹落ちできる。
+    </p>
+  </div>
+</section>
+
+<!-- ================= STEP A ================= -->
+<section style="background:#fff;border-top:1px solid var(--hair)">
+  <div class="wrap">
+    <div class="eyebrow">Step A · x = 0（外国人労働者）</div>
+    <h2>まず x=0 の“旅”を最後まで通す</h2>
+    <p class="lead">確率からスタートして、オッズ → ログオッズへと変換する。ログオッズの行き先が<strong>切片 b₀ = 2.11 とピッタリ一致</strong>することを確認します。「再生」を押すと1段ずつ点灯します。</p>
+
+    <div class="card" style="margin-top:22px">
+      <div class="journey" id="journeyA">
+        <div class="jbox p" data-i="0">
+          <div class="jl">確率 p</div>
+          <div class="jv">0.891</div>
+          <div class="jc">= 33/37</div>
+        </div>
+        <div class="jarrow"><span class="op">p/(1−p)</span><span class="ar">→</span></div>
+        <div class="jbox o" data-i="1">
+          <div class="jl">オッズ</div>
+          <div class="jv">8.25</div>
+          <div class="jc">0.891 / 0.108</div>
+        </div>
+        <div class="jarrow"><span class="op">ln( )</span><span class="ar">→</span></div>
+        <div class="jbox l" data-i="2">
+          <div class="jl">ログオッズ</div>
+          <div class="jv">2.11</div>
+          <div class="jc">= b₀ ✓</div>
+        </div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" onclick="playJourney('A')">▶ x=0 の旅を再生</button>
+        <button class="btn ghost" onclick="resetJourney('A')">リセット</button>
+      </div>
+    </div>
+
+    <div class="eq" style="margin-top:18px">
+      odds = <span class="frac"><span class="num">p</span><span class="den">1 − p</span></span>
+      = <span class="frac"><span class="num">0.891</span><span class="den">0.108</span></span>
+      = <span class="res">8.25</span>
+      &nbsp;&nbsp;→&nbsp;&nbsp; ln(8.25) = <span class="res">2.11</span> &nbsp;=&nbsp; b₀
+    </div>
+    <p style="font-size:.9rem;color:var(--muted)">
+      「外国人で<strong>良くない</strong>信用」は <span class="mono">1 − 0.891 = 0.108 = 4/37</span>。これでオッズの分母が埋まる。
+      ログオッズが切片そのものになるのは、x=0 のとき式が <span class="mono">b₀ + b₁·0 = b₀</span> に潰れるから。
+    </p>
+  </div>
+</section>
+
+<!-- ================= STEP B ================= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Step B · x = 1（自国民労働者）</div>
+    <h2>次に x=1 の“旅”を通す</h2>
+    <p class="lead">x を 0→1 に1つ増やす＝外国人から自国民へ。同じ手順で、新しいオッズ <strong>2.25</strong> を手に入れます。</p>
+
+    <div class="card" style="margin-top:22px">
+      <div class="journey" id="journeyB">
+        <div class="jbox p" data-i="0">
+          <div class="jl">確率 p</div>
+          <div class="jv">0.693</div>
+          <div class="jc">= 667/963</div>
+        </div>
+        <div class="jarrow"><span class="op">p/(1−p)</span><span class="ar">→</span></div>
+        <div class="jbox o" data-i="1">
+          <div class="jl">オッズ（新）</div>
+          <div class="jv">2.25</div>
+          <div class="jc">0.693 / 0.307</div>
+        </div>
+        <div class="jarrow"><span class="op">ln( )</span><span class="ar">→</span></div>
+        <div class="jbox l" data-i="2">
+          <div class="jl">ログオッズ</div>
+          <div class="jv">0.81</div>
+          <div class="jc">= b₀+b₁</div>
+        </div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" onclick="playJourney('B')">▶ x=1 の旅を再生</button>
+        <button class="btn ghost" onclick="resetJourney('B')">リセット</button>
+      </div>
+    </div>
+
+    <div class="eq" style="margin-top:18px">
+      odds<sub>新</sub> = <span class="frac"><span class="num">0.693</span><span class="den">0.307</span></span> = <span class="res">2.25</span>
+    </div>
+    <p style="font-size:.9rem;color:var(--muted)">
+      ここまでで手元に2つのオッズがそろいました：<br>
+      <span class="tag-pill o">旧オッズ 8.25</span>（外国人 x=0）&nbsp;と&nbsp;<span class="tag-pill o">新オッズ 2.25</span>（自国民 x=1）。
+      <strong>この2つから、どうやって係数 −1.30 を取り出すのか？</strong> ── それが次の山場です。
+    </p>
+  </div>
+</section>
+
+<!-- ================= THE KEY (dark) ================= -->
+<section class="key">
+  <div class="wrap">
+    <div class="eyebrow">The KEY · ここが全部の核心</div>
+    <h2>係数は「引き算」じゃない。<br>オッズを「割る」と出てくる。</h2>
+    <p>講師がモゴモゴ言っていた「引き算じゃなくて割り算」。意味不明だった部分を、ここで完全に潰します。新オッズ ÷ 旧オッズ を計算して、その自然対数を取る。それだけで係数が降ってきます。</p>
+
+    <div class="panel">
+      <div class="divbox">
+        <div class="divcell">
+          <div class="dl">新オッズ (x=1)</div>
+          <div class="dv o2" id="d-new">2.25</div>
+          <div class="dn">自国民</div>
+        </div>
+        <div class="divop">÷</div>
+        <div class="divcell">
+          <div class="dl">旧オッズ (x=0)</div>
+          <div class="dv o2" id="d-old">8.25</div>
+          <div class="dn">外国人</div>
+        </div>
+        <div class="divop">=</div>
+        <div class="divcell">
+          <div class="dl">オッズ比 (odds ratio)</div>
+          <div class="dv res" id="d-or">0.273</div>
+          <div class="dn">e<sup>係数</sup></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:18px;font-family:var(--mono);color:#dfe6f4;font-size:1.05rem">
+        ln(<span style="color:#6FD3A3">0.273</span>) = <span style="color:#B79BF0;font-weight:700" id="d-coef">−1.297</span> &nbsp;←&nbsp; <span style="color:#9AA6C2">これが Rの係数 b₁</span>
+      </div>
+      <div class="btnrow" style="justify-content:center">
+        <button class="btn ghost" onclick="playDivision()" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)">▶ 割り算 → ログ を再生</button>
+      </div>
+    </div>
+
+    <div class="twin">
+      <div class="tcard divis">
+        <div class="tt" style="color:#F0B964">🎲 オッズの世界では「割り算」</div>
+        <p style="color:var(--navy-muted);margin:0">2つの状態を比べるとき、オッズは<strong>比（ratio）</strong>で比べる。<br>
+        <code>2.25 ÷ 8.25 = 0.273</code><br>「新しいオッズは元の0.273倍」。</p>
+      </div>
+      <div class="tcard subtr">
+        <div class="tt" style="color:#B79BF0">🤖 ログの世界では「引き算」</div>
+        <p style="color:var(--navy-muted);margin:0">同じことをログオッズで見ると、ただの<strong>引き算</strong>。<br>
+        <code>0.81 − 2.11 = −1.30</code><br>係数とピッタリ同じ。</p>
+      </div>
+    </div>
+
+    <div class="aha">
+      <b>これが「アハ」の正体 💡</b><br>
+      「オッズを割る」と「ログオッズを引く」は<strong>まったく同じ操作</strong>。<br>
+      数学のルール <code style="color:#dfe6f4">ln(A) − ln(B) = ln(A / B)</code> がそれを保証している。<br>
+      講師が「引き算じゃなく割り算」と言ったのは、<strong>確率やオッズという“曲がった世界”では差を取れず、比でしか比べられないから</strong>。ログを取って“まっすぐな世界”に移すと、初めてただの引き算になる。<br>
+      だから回帰係数はログオッズで定義されている。<strong>足し算・引き算ができる、唯一まっすぐな言語</strong>だからです。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 73% ================= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The payoff · 「73%減」の正体</div>
+    <h2>最後の「オッズが約73%減る」<br>を1行で倒す</h2>
+    <p class="lead">レクチャーの締めの一言。実はオッズ比 0.273 をそのまま日本語にするだけです。</p>
+
+    <div class="grid2" style="margin-top:22px">
+      <div class="card">
+        <h3 style="margin-top:0">考え方はシンプル</h3>
+        <p style="margin:0">オッズ比 = <span class="mono">e<sup>−1.30</sup> = 0.273</span>。<br>
+        「新しいオッズ = 元の <strong>0.273倍</strong>」という意味。</p>
+        <div class="eq" style="text-align:left;margin-top:14px">
+          残る割合 = 0.273 = <span class="res">27.3%</span><br>
+          減った割合 = 1 − 0.273 = <span style="color:var(--neg);font-weight:700">0.727 ≈ 73%</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">符号で方向がわかる 🔭</h3>
+        <p style="margin:0 0 8px">オッズ比を覚えるより、<strong>符号と1との比較</strong>で直感を持つのが速い：</p>
+        <p style="margin:0">
+        ・係数が <span style="color:var(--neg);font-weight:700">マイナス</span> → e<sup>b</sup> &lt; 1 → オッズ<strong>減る</strong><br>
+        ・係数が <span style="color:var(--pos);font-weight:700">プラス</span> → e<sup>b</sup> &gt; 1 → オッズ<strong>増える</strong><br>
+        ・係数が <strong>0</strong> → e<sup>0</sup> = 1 → <strong>五分五分・変化なし</strong></p>
+        <p style="margin:10px 0 0;font-size:.88rem;color:var(--muted)">講師の「オッズが等しければ x/x = 1」はこのこと。1からどれだけ離れたかが効果の大きさ。</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="ctitle">日本語での最終解釈 📌</div>
+      「外国人労働者から自国民に変わると（x が0→1）、良い信用である<strong>オッズ</strong>が約73%下がる」。
+      ＊確率が73%下がるのではなく、<strong>オッズ（比）</strong>が0.273倍になる、という点に注意。確率では 0.891 → 0.693 の変化です。
+    </div>
+  </div>
+</section>
+
+<!-- ================= RECIPE ================= -->
+<section style="background:#fff;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)">
+  <div class="wrap">
+    <div class="eyebrow">The recipe · 試験で再現する8手順</div>
+    <h2>二値予測子の係数を“手で”出すレシピ</h2>
+    <p class="lead">qmd の末尾（655–666行）にある手順そのもの。連続変数（Age）でもまったく同じ流れで動きます。これを暗記すれば、もう係数の解釈で詰まりません。</p>
+
+    <div class="recipe" style="margin-top:22px">
+      <div class="rstep"><div class="rn"></div><div class="rt">回帰を実行する。<code>glm(Y ~ x, binomial(), data)</code> で <strong>b₀</strong> と <strong>b₁</strong> を得る。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt">係数をロジスティック式に代入する。<code>p = 1 / (1 + e^−(b₀ + b₁·x))</code></div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill p">x=0</span> の確率を計算する。 → ここでは 0.891。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill o">x=0</span> のオッズを計算する。<code>p/(1−p)</code> → 8.25（＝旧オッズ）。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill p">x=1</span> の確率を計算する。 → ここでは 0.693。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill o">x=1</span> のオッズを計算する。<code>p/(1−p)</code> → 2.25（＝新オッズ）。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><strong>オッズの変化＝割り算。</strong> <code>新 ÷ 旧 = 2.25 / 8.25 = 0.273</code>（オッズ比）。</div></div>
+      <div class="rstep final"><div class="rn"></div><div class="rt"><strong>その自然対数を取る。</strong> <code>ln(0.273) = −1.30</code> ── これが係数 b₁ と一致する。証明完了。 ✅</div></div>
+    </div>
+
+    <div class="quote">
+      "we divide the odds after a one-unit change by the original odds … 2.25/8.25 = .273 … log(.273) = −1.297783 … we decrease the odds of having good credit by about 73%"
+      <span class="src">— LogisticRegressionTemplate.qmd / Binary predictor interpretation セクションより</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Self-check · 理解度チェック</div>
+    <h2>本当に腹落ちしたか、4問で確認</h2>
+    <p class="lead">各問、選択肢をタップすると正解・解説が出ます。間違えても大丈夫。間違いの中にこそ理解の穴があります。</p>
+    <div class="quiz" id="quiz" style="margin-top:24px"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mono">Probability ⇄ Odds ⇄ Log&nbsp;Odds</div>
+    <p>同じ1つの真実を、3つの言語で言い直しているだけ。<br>
+    係数がログオッズに住むのは、それが足し算・引き算のできる唯一まっすぐな世界だから。</p>
+    <p class="mono" style="font-size:.74rem;opacity:.7">DTSC-650 · German Credit · ForeignWorker · b₀=2.11, b₁=−1.30</p>
+  </div>
+</footer>
+
+
+  </div>
+  <div class="chapter" id="ch-continuous">
+
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">DTSC-650 · 第12章 · Continuous Predictor (Age)</div>
+    <h1>1歳 年をとるごとに、<br>良い信用のオッズは<br><span class="g">必ず ×1.0186</span> ──<br>どの年齢でも、<span class="v">同じ倍率</span>で。</h1>
+    <p class="sub">二値予測子（外国人かどうか）の次は、連続予測子（年齢）。
+    結論を先に言うと──<strong>エンジンは完全に同じ</strong>。確率→オッズ→ログオッズの旅も、割り算で係数を出す手順も、1ミリも変わりません。
+    新しいのはたった1つ：「1単位」が“どの2つの値でもいい”ということ。</p>
+
+    <a class="prevlink" href="#" data-goto="ch-binary" style="cursor:pointer">← 前章：<b>二値予測子編</b>（外国人労働者 / 73%減）の続きです</a>
+
+    <div class="bignum">
+      <div class="x">×1.0186</div>
+      <div class="cap">これが係数 0.01844 の正体。<br>e<sup>0.01844</sup> = 1.0186。<br>33→34歳でも、55→56歳でも、70→71歳でも、オッズは“いつも同じ倍率”で増える。</div>
+    </div>
+  </div>
+</header>
+
+<!-- SAME / NEW -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Orientation · まず地図を持つ</div>
+    <h2>「同じところ」と「新しいところ」を<br>最初に切り分ける</h2>
+    <p class="lead">連続予測子が難しく感じるのは、二値と何が違うのか曖昧なまま聞くから。先に分けてしまえば、聞くべきは右側だけになります。</p>
+
+    <div class="compare">
+      <div class="ccard same">
+        <h4>✅ 二値と完全に同じところ</h4>
+        <ul>
+          <li>係数はやはり<strong>ログオッズの変化</strong>を表す（単位は同じ）</li>
+          <li>確率 → オッズ → ログオッズの<strong>3つの言語</strong>も同じ</li>
+          <li>係数を出す手順も同じ：<strong>新オッズ ÷ 旧オッズ → ln()</strong></li>
+          <li>符号で方向：プラスで増、マイナスで減、0で変化なし</li>
+          <li>R のコードも <code style="font-family:var(--mono)">glm(Class ~ Age, ...)</code> と形は同一</li>
+        </ul>
+      </div>
+      <div class="ccard diff">
+        <h4>🆕 連続予測子で新しいところ</h4>
+        <ul>
+          <li>「1単位増加」が<strong>どの2値でもいい</strong>（33→34 でも 55→56 でも）</li>
+          <li>そのオッズ比が<strong>どこでも一定（×1.0186）</strong>──これが“クール”な核心</li>
+          <li>だから効果は<strong>足し算ではなく掛け算で積み上がる</strong>（複利的）</li>
+          <li>一方、<strong>確率の変化幅 Δp は一定ではない</strong>（S字カーブの場所による）</li>
+          <li>x=0（年齢0歳）は非現実だが、計算の“基準点”として便利</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S-CURVE EXPLORER -->
+<section style="background:#fff;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)">
+  <div class="wrap">
+    <div class="eyebrow">Interactive · S字カーブ探検</div>
+    <h2>年齢を動かして「いつも ×1.0186」を<br>自分の目で確かめる</h2>
+    <p class="lead">紫の曲線がロジスティック回帰の予測確率 P(良い信用)。スライダーで年齢を選ぶと、その年齢（青）と +1歳（緑）の2点が打たれます。<strong>どこに動かしてもオッズ比は 1.0186 のまま</strong>──でも確率の段差 Δp は場所で変わる。ここが連続予測子の本質です。</p>
+
+    <div class="explorer">
+      <div class="svgwrap">
+        <svg id="scurve" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;min-width:560px"></svg>
+      </div>
+
+      <div class="slider-row">
+        <label for="agesl">年齢（スタート地点）</label>
+        <input type="range" id="agesl" min="15" max="78" value="35" step="1">
+        <div class="ageval" id="ageout">35 → 36歳</div>
+      </div>
+
+      <div class="exgrid">
+        <div class="exrow">
+          <div class="mini a">
+            <div class="ml">確率 p（今）</div>
+            <div class="mv" id="m-p1">0.700</div>
+            <div class="ms" id="m-p1s">35歳</div>
+          </div>
+          <div class="mini b">
+            <div class="ml">確率 p（+1歳）</div>
+            <div class="mv" id="m-p2">0.704</div>
+            <div class="ms" id="m-p2s">36歳</div>
+          </div>
+          <div class="mini a">
+            <div class="ml">オッズ（今）</div>
+            <div class="mv" id="m-o1">2.331</div>
+            <div class="ms">p/(1−p)</div>
+          </div>
+          <div class="mini b">
+            <div class="ml">オッズ（+1歳）</div>
+            <div class="mv" id="m-o2">2.374</div>
+            <div class="ms">p/(1−p)</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-rows:1fr auto;gap:14px">
+          <div class="pinbox">
+            <div class="pl">オッズ比（いつも一定）</div>
+            <div class="pv" id="m-or">×1.0186</div>
+            <div class="ps">年齢をどこに動かしても変わらない。<br>＝ e<sup>0.01844</sup>。これが係数の正体。</div>
+          </div>
+          <div class="dpnote">
+            <b>確率の段差 Δp は変わる：</b> <span class="dpval" id="m-dp">+0.0039</span><br>
+            S字の<strong>真ん中で最大</strong>、端に行くほど小さくなる。オッズ比は一定でも、確率インパクトは場所次第。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout grow">
+      <div class="ctitle">講師の「55と56、33と34、どれでも同じ比になる」を体感 🎯</div>
+      スライダーを左端から右端まで動かしてみてください。上の <span class="tag-pill o">×1.0186</span> は<strong>ピクリとも動きません</strong>。
+      これが「連続予測子の係数 = 1単位あたりの“一定の”ログオッズ変化」という意味。レクチャーで講師が「何年経っても自分はこれがクールだと思う」と言っていたのは、まさにこの一定性のことです。
+    </div>
+  </div>
+</section>
+
+<!-- THE EQUATION + JOURNEYS -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The stage · Age を予測子にする</div>
+    <h2>R が吐いた式と、2つの“旅”</h2>
+    <p class="lead">qmd の <span class="mono">modAge &lt;- glm(Class ~ Age, binomial(), data = gc2)</span>。良い信用の人は、悪い信用の人より平均年齢がわずかに高い。だから「年齢が上がると良い信用になりやすい（係数プラス）」と予想できます。</p>
+
+    <div class="codeblk" aria-label="R code">
+      <div class="ln"><span class="n">1</span><span class="c"><span class="kw">modAge</span> <span class="kw">&lt;-</span> <span class="fn">glm</span>(Class ~ Age, <span class="fn">binomial</span>(), data = gc2)</span></div>
+      <div class="ln"><span class="n">2</span><span class="c"><span class="fn">summary</span>(modAge)</span></div>
+      <div class="ln"><span class="n">3</span><span class="c"></span></div>
+      <div class="ln"><span class="n">4</span><span class="c"><span class="cm"># intercept b0 = 0.200919 ,  Age coef b1 = 0.01844</span></span></div>
+    </div>
+
+    <div class="eq">
+      p = <span class="frac"><span class="num">1</span><span class="den">1 + e<sup>−(b₀ + b₁·Age)</sup></span></span>
+      &nbsp;=&nbsp;
+      <span class="frac"><span class="num">1</span><span class="den">1 + e<sup>−(<span style="color:var(--l)">0.2009</span> + <span style="color:var(--grow)">0.01844</span>·Age)</sup></span></span>
+    </div>
+    <p style="font-size:.92rem;color:var(--muted)">
+      <span class="tag-pill l">b₀ = 0.2009</span> 年齢0歳のログオッズ（非現実だが基準点）。
+      <span class="tag-pill g">b₁ = 0.01844</span> 1歳あたりのログオッズ増加。<strong>今回の主役。</strong>
+    </p>
+
+    <h3>Step A：Age = 0 の旅（基準点）</h3>
+    <div class="card">
+      <div class="journey" id="cjourneyA">
+        <div class="jbox p" data-i="0"><div class="jl">確率 p</div><div class="jv">0.550</div><div class="jc">Age=0</div></div>
+        <div class="jarrow"><span class="op">p/(1−p)</span><span class="ar">→</span></div>
+        <div class="jbox o" data-i="1"><div class="jl">オッズ</div><div class="jv">1.222</div><div class="jc">0.55 / 0.45</div></div>
+        <div class="jarrow"><span class="op">ln( )</span><span class="ar">→</span></div>
+        <div class="jbox l" data-i="2"><div class="jl">ログオッズ</div><div class="jv">0.201</div><div class="jc">= b₀ ✓</div></div>
+      </div>
+      <div class="btnrow"><button class="btn" onclick="cPlayJourney('A')">▶ 再生</button><button class="btn ghost" onclick="cResetJourney('A')">リセット</button></div>
+    </div>
+
+    <h3>Step B：Age = 1 の旅（1歳増やす）</h3>
+    <div class="card">
+      <div class="journey" id="cjourneyB">
+        <div class="jbox p" data-i="0"><div class="jl">確率 p</div><div class="jv">0.555</div><div class="jc">Age=1</div></div>
+        <div class="jarrow"><span class="op">p/(1−p)</span><span class="ar">→</span></div>
+        <div class="jbox o" data-i="1"><div class="jl">オッズ（新）</div><div class="jv">1.245</div><div class="jc">0.555 / 0.445</div></div>
+        <div class="jarrow"><span class="op">ln( )</span><span class="ar">→</span></div>
+        <div class="jbox l" data-i="2"><div class="jl">ログオッズ</div><div class="jv">0.219</div><div class="jc">= b₀+b₁</div></div>
+      </div>
+      <div class="btnrow"><button class="btn" onclick="cPlayJourney('B')">▶ 再生</button><button class="btn ghost" onclick="cResetJourney('B')">リセット</button></div>
+    </div>
+    <p style="font-size:.9rem;color:var(--muted)">
+      手元に2つのオッズ：<span class="tag-pill o">旧 1.222</span>（0歳）と <span class="tag-pill o">新 1.245</span>（1歳）。
+      二値のときと<strong>まったく同じ</strong>に、ここから割り算で係数を取り出します。
+    </p>
+  </div>
+</section>
+
+<!-- KEY -->
+<section class="key">
+  <div class="wrap">
+    <div class="eyebrow">The KEY · 二値と同じ“割り算 → ログ”</div>
+    <h2>新オッズ ÷ 旧オッズ → ln。<br>出てくるのは、また係数。</h2>
+    <p>連続予測子でも操作は1ミリも変わりません。1.245 ÷ 1.222 = 1.0186、その自然対数が 0.01844。これが Age の係数 b₁ です。</p>
+
+    <div class="panel">
+      <div class="divbox">
+        <div class="divcell"><div class="dl">新オッズ (1歳)</div><div class="dv o2">1.245</div><div class="dn">+1歳の方</div></div>
+        <div class="divop">÷</div>
+        <div class="divcell"><div class="dl">旧オッズ (0歳)</div><div class="dv o2">1.222</div><div class="dn">元の方</div></div>
+        <div class="divop">=</div>
+        <div class="divcell"><div class="dl">オッズ比</div><div class="dv res">1.0186</div><div class="dn">e<sup>係数</sup></div></div>
+      </div>
+      <div style="text-align:center;margin-top:18px;font-family:var(--mono);color:#dfe6f4;font-size:1.05rem">
+        ln(<span style="color:#6FD3A3">1.0186</span>) = <span style="color:#B79BF0;font-weight:700">0.01844</span> &nbsp;←&nbsp; <span style="color:#9AA6C2">Age の係数 b₁</span>
+      </div>
+    </div>
+
+    <div class="aha">
+      <b>二値との唯一の違い 💡</b><br>
+      二値では「割れるペアは1組だけ」（外国人 vs 自国民）。連続では<strong>無限にペアが作れる</strong>──33→34、55→56、どれでも。
+      そして驚くべきことに、<strong>そのオッズ比はいつも 1.0186 で同じ</strong>。だから1つの係数で全範囲を表せる。
+      これが「連続予測子も、二値予測子の1単位増加とすごく似ている」という講師の言葉の中身です。
+    </div>
+  </div>
+</section>
+
+<!-- COMPOUNDING -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The payoff · 効果は“掛け算”で積み上がる</div>
+    <h2>1年で+1.86%。<br>では10年、30年では？</h2>
+    <p class="lead">オッズ比が一定（×1.0186）ということは、年齢の効果は<strong>足し算ではなく掛け算</strong>で積み上がるという意味。複利と同じ構造です。スライダーで年数を動かして、オッズが何倍になるか見てみましょう。</p>
+
+    <div class="card compound">
+      <div class="yrs">
+        <label for="yrsl">年数（何歳ぶん増やす？）</label>
+        <input type="range" id="yrsl" min="1" max="50" value="10" step="1">
+        <div class="yrsval" id="yrsout">10年</div>
+      </div>
+      <div class="growbar-wrap">
+        <div class="growbar-track">
+          <div class="growbar-base"></div>
+          <div class="growbar-fill" id="growfill"></div>
+        </div>
+        <div class="growout">
+          <span>式：<span class="ov" id="grow-formula">1.0186<sup>10</sup></span></span>
+          <span>オッズは <span class="ov" id="grow-mult">×1.20</span> 倍</span>
+          <span>（<span class="ov" id="grow-pct">約 +20%</span>）</span>
+        </div>
+      </div>
+      <p style="font-size:.9rem;color:var(--muted);margin-top:14px">
+        ＊棒グラフの黒線が「元のオッズ（1倍）」。そこからどれだけ伸びたかが効果。1年では誤差みたいに小さくても、年数を重ねると<strong>確かな差</strong>になる──これが「掛け算で積み上がる」の意味です。
+      </p>
+    </div>
+
+    <div class="callout info">
+      <div class="ctitle">確率では一定にならない理由 🧭</div>
+      オッズは“掛け算の世界”なので一定倍率で素直に伸びますが、確率は0〜1の檻に閉じ込められたS字。
+      端（0.9超など）に近づくと、いくらオッズを掛けても確率はほとんど動けません。<strong>「オッズ比は一定／確率の伸びは頭打ち」</strong>──この非対称が連続予測子の一番の落とし穴です。
+    </div>
+  </div>
+</section>
+
+<!-- RECIPE -->
+<section style="background:#fff;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)">
+  <div class="wrap">
+    <div class="eyebrow">The recipe · 二値と“完全に同じ”8手順</div>
+    <h2>連続予測子の係数を手で出すレシピ</h2>
+    <p class="lead">qmd 末尾（655–666行）の手順。二値編で覚えたものと<strong>1文字も変わりません</strong>。x=0 と x=1 を入れて、割って、ログを取るだけ。</p>
+
+    <div class="recipe" style="margin-top:22px">
+      <div class="rstep"><div class="rn"></div><div class="rt">回帰を実行し <strong>b₀, b₁</strong> を得る。<code>glm(Class ~ Age, binomial(), data)</code></div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt">係数をロジスティック式に代入する。<code>p = 1/(1 + e^−(b₀ + b₁·Age))</code></div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill p">Age=0</span> の確率を計算 → 0.550。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill o">Age=0</span> のオッズを計算 → 1.222（旧オッズ）。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill p">Age=1</span> の確率を計算 → 0.555。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><span class="tag-pill o">Age=1</span> のオッズを計算 → 1.245（新オッズ）。</div></div>
+      <div class="rstep"><div class="rn"></div><div class="rt"><strong>オッズの変化＝割り算。</strong> <code>新 ÷ 旧 = 1.245 / 1.222 = 1.0186</code></div></div>
+      <div class="rstep final"><div class="rn"></div><div class="rt"><strong>自然対数を取る。</strong> <code>ln(1.0186) = 0.01844</code> ── 係数 b₁ と一致。証明完了 ✅</div></div>
+    </div>
+
+    <div class="quote">
+      "a one unit increase in age … the log odds increase 0.018 … the change in odds … 1.018 … the natural log of that … equals 0.0184 … which is our coefficient … try to do this for any two values, 55 and 56, 33 and 34 … you're going to get that same ratio"
+      <span class="src">— LogisticRegressionTemplate.qmd / Continuous predictors セクションより</span>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Self-check · 理解度チェック</div>
+    <h2>連続予測子の“ねじれ”が見抜けるか、4問</h2>
+    <p class="lead">選択肢をタップすると正解・解説が出ます。特にQ3・Q4は、二値と連続の境目で間違えやすいところです。</p>
+    <div class="quiz" id="cquiz" style="margin-top:24px"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mono">binary と continuous は、同じエンジン。</div>
+    <p>違いはただ1つ──連続では「1単位」が無限に作れて、その倍率がいつも同じ。<br>だから1つの係数で、年齢全範囲の効果を表せる。</p>
+    <p class="mono" style="font-size:.74rem;opacity:.7">DTSC-650 · 第12章 · Age · b₀=0.2009, b₁=0.01844, e^b₁=1.0186</p>
+  </div>
+</footer>
+
+
+  </div>
+</main>
+<script>
+
+/* ---------------- THE MACHINE ---------------- */
+const pslider=document.getElementById('pslider');
+const pout=document.getElementById('pout');
+const roP=document.getElementById('ro-p'),roO=document.getElementById('ro-o'),roL=document.getElementById('ro-l');
+const meP=document.getElementById('me-p'),meO=document.getElementById('me-o'),meL=document.getElementById('me-l');
+const dotP=document.getElementById('dot-p'),dotO=document.getElementById('dot-o'),dotL=document.getElementById('dot-l');
+const flive=document.getElementById('flive');
+
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+function updateMachine(){
+  const p=pslider.value/100;
+  const odds=p/(1-p);
+  const lo=Math.log(odds);
+
+  pout.textContent=p.toFixed(2);
+  roP.textContent=p.toFixed(3);
+  roO.textContent=odds.toFixed(2);
+  roL.textContent=(lo>=0?'+':'')+lo.toFixed(2);
+
+  // fill of slider track
+  pslider.style.setProperty('--fill',(pslider.value)+'%');
+
+  // meanings
+  meP.textContent='100回中およそ '+Math.round(p*100)+' 回';
+  meO.textContent= odds>=1 ? '起こる方が '+odds.toFixed(2)+' 倍 ありそう'
+                           : '起こらない方が '+(1/odds).toFixed(2)+' 倍 ありそう';
+  meL.textContent= Math.abs(lo)<0.02 ? 'ちょうど0 → 完全に五分五分'
+                  : (lo>0 ? '正の値 → 五分五分より起こりやすい' : '負の値 → 五分五分より起こりにくい');
+
+  // dots
+  dotP.style.left=(p*100)+'%';
+  // odds on log scale: 0.01 .. 100 -> log10 -2..2
+  const oPos=clamp((Math.log10(odds)+2)/4,0,1)*100;
+  dotO.style.left=oPos+'%';
+  // log-odds linear -5..5
+  const lPos=clamp((lo+5)/10,0,1)*100;
+  dotL.style.left=lPos+'%';
+
+  // live formula
+  flive.innerHTML=
+    '<span class="cm"># 確率からオッズへ（割り算）</span>\n'+
+    'odds = <span class="cp">'+p.toFixed(3)+'</span> / (1 − <span class="cp">'+p.toFixed(3)+'</span>) = <span class="co">'+odds.toFixed(3)+'</span>\n'+
+    '<span class="cm"># オッズからログオッズへ（自然対数）</span>\n'+
+    'log_odds = ln(<span class="co">'+odds.toFixed(3)+'</span>) = <span class="cl">'+(lo>=0?'+':'')+lo.toFixed(3)+'</span>';
+}
+pslider.addEventListener('input',updateMachine);
+updateMachine();
+
+/* ---------------- JOURNEY A / B ---------------- */
+function resetJourney(id){
+  document.querySelectorAll('#journey'+id+' .jbox').forEach(b=>b.classList.remove('on'));
+}
+function playJourney(id){
+  resetJourney(id);
+  const boxes=document.querySelectorAll('#journey'+id+' .jbox');
+  boxes.forEach((b,i)=>setTimeout(()=>b.classList.add('on'), i*650));
+}
+// reveal on first scroll into view
+
+
+/* ---------------- DIVISION ANIMATION ---------------- */
+function playDivision(){
+  const nw=document.getElementById('d-new'),od=document.getElementById('d-old'),
+        or=document.getElementById('d-or'),cf=document.getElementById('d-coef');
+  [nw,od,or].forEach(x=>x.style.opacity=.2);
+  cf.style.opacity=.2;
+  setTimeout(()=>{nw.style.transition='opacity .4s';nw.style.opacity=1;},200);
+  setTimeout(()=>{od.style.transition='opacity .4s';od.style.opacity=1;},700);
+  setTimeout(()=>{or.style.transition='opacity .5s';or.style.opacity=1;or.animate([{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:400});},1300);
+  setTimeout(()=>{cf.style.transition='opacity .5s';cf.style.opacity=1;cf.animate([{transform:'scale(1.3)'},{transform:'scale(1)'}],{duration:400});},2000);
+}
+
+/* ---------------- QUIZ ---------------- */
+const quizData=[
+  {
+    q:'回帰係数 b₁ = −1.30 は、どの「単位」で表された値ですか？',
+    opts:[
+      {t:'良い信用になる確率そのものの変化量',ok:false},
+      {t:'1単位増えたときのログオッズの変化量',ok:true},
+      {t:'外国人労働者の人数のおおよその割合',ok:false},
+      {t:'良い信用になる単純なオッズの実数値',ok:false}
+    ],
+    exp:'係数はつねに<b>ログオッズ</b>の単位。確率でもオッズでもない。x が1増えたときログオッズがどれだけ動くか、を表します。'
+  },
+  {
+    q:'2つのオッズ（旧8.25・新2.25）から係数を取り出すとき、正しい操作はどれ？',
+    opts:[
+      {t:'2つのオッズを単純に引き算してから対数を取る',ok:false},
+      {t:'2つのオッズを足してから半分に割って使う',ok:false},
+      {t:'新オッズを旧オッズで割り、その自然対数を取る',ok:true},
+      {t:'2つの確率の差をそのまま係数として用いる',ok:false}
+    ],
+    exp:'<b>割り算 → 自然対数</b>。2.25 ÷ 8.25 = 0.273、ln(0.273) = −1.30。オッズの世界では比でしか比べられず、ログにすると初めて引き算になります。'
+  },
+  {
+    q:'「オッズが約73%減る」という結論は、どこから来ていますか？',
+    opts:[
+      {t:'確率が 0.891 から 0.693 へと下がったことから',ok:false},
+      {t:'オッズ比 e^(−1.30)=0.273 で、1−0.273≈0.73 だから',ok:true},
+      {t:'外国人が全体の37人しかいない少数派だから',ok:false},
+      {t:'切片 b₀ が 2.11 という正の値を取るから',ok:false}
+    ],
+    exp:'オッズ比 0.273 は「元の0.273倍＝27.3%だけ残る」。残り <b>1−0.273≈73%が減った</b>分。確率の変化（0.891→0.693）とは別物です。'
+  },
+  {
+    q:'もしある係数が「ちょうど 0」だったら、e^0 = 1 です。これは何を意味する？',
+    opts:[
+      {t:'その予測子はオッズを変えない（効果なし）',ok:true},
+      {t:'その予測子はオッズを必ず半分にする',ok:false},
+      {t:'モデル全体が完全に破綻していて使えない',ok:false},
+      {t:'確率が必ずちょうど0になり予測不能になる',ok:false}
+    ],
+    exp:'オッズ比が <b>1 = 変化なし</b>（x/x の状態）。1から離れるほど効果が大きく、1未満なら減少・1超なら増加。係数0は「五分五分のまま、効果ゼロ」を意味します。'
+  },
+  {
+    q:'切片 b₀ = 2.11 は、何を表している値ですか？',
+    opts:[
+      {t:'自国民（x=1）における悪い信用のログオッズの値',ok:false},
+      {t:'全申請者をまとめた良い信用になる平均確率の値',ok:false},
+      {t:'外国人から自国民へ移るときのオッズ比の対数値',ok:false},
+      {t:'外国人（x=0）における良い信用のログオッズの値',ok:true}
+    ],
+    exp:'x=0 のとき式は b₀+b₁·0 = b₀ に潰れる。だから切片は<b>外国人労働者の良い信用のログオッズ</b>そのもの。ln(8.25)=2.11 と一致します。'
+  },
+  {
+    q:'確率 0.891 という値は、本質的にどこから来ていますか？',
+    opts:[
+      {t:'2×2表の実数を数えた割合 33/37 から',ok:true},
+      {t:'回帰係数 −1.30 を指数変換した結果から',ok:false},
+      {t:'オッズ 8.25 をさらに対数変換した値から',ok:false},
+      {t:'切片と係数を足して2で割った平均値から',ok:false}
+    ],
+    exp:'Rの予測確率は、ナマの割合 <b>33/37 = 0.891</b> とピッタリ一致します。魔法ではなく、表のセルを数えた割合にすぎません。'
+  },
+  {
+    q:'「オッズの割り算」と「ログオッズの引き算」が同じ操作になるのを保証するルールは？',
+    opts:[
+      {t:'指数の法則 e^a × e^b = e^(a+b) の関係',ok:false},
+      {t:'確率の加法定理 P(A∪B)=P(A)+P(B) の関係',ok:false},
+      {t:'対数の法則 ln(A) − ln(B) = ln(A / B) の関係',ok:true},
+      {t:'微分の連鎖律 dy/dx = dy/du · du/dx の関係',ok:false}
+    ],
+    exp:'<b>ln(A) − ln(B) = ln(A / B)</b>。だからログの世界の引き算は、オッズの世界では割り算になる。これが「引き算じゃなく割り算」の正体です。'
+  },
+  {
+    q:'なぜ回帰係数は、確率やオッズではなく「ログオッズ」で表すのですか？',
+    opts:[
+      {t:'ログオッズだけが 0〜1 の範囲にきれいに収まるから',ok:false},
+      {t:'ログオッズだけが足し算・引き算を素直にできるから',ok:true},
+      {t:'ログオッズだけが必ず正の整数の値だけをとるから',ok:false},
+      {t:'ログオッズだけが計算機で最速に処理できる形だから',ok:false}
+    ],
+    exp:'確率は0〜1、オッズは0〜∞で“曲がった”世界。ログオッズは−∞〜+∞で<b>まっすぐ</b>。だから足し算の線形モデルが成立します。'
+  },
+  {
+    q:'ログオッズの値から確率 p に戻すとき、正しい式はどれですか？',
+    opts:[
+      {t:'p = ログオッズ ×（1 − ログオッズ）で計算する',ok:false},
+      {t:'p = ln(ログオッズ) を求めてから 2 で割る',ok:false},
+      {t:'p = ログオッズ ÷（1 + ログオッズ）で求める',ok:false},
+      {t:'p = 1 ÷（1 + e^(−ログオッズ)）で計算する',ok:true}
+    ],
+    exp:'シグモイド（逆ロジット）<b>p = 1/(1+e^(−logodds))</b>。確率→オッズ→ログオッズの逆ルートを一気に戻す式です。'
+  },
+  {
+    q:'外国人労働者のオッズ 8.25 を、普通の言葉で言い換えると？',
+    opts:[
+      {t:'良い信用になる確率がちょうど 8.25% であること',ok:false},
+      {t:'良い信用の人が悪い信用の人より 8.25 歳上なこと',ok:false},
+      {t:'良い信用は悪い信用より約 8.25 倍ありそうなこと',ok:true},
+      {t:'良い信用になるには平均 8.25 回の審査が要ること',ok:false}
+    ],
+    exp:'オッズ = 良い / 悪い = 33/4 ≈ 8.25。<b>「良い信用は悪い信用の約8.25倍 起こりやすい」</b>。確率 0.891 とは別の言い方です。'
+  }
+];
+
+const quizEl=document.getElementById('quiz');
+quizData.forEach((item,qi)=>{
+  const q=document.createElement('div');q.className='q';
+  let html='<div class="qh"><span class="qn">Q'+(qi+1)+'.</span>'+item.q+'</div>';
+  item.opts.forEach((o,oi)=>{
+    const letter=String.fromCharCode(65+oi);
+    html+='<button class="opt" data-ok="'+o.ok+'" data-q="'+qi+'"><span class="ol">'+letter+'</span>'+o.t+'</button>';
+  });
+  html+='<div class="qexp" id="exp-'+qi+'"><b>解説：</b>'+item.exp+'</div>';
+  q.innerHTML=html;
+  quizEl.appendChild(q);
+});
+
+quizEl.addEventListener('click',e=>{
+  const btn=e.target.closest('.opt');
+  if(!btn||btn.classList.contains('disabled'))return;
+  const qi=btn.dataset.q;
+  const siblings=quizEl.querySelectorAll('.opt[data-q="'+qi+'"]');
+  siblings.forEach(s=>{
+    s.classList.add('disabled');
+    if(s.dataset.ok==='true')s.classList.add('correct');
+  });
+  if(btn.dataset.ok!=='true')btn.classList.add('wrong');
+  document.getElementById('exp-'+qi).classList.add('show');
+});
+
+
+
+/* ============================================================ */
+/* ===============  CONTINUOUS CHAPTER SCRIPT  ================= */
+/* ============================================================ */
+
+const B0=0.200919, B1=0.01844;
+function p(age){return 1/(1+Math.exp(-(B0+B1*age)));}
+function odds(pp){return pp/(1-pp);}
+
+/* ---------- S-CURVE ---------- */
+const NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById('scurve');
+const PAD={l:48,r:18,t:18,b:34}, W=700, H=320;
+const plotW=W-PAD.l-PAD.r, plotH=H-PAD.t-PAD.b;
+const AGE_MIN=15, AGE_MAX=80;
+function xOf(age){return PAD.l + (age-AGE_MIN)/(AGE_MAX-AGE_MIN)*plotW;}
+function yOf(pp){return PAD.t + (1-pp)*plotH;}
+
+function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+function buildStatic(){
+  // typical band 19-75
+  svg.appendChild(el('rect',{class:'band',x:xOf(19),y:PAD.t,width:xOf(75)-xOf(19),height:plotH}));
+  // gridlines for p
+  [0,0.25,0.5,0.75,1].forEach(v=>{
+    svg.appendChild(el('line',{class:'grid',x1:PAD.l,y1:yOf(v),x2:PAD.l+plotW,y2:yOf(v)}));
+    const t=el('text',{class:'axlab',x:PAD.l-8,y:yOf(v)+4,'text-anchor':'end'});t.textContent=v.toFixed(2);svg.appendChild(t);
+  });
+  // x axis ticks
+  [15,30,45,60,75].forEach(a=>{
+    const t=el('text',{class:'axlab',x:xOf(a),y:H-12,'text-anchor':'middle'});t.textContent=a;svg.appendChild(t);
+  });
+  // axis labels
+  const yl=el('text',{class:'axlab',x:14,y:PAD.t+10,'text-anchor':'start'});yl.textContent='P(良い信用)';svg.appendChild(yl);
+  const xl=el('text',{class:'axlab',x:PAD.l+plotW,y:H-12,'text-anchor':'end'});xl.textContent='年齢 →';svg.appendChild(xl);
+  // axes
+  svg.appendChild(el('line',{class:'axis',x1:PAD.l,y1:PAD.t,x2:PAD.l,y2:PAD.t+plotH}));
+  svg.appendChild(el('line',{class:'axis',x1:PAD.l,y1:PAD.t+plotH,x2:PAD.l+plotW,y2:PAD.t+plotH}));
+  // curve
+  let d="";
+  for(let a=AGE_MIN;a<=AGE_MAX;a+=0.5){d+=(d===""?"M":"L")+xOf(a).toFixed(1)+" "+yOf(p(a)).toFixed(1)+" ";}
+  svg.appendChild(el('path',{class:'curve',d:d}));
+}
+buildStatic();
+
+// dynamic group
+const dyn=el('g',{});svg.appendChild(dyn);
+const conn=el('line',{class:'conn'});dyn.appendChild(conn);
+const dot1=el('circle',{class:'dot1',r:6});
+const dot2=el('circle',{class:'dot2',r:6});
+const dplab=el('text',{class:'dplab','text-anchor':'middle'});
+dyn.appendChild(dplab);dyn.appendChild(dot1);dyn.appendChild(dot2);
+
+const agesl=document.getElementById('agesl');
+const ageout=document.getElementById('ageout');
+const els={p1:'m-p1',p2:'m-p2',o1:'m-o1',o2:'m-o2',or:'m-or',dp:'m-dp',p1s:'m-p1s',p2s:'m-p2s'};
+const $=id=>document.getElementById(id);
+
+function updateCurve(){
+  const a=+agesl.value, a1=a+1;
+  const p1=p(a), p2=p(a1), o1=odds(p1), o2=odds(p2);
+  const or=o2/o1, dp=p2-p1;
+
+  agesl.style.setProperty('--fill',((a-15)/(78-15)*100)+'%');
+  ageout.textContent=a+' → '+a1+'歳';
+
+  $(els.p1).textContent=p1.toFixed(3);
+  $(els.p2).textContent=p2.toFixed(3);
+  $(els.o1).textContent=o1.toFixed(3);
+  $(els.o2).textContent=o2.toFixed(3);
+  $(els.or).textContent='×'+or.toFixed(4);
+  $(els.dp).textContent='+'+dp.toFixed(4);
+  $(els.p1s).textContent=a+'歳';
+  $(els.p2s).textContent=a1+'歳';
+
+  const x1=xOf(a),y1=yOf(p1),x2=xOf(a1),y2=yOf(p2);
+  dot1.setAttribute('cx',x1);dot1.setAttribute('cy',y1);
+  dot2.setAttribute('cx',x2);dot2.setAttribute('cy',y2);
+  conn.setAttribute('x1',x1);conn.setAttribute('y1',y1);
+  conn.setAttribute('x2',x2);conn.setAttribute('y2',y2);
+  dplab.setAttribute('x',(x1+x2)/2+24);
+  dplab.setAttribute('y',(y1+y2)/2+4);
+  dplab.textContent='Δp '+dp.toFixed(4);
+}
+agesl.addEventListener('input',updateCurve);
+updateCurve();
+
+/* ---------- JOURNEYS ---------- */
+function cResetJourney(id){document.querySelectorAll('#cjourney'+id+' .jbox').forEach(b=>b.classList.remove('on'));}
+function cPlayJourney(id){cResetJourney(id);const b=document.querySelectorAll('#cjourney'+id+' .jbox');b.forEach((x,i)=>setTimeout(()=>x.classList.add('on'),i*650));}
+
+
+/* ---------- COMPOUNDING ---------- */
+const yrsl=document.getElementById('yrsl');
+const yrsout=document.getElementById('yrsout');
+const OR1=Math.exp(B1); // 1.0186
+function updateGrow(){
+  const n=+yrsl.value;
+  const mult=Math.pow(OR1,n);
+  yrsl.style.setProperty('--cfill',((n-1)/(50-1)*100)+'%');
+  yrsout.textContent=n+'年';
+  document.getElementById('grow-formula').innerHTML='1.0186<sup>'+n+'</sup>';
+  document.getElementById('grow-mult').textContent='×'+mult.toFixed(2);
+  const pct=(mult-1)*100;
+  document.getElementById('grow-pct').textContent='約 +'+pct.toFixed(0)+'%';
+  // bar: map mult (1 .. ~2.5) to width 10%..100%
+  const maxMult=Math.pow(OR1,50);
+  const w=10+ (mult-1)/(maxMult-1)*90;
+  document.getElementById('growfill').style.width=w+'%';
+}
+yrsl.addEventListener('input',updateGrow);
+updateGrow();
+
+/* ---------- QUIZ ---------- */
+const cQuizData=[
+  {
+    q:'Age の係数 0.01844 は、1歳の増加に対して何が起きることを意味する？',
+    opts:[
+      {t:'良い信用になる確率がちょうど 0.018 だけ上がること',ok:false},
+      {t:'良い信用のログオッズが 0.018 だけ上がること',ok:true},
+      {t:'良い信用のオッズが 0.018 倍まで小さくなること',ok:false},
+      {t:'良い信用になる人数が 0.018 人ぶん増えること',ok:false}
+    ],
+    exp:'係数は<b>ログオッズの変化</b>。確率の変化ではない。オッズで見るなら e^0.01844 = 1.0186 倍、つまり約+1.86%。'
+  },
+  {
+    q:'年齢を 33→34 で計算したオッズ比と、55→56 で計算したオッズ比の関係は？',
+    opts:[
+      {t:'年齢が高いほどオッズ比も比例して大きくなる',ok:false},
+      {t:'年齢が高いほどオッズ比は逆に小さくなっていく',ok:false},
+      {t:'どちらも完全に同じで、つねに 1.0186 になる',ok:true},
+      {t:'スタート年齢ごとにオッズ比はランダムに変動する',ok:false}
+    ],
+    exp:'これが連続予測子の核心。オッズ比は<b>どの1単位ペアでも一定（1.0186）</b>。だから1つの係数で全範囲を表せます。'
+  },
+  {
+    q:'「オッズ比は一定なのに、確率の段差 Δp は年齢で変わる」のはなぜ？',
+    opts:[
+      {t:'確率はS字カーブで、端ほど動きが鈍るから',ok:true},
+      {t:'年齢が高い人ほどデータ件数が少なくなるから',ok:false},
+      {t:'オッズ比の計算式が年齢ごとに違う形になるから',ok:false},
+      {t:'Rが高齢者の確率を毎回切り捨てて丸めるから',ok:false}
+    ],
+    exp:'オッズは掛け算の世界で素直に一定倍率。だが確率は0〜1の檻に入ったS字で、<b>真ん中で段差が最大・端で頭打ち</b>。同じ倍率でも確率インパクトは場所次第です。'
+  },
+  {
+    q:'年齢が10歳上がると、良い信用のオッズはおよそ何倍になる？',
+    opts:[
+      {t:'1.0186 を10回 足して、約 +18% 増える',ok:false},
+      {t:'1.0186 を10回 掛けて、約 +20% 増える',ok:true},
+      {t:'10×0.018 で、ちょうど 0.18 倍に縮む',ok:false},
+      {t:'年齢効果は累積しないので、1.0186 倍のまま',ok:false}
+    ],
+    exp:'効果は<b>掛け算で積み上がる</b>。1.0186^10 ≈ 1.20、つまり約+20%。足し算ではなく複利と同じ構造である点がポイント。'
+  },
+  {
+    q:'切片 b₀ = 0.2009 は、何を表している値ですか？',
+    opts:[
+      {t:'全年齢を平均した良い信用になる確率の値',ok:false},
+      {t:'1歳ごとに増えるオッズの倍率そのものの値',ok:false},
+      {t:'良い信用の人と悪い信用の人の平均年齢の差',ok:false},
+      {t:'年齢0歳における良い信用のログオッズの値',ok:true}
+    ],
+    exp:'x=0（年齢0歳）のとき式は b₀ に潰れる。非現実だが<b>計算の基準点</b>。ln(1.222)=0.2009 と一致します。'
+  },
+  {
+    q:'「良い信用の人は平均年齢がやや高い」。ここから係数の符号はどう予想できますか？',
+    opts:[
+      {t:'プラス。年齢が上がると良い信用になりやすい',ok:true},
+      {t:'マイナス。年齢が上がると良い信用になりにくい',ok:false},
+      {t:'ゼロ。年齢は良い信用とまったく無関係である',ok:false},
+      {t:'不定。符号はデータごとにランダムに決まる',ok:false}
+    ],
+    exp:'高齢ほど良い信用が多い → 年齢↑で良い信用のログオッズ↑ → <b>係数はプラス</b>。実際 b₁ = +0.01844 で符号が一致します。'
+  },
+  {
+    q:'連続予測子では、「1単位増加」のペアはいくつ作れますか？',
+    opts:[
+      {t:'二値と同じで、有効なペアは1組しか作れない',ok:false},
+      {t:'年齢の最大値と最小値による2組だけに限られる',ok:false},
+      {t:'無限に作れて、どれも同じオッズ比に一致する',ok:true},
+      {t:'データの件数とちょうど同じ数だけ作成できる',ok:false}
+    ],
+    exp:'33→34, 55→56 …と無限にペアが作れ、そのオッズ比はすべて <b>1.0186 で一定</b>。だから1つの係数で全範囲を表せます。'
+  },
+  {
+    q:'「5歳の増加」に対するオッズ比を求めるには、どうすればよいですか？',
+    opts:[
+      {t:'係数 0.01844 をそのまま 5 で割って指数変換する',ok:false},
+      {t:'1.0186 を 5 乗する（= e^(5 × 0.01844)）',ok:true},
+      {t:'オッズ比 1.0186 に 5 をそのまま足し合わせる',ok:false},
+      {t:'確率 0.55 を 5 回くり返し掛け合わせて求める',ok:false}
+    ],
+    exp:'効果は掛け算で積み上がる。5歳ぶんは <b>1.0186^5 = e^(5×0.01844) ≈ 1.096</b>、つまり約 +9.6% です。'
+  },
+  {
+    q:'1歳あたりの確率変化 Δp が最も大きいのは、S字カーブのどこですか？',
+    opts:[
+      {t:'確率が 1 に限りなく近づく一番右の端あたり',ok:false},
+      {t:'確率が 0 に限りなく近づく一番左の端あたり',ok:false},
+      {t:'年齢が最も高い高齢者だけが集まる領域あたり',ok:false},
+      {t:'確率が 0.5 に近い、カーブが最も急な中央',ok:true}
+    ],
+    exp:'S字は中央（p=0.5）で最も急 → <b>Δp 最大</b>。端へ行くほど平らになり Δp は小さくなる。オッズ比は一定でも確率インパクトは場所次第です。'
+  },
+  {
+    q:'連続予測子の係数の解釈が、二値予測子と一番ちがう点はどこですか？',
+    opts:[
+      {t:'連続では係数がログオッズでなく確率を表す点',ok:false},
+      {t:'連続では割り算でなく引き算で係数を出す点',ok:false},
+      {t:'連続は全範囲で一定の1単位あたりの率を表す点',ok:true},
+      {t:'連続では符号が常にプラスへ固定されてしまう点',ok:false}
+    ],
+    exp:'二値は2つの固定グループの比較。連続は「1単位あたり、どこでも同じ率（×1.0186）」を表す。手順（割り算→ln）も単位（ログオッズ）も同じです。'
+  }
+];
+const cQuizEl=document.getElementById('cquiz');
+cQuizData.forEach((item,qi)=>{
+  const q=document.createElement('div');q.className='q';
+  let html='<div class="qh"><span class="qn">Q'+(qi+1)+'.</span>'+item.q+'</div>';
+  item.opts.forEach((o,oi)=>{const L=String.fromCharCode(65+oi);html+='<button class="opt" data-ok="'+o.ok+'" data-q="'+qi+'"><span class="ol">'+L+'</span>'+o.t+'</button>';});
+  html+='<div class="qexp" id="cexp-'+qi+'"><b>解説：</b>'+item.exp+'</div>';
+  q.innerHTML=html;cQuizEl.appendChild(q);
+});
+cQuizEl.addEventListener('click',e=>{
+  const btn=e.target.closest('.opt');if(!btn||btn.classList.contains('disabled'))return;
+  const qi=btn.dataset.q;
+  cQuizEl.querySelectorAll('.opt[data-q="'+qi+'"]').forEach(s=>{s.classList.add('disabled');if(s.dataset.ok==='true')s.classList.add('correct');});
+  if(btn.dataset.ok!=='true')btn.classList.add('wrong');
+  document.getElementById('cexp-'+qi).classList.add('show');
+});
+
+
+
+/* ---------- chapter tab controller ---------- */
+(function(){
+  const tabs=document.querySelectorAll('.tab');
+  const chapters=document.querySelectorAll('.chapter');
+  function play(id){
+    if(id==='ch-binary'){ if(window.playJourney){playJourney('A');playJourney('B');} }
+    else { if(window.cPlayJourney){cPlayJourney('A');cPlayJourney('B');} }
+  }
+  function show(id){
+    chapters.forEach(c=>c.classList.toggle('active', c.id===id));
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.target===id));
+    window.scrollTo({top:0,behavior:'auto'});
+    play(id);
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.target)));
+  document.querySelectorAll('[data-goto]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(a.dataset.goto);}));
+  // initial active chapter journeys
+  play('ch-binary');
+})();
+
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

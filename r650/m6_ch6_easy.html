@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第6章 超やさしい版：モデル評価②：AIC</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy active" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 6 · Easy Mode 🍎</div>
+    <h1>🍎 第6章 超やさしい版：モデル評価②：AIC</h1>
+    <p>AIC = −2LL + 2K。ペナルティが逸脱度との違い。変数を増やすと何が起きるかをスライダーとRコードで体感しよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">ペナルティを体感</a><a href="#u3">Rでモデル比較</a><a href="m6_ch6.html" class="easy-toplink">📊 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">AIC = 当てはまりの良さ − 複雑さへのペナルティ</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">AIC = −2LL + 2K。当てはまりが良い（逸脱度が小さい）のにパラメータが少ない（Kが小さい）ほどAICは低くなる。AICは小さいほど良いモデル。逸脱度だけではモデルが複雑になるほど必ず良くなってしまうため、Kでペナルティを課す。</p></div>
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:center;margin:1.5rem 0">
+    <div style="background:var(--green-light);border-radius:12px;padding:1.25rem;text-align:center;border:2px solid var(--green)">
+      <div style="font-size:1.8rem">📉</div>
+      <strong>−2LL</strong><br><span style="font-size:.85rem">逸脱度<br>小さいほど良い</span>
+    </div>
+    <div style="font-size:1.8rem;font-weight:900;color:var(--text-sec)">+</div>
+    <div style="background:var(--red-light);border-radius:12px;padding:1.25rem;text-align:center;border:2px solid var(--red)">
+      <div style="font-size:1.8rem">⚠️</div>
+      <strong>2K</strong><br><span style="font-size:.85rem">ペナルティ<br>変数多いほど大</span>
+    </div>
+  </div>
+  <p>重回帰のR²に相当する「モデルの良さの指標」がAICです。ただし方向が逆で、<strong>小さいほど良い</strong>という点に注意しましょう。</p>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>ペナルティを体感する</h2><div class="unit-sub">変数を増やすとAICはどう変わるか</div></div></div>
+  <p>スライダーでKを増やすとペナルティ（2K）が増え、AICが上がります。意味のない変数を追加すると逸脱度の改善よりペナルティが大きくなり、AICが悪化します。</p>
+  <div class="widget green">
+    <div class="widget-title">📊 AICペナルティシミュレーター</div>
+    <div class="slider-row">
+      <label>📦 変数の数（K）</label>
+      <input type="range" id="aic-k" min="1" max="10" step="1" value="2">
+      <span class="slider-val" id="aic-k-v">2</span>
+    </div>
+    <div style="height:10px;background:var(--border);border-radius:5px;margin:.5rem 0 1rem">
+      <div id="aic-pen-bar" style="height:10px;background:var(--red);border-radius:5px;transition:width .2s;width:20%"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div style="background:var(--bg);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.78rem;color:var(--text-sec);font-weight:700">ペナルティ（2K）</div>
+        <div style="font-size:1.7rem;font-weight:900;color:var(--red)" id="aic-penalty">4</div>
+      </div>
+      <div style="background:var(--primary-light);border-radius:10px;padding:1rem;text-align:center">
+        <div style="font-size:.78rem;color:var(--primary-dark);font-weight:700">AIC</div>
+        <div style="font-size:1.7rem;font-weight:900;color:var(--primary-dark)" id="aic-val">3,600</div>
+      </div>
+    </div>
+  </div>
+  <div class="note-box">📌 AICの差が<strong>2未満</strong>なら「ほぼ同じ」。5以上なら明確に良い方があると判断できます（経験則）。</div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>Rでモデル比較する</h2><div class="unit-sub">AIC()関数の使い方</div></div></div>
+  <p class="code-label">▶ AICを手計算で確認（仕組みを理解する）</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># AICの計算式（手計算確認）</span></span>
+<span class="cl">log_lik &lt;- <span class="kw">logLik</span>(model)<span class="cm">  # 対数尤度</span></span>
+<span class="cl">k &lt;- <span class="kw">length</span>(<span class="kw">coef</span>(model))</span>
+<span class="cl">aic_manual &lt;- -<span class="nm">2</span> * <span class="kw">as.numeric</span>(log_lik) + <span class="nm">2</span> * k</span>
+<span class="cl"><span class="cm"># R組み込みのAIC()と一致するか確認</span></span>
+<span class="cl"><span class="kw">AIC</span>(model)<span class="cm">  # ← 同じ値になる</span></span>
+<span class="cl">aic_manual<span class="cm">      # ← 手計算でも同じ</span></span>
+</pre>
+  <p class="code-label">▶ 2モデルをAICで比較する</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 2つのモデルを比較する</span></span>
+<span class="cl">model1 &lt;- <span class="kw">glm</span>(Sex ~ Diameter,             <span class="kw">data</span>=Abalone, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl">model2 &lt;- <span class="kw">glm</span>(Sex ~ Diameter + Rings,     <span class="kw">data</span>=Abalone, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="kw">AIC</span>(model1)<span class="cm">  # → 3597.8</span></span>
+<span class="cl"><span class="kw">AIC</span>(model2)<span class="cm">  # → 3596.1（わずかに低い → model2が少し良い）</span></span>
+<span class="cl"><span class="cm"># AICが低い方を選ぶ</span></span>
+</pre>
+  <table class="compare-table" style="margin:1rem 0">
+    <thead><tr><th>モデル</th><th>予測変数</th><th>K</th><th>逸脱度</th><th>AIC</th><th>判定</th></tr></thead>
+    <tbody>
+      <tr><td>Model 1</td><td>Diameter のみ</td><td>2</td><td>3595.8</td><td>3597.8</td><td>—</td></tr>
+      <tr><td>Model 2</td><td>Diameter + Rings</td><td>3</td><td>3593.9</td><td><strong>3596.1</strong></td><td>✅ 少し低い</td></tr>
+    </tbody>
+  </table>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. AICの計算式は？<span class="cp-a">A. AIC = −2LL + 2K。−2LLは逸脱度、Kはパラメータ数（切片＋予測変数の数）。</span></div><div class="cp-q">Q2. AICはどちらが良い？<span class="cp-a">A. 小さいほど良い。最もAICが低いモデルを選ぶ。差が2未満ならほぼ同じと判断。</span></div><div class="cp-q">Q3. 逸脱度だけで比べてはダメな理由は？<span class="cp-a">A. 変数を増やすほど逸脱度は必ず下がる（過学習）。AICはペナルティ（2K）で無意味な変数の追加を防ぐ。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch5_easy.html">← 第5章 やさしい版</a><a href="m6_ch7_easy.html">第7章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• AIC = −2LL + 2K（小さいほど良い）</p><p style="margin:.4rem 0">• Kはパラメータ数（切片+変数）</p><p style="margin:.4rem 0">• 変数増やす=ペナルティ増える</p><p style="margin:.4rem 0">• AIC差が2未満ならほぼ同じ</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch6.html">第6章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第6章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch6.html">← 第6章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initAICDemo();</script>
+<script src="../hub-fab.js"></script>
+</body></html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第12章：連続予測変数の解釈 — ロジスティック回帰ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 12</div>
+    <h1>📈 第12章：連続予測変数の解釈</h1>
+    <p>Ageを予測変数として追加。係数は全年齢範囲で一定のオッズ比の対数。手計算でバイナリと同じ方法で再現する。</p>
+    <div class="unit-nav"><a href="#u1">Unit 1</a><a href="#u2">Unit 2</a><a href="#u3">Unit 3</a></div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">01</div><div><h2>連続予測変数の追加</h2><div class="unit-sub">Ageを予測変数として追加する</div></div></div>
+  <p>バイナリ変数の次は、<strong>連続変数（Continuous Predictor）</strong>の解釈を学びます。GermanCreditデータに年齢（Age）を追加します。</p>
+  <p>良い信用を持つ人の年齢をグループ別に確認すると、Good信用の人の方がわずかに年齢が高い傾向があります。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># Ageを連続予測変数として追加</span></span><span class="cl">mod_age &lt;- <span class="kw">glm</span>(Class ~ Age,</span><span class="cl">            <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span><span class="cl"><span class="kw">summary</span>(mod_age)</span><span class="cl"><span class="cm"># Age係数 ≈ 0.0184（1歳増加→対数オッズが0.0184増）</span></span></div>
+  <div class="note-box">連続変数の係数の解釈：<strong>「Ageが1単位増加するごとに、対数オッズが0.0184増加する」</strong>。これはAgeの全範囲で一定（線形な変化）。</div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">02</div><div><h2>係数を手計算で再現する</h2><div class="unit-sub">バイナリ変数と同じ「オッズ比の対数」</div></div></div>
+  <p>連続変数の係数も、バイナリ変数と同じ方法で求められます。「X=0のときのオッズ」と「X=1のときのオッズ」を計算し、その比の対数をとります。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># Age=0のとき（仮想値：仕組みの確認用）</span></span><span class="cl">b0 &lt;- <span class="kw">coef</span>(mod_age)[<span class="nm">1</span>]<span class="cm">   # 切片 ≈ -0.354</span></span><span class="cl">b1 &lt;- <span class="kw">coef</span>(mod_age)[<span class="nm">2</span>]<span class="cm">   # Age係数 ≈ 0.0184</span></span><span class="cl">p_age0  &lt;- <span class="kw">plogis</span>(b0 + b1*<span class="nm">0</span>)<span class="cm">  # → 0.4124</span></span><span class="cl">odds_a0 &lt;- p_age0 / (<span class="nm">1</span> - p_age0)<span class="cm">     # → 0.7014</span></span><span class="cl"><span class="cm"># Age=1のとき</span></span><span class="cl">p_age1  &lt;- <span class="kw">plogis</span>(b0 + b1*<span class="nm">1</span>)<span class="cm">  # → 0.4156</span></span><span class="cl">odds_a1 &lt;- p_age1 / (<span class="nm">1</span> - p_age1)<span class="cm">     # → 0.7143</span></span><span class="cl"><span class="cm"># 係数の再現：log(オッズ比)</span></span><span class="cl">log(odds_a1 / odds_a0)<span class="cm">                 # → 0.0184（係数と一致！）</span></span></div>
+  <div class="big-rule">
+    <div class="ru-arrow">🔁</div>
+    <div class="ru-text">
+      <strong>どの2値でも同じ！</strong><br>
+      Age=55→56でも、Age=33→34でも<br>
+      log(odds_next / odds_prev) = 0.0184（係数と一致）<br>
+      <span style="font-size:.85rem;color:var(--text-sec)">これが「線形性」の意味。係数は全範囲で一定。</span>
+    </div>
+  </div>
+</div>
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">03</div><div><h2>オッズ比と複合モデル</h2><div class="unit-sub">exp(係数)の解釈とFull Modelへの拡張</div></div></div>
+<div class="note-box"><strong>📌 連続変数の一定性の仮定：</strong>連続予測変数の係数は「1単位増えるごとの対数オッズの一定の変化量」です。だから <code>exp(β)</code> はどの値の区間でも同じオッズ比になります（年齢55→56でも0→1でも同じ）。ただし<em>確率</em>の増え方は一定ではなく、シグモイドの形ゆえ中央付近で大きく、両端で小さくなります。「対数オッズは一定、確率は一定でない」が連続変数解釈の核心です。</div>
+  <div class="code-block"><span class="cl"><span class="cm"># exp(係数) = オッズ比（連続変数）</span></span><span class="cl"><span class="kw">exp</span>(<span class="kw">coef</span>(mod_age)[<span class="st">"Age"</span>])<span class="cm">  # → 1.0186</span></span><span class="cl"><span class="cm"># 解釈：1歳増えるごとにオッズが1.0186倍（約1.86%増加）</span></span><span class="cl"><span class="cm"># ForeignWorkerとAgeを組み合わせたフルモデル</span></span><span class="cl">mod_full &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker + Age,</span><span class="cl">             <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span><span class="cl"><span class="kw">AIC</span>(mod_fw, mod_age, mod_full)<span class="cm">  # 最良モデルを選ぶ</span></span></div>
+  <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;margin:1rem 0">
+    <h4 style="margin-top:0">📊 バイナリ vs 連続：係数解釈の比較</h4>
+    <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+      <thead><tr style="background:var(--primary);color:white">
+        <th style="padding:.5rem">予測変数</th><th style="padding:.5rem">係数</th><th style="padding:.5rem">exp(係数)</th><th style="padding:.5rem">解釈</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">ForeignWorker（バイナリ）</td><td style="padding:.5rem">−1.297</td><td style="padding:.5rem">0.273</td><td style="padding:.5rem">国内労働者のオッズは外国人の0.273倍</td></tr>
+        <tr><td style="padding:.5rem">Age（連続）</td><td style="padding:.5rem">0.0184</td><td style="padding:.5rem">1.0186</td><td style="padding:.5rem">1歳増すごとにオッズが1.0186倍（+1.86%）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<section class="quiz-section">
+  <h2>🎯 確認クイズ（英語）</h2>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-container" id="quiz">
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">For a continuous predictor Age with coefficient 0.0184, what does exp(0.0184) represent?</div>
+  <button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The probability of Good credit for each age</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The log odds change per year</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The odds ratio: for each 1-year increase in Age, the odds multiply by 1.0186</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The change in probability per year</button>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">How do you verify a continuous predictor's coefficient by hand?</div>
+  <button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Subtract P(X=1) − P(X=0)</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Calculate log(odds at X=1 / odds at X=0)</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Calculate exp(P(X=1) / P(X=0))</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Multiply the coefficient by the predictor value</button>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">If you use Age=55 and Age=56 instead of Age=0 and Age=1, what happens to log(odds_56/odds_55)?</div>
+  <button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It changes depending on the age values</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It becomes larger for older ages</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It equals the same coefficient (0.0184)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It equals twice the coefficient</button>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does a coefficient of 0.0184 for Age mean in plain language?</div>
+  <button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Each additional year of age increases the probability of Good credit by 1.84%</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Each additional year of age increases the log odds of Good credit by 0.0184</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Customers aged 18+ have Good credit odds 0.0184 times higher</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Age has no practical effect since 0.0184 is small</button>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">To compare models mod_fw (ForeignWorker only), mod_age (Age only), and mod_full (both), what function do you use?</div>
+  <button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>summary()</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>anova()</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>AIC()</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>pchisq()</button>
+<div class="q-feedback" id="fb5"></div>
+</div>
+  </div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">For a continuous predictor, exp(coefficient) is the odds ratio for:</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A 10-unit increase</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A one-unit increase in the predictor</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The entire data range</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A decrease to zero</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">A continuous predictor&#x27;s coefficient is assumed constant across:</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The whole range of the predictor</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Only the lowest values</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Only categorical splits</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The intercept only</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">Using Age=55 vs 56 instead of 0 vs 1 to derive the coefficient gives:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A completely different value</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>An undefined value</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A negative of the value</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The same coefficient value</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">A small positive Age coefficient (e.g. 0.0184) means each extra year:</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Halves the odds of the outcome</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Has no effect whatsoever</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Slightly increases the log-odds of the outcome</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes the intercept</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">To compare nested models mod_fw, mod_age, and mod_full, you would mainly use:</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Their colors</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Their file sizes</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The number of rows</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>AIC (and deviance) values</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+  <div class="quiz-score" id="score">0 / 10</div>
+</section>
+
+<div class="page-nav">
+  <a href="m6_ch11.html">← 第11章</a>
+  <a href="m6_ch13.html">第13章 →</a>
+</div>
+</main>
+
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">連続予測変数</div>
+      <div class="term-en">Continuous Predictor</div>
+      <div class="term-def">年齢・収入など連続した数値をとる予測変数。係数は1単位増加あたりの対数オッズ変化を示す。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">オッズ比（連続）</div>
+      <div class="term-en">Odds Ratio (Continuous)</div>
+      <div class="term-def">exp(係数)。予測変数1単位増加あたりのオッズの倍率。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">線形性</div>
+      <div class="term-en">Linearity Assumption</div>
+      <div class="term-def">連続変数の係数は全範囲で一定（Age=0→1でもAge=55→56でも同じ変化量）。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">フルモデル</div>
+      <div class="term-en">Full Model</div>
+      <div class="term-def">複数の予測変数を全て含むモデル。AICで他のモデルと比較して最適なものを選択する。</div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第12章</p>
+<p style="margin-top:.5rem"><a href="m6_ch12_easy.html">🍎 やさしい版へ</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script>
+var ANSWERS=[2, 1, 2, 1, 2, 1, 0, 3, 2, 3];
+var FEEDBACKS=["exp(coefficient) = odds ratio. For each 1-unit increase in Age, the odds of Good credit multiply by exp(0.0184) ≈ 1.0186 — about a 1.86% increase per year.", "Same as binary: coefficient = log(odds_at_X+1 / odds_at_X). This ratio is constant regardless of which two consecutive values you use.", "The log odds change is constant (linear) across all values of a continuous predictor. log(odds_56/odds_55) = log(odds_1/odds_0) = coefficient.", "The coefficient is on the log-odds scale: each 1-year increase in Age adds 0.0184 to the log odds. The probability change depends on the starting value due to the non-linear sigmoid function.", "AIC(mod_fw, mod_age, mod_full) compares all three models at once. The model with the lowest AIC is preferred.", "exp(b) gives the multiplicative change in odds per one-unit rise in the predictor.", "Logistic regression assumes a constant log-odds change per unit, i.e. a linear effect on the logit.", "Because the per-unit log-odds change is constant, any adjacent pair of ages yields the same coefficient.", "A positive coefficient means the log-odds rise modestly with each additional year.", "AIC (alongside deviance) lets you compare model fit and complexity across the candidates."];
+var score=0,done=0,total=10;
+</script>
+<script>
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='\u2705 Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='\u274c '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+setTimeout(function(){units.forEach(function(u){u.classList.add('visible');});},600);
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

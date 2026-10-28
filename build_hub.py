@@ -6,6 +6,7 @@ COURSES = [
     dict(id='sql', name='SQL（660）', icon='🗄️', index='sql_index.html', prefix=''),
     dict(id='stats', name='統計・回帰（550／650）', icon='📊', index='stats/index.html', prefix='stats/'),
     dict(id='py', name='Python（520）', icon='🐍', index='python520/index.html', prefix='python520/'),
+    dict(id='r650', name='R データ分析（650）', icon='📈', index='r650/index.html', prefix='r650/'),
 ]
 def clean(s):
     s = re.sub(r'<a [^>]*>.*?</a>', '', s, flags=re.S)

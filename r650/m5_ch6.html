@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第6章 カテゴリ変数の変換 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 6</div>
+<h1>🏷️ カテゴリ変数の変換</h1>
+<p>「季節＝1」「曜日＝2」…数字で表されたカテゴリ。そのまま使うと意味がわからないし、特定の季節だけ取り除くこともできない。factor化とワンホットエンコーディングで解決する。</p>
+<div class="unit-nav">
+<a href="#unit1">① なぜ変換するか</a>
+<a href="#unit2">② factor化とcase_when</a>
+<a href="#unit3">③ ワンホットエンコーディング</a>
+<a href="#unit4">④ ダミー変数トラップ</a>
+<a href="#unit5">⑤ スケーリングの考慮</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch6_easy.html">▶ 第6章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>なぜカテゴリ変数を変換するのか</h2><div class="unit-sub">2つの理由：①わかりやすさ ②特定カテゴリだけ操作したい</div></div>
+</div>
+<p>これまで気温・風速など<strong>量的な予測変数</strong>だけを使ってきました。この章では<strong>カテゴリ予測変数</strong>（季節・祝日・曜日・天気など）を扱います。まず、文字データは（自由記述テキストでなければ）<strong>factor型</strong>に変換するのが基本です。</p>
+<h3>変換する2つの理由</h3>
+<table class="compare-table">
+<tr><th>理由</th><th>説明</th></tr>
+<tr><td><strong>① わかりやすさ</strong></td><td>「季節＝1、曜日＝6、天気＝2」では意味不明。コードブック（データ辞書）を見ないとわからない。グラフでも曜日が数字だと読み手に伝わらない。</td></tr>
+<tr><td><strong>② 特定カテゴリの操作</strong></td><td>「天気1は残して天気3だけ削りたい」ができない。数字のままだと1つのカテゴリだけ取り除けない。</td></tr>
+</table>
+<div class="note-box">
+<strong>📌 余談：</strong>カテゴリ変数（季節・祝日・曜日・天気）をモデルに加えると、調整済みR²が前のモデル（約0.6）から<strong>増加</strong>しました。調整済みR²は無駄な変数を罰するので、増えたということは、これらが役立つ情報を持っている証拠です。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>「給食メニューが1番、2番、3番」と数字で言われても何が出るかわからないですよね。「1＝カレー、2＝ラーメン」と名前にすればすぐわかる。カテゴリ変数の変換は、数字に「名前」をつけてあげる作業です🍛</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>factor化と case_when で名前をつける</h2><div class="unit-sub">数字を意味のあるラベルに置き換える</div></div>
+</div>
+<p><code>case_when</code> を使って、数字を意味のある名前に変換します。<strong>== は2つ</strong>（イコール2個）、スペースに注意、最後に <code>.default</code> で取りこぼしを防ぎます。</p>
+<div class="code-block"><span class="cl">bikes <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">mutate</span>(season <span class="kw">=</span> <span class="kw">case_when</span>(</span><span class="cl">    season <span class="kw">==</span> <span class="nm">1</span> <span class="kw">~</span> <span class="st">"winter"</span>,</span><span class="cl">    season <span class="kw">==</span> <span class="nm">2</span> <span class="kw">~</span> <span class="st">"spring"</span>,</span><span class="cl">    season <span class="kw">==</span> <span class="nm">3</span> <span class="kw">~</span> <span class="st">"summer"</span>,</span><span class="cl">    season <span class="kw">==</span> <span class="nm">4</span> <span class="kw">~</span> <span class="st">"fall"</span>,</span><span class="cl">    .default <span class="kw">=</span> <span class="kw">as.character</span>(season)))</span></div>
+<p>同じように、祝日（0＝いいえ, 1＝はい）、曜日（0＝日曜〜6＝土曜）、天気（1＝晴れ, 2＝降水…）も変換できます。すると最初の行が「冬・祝日でない・土曜・小雨」のように<strong>一目で読める</strong>ようになります。</p>
+<div class="note-box">
+<strong>📌 補足：</strong>変換後の文字列は、改めて<strong>factor型</strong>に戻しておくのがおすすめです（順序づけや回帰での扱いがスムーズになります）。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>case_whenは「翻訳機」。「1という暗号は冬、2は春…」というルールを教えると、数字の羅列を人間が読める言葉に翻訳してくれます🌸</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>ワンホット（ダミー）エンコーディング</h2><div class="unit-sub">1つの列を「はい/いいえ」の複数の列に分ける</div></div>
+</div>
+<p>特定のカテゴリ（例：夏だけ）をモデルから削るには、<strong>ワンホットエンコーディング（ダミーエンコーディング）</strong>が必要です。1つの「季節」列を、季節ごとの「はい/いいえ」列に分けます。</p>
+<div class="viz">
+<div class="viz-title">ワンホットエンコーディングのしくみ</div>
+<svg style="width:100%;max-width:540px;display:block;margin:0 auto;" viewbox="0 0 540 180" xmlns="http://www.w3.org/2000/svg">
+<!-- before -->
+<rect fill="#dbeafe" height="110" rx="6" stroke="#2563eb" stroke-width="1.5" width="90" x="20" y="40"></rect>
+<text fill="#1e293b" font-size="11" font-weight="700" text-anchor="middle" x="65" y="30">変換前</text>
+<text fill="#1e3a8a" font-size="10" text-anchor="middle" x="65" y="60">season</text>
+<line stroke="#93c5fd" x1="20" x2="110" y1="68" y2="68"></line>
+<text fill="#1e293b" font-size="11" text-anchor="middle" x="65" y="88">winter</text>
+<text fill="#1e293b" font-size="11" text-anchor="middle" x="65" y="110">summer</text>
+<text fill="#1e293b" font-size="11" text-anchor="middle" x="65" y="132">fall</text>
+<!-- arrow -->
+<text fill="#7c3aed" font-size="26" text-anchor="middle" x="150" y="100">→</text>
+<!-- after -->
+<g>
+<rect fill="#ede9fe" height="110" rx="6" stroke="#7c3aed" stroke-width="1.5" width="320" x="200" y="40"></rect>
+<text fill="#1e293b" font-size="11" font-weight="700" text-anchor="middle" x="360" y="30">変換後（はい=1 / いいえ=0）</text>
+<text fill="#5b21b6" font-size="9" text-anchor="middle" x="240" y="60">winter</text>
+<text fill="#5b21b6" font-size="9" text-anchor="middle" x="300" y="60">spring</text>
+<text fill="#5b21b6" font-size="9" text-anchor="middle" x="360" y="60">summer</text>
+<text fill="#5b21b6" font-size="9" text-anchor="middle" x="420" y="60">fall</text>
+<line stroke="#c4b5fd" x1="200" x2="520" y1="68" y2="68"></line>
+<text fill="#059669" font-size="11" font-weight="700" text-anchor="middle" x="240" y="88">1</text><text font-size="11" text-anchor="middle" x="300" y="88">0</text><text font-size="11" text-anchor="middle" x="360" y="88">0</text><text font-size="11" text-anchor="middle" x="420" y="88">0</text>
+<text font-size="11" text-anchor="middle" x="240" y="110">0</text><text font-size="11" text-anchor="middle" x="300" y="110">0</text><text fill="#059669" font-size="11" font-weight="700" text-anchor="middle" x="360" y="110">1</text><text font-size="11" text-anchor="middle" x="420" y="110">0</text>
+<text font-size="11" text-anchor="middle" x="240" y="132">0</text><text font-size="11" text-anchor="middle" x="300" y="132">0</text><text font-size="11" text-anchor="middle" x="360" y="132">0</text><text fill="#059669" font-size="11" font-weight="700" text-anchor="middle" x="420" y="132">1</text>
+</g>
+</svg>
+<div class="viz-cap">1つの「season」列が、季節ごとの「はい(1)/いいえ(0)」の列に分かれる。これで「夏だけ削る」が可能に。</div>
+</div>
+<div class="code-block"><span class="cl"><span class="cm"># if_else で手動ワンホット（例：冬かどうか）</span></span><span class="cl">bikes <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">mutate</span>(season_winter <span class="kw">=</span> <span class="kw">if_else</span>(season <span class="kw">==</span> <span class="st">"winter"</span>, <span class="nm">1</span>, <span class="nm">0</span>),</span><span class="cl">         season_spring <span class="kw">=</span> <span class="kw">if_else</span>(season <span class="kw">==</span> <span class="st">"spring"</span>, <span class="nm">1</span>, <span class="nm">0</span>),</span><span class="cl">         season_summer <span class="kw">=</span> <span class="kw">if_else</span>(season <span class="kw">==</span> <span class="st">"summer"</span>, <span class="nm">1</span>, <span class="nm">0</span>))</span></div>
+<p>これで「夏」だけを回帰から取り除いて、冬・春・秋は残す、といった操作ができます。<code>fastDummies</code> パッケージでも自動でできますが、<strong>課題ではこの手動アプローチを使うこと</strong>（fastDummiesは不可）。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>1個のスイッチ（season）を、「冬スイッチ」「春スイッチ」「夏スイッチ」「秋スイッチ」の4個に分けるイメージ。今日が夏なら「夏スイッチだけON(1)、他はOFF(0)」。こうすれば「夏スイッチだけ外す」ことができます🔘</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>ダミー変数トラップ（n−1の法則）</h2><div class="unit-sub">最初の1列を必ず取り除く</div></div>
+</div>
+<p>大事なルール：カテゴリがn個なら、ダミー列は<strong>n個ではなく n−1個</strong>にします。1つは必ず取り除く（<code>remove_first_dummy</code>）。</p>
+<div class="warn-box">
+<strong>⚠️ なぜ1つ削る？</strong> 季節4つで「春でも夏でも冬でもない」なら、自動的に<strong>秋に決まります</strong>。だから「秋」列は無くても情報が完全。むしろ残すと<strong>多重共線性</strong>が起きてしまいます。これを<strong>ダミー変数トラップ</strong>と呼びます。
+  </div>
+<table class="compare-table">
+<tr><th>カテゴリ</th><th>カテゴリ数</th><th>必要なダミー列</th></tr>
+<tr><td>季節</td><td>4（春夏秋冬）</td><td>3（1つ削除）</td></tr>
+<tr><td>曜日</td><td>7</td><td>6（1つ削除）</td></tr>
+<tr><td>天気</td><td>3（晴れ/小雨/大雨）</td><td>2（1つ削除）</td></tr>
+</table>
+<div class="note-box">
+<strong>📌 トラップに落ちたサイン：</strong>係数に <code>NA</code> が出たり、<strong>"singularity"</strong> というメッセージが出たら、ダミー変数トラップに落ちています。n−1個にすれば解決します。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>「右でも左でも真ん中でもないなら…必ず上ですよね」。だから「上」のスイッチは省略できる。全部のスイッチを用意すると逆に矛盾（共線性）が起きるので、1つ減らすのがルールです🔼</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>数値とカテゴリが混在するときのスケーリング</h2><div class="unit-sub">比較しやすくするための仕上げ</div></div>
+</div>
+<p>数値変数（気温・湿度）とワンホット変数（曜日など）が混在する場合、比較しやすくするため<strong>数値変数のスケーリング</strong>を検討します。</p>
+<ul>
+<li><strong>標準化（Standardization）：</strong>Zスコアを使う（第3章で学んだ方法）。</li>
+<li><strong>正規化（Normalization）：</strong>最大・最小でスケールする方法。</li>
+</ul>
+<p>これらは機械学習の授業でより詳しく学びます。機械学習モデルでは、スケーリングが必要になることが多いです。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>身長(cm)と「夏スイッチ(0か1)」を一緒に扱うと、桁が違いすぎて比べにくい。みんなを「0〜1」や「偏差値」にそろえると、フェアに比べられます。これがスケーリングです⚖️</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第6章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">What is one key reason to transform categorical variables from numbers into labels?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> To make the dataset larger by adding many extra rows of newly labelled observations to it</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> To remove the intercept term from the model so the fitted line passes through the origin</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> To make the data understandable (e.g., "winter" instead of "1") and easier to read in plots</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> To convert the response variable into one of the predictor variables used by the model</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">What does one-hot (dummy) encoding do?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> Squares each of the categorical values to turn the column into a numeric predictor term</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> Splits one category column into multiple yes/no (1/0) columns, one for each category</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> Deletes all of the categorical variables and keeps only the numeric predictors in the data</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> Combines several separate category columns into a single averaged numeric predictor column</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">For a variable with 7 weekdays, how many dummy columns should remain?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> 6 (n − 1, dropping one to avoid the dummy variable trap)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> 7 (n, keeping one column for every single weekday)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> 8 (n + 1, adding an extra column for the intercept)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> 1 (a single column holding all seven weekday codes)</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">You see NA coefficients or a "singularity" message. What likely happened?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> You used too few rows, so the model ran out of data to estimate coefficients</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> The response variable is missing, so lm had nothing to predict against</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> The model is perfect, and the NA values simply mark the unused predictors</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> You fell into the dummy variable trap (kept all n dummies instead of n−1)</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">When numeric and one-hot encoded variables are mixed, what is recommended?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> Delete all of the numeric variables and keep only the one-hot encoded dummy columns instead</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> Use fastDummies on the response variable so it ends up on the same scale as the predictors</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> Consider scaling the numeric predictors (standardization or normalization) for comparability</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> Square all of the dummy variables so that they match the magnitude of the numeric predictors</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch5.html">← 第5章：多項式回帰</a>
+<a href="m5_ch7.html">第7章:日付データの処理 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">カテゴリ変数</div><div class="term-en">Categorical Variable</div><div class="term-def">季節・曜日・天気など、種類を表す変数。数字でも実体はカテゴリ。</div></div>
+<div class="term-item"><div class="term-name">factor型</div><div class="term-en">factor</div><div class="term-def">Rでカテゴリを扱う型。回帰や可視化で適切に処理される。</div></div>
+<div class="term-item"><div class="term-name">ワンホットエンコーディング</div><div class="term-en">One-Hot / Dummy Encoding</div><div class="term-def">1列を「はい/いいえ(1/0)」の複数列に分割すること。</div></div>
+<div class="term-item"><div class="term-name">ダミー変数トラップ</div><div class="term-en">Dummy Variable Trap</div><div class="term-def">全カテゴリをダミー化して共線性が起きる罠。n−1列にして回避。</div></div>
+<div class="term-item"><div class="term-name">case_when</div><div class="term-en">case_when()</div><div class="term-def">条件に応じて値を置き換えるdplyr関数。数字→ラベル変換に使う。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 ポイント</h4>
+<p>
+    文字データ → <strong>factor化</strong><br/><br/>
+    特定カテゴリを操作したい → <strong>ワンホット</strong><br/><br/>
+    ダミーは必ず <strong>n−1個</strong>（1つ削る）<br/><br/>
+    NA / singularity が出たら → トラップに注意！<br/><br/>
+    課題では <strong>fastDummies 不可</strong>・手動で。
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第6章:カテゴリ変数の変換</p>
+<p style="margin-top:.5rem;"><a href="m5_ch5.html">← 第5章</a> · <a href="m5_ch7.html">第7章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Labeling makes data understandable ('winter' vs '1') and far easier to read in graphics — one of the two main reasons to transform.",
+  2:"Correct! One-hot encoding splits one category column into several yes/no (1/0) columns, one per category, so you can drop a single category.",
+  3:"Correct! Use n − 1 = 6 dummy columns for 7 weekdays. Dropping one avoids the dummy variable trap (multicollinearity).",
+  4:"Correct! NA coefficients or a singularity warning means you kept all n dummies instead of n−1 — the dummy variable trap.",
+  5:"Correct! With mixed numeric and one-hot variables, scale the numeric predictors (standardization or normalization) for comparability."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

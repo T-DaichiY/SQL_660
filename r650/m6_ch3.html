@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3章 ロジスティック回帰のカギ：変換を理解する — ロジスティック回帰 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">Chapter 3</div>
+  <h1>🔑 ロジスティック回帰のカギ：変換を理解する</h1>
+  <p>確率→オッズ→対数オッズの変換をグラフと手計算で完全理解。シグモイド関数で元に戻る仕組みも確認。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 変換の全体像</a><a href="#unit2">② P=0.5で手計算</a><a href="#unit3">③ 確率を変えて確認</a><a href="#unit4">④ logitリンクとは</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>グラフで直感的に理解する</h2><div class="unit-sub">変換のプロセスをS字カーブで視覚化</div></div>
+  </div>
+  <p>ロジスティック回帰のカギは、確率(0〜1)という狭い範囲を対数オッズ(−∞〜+∞)という広い範囲に変換し、線形回帰の式を使えるようにすること。そして最後にシグモイドで戻すことです。</p>
+<div class="iter-loop">
+  <div class="loop-step">① 確率 P（0 〜 1）</div>
+  <div class="loop-arrow">↓ オッズ変換 P/(1-P)</div>
+  <div class="loop-step">② オッズ（0 〜 ∞）</div>
+  <div class="loop-arrow">↓ 自然対数 log(odds)</div>
+  <div class="loop-step">③ 対数オッズ（−∞ 〜 +∞）</div>
+  <div class="loop-arrow">↓ 線形回帰式と組み合わせて係数を推定</div>
+  <div class="loop-step">④ シグモイド 1/(1+e⁻ˣ) で逆変換</div>
+  <div class="loop-arrow">↓</div>
+  <div class="loop-step">⑤ 予測確率 P̂（0 〜 1）✅</div>
+</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>例えば「確率 → オッズ」は、勝率50%の試合を「引き分けに等しい（1対1）」と言い換えるようなもの。数学的な変換ですが、伝えている情報は同じです。</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>具体的な数値で手計算</h2><div class="unit-sub">p = 0.5 のとき何が起きるか</div></div>
+  </div>
+  <p>確率が <strong>P = 0.5</strong> のケースで、全変換を手で追ってみましょう。</p>
+<div class="code-block"><span class="cl"><span class="cm"># Step 1: 確率 → オッズ</span></span><span class="cl">P <span class="kw">&lt;-</span> <span class="nm">0.5</span></span><span class="cl">odds <span class="kw">&lt;-</span> P <span class="kw">/</span> (<span class="nm">1</span> <span class="kw">-</span> P)</span><span class="cl">odds  <span class="cm"># 0.5 / 0.5 = 1.0</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 2: オッズ → 対数オッズ</span></span><span class="cl">log_odds <span class="kw">&lt;-</span> <span class="kw">log</span>(odds)</span><span class="cl">log_odds  <span class="cm"># log(1) = 0</span></span><span class="cl"></span><span class="cl"><span class="cm"># Step 3: 対数オッズ → 確率（シグモイドで逆変換）</span></span><span class="cl">p_hat <span class="kw">&lt;-</span> <span class="nm">1</span> <span class="kw">/</span> (<span class="nm">1</span> <span class="kw">+</span> <span class="kw">exp</span>(<span class="kw">-</span>log_odds))</span><span class="cl">p_hat  <span class="cm"># → 0.5 ✅（元に戻った！）</span></span></div>
+<div class="output-text">odds    = 1.0
+log_odds = 0
+p_hat   = 0.5</div>
+<p>P=0.5 を変換して最後に戻すと、ちゃんと0.5が返ってきます。変換は可逆（reversible）なので、情報は失われていません。</p>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>確率が変わるとどうなるか</h2><div class="unit-sub">P=0.7 と P=0.1 で確認</div></div>
+  </div>
+  <p>他の確率でも同じ変換をしてみます。</p>
+<table class="compare-table">
+  <thead><tr><th>確率 P</th><th>オッズ</th><th>対数オッズ</th><th>シグモイドで戻す</th></tr></thead>
+  <tbody>
+    <tr><td>0.1（10%）</td><td>0.1/0.9 ≈ 0.111</td><td>log(0.111) ≈ −2.20</td><td>→ 0.1 ✅</td></tr>
+    <tr><td>0.5（50%）</td><td>0.5/0.5 = 1.000</td><td>log(1.0) = 0.00</td><td>→ 0.5 ✅</td></tr>
+    <tr><td>0.7（70%）</td><td>0.7/0.3 ≈ 2.333</td><td>log(2.333) ≈ 0.847</td><td>→ 0.7 ✅</td></tr>
+    <tr><td>0.9（90%）</td><td>0.9/0.1 = 9.000</td><td>log(9.0) ≈ 2.197</td><td>→ 0.9 ✅</td></tr>
+  </tbody>
+</table>
+<div class="note-box"><strong>📌 重要なパターン：</strong>確率が0.5のとき対数オッズ=0。確率が0.5より大きければ正の値、小さければ負の値になります。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>確率50%は「フィフティフィフティ」で対数オッズ0。50%より確率が上がると対数オッズがプラスになり、下がるとマイナスになる。真ん中（0）が50%という感覚を覚えておきましょう！</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>logitリンクとは何か</h2><div class="unit-sub">なぜ「リンク関数」と呼ぶか</div></div>
+  </div>
+<div class="note-box"><strong>📌 リンク関数の役割：</strong>線形予測子 <code>β₀+β₁x</code>（範囲 −∞〜+∞）と、確率の平均（範囲 0〜1）を「橋渡し（link）」するのがリンク関数です。ロジスティック回帰では logit がその橋であり、二項分布の<em>正準リンク</em>（最も自然な選択）です。リンクを変えれば probit など別モデルになりますが、係数が「オッズ比の対数」として解釈できるのは logit ならではの利点です。</div>
+  <p>この変換（確率→対数オッズ）を<strong>logitリンク関数</strong>と呼びます。<code>glm(family=binomial)</code>と書いたとき、Rは自動的にこのlogitリンクを使います。</p>
+<div class="flow-diagram">
+  <div class="flow-box input">線形予測子<br><small>β₀ + β₁X</small></div>
+  <span class="flow-arrow">logit⁻¹</span>
+  <div class="flow-box output">確率 P̂<br><small>0 〜 1</small></div>
+</div>
+<div class="teal-box"><strong>🔵 まとめ：ロジスティック回帰の仕組み</strong><br>係数（β）は「対数オッズのスケール」で推定される → exp() で「オッズ比」に戻せる → さらに確率に変換できる。この一連の流れが第4章以降の解釈の基礎になります。</div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 10</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+  
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the logit link function?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The sigmoid function</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The natural log of the odds ratio</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The square root of probability</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The exponential of probability</button>
+</div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">When probability P = 0.5, what is the log odds?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.5</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>1.0</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Undefined</button>
+</div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">If log odds is positive, what does that imply about probability?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Probability is less than 0.5</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Probability equals 0.5</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Probability is greater than 0.5</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Probability is undefined</button>
+</div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">What does the inverse sigmoid (logistic) function do?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Converts probability to log odds</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Converts log odds back to probability</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Calculates model coefficients</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Removes negative values</button>
+</div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">In R, which family argument applies the logit link automatically?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>family=gaussian</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>family=poisson</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>family=binomial</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>family=logit</button>
+</div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What shape does the relationship between log-odds and probability take?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>An S-shaped (sigmoid) curve</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A straight diagonal line</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A flat horizontal line</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A V-shaped curve</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">If the log-odds equals 0, what is the probability?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.0</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>0.25</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>1.0</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.50</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">A &#x27;link function&#x27; in a GLM serves to:</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Connect the linear predictor to the mean of the outcome</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Join two separate datasets together</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Remove outliers automatically</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Standardize all predictor variables</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">If log-odds is negative, the probability is:</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Exactly 1</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Greater than 0.5</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Undefined</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Less than 0.5</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">Why is the logit link the &#x27;natural&#x27; choice for binomial data?</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It forces predictions outside 0 and 1</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It eliminates the intercept term</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It keeps predicted probabilities within 0 and 1</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It only works with one predictor</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 2, 2, 1, 2, 0, 3, 0, 3, 2];
+var FEEDBACKS=["The logit is log(P/(1-P)), i.e., the natural log of the odds. It transforms probability (0–1) to log odds (−∞ to +∞).", "Odds = 0.5/0.5 = 1. log(1) = 0. So log odds = 0 when P = 0.5.", "Positive log odds means odds > 1, which means P > 0.5.", "The sigmoid 1/(1+e^−x) is the inverse of logit. It maps log odds back to a probability between 0 and 1.", "family=binomial automatically uses the logit link function in glm().", "Mapping log-odds back to probability follows the S-shaped sigmoid curve.", "Log-odds 0 means odds = 1, which corresponds to P = 0.5.", "The link function relates the linear predictor to the expected outcome; for logistic regression it is the logit.", "Negative log-odds means odds < 1, so the probability is below 0.5.", "The logit link is the canonical link for the binomial family and constrains fitted probabilities to [0,1]."];
+var score=0,done=0,total=10;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<div class="page-nav"><a href="m6_ch2.html">← 第2章</a><a href="m6_ch4.html">第4章 →</a></div>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">logitリンク関数</div>
+      <div class="term-en">Logit Link Function</div>
+      <div class="term-def">確率を対数オッズに変換する関数。glm(family=binomial)で自動使用される。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">シグモイドの逆変換</div>
+      <div class="term-en">Inverse Sigmoid</div>
+      <div class="term-def">対数オッズを確率に戻す変換。1/(1+e^−x)。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">可逆変換</div>
+      <div class="term-en">Reversible Transformation</div>
+      <div class="term-def">情報を失わずに元に戻せる変換のこと。確率↔対数オッズは可逆。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">線形予測子</div>
+      <div class="term-en">Linear Predictor</div>
+      <div class="term-def">β₀ + β₁X₁ + …という回帰式の部分。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>概念が難しく感じたら、コードを実際にRで動かして確認してみましょう。手を動かすことで理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_index.html">← 章の一覧に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

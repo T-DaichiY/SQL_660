@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第7章 日付データの処理 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 7</div>
+<h1>📅 日付データの処理</h1>
+<p>「8月」と「5月」では自転車のレンタル数が違う。1つの日付列から年・月・日を取り出して、分析に使えるようにする方法を学ぶ。</p>
+<div class="unit-nav">
+<a href="#unit1">① なぜ日付を分解するか</a>
+<a href="#unit2">② lubridateで分解</a>
+<a href="#unit3">③ factorに変換</a>
+<a href="#unit4">④ 全変数モデル</a>
+<a href="#unit5">⑤ 一般化VIF（GVIF）</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch7_easy.html">▶ 第7章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>なぜ日付を年・月・日に分解するのか</h2><div class="unit-sub">月を知るとデータ探索がはかどる</div></div>
+</div>
+<p>その日が<strong>何月か</strong>を知ると、データ探索に役立ちます。8月か5月かで、レンタル数の傾向が変わるからです。現在、自転車データは日付が<strong>1つの列</strong>にまとまっています。そこから<strong>年・月・日を取り出し</strong>たいわけです。</p>
+<div class="flow-diagram">
+<div class="flow-box input">date<br/><small>2011-01-01</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box model">分解<br/><small>lubridate</small></div>
+<span class="flow-arrow">→</span>
+<div class="flow-box output">year=2011<br/>month=1<br/>day=1</div>
+</div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>「2011年1月1日」という1つの情報を、「年」「月」「日」の3つの引き出しに分けて整理するイメージ。月だけ取り出せば「夏はよく借りられる」みたいなパターンが見えてきます🗓️</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>lubridate で年・月・日に分解</h2><div class="unit-sub">year() month() day() で一発</div></div>
+</div>
+<p><code>lubridate</code> ライブラリ（要インストール）の <code>year()</code> <code>month()</code> <code>day()</code> で、日付から各要素を取り出します。</p>
+<div class="code-block"><span class="cl"><span class="kw">library</span>(lubridate)</span><span class="cl"></span><span class="cl">bikes <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">mutate</span>(year <span class="kw">=</span> <span class="kw">year</span>(date),</span><span class="cl">         month <span class="kw">=</span> <span class="kw">month</span>(date),</span><span class="cl">         day <span class="kw">=</span> <span class="kw">day</span>(date))</span></div>
+<p>確認すると、2011年1月1日が「year=2011, month=1, day=1」に正しく分解されました。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>lubridateは「日付バラし機」。日付を入れるとボタン1つで「年・月・日」にバラバラにしてくれる便利な機械です⚙️</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>月と年を factor に変換</h2><div class="unit-sub">「1月」は数字ではなくカテゴリ</div></div>
+</div>
+<p>取り出した <code>month</code> と <code>year</code> は、最初は数値（double）扱いです。でも「月1（＝1月）」は数字に見えても<strong>カテゴリ</strong>です。だから <code>factor()</code> で囲んでfactor型にします。</p>
+<div class="code-block"><span class="cl">bikes <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">mutate</span>(year <span class="kw">=</span> <span class="kw">factor</span>(<span class="kw">year</span>(date)),</span><span class="cl">         month <span class="kw">=</span> <span class="kw">factor</span>(<span class="kw">month</span>(date)),</span><span class="cl">         day <span class="kw">=</span> <span class="kw">day</span>(date))   <span class="cm"># 日は数値のまま（順序的なので）</span></span></div>
+<p><strong>日（day）は数値のまま</strong>にします。順序があり、日ごとにグループ化することは少ないからです。一方、月や年は<strong>group_by</strong>で集計・可視化したいのでfactorが便利です。日付列そのものは冗長なので削除します（<code>-date</code>）。</p>
+<div class="note-box">
+<strong>📌 ワンホットの検討：</strong>月や年も<strong>ワンホットエンコーディング</strong>すれば、「1月は有意だが2月は有意でない」というとき、1月だけ残して2月を削るといった操作ができます（第6章参照）。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>「3月」の3は、計算する数字（3個のリンゴ）ではなく、「春の月」というラベルですよね。だからfactor（カテゴリ）にします。でも「日にち」は1日→2日→3日と順番があるので、数字のままでOKです🍎</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>全変数モデル（~ .）</h2><div class="unit-sub">全部の列を予測変数にする便利な書き方</div></div>
+</div>
+<p>すべての列を予測変数に使いたいとき、全部タイプするのは大変。<code>~ .</code>（チルダ・ドット）と書けば、<strong>応答変数以外の全列</strong>を予測変数にできます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># rentals を、残りすべての列で予測</span></span><span class="cl">full_model <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> ., data <span class="kw">=</span> bikes)</span><span class="cl"><span class="kw">summary</span>(full_model)</span></div>
+<p>結果を見ると、<strong>day（日）は有意でない</strong>ことが多い——「1日か15日か」はあまり情報を持たないので納得です。一方<strong>月と年は有意</strong>。そして調整済みR²が<strong>これまでで最大</strong>に。ノイズの多いデータからシグナルをよく捉えられた証拠です。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p><code>~ .</code> は「全員集合！」の号令。1人ずつ名前を呼ばなくても、応答変数以外の全員が予測変数として集まってくれる便利なショートカットです📣</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>一般化VIF（GVIF）</h2><div class="unit-sub">カテゴリ変数があるときのVIF</div></div>
+</div>
+<p>factor（カテゴリ）データがあると、ふつうのVIFは使えません。そこで<strong>一般化VIF（GVIF：Generalized VIF）</strong>を使います。注目すべきは最後の列、<strong>GVIF^(1/(2×自由度))</strong>。これで量的データとカテゴリデータのVIFを<strong>同じ土俵で比較</strong>できます。</p>
+<table class="compare-table">
+<tr><th>指標</th><th>基準</th></tr>
+<tr><td>通常のVIF</td><td>5超で問題</td></tr>
+<tr><td><strong>GVIF^(1/(2·df))</strong></td><td><strong>2超</strong>で要調査</td></tr>
+</table>
+<div class="output-text">GVIF^(1/(2df)) の結果（2超は要注意）:
+  ・temperature, temperature²  → 期待通り相関（自然）
+  ・real_feel  → 湿度と風速から作られる → 問題あり、最初に削る候補
+  ・spring/summer/winter  → 月を入れたことで季節と相関（4〜5月＝春など）</div>
+<p><code>real_feel</code>（体感温度）は湿度と風速から作られるので相関が出やすく、最初に削除を検討すべき変数です。また月を入れたことで季節と相関が生じています。月を丸ごと削るか、ワンホット化して特定の月だけ削るか、あるいは季節を削るか——さらなる分析の余地があります。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>普通のVIFは「数字の変数」しか測れない物差し。GVIFは「カテゴリも数字も両方測れる、進化した物差し」です。これで全部の変数を公平にチェックできます📐</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第7章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">Which library is used to extract year, month, and day from a date column?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> ggplot2</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> car</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> lm.beta</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> lubridate</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">Why convert month to a factor but keep day as numeric?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> Month is really a category ("1" = January), while day is sequential and not usually grouped on</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> Because the month values are always much larger numbers than the corresponding day values</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> Because the day column simply cannot be stored as a factor variable anywhere in R at all</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> Because months carry no real meaning at all once a full date has been split into pieces</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">What does the formula <code>rentals ~ .</code> mean in R?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> Predict rentals using only the date column as a predictor</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> Predict the date column using rentals as the only predictor</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> Predict rentals using every other column as a predictor</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> Remove all predictors and fit an intercept-only model</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">In the full model, the "day" predictor was usually…</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> Always negative — later days of the month sharply lowered rentals</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> Not significant — whether it's the 1st or 15th tells us little about rentals</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> The most significant predictor, with by far the smallest p-value</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> The response variable that the rest of the model was predicting</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">Why use Generalized VIF (GVIF) instead of ordinary VIF here?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> GVIF removes the multicollinearity for you automatically by dropping correlated factor variables</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> Ordinary VIF only ever works on the response variable, and never on any of the factor predictors</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> GVIF is much faster to compute because it skips the separate regression run for each predictor</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> GVIF handles categorical (factor) variables; the GVIF^(1/(2·df)) column compares all predictors</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch6.html">← 第6章:カテゴリ変数</a>
+<a href="m5_ch8.html">第8章:交互作用 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">lubridate</div><div class="term-en">lubridate package</div><div class="term-def">日付から年・月・日を取り出すRパッケージ。year()/month()/day()。</div></div>
+<div class="term-item"><div class="term-name">~ .（チルダ・ドット）</div><div class="term-en">tilde-dot formula</div><div class="term-def">応答変数以外の全列を予測変数にする書き方。</div></div>
+<div class="term-item"><div class="term-name">一般化VIF</div><div class="term-en">Generalized VIF (GVIF)</div><div class="term-def">カテゴリ変数も扱えるVIF。GVIF^(1/(2df))で比較、2超で要調査。</div></div>
+<div class="term-item"><div class="term-name">real_feel</div><div class="term-en">体感温度</div><div class="term-def">湿度と風速から作られるため相関が出やすい変数。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 ポイント</h4>
+<p>
+    日付 → lubridateで<strong>年・月・日</strong>に分解。<br/><br/>
+    月・年は <strong>factor</strong>、日は <strong>数値</strong>のまま。<br/><br/>
+    全変数モデルは <strong>~ .</strong> で。<br/><br/>
+    カテゴリありのVIFは <strong>GVIF</strong>（2超で注意）。
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第7章:日付データの処理</p>
+<p style="margin-top:.5rem;"><a href="m5_ch6.html">← 第6章</a> · <a href="m5_ch8.html">第8章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! The lubridate package provides year(), month(), and day() to pull each piece out of a date column.",
+  2:"Correct! Month is really a category (1 = January), so it becomes a factor. Day is sequential and rarely grouped on, so it stays numeric.",
+  3:"Correct! rentals ~ . predicts rentals using every other column as a predictor — no need to type them all.",
+  4:"Correct! Day was usually not significant — knowing whether it's the 1st or 15th tells you little about rentals.",
+  5:"Correct! GVIF handles factor variables. The GVIF^(1/(2·df)) column puts quantitative and categorical predictors on a comparable scale (over 2 = investigate)."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

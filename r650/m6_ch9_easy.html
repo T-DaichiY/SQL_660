@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第9章 超やさしい版：応用例：ドイツ信用データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy active" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 9 · Easy Mode 🍎</div>
+    <h1>🍎 第9章 超やさしい版：応用例：ドイツ信用データ</h1>
+    <p>ドイツ信用データで総復習。contrasts()の確認・計算チェーン・Rコードで切片を再現してM6の学習を完成させよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">データ確認とcontrasts</a><a href="#u3">インタラクティブ計算</a><a href="#u4">切片の確認</a><a href="#u5">M6総おさらい</a><a href="m6_ch9.html" class="easy-toplink">🏦 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">ドイツ信用データで第1〜8章の知識を総動員</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">German Credit（1000件の信用審査データ）でロジスティック回帰を実践。Good（良い信用）=1、Bad=0。P(Good)=0.7から対数オッズを計算し、glmの切片（0.847）と一致するを確認。contrasts()で参照カテゴリを必ず確認すること。</p></div>
+  <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;margin:1.25rem 0">
+    <h4 style="margin-top:0;color:var(--primary-dark)">🏦 German Credit データの概要</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;text-align:center">
+      <div><div style="font-size:1.6rem;font-weight:900;color:var(--green)">700</div><div style="font-size:.85rem">✅ Good（=1）</div></div>
+      <div><div style="font-size:1.6rem;font-weight:900;color:var(--red)">300</div><div style="font-size:.85rem">❌ Bad（=0）</div></div>
+      <div><div style="font-size:1.6rem;font-weight:900;color:var(--secondary)">1,000</div><div style="font-size:.85rem">合計</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>データの確認とcontrasts()</h2><div class="unit-sub">参照カテゴリを間違えると解釈が逆になる</div></div></div>
+  <p>ロジスティック回帰では「どちらを1（=予測対象）にするか」が重要です。<code>contrasts()</code>で必ず確認しましょう。</p>
+  <p class="code-label">▶ データ読み込みと基本確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># library読み込みとデータ確認</span></span>
+<span class="cl"><span class="kw">library</span>(caret)</span>
+<span class="cl"><span class="kw">data</span>(GermanCredit)</span>
+<span class="cl"><span class="kw">str</span>(GermanCredit)<span class="cm">    # 変数の構造を確認</span></span>
+<span class="cl"><span class="kw">head</span>(GermanCredit)</span>
+<span class="cl"><span class="kw">table</span>(GermanCredit<span class="kw">$</span>Class)<span class="cm">  # Good:700, Bad:300</span></span>
+</pre>
+  <p class="code-label">▶ contrasts()で参照カテゴリを確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># contrasts()で参照カテゴリを確認（重要！）</span></span>
+<span class="cl"><span class="kw">contrasts</span>(GermanCredit<span class="kw">$</span>Class)</span>
+<span class="cl"><span class="cm">#      Good</span></span>
+<span class="cl"><span class="cm"># Bad     0  ← Bad=0（参照）</span></span>
+<span class="cl"><span class="cm"># Good    1  ← Good=1（予測対象）</span></span>
+<span class="cl"><span class="cm"># → P(Good)を予測するモデルになる</span></span>
+</pre>
+  <div class="warn-box">⚠️ contrasts()を確認しないと「Goodを予測しているのかBadを予測しているのか」が分からなくなります。係数の解釈が逆になる大きなミスにつながります。</div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>インタラクティブ確率チェーン</h2><div class="unit-sub">Good・Bad人数を変えて対数オッズを確認</div></div></div>
+  <div class="widget green">
+    <div class="widget-title">🏦 信用データ：確率チェーン計算機</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div style="display:flex;flex-direction:column;gap:.3rem">
+        <label style="font-weight:700;font-size:.88rem">✅ Good（=1）の件数</label>
+        <input type="number" id="gc-good" value="700" min="1" max="999" style="width:110px;padding:.45rem;border-radius:6px;border:1.5px solid var(--green);font-size:.9rem;font-family:inherit">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.3rem">
+        <label style="font-weight:700;font-size:.88rem">❌ Bad（=0）の件数</label>
+        <input type="number" id="gc-bad" value="300" min="1" max="999" style="width:110px;padding:.45rem;border-radius:6px;border:1.5px solid var(--red);font-size:.9rem;font-family:inherit">
+      </div>
+    </div>
+    <div style="height:22px;border-radius:11px;overflow:hidden;display:flex;margin-bottom:1rem">
+      <div id="gc-bar-good" style="height:22px;background:var(--green);transition:width .3s;width:70%"></div>
+      <div id="gc-bar-bad" style="height:22px;background:var(--red);transition:width .3s;width:30%"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;text-align:center">
+      <div style="background:var(--primary-light);border-radius:8px;padding:.85rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--primary-dark)">① 確率 P</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--primary-dark)" id="gc-p">0.700</div>
+        <div style="font-size:.7rem;color:var(--text-sec)">Good/合計</div>
+      </div>
+      <div style="background:var(--green-light);border-radius:8px;padding:.85rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--green)">② オッズ</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--green)" id="gc-odds">2.333</div>
+        <div style="font-size:.7rem;color:var(--text-sec)">P/(1-P)</div>
+      </div>
+      <div style="background:var(--yellow-light);border-radius:8px;padding:.85rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--yellow)">③ 対数オッズ</div>
+        <div style="font-size:1.5rem;font-weight:900;" id="gc-lo">0.847</div>
+        <div style="font-size:.7rem;color:var(--text-sec)">glm切片と一致！</div>
+      </div>
+    </div>
+    <div style="margin-top:.75rem;font-size:.8rem;color:var(--text-sec);text-align:center">Good率：<strong><span id="gc-good-pct">70</span>%</strong></div>
+  </div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>切片の確認とモデル拡張</h2><div class="unit-sub">切片＝対数オッズ → 手計算で再現できる</div></div></div>
+  <p class="code-label">▶ 切片のみモデルで対数オッズを確認</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 切片のみモデルでP(Good)の対数オッズを確認</span></span>
+<span class="cl">m0 &lt;- <span class="kw">glm</span>(Class ~ <span class="nm">1</span>, <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="kw">coef</span>(m0)<span class="cm">  # → (Intercept) = 0.8473</span></span>
+<span class="cl"><span class="cm"># 手計算で確認</span></span>
+<span class="cl">p &lt;- <span class="nm">700</span>/<span class="nm">1000</span></span>
+<span class="cl">odds &lt;- p/(<span class="nm">1</span>-p)<span class="cm">     # → 2.333</span></span>
+<span class="cl"><span class="kw">log</span>(odds)<span class="cm">         # → 0.8473 ← 切片と一致！</span></span>
+</pre>
+  <p class="code-label">▶ ForeignWorker変数を追加して拡張</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># バイナリ予測変数ForeignWorkerを追加</span></span>
+<span class="cl">m1 &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker, <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="kw">summary</span>(m1)</span>
+<span class="cl"><span class="cm"># ForeignWorkerYes の係数から</span></span>
+<span class="cl"><span class="cm"># P(Good | 外国人労働者) を計算できる</span></span>
+<span class="cl">p_foreign &lt;- <span class="kw">plogis</span>(<span class="kw">coef</span>(m1)[<span class="nm">1</span>] + <span class="kw">coef</span>(m1)[<span class="nm">2</span>])</span>
+<span class="cl">p_foreign<span class="cm">  # → ? 確認してみよう</span></span>
+</pre>
+  <div class="note-box">📌 <code>plogis()</code>はシグモイド関数（1/(1+e^-x)）のRの組み込み関数です。対数オッズを確率に変換するときに使えます。</div>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">④</div><div><h2>M6全体のおさらい</h2><div class="unit-sub">第1〜9章の流れをまとめて確認</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:.5rem">
+    <div style="background:var(--primary-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--primary)">📐 <strong>第1〜3章：</strong>ロジスティック回帰の仕組み（確率→オッズ→対数オッズ→シグモイド→確率）</div>
+    <div style="background:var(--green-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--green)">🐚 <strong>第4章：</strong>係数の解釈（切片 = 対数オッズ → exp → オッズ → 確率）</div>
+    <div style="background:var(--yellow-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--yellow)">📉 <strong>第5〜7章：</strong>モデル評価（逸脱度・AIC・Rのkとは？）</div>
+    <div style="background:var(--teal-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--teal)">📏 <strong>第8章：</strong>Z値（= 係数/SE）・R²はない→逸脱度・AIC・疑似R²</div>
+    <div style="background:var(--secondary-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--secondary)">🏦 <strong>第9章：</strong>German Creditで実践。contrasts()必須。次回：ForeignWorker追加へ！</div>
+  </div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. German Creditでは何を予測している？<span class="cp-a">A. 信用が「Good（良い）」である確率。contrasts()でGood=1を確認してから解釈する。</span></div><div class="cp-q">Q2. P(Good)=0.7のとき対数オッズは？<span class="cp-a">A. オッズ=0.7/0.3=2.333、log(2.333)≈0.847。これがglmの切片と一致する。</span></div><div class="cp-q">Q3. なぜcontrasts()を必ず確認するのか？<span class="cp-a">A. どちらのカテゴリが1（予測対象）かで係数の解釈が逆になるから。GoodとBadのどちらを「1」としているかを必ず確認する。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch8_easy.html">← 第8章 やさしい版</a><a href="m6_index.html">目次へ →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• German Credit: Good=1 Bad=0</p><p style="margin:.4rem 0">• P(Good)=0.7 → 0.847（切片）</p><p style="margin:.4rem 0">• contrasts()で参照カテゴリを必ず確認</p><p style="margin:.4rem 0">• 次回：ForeignWorker追加へ</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch9.html">第9章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第9章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch9.html">← 第9章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initGermanCredit();</script>
+<script src="../hub-fab.js"></script>
+</body></html>

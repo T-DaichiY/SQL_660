@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第13章 超やさしい版：Shinyアプリでデプロイ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy active" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 13 · Easy Mode 🍎</div>
+    <h1>🍎 第13章 超やさしい版：Shinyアプリでデプロイ</h1>
+    <p>作ったモデルを「誰でも使えるWebアプリ」に変身させる。書いたことのないコードはLLMに手伝ってもらえばいい。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">全体の流れ</a><a href="#u3">ミニShiny体験</a><a href="#u4">公開＆ポートフォリオ</a><a href="m6_ch13.html" class="easy-toplink">🚀 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">モデルは「使われて」はじめて価値になる</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">せっかく作ったロジスティック回帰モデルも、R が使える人にしか動かせないなら宝の持ち腐れ。<strong>Shiny</strong> を使えば「数字を入れる → ボタンを押す → デフォルト確率とリスク判定が出る」Webアプリにできる。Shinyを書いたことがなくても、<strong>LLMに小さく分けて頼めば作れる</strong>。エラーが出たら、そのエラー文を貼り付けて「直して」と言えばいい。</p></div>
+  <p>たとえば銀行の窓口の人は、p値も係数も知りません。知りたいのは<strong>「この人にローンを貸して大丈夫？」</strong>だけ。それに答える画面を作って届けるのが「デプロイ」です。</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0">
+    <div style="background:var(--primary-light);border-radius:10px;padding:1.1rem;border:1.5px solid var(--primary)">
+      <div style="font-weight:800;color:var(--primary-dark);margin-bottom:.5rem">これまで（第1〜12章）</div>
+      <div style="font-size:.88rem">Rの中でモデルを作る<br>summary()で係数を読む<br>→ <strong>統計を知っている人向け</strong></div>
+    </div>
+    <div style="background:var(--teal-light);border-radius:10px;padding:1.1rem;border:1.5px solid var(--teal)">
+      <div style="font-weight:800;color:var(--teal);margin-bottom:.5rem">この章（第13章）</div>
+      <div style="font-size:.88rem">Webアプリにして公開する<br>「確率8% → 低リスク」と表示<br>→ <strong>誰でも使える</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>全体の流れ（6ステップ）</h2><div class="unit-sub">Kaggleのローンデータ → Webアプリ公開まで</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:.5rem;margin:1.25rem 0">
+    <div style="background:var(--primary-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--primary)">📥 <strong>① データ取得：</strong>Kaggleのローンデフォルトデータ（255,000行）。5万行だけサンプリングして開発を高速化。<code>set.seed()</code>で再現性も確保。</div>
+    <div style="background:var(--green-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--green)">🧹 <strong>② クリーニング：</strong>欠損値チェック、予測に役立たないLoanID列を削除（ただのノイズ）。</div>
+    <div style="background:var(--yellow-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--yellow)">📐 <strong>③ モデル構築：</strong><code>glm(Default ~ ..., family=binomial)</code>。family=binomialになっているか自分の目で確認！</div>
+    <div style="background:var(--teal-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--teal)">✂️ <strong>④ 変数選択：</strong>有意でない変数を除去。手動でも、第6〜7章で学んだAICを使う<code>step()</code>でもOK（結果は同じだった）。</div>
+    <div style="background:var(--secondary-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--secondary)">🖥️ <strong>⑤ Shinyアプリ化：</strong>LLMに依頼 → エラー → エラー文を貼って修正 → UIを整理…の往復で完成。</div>
+    <div style="background:#f0fdf4;border-radius:8px;padding:.9rem;border-left:4px solid #16a34a">🌐 <strong>⑥ 公開：</strong>shinyapps.ioにデプロイすればURLひとつで共有。GitHub＋履歴書に載せてポートフォリオに！🎉</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 LLMに頼むときの鉄則</div><p>「クリーニングして、モデル作って、アプリも作って」と<strong>一度に全部頼まない</strong>。LLMも人間と同じで、仕事を積みすぎると手を抜きます。①掃除 → ②モデル → ③変数選択 → ④アプリ、と小さく分けて頼み、各ステップを自分の統計知識でチェックするのがコツ。</p></div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>ミニShiny体験</h2><div class="unit-sub">完成したアプリはこんな感じ（ブラウザ内シミュレーション）</div></div></div>
+  <p>本物のShinyアプリはRで動きますが、雰囲気をつかむために<strong>ミニ版リスク診断機</strong>をここに再現しました。借り手の条件を動かして「診断」を押してみてください。</p>
+  <div class="widget teal">
+    <div class="widget-title">🏦 ローンデフォルト リスク診断（ミニShiny風デモ）</div>
+    <div class="slider-row">
+      <label>🎂 年齢</label>
+      <input type="range" id="sh-age" min="18" max="70" step="1" value="35">
+      <span class="slider-val" id="sh-age-v">35</span>
+    </div>
+    <div class="slider-row">
+      <label>💰 年収（$）</label>
+      <input type="range" id="sh-inc" min="15000" max="150000" step="5000" value="60000">
+      <span class="slider-val" id="sh-inc-v">60,000</span>
+    </div>
+    <div class="slider-row">
+      <label>🏠 ローン額（$）</label>
+      <input type="range" id="sh-loan" min="5000" max="250000" step="5000" value="100000">
+      <span class="slider-val" id="sh-loan-v">100,000</span>
+    </div>
+    <div class="slider-row">
+      <label>💳 クレジットスコア</label>
+      <input type="range" id="sh-credit" min="300" max="850" step="10" value="650">
+      <span class="slider-val" id="sh-credit-v">650</span>
+    </div>
+    <div class="slider-row">
+      <label>📈 金利（%）</label>
+      <input type="range" id="sh-rate" min="2" max="25" step="0.5" value="10">
+      <span class="slider-val" id="sh-rate-v">10.0</span>
+    </div>
+    <div class="btn-row" style="margin-top:.75rem"><button class="btn-step" id="sh-go">🔍 リスクを診断する</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem;text-align:center">
+      <div style="background:var(--bg);border-radius:8px;padding:.9rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--text-sec)">デフォルト確率</div>
+        <div style="font-size:1.7rem;font-weight:900;color:var(--teal)" id="sh-prob">—</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:.9rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--text-sec)">リスク判定</div>
+        <div style="font-size:1.7rem;font-weight:900" id="sh-risk">—</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.83rem;color:var(--text-sec);margin-top:.75rem">若い・低収入・高額ローン・低スコア・高金利にすると高リスクに。<strong>裏で動いているのはロジスティック回帰（シグモイド関数）</strong>です。</div>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 遊びながらモデルを疑う</div><p>本編の実験では「最低スコア＋最高額ローンでも12%＝低リスク」という結果が出ました。違和感があったら診断（第5〜8章）に戻るサイン。データを5万行→25万行に増やしたら改善するか？と検証を続けるのが分析者の仕事です。</p></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>公開＆ポートフォリオ</h2><div class="unit-sub">shinyapps.io でリンクひとつの共有</div></div></div>
+  <p class="code-label">▶ shinyapps.io にデプロイ</p>
+  <pre class="code-block"><span class="cl"><span class="cm"># ① shinyapps.io でアカウント作成（無料枠あり）</span></span><span class="cl"><span class="cm"># ② RStudioから接続してデプロイ</span></span><span class="cl">rsconnect::<span class="kw">deployApp</span>()</span><span class="cl"><span class="cm"># → https://あなたのID.shinyapps.io/アプリ名/ が発行される</span></span></pre>
+  <p>ノートブックを丸ごと渡して「実行してください」ではなく、<strong>URLをクリックするだけ</strong>で誰でもあなたのモデルを触れます。GitHubにコードを置き、履歴書にアプリのリンクを貼れば、「クリーニングからデプロイまでできる人」という強力な証明になります。</p>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. なぜモデルを「デプロイ」する必要がある？<span class="cp-a">A. モデルは使われて初めて組織の価値になるから。統計を知らない人でも「入力→確率→リスク判定」で意思決定に使える形にするのがデプロイ。</span></div><div class="cp-q">Q2. LLMに頼むときのコツは？<span class="cp-a">A. 小さく分けて頼む（クリーニング→モデル→変数選択→アプリ）。エラーが出たらエラー文をそのまま貼って修正を依頼。出力は自分の統計知識で必ず検証する（human in the loop）。</span></div><div class="cp-q">Q3. Shinyアプリの2つの部品は？<span class="cp-a">A. UI（ユーザーが見る入力フォームと結果表示）と Server（裏でpredict()を実行して確率を計算する部分）。shinyApp(ui, server)で起動する。</span></div><div class="cp-q">Q4. なぜ係数表やp値を画面に出さない？<span class="cp-a">A. 使う人は統計を知らないから。「確率8% → 低リスク」のような一目でわかる結果を前面・中央に置くのが良いUI。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch12_easy.html">← 第12章 やさしい版</a><a href="m6_index.html">目次へ →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• デプロイ＝モデルを「使える道具」にすること</p><p style="margin:.4rem 0">• Shiny＝RでWebアプリ（UI＋Server）</p><p style="margin:.4rem 0">• LLMには小さく分けて頼む・エラーは貼って直す</p><p style="margin:.4rem 0">• shinyapps.ioでURL共有→ポートフォリオへ</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">プロンプトの実録と詳しいコードは <a href="m6_ch13.html">第13章 本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第13章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch13.html">← 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>
+(function(){
+  var go=document.getElementById('sh-go');
+  if(!go) return;
+  function plogis(x){ return 1/(1+Math.exp(-x)); }
+  var fmt=function(n){ return (+n).toLocaleString('en-US'); };
+  var ids=['age','inc','loan','credit','rate'];
+  function readVals(){
+    var v={};
+    ids.forEach(function(k){ v[k]=+document.getElementById('sh-'+k).value; });
+    return v;
+  }
+  function updLabels(){
+    var v=readVals();
+    document.getElementById('sh-age-v').textContent=v.age;
+    document.getElementById('sh-inc-v').textContent=fmt(v.inc);
+    document.getElementById('sh-loan-v').textContent=fmt(v.loan);
+    document.getElementById('sh-credit-v').textContent=v.credit;
+    document.getElementById('sh-rate-v').textContent=v.rate.toFixed(1);
+  }
+  ids.forEach(function(k){
+    document.getElementById('sh-'+k).addEventListener('input',updLabels);
+  });
+  go.addEventListener('click',function(){
+    var v=readVals();
+    // 教材用の擬似係数によるロジスティック回帰（本物のモデルの雰囲気を再現）
+    var lp = -2.2
+      - 0.030*(v.age-40)
+      - 0.000018*(v.inc-60000)
+      + 0.0000065*(v.loan-100000)
+      - 0.0075*(v.credit-600)
+      + 0.11*(v.rate-10);
+    var p=plogis(lp);
+    var pct=(p*100).toFixed(1)+'%';
+    document.getElementById('sh-prob').textContent=pct;
+    var r=document.getElementById('sh-risk');
+    if(p<0.10){ r.textContent='🟢 低リスク'; r.style.color='#16a34a'; }
+    else if(p<0.25){ r.textContent='🟡 中リスク'; r.style.color='#ca8a04'; }
+    else { r.textContent='🔴 高リスク'; r.style.color='#dc2626'; }
+  });
+  updLabels();
+})();
+</script>
+<script src="../hub-fab.js"></script>
+</body></html>

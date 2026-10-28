@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第3章 標準化回帰係数 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 3</div>
+<h1>⚖️ 標準化回帰係数</h1>
+<p>湿度・気温・風速は単位がバラバラ。係数の大きさをそのまま比べても「どれが一番効いているか」はわからない。単位をそろえて公平に比べる方法を学ぶ。</p>
+<div class="unit-nav">
+<a href="#unit1">① なぜ比べられないのか</a>
+<a href="#unit2">② 方法1：手動でZスコア</a>
+<a href="#unit3">③ 方法2：scale関数</a>
+<a href="#unit4">④ 方法3：lm.beta（推奨）</a>
+<a href="#unit5">⑤ 解釈と注意点</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch3_easy.html">▶ 第3章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>なぜ係数をそのまま比べられないのか</h2><div class="unit-sub">単位が違うとリンゴとオレンジを比べることになる</div></div>
+</div>
+<p>前章のモデルでは、湿度・気温・風速でレンタル数を予測しました。でも係数をそのまま比べるのは<strong>ちょっと厄介</strong>です。なぜなら<strong>単位（スケール）が違う</strong>から。風速・湿度・気温はそれぞれ別の物差しで測られています。</p>
+<div class="warn-box">
+<strong>⚠️ よくある勘違い：</strong>「湿度の係数が −3100 で一番大きいから、湿度が一番重要だ！」── これは<strong>間違い</strong>です。係数の大きさは単位に左右されます。しかも、すべての予測変数のp値はとても小さい（みんな有意）。では本当にどれが一番効いているのでしょう？
+  </div>
+<div class="viz">
+<div class="viz-title">単位が違うと比べられない</div>
+<svg style="width:100%;max-width:520px;display:block;margin:0 auto;" viewbox="0 0 520 150" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#dbeafe" height="60" rx="8" stroke="#2563eb" stroke-width="2" width="120" x="40" y="40"></rect>
+<text fill="#1e3a8a" font-size="12" font-weight="700" text-anchor="middle" x="100" y="65">湿度</text>
+<text fill="#64748b" font-size="10" text-anchor="middle" x="100" y="85">0〜1 の割合</text>
+<rect fill="#fef3c7" height="60" rx="8" stroke="#d97706" stroke-width="2" width="120" x="200" y="40"></rect>
+<text fill="#92400e" font-size="12" font-weight="700" text-anchor="middle" x="260" y="65">気温</text>
+<text fill="#64748b" font-size="10" text-anchor="middle" x="260" y="85">0〜40 ℃</text>
+<rect fill="#d1fae5" height="60" rx="8" stroke="#059669" stroke-width="2" width="120" x="360" y="40"></rect>
+<text fill="#065f46" font-size="12" font-weight="700" text-anchor="middle" x="420" y="65">風速</text>
+<text fill="#64748b" font-size="10" text-anchor="middle" x="420" y="85">mph</text>
+<text fill="#dc2626" font-size="11" font-weight="700" text-anchor="middle" x="260" y="130">物差しがバラバラ → 係数をそのまま比べてはいけない！</text>
+</svg>
+</div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>身長を「センチ」、体重を「キロ」で測って「数字が大きいから身長のほうが大事」とは言えませんよね。単位が違うものはそのまま比べられない。だから<strong>みんな同じ物差しにそろえてから</strong>比べます📏</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>方法1：手動でZスコア化</h2><div class="unit-sub">仕組みを理解するための長いやり方</div></div>
+</div>
+<p>3つの方法を紹介します（おすすめは方法3）。まず仕組みを理解するため、手動で<strong>標準化（Zスコア化）</strong>してみましょう。Zスコアの計算は「観測値 − 平均 ÷ 標準偏差」です。</p>
+<div class="code-block"><span class="cl"><span class="cm"># Zスコア = (値 - 平均) / 標準偏差</span></span><span class="cl">bikes_for_beta <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">mutate</span>(z_rentals <span class="kw">=</span> (rentals <span class="kw">-</span> <span class="kw">mean</span>(rentals)) <span class="kw">/</span> <span class="kw">sd</span>(rentals),</span><span class="cl">         z_humidity <span class="kw">=</span> (humidity <span class="kw">-</span> <span class="kw">mean</span>(humidity)) <span class="kw">/</span> <span class="kw">sd</span>(humidity),</span><span class="cl">         z_temp <span class="kw">=</span> (temperature <span class="kw">-</span> <span class="kw">mean</span>(temperature)) <span class="kw">/</span> <span class="kw">sd</span>(temperature),</span><span class="cl">         z_wind <span class="kw">=</span> (windspeed <span class="kw">-</span> <span class="kw">mean</span>(windspeed)) <span class="kw">/</span> <span class="kw">sd</span>(windspeed))</span></div>
+<p>たとえばレンタル985件の日のZスコアが −1.8 なら、「平均より約2標準偏差ぶん下」という意味です。標準化したデータで重回帰を作ると、新しい係数が得られます。</p>
+<div class="code-block"><span class="cl">model_std <span class="kw">&lt;-</span> <span class="kw">lm</span>(z_rentals <span class="kw">~</span> z_humidity <span class="kw">+</span> z_temp <span class="kw">+</span> z_wind,</span><span class="cl">               data <span class="kw">=</span> bikes_for_beta)</span></div>
+<div class="output-text">標準化後の係数（絶対値で比較）:
+  z_temp     ← 一番大きい！ = 気温が最も影響大
+  z_humidity
+  z_wind</div>
+<p>符号は無視して<strong>絶対値（大きさ）</strong>を見ると、<strong>気温（temperature）が一番大きい</strong>。つまり気温がレンタル数に最も影響している、とわかります。これは<strong>相関</strong>（レンタル数と最も強く相関するのも気温）や<strong>t統計量</strong>（summaryの3列目、気温が最大の絶対値）でも確認できます。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>Zスコアは「テストの偏差値」みたいなもの。点数(単位)が違う英語と数学のテストも、偏差値にすれば「どっちが得意か」を公平に比べられますよね。標準化＝みんなを偏差値にそろえる作業です📝</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>方法2：scale関数（もっと簡潔に）</h2><div class="unit-sub">Zスコア化を一発でやってくれる</div></div>
+</div>
+<p>手動でmutateするのは大変。<code>scale()</code> 関数はZスコア化を自動でやってくれます。前の長いコードがぐっと短くなります。</p>
+<div class="code-block"><span class="cl">bikes_for_beta2 <span class="kw">&lt;-</span> bikes <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">select</span>(rentals, humidity, temperature, windspeed) <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">as.data.frame</span>() <span class="kw">%&gt;%</span></span><span class="cl"> <span class="kw">scale</span>()   <span class="cm"># 全列を一気にZスコア化</span></span><span class="cl"></span><span class="cl">model_std2 <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> humidity <span class="kw">+</span> temperature <span class="kw">+</span> windspeed,</span><span class="cl">                data <span class="kw">=</span> bikes_for_beta2)</span><span class="cl"><span class="cm"># → 方法1と全く同じ係数になる</span></span></div>
+<div class="note-box">
+<strong>📌 結果は同じ：</strong>手動Zスコアでも <code>scale()</code> でも、得られる標準化係数は同じです。<code>scale()</code> のほうがコードが短くてミスも少ないので便利です。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>方法1が「全部手書きで偏差値を計算」なら、方法2は「計算機のボタン1つで偏差値表を作る」。同じ答えなら、ラクなほうがいいですよね😊</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>方法3：lm.beta パッケージ（一番おすすめ）</h2><div class="unit-sub">データを変換せず、モデルを渡すだけ</div></div>
+</div>
+<p>もっと効率的なのが <code>lm.beta</code> パッケージ。データそのものを標準化する必要がなく、<strong>作ったモデルを渡すだけ</strong>で標準化係数が得られます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># install.packages("lm.beta") が必要</span></span><span class="cl"><span class="kw">library</span>(lm.beta)</span><span class="cl"></span><span class="cl"><span class="kw">lm.beta</span>(bikes_model_1)   <span class="cm"># 標準化係数を表示（気温が最大）</span></span><span class="cl"><span class="kw">summary</span>(<span class="kw">lm.beta</span>(bikes_model_1))  <span class="cm"># 元の係数＋標準化列を併記</span></span></div>
+<p><code>summary(lm.beta(...))</code> は、<strong>元の推定値</strong>と<strong>標準化された列（Standardized）</strong>を並べて表示してくれるので便利です。</p>
+<div class="teal-box">
+<strong>🔢 コードグレード対策：</strong>「最良の予測変数の標準化係数」だけを取り出すには：
+    <div class="code-block" style="margin-top:.6rem;"><span class="cl"><span class="kw">summary</span>(<span class="kw">lm.beta</span>(bikes_model_1))<span class="kw">$</span>coefficients[<span class="nm">3</span>, <span class="nm">2</span>]</span><span class="cl"><span class="cm"># 3行目(気温)・2列目(標準化係数)を抜き出す</span></span></div>
+</div>
+<div class="warn-box">
+<strong>⚠️ "beta" という言葉に注意：</strong>「beta」は多義語で混乱しがちです。① 標準化回帰係数の記号、② 一部の教科書では<strong>非標準化</strong>係数 β₀,β₁…、③ 母集団の回帰直線の傾き、④ 統計的検出力の話でも登場。課題では「標準化回帰係数」または「lm.beta」と明示します。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>方法3は「魔法の翻訳メガネ」。データをいじらなくても、メガネをかける（lm.betaに通す）だけで、バラバラの単位が一瞬で「同じ物差し」に見える！一番ラクで一番おすすめ🪄</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>解釈と注意点</h2><div class="unit-sub">便利だけど、使いどころを間違えないこと</div></div>
+</div>
+<h3>どう解釈する？</h3>
+<p>標準化係数で β₁＝0.5、β₂＝1 なら、<strong>「X₂はX₁の2倍、Yの予測に重要」</strong>と言えます。ただし前提として、両者がだいたい同じ分布で、標準偏差が大きく違わないことが必要です。</p>
+<h3>👍 メリット</h3>
+<ul>
+<li>元々スケールが違う予測変数の<strong>相対的な重要度を直接比較</strong>できる。</li>
+<li>変数の重要度をすばやく把握でき、データ探索に役立つ。</li>
+<li>同じ物差しなので、非専門家にも説明しやすい。</li>
+</ul>
+<h3>👎 注意点（カウション）</h3>
+<ul>
+<li><strong>実用的な意味が失われる</strong>こともある。「登録1件あたり$100」のほうが「0.2標準偏差」より直感的（特に非専門家には）。</li>
+<li>予測がやや複雑になる（標準化を戻す必要がある）。</li>
+<li>変数が同じ分布・似た標準偏差である前提が、現実には大きな仮定になりうる。</li>
+<li>標準化係数はサンプルのばらつきに影響され、<strong>他のデータセットへの一般化がしにくい</strong>。</li>
+</ul>
+<div class="note-box">
+<strong>📌 おすすめ：</strong>聞き手に応じて、<strong>元の係数と標準化係数の両方を報告</strong>しましょう。状況によって両方必要になります。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>偏差値は「学校内での順位」を比べるのに便利だけど、「実際に何点だったか」も大事ですよね。標準化係数（偏差値）と元の係数（実際の点数）、両方を見せるのが親切なやり方です🎓</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第3章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">Why can't you compare raw regression coefficients to judge predictor importance?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> Because the intercept term is missing from a standardized model</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> Because R rounds all coefficients to the same number of digits</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> Because predictors are measured on different scales/units</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> Because raw coefficients are always forced to be positive values</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">How is a z-score calculated?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> (value − mean) ÷ standard deviation</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> value ÷ mean, expressed relative to the column average</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> (mean − value) ÷ the range of the variable</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> (value + mean) × the standard deviation</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">After standardizing, which predictor had the greatest influence on rentals?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> They were all exactly equal once the variables were standardized</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> Humidity — its raw coefficient was the largest before standardizing</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> Windspeed — its standardized coefficient was the largest in absolute value</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> Temperature — it had the largest standardized coefficient in absolute value</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">What is the main advantage of the lm.beta package over manual z-scores or scale()?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> It changes the model's predictions so that they become noticeably more accurate on new data</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> It takes the existing model as an argument — you don't need to standardize the data first</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> It only works on categorical predictors that have first been converted into factor variables</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> It removes any multicollinearity automatically before the regression model is even fitted</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">What is the recommended reporting practice for standardized coefficients?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> Only report standardized coefficients, since raw units confuse the reader</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> Only report raw coefficients, because they keep the original measured units</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> Report both the original and standardized coefficients, depending on the audience</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> Never report either of them; show only the p-values for each predictor</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch2.html">← 第2章：診断</a>
+<a href="m5_ch3_1.html">第3.1章：影響点分析 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">標準化回帰係数</div><div class="term-en">Standardized Regression Coefficient</div><div class="term-def">単位をそろえた係数。予測変数の相対的重要度を比較できる。</div></div>
+<div class="term-item"><div class="term-name">標準化 / Zスコア</div><div class="term-en">Standardization / z-score</div><div class="term-def">(値−平均)÷標準偏差。平均0・標準偏差1にそろえる変換。</div></div>
+<div class="term-item"><div class="term-name">scale関数</div><div class="term-en">scale()</div><div class="term-def">列を一括でZスコア化するR関数。</div></div>
+<div class="term-item"><div class="term-name">lm.beta</div><div class="term-en">lm.beta package</div><div class="term-def">モデルを渡すだけで標準化係数を出すパッケージ。推奨。</div></div>
+<div class="term-item"><div class="term-name">t統計量</div><div class="term-en">t-statistic</div><div class="term-def">summary3列目。絶対値が大きいほど影響が強い目安。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 3つの方法まとめ</h4>
+<p>
+<strong>方法1</strong>：手動Zスコア（仕組み理解用）<br/>
+<strong>方法2</strong>：scale()（短くて簡潔）<br/>
+<strong>方法3</strong>：lm.beta（一番ラク・推奨）<br/><br/>
+    どれも結果は同じ。符号を無視し<strong>絶対値</strong>で重要度を比べる！
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第3章：標準化回帰係数</p>
+<p style="margin-top:.5rem;"><a href="m5_ch2.html">← 第2章</a> · <a href="m5_ch3_1.html">第3.1章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! The predictors are on different scales (humidity 0–1, temperature in °C, windspeed in mph), so raw coefficients can't be compared directly.",
+  2:"Correct! A z-score is (value − mean) ÷ standard deviation, putting every variable on a mean-0, SD-1 scale.",
+  3:"Correct! After standardizing, temperature had the largest coefficient in absolute value — the strongest influence on rentals (also confirmed by correlation and t-statistic).",
+  4:"Correct! lm.beta takes the fitted model directly, so you never have to manually standardize the data beforehand.",
+  5:"Correct! Report both original and standardized coefficients — the right one depends on whether your audience needs practical units or relative importance."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第9章 前進選択 — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 9</div>
+<h1>➡️ 変数選択：前進選択（Forward）</h1>
+<p>20個の予測変数があると、組み合わせは100万通り以上。全部試すのは無理。「何もない状態」から最良の変数を1つずつ足していく、賢い選び方を学ぶ。</p>
+<div class="unit-nav">
+<a href="#unit1">① 変数選択とは</a>
+<a href="#unit2">② なぜ全探索は無理か</a>
+<a href="#unit3">③ 前進選択の手順</a>
+<a href="#unit4">④ step関数で自動化</a>
+<a href="#unit5">⑤ BICに切り替える</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch9_easy.html">▶ 第9章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>変数選択とは</h2><div class="unit-sub">データに埋もれた「シグナル」を見つける</div></div>
+</div>
+<p>モデルを作るとき、私たちは<strong>データに隠れたパターン（シグナル）</strong>を見つけたい。<strong>変数選択</strong>は、モデルにとって<strong>最良の予測変数</strong>＝データを最もよく説明し、予測に役立つ変数を選ぶプロセスです。</p>
+<p>ただし「最良」の定義は、組織がどう「良さ」を定義し、どの指標を使うかによります。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>探偵が事件を解くとき、手がかりは多ければいいわけじゃない。<strong>本当に役立つ手がかりだけ</strong>を選びますよね。変数選択は「使える手がかりだけを厳選する」探偵の技です🔍</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>なぜ「全部試す」は無理なのか</h2><div class="unit-sub">全部分集合回帰の組み合わせ爆発</div></div>
+</div>
+<p>理屈の上では、すべての変数の組み合わせを試す<strong>全部分集合回帰（all subset regression）</strong>が一番正確です。でも計算量が爆発的に増えます。</p>
+<table class="compare-table">
+<tr><th>予測変数の数</th><th>試すべきモデルの数（2ⁿ）</th></tr>
+<tr><td>3個</td><td>8通り（手作業でも可能）</td></tr>
+<tr><td>10個</td><td>2¹⁰ ＝ 1,024通り</td></tr>
+<tr><td>20個</td><td><strong>100万通り超！</strong></td></tr>
+</table>
+<p>20個でも100万通り超。これは現実的ではありません。そこで、もっと効率的な<strong>前進選択（forward selection）</strong>を使います。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>20種類のトッピングから「最高の組み合わせ」を全部試食したら、100万通り…お腹がパンクします🍕 だから「一番おいしいトッピングを1つずつ足していく」という賢い方法を使うのです。</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>前進選択の手順</h2><div class="unit-sub">何もない状態から1つずつ足していく</div></div>
+</div>
+<div class="iter-loop">
+<div class="loop-step" style="border-color:var(--green)">ステップ1：各変数を単独で試す → 最良の1つを選ぶ</div>
+<div class="loop-arrow">↓</div>
+<div class="loop-step">ステップ2：その変数＋2つ目の候補を試す → 最良の2つ目を追加</div>
+<div class="loop-arrow">↓</div>
+<div class="loop-step" style="border-color:var(--yellow)">これを繰り返す</div>
+<div class="loop-back">↺ 停止条件（指標が改善しなくなる）まで繰り返す</div>
+</div>
+<p>手動の例：湿度・気温・風速・「夏かどうか」を単独で試すと、<strong>気温</strong>がR²で最も良い（ドメイン知識的にも納得）。だからステップ1で気温を選択。</p>
+<div class="code-block"><span class="cl"><span class="cm"># ステップ1: 単独で一番良いのは気温（R²最大）</span></span><span class="cl"><span class="kw">lm</span>(rentals <span class="kw">~</span> temperature, data <span class="kw">=</span> bikes)   <span class="cm"># R²が一番高い → 採用</span></span><span class="cl"></span><span class="cl"><span class="cm"># ステップ2: 気温＋2つ目を試す（調整済みR²で比較）</span></span><span class="cl"><span class="kw">lm</span>(rentals <span class="kw">~</span> temperature <span class="kw">+</span> humidity, data <span class="kw">=</span> bikes)</span><span class="cl"><span class="cm"># 0.44 → 0.488 に改善 → 湿度も追加</span></span></div>
+<div class="note-box">
+<strong>📌 R² か 調整済みR² か：</strong>ステップ1（予測変数1つ）はR²。ステップ2以降（2つ以上）は<strong>調整済みR²</strong>を使います（複数予測変数のときは調整済みが正しい）。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>前進選択は「空っぽのリュックに、一番役立つ道具から順に詰めていく」やり方。まず一番大事な道具（気温）、次に2番目（湿度）…。もう足しても便利にならなくなったら、そこでストップ🎒</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>step関数で自動化</h2><div class="unit-sub">AICを最小化しながら自動で変数を追加</div></div>
+</div>
+<p>手作業は大変なので <code>step()</code> 関数で自動化します。step関数はデフォルトで<strong>AICを最小化</strong>します（R²ではなく）。AICは当てはまりと複雑さのバランスを取り、シンプルなモデルを好みます。</p>
+<div class="code-block"><span class="cl"><span class="cm"># ① 空のモデル（切片だけ = 予測変数なし）</span></span><span class="cl">null_model <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> <span class="nm">1</span>, data <span class="kw">=</span> bikes)</span><span class="cl"></span><span class="cl"><span class="cm"># ② 全部入りモデル（~ . で全変数）</span></span><span class="cl">full_model <span class="kw">&lt;-</span> <span class="kw">lm</span>(rentals <span class="kw">~</span> ., data <span class="kw">=</span> bikes)</span><span class="cl"></span><span class="cl"><span class="cm"># ③ 前進選択: nullから始めてfullまで足していく</span></span><span class="cl"><span class="kw">step</span>(null_model,</span><span class="cl">     scope <span class="kw">=</span> <span class="kw">list</span>(lower <span class="kw">=</span> null_model, upper <span class="kw">=</span> full_model),</span><span class="cl">     direction <span class="kw">=</span> <span class="st">"forward"</span>)</span></div>
+<div class="warn-box">
+<strong>⚠️ AICの読み方：</strong>AICは<strong>相対的に</strong>使います。最初のnullモデルのAIC（例：10,000）の絶対値自体に意味はありません。step関数は、各変数を試して<strong>AICが一番下がるもの</strong>を順に追加し、<strong>AICが増え始めたら（=もう改善しない）停止</strong>します。例では最終的にAIC 9367で停止しました。
+  </div>
+<p>処理の流れ：null → 一番AICを下げる変数（real_feel）を追加 → 次にdate → 次にhumidity²…と続き、<strong>これ以上どの変数を足してもAICが増えてしまう</strong>点で停止。それが前進選択の最終モデルです。</p>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>step関数は「自動で道具を詰めてくれるロボット」。役立つ道具（AICを下げる）を順に詰め、「もう何を足してもリュックが重くなるだけ」になったら自動で手を止めてくれます🤖</p>
+</div>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>停止基準をBICに切り替える</h2><div class="unit-sub">もっとシンプルなモデルが欲しいとき</div></div>
+</div>
+<p>AICの代わりに<strong>BIC</strong>を使うこともできます。BICは複雑さへのペナルティがより強く、よりシンプルなモデルを選びます。Rでは <code>k = log(行数)</code> を指定します。</p>
+<div class="code-block"><span class="cl"><span class="cm"># BICで前進選択（k = log(行数)）</span></span><span class="cl"><span class="kw">step</span>(null_model,</span><span class="cl">     scope <span class="kw">=</span> <span class="kw">list</span>(lower <span class="kw">=</span> null_model, upper <span class="kw">=</span> full_model),</span><span class="cl">     direction <span class="kw">=</span> <span class="st">"forward"</span>,</span><span class="cl">     k <span class="kw">=</span> <span class="kw">log</span>(<span class="kw">nrow</span>(bikes)))   <span class="cm"># これでBICになる</span></span></div>
+<div class="note-box">
+<strong>📌 注意：</strong>出力には "AIC" と表示されますが、<code>k=log(n)</code> を指定したので<strong>実際はBIC</strong>です。BICのほうが少ない予測変数を選ぶ傾向があります。
+  </div>
+<div class="warn-box">
+<strong>⚠️ 前進選択の弱点：</strong>前進選択（と次章の後退選択）は<strong>多重共線性を考慮しません</strong>。すでに似た変数が入っていても、相関の高い変数を追加してしまい、冗長になることがあります。だからモデルを作った後に<strong>VIF（第4章）</strong>で共線性をチェックし、より簡潔（パーシモニアス）なモデルにするとよいでしょう。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>AICは「ふつうの先生」、BICは「もっと厳しくシンプルを求める先生」。同じ前進選択でも、BIC先生に頼むと「最小限の道具だけ」を選んでくれます。ただしどちらも「似た道具のダブり（共線性）」は見てくれないので、最後は自分でVIFチェックを！👩‍🏫</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第9章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">What is variable selection?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> Squaring every predictor in the model so that it can capture curved, non-linear relationships</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> The process of identifying the best predictors that explain the data and help predictions</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> Removing the response variable and then predicting it from all of the remaining data columns</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> Converting the numeric predictors into factor variables before the regression model is fitted</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">Why is all-subset regression impractical for 20 predictors?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> It would require over 1 million (2²⁰) unique models to evaluate</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> R cannot fit any model that contains more than 20 predictor variables</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> Having 20 predictors always causes singularity errors in the lm function</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> Because adjusted R² cannot be computed once there are many predictors</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">How does forward selection build a model?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> Starts with all of the predictors and removes the single weakest one at each step instead</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> Randomly picks predictor variables to add until the model finally stops improving its fit</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> Starts with no predictors and adds the best one at a time until a stopping rule is met</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> Tests every one of the 2ⁿ possible subsets of the predictors all at the very same time</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">By default, what does R's step() function minimize?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> The p-value of the intercept term in the fitted model</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> The number of rows kept in the training data set</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> R² (always preferring the model with the largest value)</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> AIC (which balances goodness of fit with model complexity)</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">What important limitation does forward selection have?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> It cannot use AIC or BIC at all, so it has no objective way to compare the candidate models it builds</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> It does not account for multicollinearity, so redundant correlated variables may be added — check VIF afterward</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> It can only ever include one single predictor at a time in the final model that it selects for you</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> It always overfits the data, because it keeps every predictor variable that is offered to the routine</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch8.html">← 第8章:交互作用</a>
+<a href="m5_ch10.html">第10章:後退選択 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">変数選択</div><div class="term-en">Variable Selection</div><div class="term-def">モデルに最良の予測変数を選ぶプロセス。</div></div>
+<div class="term-item"><div class="term-name">全部分集合回帰</div><div class="term-en">All-subset Regression</div><div class="term-def">全組み合わせを試す方法。2ⁿで爆発し大規模では非現実的。</div></div>
+<div class="term-item"><div class="term-name">前進選択</div><div class="term-en">Forward Selection</div><div class="term-def">空モデルから最良の変数を1つずつ追加していく手法。</div></div>
+<div class="term-item"><div class="term-name">step関数</div><div class="term-en">step()</div><div class="term-def">変数選択を自動化。既定でAICを最小化する。</div></div>
+<div class="term-item"><div class="term-name">~ 1（ヌルモデル）</div><div class="term-en">null model</div><div class="term-def">切片だけ・予測変数なしのモデル。前進選択の出発点。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 ポイント</h4>
+<p>
+    前進 ＝ <strong>空から足す</strong>（~ 1 が出発点）。<br/><br/>
+    step()は既定で <strong>AIC最小化</strong>。<br/><br/>
+    BICにするなら <strong>k = log(n)</strong>。<br/><br/>
+    共線性は見ない → 後で <strong>VIFチェック</strong>を！
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第9章:前進選択</p>
+<p style="margin-top:.5rem;"><a href="m5_ch8.html">← 第8章</a> · <a href="m5_ch10.html">第10章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Variable selection identifies the best predictors — the ones that best explain the data and help make predictions.",
+  2:"Correct! With 20 predictors, all-subset regression means 2²⁰ > 1,000,000 models — far too many to evaluate.",
+  3:"Correct! Forward selection starts with no predictors and adds the single best predictor at each step until a stopping rule is reached.",
+  4:"Correct! By default step() minimizes AIC, which balances goodness of fit against model complexity.",
+  5:"Correct! Forward (and backward) selection ignore multicollinearity, so correlated/redundant variables may be added — always check VIF afterward."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

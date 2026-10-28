@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear & Multiple Regression 完全用語集 | DTSC 650</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/r.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070D1A;--bg-card:#0C1829;--bg-card-h:#111F35;
+  --border:#172840;--border-hl:#2563EB;
+  --blue:#38BDF8;--green:#4ADE80;--orange:#FB923C;
+  --purple:#A78BFA;--yellow:#FBBF24;--red:#F87171;
+  --text:#DDE6F0;--text-s:#8AAABB;--text-m:#4E6A80;
+  --code-bg:#050B14;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#060D1C 0%,#0D1E38 100%);
+  border-bottom:1px solid var(--border);
+  padding:24px 32px 20px;position:sticky;top:0;z-index:100;
+}
+.header-top{display:flex;align-items:baseline;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+header h1{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);letter-spacing:-0.3px}
+.header-sub{font-size:11px;color:var(--text-m);font-family:var(--mono)}
+.search-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#search{
+  width:420px;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:8px;padding:9px 16px;color:var(--text);
+  font-family:var(--sans);font-size:14px;outline:none;transition:border-color 0.2s;
+}
+#search:focus{border-color:var(--blue)}
+#search::placeholder{color:var(--text-m)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:11px;font-family:var(--mono);padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text-s)}
+.chip b{color:var(--blue)}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 120px)}
+
+/* SIDEBAR */
+nav.sidebar{
+  width:230px;flex-shrink:0;background:#08101E;
+  border-right:1px solid var(--border);padding:20px 0;
+  position:sticky;top:110px;height:calc(100vh - 110px);overflow-y:auto;
+}
+.nav-label{font-size:10px;font-family:var(--mono);color:var(--text-m);text-transform:uppercase;letter-spacing:1.5px;padding:0 18px 10px}
+.nav-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 18px;color:var(--text-s);text-decoration:none;font-size:13px;
+  transition:all 0.15s;border-left:2px solid transparent;
+}
+.nav-item:hover{color:var(--text);background:rgba(56,189,248,0.05);border-left-color:var(--blue)}
+.nc{font-family:var(--mono);font-size:11px;background:var(--border);padding:2px 7px;border-radius:10px;color:var(--text-m)}
+
+/* MAIN */
+main{flex:1;padding:32px 36px;max-width:940px}
+
+/* SECTION */
+.section{margin-bottom:52px}
+.section-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);
+}
+.sec-num{font-family:var(--mono);font-size:11px;color:var(--text-m);width:22px}
+.sec-title{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+.sec-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-family:var(--mono)}
+.c1{background:rgba(37,99,235,.15);color:#60A5FA;border:1px solid rgba(37,99,235,.35)}
+.c2{background:rgba(4,120,87,.15);color:#34D399;border:1px solid rgba(4,120,87,.35)}
+.c3{background:rgba(251,146,60,.12);color:#FDBA74;border:1px solid rgba(251,146,60,.3)}
+.c4{background:rgba(167,139,250,.12);color:#C4B5FD;border:1px solid rgba(167,139,250,.3)}
+.c5{background:rgba(74,222,128,.12);color:#86EFAC;border:1px solid rgba(74,222,128,.3)}
+.c6{background:rgba(248,113,113,.12);color:#FCA5A5;border:1px solid rgba(248,113,113,.3)}
+.c7{background:rgba(147,197,253,.12);color:#BAE6FD;border:1px solid rgba(147,197,253,.3)}
+.c8{background:rgba(232,121,249,.12);color:#F5D0FE;border:1px solid rgba(232,121,249,.3)}
+.c9{background:rgba(252,211,77,.12);color:#FDE68A;border:1px solid rgba(252,211,77,.3)}
+
+/* CARD */
+.term-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:12px;margin-bottom:16px;overflow:hidden;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.term-card:hover{border-color:#1E3A5F;box-shadow:0 4px 24px rgba(56,189,248,.05)}
+.term-card.hidden{display:none}
+.card-top{padding:18px 22px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.term-names{flex:1}
+.term-en{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--blue);display:block;margin-bottom:3px}
+.term-ja{font-size:13px;color:var(--text-s);display:block}
+.summary{font-size:13px;color:var(--text-s);font-style:italic;padding:0 22px 12px;border-bottom:1px solid var(--border)}
+.card-body{padding:18px 22px}
+.dl{font-family:var(--mono);font-size:10px;color:var(--text-m);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:7px;display:block}
+.dt{font-size:14px;color:var(--text);line-height:1.8;margin-bottom:14px}
+.dt strong{color:var(--blue);font-weight:600}
+.dt code{font-family:var(--mono);font-size:12px;background:rgba(56,189,248,.1);color:var(--blue);padding:1px 6px;border-radius:4px}
+
+/* BOXES */
+.ex-box,.mistake-box,.note-box{border-radius:8px;padding:13px 17px;margin-bottom:14px;font-size:13px;line-height:1.75}
+.ex-box{background:var(--code-bg);border:1px solid var(--border);border-left:3px solid var(--green)}
+.ex-title{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--green);letter-spacing:1px;display:block;margin-bottom:5px}
+.mistake-box{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-left:3px solid var(--red);color:#FCA5A5}
+.m-title{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--red);letter-spacing:1px;display:block;margin-bottom:5px}
+.note-box{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.25);border-left:3px solid var(--yellow);color:#FDE68A}
+.n-title{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--yellow);letter-spacing:1px;display:block;margin-bottom:5px}
+
+/* FORMULA */
+.formula{font-family:var(--mono);font-size:13px;color:var(--purple);background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:7px;padding:8px 14px;margin:8px 0 12px;display:inline-block}
+
+/* CODE WRAP */
+.code-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:14px}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;background:#0A1525;padding:8px 14px;border-bottom:1px solid var(--border)}
+.code-lang{font-family:var(--mono);font-size:11px;color:var(--text-m);display:flex;align-items:center;gap:7px}
+.code-lang::before{content:'';display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%}
+.copy-btn{font-family:var(--mono);font-size:11px;color:var(--text-m);background:none;border:1px solid var(--border);padding:3px 9px;border-radius:5px;cursor:pointer;transition:all 0.2s}
+.copy-btn:hover{color:var(--blue);border-color:var(--blue)}
+.copy-btn.ok{color:var(--green);border-color:var(--green)}
+.code-wrap pre{margin:0!important;border-radius:0!important;background:var(--code-bg)!important;padding:15px!important;overflow-x:auto;font-size:12.5px!important;line-height:1.65!important}
+.code-wrap pre code{font-family:var(--mono)!important;font-size:12.5px!important}
+
+/* NO RESULT */
+.no-result{text-align:center;padding:60px 20px;color:var(--text-m);font-family:var(--mono);display:none}
+
+/* SCROLL TOP */
+#scrollTop{position:fixed;bottom:28px;right:28px;background:var(--border-hl);color:#fff;width:40px;height:40px;border-radius:50%;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;z-index:99;box-shadow:0 4px 12px rgba(37,99,235,.4)}
+#scrollTop.show{opacity:1}
+
+@media(max-width:768px){.layout{flex-direction:column}nav.sidebar{width:100%;position:static;height:auto}main{padding:24px 18px}#search{width:100%}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>📐 Linear &amp; Multiple Regression 完全用語集</h1>
+    <span class="header-sub">DTSC 650 | 4回分テスト統合 | Eastern University 2026</span>
+  </div>
+  <div class="search-row">
+    <input type="text" id="search" placeholder="🔍 用語を検索... (例: residual, 残差, AIC, VIF)">
+    <div class="chips">
+      <div class="chip">用語数 <b id="total">49</b></div>
+      <div class="chip">セクション <b>9</b></div>
+      <div class="chip">Rコード付き <b>40+</b></div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="sidebar">
+  <div class="nav-label">カテゴリ</div>
+  <a href="#sec1" class="nav-item">① 基本概念 <span class="nc">8</span></a>
+  <a href="#sec2" class="nav-item">② R関数・コード <span class="nc">9</span></a>
+  <a href="#sec3" class="nav-item">③ モデル評価指標 <span class="nc">7</span></a>
+  <a href="#sec4" class="nav-item">④ 予測・信頼区間 <span class="nc">3</span></a>
+  <a href="#sec5" class="nav-item">⑤ モデルの仮定 <span class="nc">4</span></a>
+  <a href="#sec6" class="nav-item">⑥ 診断ツール <span class="nc">6</span></a>
+  <a href="#sec7" class="nav-item">⑦ モデルの改善 <span class="nc">6</span></a>
+  <a href="#sec8" class="nav-item">⑧ 変数選択法 <span class="nc">3</span></a>
+  <a href="#sec9" class="nav-item">⑨ データ準備 <span class="nc">3</span></a>
+</nav>
+
+<main>
+<div id="no-result" class="no-result">🔍 該当する用語が見つかりませんでした</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 1: 基本概念                                       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec1">
+<div class="section-header">
+  <span class="sec-num">01</span>
+  <h2 class="sec-title">基本概念</h2>
+  <span class="sec-badge c1">Fundamentals</span>
+</div>
+
+<!-- RESIDUAL -->
+<div class="term-card" data-search="residual 残差 error observed predicted difference">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Residual</span><span class="term-ja">残差</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">実測値と予測値の差。モデルが「説明できなかった部分」の量。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">残差とは、実際に観測されたデータ点（observed value）と、回帰直線による予測値（fitted value / predicted value）の差のことです。数式で表すと <strong>residual = observed − predicted（実測 − 予測）</strong> となります。残差が正（positive）であれば、実測値が予測値より高いことを意味し、データ点は回帰直線の上側にあります。残差が負（negative）であれば、予測値が実測値より高いことを意味し、データ点は回帰直線の下側に位置します。</p>
+    <p class="dt">Errorとほぼ同義に使われることがありますが、厳密には「Error（誤差）」は理論上の真の誤差ε（イプシロン）を指し、「Residual（残差）」はそれをデータから推定したものです。回帰モデルの診断（Q-Qプロット、残差プロット、Cook's Distanceなど）はすべてこの残差を使って行われます。</p>
+    <div class="formula">residual = yᵢ − ŷᵢ　（実測値 − 予測値）</div>
+    <div class="ex-box">
+      <span class="ex-title">数値例</span>
+      気温60°Fのとき、モデルが予測した自転車利用数 = 4,542。実際の利用数 = 4,400。<br>
+      → 残差 = 4,400 − 4,542 = <strong>−142（負の残差）</strong><br>
+      → 予測値(4,542)が実測値(4,400)を上回っている状態
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ よくある間違い（テスト頻出）</span>
+      「負の残差 = 実測値が予測値より低い（予測値 > 実測値）」→ <strong>TRUE</strong>。<br>
+      「負の残差 = モデルの計算が間違い」ではありません。残差は常に存在し、それ自体はエラーではありません。
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># モデルを作成
+model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 方法① : 残差を取得
+residuals(model)
+
+# 方法② : $演算子で取得（同じ結果）
+model$residuals
+
+# 残差の確認（最初の6件）
+head(residuals(model))
+
+# 残差の基本統計
+summary(residuals(model))
+# → Min / 1Q / Median / Mean / 3Q / Max が表示される
+# → Mean がほぼ0であれば正常（OLSの性質）
+
+# 残差プロット（ランダムに散らばっていればOK）
+plot(model$fitted.values, model$residuals,
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted")
+abline(h = 0, col = "red", lty = 2)</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- LEAST SQUARES LINE -->
+<div class="term-card" data-search="least squares line 最小二乗直線 OLS ordinary RSS sum of squared">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Least Squares Line</span><span class="term-ja">最小二乗直線 / OLS</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">全残差の二乗和（RSS）を最小化する回帰直線。Rの lm() が自動計算する。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">最小二乗法（OLS: Ordinary Least Squares）は、すべての残差の二乗を合計した値（<strong>RSS: Residual Sum of Squares = Σ(yᵢ − ŷᵢ)²</strong>）が最小になるような切片β₀と傾きβ₁を数学的に求める手法です。「二乗」するのは、正の残差と負の残差が打ち消し合うのを防ぐためです。Rの <code>lm()</code> 関数は、この計算を内部で自動的に行います。</p>
+    <p class="dt">最小二乗直線はデータに対して唯一存在し、どの他の直線よりもRSSが小さくなるという数学的な保証があります。ただし、これは「モデルが正しい」ことを意味しません。仮定（線形性・等分散性・正規性）が満たされているかどうかは別途確認が必要です。</p>
+    <div class="formula">RSS = Σᵢ (yᵢ − ŷᵢ)²　← これを最小化するβ₀, β₁を求める</div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 最小二乗回帰モデルを作成
+model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# パイプ演算子を使った書き方（同じ結果）
+model &lt;- bikes |&gt; lm(rentals ~ temperature, data = _)
+
+# モデルの内容を確認
+summary(model)
+# → Coefficients（β₀, β₁）
+# → Residual standard error（RSE）
+# → R-squared / Adjusted R-squared
+# → F-statistic
+
+# RSSを手動計算で確認
+RSS &lt;- sum(residuals(model)^2)
+RSS</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL vs NOISE -->
+<div class="term-card" data-search="signal noise シグナル ノイズ random variation meaningful pattern">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Signal vs Noise</span><span class="term-ja">シグナル vs ノイズ</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">Signal＝モデルが捉えた意味あるパターン、Noise＝説明できないランダム変動。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><strong>Signal（シグナル）</strong>とは、データの中にある意味のある構造や傾向のことです。例えば「気温が上がるほど自転車利用者が増える」という関係が回帰モデルで捉えられた場合、これがシグナルです。<strong>Noise（ノイズ）</strong>とは、シグナルでは説明できないランダムな変動のことで、残差（residuals）として現れます。</p>
+    <p class="dt">データのノイズが高い（= 残差の分散が大きい）ほど、回帰直線による予測精度は下がります。高ノイズのデータに対して無理に当てはめようとするとオーバーフィッティング（過学習）が起きます。R²はシグナルの強さを0〜1で示す指標で、1に近いほどシグナルが強く、ノイズが少ない状態です。</p>
+    <div class="ex-box">
+      <span class="ex-title">具体的イメージ</span>
+      気温と自転車利用数 → R² = 0.85 → 変動の85%をシグナルで説明できる（ノイズ15%）<br>
+      気温と株価 → R² = 0.05 → ほぼノイズ。モデルとしてほぼ意味がない。
+    </div>
+  </div>
+</div>
+
+<!-- INTERCEPT -->
+<div class="term-card" data-search="intercept beta0 β0 切片 b a y-intercept">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">β₀ — Intercept</span><span class="term-ja">切片</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">x = 0 のときのyの推定値。回帰直線がY軸と交わる点。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">切片（Intercept）β₀は、すべての予測変数がゼロのときの応答変数の期待値です。回帰式 <strong>ŷ = β₀ + β₁x</strong> において、x=0を代入するとŷ=β₀になります。ただし、現実のデータではx=0が意味をなさないケースも多い（例：身長=0のときの体重は存在しない）ため、切片の値を単独で解釈することは必ずしも適切ではありません。</p>
+    <p class="dt">Rでの係数の取得方法は2種類あり、<code>coef(model)</code>と<code>model$coefficients</code>のどちらも使えます。出力の1番目が切片（Intercept）です。</p>
+    <div class="formula">ŷ = β₀ + β₁x　→　x=0のとき　ŷ = β₀</div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 全係数を表示（切片 + 傾き）
+coef(model)
+# (Intercept)  temperature
+#  -2179.4         109.7    ← 切片 = -2179.4
+
+# $演算子でも同じ結果
+model$coefficients
+
+# 切片だけを取り出す
+coef(model)[1]         # または
+coef(model)["(Intercept)"]
+
+# 解釈：temperature = 0 のとき rentals = -2179.4 と予測
+# ※ 温度が0°Fは現実的ではないため、切片単体の解釈は注意が必要</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- SLOPE -->
+<div class="term-card" data-search="slope beta1 β1 傾き b coefficient predictor effect">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">β₁ — Slope</span><span class="term-ja">傾き</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">xが1単位増えたとき、yがどれだけ変化するかを示す係数。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">傾き（Slope）β₁は、予測変数（x）が1単位増加したときの応答変数（y）の予測変化量です。<strong>β₁ = 2</strong> であれば「xが1増えるとyが2増える」、<strong>β₁ = -3</strong> であれば「xが1増えるとyが3減る」と解釈します。</p>
+    <p class="dt">複数回帰では各変数に対して独立した傾きが存在します（β₁, β₂, β₃...）。それぞれの傾きは「他の変数を固定したときの、その変数1単位変化のyへの影響」を意味します（偏回帰係数）。</p>
+    <div class="ex-box">
+      <span class="ex-title">数値例</span>
+      <code>lm(rentals ~ temperature, bikes)</code> で slope = 109.7<br>
+      → 気温が1°F上がると、自転車利用数が約110台増えると予測される
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 傾きだけを取り出す（2番目の係数）
+coef(model)[2]          # または
+coef(model)["temperature"]
+# → 109.7
+
+# 解釈のポイント：
+# "As temperature increases by 1 degree,
+#  we'd predict rentals to increase by 109.7"
+
+# 複数回帰の場合（偏回帰係数）
+model2 &lt;- lm(rentals ~ temperature + humidity, data = bikes)
+coef(model2)
+# (Intercept)  temperature    humidity
+#   -1850.2       95.3         -24.6
+# → 気温を固定したとき: 湿度1単位増→利用数24.6減と予測</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- RESPONSE VARIABLE -->
+<div class="term-card" data-search="response outcome variable 応答変数 目的変数 dependent y variable">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Response / Outcome Variable</span><span class="term-ja">応答変数 / 目的変数</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">予測される側の変数（y）。lm(y ~ x) の左辺。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">応答変数（Response Variable）は、モデルで予測・説明しようとしている変数です。従属変数（Dependent Variable）、アウトカム変数とも呼ばれます。Rの <code>lm()</code> 関数では、チルダ（~）の<strong>左側</strong>に書きます。</p>
+    <div class="ex-box">
+      <span class="ex-title">見分け方</span>
+      <code>bikes |&gt; lm(rentals ~ temperature, data = _)</code><br>
+      → <strong>rentals</strong>（利用台数）が応答変数（予測したい変数）<br>
+      → <strong>temperature</strong>（気温）が予測変数（予測に使う変数）
+    </div>
+    <div class="note-box">
+      <span class="n-title">💡 命名のバリエーション</span>
+      Response variable = Outcome variable = Dependent variable = y variable<br>
+      すべて同じ概念。教科書やドキュメントによって呼び方が異なります。
+    </div>
+  </div>
+</div>
+
+<!-- PREDICTOR VARIABLE -->
+<div class="term-card" data-search="predictor explanatory variable 説明変数 予測変数 independent x variable">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Predictor / Explanatory Variable</span><span class="term-ja">予測変数 / 説明変数</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">予測に使う側の変数（x）。lm(y ~ x) の右辺。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">予測変数（Predictor Variable）は、応答変数を予測・説明するために使う変数です。独立変数（Independent Variable）、説明変数（Explanatory Variable）とも呼ばれます。Rの <code>lm()</code> 関数でチルダ（~）の<strong>右側</strong>に書きます。複数の予測変数を使う場合は <code>+</code> で繋ぎます。</p>
+    <p class="dt">予測変数は<strong>連続変数</strong>（気温、身長など）だけでなく、<strong>名義変数（カテゴリ変数）</strong>も使用可能です。カテゴリ変数はRが自動的にダミー変数に変換して扱います。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 単回帰：1つの予測変数
+model1 &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 重回帰：複数の予測変数（+で追加）
+model2 &lt;- lm(rentals ~ temperature + humidity + windspeed, data = bikes)
+
+# カテゴリ変数（名義変数）も使える
+# → Rが自動でダミー変数に変換
+model3 &lt;- lm(age ~ height + gender, data = humans)
+# gender が factor 型なら gender_Male などのダミー変数が自動生成される</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ERROR -->
+<div class="term-card" data-search="error 誤差 epsilon unexplained variability noise random">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Error Term (ε)</span><span class="term-ja">誤差項</span></div>
+    <span class="sec-badge c1">基本概念</span>
+  </div>
+  <p class="summary">モデルで説明できない残りの変動。理論式ではεで表される。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">回帰モデルの理論的な式は <strong>y = β₀ + β₁x + ε</strong> と書かれ、εが「誤差項」です。εは「モデルが説明しきれない部分」を表し、正規分布に従い、平均0、分散σ²を持つと仮定されます（回帰の仮定の一つ）。実際のデータからはεを直接観察できないため、<strong>残差（residual）</strong>によって推定します。</p>
+    <div class="formula">y = β₀ + β₁x + ε　（理論式）<br>ŷ = b₀ + b₁x　（推定式、εは含まない）</div>
+    <div class="note-box">
+      <span class="n-title">💡 ErrorとResidualの違い</span>
+      Error（ε）= 理論上の真の誤差（観測不可能）<br>
+      Residual = εの推定値（データから計算可能）<br>
+      テストでは「error」と「residual」はほぼ同義として扱われることが多い
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 2: R関数・コード                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec2">
+<div class="section-header">
+  <span class="sec-num">02</span>
+  <h2 class="sec-title">R 関数・コード</h2>
+  <span class="sec-badge c2">R Functions</span>
+</div>
+
+<!-- SUMMARY -->
+<div class="term-card" data-search="summary 要約 統計 min max mean median quartile statistics">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">summary()</span><span class="term-ja">要約統計関数</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">データセットまたはモデルの要約を返す万能関数。SDは含まれない点に注意。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><code>summary()</code>は用途が2つあります。①データセットに適用すると、各数値変数の <strong>Min, 1st Quartile（Q1）, Median, Mean, 3rd Quartile（Q3）, Max</strong> と欠損値数（NA's）を返します。②回帰モデルに適用すると、係数（Estimates）, 標準誤差（Std. Error）, t値（t value）, p値（Pr(&gt;|t|)）, RSE, R², Adjusted R², F統計量などが表示されます。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ テスト頻出の誤解</span>
+      summary()は<strong>Standard Deviation（標準偏差）を返さない</strong>！<br>
+      SDが必要な場合は別途 <code>sd(df$column)</code> を使う。<br>
+      返されるのは: Min / Q1 / Median / Mean / Q3 / Max の6統計量 + NA's
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># ① データセットへの適用
+summary(bikes)
+# → 各列の Min, Q1, Median, Mean, Q3, Max が表示
+# → 欠損値がある列は NA's: n も表示される
+
+# ② 単一列への適用（同じ統計量）
+summary(bikes$temperature)
+
+# ③ 回帰モデルへの適用（最も多用する）
+model &lt;- lm(rentals ~ temperature, data = bikes)
+summary(model)
+# 出力の見方:
+# Coefficients:
+#               Estimate Std. Error t value Pr(&gt;|t|)
+# (Intercept)  -2179.4    200.1    -10.89   &lt;2e-16 ***
+# temperature    109.7      3.4     32.26   &lt;2e-16 ***
+#
+# Residual standard error: 1281 on 729 degrees of freedom
+# Multiple R-squared:  0.6875, Adjusted R-squared:  0.687
+# F-statistic: 1601 on 1 and 729 DF,  p-value: &lt; 2.2e-16</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- SKIM -->
+<div class="term-card" data-search="skim skimr missing values 欠損値 histogram 分布 探索的分析">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">skim() — skimr package</span><span class="term-ja">高度な要約関数</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">欠損値の数・割合や分布のミニヒストグラムまで含む詳細な要約を提供する。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><code>skim()</code>は<strong>skimrパッケージ</strong>に含まれる関数で、<code>summary()</code>よりも豊富な情報を提供します。主な出力: 変数の型（数値・カテゴリ・論理値）、欠損値の数・割合（n_missing, complete_rate）、平均・標準偏差、分位数、そしてコンソールにミニヒストグラムが表示されます。データの探索的分析（EDA）で特に有用です。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ テストでの間違い</span>
+      「欠損値を探索する関数は？」→ <strong>skim()</strong>（skimrパッケージ）<br>
+      glimpse()はデータ構造（型・先頭値）の確認用。欠損値の探索には向かない。<br>
+      パッケージ名「skimr」を必ずセットで覚える。
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">install.packages("skimr")   # 初回のみ
+library(skimr)
+
+# データセット全体の詳細要約
+skim(bikes)
+# 出力例:
+# ── Data Summary ─────────────────────
+# Name: bikes
+# Number of rows: 731
+# Number of columns: 12
+#
+# ── Variable type: numeric ───────────
+# skim_variable  n_missing complete_rate mean   sd    p0  p25  p50  p75  p100
+# temperature         0          1      0.495  0.184  0   0.34 0.50 0.66 0.86
+# humidity            0          1      0.628  0.143  0   0.52 0.63 0.73 0.97
+#
+# ※ ヒストグラムも表示されるが環境によっては文字化けする場合あり
+
+# 特定のパッケージを明示して呼び出す方法
+skimr::skim(bikes)</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- GLIMPSE -->
+<div class="term-card" data-search="glimpse データ構造 型 列 dplyr tidyverse structure">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">glimpse()</span><span class="term-ja">データ構造確認関数</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">列の型（int/dbl/chr）と先頭の値を確認するための関数。要約統計ではない。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><code>glimpse()</code>はdplyr/tidyverseパッケージの関数で、データフレームの構造（列名、データ型、先頭の値）を確認するために使います。<code>str()</code>のtidyverseバージョンです。Min/Max/Meanなどの統計量は<strong>出力しません</strong>。データを受け取ったら最初にglimpse()で構造を把握し、次にsummary()やskim()で統計量を確認するという流れが一般的です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">library(dplyr)
+
+glimpse(bikes)
+# Rows: 731
+# Columns: 12
+# $ date        &lt;date&gt; 2011-01-01, 2011-01-02, ...
+# $ season      &lt;int&gt;  1, 1, 1, 1, 1, ...
+# $ temperature &lt;dbl&gt;  0.344, 0.363, 0.196, ...
+# $ humidity    &lt;dbl&gt;  0.806, 0.696, 0.437, ...
+# $ rentals     &lt;int&gt;  985, 801, 1349, ...
+
+# ワークフロー：データ受け取り後の標準手順
+glimpse(bikes)       # ① 構造確認（型・列名）
+summary(bikes)       # ② 基本統計量
+skim(bikes)          # ③ 詳細統計 + 欠損値確認（skimrが必要）</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- COEF -->
+<div class="term-card" data-search="coef coefficients 係数 intercept slope model extract">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">coef() / $coefficients</span><span class="term-ja">係数取得</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">回帰モデルの切片と傾きを取り出す2つの方法。どちらも同じ結果を返す。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">モデルから係数を取り出す方法は2つあります：<code>coef(model)</code>（関数形式）と <code>model$coefficients</code>（ドル記号形式）。どちらも名前付きの数値ベクトルを返します。特定の係数を取り出す場合はインデックス（数値または名前）を使います。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ テストでの間違い（Attempt 2 Q5）</span>
+      ✅ 正しい: <code>coef(age_model)</code>、<code>age_model$coefficients</code><br>
+      ❌ 誤り: <code>lm$coefficients</code>（lmは関数名であり、オブジェクトではない）<br>
+      ❌ 誤り: <code>age_model.coef()</code>（Pythonの構文。Rでは使えない）
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">age_model &lt;- lm(age ~ height, data = humans)
+
+# 方法① : 関数形式
+coef(age_model)
+# (Intercept)    height
+#   -50.2        0.45
+
+# 方法② : ドル記号形式（同じ結果）
+age_model$coefficients
+
+# 特定の係数だけを取り出す
+coef(age_model)["height"]       # 名前で指定
+coef(age_model)[2]              # インデックスで指定
+
+# モデル全体の詳細確認
+summary(age_model)$coefficients
+# → 係数、標準誤差、t値、p値がまとめて確認できる</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- FITTED VALUES -->
+<div class="term-card" data-search="fitted values 当てはめ値 training data in-sample prediction">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">fitted.values</span><span class="term-ja">当てはめ値（フィット値）</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">モデルが学習データに対して返す予測値。新しいデータへの予測には使えない。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><code>model$fitted.values</code>（または<code>fitted(model)</code>）は、モデルの<strong>学習に使ったデータ（訓練データ）</strong>に対する予測値を返します。つまり、すでにモデルが「見た」データに対する当てはめ値です。新しいデータや未知のデータに対して予測を行いたい場合は、<code>fitted.values</code>ではなく<code>predict(model, newdata = ...)</code>を使う必要があります。</p>
+    <p class="dt">残差（residuals）は <code>observed - fitted.values</code> で計算されます。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 学習データへの当てはめ値を取得
+model$fitted.values     # または
+fitted(model)           # どちらも同じ結果（731件）
+
+# 残差の確認（observed - fitted）
+model$residuals
+# → residuals = bikes$rentals - model$fitted.values と一致
+
+# 当てはめ値と実測値の比較プロット
+plot(bikes$rentals, model$fitted.values,
+     xlab = "Actual Rentals", ylab = "Fitted Values",
+     main = "Actual vs Fitted")
+abline(a = 0, b = 1, col = "blue")  # 完全予測なら対角線上に並ぶ</code></pre>
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ fitted.values と predict() の違い</span>
+      fitted.values → 学習データのみ（731行のデータ全件分）<br>
+      predict(model, newdata = ...) → 新しいデータに予測適用可能<br>
+      テストでは「新しいデータセットへの予測 = predict()」が正解
+    </div>
+  </div>
+</div>
+
+<!-- PREDICT -->
+<div class="term-card" data-search="predict newdata 予測 新しいデータ prediction function interval">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">predict()</span><span class="term-ja">予測関数</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">学習済みモデルを使って新しいデータへ予測を行う。信頼区間・予測区間の出力も可能。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><code>predict()</code>はモデルに新しいデータを渡して予測値を得るための関数です。<strong>正しい構文</strong>は <code>predict(model, newdata = 新しいデータフレーム)</code> です。第1引数がモデル、<code>newdata</code>引数が新しいデータである点に注意してください（引数の順序に注意）。</p>
+    <p class="dt"><code>interval</code>引数を追加することで、信頼区間（confidence）または予測区間（prediction）も同時に得られます。信頼水準は<code>level</code>引数で指定します（デフォルトは0.95）。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# ① 新しいデータへの予測（基本）
+new_data &lt;- data.frame(temperature = 60)
+predict(model, newdata = new_data)
+# → 4542.1（予測利用台数）
+
+# ② 複数の値を一度に予測
+new_temps &lt;- data.frame(temperature = c(40, 50, 60, 70, 80))
+predict(model, newdata = new_temps)
+
+# ③ 信頼区間付きの予測（平均応答の範囲）
+predict(model, newdata = new_data,
+        interval = "confidence", level = 0.90)
+#        fit     lwr      upr
+# 1  4542.1  4450.9   4634.8
+# → 90%信頼区間で (4450.9, 4634.8)
+
+# ④ 予測区間付きの予測（個別観測値の範囲）
+predict(model, newdata = new_data,
+        interval = "prediction", level = 0.90)
+# → 信頼区間より必ず広い範囲になる</code></pre>
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ よくある構文ミス</span>
+      ❌ <code>predict(newdata, model3)</code>（引数の順序が逆）<br>
+      ❌ <code>model3$predict(newdata)</code>（Pythonのメソッド構文）<br>
+      ❌ <code>fitted.values(model3, newdata)</code>（fitted.valuesはnewdataを受け取れない）<br>
+      ✅ <code>predict(model3, newdata = newdata)</code>（正解）
+    </div>
+  </div>
+</div>
+
+<!-- LM.BETA / SCALE -->
+<div class="term-card" data-search="lm.beta scale standardize 標準化 係数 standardized coefficients comparison">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">lm.beta() / scale()</span><span class="term-ja">標準化係数の取得</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">変数間のスケールを揃え、予測変数の相対的な影響力を比較するために係数を標準化する。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">通常の回帰係数は変数のスケール（単位）に依存するため、そのままでは異なる変数の影響力を比較できません（例：気温の係数109.7と湿度の係数-24.6を直接比較できない）。<strong>標準化係数</strong>は各変数を平均0・標準偏差1に変換してから求めた係数で、スケール差を排除して影響力を比較できます。</p>
+    <p class="dt">方法は主に2つ：①データを先に<code>scale()</code>で標準化してからlm()を実行する、②モデル作成後に<code>lm.beta()</code>（QuantPsycパッケージ）を使う。<strong>標準化係数は影響力の比較のみに使い、実際の予測には使わない</strong>という点が重要です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 方法① : scale()でデータを標準化してからlm()
+bikes_scaled &lt;- bikes
+bikes_scaled$temperature &lt;- scale(bikes$temperature)
+bikes_scaled$humidity    &lt;- scale(bikes$humidity)
+
+model_std &lt;- lm(rentals ~ temperature + humidity, data = bikes_scaled)
+coef(model_std)
+# (Intercept)  temperature    humidity
+#   4504.3       856.2        -220.8
+# → temperatureの影響力がhumidityの約4倍
+
+# 方法② : QuantPsycパッケージのlm.beta()
+install.packages("QuantPsyc")
+library(QuantPsyc)
+
+model_raw &lt;- lm(rentals ~ temperature + humidity, data = bikes)
+lm.beta(model_raw)
+# temperature    humidity
+#   0.7823       -0.1897
+# → 絶対値が大きいほど影響力が強い（temperatureが最大）
+
+# ⚠️ 重要：標準化係数は比較専用。予測には使わない。</code></pre>
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ 標準化係数の目的を間違えない</span>
+      標準化係数 → 変数間の<strong>影響力比較</strong>のために使う<br>
+      多重共線性の検出 → VIFを使う（標準化係数ではない）<br>
+      予測（新データへの適用） → 元スケールの係数を使う
+    </div>
+  </div>
+</div>
+
+<!-- STEP -->
+<div class="term-card" data-search="step stepwise variable selection AIC 変数選択 forward backward both">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">step()</span><span class="term-ja">ステップワイズ変数選択</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">AIC（デフォルト）を基準に変数を自動的に追加・削除しながら最適なモデルを探す。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt"><code>step()</code>はRの基本関数で、ステップワイズ選択により最適な予測変数の組み合わせを見つけます。デフォルトでは<strong>AIC（赤池情報量基準）</strong>を最小化するように変数を選択します。方向（direction）を指定することで、前進選択（forward）・後退削除（backward）・両方向（both）から選べます。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 両方向ステップワイズ（デフォルト: AIC基準）
+full_model &lt;- lm(rentals ~ temperature + humidity + windspeed + season, data = bikes)
+best_model &lt;- step(full_model, direction = "both")
+
+# 前進選択（何もない状態から変数を追加）
+null_model &lt;- lm(rentals ~ 1, data = bikes)   # 切片のみ
+forward_model &lt;- step(null_model,
+                       scope = list(upper = full_model),
+                       direction = "forward")
+
+# 後退削除（全変数から不要なものを削除）
+backward_model &lt;- step(full_model, direction = "backward")
+
+# step()の出力の読み方:
+# AIC: 現在のモデルのAIC値
+# → ステップごとにAICが小さくなるほうの変数追加/削除を選ぶ
+# → "none" が最小になったら終了（これ以上改善できない）
+
+# AICの確認
+AIC(best_model)</code></pre>
+    </div>
+    <div class="note-box">
+      <span class="n-title">💡 重要なポイント</span>
+      step()のデフォルト基準は<strong>AIC</strong>（p値でもR²でもない）<br>
+      選択結果は使用する指標（AIC/BIC/adjusted R²）によって異なる<br>
+      ステップワイズで選ばれたモデルが必ずしも「最良」とは限らない
+    </div>
+  </div>
+</div>
+
+<!-- PREDICT WITH LEVEL -->
+<div class="term-card" data-search="predict level confidence interval 信頼水準 95% 90% level parameter">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">predict() — level parameter</span><span class="term-ja">信頼水準の指定</span></div>
+    <span class="sec-badge c2">R関数</span>
+  </div>
+  <p class="summary">predict()で信頼区間の水準を指定するには level = 0.90 のように書く。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">predict()で信頼区間や予測区間を求める際、信頼水準を指定する引数は<strong><code>level</code></strong>です。デフォルトは0.95（95%）です。90%にしたい場合は <code>level = 0.90</code> と書きます。引数名の書き間違いは頻出ミスです。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ 引数名の間違いに注意（テスト頻出）</span>
+      ✅ 正しい: <code>level = 0.95</code><br>
+      ❌ 間違い: <code>confidence = 0.95</code><br>
+      ❌ 間違い: <code>range = 0.95</code><br>
+      ❌ 間違い: <code>percent = 0.95</code>
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+new_data &lt;- data.frame(temperature = 60)
+
+# 90% 信頼区間
+predict(model, newdata = new_data,
+        interval = "confidence", level = 0.90)
+#        fit      lwr      upr
+# 1   4542.1   4450.9   4634.8
+# → "90%信頼区間は (4450.9, 4634.8)"
+
+# 95% 信頼区間（より広い）
+predict(model, newdata = new_data,
+        interval = "confidence", level = 0.95)
+
+# 90% 予測区間（信頼区間より広い）
+predict(model, newdata = new_data,
+        interval = "prediction", level = 0.90)</code></pre>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 3: モデル評価指標                                 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec3">
+<div class="section-header">
+  <span class="sec-num">03</span>
+  <h2 class="sec-title">モデル評価指標</h2>
+  <span class="sec-badge c3">Model Metrics</span>
+</div>
+
+<!-- RSE -->
+<div class="term-card" data-search="RSE residual standard error 残差標準誤差 fit quality model performance sigma">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">RSE — Residual Standard Error</span><span class="term-ja">残差標準誤差</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">モデルの「平均的な誤差の大きさ」。小さいほどモデルの当てはまりが良い。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">RSE（残差標準誤差）は、回帰モデルの予測がどれくらいの誤差を持つかを応答変数と同じ単位で示します。数式は <strong>RSE = √(RSS / (n − p − 1))</strong>（RSS = 残差二乗和、n = サンプル数、p = 予測変数の数）です。RSEが小さいほど予測精度が高いモデルと言えます。</p>
+    <p class="dt"><code>summary(model)</code>の出力で <em>Residual standard error: 1281 on 729 degrees of freedom</em> のように表示されます。自由度（degrees of freedom）は n − p − 1 です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# RSEを取得する方法
+sigma(model)        # 最も簡単
+# → 1281.2
+
+# summary()の出力からも確認できる
+summary(model)$sigma
+# → 1281.2
+
+# 手動計算で確認
+n &lt;- nrow(bikes)
+p &lt;- 1  # 予測変数の数（単回帰なので1）
+RSS &lt;- sum(residuals(model)^2)
+RSE_manual &lt;- sqrt(RSS / (n - p - 1))
+RSE_manual  # → 1281.2
+
+# 解釈: 気温から自転車利用数を予測する際、
+# 平均的に約±1281台の誤差が生じる</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- R-SQUARED -->
+<div class="term-card" data-search="R squared R2 r-squared 決定係数 explained variance goodness of fit">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">R² — R-Squared</span><span class="term-ja">決定係数</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">応答変数の全変動のうち、モデルが説明できる割合（0〜1）。1に近いほど良い。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">R²（決定係数）は0から1の値を取り、<strong>1に近いほどモデルがデータをよく説明している</strong>ことを示します。R² = 0.69 であれば「応答変数の変動の69%をモデルで説明できる（残り31%はノイズ）」と解釈します。</p>
+    <p class="dt">注意点：変数を増やせばR²は必ず上がります（意味のない変数でも）。そのため、変数を追加する際のモデル評価にはR²ではなく<strong>Adjusted R²</strong>を使うべきです。また、<strong>学習データのR²がとても高く（例：0.95）、テストデータのR²がとても低い（例：0.40）場合は過学習（Overfitting）のサイン</strong>です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# R²の取得
+summary(model)$r.squared
+# → 0.6875 （68.75%の変動を説明）
+
+# Adjusted R²の取得
+summary(model)$adj.r.squared
+# → 0.6870
+
+# 複数モデルのR²比較
+model1 &lt;- lm(rentals ~ temperature, data = bikes)
+model2 &lt;- lm(rentals ~ temperature + humidity, data = bikes)
+
+summary(model1)$r.squared    # → 0.687
+summary(model2)$r.squared    # → 0.721（変数追加でR²は上昇）
+summary(model2)$adj.r.squared  # → 0.720（ペナルティ後も改善→変数追加が有効）</code></pre>
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ 過学習（Overfitting）のサイン</span>
+      Train R² = 0.95、Test R² = 0.40<br>
+      → 学習データには過剰適合しているが、未知データへの汎化ができていない<br>
+      → 変数が多すぎる、またはモデルが複雑すぎる可能性
+    </div>
+  </div>
+</div>
+
+<!-- ADJUSTED R2 -->
+<div class="term-card" data-search="adjusted r squared 自由度調整 変数追加 penalty adjusted model comparison">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Adjusted R²</span><span class="term-ja">自由度調整済み決定係数</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">変数の数に対してペナルティを課したR²。変数選択の比較に適している。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">通常のR²は変数を追加するたびに（たとえ無意味な変数でも）必ず増加します。Adjusted R²は変数数に対してペナルティを課すことで、この問題を解決します。有意に貢献する変数を追加した場合のみ増加し、意味のない変数を追加すると減少（または変化なし）する特性があります。</p>
+    <div class="formula">Adj. R² = 1 − (1 − R²) × (n − 1)/(n − p − 1)</div>
+    <div class="note-box">
+      <span class="n-title">💡 使い分けガイド</span>
+      単一モデルの評価 → R²<br>
+      複数モデルの比較（変数数が異なる場合）→ Adjusted R²<br>
+      モデルの複雑さとのトレードオフ評価 → AIC / BIC
+    </div>
+  </div>
+</div>
+
+<!-- AIC -->
+<div class="term-card" data-search="AIC akaike information criterion 赤池情報量基準 model complexity goodness fit step">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">AIC — Akaike Information Criterion</span><span class="term-ja">赤池情報量基準</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">モデルの複雑さ（変数数）と当てはまりの良さのバランスを測る指標。小さいほど良い。step()のデフォルト基準。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">AICは「モデルの当てはまりの良さ」と「モデルの複雑さ（変数の数）」の両方を考慮した指標です。当てはまりが同じなら変数が少ないモデルほど低いAICになります（シンプルさを優遇）。<strong>AICの絶対値に意味はなく、複数モデルの比較に使います。小さいほうが良いモデル</strong>です。</p>
+    <p class="dt">RのデフォルトのAICの計算は <strong>AIC = −2 × log尤度 + 2k</strong>（k = パラメータ数）です。<code>step()</code>関数はこのAICを最小化するように変数を選択します。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model1 &lt;- lm(rentals ~ temperature, data = bikes)
+model2 &lt;- lm(rentals ~ temperature + humidity, data = bikes)
+model3 &lt;- lm(rentals ~ temperature + humidity + windspeed, data = bikes)
+
+# 各モデルのAICを比較
+AIC(model1)   # → 11245.3
+AIC(model2)   # → 11100.8  ← 最小 → 最良
+AIC(model3)   # → 11102.1
+
+# 複数モデルを一度に比較
+AIC(model1, model2, model3)
+#         df      AIC
+# model1   3  11245.3
+# model2   4  11100.8   ← 最良
+# model3   5  11102.1
+
+# step()との関係
+best &lt;- step(model3, direction = "both")
+# → 内部でAICを計算し、最小のAICになるまで変数を追加・削除</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- BIC -->
+<div class="term-card" data-search="BIC bayesian information criterion ベイズ情報量基準 penalty complexity">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">BIC — Bayesian Information Criterion</span><span class="term-ja">ベイズ情報量基準</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">AICより変数数へのペナルティが強い。より簡潔なモデルを選ぶ傾向がある。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">BICはAICと同様にモデルの当てはまりと複雑さを評価しますが、パラメータ数のペナルティを <strong>2k</strong>（AIC）ではなく <strong>k × log(n)</strong>（n = サンプルサイズ）として計算します。サンプル数が多い（n &gt; 7）場合はBICのペナルティがAICより強くなり、より少ない変数のモデルを選ぶ傾向があります。</p>
+    <div class="formula">AIC = −2×logL + 2k<br>BIC = −2×logL + k×ln(n)　← ペナルティがより強い</div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model1 &lt;- lm(rentals ~ temperature, data = bikes)
+model2 &lt;- lm(rentals ~ temperature + humidity, data = bikes)
+
+# BICの比較
+BIC(model1)   # → 11262.4
+BIC(model2)   # → 11122.5
+
+# AICとBICを並べて比較
+data.frame(
+  Model   = c("model1", "model2"),
+  AIC_val = c(AIC(model1), AIC(model2)),
+  BIC_val = c(BIC(model1), BIC(model2))
+)</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- MALLOWS CP -->
+<div class="term-card" data-search="mallows cp statistic マローズ Cp モデル簡潔さ fit simplicity leaps">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Mallows' Cp Statistic</span><span class="term-ja">マローズのCp統計量</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">モデルの当てはまりの良さと簡潔さのトレードオフを評価する指標。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">Mallows' Cpは変数選択で使われる指標のひとつで、<strong>Cp値が変数の数（p+1）に近いほど良いモデル</strong>とされます。Cp &lt; p+1 はモデルが偏っている可能性、Cp &gt;&gt; p+1 は変数が不足している可能性を示します。lm()直接では計算できないため、<strong>leapsパッケージ</strong>が必要です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">install.packages("leaps")
+library(leaps)
+
+# 全変数サブセット選択（Cp含む）
+subsets &lt;- regsubsets(rentals ~ temperature + humidity + windspeed + season,
+                       data = bikes, nvmax = 4)
+summary(subsets)$cp   # → 各サブセットのCp値
+
+# Cpのプロット
+plot(subsets, scale = "Cp")
+# → Cp値が変数数+1に近いモデルが最良
+
+# 補足：AIC・BIC・Adjuusted R²と比べてMallows' Cpは
+# 「モデルバイアス vs 分散」のトレードオフを明示的に評価</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- F-STATISTIC -->
+<div class="term-card" data-search="F statistic F統計量 overall significance model test F-test p-value ALL predictors">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">F-Statistic</span><span class="term-ja">F統計量</span></div>
+    <span class="sec-badge c3">評価指標</span>
+  </div>
+  <p class="summary">モデル全体の有意性を検定する。「少なくとも1つの予測変数が有意」を検定するが、全変数が有意とは意味しない。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">F統計量は「このモデルは何も予測しない切片のみのモデルよりも良いか？」を検定します。p値が有意（例：p &lt; 0.05）であれば、<strong>少なくとも1つの予測変数</strong>が応答変数に対して有意な関係を持つことが示されます。しかし、すべての変数が有意であることを意味するわけではありません。個々の変数の有意性は、各係数のt値・p値で個別に確認する必要があります。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ テスト頻出の誤解</span>
+      「有意なF統計量 → すべての予測変数が有意」→ <strong>FALSE</strong><br>
+      正しくは「少なくとも1つが有意」。個々の変数の有意性はt検定（p値）で確認する。
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature + humidity + windspeed, data = bikes)
+summary(model)
+# F-statistic: 612.4 on 3 and 727 DF, p-value: &lt; 2.2e-16
+# → モデル全体は非常に有意
+
+# F統計量の取得
+summary(model)$fstatistic
+#    value  numdf  dendf
+#   612.4    3.0  727.0
+
+# 個々の変数のp値（別途確認が必要）
+summary(model)$coefficients
+#              Estimate  Std.Error  t value  Pr(&gt;|t|)
+# temperature   95.3      3.8      25.08    &lt;2e-16 ***  ← 有意
+# humidity    -1823.1    190.5     -9.57    &lt;2e-16 ***  ← 有意
+# windspeed    -33.2     23.1      -1.44     0.151      ← 有意でない！</code></pre>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 4: 予測区間・信頼区間                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec4">
+<div class="section-header">
+  <span class="sec-num">04</span>
+  <h2 class="sec-title">予測区間・信頼区間</h2>
+  <span class="sec-badge c4">Intervals</span>
+</div>
+
+<!-- CONFIDENCE INTERVAL -->
+<div class="term-card" data-search="confidence interval 信頼区間 mean response uncertainty model CI">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Confidence Interval (CI)</span><span class="term-ja">信頼区間</span></div>
+    <span class="sec-badge c4">区間推定</span>
+  </div>
+  <p class="summary">平均的な応答値の推定範囲。モデル自体の不確かさ（パラメータ推定の誤差）を反映する。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">信頼区間は「真の平均応答値がこの範囲に入る確率が信頼水準（例：90%）である」という区間です。例えば「気温60°Fにおける平均的な自転車利用台数の90%信頼区間は (4450.9, 4634.8) 台」と解釈します。これはモデルのパラメータ推定にともなう<strong>不確かさだけ</strong>を反映しています。</p>
+    <p class="dt">信頼区間は<strong>個々の観測値ではなく、平均応答値</strong>に対する推定です。個々の将来の観測値に対する区間は予測区間（PI）を使います。</p>
+    <div class="ex-box">
+      <span class="ex-title">解釈の例（テスト Q7 Attempt 1）</span>
+      コード: <code>predict(model, newdata = data.frame(temperature=60), interval="confidence", level=0.90)</code><br>
+      出力:   fit=4542.1, lwr=4450.9, upr=4634.8<br>
+      解釈: <strong>「気温が60°Fのとき、平均的な自転車利用台数について、90%の信頼区間は (4450.9, 4634.8) 台である」</strong>
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 信頼区間の取得
+predict(model,
+        newdata   = data.frame(temperature = 60),
+        interval  = "confidence",
+        level     = 0.90)   # ← 引数名は "level"（"confidence"ではない）
+#        fit     lwr      upr
+# 1  4542.1  4450.9   4634.8
+
+# 信頼水準を変えると幅が変わる
+predict(model, newdata = data.frame(temperature=60),
+        interval="confidence", level=0.95)  # → より広い区間
+predict(model, newdata = data.frame(temperature=60),
+        interval="confidence", level=0.80)  # → より狭い区間</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- PREDICTION INTERVAL -->
+<div class="term-card" data-search="prediction interval 予測区間 individual observation wider PI random error uncertainty">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Prediction Interval (PI)</span><span class="term-ja">予測区間</span></div>
+    <span class="sec-badge c4">区間推定</span>
+  </div>
+  <p class="summary">個々の将来観測値の範囲。モデルの不確かさ＋個体差の両方を含むため、常にCIより広い。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">予測区間（PI）は「ある特定の条件（例：気温60°F）のとき、<strong>新しい1件の観測値</strong>がこの範囲に入る確率が信頼水準（90%など）である」という区間です。信頼区間（CI）がモデルの不確かさのみを扱うのに対し、予測区間は<strong>モデルの不確かさ + 個々の観測値の固有のばらつき（ランダムエラー）</strong>の両方を考慮します。そのため、予測区間は常に信頼区間より広くなります。</p>
+    <div class="ex-box">
+      <span class="ex-title">CIとPIの違いまとめ</span>
+      CI（信頼区間）: 平均応答の推定範囲 → <strong>モデル不確かさのみ</strong><br>
+      PI（予測区間）: 個別観測値の予測範囲 → <strong>モデル不確かさ + 個体ランダム変動</strong><br>
+      → PI は常に CI より広い（これはテスト頻出の事実）
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+new_data &lt;- data.frame(temperature = 60)
+
+# 信頼区間（CI）
+ci &lt;- predict(model, newdata = new_data,
+              interval = "confidence", level = 0.90)
+# fit=4542.1  lwr=4450.9  upr=4634.8  ← 幅: 183.9台
+
+# 予測区間（PI）
+pi &lt;- predict(model, newdata = new_data,
+              interval = "prediction", level = 0.90)
+# fit=4542.1  lwr=2434.7  upr=6649.5  ← 幅: 4214.8台（CIより大幅に広い）
+
+# 幅の比較
+ci_width &lt;- ci[,"upr"] - ci[,"lwr"]  # → 183.9
+pi_width &lt;- pi[,"upr"] - pi[,"lwr"]  # → 4214.8
+# PI が CI の約23倍の幅 → 個体差のばらつきが支配的</code></pre>
+    </div>
+    <div class="note-box">
+      <span class="n-title">💡 区間を狭くする条件（Attempt 1 Q8）</span>
+      信頼区間を<strong>狭く</strong>するには: 信頼水準を<strong>下げる</strong> ＋ サンプルサイズを<strong>増やす</strong><br>
+      信頼水準を上げると幅は広がる。サンプルが増えると推定精度が上がり幅が狭まる。
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 5: モデルの仮定                                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec5">
+<div class="section-header">
+  <span class="sec-num">05</span>
+  <h2 class="sec-title">モデルの仮定（OLS前提条件）</h2>
+  <span class="sec-badge c5">Assumptions</span>
+</div>
+
+<!-- LINEARITY -->
+<div class="term-card" data-search="linearity 線形性 linear trend scatter plot relationship assumption">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Linearity（線形性）</span><span class="term-ja">OLS仮定①</span></div>
+    <span class="sec-badge c5">仮定</span>
+  </div>
+  <p class="summary">予測変数と応答変数の関係が線形（直線的）であること。散布図で確認する。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">線形回帰モデルは、予測変数(x)と応答変数(y)の関係が直線的であることを前提にしています。非線形な関係（曲線、指数関数的など）がある場合、モデルは現実を正確に捉えられません。対数変換（log transformation）や多項式回帰（polynomial regression）で対処できます。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# ① 散布図で線形性の確認
+plot(bikes$temperature, bikes$rentals,
+     xlab = "Temperature", ylab = "Rentals",
+     main = "Linearity Check")
+abline(model, col = "red")  # 回帰直線を追加
+
+# ② 残差 vs 当てはめ値プロットでも確認
+# → ランダムに散らばっていれば線形性OK
+# → U字やアーチ状になっていれば線形性違反
+plot(model, which = 1)  # Residuals vs Fitted</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- NORMALITY OF RESIDUALS -->
+<div class="term-card" data-search="normality normal residuals 正規性 Q-Q plot Shapiro-Wilk normal distribution assumption">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Nearly Normal Residuals（正規性）</span><span class="term-ja">OLS仮定②</span></div>
+    <span class="sec-badge c5">仮定</span>
+  </div>
+  <p class="summary">残差がほぼ正規分布に従うこと。Q-Qプロットで視覚的に、Shapiro-Wilk検定で統計的に確認。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">OLSの仮定の一つとして、残差（ε）が正規分布に従うことが求められます。「Nearly（ほぼ）」という表現が重要で、完全な正規分布でなくても、著しい歪みや外れ値がなければ多くの場合問題ありません。Q-Qプロットで点が対角線に沿って並んでいれば正規性が満たされていると判断します。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ よくある誤解（テスト頻出）</span>
+      「1点だけ正規性から外れている → その観測値を削除すべき」→ <strong>FALSE</strong><br>
+      1点だけを除外することは適切ではない。データ変換や外れ値の原因調査が先。<br>
+      また、Q-Qプロットを見て「正規性に問題なし」と判断するには慎重さが必要。
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# ① Q-Qプロット（視覚的確認）
+qqnorm(residuals(model), main = "Q-Q Plot of Residuals")
+qqline(residuals(model), col = "red")
+# → 点が赤い直線に沿って並んでいれば正規性OK
+
+# Rの組み込み診断プロット（4種類まとめて）
+par(mfrow = c(2,2))
+plot(model)
+# Which = 1: Residuals vs Fitted （線形性 + 等分散性）
+# Which = 2: Normal Q-Q         （正規性） ← 特に重要
+# Which = 3: Scale-Location     （等分散性）
+# Which = 4: Cook's Distance    （影響点）
+
+# ② Shapiro-Wilk検定（統計的確認）
+shapiro.test(residuals(model))
+# p-value &gt; 0.05 → 正規性違反なし（帰無仮説を棄却しない）
+# p-value &lt; 0.05 → 正規性違反の疑い</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- CONSTANT VARIABILITY -->
+<div class="term-card" data-search="homoskedasticity 等分散性 constant variability homoscedasticity assumption breusch pagan">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Constant Variability（等分散性）</span><span class="term-ja">OLS仮定③ / Homoskedasticity</span></div>
+    <span class="sec-badge c5">仮定</span>
+  </div>
+  <p class="summary">残差の分散が、予測変数の値に関わらず一定であること。違反するとHeteroskedasticityとなる。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">等分散性（Homoskedasticity）とは、xの値がどこであっても残差の分散σ²が一定であるという仮定です。「Residuals vs Fitted」プロットを見たときに、点が均等に散らばっていれば等分散と判断します。ファネル状（漏斗形）に広がっていれば等分散性違反（Heteroskedasticity）です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# ① 残差 vs 当てはめ値プロット
+plot(model$fitted.values, residuals(model),
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted")
+abline(h = 0, col = "red", lty = 2)
+# → ランダムに散らばっていれば等分散性OK
+# → ファネル状（右に行くほど広がる）なら違反
+
+# ② Breusch-Pagan検定（統計的確認）
+library(lmtest)
+bptest(model)
+# p &gt; 0.05 → 等分散性OK
+# p &lt; 0.05 → Heteroskedasticity の疑い</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- INDEPENDENCE OF RESIDUALS -->
+<div class="term-card" data-search="independence residuals 残差 独立性 autocorrelation 自己相関 Durbin-Watson time series">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Independence of Residuals（残差の独立性）</span><span class="term-ja">OLS仮定④</span></div>
+    <span class="sec-badge c5">仮定</span>
+  </div>
+  <p class="summary">残差同士が互いに相関していないこと。時系列データでは特に注意が必要。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">残差の独立性とは、一つの観測値の残差が他の観測値の残差と相関していないことを意味します。特に<strong>時系列データ</strong>では、時間的に隣接するデータが互いに影響し合う（自己相関：autocorrelation）ため、この仮定が違反されやすいです。Durbin-Watson検定で診断します。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">library(lmtest)
+model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# Durbin-Watson検定（残差の自己相関を検定）
+dwtest(model)
+# DW statistic:
+# → 2に近い → 自己相関なし（独立性OK）
+# → 0に近い → 正の自己相関（前の値が大きければ次も大きい）
+# → 4に近い → 負の自己相関
+
+# 残差の自己相関プロット（ACFプロット）
+acf(residuals(model), main = "ACF of Residuals")
+# → ラグ0以外のバーが点線内に収まっていれば独立性OK</code></pre>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 6: 診断ツール                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec6">
+<div class="section-header">
+  <span class="sec-num">06</span>
+  <h2 class="sec-title">診断ツール</h2>
+  <span class="sec-badge c6">Diagnostics</span>
+</div>
+
+<!-- HETEROSKEDASTICITY -->
+<div class="term-card" data-search="heteroskedasticity 異分散性 不均一分散 funnel shape residuals violation">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Heteroskedasticity</span><span class="term-ja">不均一分散（異分散性）</span></div>
+    <span class="sec-badge c6">診断</span>
+  </div>
+  <p class="summary">残差の分散がxの値によって変化する状態。等分散性仮定の違反。大サンプルでも消えない。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">Heteroskedasticityは等分散性（Homoskedasticity）の違反状態です。「Residuals vs Fitted」プロットがファネル型（漏斗型）に見える場合が典型的です。サンプルサイズが大きくなっても異分散性自体は消えませんが（テストのQ9）、大サンプルでは推定量の偏りへの影響が相対的に緩和される傾向があります（True）。</p>
+    <div class="ex-box">
+      <span class="ex-title">視覚的な見分け方</span>
+      ✅ 等分散（Homoskedastic）: 残差がランダムに散らばる → 横向きのランダムな雲<br>
+      ❌ 異分散（Heteroskedastic）: ファネル型・扇型に広がる → 右に行くほど残差が大きくなる
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 視覚的診断（残差 vs 当てはめ値）
+plot(model$fitted.values, model$residuals,
+     xlab = "Fitted Values", ylab = "Residuals")
+abline(h = 0, col = "red", lty = 2)
+
+# 統計的検定（Breusch-Pagan test）
+library(lmtest)
+bptest(model)
+# p &lt; 0.05 → 異分散性の証拠あり
+
+# 対処法① : 対数変換
+model_log &lt;- lm(log(rentals) ~ temperature, data = bikes)
+
+# 対処法② : 重み付き最小二乗（WLS）
+# weights = 1/fitted(model)^2 などを指定する</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- Q-Q PLOT -->
+<div class="term-card" data-search="QQ plot Q-Q quantile normal probability 正規Q-Qプロット normality check diagonal">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Q-Q Plot</span><span class="term-ja">正規Q-Qプロット</span></div>
+    <span class="sec-badge c6">診断</span>
+  </div>
+  <p class="summary">残差が正規分布に従っているかを視覚的に確認するプロット。対角線から外れると正規性違反の疑い。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">Q-Qプロット（Quantile-Quantile Plot）は、データの分布と理論上の正規分布を比較するグラフです。横軸に理論上の正規分布の分位点、縦軸に実際のデータの分位点をプロットします。<strong>点が対角線（45°の直線）上に並んでいれば正規性あり</strong>、大きく外れている場合は正規性に問題があります。点が曲線状になる場合は歪み（skewness）、端が極端に外れる場合は裾の重さ（heavy tails）を示します。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 方法① : 基本のQ-Qプロット
+qqnorm(residuals(model), main = "Normal Q-Q Plot")
+qqline(residuals(model), col = "steelblue", lwd = 2)
+
+# 方法② : plot()のwhich=2で表示（同じグラフ）
+plot(model, which = 2)
+
+# ggplot2での美しいQ-Qプロット
+library(ggplot2)
+ggplot(data = data.frame(res = residuals(model)), aes(sample = res)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(title = "Q-Q Plot of Residuals",
+       x = "Theoretical Quantiles", y = "Sample Quantiles") +
+  theme_dark()
+
+# 読み方:
+# 点が対角線に沿う → 正規性OK ✅
+# S字カーブ       → 歪み（skewness）あり ❌
+# 端が外れる      → 外れ値 or 裾が重い ❌</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- DURBIN-WATSON -->
+<div class="term-card" data-search="Durbin-Watson autocorrelation 自己相関 serial correlation residuals test independence">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Durbin-Watson Test</span><span class="term-ja">ダービン・ワトソン検定</span></div>
+    <span class="sec-badge c6">診断</span>
+  </div>
+  <p class="summary">残差間の自己相関（系列相関）を検定する統計検定。DW値が2に近いほど自己相関なし。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">Durbin-Watson統計量（DW値）は0から4の範囲を取ります。<strong>DW ≈ 2</strong>：自己相関なし（独立性OK）、<strong>DW &lt; 2（0に近い）</strong>：正の自己相関（連続した観測が似た傾向）、<strong>DW &gt; 2（4に近い）</strong>：負の自己相関（交互に正負が逆転する傾向）です。lmtestパッケージが必要です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">library(lmtest)
+model &lt;- lm(rentals ~ temperature, data = bikes)
+
+dwtest(model)
+# Durbin-Watson test
+# DW = 1.74, p-value = 0.003
+# → DWが2より低く、p値が小さい → 正の自己相関の疑い
+#   （自転車データは時系列なので自己相関が生じやすい）
+
+# 解釈ガイド:
+# DW ≈ 2         → 自己相関なし ✅
+# DW = 0〜2      → 正の自己相関 ❌
+# DW = 2〜4      → 負の自己相関 ❌
+# 一般的な基準: 1.5 &lt; DW &lt; 2.5 なら許容範囲とみなすことが多い</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- COOK'S DISTANCE -->
+<div class="term-card" data-search="Cooks distance クックの距離 influential observation 影響点 leverage outlier">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Cook's Distance</span><span class="term-ja">クックの距離</span></div>
+    <span class="sec-badge c6">診断</span>
+  </div>
+  <p class="summary">各観測値がモデルに与える影響力を測る指標。値 &gt; 1 は高影響点の目安。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">Cook's Distanceは「もしこの観測値を除外したら、回帰係数がどれだけ変化するか」を数値化した指標です。値が大きい観測値ほど、モデルに与える影響が強いことを意味します。一般的な閾値は<strong>1.0</strong>（D &gt; 1 → 高影響点として要注意）ですが、4/n（nはサンプル数）を使うこともあります。</p>
+    <p class="dt">注意：Cook's Distanceは「外れ値（outlier in response）」と「てこ比が高い点（high leverage point）」の両方の影響を組み合わせた指標です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">model &lt;- lm(rentals ~ temperature, data = bikes)
+
+# Cook's Distanceの計算
+cd &lt;- cooks.distance(model)
+
+# 閾値を超える観測値の確認
+threshold &lt;- 1.0          # 一般的な基準
+which(cd &gt; threshold)     # → インデックスを返す
+
+# より厳格な閾値（サンプルサイズ考慮）
+threshold2 &lt;- 4 / nrow(bikes)  # 4/n = 4/731 ≈ 0.0055
+sum(cd &gt; threshold2)           # この基準を超える観測値の数
+
+# 視覚化
+plot(cd, type = "h", ylab = "Cook's Distance",
+     main = "Cook's Distance Plot")
+abline(h = 1.0, col = "red", lty = 2)   # 閾値ライン
+
+# 組み込み診断プロット（which=4）
+plot(model, which = 4)
+
+# 上位5件の影響力が強い観測値
+head(sort(cd, decreasing = TRUE), 5)</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- VIF -->
+<div class="term-card" data-search="VIF variance inflation factor 分散拡大要因 multicollinearity 多重共線性 car package threshold 5 10">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">VIF — Variance Inflation Factor</span><span class="term-ja">分散拡大要因</span></div>
+    <span class="sec-badge c6">診断</span>
+  </div>
+  <p class="summary">多重共線性の診断指標。VIF &gt; 5 で多重共線性の疑い、VIF &gt; 10 で深刻な問題。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">VIF（分散拡大要因）は、「ある予測変数が他の予測変数とどれだけ相関しているか」を測る指標です。VIF = 1 は共線性なし、VIF = 5〜10 が多重共線性の疑い域、VIF &gt; 10 は深刻な多重共線性を示します。VIFが大きい場合、その変数の係数推定が不安定になり、符号が逆転することさえあります。</p>
+    <div class="formula">VIF = 1 / (1 − R²ⱼ)　← R²ⱼ は変数jを他の変数で回帰したときのR²</div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">library(car)
+model &lt;- lm(rentals ~ temperature + humidity + windspeed, data = bikes)
+
+# VIFの計算
+vif(model)
+# temperature    humidity   windspeed
+#    1.42          1.11       1.33
+# → 全てVIF &lt; 5 → 多重共線性の問題なし ✅
+
+# VIFの解釈ガイド:
+# VIF = 1       → 完全に独立。共線性なし
+# VIF = 1〜5    → 許容範囲内
+# VIF = 5〜10   → 多重共線性の疑い ⚠️
+# VIF &gt; 10      → 深刻な多重共線性 ❌
+
+# 対処法① : VIFの高い変数を除外
+# 対処法② : 共線性のある変数を合成（PCAなど）
+# 対処法③ : 正則化手法（Ridge回帰、LASSO）の使用</code></pre>
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ よくある誤解</span>
+      「相関行列（correlation matrix）だけで多重共線性を検出できる」→ <strong>FALSE</strong><br>
+      相関行列は2変数間の関係しか見られない。3変数以上の複合的な共線性を検出するにはVIFが必要。
+    </div>
+  </div>
+</div>
+
+<!-- MULTICOLLINEARITY -->
+<div class="term-card" data-search="multicollinearity 多重共線性 correlated predictors unstable coefficients inflated">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Multicollinearity</span><span class="term-ja">多重共線性</span></div>
+    <span class="sec-badge c6">診断</span>
+  </div>
+  <p class="summary">複数の予測変数が互いに強く相関している状態。係数推定が不安定・信頼できなくなる。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">多重共線性とは、複数の予測変数が互いに高い相関を持つ状態です。例えば「気温」と「体感温度」を同時に予測変数として使うと、両者がほぼ同じ情報を持つため、それぞれの係数を個別に推定することが困難になります。結果として：係数の標準誤差が大きくなる、係数の符号が意味不明になる、t値が小さくなりp値が大きくなる（本来有意なのに有意でないと判定される）などの問題が起きます。</p>
+    <div class="ex-box">
+      <span class="ex-title">多重共線性の結果</span>
+      影響①: 係数が膨張（inflated）または符号が逆転する<br>
+      影響②: 標準誤差が大きくなり、t値が小さくなる（有意差が出にくい）<br>
+      影響③: モデルの解釈が困難になる<br>
+      ※ ただし予測精度（R²など）は大きく下がらないこともある
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">library(car)
+
+# 例：気温と体感温度（強い共線性）
+model_problem &lt;- lm(rentals ~ temperature + temp_feeling, data = bikes)
+vif(model_problem)
+# temperature   temp_feeling
+#    18.3          18.6          ← VIF &gt; 10 → 深刻な多重共線性
+
+# 対処法① : 一方を除外
+model_fixed1 &lt;- lm(rentals ~ temperature, data = bikes)
+
+# 対処法② : 相関のある変数を合成
+bikes$temp_mean &lt;- (bikes$temperature + bikes$temp_feeling) / 2
+model_fixed2 &lt;- lm(rentals ~ temp_mean, data = bikes)
+
+# 対処法③ : 主成分分析（PCA）で次元削減
+# → 相関のある変数グループを独立した成分に変換</code></pre>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 7: モデルの改善                                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec7">
+<div class="section-header">
+  <span class="sec-num">07</span>
+  <h2 class="sec-title">モデルの改善・変換</h2>
+  <span class="sec-badge c7">Improvement</span>
+</div>
+
+<!-- LOG TRANSFORMATION -->
+<div class="term-card" data-search="logarithmic log transformation 対数変換 nonlinear non-linear normality fix">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Logarithmic Transformation</span><span class="term-ja">対数変換</span></div>
+    <span class="sec-badge c7">改善</span>
+  </div>
+  <p class="summary">非線形な関係を線形に近づける変換。正規性違反・異分散性の対処にも使われる。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">対数変換は非線形な関係（指数関数的な増加など）を持つデータを線形に変換する手法です。応答変数（y）を log(y) に変換する場合、残差の分布が改善されることがあります。Rでは <code>log()</code> はデフォルトで自然対数（底e）を使います。</p>
+    <p class="dt">係数の解釈が変わる点に注意：log(y) ～ x モデルでは、xが1増えるとyが β₁×100% 増加すると解釈します（パーセント変化）。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># ① 応答変数の対数変換
+model_logy &lt;- lm(log(rentals) ~ temperature, data = bikes)
+
+# ② 予測変数の対数変換
+model_logx &lt;- lm(rentals ~ log(temperature), data = bikes)
+
+# ③ 両方変換（log-logモデル）
+model_loglog &lt;- lm(log(rentals) ~ log(temperature), data = bikes)
+
+# 変換後の診断（正規性が改善されたか確認）
+par(mfrow = c(1,2))
+qqnorm(residuals(lm(rentals ~ temperature, data = bikes)),
+       main = "Before Transformation")
+qqline(residuals(lm(rentals ~ temperature, data = bikes)))
+
+qqnorm(residuals(model_logy), main = "After Log Transformation")
+qqline(residuals(model_logy))
+
+# log変換モデルの係数の解釈
+# coefficient = 0.02 の場合
+# → temperature が 1 増えると rentals が約 2% 増加</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- POLYNOMIAL REGRESSION -->
+<div class="term-card" data-search="polynomial regression 多項式回帰 nonlinear curved relationship quadratic I()">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Polynomial Regression</span><span class="term-ja">多項式回帰</span></div>
+    <span class="sec-badge c7">改善</span>
+  </div>
+  <p class="summary">線形回帰の代わりに使い、曲線的な非線形関係をモデル化する。I(x^2) で2次項を追加。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">予測変数と応答変数の関係が曲線的（非線形）な場合、線形回帰では対処できません。多項式回帰は x² や x³ などの高次項を追加することで曲線をモデル化します。Rでは <code>I(x^2)</code>（inhibit関数）を使って2次項を指定します。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 2次多項式回帰（二次関数）
+model_poly2 &lt;- lm(rentals ~ temperature + I(temperature^2), data = bikes)
+summary(model_poly2)
+
+# 3次多項式回帰
+model_poly3 &lt;- lm(rentals ~ temperature + I(temperature^2) + I(temperature^3),
+                   data = bikes)
+
+# poly()関数を使った書き方（より簡潔）
+model_poly2b &lt;- lm(rentals ~ poly(temperature, 2), data = bikes)
+
+# モデルの視覚化
+temp_seq &lt;- seq(min(bikes$temperature), max(bikes$temperature), length.out = 100)
+pred_poly &lt;- predict(model_poly2, newdata = data.frame(temperature = temp_seq))
+
+plot(bikes$temperature, bikes$rentals, col = "gray", pch = 16)
+lines(temp_seq, pred_poly, col = "red", lwd = 2)
+
+# 多項式 vs 線形の比較
+AIC(lm(rentals ~ temperature, data=bikes))      # → 11245
+AIC(model_poly2)                                 # → 11190（改善）</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- INTERACTION EFFECT -->
+<div class="term-card" data-search="interaction effect 交互作用 combined effect * asterisk modifier lm formula">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Interaction Effect</span><span class="term-ja">交互作用効果</span></div>
+    <span class="sec-badge c7">改善</span>
+  </div>
+  <p class="summary">2つの予測変数の「組み合わせ効果」が個別の和を超える（下回る）現象。Rでは * を使う。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">交互作用効果とは、1つの変数の効果が別の変数の水準によって異なる現象です。例えば「気温の自転車利用への効果が、天気（晴れ/雨）によって異なる」場合、これが交互作用です。Rの<code>lm()</code>では <code>*</code>（アスタリスク）で指定します。<code>y ~ x1 * x2</code> は <code>y ~ x1 + x2 + x1:x2</code>（主効果2つ＋交互作用項1つ）と同義です。</p>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ 記号の意味（テスト頻出）</span>
+      <code>+</code>（プラス） → 主効果のみ追加（交互作用なし）<br>
+      <code>*</code>（アスタリスク）→ 主効果＋交互作用項を全て追加（正解）<br>
+      <code>:</code>（コロン）→ 交互作用項のみ（主効果なし）<br>
+      <code>/</code>（スラッシュ）→ 階層モデル（通常は使わない）
+    </div>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 交互作用モデル（*を使う）
+model_int &lt;- lm(rentals ~ temperature * weather, data = bikes)
+# 上記は以下と同じ意味
+# lm(rentals ~ temperature + weather + temperature:weather, data = bikes)
+
+summary(model_int)
+# Coefficients:
+#                        Estimate ...
+# (Intercept)              1200
+# temperature               85.3     ← 晴れ時の気温効果
+# weatherRainy            -800.2     ← 雨の主効果
+# temperature:weatherRainy -12.4     ← 交互作用項（雨の日は気温効果が弱い）
+
+# 交互作用の解釈:
+# 晴れの日: rentals = 1200 + 85.3×temp
+# 雨の日:   rentals = (1200-800.2) + (85.3-12.4)×temp
+#         = 399.8 + 72.9×temp
+# → 雨の日は気温の効果が12.4台分少ない</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- OVERFITTING -->
+<div class="term-card" data-search="overfitting 過学習 train test R² generalization performance gap">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Overfitting</span><span class="term-ja">過学習</span></div>
+    <span class="sec-badge c7">改善</span>
+  </div>
+  <p class="summary">学習データに過剰適合し、未知データへの汎化ができていない状態。Train R²とTest R²の大きな乖離が目印。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">過学習は、モデルが学習データの「ノイズ」まで覚えてしまい、新しいデータに対してうまく予測できない状態です。予測変数が多すぎる場合や、モデルが複雑すぎる場合に起こります。典型的なサイン：<strong>学習データのR² = 0.95、テストデータのR² = 0.40</strong>（大幅な乖離）。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">set.seed(42)
+
+# データ分割（80% 学習 / 20% テスト）
+n     &lt;- nrow(bikes)
+idx   &lt;- sample(1:n, size = floor(0.8 * n))
+train &lt;- bikes[idx, ]
+test  &lt;- bikes[-idx, ]
+
+# 過学習しやすいモデル（変数が多すぎる）
+model_complex &lt;- lm(rentals ~ temperature + I(temperature^2) +
+                     humidity + windspeed + season +
+                     temperature:humidity + temperature:season,
+                     data = train)
+
+# 学習データのR²
+summary(model_complex)$r.squared         # → 0.84（高い）
+
+# テストデータのR²（実際の汎化性能）
+pred_test &lt;- predict(model_complex, newdata = test)
+actual    &lt;- test$rentals
+SS_tot    &lt;- sum((actual - mean(actual))^2)
+SS_res    &lt;- sum((actual - pred_test)^2)
+R2_test   &lt;- 1 - SS_res/SS_tot
+R2_test   # → 0.62（大幅低下 = 過学習）</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- PARSIMONIOUS MODEL -->
+<div class="term-card" data-search="parsimonious model 簡潔 シンプル simplicity balance effectiveness Occam razor">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Parsimonious Model</span><span class="term-ja">簡潔なモデル（節約的モデル）</span></div>
+    <span class="sec-badge c7">改善</span>
+  </div>
+  <p class="summary">必要最低限の変数で最大限の説明力を持つモデル。複雑さと精度のバランスが鍵。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">Parsimony（節約性）は統計モデリングの重要な原則です。オッカムの剃刀（Occam's Razor）の考え方で「同じ説明力なら、より単純なモデルを選ぶ」。変数を増やしすぎると過学習が起き、モデルの解釈が難しくなり、AICやBICも悪化します。AICやAdjusted R²を使った変数選択がParsimonious Modelを目指す実践的な方法です。</p>
+    <div class="ex-box">
+      <span class="ex-title">Parsimonious Modelの定義（テスト Q19 Attempt 3）</span>
+      ✅ 「簡潔さと効果のバランスを取るモデル」<br>
+      ✅ 「主要なパターンを捉えつつ、必要最低限の変数だけを含むモデル」<br>
+      ❌ 「過学習を減らすためだけに変数を削除するモデル」（説明力を犠牲にしてはいけない）<br>
+      ❌ 「精度を最大化するために全変数を使うモデル」（複雑すぎ）
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 8: 変数選択法                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec8">
+<div class="section-header">
+  <span class="sec-num">08</span>
+  <h2 class="sec-title">変数選択法</h2>
+  <span class="sec-badge c8">Variable Selection</span>
+</div>
+
+<!-- FORWARD SELECTION -->
+<div class="term-card" data-search="forward selection 前進選択 stepwise variable significance AIC add step">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Forward Selection</span><span class="term-ja">前進選択法</span></div>
+    <span class="sec-badge c8">変数選択</span>
+  </div>
+  <p class="summary">空のモデル（切片のみ）から始め、モデル改善に最も貢献する変数を1つずつ追加していく方法。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">前進選択（Forward Selection）は変数選択の一手法です。最初は切片のみのモデルからスタートし、各ステップで「追加するとAIC（または他の指標）を最も改善する変数」を1つずつ追加します。追加してもモデルが改善しなくなったところで停止します。後退削除（Backward Elimination）と逆のアプローチです。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r"># 前進選択の実装
+null_model &lt;- lm(rentals ~ 1, data = bikes)  # 切片のみ
+full_model &lt;- lm(rentals ~ temperature + humidity + windspeed + season,
+                 data = bikes)
+
+# Forward selection（AIC基準）
+forward_model &lt;- step(null_model,
+                       scope = list(lower = null_model,
+                                    upper = full_model),
+                       direction = "forward")
+
+# step()の出力例:
+# Step 1: +temperature  AIC = 11245 → 11100 （最大改善）
+# Step 2: +humidity     AIC = 11100 → 10950
+# Step 3: +season       AIC = 10950 → 10920
+# Step 4: +windspeed    AIC = 10920 → 10922 （改善なし → 停止）
+
+# 最終モデルの確認
+summary(forward_model)
+formula(forward_model)  # 採用された変数を確認</code></pre>
+    </div>
+    <div class="note-box">
+      <span class="n-title">💡 重要なポイント（テスト頻出）</span>
+      選択結果は使用する指標（AIC / p値 / Adjusted R²）によって異なる<br>
+      同じ前進選択でもAIC基準とp値基準では異なるモデルになることがある
+    </div>
+  </div>
+</div>
+
+<!-- STEPWISE SELECTION -->
+<div class="term-card" data-search="stepwise selection ステップワイズ both directions variable selection AIC backward forward">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Stepwise Selection — step()</span><span class="term-ja">ステップワイズ選択</span></div>
+    <span class="sec-badge c8">変数選択</span>
+  </div>
+  <p class="summary">前進選択と後退削除を組み合わせ、AICが最小になるまで変数の追加・削除を繰り返す。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">双方向ステップワイズ（Both-direction Stepwise）は最も一般的な変数選択法です。各ステップで「変数を追加する場合」と「変数を削除する場合」の両方を評価し、AICを最も改善する操作を選択します。前進選択だけでは見逃す変数の組み合わせも発見できる点が利点です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">full_model &lt;- lm(rentals ~ temperature + humidity + windspeed + season,
+                 data = bikes)
+
+# 双方向ステップワイズ（direction = "both"）
+best_model &lt;- step(full_model, direction = "both")
+
+# 後退削除のみ
+backward_model &lt;- step(full_model, direction = "backward")
+
+# 各モデルのAIC比較
+cat("Full model AIC:      ", AIC(full_model), "\n")
+cat("Stepwise model AIC:  ", AIC(best_model), "\n")
+cat("Backward model AIC:  ", AIC(backward_model), "\n")
+
+# 採用された変数
+formula(best_model)</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- STANDARDIZED COEFFICIENTS -->
+<div class="term-card" data-search="standardized coefficients 標準化係数 relative importance comparison beta prediction">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Standardized Coefficients</span><span class="term-ja">標準化係数</span></div>
+    <span class="sec-badge c8">変数選択</span>
+  </div>
+  <p class="summary">スケールを揃えた係数で変数間の影響力を比較するためのもの。予測には使わない。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">予測変数のスケール（単位）が異なる場合（例：気温 vs 湿度（0〜1）vs 風速）、元の係数を直接比較しても意味がありません。標準化係数（Beta coefficients）はすべての変数を平均0・標準偏差1にスケールしてから計算した係数で、<strong>絶対値が大きいほど影響力が強い</strong>変数です。</p>
+    <div class="ex-box">
+      <span class="ex-title">例（Attempt 1 Q14）</span>
+      β̂₁ = 0.5703、β̂₂ = −0.7294、β̂₃ = 0.1586<br>
+      → 絶対値比較: |−0.7294| &gt; |0.5703| &gt; |0.1586|<br>
+      → <strong>β̂₂（= −0.7294）が最も影響力が強い変数</strong>
+    </div>
+    <div class="mistake-box">
+      <span class="m-title">⚠️ テストでの間違い（Attempt 2 Q14）</span>
+      「標準化係数 → 多重共線性の検出に使う」→ <strong>❌ 誤り</strong><br>
+      標準化係数の正しい用途は「<strong>変数間の影響力の比較</strong>」<br>
+      多重共線性の検出 → VIF を使う<br>
+      標準化係数で予測をしてはいけない（元スケールの係数を使う）
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  SECTION 9: データ準備・分割                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="section" id="sec9">
+<div class="section-header">
+  <span class="sec-num">09</span>
+  <h2 class="sec-title">データ準備・分割</h2>
+  <span class="sec-badge c9">Data Prep</span>
+</div>
+
+<!-- TRAIN TEST SPLIT -->
+<div class="term-card" data-search="train test split 分割 training testing generalization performance unseen data sample">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Train / Test Split</span><span class="term-ja">訓練データ・テストデータの分割</span></div>
+    <span class="sec-badge c9">データ準備</span>
+  </div>
+  <p class="summary">モデルの汎化性能を評価するためにデータを学習用とテスト用に分割する手法。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">モデルを学習に使ったデータで評価すると、過学習を見抜けません。そのため、データを<strong>学習データ（Training Set）</strong>と<strong>テストデータ（Test Set）</strong>に分割し、テストデータは学習に使わず評価専用にします。一般的な比率は80:20または70:30です。テストデータで評価したR²やRSEが「本当の予測性能」です。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">set.seed(42)   # 再現性のために乱数シードを設定
+
+n     &lt;- nrow(bikes)           # 総サンプル数 = 731
+idx   &lt;- sample(1:n, size = floor(0.8 * n))  # 80%をランダム選択
+
+# データ分割
+train &lt;- bikes[idx, ]          # 学習データ（585行）
+test  &lt;- bikes[-idx, ]         # テストデータ（146行）
+
+cat("Training samples: ", nrow(train), "\n")  # → 585
+cat("Test samples:     ", nrow(test),  "\n")  # → 146
+
+# モデルの学習（学習データのみ使用）
+model &lt;- lm(rentals ~ temperature + humidity, data = train)
+
+# テストデータへの予測
+pred_test &lt;- predict(model, newdata = test)
+
+# テストデータでのRSE
+test_residuals &lt;- test$rentals - pred_test
+test_RSE &lt;- sqrt(mean(test_residuals^2))
+cat("Test RMSE: ", test_RSE, "\n")
+
+# テストR²の計算
+SS_res &lt;- sum((test$rentals - pred_test)^2)
+SS_tot &lt;- sum((test$rentals - mean(test$rentals))^2)
+R2_test &lt;- 1 - SS_res/SS_tot
+cat("Test R²: ", round(R2_test, 3), "\n")</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- DATA LEAKAGE -->
+<div class="term-card" data-search="data leakage データ漏洩 test set training process information contamination">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Data Leakage</span><span class="term-ja">データ漏洩</span></div>
+    <span class="sec-badge c9">データ準備</span>
+  </div>
+  <p class="summary">テストセットの情報が学習プロセスに混入すること。モデルの性能を過大評価させる原因。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">データ漏洩は、「本来テスト時には知らないはずの情報」が学習段階に使われてしまう状態です。例えば、分割<strong>前</strong>に全データでスケーリング（scale()）を行うと、テストデータの統計情報（平均・SD）が学習データの処理に混入します（これは漏洩）。正しくは、スケーリングのパラメータを学習データだけで計算し、テストデータに適用します。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">set.seed(42)
+idx   &lt;- sample(1:nrow(bikes), floor(0.8*nrow(bikes)))
+train &lt;- bikes[idx, ]
+test  &lt;- bikes[-idx, ]
+
+# ❌ 悪い例（データ漏洩あり）
+# 全データでスケーリング → テスト情報が学習に漏洩
+bikes_scaled &lt;- scale(bikes[, c("temperature","humidity")])  # 全データで計算
+# このスケーリングパラメータ（平均・SD）はtestデータを含む → 漏洩！
+
+# ✅ 正しい例（漏洩なし）
+# 学習データのみでパラメータを計算
+train_mean &lt;- colMeans(train[, c("temperature","humidity")])
+train_sd   &lt;- apply(train[, c("temperature","humidity")], 2, sd)
+
+# 学習データのスケーリング
+train_scaled &lt;- scale(train[, c("temperature","humidity")])
+
+# テストデータには学習データのパラメータを適用
+test_scaled &lt;- sweep(test[, c("temperature","humidity")],
+                     2, train_mean, "-")
+test_scaled  &lt;- sweep(test_scaled, 2, train_sd, "/")</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- DATA CLEANING -->
+<div class="term-card" data-search="data cleaning データクリーニング 前処理 split before cleaning missing values outlier">
+  <div class="card-top">
+    <div class="term-names"><span class="term-en">Data Cleaning Before Split</span><span class="term-ja">分割前のデータクリーニング</span></div>
+    <span class="sec-badge c9">データ準備</span>
+  </div>
+  <p class="summary">欠損値処理・外れ値除去などのデータ整備は、Train/Testへの分割より前に行うのが原則。</p>
+  <div class="card-body">
+    <span class="dl">詳細説明</span>
+    <p class="dt">データクリーニング（欠損値の補完・削除、外れ値の処理、型変換など）は<strong>データ分割の前</strong>に実施します。クリーニング後のデータを分割することで、学習データとテストデータが同じ品質になり、モデルが最良の性能を発揮できます。ただし、スケーリングや標準化は学習データのみのパラメータで行い（上記Data Leakage参照）、テストデータへはそのパラメータを適用します。</p>
+    <div class="code-wrap">
+      <div class="code-hdr"><span class="code-lang">R</span><button class="copy-btn">copy</button></div>
+      <pre><code class="language-r">library(dplyr)
+
+# 推奨ワークフロー
+
+# ① データクリーニング（分割前）
+bikes_clean &lt;- bikes |&gt;
+  filter(!is.na(rentals), !is.na(temperature)) |&gt;  # 欠損値除去
+  filter(temperature &gt; 0) |&gt;                        # 外れ値除去
+  mutate(season = as.factor(season))                # 型変換
+
+# ② データ分割（クリーニング後）
+set.seed(42)
+idx   &lt;- sample(1:nrow(bikes_clean), floor(0.8*nrow(bikes_clean)))
+train &lt;- bikes_clean[idx, ]
+test  &lt;- bikes_clean[-idx, ]
+
+# ③ モデル学習（学習データのみ）
+model &lt;- lm(rentals ~ temperature + humidity, data = train)
+
+# ④ モデル評価（テストデータ）
+pred  &lt;- predict(model, newdata = test)
+RMSE  &lt;- sqrt(mean((test$rentals - pred)^2))
+cat("Test RMSE:", round(RMSE, 1))</code></pre>
+    </div>
+    <div class="note-box">
+      <span class="n-title">💡 ワークフローまとめ</span>
+      ① データ取得 → ② EDA（glimpse, skim, summary）→ ③ クリーニング →
+      ④ Train/Test分割 → ⑤ モデル学習（trainのみ）→
+      ⑥ モデル診断（残差, VIF, Cook's D）→ ⑦ テスト評価 → ⑧ 結果解釈
+    </div>
+  </div>
+</div>
+
+</section>
+
+</main>
+</div><!-- end layout -->
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ── HIGHLIGHT.JS INIT
+document.addEventListener("DOMContentLoaded", () => {
+  hljs.highlightAll();
+});
+
+// ── COPY BUTTON
+document.querySelectorAll(".copy-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const code = btn.closest(".code-wrap").querySelector("code");
+    navigator.clipboard.writeText(code.innerText).then(() => {
+      btn.textContent = "copied ✓";
+      btn.classList.add("ok");
+      setTimeout(() => { btn.textContent = "copy"; btn.classList.remove("ok"); }, 1800);
+    });
+  });
+});
+
+// ── SEARCH
+const searchInput = document.getElementById("search");
+const cards       = document.querySelectorAll(".term-card");
+const noResult    = document.getElementById("no-result");
+
+searchInput.addEventListener("input", () => {
+  const q   = searchInput.value.toLowerCase().trim();
+  let vis   = 0;
+  cards.forEach(card => {
+    const text = (card.dataset.search + " " + card.innerText).toLowerCase();
+    if (!q || text.includes(q)) {
+      card.classList.remove("hidden");
+      vis++;
+    } else {
+      card.classList.add("hidden");
+    }
+  });
+  noResult.style.display = (vis === 0 && q) ? "block" : "none";
+
+  // Hide empty section headings
+  document.querySelectorAll(".section").forEach(sec => {
+    const visibleCards = sec.querySelectorAll(".term-card:not(.hidden)");
+    sec.style.display  = (visibleCards.length === 0 && q) ? "none" : "";
+  });
+});
+
+// ── SCROLL TO TOP BUTTON
+window.addEventListener("scroll", () => {
+  const btn = document.getElementById("scrollTop");
+  btn.classList.toggle("show", window.scrollY > 400);
+});
+
+// ── ACTIVE NAV HIGHLIGHT
+const sections = document.querySelectorAll("section.section");
+const navItems = document.querySelectorAll("nav .nav-item");
+
+window.addEventListener("scroll", () => {
+  let current = "";
+  sections.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 160) current = sec.id;
+  });
+  navItems.forEach(item => {
+    item.classList.toggle("active", item.getAttribute("href") === "#" + current);
+  });
+});
+</script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

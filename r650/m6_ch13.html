@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第13章：Shinyアプリでモデルをデプロイする — ロジスティック回帰ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 13</div>
+    <h1>🚀 第13章：Shinyアプリでモデルをデプロイする</h1>
+    <p>モデルを作って終わりではなく「使える形」にして届ける。ローン返済不能（デフォルト）予測モデルを、LLMの力を借りてShinyアプリとしてWebにデプロイするエンドツーエンド・プロジェクト。</p>
+    <div class="unit-nav"><a href="#u1">Unit 1</a><a href="#u2">Unit 2</a><a href="#u3">Unit 3</a><a href="#u4">Unit 4</a><a href="#u5">Unit 5</a><a href="#u6">Unit 6</a></div>
+  </div>
+</div>
+
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">01</div><div><h2>なぜ「デプロイ」まで学ぶのか</h2><div class="unit-sub">モデルは使われて初めて価値になる</div></div></div>
+  <p>ここまでの12章で、ロジスティック回帰モデルを<strong>作る</strong>こと・<strong>評価する</strong>こと（逸脱度・AIC・Z値）を学びました。でも現実の仕事では、それだけでは足りません。</p>
+  <p>データのクリーニング、分析、モデル作成、診断——これらはデータサイエンスの楽しい部分です。しかし<span class="highlight">それを組織の価値に変換できなければ、仕事として成立しません</span>。組織が本当に欲しいのは「統計の出力」ではなく、<strong>誰でも使えて意思決定に役立つ道具</strong>です。</p>
+  <div class="note-box"><strong>💼 この章のゴール：</strong>データセットを取得 → クリーニング → モデル構築 → 診断 → <strong>ダッシュボードとしてデプロイ</strong>、というエンドツーエンドのプロジェクトを完成させること。ポートフォリオに載せられる「動く成果物」を作ります。</div>
+  <p>デプロイに使うのは <strong>Shiny</strong>。Rからそのまま使えるWebアプリのフレームワークです。「Shinyを書いたことがない」——それで大丈夫。この章のもうひとつのテーマは、<strong>生成AI（LLM）に助けてもらいながら、書いたことのないコードを完成させる</strong>という現代的なワークフローです。</p>
+  <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;margin:1rem 0">
+    <h4 style="margin-top:0">🗺️ エンドツーエンド・プロジェクトの全体像</h4>
+    <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+      <thead><tr style="background:var(--primary);color:white">
+        <th style="padding:.5rem">ステップ</th><th style="padding:.5rem">やること</th><th style="padding:.5rem">使うもの</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">① データ取得</td><td style="padding:.5rem">Kaggleのローンデフォルトデータ</td><td style="padding:.5rem">read_csv()</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">② クリーニング</td><td style="padding:.5rem">欠損値チェック・不要列の削除</td><td style="padding:.5rem">dplyr + LLM</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">③ モデル構築</td><td style="padding:.5rem">ロジスティック回帰</td><td style="padding:.5rem">glm(family=binomial)</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">④ 変数選択</td><td style="padding:.5rem">有意でない予測変数を除去</td><td style="padding:.5rem">step() / AIC</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">⑤ デプロイ</td><td style="padding:.5rem">誰でも使える画面を作る</td><td style="padding:.5rem">Shiny</td></tr>
+        <tr><td style="padding:.5rem">⑥ 公開</td><td style="padding:.5rem">リンクひとつで共有</td><td style="padding:.5rem">shinyapps.io</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">02</div><div><h2>データの準備</h2><div class="unit-sub">Kaggleのローンデフォルトデータを絞り込む</div></div></div>
+  <p>使うのはCourseraの「Loan Default Prediction」チャレンジのデータセット。<strong>255,000行 × 18列</strong>という、これまでの例（アバロン・German Credit）よりずっと大きなデータです。「返済不能（Default）になるか否か」という2値の結果を予測する——まさにロジスティック回帰の出番です。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># CSVを読み込む（列型のメッセージは非表示）</span></span><span class="cl">loans_raw &lt;- <span class="kw">read_csv</span>(<span class="st">"Loan_default.csv"</span>, <span class="kw">show_col_types</span> = <span class="st">FALSE</span>)</span><span class="cl"></span><span class="cl"><span class="cm"># 訓練を速くするため50,000行をサンプリング</span></span><span class="cl"><span class="kw">set.seed</span>(<span class="nm">123</span>)<span class="cm">                       # 再現性のため</span></span><span class="cl">loan_data &lt;- <span class="kw">sample_n</span>(loans_raw, <span class="nm">50000</span>)</span><span class="cl"></span><span class="cl"><span class="kw">rm</span>(loans_raw)<span class="cm">                        # 巨大データを環境から削除して軽くする</span></span></div>
+  <p>ここでの3つの実務テクニックに注目してください。</p>
+  <div class="note-box">
+    <strong>📌 大きなデータを扱う3つの工夫</strong><br>
+    ① <strong>sample_n()</strong> — 25万行のままだと訓練が遅い。まず5万行で開発し、後で「データを増やすと改善するか？」を検証する。<br>
+    ② <strong>set.seed()</strong> — 乱数を固定して、誰がやっても同じサンプル・同じ結果を再現できるようにする。<br>
+    ③ <strong>rm()</strong> — 使い終わった巨大オブジェクトをメモリから消して、RStudioの動作を軽く保つ。
+  </div>
+  <p>また、モデルを作る前に<strong>LoanID（ローンの識別番号）を削除</strong>します。IDには予測に役立つ情報がなく、モデルにとってはただのノイズだからです。</p>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">03</div><div><h2>LLMと組んで開発する</h2><div class="unit-sub">プロンプトは「小さく分割」が鉄則</div></div></div>
+  <p>「Shinyアプリを書いたことがない」状態からどう始めるか。答えは<strong>LLM（このプロジェクトではGoogle Gemini）に段階的に依頼する</strong>ことです。最初のプロンプトはこうでした。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># プロンプト①（要約）</span></span><span class="cl"><span class="st">「このデータセットでローンのデフォルトを予測する</span></span><span class="cl"><span class="st">　ロジスティック回帰モデルを作りたい。</span></span><span class="cl"><span class="st">　データのクリーニングとモデル構築のRコードを書いて。</span></span><span class="cl"><span class="st">　データセットのリンクはこちら：…」</span></span></div>
+  <p>LLMは、ライブラリ読み込み → データ読み込み → クリーニング（欠損値チェック：このデータは欠損ゼロでした）→ 訓練/テスト分割 → <code>glm(…, family = binomial)</code> でのモデル構築 → AUCなどの評価指標、という一連のコメント付きコードを返してくれました。<code>family = binomial</code> になっているか——<strong>ここを自分の知識で検証できる</strong>のが、この授業を受けたあなたの強みです。</p>
+  <div class="big-rule">
+    <div class="ru-arrow">✂️</div>
+    <div class="ru-text">
+      <strong>プロンプトは小さく分割する！</strong><br>
+      「クリーニング＋モデル＋Shinyアプリ」を一度に頼むと<br>
+      LLMも人間と同じで、タスクが多すぎると手を抜くことがある。<br>
+      <span style="font-size:.85rem;color:var(--text-sec)">①クリーニング → ②モデル → ③変数選択 → ④Shinyアプリ、と段階的に積み上げる。</span>
+    </div>
+  </div>
+  <div class="note-box"><strong>🧑‍🔬 Human in the loop（人間による検証）：</strong>LLMの出力を鵜呑みにしない。「family=binomialか？」「有意でない変数はどれか？」「この評価指標は妥当か？」——判断するのは統計を学んだ<strong>あなた</strong>です。LLMはコードを速く書く道具であって、分析の責任者ではありません。</div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">04</div><div><h2>予測変数の絞り込み</h2><div class="unit-sub">手動除去 vs ステップワイズ選択（AIC）</div></div></div>
+  <p><code>summary()</code> を見ると、多くの予測変数は有意（***）でしたが、LoanTerm や LoanPurpose、一部のEducationダミーなどは有意ではありませんでした。「有意でない予測変数をモデルから除去するコードを書いて」と2つ目のプロンプトを投げると、LLMは2つの方法を提案してきます。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># 方法①：手動で有意でない変数を除いて作り直す</span></span><span class="cl">mod2 &lt;- <span class="kw">glm</span>(Default ~ Age + Income + LoanAmount + CreditScore +</span><span class="cl">            MonthsEmployed + InterestRate + Education + EmploymentType,</span><span class="cl">            <span class="kw">data</span> = loan_data, <span class="kw">family</span> = <span class="st">binomial</span>)</span><span class="cl"></span><span class="cl"><span class="cm"># 方法②：ステップワイズ選択（AICで自動選択）← 第6〜7章の知識！</span></span><span class="cl">mod_step &lt;- <span class="kw">step</span>(mod_full, <span class="kw">trace</span> = <span class="nm">0</span>)<span class="cm">  # trace=0で途中経過を非表示</span></span><span class="cl"><span class="cm"># → 手動と同じモデルに到達</span></span></div>
+  <p>ここで面白い問題が出てきます。<strong>Education（学歴）はカテゴリ変数</strong>なので、「Masterは有意だがHigh Schoolは有意でない」という状態でも、High Schoolのダミーだけを取り除くことはできません。カテゴリ変数はレベル全体でひとまとまりだからです。</p>
+  <div class="note-box"><strong>💡 人間がLLMを超える瞬間：</strong>この問題への一手は<strong>ワンホットエンコーディング</strong>（例：Education_HighSchool を独立した0/1変数にする）。LLMは最初この方法を提案しませんでした。分析者であるあなたが「ワンホット化して個別に除去できるようにして」と指示できる——これがhuman in the loopの価値です。</div>
+  <p>なお <code>step()</code> の <code>trace = 0</code> を外すと、AICが1ステップずつどう改善していくかの長い出力が見られます。第6〜7章で学んだAICが実務でどう働くか、一度確認してみる価値があります。</p>
+</div>
+
+<div class="unit" id="u5">
+  <div class="unit-header"><div class="unit-num">05</div><div><h2>Shinyアプリの構築とデバッグ</h2><div class="unit-sub">UI + Server、エラーはLLMに貼り付けて直す</div></div></div>
+  <p>いよいよ本題。「このモデルをデプロイするShinyアプリを作って」と依頼します。Shinyアプリは大きく2つの部品でできています。</p>
+  <div class="code-block"><span class="cl"><span class="kw">library</span>(shiny)</span><span class="cl"></span><span class="cl"><span class="cm"># UI：ユーザーが見る画面（入力フォームと結果表示）</span></span><span class="cl">ui &lt;- <span class="kw">fluidPage</span>(</span><span class="cl">  <span class="kw">titlePanel</span>(<span class="st">"ローンデフォルト リスク診断"</span>),</span><span class="cl">  <span class="kw">numericInput</span>(<span class="st">"age"</span>, <span class="st">"年齢"</span>, <span class="nm">35</span>),</span><span class="cl">  <span class="kw">numericInput</span>(<span class="st">"income"</span>, <span class="st">"年収"</span>, <span class="nm">60000</span>),</span><span class="cl">  <span class="kw">numericInput</span>(<span class="st">"credit"</span>, <span class="st">"クレジットスコア"</span>, <span class="nm">650</span>),</span><span class="cl">  <span class="kw">actionButton</span>(<span class="st">"go"</span>, <span class="st">"リスクを診断"</span>),</span><span class="cl">  <span class="kw">textOutput</span>(<span class="st">"result"</span>)</span><span class="cl">)</span><span class="cl"></span><span class="cl"><span class="cm"># Server：裏側の計算（モデルでpredictして確率を返す）</span></span><span class="cl">server &lt;- <span class="kw">function</span>(input, output) {</span><span class="cl">  output$result &lt;- <span class="kw">renderText</span>({</span><span class="cl">    p &lt;- <span class="kw">predict</span>(mod2, newdata = <span class="cm">入力から作ったdata.frame</span>, <span class="kw">type</span> = <span class="st">"response"</span>)</span><span class="cl">    <span class="kw">paste0</span>(<span class="st">"デフォルト確率: "</span>, <span class="kw">round</span>(p*<span class="nm">100</span>), <span class="st">"% → "</span>, <span class="kw">if</span>(p &lt; <span class="nm">0.1</span>) <span class="st">"低リスク"</span> <span class="kw">else</span> <span class="st">"高リスク"</span>)</span><span class="cl">  })</span><span class="cl">}</span><span class="cl"></span><span class="cl"><span class="kw">shinyApp</span>(ui, server)<span class="cm">  # アプリ起動！</span></span></div>
+  <p>ただし——最初に実行したら、いきなりエラーが出ました。ここからが現実の開発です。実際のワークフローはこんな往復でした。</p>
+  <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:1.25rem;margin:1rem 0">
+    <h4 style="margin-top:0">🔁 実際のプロンプト往復の記録</h4>
+    <table style="width:100%;border-collapse:collapse;font-size:.87rem">
+      <thead><tr style="background:var(--primary);color:white"><th style="padding:.5rem">往復</th><th style="padding:.5rem">依頼内容</th><th style="padding:.5rem">結果</th></tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">③</td><td style="padding:.5rem">Shinyアプリを作って</td><td style="padding:.5rem">エラー発生</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">④</td><td style="padding:.5rem">「このエラーは何？どう直す？」（エラー文を貼る）</td><td style="padding:.5rem">修正コード → アプリ起動✅</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">⑤</td><td style="padding:.5rem">全コードを1チャンクで＋改善提案も</td><td style="padding:.5rem">また別のエラー → 再修正</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">⑥</td><td style="padding:.5rem">モデルパラメータの表を隠して、確率とリスク判定を前面に</td><td style="padding:.5rem">UI再設計</td></tr>
+        <tr><td style="padding:.5rem">⑦</td><td style="padding:.5rem">新たなエラーを貼って修正依頼</td><td style="padding:.5rem">完成🎉 確率＋リスク表示</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note-box"><strong>🎨 UIの大原則：</strong>使う人は統計を知りません。<code>summary()</code>の係数表やp値を見せても意味がない。<strong>「デフォルト確率 8% → 低リスク」のような一目でわかる出力を前面・中央に</strong>。リスクの閾値（何%から高リスクか）は銀行ごとの基準に合わせて調整できます。</div>
+  <p>完成したアプリで遊んでみると、モデルの理解も深まります。「クレジットスコアを最低にして、ローン額を最大にしたら12%……まだ低リスク？」——そんな違和感が出たら、診断（第5〜8章）に立ち返るサインです。データを5万行から増やしたら改善するか？という検証の入口にもなります。</p>
+</div>
+
+<div class="unit" id="u6">
+  <div class="unit-header"><div class="unit-num">06</div><div><h2>公開してポートフォリオへ</h2><div class="unit-sub">shinyapps.io でリンクひとつの共有</div></div></div>
+  <p>ローカルで動くだけでは「Rを持っている人」しか使えません。<strong>shinyapps.io</strong>（無料枠あり）にデプロイすれば、<strong>URLひとつで誰でも使えるWebアプリ</strong>になります。</p>
+  <div class="code-block"><span class="cl"><span class="cm"># ① shinyapps.io でアカウント作成</span></span><span class="cl"><span class="cm"># ② RStudioからアカウントを接続してデプロイ</span></span><span class="cl"><span class="kw">install.packages</span>(<span class="st">"rsconnect"</span>)</span><span class="cl">rsconnect::<span class="kw">setAccountInfo</span>(<span class="kw">name</span>=<span class="st">"あなたのID"</span>, <span class="kw">token</span>=<span class="st">"…"</span>, <span class="kw">secret</span>=<span class="st">"…"</span>)</span><span class="cl">rsconnect::<span class="kw">deployApp</span>()<span class="cm">   # → https://あなたのID.shinyapps.io/アプリ名/</span></span></div>
+  <p>これで完成したものは、単なる課題ではありません。</p>
+  <div class="note-box">
+    <strong>💼 ポートフォリオとしての価値</strong><br>
+    ① GitHubにノートブックを置き、履歴書にリンクを載せられる<br>
+    ② 採用担当者はRを実行しなくても、リンクを開くだけであなたの「動く成果物」を見られる<br>
+    ③ 「クリーニング → モデル → 診断 → デプロイ」というエンドツーエンドの実力証明になる
+  </div>
+  <p>仕上げのアイデア：LLMに「このダッシュボードをどう改善する？」と聞いてみる。どの予測変数が確率に最も効いているかの表示、レイアウト変更、説明文の追加——改善のループは続きます。ロジスティック回帰に限らず、<strong>どんなモデルもShinyでダッシュボード化できる</strong>。これがM6の締めくくりです。</p>
+</div>
+
+<section class="quiz-section">
+  <h2>🎯 確認クイズ（英語）</h2>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-container" id="quiz">
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why is deploying a model (e.g., as a Shiny app) considered so important in this chapter?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It makes the model train faster</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Organizations need models converted into tools people can actually use for decisions</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It improves the AIC of the model</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Deployment is required before running glm()</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Why did we take a sample of 50,000 rows from the 255,000-row dataset?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Logistic regression cannot handle more than 100,000 rows</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Kaggle only allows downloading 50,000 rows</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>For faster training time during development</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To remove missing values</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What is the purpose of set.seed() before sample_n()?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It makes the sample larger</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It ensures reproducibility — anyone gets the same random sample and results</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It removes the LoanID column</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It speeds up the glm() function</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why was the LoanID column removed before building the model?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It contained missing values</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It was highly correlated with Default</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>An ID carries no predictive information — it is just noise for the model</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Shiny apps cannot display ID columns</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What is the key prompting tip when using an LLM for a multi-step project like this?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Ask for everything (cleaning, model, app) in one giant prompt</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Break the work into small prompts and build up gradually</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Never show the LLM your error messages</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only use the LLM for comments, not code</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Two ways to remove insignificant predictors were shown. What were they?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Manual removal, or stepwise selection using AIC (step())</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Deleting rows, or deleting columns</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Increasing sample size, or decreasing it</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Changing family=binomial, or family=gaussian</button>
+</div>
+<div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Education had one insignificant level (e.g., High School) but it couldn't simply be dropped. Why?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Categorical variables are wrapped together — you can't remove one level without removing the whole variable (unless you one-hot encode)</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>R gives an error if you remove any education level</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>High School was the most significant predictor</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Shiny requires all education levels as inputs</button>
+</div>
+<div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">What are the two main components of a Shiny app?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The dataset and the model</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The UI (what users see) and the server (the computation behind it)</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The HTML file and the CSS file</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The intercept and the coefficients</button>
+</div>
+<div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">When the Shiny app produced an error, what was the recommended workflow?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Start the whole project over from scratch</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Ignore the error and deploy anyway</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Paste the specific error message back to the LLM and ask what it is and how to fix it</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Switch from logistic to linear regression</button>
+</div>
+<div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">Why should the app show "Probability: 8% → Low risk" instead of the model's coefficient table?</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Coefficient tables are too slow to render in Shiny</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>End users are not statisticians — they need a clear, decision-ready output front and center</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>P-values are confidential information</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>shinyapps.io does not allow tables</button>
+</div>
+<div class="q-feedback" id="fb10"></div>
+</div>
+  </div>
+  <div class="quiz-score" id="score">0 / 10</div>
+</section>
+
+<div class="page-nav">
+  <a href="m6_ch12.html">← 第12章</a>
+  <a href='m6_index.html'>目次へ →</a>
+</div>
+</main>
+
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">デプロイ</div>
+      <div class="term-en">Deployment</div>
+      <div class="term-def">作ったモデルを、他の人が実際に使える形（Webアプリ等）にして公開すること。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">Shiny</div>
+      <div class="term-en">Shiny (R package)</div>
+      <div class="term-def">RコードだけでインタラクティブなWebアプリを作れるフレームワーク。UI＋Serverの2部構成。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">エンドツーエンド</div>
+      <div class="term-en">End-to-End Project</div>
+      <div class="term-def">データ取得→クリーニング→モデル→診断→デプロイまで一気通貫で完成させるプロジェクト。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">ステップワイズ選択</div>
+      <div class="term-en">Stepwise Selection</div>
+      <div class="term-def">AICを基準に予測変数を自動で足し引きして最良モデルを探す方法。Rではstep()。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">ワンホットエンコーディング</div>
+      <div class="term-en">One-Hot Encoding</div>
+      <div class="term-def">カテゴリ変数の各レベルを独立した0/1変数に変換。レベル単位での除去が可能になる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">Human in the loop</div>
+      <div class="term-en">Human in the Loop</div>
+      <div class="term-def">LLMの出力を人間（分析者）が検証・修正しながら進める開発スタイル。統計の知識が武器になる。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">shinyapps.io</div>
+      <div class="term-en">shinyapps.io</div>
+      <div class="term-def">Shinyアプリのホスティングサービス。rsconnectでデプロイし、URLひとつで共有できる。</div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第13章</p>
+<p style="margin-top:.5rem"><a href="m6_ch13_easy.html">🍎 やさしい版へ</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script>
+var ANSWERS=[1, 2, 1, 2, 1, 0, 0, 1, 2, 1];
+var FEEDBACKS=["Cleaning data and building models is fun, but if you can't convert that into value for an organization — a tool people use to make decisions — the work isn't complete.", "With 255,000 rows, training is slow. Developing on a 50,000-row sample keeps iteration fast; later you can test whether more data improves the model.", "set.seed() fixes the random number generator so sample_n() draws the exact same rows every time — essential for reproducible results.", "LoanID is just an identifier. It has no relationship with defaulting, so keeping it only adds noise the model has to sift through.", "Giving an LLM too many tasks at once can make it cut corners — just like humans. Clean first, then model, then select variables, then build the app.", "Option 1: manually refit without the insignificant predictors. Option 2: stepwise selection with step(), which uses AIC — the same AIC from Chapters 6–7.", "Dummy levels of one categorical variable travel together. To drop just one level you'd need to one-hot encode it into separate 0/1 variables first — an idea the human analyst contributed.", "ui defines the inputs and outputs the user sees; server does the computation (running predict() on the model). shinyApp(ui, server) launches it.", "Copy the exact error message into the LLM and ask for an explanation and fix. This error→fix loop happened several times before the app worked.", "Users who just want a risk assessment don't care about coefficients or p-values. Put the probability and the risk verdict front and center."];
+var score=0,done=0,total=10;
+</script>
+<script>
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+setTimeout(function(){units.forEach(function(u){u.classList.add('visible');});},600);
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

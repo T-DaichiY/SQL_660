@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第12章 超やさしい版：連続予測変数の解釈</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy active" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 12 · Easy Mode 🍎</div>
+    <h1>🍎 第12章 超やさしい版：連続予測変数の解釈</h1>
+    <p>連続変数Ageの係数0.0184。バイナリと全く同じ計算で再現でき、どの年齢でも一定（線形性）。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">Ageモデル実行</a><a href="#u3">手計算で再現</a><a href="#u4">フルモデルとAIC</a><a href="m6_ch12.html" class="easy-toplink">📈 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">連続変数の係数 = 1単位増加あたりのオッズ比の対数</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">連続変数（Age）の係数0.0184は「1歳増えるごとに対数オッズが0.0184増加」。exp(0.0184)=1.0186がオッズ比（1歳増ごとにオッズが1.0186倍）。バイナリ変数と同じ計算で手計算でも再現できる。重要：この比率は全年齢範囲で一定（線形性）。</p></div>
+  <p>バイナリ変数（0か1）と違い、連続変数は無数の値を取ります。でも係数の求め方は同じです。「隣り合う2つの値でオッズ比を計算し対数を取る」だけ。</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0">
+    <div style="background:var(--primary-light);border-radius:10px;padding:1.1rem;border:1.5px solid var(--primary)">
+      <div style="font-weight:800;color:var(--primary-dark);margin-bottom:.5rem">バイナリ変数（復習）</div>
+      <div style="font-size:.88rem">X: 0→1の変化<br>係数 = log(odds₁/odds₀)<br>例：FW → −1.297</div>
+    </div>
+    <div style="background:var(--teal-light);border-radius:10px;padding:1.1rem;border:1.5px solid var(--teal)">
+      <div style="font-weight:800;color:var(--teal);margin-bottom:.5rem">連続変数（今回）</div>
+      <div style="font-size:.88rem">X: n→n+1の変化（どの値でも同じ）<br>係数 = log(oddsₙ₊₁/oddsₙ)<br>例：Age → 0.0184</div>
+    </div>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>Ageのモデルを実行する</h2><div class="unit-sub">係数・オッズ比の確認</div></div></div>
+  <p class="code-label">▶ Ageモデルの実行とオッズ比</p>
+  <pre class="code-block"><span class="cl"><span class="cm"># 連続変数Ageのモデル</span></span><span class="cl">mod_age &lt;- <span class="kw">glm</span>(Class ~ Age,</span><span class="cl">            <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span><span class="cl"><span class="kw">coef</span>(mod_age)<span class="cm">  # Age係数 ≈ 0.0184</span></span><span class="cl"><span class="cm"># → 1歳増えるごとに対数オッズが0.0184増加</span></span><span class="cl"><span class="kw">exp</span>(<span class="kw">coef</span>(mod_age)[<span class="nm">2</span>])<span class="cm">  # → 1.0186（オッズ比）</span></span></pre>
+  <div class="widget teal">
+    <div class="widget-title">📈 Age係数のオッズ比インタラクティブ確認</div>
+    <div class="slider-row">
+      <label>🎂 Age（開始）</label>
+      <input type="range" id="age-slider" min="20" max="70" step="1" value="35">
+      <span class="slider-val" id="age-v">35</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-top:1rem;text-align:center">
+      <div style="background:var(--bg);border-radius:8px;padding:.75rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--text-sec)">P(Good|この年齢)</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--teal)" id="age-p">—</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:.75rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--text-sec)">P(Good|1歳後)</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--green)" id="age-p1">—</div>
+      </div>
+      <div style="background:var(--yellow-light);border-radius:8px;padding:.75rem">
+        <div style="font-size:.72rem;font-weight:700;color:var(--yellow)">log(オッズ比)</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--yellow)" id="age-ratio">0.0184</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.83rem;color:var(--text-sec);margin-top:.75rem">どの年齢でも対数オッズ変化は <strong>0.0184で一定</strong> ← これが「線形性」</div>
+  </div>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>係数を手計算で再現する</h2><div class="unit-sub">バイナリと全く同じ計算</div></div></div>
+  <p class="code-label">▶ Age=0→1 で係数を手計算</p>
+  <pre class="code-block"><span class="cl"><span class="cm"># Age=0→1 でオッズ比を確認（係数を手計算で再現）</span></span><span class="cl">b0 &lt;- <span class="kw">coef</span>(mod_age)[<span class="nm">1</span>]<span class="cm">   # 切片</span></span><span class="cl">b1 &lt;- <span class="kw">coef</span>(mod_age)[<span class="nm">2</span>]<span class="cm">   # Age係数</span></span><span class="cl">p0 &lt;- <span class="kw">plogis</span>(b0)<span class="cm">            # Age=0のとき</span></span><span class="cl">p1 &lt;- <span class="kw">plogis</span>(b0 + b1)<span class="cm">       # Age=1のとき</span></span><span class="cl">odds_ratio &lt;- (p1/(<span class="nm">1</span>-p1)) / (p0/(<span class="nm">1</span>-p0))</span><span class="cl"><span class="kw">log</span>(odds_ratio)<span class="cm">             # → 0.0184（係数と一致！）</span></span></pre>
+  <div class="simple-box"><div class="simple-title">🍎 重要ポイント</div><p>Age=55→56でも、Age=30→31でも、log(オッズ比)は必ず0.0184になります。これが連続変数の「線形性」。任意の隣り合う2値でコードを実行して確認してみてください。</p></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>フルモデルとAIC比較</h2><div class="unit-sub">ForeignWorker + Age を組み合わせる</div></div></div>
+  <p class="code-label">▶ 3モデルをAICで比較</p>
+  <pre class="code-block"><span class="cl"><span class="cm"># モデル比較：FW単独 vs Age単独 vs フルモデル</span></span><span class="cl">mod_fw   &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker, <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span><span class="cl">mod_full &lt;- <span class="kw">glm</span>(Class ~ ForeignWorker + Age,</span><span class="cl">             <span class="kw">data</span>=GermanCredit, <span class="kw">family</span>=<span class="st">binomial</span>)</span><span class="cl"><span class="kw">AIC</span>(mod_fw, mod_age, mod_full)<span class="cm">  # 最小AICのモデルを選ぶ</span></span></pre>
+  <div style="display:flex;flex-direction:column;gap:.5rem;margin:1.25rem 0">
+    <div style="background:var(--primary-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--primary)">📐 <strong>第1〜3章：</strong>仕組み（確率→オッズ→logit→シグモイド）</div>
+    <div style="background:var(--green-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--green)">🐚 <strong>第4章：</strong>切片の解釈（対数オッズ→exp→確率）</div>
+    <div style="background:var(--yellow-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--yellow)">📉📊🔧 <strong>第5〜7章：</strong>モデル評価（逸脱度・AIC・Rのk）</div>
+    <div style="background:var(--teal-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--teal)">📏 <strong>第8章：</strong>Z値・疑似R²</div>
+    <div style="background:var(--secondary-light);border-radius:8px;padding:.9rem;border-left:4px solid var(--secondary)">🏦🔀🧮 <strong>第9〜11章：</strong>German Credit実践・バイナリ係数解釈</div>
+    <div style="background:#f0fdf4;border-radius:8px;padding:.9rem;border-left:4px solid #16a34a">📈 <strong>第12章（今章）：</strong>連続変数・フルモデル構築 → 残るは第13章のデプロイ！🚀</div>
+  </div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 連続変数の係数0.0184は何を意味する？<span class="cp-a">A. 1単位増加（1歳増）あたりの対数オッズの変化量。exp(0.0184)=1.0186がオッズ比（1.86%/年の増加）。</span></div><div class="cp-q">Q2. Age=55→56と Age=30→31で対数オッズの変化は違う？<span class="cp-a">A. 同じ。連続変数の係数は全範囲で一定（線形性）。どの隣り合う2値でも log(オッズ比) = 0.0184。</span></div><div class="cp-q">Q3. FW + Ageのフルモデルをどう評価する？<span class="cp-a">A. AIC(mod_fw, mod_age, mod_full)で比較。最もAICが低いモデルを選ぶ。逸脱度も下がっているか確認する。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_ch11_easy.html">← 第11章 やさしい版</a><a href="m6_ch13_easy.html">第13章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 係数0.0184 = 1歳増あたりの対数オッズ変化</p><p style="margin:.4rem 0">• exp(0.0184)=1.0186（オッズ比）</p><p style="margin:.4rem 0">• どの年齢でも変化量は一定（線形性）</p><p style="margin:.4rem 0">• AICでFW・Age・フルモデルを比較</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch12.html">第12章 本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第12章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch12.html">← 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>
+(function(){
+  var sl=document.getElementById('age-slider');
+  if(!sl) return;
+  function plogis(x){ return 1/(1+Math.exp(-x)); }
+  // rough coefficients from mod_age
+  var b0=-0.354, b1=0.0184;
+  function upd(){
+    var age=+sl.value;
+    document.getElementById('age-v').textContent=age;
+    var p0=plogis(b0+b1*age);
+    var p1=plogis(b0+b1*(age+1));
+    var o0=p0/(1-p0), o1=p1/(1-p1);
+    var ratio=Math.log(o1/o0);
+    document.getElementById('age-p').textContent=p0.toFixed(3);
+    document.getElementById('age-p1').textContent=p1.toFixed(3);
+    document.getElementById('age-ratio').textContent=ratio.toFixed(4);
+  }
+  sl.addEventListener('input',upd); upd();
+})();
+</script>
+<script src="../hub-fab.js"></script>
+</body></html>

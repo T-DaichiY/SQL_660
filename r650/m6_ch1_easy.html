@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>第1章 超やさしい版：ロジスティック回帰とは？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy active" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">Chapter 1 · Easy Mode 🍎</div>
+    <h1>🍎 第1章 超やさしい版：ロジスティック回帰とは？</h1>
+    <p>むずかしい式は後回し。「ロジスティック回帰って要するに何？」をスライダーと実際のRコードで体感しよう。</p>
+    <div class="unit-nav"><a href="#u1">一言でいうと</a><a href="#u2">なぜ重回帰ではダメ</a><a href="#u3">確率を体感</a><a href="#u4">glm()の使い方</a><a href="m6_ch1.html" class="easy-toplink">🎲 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header"><div class="unit-num">⚡</div><div><h2>一言でいうと</h2><div class="unit-sub">ロジスティック回帰＝「どちらか？」を確率で予測する機械</div></div></div>
+  <div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0">重回帰は「いくつ？（連続値）」を予測。ロジスティック回帰は「どちら？（0か1か）」を確率で予測する。答えは必ず0〜1の確率として出てくる。たとえば「がんである確率72%」「スパムである確率91%」。</p></div>
+  <p>ロジスティック回帰は名前に「回帰」とありますが、実際には<strong>分類問題</strong>を解くモデルです。「2つのグループのうち、どちらに属するか」を確率として予測します。</p>
+  <div class="task-grid">
+    <div class="task-card"><div class="tc-icon">🔬</div><div class="tc-name">がん or 良性</div><div class="tc-example">医療診断</div></div>
+    <div class="task-card"><div class="tc-icon">📧</div><div class="tc-name">スパム or 正常</div><div class="tc-example">メールフィルタ</div></div>
+    <div class="task-card"><div class="tc-icon">🎓</div><div class="tc-name">合格 or 不合格</div><div class="tc-example">入試予測</div></div>
+    <div class="task-card"><div class="tc-icon">💳</div><div class="tc-name">信用良 or 悪</div><div class="tc-example">ローン審査</div></div>
+  </div>
+</div>
+
+<div class="unit" id="u2">
+  <div class="unit-header"><div class="unit-num">①</div><div><h2>なぜ重回帰ではダメ？</h2><div class="unit-sub">確率は0〜1の間でなければおかしい</div></div></div>
+  <p>「スパムかどうか（1=スパム、0=正常）」を<strong>そのまま重回帰で予測</strong>しようとすると、予測値が−0.3や1.7になることがあります。これは確率として意味をなしません。</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;">
+    <div style="background:#fee2e2;border:2px solid #dc2626;border-radius:12px;padding:1.25rem">
+      <h4 style="color:#7f1d1d;margin-top:0">❌ 重回帰の問題点</h4>
+      <p style="color:#7f1d1d;margin:0;font-size:.9rem">予測値 = −0.3 ～ 1.7<br>0未満・1超えが出てしまう<br>確率としておかしい！</p>
+    </div>
+    <div style="background:#d1fae5;border:2px solid #059669;border-radius:12px;padding:1.25rem">
+      <h4 style="color:#065f46;margin-top:0">✅ ロジスティック回帰</h4>
+      <p style="color:#065f46;margin:0;font-size:.9rem">予測値 = 0.0 ～ 1.0<br>必ず確率の範囲に収まる<br>シグモイド関数のおかげ！</p>
+    </div>
+  </div>
+  <p>ロジスティック回帰は<strong>シグモイド関数</strong>（Sカーブ）を使って、どんな数値でも必ず0〜1に押し込みます。これが最大の特徴です。</p>
+  <p class="code-label">▶ まず重回帰との違いをコードで見てみよう</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># 重回帰（比較用）</span></span>
+<span class="cl"><span class="kw">lm</span>(bike_rentals ~ temp + humidity + windspeed, <span class="kw">data</span>=df)</span>
+</pre>
+</div>
+
+<div class="unit" id="u3">
+  <div class="unit-header"><div class="unit-num">②</div><div><h2>確率を体感してみよう</h2><div class="unit-sub">スライダーを動かして「バイナリ判定」を確認</div></div></div>
+  <p>スライダーで確率を変えると、モデルが「0（否定）」か「1（肯定）」どちらに判定するかがリアルタイムで変わります。デフォルトの閾値は<strong>P=0.5（50%）</strong>です。</p>
+  <div class="widget green">
+    <div class="widget-title">🎛️ バイナリ判定シミュレーター</div>
+    <div class="slider-row"><label>📊 確率（P）</label><input type="range" id="bin-prob" min="0.01" max="0.99" step="0.01" value="0.5"><span class="slider-val" id="bin-prob-v">0.50</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="text-align:center;background:var(--bg);border-radius:10px;padding:1rem">
+        <div style="font-size:.8rem;color:var(--text-sec);font-weight:700">確率</div>
+        <div style="font-size:1.8rem;font-weight:900;color:var(--primary-dark)" id="bin-pct">50%</div>
+      </div>
+      <div style="text-align:center;background:var(--bg);border-radius:10px;padding:1rem">
+        <div style="font-size:.8rem;color:var(--text-sec);font-weight:700">予測ラベル</div>
+        <div style="font-size:2.4rem;font-weight:900;color:var(--primary-dark)" id="bin-outcome">?</div>
+      </div>
+    </div>
+    <div class="verdict" id="bin-verdict">—</div>
+    <p style="font-size:.78rem;color:var(--text-sec);margin:.75rem 0 0">※ P≥0.5なら「1」、P&lt;0.5なら「0」と判定（デフォルト閾値）。閾値は用途に応じて変更可能。</p>
+  </div>
+  <div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>50%未満→「0（否定）」、50%以上→「1（肯定）」。コインの表裏と同じ感覚。医療診断なら「がんかもしれない=1」を見逃さないよう閾値を30%にするなど、目的に合わせて調整します。</p></div>
+</div>
+
+<div class="unit" id="u4">
+  <div class="unit-header"><div class="unit-num">③</div><div><h2>glm()の使い方</h2><div class="unit-sub">lm()から1か所変えるだけ</div></div></div>
+  <p>Rでロジスティック回帰を実行するのは、重回帰の<code>lm()</code>を<code>glm()</code>に変えて、<code>family=binomial</code>を追加するだけです。式の書き方はまったく同じです。</p>
+  <div class="big-rule">
+    <div class="ru-arrow">🔄</div>
+    <div class="ru-text"><strong>重回帰：</strong><code>lm(結果 ~ 変数1 + 変数2, data=df)</code><br>
+    <strong>ロジスティック：</strong><code>glm(結果 ~ 変数1 + 変数2, data=df, <span style="color:var(--red);font-weight:800">family=binomial</span>)</code></div>
+  </div>
+  <p class="code-label">▶ スパム判定モデルのコード例</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># ロジスティック回帰（family=binomialを追加するだけ！）</span></span>
+<span class="cl"><span class="kw">glm</span>(spam ~ word_freq + capital_run + exclamation,</span>
+<span class="cl">    <span class="kw">data</span>=df, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="cm"># family=binomial が「バイナリ結果を予測する」という合図</span></span>
+</pre>
+  <p class="code-label">▶ モデル実行から結果確認までの全体コード</p>
+  <pre class="code-block">
+<span class="cl"><span class="cm"># モデルを実行して結果を確認</span></span>
+<span class="cl">model &lt;- <span class="kw">glm</span>(spam ~ word_freq + capital_run,</span>
+<span class="cl">          <span class="kw">data</span>=emails, <span class="kw">family</span>=<span class="st">binomial</span>)</span>
+<span class="cl"><span class="kw">summary</span>(model)<span class="cm">  # 係数・Z値・p値が表示される</span></span>
+<span class="cl"><span class="kw">exp</span>(<span class="kw">coef</span>(model))<span class="cm">  # 係数をオッズ比に変換</span></span>
+</pre>
+  <div class="note-box">📌 <code>summary(model)</code>を実行すると係数・Z値・p値がすべて表示されます。<code>exp(coef(model))</code>で係数をオッズ比（解釈しやすい形）に変換できます。</div>
+  <div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. ロジスティック回帰はどんな結果を予測する？<span class="cp-a">A. 2択（バイナリ）の結果が起こる確率。例：スパムである確率、がんである確率。答えは必ず0〜1の間。</span></div><div class="cp-q">Q2. lm()とglm()の違いは？<span class="cp-a">A. glm()にfamily=binomialを追加するだけ。式の書き方（結果 ~ 変数1 + 変数2）はまったく同じ。</span></div><div class="cp-q">Q3. なぜ重回帰をそのまま使えない？<span class="cp-a">A. 重回帰の予測値は0〜1の範囲を超えることがある（例：−0.3や1.7）。確率としておかしいので、シグモイド関数で変換するglmを使う。</span></div></div>
+</div>
+<div class="page-nav"><a href="m6_index.html">← 目次</a><a href="m6_ch2_easy.html">第2章 やさしい版 →</a></div>
+</main>
+<aside class="sidebar">
+  <div class="tip-box"><h4>💡 まとめ</h4><p style="margin:.4rem 0">• 2択（バイナリ）の結果を確率で予測する</p><p style="margin:.4rem 0">• 確率は必ず0〜1の範囲に収まる</p><p style="margin:.4rem 0">• lm()の代わりにglm(family=binomial)</p><p style="margin:.4rem 0">• 重回帰は確率の範囲を超えてしまう</p></div>
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">詳しいコードと解説は <a href="m6_ch1.html">第1章 本編</a> へ。英語MCQクイズもあります。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🐚 ロジスティック回帰 完全ガイド · 第1章 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="m6_ch1.html">← 第1章 本編</a> · <a href="m6_index.html">🏠 目次</a></p></footer>
+<script src="interactive.js"></script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script>initBinaryDemo();</script>
+<script src="../hub-fab.js"></script>
+</body></html>

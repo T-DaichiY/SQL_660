@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>第4章 多重共線性とVIF — 重回帰分析 完全ガイド</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="easy.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main active" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+<div class="ch-tag">Chapter 4</div>
+<h1>🔗 多重共線性とVIF</h1>
+<p>予測変数どうしが「似すぎている」と、係数がおかしくなる。相関行列では見抜けない隠れた共線性を、分散拡大係数（VIF）で検出する方法を学ぶ。</p>
+<div class="unit-nav">
+<a href="#unit1">① 多重共線性とは</a>
+<a href="#unit2">② 相関行列で探す</a>
+<a href="#unit3">③ VIFと許容度</a>
+<a href="#unit4">④ Rで計算する</a>
+<a href="#unit5">⑤ 見つけたらどうする</a>
+<a href="#quiz">📝 Quiz</a>
+</div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="easy-callout">
+  🍎 <strong>むずかしいと感じたら？</strong> 図・アニメ・スライダーで“特性だけ”をつかめる <a href="m5_ch4_easy.html">▶ 第4章 超やさしい版</a> を先に読むのがおすすめです。
+</div>
+<!-- UNIT 1 -->
+<div class="unit" id="unit1">
+<div class="unit-header">
+<div class="unit-num">①</div>
+<div><h2>多重共線性（たじゅうきょうせんせい）とは</h2><div class="unit-sub">「多重」＝複数、「共線」＝同じ線の上 → 似た変数が複数ある状態</div></div>
+</div>
+<p><strong>多重共線性</strong>とは、回帰モデルの中の<strong>2つ以上の予測変数が互いに強く相関し</strong>、強い線形関係を示す状態のことです。これが起きると次の問題が発生します。</p>
+<ul>
+<li>回帰係数がうまく推定できない、または<strong>異常に大きくなる（inflated）</strong>。</li>
+<li>符号が直感に反する（プラスのはずがマイナスになるなど）。</li>
+<li>標準誤差が膨らみ、それに依存する<strong>t統計量やp値が信頼できなくなる</strong>。</li>
+</ul>
+<p>このクラスでは、2つの予測変数の<strong>相関の絶対値が 0.5 を超えたら</strong>、共線性ありとみなします（符号は無視、大きさだけ見る）。</p>
+<h3>身近な例</h3>
+<table class="compare-table">
+<tr><th>予測したいもの</th><th>共線性が起きる予測変数</th><th>なぜ似ているか</th></tr>
+<tr><td>血圧</td><td>体重・身長・BMI</td><td>BMIは体重と身長から計算される → 当然相関する</td></tr>
+<tr><td>家の価格</td><td>寝室の数・延床面積</td><td>寝室が多い家は面積も広い → 相関する</td></tr>
+</table>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>多重共線性は「同じことを言う友達が2人いる」状態。クイズの答えを2人に聞いても、同じことしか返ってこないなら、1人で十分ですよね。似た情報を持つ変数を2つ入れると、モデルが混乱してしまうのです👬</p>
+</div>
+</div>
+<!-- UNIT 2 -->
+<div class="unit" id="unit2">
+<div class="unit-header">
+<div class="unit-num">②</div>
+<div><h2>相関行列で探す（限界あり）</h2><div class="unit-sub">2変数の共線性は見つかるが、3変数以上は見逃す</div></div>
+</div>
+<p>まず<strong>相関行列</strong>で予測変数どうしの相関を見ます。応答変数Yとの相関が強いのは良いことですが、<strong>予測変数X1とX2どうし</strong>が強く相関していたら要注意です。</p>
+<div class="code-block"><span class="cl"><span class="cm"># 数値列だけ選んで相関行列</span></span><span class="cl">bikes <span class="kw">%&gt;%</span> <span class="kw">select</span>(rentals, humidity, temperature, windspeed) <span class="kw">%&gt;%</span> <span class="kw">cor</span>()</span></div>
+<div class="output-text">自転車データの結果:
+  ・temperature は rentals と強く相関（これは良い）
+  ・予測変数どうしで |相関| &gt; 0.5 のペアは無し
+  → 多重共線性の問題は無さそう ✅</div>
+<div class="warn-box">
+<strong>⚠️ 相関行列の落とし穴：</strong>相関行列は<strong>2つの変数のペア</strong>しか調べられません。<strong>3つ以上の変数が一緒に絡み合った共線性は見逃します</strong>。実際、後の偽データ例ではX1・X2だけでなく<strong>X4も</strong>絡んでいたのに、相関行列では気づけませんでした。だから次のVIFが必要なのです。
+  </div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>相関行列は「2人組のケンカ」しか見つけられない先生。でも「3人グループで結託してる」のは見抜けない。3人以上のグルを暴くには、もっと賢い探知機（VIF）が必要です🕵️</p>
+</div>
+</div>
+<!-- UNIT 3 -->
+<div class="unit" id="unit3">
+<div class="unit-header">
+<div class="unit-num">③</div>
+<div><h2>VIF（分散拡大係数）と許容度</h2><div class="unit-sub">3変数以上の共線性も検出できる</div></div>
+</div>
+<p><strong>VIF（Variance Inflation Factor＝分散拡大係数）</strong>は、モデル内の多重共線性の量を測ります。計算式は：</p>
+<div class="code-block"><span class="cl">VIF = <span class="nm">1</span> <span class="kw">/</span> (<span class="nm">1</span> <span class="kw">-</span> R²)</span><span class="cl"></span><span class="cl"><span class="cm"># ここでの R² は…</span></span><span class="cl"><span class="cm"># 「ある予測変数（例:気温）を、他の予測変数で予測したときの R²」</span></span><span class="cl"><span class="cm"># 例: 気温 ~ 湿度 + 風速 という回帰の R²</span></span></div>
+<p>つまり、気温を他の変数で説明できてしまう（R²が高い）なら、気温は他と被っている＝VIFが大きくなります。VIFの逆数は<strong>許容度（Tolerance）</strong>です。</p>
+<table class="compare-table">
+<tr><th>指標</th><th>基準</th><th>判定</th></tr>
+<tr><td>VIF &gt; 5</td><td>= Tolerance &lt; 0.2</td><td>⚠️ 多重共線性あり。対処すべき。</td></tr>
+<tr><td>VIF &gt; 10</td><td>= Tolerance &lt; 0.1</td><td>🚨 非常に深刻。大問題。</td></tr>
+</table>
+<h3>許容度（Tolerance）のほうが直感的</h3>
+<p>許容度は<strong>「ある予測変数の分散のうち、他の変数で説明されない割合」</strong>。</p>
+<ul>
+<li>許容度 = 0.88 → ✅ 良い。その変数は他にない情報（シグナル）を88%持っている。残すべき。</li>
+<li>許容度 &lt; 0.2 → ⚠️ その変数は他の変数とほぼ同じ情報。<strong>無くても他が説明できる</strong>ので不要かも。</li>
+</ul>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>VIFは「この子の発言、どれくらい他の子とかぶってる？」メーター。VIFが大きい＝かぶりまくり（共線性）。許容度はその逆で「どれくらいオリジナルな意見を持ってるか」。オリジナルが多い（許容度が高い）ほど、チームに必要な人材です🗣️</p>
+</div>
+</div>
+<!-- UNIT 4 -->
+<div class="unit" id="unit4">
+<div class="unit-header">
+<div class="unit-num">④</div>
+<div><h2>RでVIFを計算する</h2><div class="unit-sub">carパッケージ or olsrrパッケージ</div></div>
+</div>
+<div class="code-block"><span class="cl"><span class="cm"># car パッケージの vif()</span></span><span class="cl"><span class="kw">library</span>(car)</span><span class="cl"><span class="kw">vif</span>(bikes_model_1)   <span class="cm"># 全部 5未満 → 共線性なし ✅</span></span><span class="cl"></span><span class="cl"><span class="cm"># olsrr パッケージなら VIF と許容度を同時に</span></span><span class="cl"><span class="kw">ols_vif_tol</span>(bikes_model_1)</span></div>
+<p>自転車モデルの3変数（湿度・気温・風速）はすべてVIF&lt;5、許容度&gt;0.2でした。つまり共線性なし。すべて残してOKです。</p>
+<h3>偽データでの例（共線性あり）</h3>
+<div class="output-text">偽データのVIF:
+  X1: 高い (&gt;5)   ← X1とX2が重複
+  X2: 115 (!!)    ← 巨大、深刻な共線性
+  X4: 高い        ← 相関行列では見逃していた！
+  → X1, X2, X4 が互いに絡み合っていた</div>
+<p>相関行列ではX1とX2の0.98しか見えませんでしたが、VIFを見ると<strong>X4も</strong>巻き込まれていたことが判明。これがVIFの威力です。</p>
+</div>
+<!-- UNIT 5 -->
+<div class="unit" id="unit5">
+<div class="unit-header">
+<div class="unit-num">⑤</div>
+<div><h2>共線性を見つけたらどうする？</h2><div class="unit-sub">削るか、まとめるか</div></div>
+</div>
+<h3>対処法1：1つを削除する</h3>
+<p>絡み合った変数のうち<strong>1つだけ残して他を削る</strong>。偽データでは、VIFが115と一番高かった<strong>X2を削除</strong>。再計算すると、残りのVIFはすべて5未満に。X4とX1の問題も同時に解消しました。</p>
+<h3>対処法2：まとめて1つの変数にする</h3>
+<p>相関する変数を<strong>合体させて新しい1変数</strong>を作る。例：「延床面積」と「階数」を掛け合わせて「総床面積」のような1変数にする。</p>
+<div class="note-box">
+<strong>📌 さらに高度な手法：</strong>主成分分析（PCA）や、Lassoなどの正則化手法もありますが、これらはこの講義の範囲外です。
+  </div>
+<div class="iter-loop">
+<div class="loop-step" style="border-color:var(--green)">VIFを計算</div>
+<div class="loop-arrow">↓</div>
+<div class="loop-step" style="border-color:var(--red)">VIF &gt; 5 の変数がある？</div>
+<div class="loop-arrow">↓ YES</div>
+<div class="loop-step" style="border-color:var(--yellow)">一番VIFが高い1つを削除（or 合体）</div>
+<div class="loop-arrow">↺</div>
+<div class="loop-back">全部 VIF &lt; 5 になるまで繰り返す</div>
+</div>
+<div class="simple-box">
+<div class="simple-title">🍎 かんたん説明</div>
+<p>同じことを言う友達が3人いたら、1人だけ残せばOK（対処法1）。あるいは3人の意見を「みんなの総意」として1つにまとめる（対処法2）。どちらにしても、ダブった情報を整理してスッキリさせるのが目的です🧹</p>
+</div>
+</div>
+<!-- QUIZ -->
+<div class="quiz-section" id="quiz">
+<div class="quiz-header">
+<h2>📝 第4章 確認クイズ</h2>
+<div class="quiz-score" id="score">0 / 5</div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+<div class="quiz-lang-note">📌 クイズは英語で出題されます（MCQ is in English）</div>
+<div class="quiz-q">
+<div class="q-num">Question 1 of 5</div>
+<div class="q-text">What is multicollinearity?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,1)"><span class="opt-letter">A</span> When two or more predictor variables are highly correlated with each other</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">B</span> When the model has too few predictors to explain the response well</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">C</span> When the residuals are normally distributed around the fitted line</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,1)"><span class="opt-letter">D</span> When a predictor is strongly correlated with the response variable</button>
+</div>
+<div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 2 of 5</div>
+<div class="q-text">Why isn't a correlation matrix enough to detect all multicollinearity?</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">A</span> It can only show positive correlations, never negative relationships between variables</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">B</span> It cannot be computed in R without first standardizing every predictor variable</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,2)"><span class="opt-letter">C</span> It requires categorical data and so won't work for numeric predictors at all</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,2)"><span class="opt-letter">D</span> It only checks pairs of variables and misses cases where 3+ variables are jointly correlated</button>
+</div>
+<div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 3 of 5</div>
+<div class="q-text">A VIF greater than 5 indicates…</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">A</span> No multicollinearity — the variable is fine and adds unique information</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,3)"><span class="opt-letter">B</span> Multicollinearity is present and should be addressed (tolerance &lt; 0.2)</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">C</span> The response variable is categorical rather than a numeric outcome</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,3)"><span class="opt-letter">D</span> The model has a perfect fit with no residual error remaining</button>
+</div>
+<div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 4 of 5</div>
+<div class="q-text">A tolerance of 0.88 means…</div>
+<div class="options">
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">A</span> A bad thing — it means the VIF equals 0.88, sitting below the usual safe cutoff of one</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">B</span> A warning sign that the variable is redundant and ought to be removed from the model</button>
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,4)"><span class="opt-letter">C</span> A good thing — 88% of the variable's variance is not explained by the other predictors</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,4)"><span class="opt-letter">D</span> A serious multicollinearity problem, because most of the variable's variance is shared</button>
+</div>
+<div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q">
+<div class="q-num">Question 5 of 5</div>
+<div class="q-text">Which is a recommended way to deal with multicollinearity?</div>
+<div class="options">
+<button class="option-btn" data-correct="true" onclick="checkAnswer(this,5)"><span class="opt-letter">A</span> Remove one of the correlated variables, or combine them into a single predictor</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">B</span> Ignore it entirely, because the VIF of a predictor never affects the model</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">C</span> Add even more correlated predictors so the shared variance is spread out</button>
+<button class="option-btn" data-correct="false" onclick="checkAnswer(this,5)"><span class="opt-letter">D</span> Always delete the response variable and refit the model on the predictors</button>
+</div>
+<div class="q-feedback" id="fb5"></div>
+</div>
+<div class="page-nav">
+<a href="m5_ch3_1.html">← 第3.1章：影響点分析</a>
+<a href="m5_ch5.html">第5章：多項式回帰 →</a>
+</div>
+</div>
+</main>
+<aside class="sidebar">
+<div class="glossary">
+<h3>📘 重要用語</h3>
+<div class="term-item"><div class="term-name">多重共線性</div><div class="term-en">Multicollinearity</div><div class="term-def">予測変数どうしが強く相関し、係数が不安定になる状態。</div></div>
+<div class="term-item"><div class="term-name">VIF</div><div class="term-en">Variance Inflation Factor</div><div class="term-def">1/(1−R²)。5超で共線性あり、10超で深刻。</div></div>
+<div class="term-item"><div class="term-name">許容度</div><div class="term-en">Tolerance</div><div class="term-def">VIFの逆数。他の変数で説明されない分散の割合。0.2未満で問題。</div></div>
+<div class="term-item"><div class="term-name">相関行列</div><div class="term-en">Correlation Matrix</div><div class="term-def">変数ペアの相関を一覧表示。3変数以上の共線性は見逃す。</div></div>
+<div class="term-item"><div class="term-name">car / olsrr</div><div class="term-en">car / olsrr packages</div><div class="term-def">VIFや許容度を計算するRパッケージ。</div></div>
+</div>
+<div class="tip-box">
+<h4>💡 早見表</h4>
+<p>
+<strong>相関 |r| &gt; 0.5</strong> → ペアの共線性<br/>
+<strong>VIF &gt; 5</strong> → 共線性あり<br/>
+<strong>VIF &gt; 10</strong> → 深刻<br/>
+<strong>Tolerance &lt; 0.2</strong> → 不要かも<br/><br/>
+    対処：1つ削る or 合体させる
+    </p>
+</div>
+</aside>
+</div>
+<footer>
+<p>重回帰分析 完全ガイド · 第4章：多重共線性とVIF</p>
+<p style="margin-top:.5rem;"><a href="m5_ch3_1.html">← 第3.1章</a> · <a href="m5_ch5.html">第5章 →</a></p>
+</footer>
+<script src="quiz.js"></script>
+<script>setupQuiz({
+  1:"Correct! Multicollinearity is when two or more PREDICTOR variables are highly correlated with each other (not with the response).",
+  2:"Correct! A correlation matrix only inspects pairs. When three or more variables are jointly correlated, it can miss the problem — VIF catches it.",
+  3:"Correct! VIF > 5 (tolerance < 0.2) signals multicollinearity that should be addressed; VIF > 10 is very serious.",
+  4:"Correct! Tolerance 0.88 is good — 88% of that variable's variance is unique and not explained by the others, so keep it.",
+  5:"Correct! Remove one of the correlated variables, or combine the collinear predictors into a single new variable."
+});</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1章 ロジスティック回帰とは？ — ロジスティック回帰 完全ガイド</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header"><div class="logo">DTSC 650 <span>データ分析 with R</span></div><nav class="header-nav"><a href="index.html">🏠 概要</a><button class="nav-toggle" id="navToggle" aria-expanded="false" type="button">📚 全レッスン <span class="nav-caret">▾</span></button></nav><div class="nav-groups" id="navGroups"><div class="nav-row m2"><span class="nav-mod">M1 ggplot2</span><span class="navg"><a class="n-main" href="m1_intro.html">🐧 第1回</a></span><span class="navg"><a class="n-main" href="m1_dist.html">📊 第2回</a></span><span class="navg"><a class="n-main" href="m1_rel.html">🔀 第3回</a></span><span class="navg"><a class="n-main" href="m1_save.html">🛠️ 第4回</a></span><span class="navg"><a class="n-main" href="m1_practice.html">✏️ 演習</a></span></div><div class="nav-row m3"><span class="nav-mod">M2 取込・dplyr</span><span class="navg"><a class="n-main" href="m2_import.html">📥 取込</a></span><span class="navg"><a class="n-main" href="m2_rows.html">🔎 行</a></span><span class="navg"><a class="n-main" href="m2_cols.html">🧱 列</a></span><span class="navg"><a class="n-main" href="m2_pipe.html">🚰 パイプ</a></span><span class="navg"><a class="n-main" href="m2_groups.html">🗂️ 集計</a></span></div><div class="nav-row m4"><span class="nav-mod">欠損値・外れ値</span><span class="navg"><a class="n-main" href="na_missing.html">🕳️ 欠損値</a></span><span class="navg"><a class="n-main" href="na_outliers.html">🚨 外れ値</a></span></div><div class="nav-row m6"><span class="nav-mod">相関</span><span class="navg"><a class="n-main" href="cor_basics.html">🔗 基本</a></span><span class="navg"><a class="n-main" href="cor_r.html">🧮 Rで</a></span></div><div class="nav-row m5"><span class="nav-mod">M4 単回帰</span><span class="navg"><a class="n-main" href="m4_predict.html">🔮 予測</a></span><span class="navg"><a class="n-main" href="m4_intervals.html">📏 区間</a></span><span class="navg"><a class="n-main" href="m4_assump.html">✅ 仮定</a></span><span class="navg"><a class="n-main" href="m4_nonnormal.html">🧪 対処</a></span></div><div class="nav-row m5"><span class="nav-mod">M5 重回帰</span><span class="navg"><a class="n-main" href="m5_ch1.html">📈 1</a><a class="n-easy" href="m5_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch2.html">🩺 2</a><a class="n-easy" href="m5_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3.html">⚖️ 3</a><a class="n-easy" href="m5_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch3_1.html">🎯 3.1</a><a class="n-easy" href="m5_ch3_1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch4.html">🔗 4</a><a class="n-easy" href="m5_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch5.html">〰️ 5</a><a class="n-easy" href="m5_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch6.html">🏷️ 6</a><a class="n-easy" href="m5_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch7.html">📅 7</a><a class="n-easy" href="m5_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch8.html">✖️ 8</a><a class="n-easy" href="m5_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch9.html">➡️ 9</a><a class="n-easy" href="m5_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch10.html">⬅️ 10</a><a class="n-easy" href="m5_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch11.html">🔀 11</a><a class="n-easy" href="m5_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_ch12.html">🎓 12</a><a class="n-easy" href="m5_ch12_easy.html" title="やさしい版">🍎</a></span></div><div class="nav-row m6"><span class="nav-mod">M6 ロジスティック</span><span class="navg"><a class="n-main active" href="m6_ch1.html">1</a><a class="n-easy" href="m6_ch1_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch2.html">2</a><a class="n-easy" href="m6_ch2_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch3.html">3</a><a class="n-easy" href="m6_ch3_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch4.html">4</a><a class="n-easy" href="m6_ch4_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch5.html">5</a><a class="n-easy" href="m6_ch5_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch6.html">6</a><a class="n-easy" href="m6_ch6_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch7.html">7</a><a class="n-easy" href="m6_ch7_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch8.html">8</a><a class="n-easy" href="m6_ch8_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch9.html">9</a><a class="n-easy" href="m6_ch9_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch10.html">10</a><a class="n-easy" href="m6_ch10_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch11.html">11</a><a class="n-easy" href="m6_ch11_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch12.html">12</a><a class="n-easy" href="m6_ch12_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_ch13.html">13</a><a class="n-easy" href="m6_ch13_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_log_master.html">📚 log補足</a></span></div></div></header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">Chapter 1</div>
+  <h1>🎲 ロジスティック回帰とは？</h1>
+  <p>M5で学んだ重回帰との違いは「何を予測するか」。バイナリ結果・確率・glm()の基礎をアバロンデータで学ぶ。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 重回帰との違い</a><a href="#unit2">② バイナリ結果と確率</a><a href="#unit3">③ アバロンで実践</a><a href="#unit4">④ なぜ重回帰では不十分か</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ロジスティック回帰とは？</h2><div class="unit-sub">重回帰との決定的な違い：予測する結果が違う</div></div>
+  </div>
+  <p>M5では<strong>量的な値</strong>（自転車レンタル数）を予測する重回帰を学びました。ロジスティック回帰は似ていますが、予測したいものが根本的に異なります。</p>
+<p><strong>結果が「どちらか一方（バイナリ）」</strong>——0か1か——のときに使います。</p>
+<table class="compare-table">
+  <thead><tr><th>手法</th><th>予測するもの</th><th>例</th></tr></thead>
+  <tbody>
+    <tr><td>重回帰</td><td>量的な連続値</td><td>レンタル数・売上・気温</td></tr>
+    <tr><td>ロジスティック回帰</td><td>確率（0〜1）→ 2択の判定</td><td>がんか否か・スパムか否か・合格か否か</td></tr>
+  </tbody>
+</table>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>重回帰は「何個売れるか？」を予測。ロジスティック回帰は「売れるか？売れないか？」を予測します。料理で言えば、重回帰は「何グラム？」、ロジスティック回帰は「おいしいか？まずいか？」🍳</p></div>
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>バイナリ結果と確率の考え方</h2><div class="unit-sub">0と1のラベルが何を意味するか</div></div>
+  </div>
+  <p>バイナリ（binary）とは「2択」のことです。ロジスティック回帰では、結果変数を次のようにラベルします：</p>
+<ul>
+  <li><strong>0（ゼロ）：</strong>「失敗」「なし」「いいえ」のグループ</li>
+  <li><strong>1（いち）：</strong>「成功」「あり」「はい」のグループ</li>
+</ul>
+<p>ロジスティック回帰が予測するのは「<strong>1である確率</strong>」です。例えば：</p>
+<div class="task-grid">
+  <div class="task-card"><div class="tc-icon">🔬</div><div class="tc-name">がんの診断</div><div class="tc-example">1=悪性　0=良性</div></div>
+  <div class="task-card"><div class="tc-icon">📧</div><div class="tc-name">スパム検出</div><div class="tc-example">1=スパム　0=正常</div></div>
+  <div class="task-card"><div class="tc-icon">🎓</div><div class="tc-name">合否予測</div><div class="tc-example">1=合格　0=不合格</div></div>
+  <div class="task-card"><div class="tc-icon">💳</div><div class="tc-name">信用審査</div><div class="tc-example">1=良い　0=悪い</div></div>
+</div>
+<div class="note-box"><strong>📌 注意：</strong>「バイナリロジスティック回帰」が基本です。3つ以上のカテゴリがある場合は「多項ロジスティック回帰（multinomial）」になりますが、このコースでは扱いません。</div>
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>アバロンデータで実践</h2><div class="unit-sub">オスかメスかを予測する</div></div>
+  </div>
+  <p>このモジュールでは<strong>アバロン（鮑）のデータセット</strong>を使います。<code>AppliedPredictiveModeling</code>パッケージに含まれています。</p>
+<div class="code-block"><span class="cl"><span class="kw">library</span>(AppliedPredictiveModeling)</span><span class="cl"><span class="kw">data</span>(abalone)</span><span class="cl"></span><span class="cl"><span class="cm"># 変数の確認：Type（オス/メス/不明）+ 各種計測値</span></span><span class="cl"><span class="kw">head</span>(abalone)</span><span class="cl"></span><span class="cl"><span class="cm"># オスとメスだけに絞る（不明 = I を除外）</span></span><span class="cl">abalone2 <span class="kw">&lt;-</span> abalone[abalone$Type <span class="kw">!=</span> <span class="st">"I"</span>, ]</span></div>
+<p>次に、ロジスティック回帰を実行します。重回帰の <code>lm()</code> の代わりに <code><strong>glm()</strong></code>（Generalized Linear Model）を使います。</p>
+<div class="code-block"><span class="cl"><span class="cm"># family = binomial が「ロジスティック回帰」の指定</span></span><span class="cl">model1 <span class="kw">&lt;-</span> <span class="kw">glm</span>(Type <span class="kw">~</span> Diameter,</span><span class="cl">              data <span class="kw">=</span> abalone2,</span><span class="cl">              family <span class="kw">=</span> binomial)</span><span class="cl"><span class="kw">summary</span>(model1)</span></div>
+<div class="warn-box"><strong>⚠️ lm() ではなく glm() を使う！</strong>　<code>family = binomial</code> を忘れずに指定してください。これがロジスティック回帰であることをRに伝える重要な設定です。</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>glm()は「ゼネラル（汎用的）な線形モデル」の略。lm()が「直線専用」とすると、glm()は直線以外の曲線も含む万能な兄貴分です💪</p></div>
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>なぜ重回帰をそのまま使えないのか</h2><div class="unit-sub">確率は0〜1の間でないといけない</div></div>
+  </div>
+  <p>「0か1か」の結果変数に対してそのまま重回帰を使うと、予測値が0より小さくなったり1より大きくなったりします。これは確率としておかしい。</p>
+<div class="flow-diagram">
+  <div class="flow-box input">重回帰の予測値<br><small>−∞ 〜 +∞</small></div>
+  <span class="flow-arrow">❌</span>
+  <div class="flow-box" style="border-color:#dc2626;background:#fee2e2;">確率としての要件<br><small>0 〜 1</small></div>
+</div>
+<p>ロジスティック回帰は<strong>シグモイド関数</strong>という特殊な変換を使って、どんな入力値でも必ず0〜1の間に収まる確率を出力します。</p>
+<div class="flow-diagram">
+  <div class="flow-box input">回帰式の値<br><small>−∞ 〜 +∞</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box model">シグモイド関数<br><small>1 / (1 + e⁻ˣ)</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box output">確率<br><small>0 〜 1</small></div>
+</div>
+<div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>シグモイド関数は「S字カーブ」の形をしています。どんな大きい数も小さい数も、必ず0と1の間に「押し込んで」くれる魔法の変換です🔄</p></div>
+<div class="note-box"><strong>📌 もう一歩深く：</strong>シグモイドは <code>p = 1/(1+e^(−z))</code> で、z（=回帰式の値、＝対数オッズ）が0のとき p=0.5、z→+∞で p→1、z→−∞で p→0 に近づきます。傾きが最も急なのは p=0.5 付近で、ここでは入力の変化が確率に最も強く反映されます。つまりロジスティック回帰は「判断が微妙な境界付近」ほど敏感に確率を動かす設計になっています。
+</div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 10</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+  
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What is the key difference between logistic regression and multiple regression?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Logistic regression uses more variables</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Logistic regression predicts a probability for a binary outcome</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Logistic regression is less accurate</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Logistic regression requires larger datasets</button>
+</div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which R function is used to run logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>lm()</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>glm()</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>log()</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>predict()</button>
+</div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">In a binary outcome, what do 0 and 1 typically represent?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Positive and negative numbers</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Failure/absence (0) and success/presence (1)</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Zero percent and 100 percent probability</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Small and large values</button>
+</div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">Why can't we use regular linear regression for binary outcomes?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Linear regression is too slow</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Linear regression can predict values outside the 0–1 range, which is invalid for probabilities</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Linear regression needs continuous predictors</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Linear regression has no intercept</button>
+</div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which argument in glm() specifies logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>method = "logistic"</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>type = "binary"</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>family = binomial</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>link = "logit"</button>
+</div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">What does the sigmoid function guarantee about its output?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The output always stays between 0 and 1</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The output is always a whole number</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The output is always greater than 1</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The output can be any real number</button>
+</div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+<div class="quiz-q" id="q7">
+  <div class="q-num">Question 7</div>
+  <div class="q-text">Which of these is a typical task for logistic regression?</div>
+  <div class="options"><button class="option-btn" data-q="7" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Predicting tomorrow&#x27;s exact temperature</button>
+<button class="option-btn" data-q="7" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Estimating total monthly sales revenue</button>
+<button class="option-btn" data-q="7" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Classifying an email as spam or not spam</button>
+<button class="option-btn" data-q="7" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Forecasting a continuous stock price</button>
+</div>
+  <div class="q-feedback" id="fb7"></div>
+</div>
+<div class="quiz-q" id="q8">
+  <div class="q-num">Question 8</div>
+  <div class="q-text">In the abalone example, why is the Type &#x27;I&#x27; (infant) removed before modeling?</div>
+  <div class="options"><button class="option-btn" data-q="8" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Because glm() cannot read text labels</button>
+<button class="option-btn" data-q="8" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To make the dataset larger overall</button>
+<button class="option-btn" data-q="8" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Because infants have missing diameter values</button>
+<button class="option-btn" data-q="8" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To keep the outcome strictly binary (Male/Female)</button>
+</div>
+  <div class="q-feedback" id="fb8"></div>
+</div>
+<div class="quiz-q" id="q9">
+  <div class="q-num">Question 9</div>
+  <div class="q-text">What kind of model family does glm() belong to?</div>
+  <div class="options"><button class="option-btn" data-q="9" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A generalized linear model family</button>
+<button class="option-btn" data-q="9" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A purely linear regression family</button>
+<button class="option-btn" data-q="9" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A clustering model family</button>
+<button class="option-btn" data-q="9" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A decision-tree model family</button>
+</div>
+  <div class="q-feedback" id="fb9"></div>
+</div>
+<div class="quiz-q" id="q10">
+  <div class="q-num">Question 10</div>
+  <div class="q-text">If a linear regression predicts 1.4 for a binary outcome, why is that a problem?</div>
+  <div class="options"><button class="option-btn" data-q="10" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>1.4 is too small to be useful</button>
+<button class="option-btn" data-q="10" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The intercept is undefined</button>
+<button class="option-btn" data-q="10" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The slope must always be negative</button>
+<button class="option-btn" data-q="10" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A probability cannot exceed 1</button>
+</div>
+  <div class="q-feedback" id="fb10"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 1, 1, 1, 2, 0, 2, 3, 0, 3];
+var FEEDBACKS=["Logistic regression predicts a probability (0–1) for a binary outcome, whereas multiple regression predicts continuous values.", "glm() with family=binomial is used for logistic regression. lm() is for linear regression only.", "By convention, 0 = failure/absence/no and 1 = success/presence/yes.", "Linear regression can produce predicted values below 0 or above 1, which make no sense as probabilities.", "family = binomial tells R to use the logistic (binomial) link function.", "The sigmoid 1/(1+e^-x) squeezes any input into the (0,1) range, so the result is always a valid probability.", "Logistic regression handles binary classification such as spam vs. not-spam, not continuous quantities.", "Binary logistic regression needs exactly two outcome classes, so the infant category is dropped to leave Male/Female.", "glm() fits Generalized Linear Models, a broad family that includes logistic regression via family=binomial.", "Predicted probabilities must lie in [0,1]; a value of 1.4 is impossible as a probability, motivating logistic regression."];
+var score=0,done=0,total=10;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+<div class="page-nav"><a href="m6_index.html">← 概要</a><a href="m6_ch2.html">第2章 →</a></div>
+</main>
+<aside class="sidebar">
+
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item">
+      <div class="term-name">バイナリ結果</div>
+      <div class="term-en">Binary Outcome</div>
+      <div class="term-def">0か1かの2択の結果変数。ロジスティック回帰が予測する対象。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">glm()</div>
+      <div class="term-en">Generalized Linear Model</div>
+      <div class="term-def">Rで一般化線形モデルを実行する関数。ロジスティック回帰にはfamily=binomialを指定。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">シグモイド関数</div>
+      <div class="term-en">Sigmoid Function</div>
+      <div class="term-def">S字カーブを描く関数。どんな値も0〜1の確率に変換する。</div>
+    </div>
+    <div class="term-item">
+      <div class="term-name">family=binomial</div>
+      <div class="term-en">Binomial Family</div>
+      <div class="term-def">glm()でロジスティック回帰を指定するための引数。</div>
+    </div>
+  </div>
+<div class="tip-box"><h4>💡 学習のヒント</h4><p>概念が難しく感じたら、コードを実際にRで動かして確認してみましょう。手を動かすことで理解が深まります。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>🐚 SU1 Data Analytics M6 講義をもとに作成 · <strong>ロジスティック回帰 完全ガイド</strong></p>
+  <p style="margin-top:.5rem;"><a href="m6_index.html">← 章の一覧に戻る</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="nav.js"></script>
+<script src="typewriter.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>
