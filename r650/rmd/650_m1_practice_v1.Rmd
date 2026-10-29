@@ -1,0 +1,453 @@
+---
+title: "650 M1 — Data Visualization with ggplot2: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Needs the ggplot2 package (`install.packages("ggplot2")` once). Data sets `mpg` and `diamonds` come with ggplot2.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/r650/m1_intro.html (650 M1 ggplot2)
+
+------------------------------------------------------------------------
+
+
+# Topic A — First Plots & Aesthetics
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Plot engine size (displ) against highway mpg (hwy) for the `mpg` data.
+
+```{r q1-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+p <- ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point()
+p
+nrow(mpg)          # each point is one car model
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Colour the points by `class`, and add axis labels.
+
+```{r q2-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q2-l2}
+ggplot(mpg, aes(x = displ, y = hwy, ___ = class)) +
+  geom____() +
+  labs(x = "Engine displacement (L)", y = "Highway mpg", ___ = "Car class")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Make two plots of hwy vs displ: (a) all points blue and size 2 (a setting, outside aes()); (b) point size mapped to cyl (inside aes()). Explain the difference in a comment.
+
+```{r q3-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** A car magazine wants to show that bigger engines use more fuel. Make a scatterplot of hwy vs displ with a smooth line, and compute the correlation and the mean hwy of cars with displ > 5.
+
+```{r q4-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q4-l4}
+# 1. Scatterplot + geom_smooth(method = "lm")
+# 2. cor(mpg$displ, mpg$hwy)
+# 3. Mean hwy for displ > 5
+# 4. Headline for the magazine (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** In the hwy vs displ plot, a few cars with large engines have high hwy. Find them (displ > 5, hwy > 22), plot them in red on top of the others, and explain with the `class` variable. Write 3 sentences.
+
+```{r q5-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q5-l5}
+# 1. outliers <- mpg[mpg$displ > 5 & mpg$hwy > 22, ]
+# 2. Their class and model
+# 3. Plot all cars + geom_point(data = outliers, colour = "red", size = 3)
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Distributions
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Count cars by class.
+
+```{r q6-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+ggplot(mpg, aes(x = class)) + geom_bar()
+counts <- table(mpg$class)
+counts
+ggplot(mpg, aes(x = factor(class, levels = names(sort(counts, decreasing = TRUE))))) +
+  geom_bar() + labs(x = "class")                         # ordered by count
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Draw a histogram of `hwy` with binwidth 2, then a density plot.
+
+```{r q7-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q7-l2}
+ggplot(mpg, aes(x = ___)) + geom_histogram(binwidth = ___)
+ggplot(mpg, aes(x = hwy)) + geom____()
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Use `diamonds`. Plot a histogram of price (binwidth 500), describe the shape, and compute the mean and median price.
+
+```{r q8-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** A jeweller asks how the diamond `cut` is distributed and whether better cuts are more expensive. Make a bar chart of cut and a boxplot of price by cut; report the median price per cut.
+
+```{r q9-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q9-l4}
+# 1. Bar chart of cut
+# 2. Boxplot of price by cut
+# 3. Median price per cut (tapply)
+# 4. Answer for the jeweller (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Show the count of cars by `class` and `drv` three ways: stacked, `position = 'dodge'` and `position = 'fill'`. Which chart answers 'what share of each class is 4-wheel drive?' Compute that share for SUVs. Write 3 sentences.
+
+```{r q10-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q10-l5}
+# 1. Stacked bar: aes(class, fill = drv)
+# 2. position = "dodge"
+# 3. position = "fill"
+# 4. Share of 4wd among SUVs
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Relationships, Groups & Facets
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Add a separate smoothed line for each drive type.
+
+```{r q11-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+ggplot(mpg, aes(displ, hwy, colour = drv)) +
+  geom_point() +
+  geom_smooth(method = "loess", formula = y ~ x, se = FALSE)
+round(tapply(mpg$hwy, mpg$drv, mean), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Split the hwy vs displ scatterplot into one panel per `class`, and then a grid of drv × cyl.
+
+```{r q12-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q12-l2}
+ggplot(mpg, aes(displ, hwy)) + geom_point() + facet_wrap(~ ___)
+ggplot(mpg, aes(displ, hwy)) + geom_point() + facet_grid(___ ~ ___)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Draw boxplots of hwy for each class, ordered by median hwy (use `reorder()`), flipped horizontally. Which class has the highest median?
+
+```{r q13-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** For `diamonds`, plot price against carat with transparency (alpha = 0.1) coloured by `color`, add a log10 scale on both axes, and compute the correlation of log10(carat) and log10(price).
+
+```{r q14-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q14-l4}
+# 1. Scatterplot with alpha = 0.1, colour = color
+# 2. scale_x_log10() + scale_y_log10()
+# 3. Correlation on the log scale
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** The `mpg` data have many identical (displ, hwy) points. Compare geom_point() with geom_jitter(width = 0.2, height = 0.2) (`set.seed(15)`) and geom_count(). How many rows share a (displ, hwy) pair with another row? Write 3 sentences.
+
+```{r q15-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q15-l5}
+# 1. geom_point() vs geom_jitter() vs geom_count()
+# 2. Number of rows whose (displ, hwy) pair appears more than once
+# 3. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Communicating & Saving
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Add a title, subtitle and caption, change the theme and save the plot with ggsave().
+
+```{r q16-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+p <- ggplot(mpg, aes(displ, hwy, colour = class)) + geom_point() +
+  labs(title = "Fuel efficiency generally decreases with engine size",
+       subtitle = "Two-seaters are an exception because they are light",
+       caption = "Data: ggplot2::mpg", x = "Engine displacement (L)", y = "Highway mpg") +
+  theme_minimal()
+p
+out <- file.path(tempdir(), "mpg_plot.png")
+ggsave(out, p, width = 7, height = 4, dpi = 150)
+file.exists(out)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Each line below has a bug. Fix them so every plot runs.
+
+```{r q17-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q17-l2}
+# a) the + must be at the END of a line
+ggplot(mpg, aes(displ, hwy))
+  ___ geom_point()
+# b) a fixed colour goes OUTSIDE aes()
+ggplot(mpg, aes(displ, hwy)) + geom_point(___ = "red")
+# c) a variable name must be spelled exactly
+ggplot(mpg, aes(displ, ___)) + geom_point()          # was: hwyy
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Recreate: city mpg (cty) on the y-axis vs. hwy on the x-axis, points coloured by drv, a dashed 45° line (geom_abline(linetype = 'dashed')), and coord_fixed(). What share of cars have cty < hwy?
+
+```{r q18-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** Make one clear chart that compares the mean highway mpg of each manufacturer (sorted, horizontal bars, with the overall mean as a vertical line). Save it as a PNG in tempdir().
+
+```{r q19-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q19-l4}
+# 1. Mean hwy per manufacturer (aggregate() or tapply())
+# 2. Horizontal bar chart sorted by the mean (geom_col + reorder)
+# 3. geom_hline/vline for the overall mean
+# 4. ggsave() to tempdir()
+# 5. Which manufacturer is best? (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Explore `diamonds` with three plots of your choice (one distribution, one relationship, one comparison across groups). For each, write the question it answers and one finding. Finish with a 3-sentence summary.
+
+```{r q20-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q20-l5}
+# Plot 1 (distribution): question + finding as comments
+# Plot 2 (relationship):  question + finding as comments
+# Plot 3 (comparison):    question + finding as comments
+# Summary (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  650 M1 QUICK REFERENCE (ggplot2)                    ║
+║  ggplot(data, aes(x, y, colour = g)) + geom_point()  ║
+║  setting: geom_point(colour = 'red')  outside aes()  ║
+║  geom_bar()  geom_histogram(binwidth)  geom_density()║
+║  geom_boxplot()  geom_smooth(method = 'lm')          ║
+║  position = 'dodge' / 'fill'   geom_jitter()         ║
+║  facet_wrap(~ g)   facet_grid(r ~ c)                 ║
+║  labs(title, x, y, colour)  theme_minimal()          ║
+║  scale_x_log10()  coord_flip()  coord_fixed()        ║
+║  ggsave('file.png', p, width, height)                ║
+║  the + goes at the END of a line                     ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*650 M1 — Data Visualization with ggplot2: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

@@ -1,0 +1,497 @@
+---
+title: "650 M6 — Logistic Regression: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Needs only MASS (comes with R). Data: `birthwt` (MASS), `mtcars` and a simulated loan data set.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/r650/m6_ch1.html (650 M6 logistic regression, Ch.1-13)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Odds, Log-odds & the Logistic Model
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Convert between the three scales for p = 0.2.
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+p <- 0.2
+odds <- p / (1 - p)
+logit <- log(odds)
+round(c(p = p, odds = odds, logit = logit), 4)
+# back again
+round(c(odds = exp(logit), p = exp(logit) / (1 + exp(logit)), plogis = plogis(logit)), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Draw p = plogis(x) for x from −6 to 6 and find the x where p = 0.9.
+
+```{r q2-l2}
+curve(___(x), from = -6, to = 6, ylab = "probability", xlab = "log-odds")
+abline(h = 0.5, lty = 2)
+x90 <- qlogis(___)
+round(x90, 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** For mtcars, fit a linear model am ~ wt and a logistic model. Show that the linear model predicts probabilities below 0 or above 1 for some cars.
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** A clinic studies low birth weight (`low`, 1 = under 2.5 kg) in `birthwt`. Fit low ~ smoke_f, report the coefficients and the predicted probability for smokers and non-smokers.
+
+```{r q4-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q4-l4}
+# 1. glm(low ~ smoke_f, family = binomial, data = bw)
+# 2. Coefficients on the log-odds scale
+# 3. predict(type = "response") for both groups
+# 4. Check against the raw proportions with tapply()
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** Using m1, compute by hand: the odds for non-smokers (exp of the intercept), the odds for smokers, and the odds ratio. Explain in 3 sentences what the odds ratio means for a parent.
+
+```{r q5-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q5-l5}
+# 1. odds_no  <- exp(b0)
+# 2. odds_yes <- exp(b0 + b1)
+# 3. odds ratio = odds_yes / odds_no = exp(b1)
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Interpreting Coefficients
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Model low ~ lwt (mother's weight in pounds).
+
+```{r q6-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+m2 <- glm(low ~ lwt, family = binomial, data = bw)
+round(coef(m2), 4)
+round(exp(coef(m2)["lwt"]), 4)          # odds ratio per extra pound
+round(exp(10 * coef(m2)["lwt"]), 4)     # per extra 10 pounds
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Fit low ~ smoke_f + lwt and interpret the smoking odds ratio holding weight fixed.
+
+```{r q7-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q7-l2}
+m3 <- glm(low ~ ___ + ___, family = ___, data = bw)
+round(exp(coef(m3)), 4)
+round(exp(confint.default(___)), 4)      # Wald 95% CIs on the odds scale
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Using m3, predict the probability of low birth weight for a smoker and a non-smoker who both weigh 110 lb and 160 lb (4 profiles).
+
+```{r q8-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** `race` is coded 1 = white, 2 = black, 3 = other. Make it a factor with labels, fit low ~ smoke_f + lwt + race_f, and report the odds ratios with white as the baseline.
+
+```{r q9-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q9-l4}
+# 1. Check the factor bw$race_f (made in the data chunk): levels(bw$race_f)
+# 2. glm(...)
+# 3. exp(coef()) and the p-values
+# 4. Interpretation (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Plot the predicted probability of low birth weight against lwt for smokers and non-smokers (model m3) on one graph, with the observed 0/1 values jittered. Write 3 sentences describing the plot.
+
+```{r q10-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q10-l5}
+# 1. A grid of lwt values for each smoking group
+# 2. predict(type = "response") on the grid
+# 3. plot the observed points (jitter) and two curves
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Evaluating Models: Deviance, AIC, z
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Compare the null and residual deviance of m3 and read the AIC.
+
+```{r q11-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+m3 <- glm(low ~ smoke_f + lwt, family = binomial, data = bw)
+round(c(null_dev = m3$null.deviance, resid_dev = m3$deviance, AIC = AIC(m3)), 3)
+# AIC = deviance + 2 * (number of coefficients)
+round(m3$deviance + 2 * length(coef(m3)), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Is m3 better than the model with smoking only (m1)? Use anova(..., test = 'Chisq').
+
+```{r q12-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q12-l2}
+m1 <- glm(low ~ smoke_f, family = binomial, data = bw)
+anova(___, ___, test = "___")
+drop <- m1$deviance - m3$___
+round(c(drop = drop, p = pchisq(drop, df = 1, lower.tail = ___)), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** From summary(m3), report the z value and p-value of each coefficient, and compute McFadden's pseudo R² = 1 − residual deviance / null deviance.
+
+```{r q13-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** The clinic considers five candidate models for low birth weight. Fit them, build an AIC table, and pick the best. Also run step() from the model with smoke_f, lwt, race_f, age, ptl, ht and ui.
+
+```{r q14-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q14-l4}
+# 1. Candidates: ~ smoke_f; ~ smoke_f + lwt; ~ smoke_f + lwt + race_f;
+#    ~ smoke_f + lwt + race_f + ht; ~ smoke_f + lwt + race_f + ht + ui
+# 2. AIC table, sorted
+# 3. step() on the full model (trace = 0): which variables stay?
+# 4. Recommendation (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** AIC = −2·logLik + 2K, where K is the number of estimated coefficients. Compute it by hand for the best model from Q14, compare with AIC(), and show that a factor with 3 levels adds 2 to K. Write 3 sentences.
+
+```{r q15-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q15-l5}
+# 1. K <- length(coef(best)); ll <- logLik(best)
+# 2. -2 * ll + 2 * K vs AIC(best)
+# 3. K of a model with race_f vs without it
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Prediction & Classification
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Turn predicted probabilities from the best model into 0/1 predictions and make a confusion matrix.
+
+```{r q16-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+# the model chosen by step() in Q14 (written out so this chunk runs on its own)
+best <- glm(low ~ smoke_f + lwt + race_f + ptl + ht + ui, family = binomial, data = bw)
+p_hat <- predict(best, type = "response")
+pred <- ifelse(p_hat >= 0.5, 1, 0)
+cm <- table(actual = bw$low, predicted = pred)
+cm
+accuracy <- mean(pred == bw$low)
+round(accuracy, 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** From the confusion matrix, compute sensitivity (true positive rate) and specificity (true negative rate).
+
+```{r q17-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q17-l2}
+TP <- cm["1", "1"]; FN <- cm["1", "___"]
+TN <- cm["0", "0"]; FP <- cm["0", "___"]
+sensitivity <- TP / (TP + ___)
+specificity <- TN / (TN + ___)
+round(c(sensitivity = sensitivity, specificity = specificity), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** A screening programme wants to catch more at-risk babies. Recompute sensitivity, specificity and accuracy for thresholds 0.2, 0.3, 0.4 and 0.5.
+
+```{r q18-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** Split birthwt 70/30 (`set.seed(19)`), fit the best formula on the training set and report the test accuracy, sensitivity and specificity at threshold 0.3.
+
+```{r q19-data, eval=TRUE}
+library(MASS)        # birthwt data
+bw <- birthwt
+bw$smoke_f <- factor(bw$smoke, labels = c("no", "yes"))
+bw$race_f <- factor(bw$race, labels = c("white", "black", "other"))
+```
+
+```{r q19-l4}
+# 1. idx <- sample(nrow(bw), round(0.7 * nrow(bw)))
+# 2. glm(formula(best), family = binomial, data = train)
+# 3. Test predictions at threshold 0.3
+# 4. Comment: how does test accuracy compare with Q18?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Simulate 1,000 loan applicants (`set.seed(20)`) whose default probability depends on income and debt ratio, fit a logistic model, interpret the odds ratios, and choose a threshold that keeps the false-positive rate below 20%. Write a 4-sentence report for a loan officer.
+
+```{r q20-data, eval=TRUE}
+set.seed(20)
+n <- 1000
+income <- round(rlnorm(n, log(50), 0.4), 1)           # $1000s
+debt_ratio <- round(runif(n, 0, 0.8), 2)
+p_default <- plogis(-1 - 0.03 * income + 4 * debt_ratio)
+loans <- data.frame(income, debt_ratio, default = rbinom(n, 1, p_default))
+```
+
+```{r q20-l5}
+# 1. glm(default ~ income + debt_ratio, family = binomial)
+# 2. Odds ratios: per $10,000 income and per +0.1 debt ratio
+# 3. False-positive rate (good customers flagged) for thresholds 0.2-0.6
+# 4. The lowest threshold with FPR < 0.20
+# 5. Report (4 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  650 M6 QUICK REFERENCE (logistic regression)        ║
+║  odds = p / (1 - p)   logit = log(odds)              ║
+║  plogis(x) = p from log-odds   qlogis(p) = log-odds  ║
+║  glm(y ~ x, family = binomial, data = df)            ║
+║  exp(coef(m)) = odds ratios   confint.default(m)     ║
+║  predict(m, newdata, type = 'response') = p          ║
+║  m$deviance  m$null.deviance  AIC(m)  logLik(m)      ║
+║  anova(m_small, m_big, test = 'Chisq')               ║
+║  McFadden R2 = 1 - deviance / null.deviance          ║
+║  table(actual, predicted)  sensitivity  specificity  ║
+║  threshold choice trades sensitivity vs specificity  ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*650 M6 — Logistic Regression: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

@@ -1,0 +1,472 @@
+---
+title: "650 — Missing Values, Outliers & Correlation: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Needs readr, dplyr, tidyr and ggplot2 (or `library(tidyverse)`). Uses `NCBirths2004.csv` (same folder as this notebook), `airquality` and `mtcars`.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/r650/na_missing.html (650 NAs, outliers & correlation)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Missing Values
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Count NAs in every column of `airquality` and in the births data.
+
+```{r q1-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+colSums(is.na(airquality))
+sum(is.na(births))                     # the births data have no NAs
+mean(is.na(airquality$Ozone))          # share of missing Ozone values
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Copy the births data and put NAs in on purpose (as in the lesson), then count them.
+
+```{r q2-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q2-l2}
+b_ill <- births
+b_ill[1, ] <- ___                       # whole first row missing
+b_ill[2, "Tobacco"] <- NA
+b_ill[3, "___"] <- NA                   # one missing Weight
+colSums(is.na(___))
+sum(is.na(b_ill))
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Compare nrow() after drop_na() on all columns and after drop_na(Weight). Then compute mean Weight with na.rm = TRUE.
+
+```{r q3-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** An analyst must report mean Ozone per month from `airquality`. Compare (a) dropping NAs, (b) imputing the overall median, (c) imputing each month's median. Which choice changes the monthly means most?
+
+```{r q4-data, eval=TRUE}
+library(dplyr)
+library(tidyr)
+```
+
+```{r q4-l4}
+# 1. Monthly mean Ozone with na.rm = TRUE
+# 2. replace_na() with the overall median, then monthly means (Ozone is integer: use as.numeric() first)
+# 3. Group-wise median imputation (group_by(Month) + mutate(if_else(is.na(...))))
+# 4. Compare the three tables and comment
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** With `set.seed(5)`, make Ozone values missing completely at random (20%) vs. missing only when Ozone > 60. Compare the mean of the observed values with the true mean of the complete cases. Write 3 sentences.
+
+```{r q5-data, eval=TRUE}
+library(dplyr)
+oz <- airquality$Ozone[!is.na(airquality$Ozone)]
+```
+
+```{r q5-l5}
+# 1. true <- mean(oz)
+# 2. MCAR: a random 20% become NA, mean of the rest
+# 3. Not at random: values > 60 become NA, mean of the rest
+# 4. Compare the two biases
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Outliers
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Find outliers in birth Weight with the 1.5·IQR rule.
+
+```{r q6-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+q1 <- quantile(births$Weight, 0.25); q3 <- quantile(births$Weight, 0.75)
+iqr <- IQR(births$Weight)
+low <- q1 - 1.5 * iqr; high <- q3 + 1.5 * iqr
+c(low = unname(low), high = unname(high))
+n_out_iqr <- sum(births$Weight < low | births$Weight > high)
+n_out_iqr
+boxplot(births$Weight, horizontal = TRUE, col = "lightblue")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Use the mean ± 3 SD rule on Weight and compare with Q6.
+
+```{r q7-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q7-l2}
+m <- mean(births$___); s <- ___(births$Weight)
+lower <- m - ___ * s; upper <- m + 3 * s
+n_out_sd <- sum(births$Weight < lower | births$Weight ___ upper)
+round(c(lower, upper), 1); n_out_sd
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Create `births_clean` without the 1.5·IQR outliers using filter(), and compare n, mean and SD before and after.
+
+```{r q8-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** A midwife asks whether smokers have more low-weight outliers. Apply the 1.5·IQR rule within each Smoker group (group_by + mutate) and count outliers per group.
+
+```{r q9-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q9-l4}
+# 1. group_by(Smoker) |> mutate(low = ..., high = ..., outlier = ...)
+# 2. count outliers per group and their share
+# 3. Boxplot of Weight by Smoker
+# 4. Answer for the midwife (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Low birth weights are real, important cases. Compare the mean weight of smokers vs non-smokers with and without IQR outliers, and run a t test in both cases. Write a 3-sentence recommendation.
+
+```{r q10-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q10-l5}
+# 1. Mean Weight by Smoker: all data and births_clean
+# 2. t.test(Weight ~ Smoker) on both
+# 3. Did removing outliers change the conclusion?
+# 4. Recommendation (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Correlation
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Correlations among mpg, wt, hp and disp (`mtcars`).
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+v <- mtcars[, c("mpg", "wt", "hp", "disp")]
+round(cor(v), 3)
+plot(mtcars$wt, mtcars$mpg, pch = 16)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** cor() returns NA when a column has NAs. Fix it with `use =`.
+
+```{r q12-l2}
+aq <- airquality[, c("Ozone", "Solar.R", "Wind", "Temp")]
+cor(aq)                                       # NAs appear
+round(cor(aq, use = "___"), 3)               # only rows complete in ALL columns
+round(cor(aq, use = "___"), 3)               # complete rows per pair
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Compute Pearson and Spearman correlations of Ozone and Wind (complete cases) and test both with cor.test(). Why do they differ?
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A hospital asks how strongly gestation week relates to birth weight. Make a scatterplot, compute r, test it, and say what share of the variation in weight is explained (r²).
+
+```{r q14-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q14-l4}
+# 1. Scatterplot of Weight vs Gestation
+# 2. r and cor.test()
+# 3. r^2 as a percentage
+# 4. Answer for the hospital (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Using `mtcars`, find the variable most correlated with mpg (in absolute value). Then show that cyl and disp are also highly correlated with each other, and explain why a strong r between mpg and one variable does not show cause and effect. Write 3 sentences.
+
+```{r q15-l5}
+# 1. Correlations of mpg with all other columns, sorted by absolute value
+# 2. cor(mtcars$cyl, mtcars$disp)
+# 3. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Cleaning Pipelines & Reporting
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Correlation needs numbers. Convert Smoker (Yes/No) to 0/1 and correlate with Weight (a point-biserial correlation).
+
+```{r q16-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+births$smoker01 <- as.numeric(births$Smoker == "Yes")
+round(cor(births$smoker01, births$Weight), 3)
+table(births$Smoker)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** MothersAge is stored as text groups. Turn it into an ordered number (1 = under 15 … 8 = 45-49) and compute the Spearman correlation with Weight.
+
+```{r q17-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q17-l2}
+age_levels <- c("under 15", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49")
+births$age_rank <- match(births$___, ___)
+table(births$age_rank)
+round(cor(births$age_rank, births$Weight, method = "___"), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Turn the airquality correlation matrix (pairwise) into long format and draw a heatmap with geom_tile() and the values as labels.
+
+```{r q18-data, eval=TRUE}
+library(ggplot2)
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** Build a pipeline: from `airquality`, drop rows with NA Ozone or Solar.R, remove Ozone outliers (1.5·IQR), then report r between Ozone and Temp before and after the cleaning.
+
+```{r q19-data, eval=TRUE}
+library(dplyr)
+library(tidyr)
+```
+
+```{r q19-l4}
+# 1. aq_c <- airquality |> drop_na(Ozone, Solar.R)
+# 2. IQR fences for Ozone and filter()
+# 3. r(Ozone, Temp) before and after removing outliers
+# 4. Comment: did the outliers matter?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Write a short data-quality report for the births data: missing values, outliers in Weight and Gestation (1.5·IQR), impossible values (e.g. Gestation outside 20-45 weeks), and the correlation of Weight with Gestation with and without the flagged rows. Finish with 4 sentences of advice.
+
+```{r q20-data, eval=TRUE}
+library(readr)
+library(dplyr)
+library(tidyr)
+births <- read_csv("NCBirths2004.csv", show_col_types = FALSE)
+```
+
+```{r q20-l5}
+# 1. Missing values per column
+# 2. Outliers in Weight and Gestation
+# 3. Impossible or suspicious values
+# 4. r(Weight, Gestation) with and without flagged rows
+# 5. Advice (4 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  650 M3 QUICK REFERENCE (NA, outliers, correlation)  ║
+║  is.na(x)  colSums(is.na(df))  mean(x, na.rm = TRUE) ║
+║  drop_na(df)  drop_na(df, col)  replace_na(x, v)     ║
+║  IQR rule: Q1 - 1.5*IQR,  Q3 + 1.5*IQR               ║
+║  SD rule:  mean +/- 3 * sd                           ║
+║  filter(x >= low, x <= high)   group_by() + mutate() ║
+║  cor(df, use = 'complete.obs' / 'pairwise...')       ║
+║  cor(x, y, method = 'spearman')   cor.test(x, y)     ║
+║  ask WHY values are missing or extreme               ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*650 — Missing Values, Outliers & Correlation: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

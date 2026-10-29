@@ -1,0 +1,398 @@
+---
+title: "650 M4 — Prediction, Intervals & Regression Assumptions: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Needs the lmtest and car packages (`install.packages(c("lmtest", "car"))` once). Data: `cars`, `airquality` (built into R) and a small simulated data set.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/r650/m4_predict.html (650 M4 prediction & assumptions)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Predicting with a Regression Line
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Predict stopping distance from speed (`cars`).
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+fit <- lm(dist ~ speed, data = cars)
+b <- coef(fit)
+b
+pred_hand <- b[1] + b[2] * 21              # speed = 21 mph
+pred_r <- predict(fit, newdata = data.frame(speed = 21))
+round(c(hand = unname(pred_hand), predict = unname(pred_r)), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Predict stopping distances for speeds 10, 15 and 20 mph with predict().
+
+```{r q2-l2}
+new <- data.frame(speed = c(___, ___, ___))
+round(predict(___, newdata = ___), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** The data cover speeds 4–25 mph. Predict for speed = 2 and speed = 40, and explain in a comment why one of them is unreliable (look at the sign of the first prediction too).
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** A shop records daily temperature (°C) and ice-cream sales (made-up). Fit a line, interpret the slope, and predict sales for a 30 °C day.
+
+```{r q4-data, eval=TRUE}
+set.seed(4)
+temp <- round(runif(40, 18, 34), 1)
+sales <- round(60 + 9 * temp + rnorm(40, 0, 25))
+shop <- data.frame(temp, sales)
+```
+
+```{r q4-l4}
+# 1. Scatterplot with the fitted line
+# 2. Slope and its meaning (comment)
+# 3. Predicted sales at 30 degrees
+# 4. R-squared
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** For the cars model, add fitted values and residuals to a data frame, find the three cars with the largest absolute residuals, and check that the residuals sum to 0. Write 3 sentences on what a residual means.
+
+```{r q5-l5}
+# 1. cars2 <- cars; cars2$fitted <- fitted(fit); cars2$resid <- resid(fit)
+# 2. Rows with the 3 largest |resid|
+# 3. sum(resid) and mean(resid)
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Confidence & Prediction Intervals
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Compare the 95% CI for the mean distance and the 95% PI for one car at speed = 21.
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+nd <- data.frame(speed = 21)
+ci <- predict(fit, nd, interval = "confidence")
+pi <- predict(fit, nd, interval = "prediction")
+round(rbind(confidence = ci, prediction = pi), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Find 90% and 99% prediction intervals at speed = 21.
+
+```{r q7-l2}
+round(predict(fit, data.frame(speed = 21), interval = "___", level = ___), 2)
+round(predict(fit, data.frame(speed = 21), interval = "prediction", level = ___), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Compute the CI width at speeds 5, 15 and 25. Where is the interval narrowest and why?
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** Draw the cars scatterplot with the fitted line, the 95% confidence band and the 95% prediction band (use a grid of speeds from 4 to 25).
+
+```{r q9-l4}
+# 1. grid <- data.frame(speed = seq(4, 25, by = 0.5))
+# 2. ci and pi on the grid
+# 3. plot + lines() for fit, lwr and upr of both
+# 4. What share of the cars lie inside the prediction band? (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Rebuild the 95% PI at speed = 21 from the formula ŷ ± t* · s · sqrt(1 + 1/n + (x0 − x̄)² / Σ(x − x̄)²) and compare with predict(). Also compute the CI version (without the 1). Write 3 sentences on why the PI is wider.
+
+```{r q10-l5}
+# 1. s (residual SE), n, xbar, Sxx
+# 2. t* with df = n - 2
+# 3. PI and CI by hand
+# 4. Compare with predict()
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Checking the Assumptions
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Look at the four standard diagnostic plots of the cars model.
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+par(mfrow = c(2, 2))
+plot(fit)              # residuals vs fitted, Q-Q, scale-location, leverage
+par(mfrow = c(1, 1))
+round(summary(fit)$sigma, 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Check the normality of the residuals with a Q-Q plot and shapiro.test().
+
+```{r q12-l2}
+r <- ___(fit)
+qqnorm(r); qqline(r, col = "red")
+sw <- ___(r)
+round(sw$p.value, 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Run lmtest::bptest() on the cars model and on a model for log(dist). Report both p-values.
+
+```{r q13-data, eval=TRUE}
+library(lmtest)
+```
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** Ozone readings in `airquality` are recorded day after day. Fit Ozone ~ Temp (complete cases) and test the residuals for autocorrelation with car::durbinWatsonTest() (`set.seed(14)` because it uses a bootstrap p-value).
+
+```{r q14-data, eval=TRUE}
+library(car)
+```
+
+```{r q14-l4}
+# 1. aq <- na.omit(airquality); fit_aq <- lm(Ozone ~ Temp, data = aq)
+# 2. durbinWatsonTest(fit_aq)
+# 3. Plot residuals in time order
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Check all four LINE assumptions for Ozone ~ Temp (airquality, complete cases): Linearity, Independence, Normality, Equal variance. Use a plot or a test for each and write a 4-sentence verdict.
+
+```{r q15-data, eval=TRUE}
+library(lmtest)
+library(car)
+```
+
+```{r q15-l5}
+# L: residuals vs fitted
+# I: durbinWatsonTest()
+# N: Q-Q plot + shapiro.test()
+# E: bptest()
+# Verdict (4 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Fixing Problems: Transformations & Robust SEs
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Model log(Ozone) instead of Ozone and compare the residual normality.
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+aq <- na.omit(airquality)
+fit_raw <- lm(Ozone ~ Temp, data = aq)
+fit_lg  <- lm(log(Ozone) ~ Temp, data = aq)
+round(c(raw = shapiro.test(resid(fit_raw))$p.value, log = shapiro.test(resid(fit_lg))$p.value), 4)
+par(mfrow = c(1, 2)); qqnorm(resid(fit_raw)); qqnorm(resid(fit_lg)); par(mfrow = c(1, 1))
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Predict Ozone at Temp = 85 from the log model and back-transform with exp().
+
+```{r q17-l2}
+pred_log <- predict(fit_lg, data.frame(Temp = ___), interval = "prediction")
+round(___(pred_log), 2)            # back to ppb
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Try sqrt(dist) ~ speed for the cars data. Compare R² and the Breusch–Pagan p-value with the original model.
+
+```{r q18-data, eval=TRUE}
+library(lmtest)
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** When variance is not constant, heteroskedasticity-consistent SEs are an option. Compare the usual and HC3 standard errors of the slope for Ozone ~ Temp using car::hccm().
+
+```{r q19-data, eval=TRUE}
+library(car)
+```
+
+```{r q19-l4}
+# 1. Usual SE from summary()
+# 2. HC3 SE: sqrt(diag(hccm(fit_aq, type = "hc3")))
+# 3. Compare the two t values
+# 4. Comment: which SE should we report here?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Write a short analysis of Ozone ~ Temp: (1) the raw model and its assumption problems, (2) the log model and its checks, (3) a 95% prediction interval at 85 °F from each model. Finish with a 4-sentence recommendation.
+
+```{r q20-data, eval=TRUE}
+library(lmtest)
+```
+
+```{r q20-l5}
+# 1. Raw model: R-squared, shapiro and bptest p-values
+# 2. Log model: the same checks
+# 3. PI at Temp = 85 from both models (back-transform the log one)
+# 4. Recommendation (4 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  650 M4 QUICK REFERENCE (simple regression)          ║
+║  fit <- lm(y ~ x, data)  coef  fitted  resid         ║
+║  predict(fit, newdata = data.frame(x = ...))         ║
+║  interval = 'confidence' (mean) / 'prediction' (one) ║
+║  level = 0.90 / 0.99                                 ║
+║  plot(fit)  qqnorm(resid)  shapiro.test(resid(fit))  ║
+║  lmtest::bptest(fit)    car::durbinWatsonTest(fit)   ║
+║  LINE: Linearity Independence Normality Equal var    ║
+║  fixes: log(y)  sqrt(y)  car::hccm(fit, 'hc3')       ║
+║  back-transform: exp(predict(log_model, ...))        ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*650 M4 — Prediction, Intervals & Regression Assumptions: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

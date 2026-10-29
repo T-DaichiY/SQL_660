@@ -1,0 +1,481 @@
+---
+title: "650 M2 — Data Import & Transformation with dplyr: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Needs the readr and dplyr packages (or `library(tidyverse)`). Topic A uses `students.csv` (R4DS example file in the M2 folder); the rest use `starwars`, `storms` (dplyr) and `mpg` (ggplot2).
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/r650/m2_import.html (650 M2 import & dplyr)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Data Import with readr
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Read `students.csv` (the R4DS example file in the M2 folder) and look at it.
+
+```{r q1-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+students <- read_csv("students.csv")
+students
+spec(students)            # the column types readr guessed
+dim(students)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Treat both "N/A" and empty cells as missing, and rename the awkward columns.
+
+```{r q2-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q2-l2}
+students <- read_csv("students.csv", na = c("___", "___"))
+students <- students |>
+  rename(student_id = `Student ID`, full_name = `___`,
+         favourite_food = favourite.food, meal_plan = ___, age = ___)
+sum(is.na(students$favourite_food))
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** `age` was read as text because one value is "five". Fix it ("five" → 5), convert age to a number and meal_plan to a factor. Report the mean age.
+
+```{r q3-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** Save the cleaned data to a CSV in tempdir(), read it back, and check whether the column types survive the round trip.
+
+```{r q4-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q4-l4}
+# 1. write_csv() to file.path(tempdir(), "students_clean.csv")
+# 2. read_csv() it back
+# 3. Compare the classes of the columns before and after
+# 4. Conclusion (comment): what is lost when we save to CSV?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** Read the inline CSV below with read_csv(I(...)). Use `col_types` to read `price` as a number and `date` as a date, find the problem rows with problems(), and write 3 sentences on good import habits.
+
+```{r q5-data, eval=TRUE}
+raw <- "item,price,date
+apple,1.20,2026-01-05
+pear,unknown,2026-01-06
+fig,2.50,05/01/2026"
+```
+
+```{r q5-l5}
+# 1. read_csv(I(raw), col_types = cols(price = col_double(), date = col_date()))
+# 2. problems() on the result
+# 3. How many NAs did the parsing create?
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Rows: filter, arrange, distinct
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Find the starwars characters taller than 200 cm, tallest first.
+
+```{r q6-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+tall <- starwars |>
+  filter(height > 200) |>
+  arrange(desc(height)) |>
+  select(name, height, species)
+tall
+nrow(tall)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Keep humans OR droids whose mass is known, sorted by mass.
+
+```{r q7-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q7-l2}
+starwars |>
+  filter(species ___ c("Human", "Droid"), !is.na(___)) |>
+  arrange(___) |>
+  select(name, species, mass)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** How many different homeworlds are there in starwars (excluding NA)? Which homeworld appears most often? Use distinct() and count().
+
+```{r q8-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** A meteorologist wants all observations of category-5 hurricanes in `storms`. Filter them, list the distinct storm names and years, and find the strongest wind recorded.
+
+```{r q9-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q9-l4}
+# 1. filter(category == 5)
+# 2. distinct(name, year), sorted by year
+# 3. Maximum wind speed
+# 4. Note for the meteorologist (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** filter() drops rows where the condition is NA. Show this with starwars: count characters with mass > 80, mass <= 80, and NA mass, and check that the three add up to the total. Write 3 sentences.
+
+```{r q10-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q10-l5}
+# 1. n with mass > 80
+# 2. n with mass <= 80
+# 3. n with is.na(mass)
+# 4. Do they add up to nrow(starwars)?
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Columns: select, rename, mutate
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Pick and tidy columns of starwars.
+
+```{r q11-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+sw <- starwars |>
+  select(name, height, mass, species, homeworld) |>
+  rename(world = homeworld) |>
+  relocate(species, .before = height)
+sw
+ncol(sw)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Add BMI = mass / (height/100)^2 and keep the five highest.
+
+```{r q12-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q12-l2}
+starwars |>
+  ___(bmi = mass / (height / 100)^___) |>
+  select(name, height, mass, bmi) |>
+  arrange(desc(___)) |>
+  head(5)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** From `storms`, select name, year and every column that ends with "_diameter". Then add a column `ts_km` with tropicalstorm_force_diameter in kilometres (1 nautical mile = 1.852 km).
+
+```{r q13-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A rental company wants the fuel cost of each car in `ggplot2::mpg` for 100 km of highway driving at $1.60 per litre. Convert hwy (miles per US gallon) to L/100 km (235.215 / hwy) and add the cost. Which model is cheapest?
+
+```{r q14-data, eval=TRUE}
+library(dplyr)
+mpg <- ggplot2::mpg
+```
+
+```{r q14-l4}
+# 1. mutate(l_per_100 = 235.215 / hwy, cost_100km = l_per_100 * 1.60)
+# 2. select the useful columns only
+# 3. arrange by cost and show the cheapest 3
+# 4. Recommendation (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Classify starwars characters by height: 'short' (< 150), 'medium' (150-190), 'tall' (> 190), and NA when height is unknown. Count each group and write 3 sentences on case_when() vs if_else().
+
+```{r q15-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q15-l5}
+# 1. mutate(size = case_when(...))
+# 2. count(size)
+# 3. A second column with if_else(): 'droid' vs 'not droid'
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — The Pipe & Groups
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Mean height and count per species (species with at least 2 characters).
+
+```{r q16-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+by_species <- starwars |>
+  group_by(species) |>
+  summarise(n = n(), mean_height = mean(height, na.rm = TRUE)) |>
+  filter(n >= 2) |>
+  arrange(desc(n))
+by_species
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Rewrite the nested code as a pipe.
+
+```{r q17-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q17-l2}
+# Nested:
+head(arrange(filter(starwars, !is.na(mass)), desc(mass)), 3)
+# Piped (fill in):
+starwars |>
+  ___(!is.na(mass)) |>
+  ___(desc(mass)) |>
+  ___(3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** For `storms`, compute per year: number of distinct storms, maximum wind and mean pressure. Which year had the most distinct storms?
+
+```{r q18-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** Using `ggplot2::mpg`, make a table per class with: number of models, mean hwy, mean cty and the share of 4-wheel drive. Sort by mean hwy and identify the most and least efficient classes.
+
+```{r q19-data, eval=TRUE}
+library(dplyr)
+mpg <- ggplot2::mpg
+```
+
+```{r q19-l4}
+# 1. group_by(class) |> summarise(...)
+# 2. arrange(desc(mean_hwy))
+# 3. Most / least efficient class (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** For each storm (name + year), compute its peak wind with a grouped mutate(), keep only the row(s) where wind equals the peak, and compare with summarise(.by = ...). Count storms whose peak wind is at least 100 knots. Write 3 sentences.
+
+```{r q20-data, eval=TRUE}
+library(readr)
+library(dplyr)
+```
+
+```{r q20-l5}
+# 1. group_by(name, year) |> mutate(peak = max(wind)) |> filter(wind == peak)
+# 2. summarise(peak = max(wind), .by = c(name, year))
+# 3. Number of storms with peak >= 100
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  650 M2 QUICK REFERENCE (readr + dplyr)              ║
+║  read_csv('f.csv', na = c('N/A', ''))  spec()        ║
+║  col_types = cols(x = col_double())   problems()     ║
+║  rename(new = `old name`)  parse_number()            ║
+║  filter(a > 1, b %in% c(...))   arrange(desc(x))     ║
+║  distinct(x)   count(x, sort = TRUE)                 ║
+║  select(a, b, ends_with('_x'))  relocate(.before)    ║
+║  mutate(y = ...)  if_else()  case_when(... ~ ...)    ║
+║  group_by(g) |> summarise(n = n(), m = mean(x))      ║
+║  summarise(..., .by = g)   ungroup()                 ║
+║  x |> f() |> g()   ==   g(f(x))                      ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*650 M2 — Data Import & Transformation with dplyr: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

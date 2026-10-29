@@ -37,7 +37,9 @@ def run_checks(mod):
     lines.append('cat("\\n@@END@@\\n")')
     rf = os.path.join(tmp, "main.R")
     open(rf, "w", encoding="utf-8").write("\n".join(lines))
-    r = subprocess.run(["Rscript", "--vanilla", rf], cwd=mod["wd"], capture_output=True, text=True)
+    env = dict(os.environ)
+    if mod.get("rlib"): env["R_LIBS"] = mod["rlib"]
+    r = subprocess.run(["Rscript", "--vanilla", rf], cwd=mod["wd"], capture_output=True, text=True, env=env)
     if "@@END@@" not in r.stdout:
         raise RuntimeError(r.stdout[-3000:] + "\n" + r.stderr[-3000:])
     vals, outs = {}, {}
@@ -89,7 +91,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = {"TRUE" if answers else "FALSE"})
 >
 > {mod["data_note"]}
 >
-> ✅ Check your numbers on the website: {mod["web_url"]}
+> {mod.get("header_link") or ("✅ Check your numbers on the website: " + mod["web_url"])}
 
 ------------------------------------------------------------------------
 ''']

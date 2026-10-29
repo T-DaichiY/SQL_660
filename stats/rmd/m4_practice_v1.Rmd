@@ -1,0 +1,419 @@
+---
+title: "550 M4 — Sampling, Hypothesis Testing & Confidence Intervals: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> No data files are needed: every data set is simulated or built into R.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/stats/m3_basics.html (M4 ①–③)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Samples, Populations & Bias
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Compare a simple random sample of 60 fish with the true population mean.
+
+```{r q1-data, eval=TRUE}
+set.seed(2026)
+pop <- round(rnorm(10000, mean = 0.9, sd = 0.3), 2)   # mercury (ppm) of 10,000 fish
+```
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+mu <- mean(pop)                         # population parameter (normally unknown)
+set.seed(1)
+srs <- sample(pop, size = 60)           # simple random sample, without replacement
+xbar <- mean(srs)                       # sample statistic
+round(c(mu = mu, xbar = xbar, error = xbar - mu), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** A boat only catches the largest fish (top 20% of mercury values). Show the bias.
+
+```{r q2-data, eval=TRUE}
+set.seed(2026)
+pop <- round(rnorm(10000, mean = 0.9, sd = 0.3), 2)   # mercury (ppm) of 10,000 fish
+```
+
+```{r q2-l2}
+cut_off <- quantile(pop, ___)               # 80th percentile
+big_fish <- pop[pop > ___]
+set.seed(1)
+conv <- sample(big_fish, size = ___)
+round(mean(conv) - mean(___), 4)            # bias
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Draw 1,000 random samples of size 60 from `pop` (`set.seed(3)`), store the sample means, and report their mean and SD. Compare the SD with sd(pop)/sqrt(60).
+
+```{r q3-data, eval=TRUE}
+set.seed(2026)
+pop <- round(rnorm(10000, mean = 0.9, sd = 0.3), 2)   # mercury (ppm) of 10,000 fish
+```
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** A café tests a new menu: 40 branches are randomly split into 20 with the new menu and 20 without (made-up data below). Decide the study type, the explanatory and response variables, and compare the mean sales.
+
+```{r q4-data, eval=TRUE}
+set.seed(44)
+branch <- data.frame(menu  = rep(c("new", "old"), each = 20),
+                     sales = round(c(rnorm(20, 5200, 400), rnorm(20, 4900, 400))))
+```
+
+```{r q4-l4}
+# 1. Study type (comment): observational or experiment? Why?
+# 2. Explanatory and response variables (comment)
+# 3. Mean sales for each menu with tapply()
+# 4. Difference new - old
+# 5. Conclusion (comment): can we talk about cause and effect here?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** A university emails 2,000 students; only 30% reply, and students who reply study more hours. Simulate this and show how non-response biases the estimate of mean study hours. Write a 3-sentence report.
+
+```{r q5-data, eval=TRUE}
+set.seed(55)
+hours <- round(rgamma(2000, shape = 4, rate = 0.25), 1)      # weekly study hours of all students
+p_reply <- pmin(0.9, 0.05 + hours / 40)                     # keener students reply more often
+replied <- runif(2000) < p_reply
+```
+
+```{r q5-l5}
+# 1. True mean hours of all 2,000 students
+# 2. Response rate
+# 3. Mean hours of the students who replied
+# 4. Size of the bias
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Test Statistics & p-values
+
+
+## Q6 · L1 · Reference
+
+**Goal:** A machine should fill 500 g bags (σ = 6 g). A sample of 36 bags has mean 502.5 g. Test H0: μ = 500 vs Ha: μ ≠ 500.
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+xbar <- 502.5; mu0 <- 500; sigma <- 6; n <- 36
+se <- sigma / sqrt(n)
+z <- (xbar - mu0) / se                     # test statistic = standardized score
+p_two <- 2 * pnorm(abs(z), lower.tail = FALSE)
+round(c(se = se, z = z, p = p_two), 4)
+if (p_two < 0.05) cat("Reject H0\n") else cat("Fail to reject H0\n")
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Same machine. The manager only worries about over-filling: Ha: μ > 500.
+
+```{r q7-l2}
+xbar <- 502.5; mu0 <- 500; sigma <- 6; n <- 36
+z <- (xbar - ___) / (sigma / sqrt(___))
+p_right <- pnorm(z, lower.tail = ___)
+round(c(z, p_right), 4)
+# Compare with the two-tailed p-value from Q6 (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Find the critical z values for α = 0.05 and α = 0.01, for two-tailed and right-tailed tests (4 values, 3 decimals). Is z = 2.5 significant in each case?
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** A company claims mean battery life is 20 hours (σ = 2.4). A reviewer tests 25 batteries and finds a mean of 19.1 hours. Test whether the true mean is less than claimed at α = 0.05.
+
+```{r q9-l4}
+# 1. H0 and Ha (comment)
+# 2. SE, z and the p-value
+# 3. Decision at alpha = 0.05
+# 4. Conclusion in context (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Simulate 10,000 sample means under H0 (μ = 500, σ = 6, n = 36, `set.seed(10)`). Estimate the two-tailed p-value for x̄ = 502.5 from the simulation and compare it with Q6. Write 3 sentences on what a p-value means.
+
+```{r q10-l5}
+# 1. null_means <- replicate(10000, mean(rnorm(36, 500, 6)))
+# 2. Share of null means at least as far from 500 as 502.5
+# 3. Compare with the formula p-value
+# 4. Histogram with a red line at 502.5
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Errors, Power & Effect Size
+
+
+## Q11 · L1 · Reference
+
+**Goal:** If H0 is true and we test at α = 0.05, how often do we wrongly reject?
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+set.seed(11)
+p_values <- replicate(5000, {
+  x <- rnorm(30, mean = 50, sd = 10)          # H0 (mu = 50) is TRUE
+  t.test(x, mu = 50)$p.value
+})
+type1_rate <- mean(p_values < 0.05)
+type1_rate                                    # close to alpha = 0.05
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Find the power of a two-sided one-sample t test with n = 30, true difference δ = 4, SD = 10, α = 0.05.
+
+```{r q12-l2}
+res <- power.t.test(n = ___, delta = ___, sd = ___, sig.level = ___,
+                    type = "one.sample", alternative = "two.sided")
+round(res$power, 3)
+1 - res$___                    # probability of a Type II error (beta)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** How many observations are needed to reach 80% and 90% power for δ = 4, SD = 10, α = 0.05 (one-sample, two-sided)? Round up.
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A tutoring program raises the mean score from 70 to 74.5 (SD 12). Compute Cohen's d, classify it (0.2 small / 0.5 medium / 0.8 large) and find the power for n = 50 at α = 0.05.
+
+```{r q14-l4}
+# 1. Cohen's d = difference / SD
+# 2. Size category (comment)
+# 3. Power for n = 50 (one-sample, two-sided)
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Simulate 5,000 studies where the true mean is 53 (H0: μ = 50, SD 10, n = 30, `set.seed(15)`). Estimate the power and the Type II error rate at α = 0.05 and α = 0.01. Write 3 sentences on the trade-off.
+
+```{r q15-l5}
+# 1. p-values from 5,000 simulated t tests (true mean 53)
+# 2. Power at alpha 0.05 and 0.01
+# 3. Type II error rates (1 - power)
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Standard Error & Confidence Intervals
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Sample means of a right-skewed variable become approximately normal as n grows.
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+set.seed(16)
+skewed <- rexp(100000, rate = 1 / 20)          # right-skewed population, mean 20, sd 20
+par(mfrow = c(1, 2))
+hist(skewed, breaks = 60, main = "Population", col = "gray")
+means40 <- replicate(2000, mean(sample(skewed, 40)))
+hist(means40, breaks = 40, main = "Means of n = 40", col = "lightblue")
+par(mfrow = c(1, 1))
+se_theory <- sd(skewed) / sqrt(40)
+round(c(sd_of_means = sd(means40), se_theory = se_theory), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Build a 95% CI for the mean of `mtcars$mpg` using t* and check it with t.test().
+
+```{r q17-l2}
+x <- mtcars$mpg
+n <- length(x); xbar <- mean(x); se <- sd(x) / sqrt(___)
+tstar <- qt(___, df = n - 1)
+ci <- xbar + c(-1, 1) * ___ * se
+round(ci, 3)
+round(t.test(x)$___, 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** For SD = 15, compute the margin of error of a mean CI for n = 25, 100, 400 at 95%, and for n = 100 at 90% and 99% (use z*). What happens when n is multiplied by 4?
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** A coffee shop records 40 wait times (minutes, below). Build a 95% CI for the mean wait, report the margin of error and decide whether the target of 5 minutes is plausible.
+
+```{r q19-data, eval=TRUE}
+set.seed(19)
+wait <- round(rgamma(40, shape = 6, rate = 1.1), 1)
+```
+
+```{r q19-l4}
+# 1. Mean, SD, n, SE
+# 2. 95% CI with t.test()
+# 3. Margin of error
+# 4. Is 5 inside the CI? (logical)
+# 5. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Simulate 2,000 samples of size 25 from N(100, 15) (`set.seed(20)`), build a 95% t interval for each, and count how many contain 100. Plot the first 50 intervals. Write 3 sentences on what '95% confidence' means.
+
+```{r q20-l5}
+# 1. A function that returns TRUE if the CI of one sample contains 100
+# 2. Coverage over 2,000 samples
+# 3. Plot the first 50 intervals (segments) with a line at 100
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  M4 QUICK REFERENCE                                  ║
+║  sample(x, n)  replicate(B, expr)  set.seed()        ║
+║  SE = sd / sqrt(n)        z = (xbar - mu0) / SE      ║
+║  p two-sided: 2 * pnorm(abs(z), lower.tail = FALSE)  ║
+║  critical: qnorm(0.975)  qt(0.975, df = n - 1)       ║
+║  t.test(x, mu = 50, alternative = 'less')            ║
+║  CI: xbar + c(-1, 1) * tstar * SE                    ║
+║  power.t.test(n, delta, sd, sig.level, type)         ║
+║  Type I = alpha   Type II = beta = 1 - power         ║
+║  Cohen's d = difference / SD                         ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*550 M4 — Sampling, Hypothesis Testing & Confidence Intervals: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

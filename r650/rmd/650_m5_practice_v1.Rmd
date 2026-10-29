@@ -1,0 +1,448 @@
+---
+title: "650 M5 — Multiple Regression: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> Needs MASS (comes with R) and car (`install.packages("car")` once). Data: `Boston` (MASS), `mtcars` and a simulated sales data set.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/r650/m5_ch1.html (650 M5 multiple regression, Ch.1-12)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Fitting & Diagnosing a Multiple Regression
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Predict median home value (medv, $1000s) from rooms (rm), lower-status share (lstat) and pupil-teacher ratio (ptratio).
+
+```{r q1-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+fit <- lm(medv ~ rm + lstat + ptratio, data = Boston)
+summary(fit)
+round(coef(fit), 4)
+# rm: one extra room is linked to about $4,500 more, holding lstat and ptratio fixed.
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Extract R², adjusted R², the residual SE and the overall F-test p-value.
+
+```{r q2-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q2-l2}
+s <- summary(___)
+r2 <- s$___; adj <- s$___; sigma <- s$___
+f <- s$fstatistic
+p_overall <- pf(f[1], f[2], f[3], lower.tail = ___)
+round(c(r2 = r2, adj = adj, sigma = sigma), 4); signif(p_overall, 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Which predictor matters most? Refit the model on scale()d variables (or multiply each slope by sd(x)/sd(y)) and compare the standardized coefficients.
+
+```{r q3-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** An analyst wants to trust this model. Check residuals vs fitted, the Q-Q plot, and count observations with |standardized residual| > 3.
+
+```{r q4-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q4-l4}
+# 1. par(mfrow = c(2, 2)); plot(fit)
+# 2. rstandard(fit): how many beyond +/- 3?
+# 3. Which homes are they (row numbers)?
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** Use Cook's distance (rule of thumb 4/n) to find influential homes, refit without them, and compare the coefficients. Write 3 sentences on whether to drop them.
+
+```{r q5-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q5-l5}
+# 1. cd <- cooks.distance(fit)
+# 2. Count cd > 4 / n
+# 3. Refit without them and compare coef()
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Collinearity, Polynomials, Categories & Interaction
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Check the VIF of a model with correlated predictors.
+
+```{r q6-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+fit_big <- lm(medv ~ rm + lstat + ptratio + tax + rad + nox, data = Boston)
+v <- vif(fit_big)
+round(v, 2)
+round(cor(Boston$tax, Boston$rad), 3)      # tax and rad move together
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Remove the predictor with the largest VIF and recompute the VIFs and adjusted R².
+
+```{r q7-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q7-l2}
+worst <- names(which.max(___))
+fit_small <- update(fit_big, . ~ . - ___)          # use the name stored in worst
+round(vif(fit_small), 2)
+round(c(big = summary(fit_big)$adj.r.squared, small = summary(fit_small)$___), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** medv vs lstat is curved. Compare a straight-line model with a quadratic one (lstat + I(lstat^2)) using adjusted R² and anova().
+
+```{r q8-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** Does being on the Charles River (chas = 1) add value after rm and lstat? Convert chas to a factor, fit the model and interpret the coefficient.
+
+```{r q9-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q9-l4}
+# 1. Boston$river <- factor(Boston$chas, labels = c("no", "yes"))
+# 2. lm(medv ~ rm + lstat + river)
+# 3. Coefficient and p-value of riveryes
+# 4. Interpretation (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Does the effect of rooms depend on lstat? Fit medv ~ rm * lstat, test the interaction, and compute the slope of rm at lstat = 5 and at lstat = 25. Write 3 sentences.
+
+```{r q10-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q10-l5}
+# 1. fit_i <- lm(medv ~ rm * lstat, data = Boston)
+# 2. p-value of rm:lstat
+# 3. Slope of rm = b_rm + b_int * lstat, at 5 and at 25
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Dates & Dummy Variables
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Turn date strings into Date objects and extract useful predictors (made-up sales data).
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+set.seed(11)
+day <- seq(as.Date("2025-01-01"), as.Date("2025-12-31"), by = "day")
+sales <- data.frame(date = day,
+                    units = round(200 + 30 * sin(2 * pi * as.numeric(format(day, "%j")) / 365) +
+                                  25 * (weekdays(day) %in% c("Saturday", "Sunday")) + rnorm(length(day), 0, 10)))
+sales$month <- factor(format(sales$date, "%m"))
+sales$weekend <- weekdays(sales$date) %in% c("Saturday", "Sunday")
+head(sales, 3)
+round(tapply(sales$units, sales$weekend, mean), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Regress units on weekend and month. How many extra units does a weekend day sell?
+
+```{r q12-l2}
+fit_d <- lm(units ~ ___ + ___, data = sales)
+round(coef(fit_d)["weekendTRUE"], 2)
+round(summary(fit_d)$___, 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Create `t` = days since 2025-01-01 (as.numeric(date - start)) and test whether there is a linear trend after controlling for weekend.
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** Recreate R's dummy variables for `cyl` in mtcars with model.matrix(), and show that lm() with the factor gives the same coefficients as lm() with the dummies.
+
+```{r q14-l4}
+# 1. model.matrix(~ factor(cyl), data = mtcars)
+# 2. lm(mpg ~ factor(cyl)) vs lm(mpg ~ d6 + d8)
+# 3. Which level is the baseline? (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Use relevel() to make 8 cylinders the baseline, refit, and explain how the coefficients changed while the fitted values stayed the same. Write 3 sentences.
+
+```{r q15-l5}
+# 1. mtcars$cyl_f <- relevel(factor(mtcars$cyl), ref = "8")
+# 2. Refit lm(mpg ~ cyl_f)
+# 3. Check: are the fitted values identical? all.equal()
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Variable Selection & Evaluation
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Evaluate a model on data it has not seen.
+
+```{r q16-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+set.seed(16)
+idx <- sample(nrow(Boston), round(0.7 * nrow(Boston)))
+train <- Boston[idx, ]; test <- Boston[-idx, ]
+m <- lm(medv ~ rm + lstat + ptratio, data = train)
+rmse <- function(obs, pred) sqrt(mean((obs - pred)^2))
+round(c(train = rmse(train$medv, fitted(m)), test = rmse(test$medv, predict(m, test))), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Start from a model with all predictors and let step() remove variables by AIC.
+
+```{r q17-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q17-l2}
+full <- lm(medv ~ ., data = Boston[, setdiff(names(Boston), "river")])
+back <- step(full, direction = "___", trace = 0)
+formula(back)
+length(coef(___)) - 1          # number of predictors kept
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Run forward selection (scope = the full model) from the empty model, and both-direction stepwise selection. Do they choose the same predictors as backward selection?
+
+```{r q18-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** A realtor wants a simple but accurate model. Compare three models (rm + lstat; rm + lstat + ptratio; the backward-selection model) with adjusted R², AIC, BIC and test RMSE (same split as Q16).
+
+```{r q19-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q19-l4}
+# 1. Fit the three models on train
+# 2. A table of adj. R-squared, AIC, BIC and test RMSE
+# 3. Recommendation (comment): which model?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Estimate the prediction error of the medium model with 5-fold cross-validation (`set.seed(20)`) instead of a single split. Write a 4-sentence report.
+
+```{r q20-data, eval=TRUE}
+library(MASS)      # Boston housing data
+library(car)       # vif()
+```
+
+```{r q20-l5}
+# 1. folds <- sample(rep(1:5, length.out = nrow(Boston)))
+# 2. For each fold: fit on the other folds, RMSE on this fold
+# 3. Mean and SD of the 5 RMSEs
+# 4. Report (4 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  650 M5 QUICK REFERENCE (multiple regression)        ║
+║  lm(y ~ x1 + x2 + x3)  summary()  adj.r.squared      ║
+║  standardized: lm(scale(y) ~ scale(x1) + ...)        ║
+║  rstandard(fit)  cooks.distance(fit) > 4/n           ║
+║  car::vif(fit) > 5-10 = collinearity                 ║
+║  poly: y ~ x + I(x^2)    interaction: y ~ x1 * x2    ║
+║  factor(x)  relevel(f, ref)  model.matrix(~ f)       ║
+║  dates: as.Date()  format(d, '%m')  weekdays(d)      ║
+║  step(fit, direction = 'backward'/'forward'/'both')  ║
+║  AIC() BIC()  RMSE = sqrt(mean((obs - pred)^2))      ║
+║  k-fold CV: sample(rep(1:k, length.out = n))         ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*650 M5 — Multiple Regression: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

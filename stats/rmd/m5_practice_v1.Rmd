@@ -1,0 +1,399 @@
+---
+title: "550 M5 — t Procedures, ANOVA & Chi-square Tests: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> No data files are needed: built-in data sets (sleep, mtcars, ToothGrowth, chickwts, InsectSprays, HairEyeColor, warpbreaks, airquality) and small made-up tables.
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/stats/m5_t_intro.html (M5 t / ANOVA / chi-square)
+
+------------------------------------------------------------------------
+
+
+# Topic A — t Procedures, Conditions & Bootstrap
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Is the mean sleep gain in the built-in `sleep` data (group 1) different from 0?
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+g1 <- sleep$extra[sleep$group == 1]
+res <- t.test(g1, mu = 0)                 # H0: mu = 0, Ha: mu != 0
+res
+round(c(t = unname(res$statistic), df = unname(res$parameter), p = res$p.value), 4)
+round(res$conf.int, 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Compare mpg of automatic (am = 0) and manual (am = 1) cars in `mtcars`.
+
+```{r q2-l2}
+res <- t.test(mpg ~ ___, data = ___)          # Welch by default
+round(c(t = unname(res$statistic), df = unname(res$___), p = res$p.value), 4)
+round(res$conf.int, 3)                          # CI for mu(auto) - mu(manual)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** The `sleep` data give two drugs to the SAME 10 patients (ID). Run a paired t test of drug 2 vs drug 1 and compare its p-value with an unpaired test.
+
+```{r q3-l3}
+# Write all your code here
+# Hint: reshape with sleep$extra[sleep$group == 1] and [== 2]
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** Before a t test on `ToothGrowth` (len for supp = VC vs OJ), check the conditions: sample sizes, histograms/boxplots, and shapiro.test() per group. Then run the test.
+
+```{r q4-l4}
+# 1. n per group
+# 2. boxplot(len ~ supp, data = ToothGrowth)
+# 3. shapiro.test() for each group
+# 4. Welch t test
+# 5. Conclusion (comment): are the conditions reasonable? what does the test say?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** Bootstrap the mean of `ToothGrowth$len[ToothGrowth$supp == 'VC']` (`set.seed(5)`, 5,000 resamples). Compare the percentile 95% interval with the t interval. Write 3 sentences.
+
+```{r q5-l5}
+# 1. x <- the VC lengths
+# 2. boot_means <- replicate(5000, mean(sample(x, replace = TRUE)))
+# 3. Percentile interval: quantile(boot_means, c(0.025, 0.975))
+# 4. t interval: t.test(x)$conf.int
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — One-way ANOVA & Post-hoc Tests
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Do chick weights differ by feed type (`chickwts`)?
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+boxplot(weight ~ feed, data = chickwts, las = 2, col = "lightblue")
+fit <- aov(weight ~ feed, data = chickwts)
+summary(fit)
+tab <- summary(fit)[[1]]
+round(c(F = tab$`F value`[1], p = tab$`Pr(>F)`[1]), 6)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Compute SSB, SSW, MSB, MSW and F for `weight ~ feed` and check against Q6.
+
+```{r q7-l2}
+y <- chickwts$weight; g <- chickwts$feed
+grand <- mean(y)
+group_means <- tapply(y, g, mean); n_g <- tapply(y, g, length)
+SSB <- sum(n_g * (group_means - ___)^2)
+SSW <- sum((y - group_means[___])^2)
+k <- length(n_g); N <- length(y)
+MSB <- SSB / (k - ___); MSW <- SSW / (N - ___)
+F_stat <- MSB / MSW
+round(c(SSB = SSB, SSW = SSW, F = F_stat), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Use `pf()` to get the ANOVA p-value from F, df1 and df2 in Q7, and draw the F curve with the observed F marked.
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** An agronomist compares six sprays (`InsectSprays`, count of insects). Run the ANOVA, report F and p, and say which spray has the lowest mean count.
+
+```{r q9-l4}
+# 1. Boxplot of count by spray
+# 2. Group means
+# 3. ANOVA: F, df and p-value
+# 4. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** After the chickwts ANOVA, run TukeyHSD() and a Bonferroni pairwise t test. How many of the 15 pairs are significant at 0.05 with each method? Write 3 sentences on why we need post-hoc tests.
+
+```{r q10-l5}
+# 1. TukeyHSD(fit)
+# 2. Count pairs with p adj < 0.05
+# 3. pairwise.t.test(..., p.adjust.method = "bonferroni")
+# 4. Count pairs with p < 0.05
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Chi-square Tests
+
+
+## Q11 · L1 · Reference
+
+**Goal:** A store expects equal sales on weekdays Mon–Fri. Observed sales (made-up) are below.
+
+```{r q11-data, eval=TRUE}
+obs <- c(Mon = 54, Tue = 41, Wed = 39, Thu = 47, Fri = 69)
+```
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+expected <- rep(sum(obs) / 5, 5)
+chi_sq <- sum((obs - expected)^2 / expected)
+p_val <- pchisq(chi_sq, df = 5 - 1, lower.tail = FALSE)
+round(c(chi_sq = chi_sq, p = p_val), 4)
+chisq.test(obs)                        # same result
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** A website claims 50% of visitors use phones, 35% computers and 15% tablets. A sample of 400 visitors (made-up) is below.
+
+```{r q12-data, eval=TRUE}
+visits <- c(phone = 182, computer = 160, tablet = 58)
+```
+
+```{r q12-l2}
+res <- chisq.test(visits, p = c(___, ___, ___))
+round(res$statistic, 3); round(res$p.value, 4)
+res$___                                 # expected counts
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Is hair colour independent of eye colour? Use `HairEyeColor` summed over Sex (`margin.table(HairEyeColor, c(1, 2))`). Report χ², df, p and the largest standardized residual.
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A café records the payment method of 300 customers by age group (made-up table). Test whether payment method depends on age group and describe the pattern with row proportions.
+
+```{r q14-data, eval=TRUE}
+pay <- matrix(c(40, 25, 10,
+                30, 45, 20,
+                15, 50, 65), nrow = 3, byrow = TRUE,
+              dimnames = list(age = c("18-29", "30-49", "50+"), method = c("Card", "Phone", "Cash")))
+```
+
+```{r q14-l4}
+# 1. addmargins(pay)
+# 2. Row proportions (3 decimals)
+# 3. chisq.test(pay): statistic, df, p
+# 4. Check: all expected counts >= 5?
+# 5. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Using `mtcars`, make a table of gear by am and test independence. The expected counts are small: compare chisq.test() with simulate.p.value = TRUE (`set.seed(15)`, B = 10000) and fisher.test(). Write 3 sentences.
+
+```{r q15-l5}
+# 1. tab <- table(mtcars$gear, mtcars$am)
+# 2. chisq.test(tab) and its expected counts (warning?)
+# 3. chisq.test(tab, simulate.p.value = TRUE, B = 10000)
+# 4. fisher.test(tab)
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Choosing Tests & Reporting
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Compute eta squared (SSB / SST) for the chickwts ANOVA.
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+tab <- summary(aov(weight ~ feed, data = chickwts))[[1]]
+ss <- tab$`Sum Sq`
+eta_sq <- ss[1] / sum(ss)
+round(eta_sq, 3)            # share of variation in weight explained by feed
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** For each research question, choose the test and run it on the data given.
+
+```{r q17-l2}
+# a) Is mean Ozone different between May and August (airquality)?   -> ___ test
+t.test(Ozone ~ Month, data = subset(airquality, Month %in% c(___, ___)))$p.value
+# b) Does the number of cylinders differ by transmission (mtcars)?   -> ___ test
+suppressWarnings(chisq.test(table(mtcars$___, mtcars$___))$p.value)
+# c) Does mean breaks differ across tension levels (warpbreaks)?       -> ___
+summary(aov(breaks ~ ___, data = warpbreaks))
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** With `set.seed(18)`, simulate two groups of 20,000 with means 100 and 100.5 (SD 15). Run a t test and compute Cohen's d. Is the result important?
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** A textile mill compares breaks for low, medium and high tension (`warpbreaks`). Run the ANOVA and Tukey test, and report which pairs differ.
+
+```{r q19-l4}
+# 1. Group means of breaks by tension
+# 2. aov() and summary()
+# 3. TukeyHSD(): which pairs have p adj < 0.05?
+# 4. Recommendation (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** ToothGrowth has two supplements and three doses. (1) Test dose with a one-way ANOVA. (2) Test supp × dose-group independence of 'long teeth' (len > 20). (3) Write a 4-sentence report for a nutrition team.
+
+```{r q20-l5}
+# 1. ToothGrowth$dose_f <- factor(ToothGrowth$dose); ANOVA of len ~ dose_f
+# 2. long <- ToothGrowth$len > 20; table(ToothGrowth$supp, long); chisq.test()
+# 3. Report (4 sentences as comments):
+# Question:
+# Results:
+# Conclusion:
+# Recommendation:
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  M5 QUICK REFERENCE                                  ║
+║  t.test(x, mu = 0)    t.test(y ~ group, data = df)   ║
+║  t.test(x2, x1, paired = TRUE)   shapiro.test(x)     ║
+║  bootstrap: replicate(B, mean(sample(x, TRUE)))      ║
+║  aov(y ~ group, data = df)   summary(fit)            ║
+║  F = MSB / MSW   pf(F, k - 1, N - k, lower = FALSE)  ║
+║  TukeyHSD(fit)   pairwise.t.test(y, g, 'bonferroni') ║
+║  chisq.test(obs, p = probs)       goodness of fit    ║
+║  chisq.test(table)  $expected  $stdres  fisher.test  ║
+║  eta^2 = SSB / SST    Cohen's d = diff / SD          ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*550 M5 — t Procedures, ANOVA & Chi-square Tests: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

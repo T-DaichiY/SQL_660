@@ -1,0 +1,378 @@
+---
+title: "550 M6 — Correlation & Linear Regression: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> No data files are needed: built-in data sets (mtcars, airquality, anscombe, faithful).
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/stats/m6_corr_basics.html (M6 correlation & regression)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Correlation
+
+
+## Q1 · L1 · Reference
+
+**Goal:** How strongly is car weight related to fuel economy (`mtcars`)?
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+plot(mpg ~ wt, data = mtcars, pch = 16, xlab = "Weight (1000 lb)", ylab = "mpg")
+r <- cor(mtcars$wt, mtcars$mpg)
+round(r, 4)            # strong negative linear association
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Compute r from z-scores: r = Σ(zx · zy) / (n − 1).
+
+```{r q2-l2}
+x <- mtcars$wt; y <- mtcars$mpg; n <- length(x)
+zx <- (x - mean(x)) / ___(x)
+zy <- (y - ___(y)) / sd(y)
+r_hand <- sum(___ * ___) / (n - 1)
+round(c(r_hand, cor(x, y)), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Make a correlation matrix of mpg, wt, hp and qsec (`mtcars`), rounded to 2 decimals, and a scatterplot matrix with pairs(). Which variable is most strongly correlated with mpg?
+
+```{r q3-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** Show with `airquality` (Temp vs Ozone, complete cases) that r does not change when Temp is converted from °F to °C, nor when x and y are swapped. Then test the correlation with cor.test().
+
+```{r q4-l4}
+# 1. aq <- na.omit(airquality[, c("Ozone", "Temp")])
+# 2. r with Temp in F, then in C ((F - 32) * 5 / 9)
+# 3. r with x and y swapped
+# 4. cor.test(): r, p-value, 95% CI
+# 5. Conclusion (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** With `anscombe`, compute r for the four (x, y) pairs and plot them in a 2 × 2 grid. Then show how one outlier changes r for made-up data. Write 3 sentences of cautions about correlation.
+
+```{r q5-data, eval=TRUE}
+set.seed(5)
+x <- 1:20; y <- 2 + 0.5 * x + rnorm(20)
+```
+
+```{r q5-l5}
+# 1. r for anscombe x1-y1 ... x4-y4
+# 2. par(mfrow = c(2, 2)) and four plots
+# 3. r for (x, y), then add the point (40, 2) and recompute
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Least-squares Regression
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Regress mpg on wt and interpret the slope.
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+fit <- lm(mpg ~ wt, data = mtcars)
+coef(fit)
+plot(mpg ~ wt, data = mtcars, pch = 16); abline(fit, col = "red", lwd = 2)
+# Slope: each extra 1,000 lb is associated with about 5.34 fewer mpg on average.
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** b1 = r · sy / sx and b0 = ȳ − b1 · x̄. Check against coef().
+
+```{r q7-l2}
+x <- mtcars$wt; y <- mtcars$mpg
+b1 <- cor(x, y) * ___(y) / ___(x)
+b0 <- mean(___) - b1 * mean(___)
+round(c(b0 = b0, b1 = b1), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** Predict mpg for a car of 3,000 lb (wt = 3). Find the residual of the Mazda RX4 and the car with the largest positive residual.
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** Check the mpg ~ wt model: residual plot, R² and the residual standard error. Then try mpg ~ hp and compare R².
+
+```{r q9-l4}
+# 1. plot(fitted(fit), resid(fit)); abline(h = 0)
+# 2. R-squared and residual standard error from summary(fit)
+# 3. fit_hp <- lm(mpg ~ hp, data = mtcars): its R-squared
+# 4. Conclusion (comment): which predictor explains more variation?
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Compare the sum of squared residuals (SSE) of the least-squares line with two other lines (y = 37 − 5x and y = 40 − 6x) for mpg ~ wt. Show that R² = r². Write 3 sentences.
+
+```{r q10-l5}
+# 1. SSE function for a given intercept and slope
+# 2. SSE for the lm line and the two other lines
+# 3. R-squared vs cor(wt, mpg)^2
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Inference for the Slope & Prediction
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Is the slope of mpg ~ wt different from 0?
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+s <- summary(fit)
+s$coefficients                      # estimate, SE, t value, p-value
+round(confint(fit, level = 0.95), 4)
+# t = estimate / SE, df = n - 2
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Rebuild t and the 95% CI for the slope from its estimate and SE.
+
+```{r q12-l2}
+est <- summary(fit)$coefficients["wt", "___"]
+se  <- summary(fit)$coefficients["wt", "___"]
+t_stat <- est / se
+df <- nrow(mtcars) - ___
+tstar <- qt(___, df)
+round(c(t = t_stat, lower = est - tstar * se, upper = est + tstar * se), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** Regress Ozone on Temp (`airquality`, complete cases). Report the slope, its 95% CI, p-value and R². Interpret the slope in context.
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A park ranger predicts the waiting time to the next eruption from the eruption length (`faithful`). Fit the model, test the slope, and give a 95% prediction interval for a 4-minute eruption.
+
+```{r q14-l4}
+# 1. Scatterplot and lm(waiting ~ eruptions)
+# 2. Slope, its p-value and R-squared
+# 3. 95% prediction interval for eruptions = 4
+# 4. Advice for visitors (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Use bootstrapping (`set.seed(15)`, 2,000 resamples of rows of mtcars) to get a 95% percentile interval for the mpg ~ wt slope and compare it with confint(). Write 3 sentences.
+
+```{r q15-l5}
+# 1. A function that refits lm on a resample of rows and returns the slope
+# 2. 2,000 bootstrap slopes
+# 3. quantile(..., c(0.025, 0.975)) vs confint(fit)
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Categorical & Multiple Regression
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Regress mpg on transmission type (am as a factor).
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+mtcars$trans <- factor(mtcars$am, labels = c("auto", "manual"))
+fit_c <- lm(mpg ~ trans, data = mtcars)
+coef(fit_c)
+tapply(mtcars$mpg, mtcars$trans, mean)
+# Intercept = mean of the baseline (auto); slope = manual - auto.
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Regress mpg on number of cylinders as a factor and read the coefficients.
+
+```{r q17-l2}
+mtcars$cyl_f <- factor(mtcars$___)
+fit_cyl <- lm(mpg ~ ___, data = mtcars)
+round(coef(fit_cyl), 4)
+round(tapply(mtcars$mpg, mtcars$___, mean), 4)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Fit mpg ~ wt + hp. Compare the wt coefficient with the simple model and report adjusted R² for both models.
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** A buyer wants the expected mpg of a 3,200 lb car with 150 hp, with a 95% confidence interval for the mean and a 95% prediction interval for one car.
+
+```{r q19-l4}
+# 1. newcar <- data.frame(wt = 3.2, hp = 150)
+# 2. predict(..., interval = "confidence")
+# 3. predict(..., interval = "prediction")
+# 4. Explain the difference (comment):
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Compare three models for mpg: wt; wt + hp; wt + hp + trans. Use adjusted R², the residual SE and the p-value of each new term. Choose a model and write a 4-sentence report.
+
+```{r q20-l5}
+# 1. Fit the three models
+# 2. Table of adjusted R-squared and sigma
+# 3. anova(model2, model3): does trans add anything?
+# 4. Residual plot of the chosen model
+# 5. Report (4 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  M6 QUICK REFERENCE                                  ║
+║  plot(y ~ x, data = df)   cor(x, y)   cor(df)        ║
+║  cor.test(x, y)   pairs(df)                          ║
+║  fit <- lm(y ~ x, data = df)  coef  resid  fitted    ║
+║  b1 = r * sy / sx     b0 = ybar - b1 * xbar          ║
+║  summary(fit)$r.squared   $sigma   $coefficients     ║
+║  confint(fit)   t = estimate / SE   df = n - 2       ║
+║  predict(fit, newdata, interval = 'confidence')      ║
+║  predict(fit, newdata, interval = 'prediction')      ║
+║  factor predictors: lm(y ~ factor(g))  baseline      ║
+║  lm(y ~ x1 + x2)  adj.r.squared  anova(m1, m2)       ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*550 M6 — Correlation & Linear Regression: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*
