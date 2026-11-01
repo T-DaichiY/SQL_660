@@ -30,7 +30,7 @@
     margin:.5rem 0;transition:all .2s;}
   .or-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
   .output-reveal{background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:8px;padding:1rem 1.25rem;
-    font-size:.85rem;line-height:1.7;margin:.25rem 0 1rem;color:#065f46;font-family:'SF Mono','Fira Code',monospace;
+    font-size:1rem;line-height:1.7;margin:.25rem 0 1rem;color:#065f46;font-family:'SF Mono','Fira Code',monospace;
     white-space:pre-wrap;display:none;overflow-x:auto;}
   .output-reveal.or-open{display:block;}
   .or-label{font-size:.72rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#16a34a;

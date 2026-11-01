@@ -139,7 +139,7 @@ def web_page(mod, vals, outs):
 <title>演習 {mod["short"]} {mod["name_ja"]}</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="practice-arena.css?v=1">
-<style>.arena-data{{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.6rem .8rem;margin:.5rem 0 0;font-size:.82rem;white-space:pre-wrap;overflow-x:auto}}</style>
+<style>.arena-data{{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.6rem .8rem;margin:.5rem 0 0;font-size:1rem;white-space:pre-wrap;overflow-x:auto}}</style>
 </head>
 <body>
 <header class="site-header">
