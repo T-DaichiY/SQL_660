@@ -138,6 +138,7 @@ def web_page(mod, vals, outs):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>演習 {mod["short"]} {mod["name_ja"]}</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
 <link rel="stylesheet" href="practice-arena.css?v=1">
 <style>.arena-data{{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.6rem .8rem;margin:.5rem 0 0;font-size:1rem;white-space:pre-wrap;overflow-x:auto}}</style>
 </head>
@@ -200,6 +201,7 @@ renderStatsArena(PROBLEMS, {{
   advancedEl: document.getElementById("advanced-container")
 }});
 </script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
 <script src="../hub-fab.js"></script>
 </body>
 </html>

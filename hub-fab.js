@@ -24,7 +24,7 @@
     d.onclick=tog('done');s.onclick=tog('star');paint();
     box.appendChild(hub);if(!homeOnly){box.appendChild(s);box.appendChild(d);}
     var isEasy=/_easy\.html$/.test(id),nx=NEXT[key];
-    if(nx){var tgt=(isEasy&&nx.e)?nx.e:nx.n;var nb=mk(homeOnly?'▶ はじめる':'次へ ▶',null,base+tgt);nb.title=nx.t;nb.style.background='#2563eb';nb.style.padding='8px 16px';box.appendChild(nb);}
+    if(nx){var tgt=(isEasy&&nx.e)?nx.e:nx.n;var nb=mk(homeOnly?'▶ はじめる':'次へ ▶',null,base+tgt);nb.title=nx.t;nb.style.background='#4471B8';nb.style.padding='8px 16px';box.appendChild(nb);}
     (document.body||document.documentElement).appendChild(box);
   }catch(e){}
 })();

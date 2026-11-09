@@ -4,25 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>データサイエンス 学習ハブ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap">
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--ink:#1e293b;--sub:#64748b;--line:#e2e8f0;--acc:#2563eb;--ok:#16a34a;--star:#f59e0b}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#1e293b;--ink:#e2e8f0;--sub:#94a3b8;--line:#334155;--acc:#60a5fa}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.6}
-.hero{background:linear-gradient(135deg,#1e293b,#1d4ed8 55%,#7c3aed);color:#fff;padding:2.2rem 16px 4.5rem;text-align:center}
-.hero h1{margin:0 0 .4rem;font-size:1.9rem}.hero p{margin:0;opacity:.9;font-size:.95rem}
+:root{--bg:#F4F7FD;--card:rgba(255,253,247,.9);--ink:#111827;--sub:#6b7280;--line:#E2E2DE;--acc:#4471B8;--ok:#3C8A5A;--star:#C8913A}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans JP",-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.6;min-height:100vh;background:linear-gradient(180deg,#E6F0FF 0%,#EEEAFB 38%,#FCEFE4 72%,#E9F5EC 100%)}
+.hero{background:linear-gradient(120deg,#DCE6FB,#E7DDF6 50%,#F7DDE3);color:var(--ink);border-bottom:2px solid #EBCB87;padding:2.2rem 16px 4.5rem;text-align:center}
+.hero h1{margin:0 0 .4rem;font-size:1.9rem}.hero p{margin:0;color:#374151;font-size:.95rem}
 .wrap{max-width:1100px;margin:-3rem auto 3rem;padding:0 16px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;box-shadow:0 4px 14px rgba(0,0,0,.06);margin-bottom:1rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;margin-bottom:1rem}
 .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 input[type=search]{flex:1;min-width:200px;padding:.65rem .9rem;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:1rem}
 .chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:.35rem .85rem;font-size:.85rem;cursor:pointer}
 .chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
 .btn{border:0;background:var(--acc);color:#fff;border-radius:10px;padding:.55rem 1rem;font-size:.9rem;cursor:pointer;text-decoration:none;display:inline-block}
 .btn.alt{background:var(--star)}
+.it{box-shadow:none}
 .prog{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem}
 .pc{background:var(--bg);border-radius:12px;padding:.7rem .9rem}.pc b{font-size:.95rem}
 .bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:.4rem}.bar i{display:block;height:100%;background:var(--ok)}
 .pc small{color:var(--sub)}
-h2.mod{margin:1.6rem 0 .6rem;font-size:1.05rem;border-left:4px solid var(--acc);padding-left:.6rem}
+section.modbox{background:rgba(255,253,247,.55);border:1.5px solid rgba(120,110,160,.28);border-radius:16px;padding:.2rem 1rem 1rem;margin:1.1rem 0}
+section.modbox .it{background:rgba(255,255,255,.85)}
+h2.mod{margin:1rem 0 .7rem;font-size:1.05rem;border-left:4px solid var(--acc);padding-left:.6rem}
 .cname{margin:2rem 0 0;font-size:1.3rem}
 .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:.7rem}
 .it{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem .9rem;display:flex;flex-direction:column;gap:.3rem}
@@ -74,11 +77,11 @@ function render(){
     html+='<h2 class="cname">'+c.icon+' '+esc(c.name)+' <a class="chip" style="text-decoration:none;font-size:.75rem" href="'+c.home+'">概要ページ</a></h2>';
     var mods=[];ci.forEach(function(i){if(mods.indexOf(i.mod)<0)mods.push(i.mod)});
     mods.forEach(function(m){
-      html+='<h2 class="mod">'+esc(m||'レッスン')+'</h2><div class="list">';
+      html+='<section class="modbox"><h2 class="mod">'+esc(m||'レッスン')+'</h2><div class="list">';
       ci.filter(function(i){return i.mod===m}).forEach(function(i){
         var s=st[i.id];
         html+='<div class="it'+(s==='done'?' done':'')+'"><div class="tg">'+i.icon+' '+esc(i.tag)+'</div><div class="tt"><a href="'+i.id+'">'+esc(i.title)+'</a></div><div class="ds">'+esc(i.desc)+'</div><div class="acts"><a href="'+i.id+'">'+(i.practice?'🏋️ 演習へ':'📘 本編')+'</a>'+(i.easy?'<a href="'+i.easy+'">🍎 やさしい版</a>':'')+'<button data-id="'+i.id+'" data-a="done" class="'+(s==='done'?'on-done':'')+'">✓ 復習済み</button><button data-id="'+i.id+'" data-a="star" class="'+(s==='star'?'on-star':'')+'">★ 要復習</button></div></div>'});
-      html+='</div>'});
+      html+='</div></section>'});
   });
   $('out').innerHTML=html||'<div class="none">該当するページがありません</div>';
   var ph='';
