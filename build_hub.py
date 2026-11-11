@@ -7,6 +7,8 @@ COURSES = [
     dict(id='stats', name='統計・回帰（550）', icon='📊', index='stats/index.html', prefix='stats/'),
     dict(id='py', name='Python（520）', icon='🐍', index='python520/index.html', prefix='python520/'),
     dict(id='r650', name='R データ分析（650）', icon='📈', index='r650/index.html', prefix='r650/'),
+    dict(id='ml670', name='ML 統計復習（670）', icon='🤖', index='stats/cheat_ml.html', prefix='stats/', parse=False),
+    dict(id='py580', name='データ操作（580）', icon='🐼', index='python580/index.html', prefix='python580/'),
 ]
 def clean(s):
     s = re.sub(r'<a [^>]*>.*?</a>', '', s, flags=re.S)
@@ -14,6 +16,7 @@ def clean(s):
     return html.unescape(re.sub(r'\s+', ' ', s)).strip()
 items = []
 for c in COURSES:
+    if not c.get('parse', True) or not os.path.exists(c['index']): continue
     t = open(c['index'], encoding='utf-8').read()
     base = os.path.dirname(c['index'])
     parts = re.split(r'(<h2>.*?</h2>)', t, flags=re.S)
@@ -54,10 +57,13 @@ for i in items:
         if '/ex_650_' in i['id']: i['mod'] = '🏋️ R 演習（650 M4–M6）'
     elif i['course'] == 'stats' and '/ex_550_' in i['id']:
         i['mod'] = '🏋️ 統計 演習（550）'
+    elif i['course'] == 'stats' and i['mod'].startswith('670'):
+        i['course'] = 'ml670'      # 670 ML review gets its own section in the hub
 seen = set(); out = []
 for i in items:
     if i['id'] in seen: continue
     seen.add(i['id']); out.append(i)
+COURSES = [c for c in COURSES if os.path.exists(c['index'])]
 data = json.dumps(dict(courses=[dict(id=c['id'], name=c['name'], icon=c['icon'], home=c['index']) for c in COURSES], items=out), ensure_ascii=False)
 # next-page map for hub-fab.js: reading order = item order within each course
 NEXT = {}

@@ -43,3 +43,19 @@
 document.querySelectorAll('.unit strong,.note-box strong,.warn-box strong,.teal-box strong,.tip-box strong').forEach(function(s){
   if(getComputedStyle(s).display!=='inline')s.classList.add('no-hl');
 });
+
+/* Download links (.Rmd / .ipynb / .R / .py / .csv …): GitHub Pages serves these as plain text, so the
+   browser opens them instead of saving. Fetch the file and hand it over as a real download. */
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[download]');
+  if (!a || !/\.(Rmd|R|ipynb|py|csv|sql|txt|json)$/i.test(a.getAttribute('href') || '')) return;
+  if (!window.fetch || !window.Blob || location.protocol === 'file:') return;
+  e.preventDefault();
+  var name = a.getAttribute('download') || a.getAttribute('href').split('/').pop();
+  fetch(a.href).then(function (r) { if (!r.ok) throw r.status; return r.blob(); }).then(function (b) {
+    var u = URL.createObjectURL(new Blob([b], { type: 'application/octet-stream' }));
+    var t = document.createElement('a'); t.href = u; t.download = name; t.style.display = 'none';
+    document.body.appendChild(t); t.click();
+    setTimeout(function () { URL.revokeObjectURL(u); t.remove(); }, 4000);
+  }).catch(function () { location.href = a.href; });
+});

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DTSC580 pandas① SeriesとDataFrame</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC580 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m4"><span class="nav-mod">M3 pandas入門</span><span class="navg"><a class="n-main active" href="pd_structs.html">① Series・DataFrame</a><a class="n-easy" href="pd_structs_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ pandas</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">M3 · pandas入門 — Series & DataFrame</div>
+  <h1>🐼 pandas①：SeriesとDataFrame</h1>
+  <p>pandasの2つの基本のデータ構造を、作る・取り出す・足す・消すところまで、本物のCSVを使って動かしながら学びます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① Series</a><a href="#unit2">② DataFrame</a><a href="#unit3">③ 列と行</a><a href="#unit4">④ Index</a><a href="#quiz">📝 Quiz</a><a href="pd_structs_easy.html">🍎 やさしい版</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="teal-box">📖 <strong>対応する教科書：</strong>McKinney, <em>Python for Data Analysis</em>, 3rd ed.（<a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">オンライン版</a>）<ul><li>PDA3E 5.1 Introduction to pandas Data Structures</li></ul><small>解説文はこのサイト独自の日本語です。コード例は本書のMITライセンスのコードの考え方に沿って、動作を確認したものを使っています。</small></div>
+<div class="teal-box"><strong>🧪 手を動かそう</strong>（本と同じファイルを使います：<code>examples/tips.csv</code>）<p><code>tips.csv</code> を読み込み、(1) 行数と列名を確認、(2) <code>tip / total_bill</code> の割合の列を足し、(3) 割合が最大の行を <code>loc</code> で取り出してみましょう。</p><small>ファイルは <a href="downloads/580_data.zip">580_data.zip</a> にもあります。Jupyterで同じパスのまま動きます。 対応する演習：<a href="pd_practice.html">🏋️ 演習アリーナ</a></small></div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>Series：名札つきの1列</h2><div class="unit-sub">値（values）と索引（index）と名前（name）</div></div>
+  </div>
+<p><strong>Series</strong>は、1次元の値の並びに<strong>ラベル（索引）</strong>がセットになったデータです。NumPy配列は「何番目」でしか呼べませんが、Seriesは「<code>'Tokyo'</code>」のように<strong>自分で付けた名前</strong>でも呼べます。</p><pre class="code-block">
+<span class="cl"><span class="kw">import</span> pandas <span class="kw">as</span> pd</span>
+<span class="cl"></span>
+<span class="cl">obj = pd.Series([<span class="nm">4</span>, <span class="nm">7</span>, -<span class="nm">5</span>, <span class="nm">3</span>])</span>
+<span class="cl">obj</span>
+</pre><div class="output-reveal">0    4
+1    7
+2   -5
+3    3
+dtype: int64</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(obj.array)    <span class="cm"># 値の部分</span></span>
+<span class="cl"><span class="kw">print</span>(obj.index)    <span class="cm"># 索引の部分（省略すると 0,1,2,…）</span></span>
+</pre><div class="output-reveal">&lt;NumpyExtensionArray&gt;
+[4, 7, -5, 3]
+Length: 4, dtype: int64
+RangeIndex(start=0, stop=4, step=1)</div><p>索引は自分で決められます。<strong>辞書から作ると、キーが索引になります</strong>。</p><pre class="code-block">
+<span class="cl">pop = pd.Series({<span class="st">'Tokyo'</span>: <span class="nm">37.4</span>, <span class="st">'Delhi'</span>: <span class="nm">31.0</span>, <span class="st">'Shanghai'</span>: <span class="nm">27.1</span>, <span class="st">'Osaka'</span>: <span class="nm">19.2</span>})</span>
+<span class="cl"><span class="kw">print</span>(pop)</span>
+<span class="cl"><span class="kw">print</span>(pop[<span class="st">'Delhi'</span>])</span>
+<span class="cl">pop[[<span class="st">'Osaka'</span>, <span class="st">'Tokyo'</span>]]    <span class="cm"># 複数ラベルはリストで</span></span>
+</pre><div class="output-reveal">Tokyo       37.4
+Delhi       31.0
+Shanghai    27.1
+Osaka       19.2
+dtype: float64
+31.0
+Osaka    19.2
+Tokyo    37.4
+dtype: float64</div><p>値の部分は条件で絞ったり、計算したりできます。ラベルは計算しても<strong>そのまま付いてきます</strong>。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(pop[pop &gt; <span class="nm">25</span>])       <span class="cm"># 条件で絞る</span></span>
+<span class="cl"><span class="kw">print</span>(pop * <span class="nm">1000</span>)          <span class="cm"># 全部に掛ける</span></span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'Osaka'</span> <span class="kw">in</span> pop)       <span class="cm"># 索引にあるか</span></span>
+</pre><div class="output-reveal">Tokyo       37.4
+Delhi       31.0
+Shanghai    27.1
+dtype: float64
+Tokyo       37400.0
+Delhi       31000.0
+Shanghai    27100.0
+Osaka       19200.0
+dtype: float64
+True</div><pre class="code-block">
+<span class="cl">pop.name = <span class="st">'population'</span>          <span class="cm"># Series自身の名前</span></span>
+<span class="cl">pop.index.name = <span class="st">'city'</span>         <span class="cm"># 索引の名前</span></span>
+<span class="cl">pop</span>
+</pre><div class="output-reveal">city
+Tokyo       37.4
+Delhi       31.0
+Shanghai    27.1
+Osaka       19.2
+Name: population, dtype: float64</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>Seriesは「名札つきのNumPy配列」。計算しても名札が付いたままなので、どの値が何だったか迷いません。</p></div><div class="practice-card" id="p-s1-u1">
+    <div class="ptitle">💻 ミニ練習：Seriesを作る</div>
+    <p class="ptask">果物の価格 <code>apple: 120, banana: 80, orange: 100</code> を辞書から Series にして、変数 <code>price</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-s1-u1-input" rows="7">import pandas as pd
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-s1-u1", ["pd.Series", "apple", "banana", "orange"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-s1-u1', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-s1-u1-result"></div>
+    <div class="answer-reveal" id="p-s1-u1-answer" hidden>
+      <pre class="code-block">
+<span class="cl">price = pd.Series({<span class="st">'apple'</span>: <span class="nm">120</span>, <span class="st">'banana'</span>: <span class="nm">80</span>, <span class="st">'orange'</span>: <span class="nm">100</span>})</span>
+</pre>
+      <p class="answer-note">辞書のキーが索引、値がデータになります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>DataFrame：表を作る</h2><div class="unit-sub">同じ索引を共有するSeriesの束</div></div>
+  </div>
+<p><strong>DataFrame</strong>は、行と列をもつ表です。各<strong>列がSeries</strong>で、すべての列が同じ行ラベル（索引）を共有します。いちばん基本の作り方は「<strong>列名 → 値のリスト</strong>の辞書」です。</p><pre class="code-block">
+<span class="cl">data = {<span class="st">'city'</span>: [<span class="st">'Tokyo'</span>, <span class="st">'Delhi'</span>, <span class="st">'Shanghai'</span>],</span>
+<span class="cl">        <span class="st">'pop'</span>: [<span class="nm">37.4</span>, <span class="nm">31.0</span>, <span class="nm">27.1</span>],</span>
+<span class="cl">        <span class="st">'country'</span>: [<span class="st">'Japan'</span>, <span class="st">'India'</span>, <span class="st">'China'</span>]}</span>
+<span class="cl">frame = pd.DataFrame(data)</span>
+<span class="cl">frame</span>
+</pre><div class="output-reveal">       city   pop country
+0     Tokyo  37.4   Japan
+1     Delhi  31.0   India
+2  Shanghai  27.1   China</div><p>列の<strong>並び順</strong>や<strong>行ラベル</strong>は、引数で指定できます。無い列名を指定すると、その列は欠損値（<code>NaN</code>）になります。</p><pre class="code-block">
+<span class="cl">pd.DataFrame(data, columns=[<span class="st">'country'</span>, <span class="st">'city'</span>, <span class="st">'pop'</span>, <span class="st">'area'</span>], index=[<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>])</span>
+</pre><div class="output-reveal">  country      city   pop area
+a   Japan     Tokyo  37.4  NaN
+b   India     Delhi  31.0  NaN
+c   China  Shanghai  27.1  NaN</div><pre class="code-block">
+<span class="cl"><span class="cm"># 辞書のリスト（1行＝1つの辞書）。足りない所は NaN</span></span>
+<span class="cl">pd.DataFrame([{<span class="st">'a'</span>: <span class="nm">1</span>, <span class="st">'b'</span>: <span class="nm">2</span>}, {<span class="st">'b'</span>: <span class="nm">3</span>, <span class="st">'c'</span>: <span class="nm">4</span>}])</span>
+</pre><div class="output-reveal">     a  b    c
+0  1.0  2  NaN
+1  NaN  3  4.0</div><pre class="code-block">
+<span class="cl"><span class="cm"># 入れ子の辞書：外側のキー＝列、内側のキー＝行</span></span>
+<span class="cl">nested = {<span class="st">'Tokyo'</span>: {<span class="nm">2020</span>: <span class="nm">37.3</span>, <span class="nm">2021</span>: <span class="nm">37.4</span>}, <span class="st">'Delhi'</span>: {<span class="nm">2020</span>: <span class="nm">30.3</span>, <span class="nm">2021</span>: <span class="nm">31.0</span>}}</span>
+<span class="cl">frame2 = pd.DataFrame(nested)</span>
+<span class="cl"><span class="kw">print</span>(frame2)</span>
+<span class="cl">frame2.T    <span class="cm"># 転置（行と列を入れ替え）</span></span>
+</pre><div class="output-reveal">      Tokyo  Delhi
+2020   37.3   30.3
+2021   37.4   31.0
+       2020  2021
+Tokyo  37.3  37.4
+Delhi  30.3  31.0</div><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(frame.to_numpy())     <span class="cm"># 値だけをNumPy配列として取り出す</span></span>
+<span class="cl"><span class="kw">print</span>(frame.dtypes)           <span class="cm"># 列ごとに型が違ってよい</span></span>
+</pre><div class="output-reveal">[['Tokyo' 37.4 'Japan']
+ ['Delhi' 31.0 'India']
+ ['Shanghai' 27.1 'China']]
+city        object
+pop        float64
+country     object
+dtype: object</div><div class="warn-box">⚠️ 列ごとに型が違うDataFrameを <code>to_numpy()</code> すると、全体が <code>object</code>型（なんでも入る型）になります。数値だけの表なら数値型のままです。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>DataFrameは「列ごとに型を持てる表」。表計算ソフトの1シートのようなものと考えてOKです。</p></div><div class="practice-card" id="p-s1-u2">
+    <div class="ptitle">💻 ミニ練習：DataFrameを作る</div>
+    <p class="ptask"><code>name</code>列（Ann, Bob）と<code>score</code>列（80, 90）のDataFrameを辞書から作り、<code>df</code> に入れてください。</p>
+    <textarea class="code-editor" id="p-s1-u2-input" rows="7">import pandas as pd
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-s1-u2", ["pd.DataFrame", "name", "score"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-s1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-s1-u2-result"></div>
+    <div class="answer-reveal" id="p-s1-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">df = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Ann'</span>, <span class="st">'Bob'</span>], <span class="st">'score'</span>: [<span class="nm">80</span>, <span class="nm">90</span>]})</span>
+</pre>
+      <p class="answer-note">辞書のキーが列名になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>列と行を取り出す・足す・消す</h2><div class="unit-sub">[ ] と loc / iloc</div></div>
+  </div>
+<p>本物のCSV（本の <code>examples/tips.csv</code>）で試します。まず読み込んで、<code>head()</code>で先頭を眺めます。</p><pre class="code-block">
+<span class="cl">tips = pd.read_csv(<span class="st">'examples/tips.csv'</span>)</span>
+<span class="cl">tips.head()</span>
+</pre><div class="output-reveal">   total_bill   tip smoker  day    time  size
+0       16.99  1.01     No  Sun  Dinner     2
+1       10.34  1.66     No  Sun  Dinner     3
+2       21.01  3.50     No  Sun  Dinner     3
+3       23.68  3.31     No  Sun  Dinner     2
+4       24.59  3.61     No  Sun  Dinner     4</div><p><strong>列</strong>は <code>[ ]</code> に列名を入れて取り出します（1列ならSeries、複数列ならリストで渡してDataFrame）。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(tips[<span class="st">'tip'</span>].head(<span class="nm">3</span>))               <span class="cm"># 1列 → Series</span></span>
+<span class="cl">tips[[<span class="st">'total_bill'</span>, <span class="st">'tip'</span>]].head(<span class="nm">3</span>)    <span class="cm"># 2列 → DataFrame</span></span>
+</pre><div class="output-reveal">0    1.01
+1    1.66
+2    3.50
+Name: tip, dtype: float64
+   total_bill   tip
+0       16.99  1.01
+1       10.34  1.66
+2       21.01  3.50</div><p><strong>行</strong>は <code>loc</code>（ラベルで）か <code>iloc</code>（位置で）で取り出します。</p><pre class="code-block">
+<span class="cl"><span class="kw">print</span>(tips.loc[<span class="nm">0</span>])          <span class="cm"># ラベル0の行 → Series</span></span>
+<span class="cl"><span class="kw">print</span>(tips.iloc[<span class="nm">2</span>])         <span class="cm"># 3番目の行（位置は0から）</span></span>
+<span class="cl">tips.loc[<span class="nm">0</span>:<span class="nm">2</span>, [<span class="st">'tip'</span>, <span class="st">'day'</span>]]    <span class="cm"># ラベル0〜2（終点を含む）、列も指定</span></span>
+</pre><div class="output-reveal">total_bill     16.99
+tip             1.01
+smoker            No
+day              Sun
+time          Dinner
+size               2
+Name: 0, dtype: object
+total_bill     21.01
+tip              3.5
+smoker            No
+day              Sun
+time          Dinner
+size               3
+Name: 2, dtype: object
+    tip  day
+0  1.01  Sun
+1  1.66  Sun
+2  3.50  Sun</div><p>新しい列は、代入するだけで足せます。スカラー・リスト・<strong>Series（索引でそろえて入る）</strong>が使えます。消すときは <code>drop</code>（元は変えない）か <code>del</code>（元を変える）です。</p><pre class="code-block">
+<span class="cl">tips[<span class="st">'tip_pct'</span>] = tips[<span class="st">'tip'</span>] / tips[<span class="st">'total_bill'</span>]      <span class="cm"># 計算した列を追加</span></span>
+<span class="cl">tips[<span class="st">'is_big'</span>] = tips[<span class="st">'size'</span>] &gt;= <span class="nm">4</span>                          <span class="cm"># 真偽値の列</span></span>
+<span class="cl">tips[[<span class="st">'tip_pct'</span>, <span class="st">'is_big'</span>]].head(<span class="nm">3</span>)</span>
+</pre><div class="output-reveal">    tip_pct  is_big
+0  0.059447   False
+1  0.160542   False
+2  0.166587   False</div><pre class="code-block">
+<span class="cl">small = tips.drop(columns=[<span class="st">'is_big'</span>])    <span class="cm"># 新しいDataFrameを返す</span></span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'is_big'</span> <span class="kw">in</span> small.columns, <span class="st">'is_big'</span> <span class="kw">in</span> tips.columns)</span>
+<span class="cl">del tips[<span class="st">'is_big'</span>]                          <span class="cm"># tips自身から消す</span></span>
+<span class="cl"><span class="st">'is_big'</span> <span class="kw">in</span> tips.columns</span>
+</pre><div class="output-reveal">False True
+False</div><div class="warn-box">⚠️ <code>tips[0]</code> のように数字を <code>[ ]</code> に入れると「0という名前の<strong>列</strong>」を探します。行を取りたいときは必ず <code>loc[0]</code> / <code>iloc[0]</code> を使います。</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>列は <code>[ ]</code>、行は <code>loc</code>（名前）か <code>iloc</code>（番号）。迷ったらこの3つだけ覚えればOKです。</p></div><div class="practice-card" id="p-s1-u3">
+    <div class="ptitle">💻 ミニ練習：列を足す</div>
+    <p class="ptask"><code>tips</code>に、<code>total_bill</code>と<code>tip</code>の合計を入れた<code>grand</code>列を追加してください。</p>
+    <textarea class="code-editor" id="p-s1-u3-input" rows="7">tips = pd.read_csv('examples/tips.csv')
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-s1-u3", ["tips['grand']", "total_bill", "tip"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-s1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-s1-u3-result"></div>
+    <div class="answer-reveal" id="p-s1-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">tips[<span class="st">'grand'</span>] = tips[<span class="st">'total_bill'</span>] + tips[<span class="st">'tip'</span>]</span>
+</pre>
+      <p class="answer-note">右辺の計算結果が、新しい列になります。</p>
+    </div>
+  </div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>Index：変えられない名札</h2><div class="unit-sub">集合のように使える・重複もOK</div></div>
+  </div>
+<p>索引（Index）は<strong>あとから1か所だけ書き換えられない</strong>（イミュータブルな）配列です。複数のデータで同じ索引を安全に共有するための仕組みです。</p><pre class="code-block">
+<span class="cl">idx = pd.Index([<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>])</span>
+<span class="cl"><span class="kw">print</span>(idx[<span class="nm">1</span>:])</span>
+</pre><div class="output-reveal">Index(['b', 'c'], dtype='object')</div><pre class="code-block">
+<span class="cl">idx[<span class="nm">1</span>] = <span class="st">'z'</span></span>
+</pre><div class="output-reveal">TypeError: Index does not support mutable operations</div><p>Indexは集合のように使えます。2つの索引の共通部分や、どちらかにある要素を調べられます。</p><pre class="code-block">
+<span class="cl">a = pd.Index([<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">9</span>])</span>
+<span class="cl">b = pd.Index([<span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">11</span>])</span>
+<span class="cl"><span class="kw">print</span>(a.intersection(b))    <span class="cm"># 共通</span></span>
+<span class="cl"><span class="kw">print</span>(a.union(b))           <span class="cm"># どちらか</span></span>
+<span class="cl"><span class="kw">print</span>(a.difference(b))      <span class="cm"># aにだけある</span></span>
+</pre><div class="output-reveal">Index([3, 5, 7], dtype='int64')
+Index([1, 2, 3, 5, 7, 9, 11], dtype='int64')
+Index([1, 9], dtype='int64')</div><p>NumPy配列の索引と違って、<strong>重複したラベルを持てます</strong>。重複があると、そのラベルを指定したときに複数行がまとめて返ります。</p><pre class="code-block">
+<span class="cl">dup = pd.Series([<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>], index=[<span class="st">'x'</span>, <span class="st">'x'</span>, <span class="st">'y'</span>])</span>
+<span class="cl"><span class="kw">print</span>(dup.index.is_unique)</span>
+<span class="cl">dup[<span class="st">'x'</span>]</span>
+</pre><div class="output-reveal">False
+x    10
+x    20
+dtype: int64</div><pre class="code-block">
+<span class="cl">frame3 = pd.DataFrame({<span class="st">'a'</span>: [<span class="nm">1</span>, <span class="nm">2</span>]}, index=[<span class="st">'r1'</span>, <span class="st">'r2'</span>])</span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'a'</span> <span class="kw">in</span> frame3.columns)    <span class="cm"># 列に名前があるか</span></span>
+<span class="cl"><span class="kw">print</span>(<span class="st">'r1'</span> <span class="kw">in</span> frame3.index)     <span class="cm"># 行ラベルがあるか</span></span>
+</pre><div class="output-reveal">True
+True</div><div class="simple-box"><div class="simple-title">🍎 かんたん説明</div><p>名札の途中を書き換えられないのは、データと名札がずれる事故を防ぐため。同じ名札を何個ものSeriesで使い回しても安心です。</p></div><div class="practice-card" id="p-s1-u4">
+    <div class="ptitle">💻 ミニ練習：共通の索引</div>
+    <p class="ptask"><code>a</code>と<code>b</code>の<strong>共通部分</strong>を求めてください。</p>
+    <textarea class="code-editor" id="p-s1-u4-input" rows="7">a = pd.Index([1, 2, 3])
+b = pd.Index([2, 3, 4])
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick='checkPractice("p-s1-u4", ["intersection"])'>✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-s1-u4', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-s1-u4-result"></div>
+    <div class="answer-reveal" id="p-s1-u4-answer" hidden>
+      <pre class="code-block">
+<span class="cl">a.intersection(b)</span>
+</pre>
+      <p class="answer-note">結果は [2, 3] です。</p>
+    </div>
+  </div>
+</div>
+
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">What does a pandas Series add to a plain NumPy array?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A label (index) attached to each value</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A restriction that allows string values only</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Automatic sorting of all of the stored values</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>An extra hidden dimension for every element</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">If a Series is created from a dictionary, what becomes the index?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The dictionary values</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The numbers 0, 1, 2, ...</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The dictionary keys</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Only the first key</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Which statement about a DataFrame is correct?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It can only hold numeric columns, and never any text at all</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is a table whose columns are Series sharing one index</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It is created only by calling the read_csv function</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It always has exactly two columns and two rows</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">You want the row with label 0 of a DataFrame df. What should you write?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>df[0]</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>df.col(0)</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>df.row[0]</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>df.loc[0]</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">What does df.drop(columns=["x"]) do?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Returns a new DataFrame without column x and leaves df unchanged</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Deletes column x from the original df itself, changing it in place for good</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Deletes the row labelled "x"</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Raises an error unless x is the last column</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Why does idx[1] = "z" raise an error for a pandas Index?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Strings cannot be stored in an Index</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The label z does not exist</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Index positions start at 1</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Index objects are immutable</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 1, 3, 0, 3];
+var FEEDBACKS=["A Series is a 1-D array of values with an explicit index, so values can be reached by label.", "The dictionary keys become the index labels and the values become the data.", "Each column is a Series and all columns share the same row index; columns may have different dtypes.", "df[0] looks for a COLUMN named 0. Use loc (label) or iloc (position) to get a row.", "drop returns a new object by default; \"del df['x']\" is the form that changes df itself.", "An Index is immutable so that it can be shared safely between many pandas objects."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">Series（シリーズ）</div><div class="term-en">Series</div><div class="term-def">索引つきの1次元データ。値と索引と名前をもつ。</div></div>
+    <div class="term-item"><div class="term-name">DataFrame（データフレーム）</div><div class="term-en">DataFrame</div><div class="term-def">行と列をもつ表。各列がSeriesで、索引を共有する。</div></div>
+    <div class="term-item"><div class="term-name">索引・インデックス</div><div class="term-en">index</div><div class="term-def">行につけるラベル。重複もでき、途中の書き換えはできない。</div></div>
+    <div class="term-item"><div class="term-name">ラベルによる選択</div><div class="term-en">loc</div><div class="term-def">行・列の名前で選ぶ。範囲指定の終点は含まれる。</div></div>
+    <div class="term-item"><div class="term-name">位置による選択</div><div class="term-en">iloc</div><div class="term-def">0から数えた位置で選ぶ。範囲指定の終点は含まれない。</div></div>
+    <div class="term-item"><div class="term-name">欠損値</div><div class="term-en">NaN</div><div class="term-def">値がないことを表す特別な値。存在しない列を指定すると入る。</div></div>
+    <div class="term-item"><div class="term-name">転置</div><div class="term-en">transpose (.T)</div><div class="term-def">行と列を入れ替えること。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>新しい表を手にしたら、まず <code>head()</code>・<code>dtypes</code>・<code>shape</code> で形を確認する癖をつけましょう。</p></div>
+</aside>
+
+</div>
+
+<footer>
+  <p>🧹 DTSC580 レッスン：pandas① SeriesとDataFrame</p>
+  <p style="margin-top:.5rem;"><a href="pd_practice.html">🏋️ 演習へ</a> · <a href="index.html">🏠 概要</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

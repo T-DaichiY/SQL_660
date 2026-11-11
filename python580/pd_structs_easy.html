@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>超やさしい版：pandas① SeriesとDataFrame</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="easy.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.plot-out{margin:.6rem 0 1.2rem}.plot-out img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border,#e2e8f0);background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">DTSC580 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 レッスン一覧 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+      <div class="nav-row m4"><span class="nav-mod">M3 pandas入門</span><span class="navg"><a class="n-main active" href="pd_structs.html">① Series・DataFrame</a><a class="n-easy" href="pd_structs_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">演習</span><span class="navg"><a class="n-main" href="pd_practice.html">🏋️ pandas</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner easy">
+  <div class="ch-banner-inner">
+    <div class="ch-tag">M3 · pandas入門 — Series & DataFrame 🍎</div>
+    <h1>🍎 超やさしい版：pandas① SeriesとDataFrame</h1>
+    <p>SeriesとDataFrameの基本。</p>
+    <div class="unit-nav"><a href="#u1">Series・DataFrame</a><a href="#u2">取り出す・足す</a><a href="pd_structs.html" class="easy-toplink">📖 本編はこちら</a></div>
+  </div>
+</div>
+<div class="page-layout">
+<main>
+
+<div class="unit" id="u1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>SeriesとDataFrame</h2><div class="unit-sub">名札つきの列と表</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>Seriesは<strong>名札つきの1列</strong>、DataFrameは<strong>表</strong>（列がSeriesの束）。</strong></p></div><pre class="code-block">
+<span class="cl">s = pd.Series({<span class="st">'a'</span>: <span class="nm">1</span>, <span class="st">'b'</span>: <span class="nm">2</span>})</span>
+<span class="cl"><span class="kw">print</span>(s)</span>
+<span class="cl">df = pd.DataFrame({<span class="st">'name'</span>: [<span class="st">'Ann'</span>, <span class="st">'Bob'</span>], <span class="st">'score'</span>: [<span class="nm">80</span>, <span class="nm">90</span>]})</span>
+<span class="cl">df</span>
+</pre><div class="output-reveal">a    1
+b    2
+dtype: int64
+  name  score
+0  Ann     80
+1  Bob     90</div><div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>辞書から作ると、キーが名札（索引）や列名になります。</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 辞書からSeriesを作ると、索引は何になる？<span class="cp-a">A. キーになる。</span></div><div class="cp-q">Q2. DataFrameの列は何？<span class="cp-a">A. Series。</span></div></div>
+</div>
+<div class="unit" id="u2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>取り出す・足す</h2><div class="unit-sub">[ ] と loc</div></div>
+  </div>
+<div class="tldr"><h3>🎯 これだけ覚えればOK</h3><p style="margin:0"><strong>列は <strong>[ ]</strong>、行は <strong>loc（名前）／iloc（番号）</strong>。</strong></p></div><pre class="code-block">
+<span class="cl">tips = pd.read_csv(<span class="st">'examples/tips.csv'</span>)</span>
+<span class="cl"><span class="kw">print</span>(tips[<span class="st">'tip'</span>].head(<span class="nm">2</span>))</span>
+<span class="cl">tips.loc[<span class="nm">0</span>, [<span class="st">'tip'</span>, <span class="st">'day'</span>]]</span>
+</pre><div class="output-reveal">0    1.01
+1    1.66
+Name: tip, dtype: float64
+tip    1.01
+day     Sun
+Name: 0, dtype: object</div><div class="simple-box"><div class="simple-title">🍎 ひとことで</div><p>新しい列は <code>tips['新しい名前'] = 計算式</code> で足せます。<code>tips[0]</code> は行ではなく「0という列」なので注意！</p></div><div class="checkpoint"><h4>🤔 答えられるかな？（クリックで答えが開く）</h4><div class="cp-q">Q1. 1行目（ラベル0）を取るには？<span class="cp-a">A. tips.loc[0]</span></div><div class="cp-q">Q2. <code>tips[0]</code>が取りにいくのは？<span class="cp-a">A. 「0」という名前の列。</span></div></div>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="tip-box" style="margin-top:1rem;background:var(--primary-light);border-color:rgba(37,99,235,.2)">
+    <h4 style="color:var(--primary-dark)">📖 本編へ</h4>
+    <p style="color:var(--text)">くわしい説明・練習・英語クイズは <a href="pd_structs.html">本編</a> へ。</p>
+  </div>
+</aside>
+</div>
+<footer><p>🍎 DTSC580 レッスン：pandas① SeriesとDataFrame — 超やさしい版</p>
+<p style="margin-top:.5rem"><a href="pd_structs.html">← 本編</a> · <a href="index.html">🏠 概要</a></p></footer>
+<script>
+document.querySelectorAll('.cp-q').forEach(function(q){q.addEventListener('click', function(){ q.classList.toggle('open'); });});
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

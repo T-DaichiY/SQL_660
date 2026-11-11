@@ -9,7 +9,7 @@
     function (a) { return !a.closest('.editor-wrap'); });
   if (!areas.length) return;
   var path = location.pathname;
-  var LANG = /\/python520\//.test(path) ? 'python' : /\/(stats|r650)\//.test(path) ? 'r' : 'sql';
+  var LANG = /\/python5[28]0\//.test(path) ? 'python' : /\/(stats|r650)\//.test(path) ? 'r' : 'sql';
   var WORDCH = LANG === 'r' ? /[\w.]/ : /\w/;
   var MODE = { r: 'r', python: 'python', sql: 'text/x-sql' }[LANG];
   var MODEFILE = { r: 'r/r', python: 'python/python', sql: 'sql/sql' }[LANG];
