@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML 統計復習 データを見る・整える：要約・外れ値・標準化・欠損</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 670 ML 統計復習 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">ML Prep · Explore &amp; Prepare — Summary Statistics, Skewness, Outliers, z-scores, Missing Values</div>
+  <h1>🔍 データを見る・整える：要約・外れ値・標準化・欠損</h1>
+  <p>ML のモデルを作る前に必ずやる「データを見る」作業を、統計の言葉で整理します。<strong>平均と中央値の差（歪み）</strong>、<strong>外れ値の判定</strong>、<strong>標準化（z スコア）</strong>、<strong>欠損の補い方</strong>。550 の M2 の復習です。</p>
+  <p style="font-size:.9rem">📺 講義動画: 670 準備 · 550 M2（記述統計）の復習</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 要約と歪み</a><a href="#unit2">② 外れ値と対数変換</a><a href="#unit3">③ 標準化(z)</a><a href="#unit4">④ 欠損の扱い</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📌 先に <a href="cheat_ml.html">ML のための統計チートシート</a> で全体の地図を見ておくと、この回の位置づけが分かります。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>要約統計と歪み</h2><div class="unit-sub">summary() で mean と median を並べる</div></div>
+  </div>
+
+  <p>ML の最初の一歩は<strong>データの顔つきを知る</strong>ことです。R の <code>summary()</code> は、最小・四分位・中央値・平均・最大を一度に出します（Python の <code>describe()</code> と同じ）。ここでは R に入っている実データ <code>airquality</code>（ニューヨークの大気データ）のオゾン濃度を使います。</p>
+  <pre class="code-block">
+<span class="cl">x &lt;- airquality$Ozone</span>
+<span class="cl"><span class="kw">summary</span>(x)</span>
+<span class="cl"><span class="kw">sd</span>(x, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+<div class="output-reveal">   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   1.00   18.00   31.50   42.13   63.25  168.00      37 
+[1] 32.98788</div>
+  <p><strong>平均（42.1）が中央値（31.5）より大きい</strong>ことに注目してください。少数の高い値が平均を引き上げています。これが<strong>右に歪んだ</strong>分布です。歪みの大きさは<strong>歪度（skewness）</strong>で数値にできます（正なら右に裾が長い）。</p>
+  <pre class="code-block">
+<span class="cl">skew &lt;- <span class="kw">function</span>(x) { x &lt;- x[!<span class="kw">is.na</span>(x)]; <span class="kw">mean</span>((x - <span class="kw">mean</span>(x))^<span class="nm">3</span>) / <span class="kw">mean</span>((x - <span class="kw">mean</span>(x))^<span class="nm">2</span>)^<span class="nm">1.5</span> }</span>
+<span class="cl"><span class="kw">skew</span>(x)</span>
+<span class="cl"><span class="kw">hist</span>(x, breaks = <span class="nm">20</span>, col = <span class="st">"lightblue"</span>, main = <span class="st">"Ozone (ppb)"</span>, xlab = <span class="st">"Ozone"</span>)</span>
+</pre>
+<div class="output-reveal">[1] 1.225681</div>
+<figure class="r-fig"><img src="img550/ml_explore_1.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <div class="note-box">📐 <strong>歪度の目安</strong>：0 に近い＝左右対称、<strong>+1 を超える</strong>＝かなり右に歪んでいる。歪んだデータでは<strong>平均より中央値</strong>が「ふつうの値」を表します。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>外れ値と対数変換</h2><div class="unit-sub">1.5 × IQR ルールとログで歪みを直す</div></div>
+  </div>
+
+  <p>外れ値は、ほかの値から<strong>大きく離れた値</strong>です。550 で学んだ <strong>1.5 × IQR ルール</strong>で、機械的に見つけられます。</p>
+  <pre class="code-block">
+<span class="cl">q &lt;- <span class="kw">quantile</span>(x, <span class="kw">c</span>(.<span class="nm">25</span>, .<span class="nm">75</span>), na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl">iqr &lt;- <span class="kw">unname</span>(<span class="kw">diff</span>(q))</span>
+<span class="cl">fence &lt;- <span class="kw">c</span>(lower = <span class="kw">unname</span>(q[<span class="nm">1</span>]) - <span class="nm">1.5</span> * iqr, upper = <span class="kw">unname</span>(q[<span class="nm">2</span>]) + <span class="nm">1.5</span> * iqr)</span>
+<span class="cl">fence</span>
+<span class="cl"><span class="kw">sum</span>(x &gt; fence[<span class="st">"upper"</span>], na.rm = <span class="kw">TRUE</span>)       <span class="cm"># how many outliers above the fence</span></span>
+</pre>
+<div class="output-reveal">  lower   upper 
+-49.875 131.125 
+[1] 2</div>
+  <p>外れ値が見つかったら、<strong>すぐ消さずに理由を考えます</strong>（入力ミスか、本当に珍しい日か）。ML では、次の対策がよく使われます。</p>
+  <table class="compare-table">
+<tr><th>対策</th><th>いつ使う</th><th>R のコード</th></tr>
+<tr><td>そのまま使う</td><td>本物の値で、予測にも大事そう</td><td>—</td></tr><tr><td>対数変換</td><td>右に歪んだ正の値（収入・価格・濃度）</td><td><code>log(x)</code> / <code>log1p(x)</code></td></tr><tr><td>上限で切る（clip）</td><td>極端な値だけ抑えたい</td><td><code>pmin(x, fence)</code></td></tr><tr><td>取り除く</td><td>明らかな入力ミス</td><td><code>x[x &lt;= fence]</code></td></tr>
+</table>
+  <p>対数変換すると、歪みがどれだけ直るかを確かめましょう。</p>
+  <pre class="code-block">
+<span class="cl">oz &lt;- airquality$Ozone</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(before = <span class="kw">skew</span>(oz), after = <span class="kw">skew</span>(<span class="kw">log</span>(oz))), <span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">par</span>(mfrow = <span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">2</span>))</span>
+<span class="cl"><span class="kw">hist</span>(oz, breaks = <span class="nm">20</span>, col = <span class="st">"lightblue"</span>, main = <span class="st">"raw"</span>, xlab = <span class="st">"Ozone"</span>)</span>
+<span class="cl"><span class="kw">hist</span>(<span class="kw">log</span>(oz), breaks = <span class="nm">20</span>, col = <span class="st">"lightgreen"</span>, main = <span class="st">"log"</span>, xlab = <span class="st">"log(Ozone)"</span>)</span>
+</pre>
+<div class="output-reveal">before  after 
+  1.23  -0.56 </div>
+<figure class="r-fig"><img src="img550/ml_explore_3.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <div class="practice-card" id="p-ml1-u2">
+    <div class="ptitle">💻 ミニ練習：Solar.R の外れ値</div>
+    <p class="ptask"><code>airquality$Solar.R</code> について、<strong>1.5 × IQR ルール</strong>の上限（<code>upper</code>）を求め、それより大きい値の数を数えてください（欠損は無視）。</p>
+    <textarea class="code-editor" id="p-ml1-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ml1-u2', ['quantile', 'IQR', 'na.rm', 'sum'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1-u2-result"></div>
+    <div class="answer-reveal" id="p-ml1-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl">x &lt;- airquality$Solar.R</span>
+<span class="cl">q &lt;- <span class="kw">quantile</span>(x, <span class="kw">c</span>(.<span class="nm">25</span>, .<span class="nm">75</span>), na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl">iqr &lt;- <span class="kw">unname</span>(<span class="kw">diff</span>(q))</span>
+<span class="cl">upper &lt;- <span class="kw">unname</span>(q[<span class="nm">2</span>]) + <span class="nm">1.5</span> * iqr</span>
+<span class="cl">upper</span>
+<span class="cl"><span class="kw">sum</span>(x &gt; upper, na.rm = <span class="kw">TRUE</span>)</span>
+</pre>
+      <p class="answer-note">上限は Q3 + 1.5×IQR。<code>na.rm = TRUE</code> を忘れると NA になる。Solar.R はほぼ左右対称なので、上限を超える値はありません。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>標準化（z スコア）</h2><div class="unit-sub">桁のちがう列を同じ土俵にそろえる</div></div>
+  </div>
+
+  <p>データの列は、単位も大きさもバラバラです（面積は 25〜120、価格は 100〜400）。<strong>距離を使うモデル</strong>（KNN、SVM、クラスタリング、正則化回帰）は、<strong>桁の大きい列だけで決まってしまう</strong>ので、先に<strong>標準化</strong>します。式は 550 で学んだ z スコアそのものです。</p>
+  <div class="note-box">📐 <strong>z = (x − 平均) ÷ SD</strong>　→　平均 0、SD 1 にそろう。「平均から SD いくつ分離れているか」を表す。</div>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">670</span>)</span>
+<span class="cl">n &lt;- <span class="nm">400</span></span>
+<span class="cl">apt &lt;- <span class="kw">data.frame</span>(area  = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">25</span>, <span class="nm">120</span>)),</span>
+<span class="cl">                  rooms = <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">4</span>, n, replace = <span class="kw">TRUE</span>, prob = <span class="kw">c</span>(.<span class="nm">2</span>, .<span class="nm">4</span>, .<span class="nm">3</span>, .<span class="nm">1</span>)),</span>
+<span class="cl">                  age   = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">0</span>, <span class="nm">50</span>)))</span>
+<span class="cl">apt$price &lt;- <span class="kw">round</span>(<span class="nm">40</span> + <span class="nm">2.2</span> * apt$area + <span class="nm">12</span> * apt$rooms - <span class="nm">0.8</span> * apt$age + <span class="kw">rnorm</span>(n, <span class="nm">0</span>, <span class="nm">25</span>), <span class="nm">1</span>)  <span class="cm"># 1000 USD</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(n, size = <span class="nm">0.8</span> * n)</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl">z_area &lt;- (apt$area - <span class="kw">mean</span>(apt$area)) / <span class="kw">sd</span>(apt$area)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(mean = <span class="kw">mean</span>(z_area), sd = <span class="kw">sd</span>(z_area)), <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">head</span>(<span class="kw">round</span>(<span class="kw">scale</span>(apt[, <span class="kw">c</span>(<span class="st">"area"</span>, <span class="st">"price"</span>)]), <span class="nm">2</span>), <span class="nm">4</span>)     <span class="cm"># scale() does the same for every column</span></span>
+</pre>
+<div class="output-reveal">mean   sd 
+   0    1 
+      area price
+[1,] -1.20 -0.99
+[2,] -0.15 -0.13
+[3,]  0.18 -0.12
+[4,] -0.04  0.36</div>
+  <div class="warn-box">⚠️ <strong>訓練データだけ</strong>で平均と SD を計算します。テストデータの情報が混ざると<strong>データ漏れ</strong>になります（次の回）。Python では <code>scaler.fit(X_train)</code> のあと <code>transform(X_test)</code> と書きます。</div>
+  <p>木のモデル（決定木・ランダムフォレスト）は、大小関係だけを見るので標準化は<strong>不要</strong>です。</p>
+  <div class="practice-card" id="p-ml1-u3">
+    <div class="ptitle">💻 ミニ練習：Wind の z スコア</div>
+    <p class="ptask"><code>airquality$Wind</code> を標準化（z スコア）して、<strong>最初の 5 個</strong>を小数 2 桁で表示してください。</p>
+    <textarea class="code-editor" id="p-ml1-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ml1-u3', ['mean', 'sd', 'scale'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml1-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml1-u3-result"></div>
+    <div class="answer-reveal" id="p-ml1-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">w &lt;- airquality$Wind</span>
+<span class="cl">z &lt;- (w - <span class="kw">mean</span>(w)) / <span class="kw">sd</span>(w)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">head</span>(z, <span class="nm">5</span>), <span class="nm">2</span>)</span>
+</pre>
+      <p class="answer-note"><code>scale(w)</code> でも同じ値になる（行列で返る）。Wind に欠損はないので na.rm は不要。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>欠損の扱い</h2><div class="unit-sub">落とす？ 補う？</div></div>
+  </div>
+
+  <p>現実のデータには空の所（NA）があります。多くの ML の関数は NA が入っているとエラーになるので、<strong>落とす</strong>か<strong>補う（補完）</strong>必要があります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">colSums</span>(<span class="kw">is.na</span>(airquality))                  <span class="cm"># NA count per column</span></span>
+<span class="cl"><span class="kw">nrow</span>(airquality); <span class="kw">nrow</span>(<span class="kw">na.omit</span>(airquality))    <span class="cm"># rows left if we drop every row with an NA</span></span>
+</pre>
+<div class="output-reveal">  Ozone Solar.R    Wind    Temp   Month     Day 
+     37       7       0       0       0       0 
+[1] 153
+[1] 111</div>
+  <p>行を落とすと、データがかなり減ります（153 行 → 111 行）。そこで<strong>中央値で補う</strong>方法がよく使われます（歪んだ列では平均より安全）。</p>
+  <pre class="code-block">
+<span class="cl">oz &lt;- airquality$Ozone</span>
+<span class="cl">med &lt;- <span class="kw">median</span>(oz, na.rm = <span class="kw">TRUE</span>)</span>
+<span class="cl">oz2 &lt;- <span class="kw">ifelse</span>(<span class="kw">is.na</span>(oz), med, oz)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(mean_before = <span class="kw">mean</span>(oz, na.rm = <span class="kw">TRUE</span>), mean_after = <span class="kw">mean</span>(oz2),</span>
+<span class="cl">        sd_before = <span class="kw">sd</span>(oz, na.rm = <span class="kw">TRUE</span>), sd_after = <span class="kw">sd</span>(oz2)), <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal">mean_before  mean_after   sd_before    sd_after 
+      42.13       39.56       32.99       29.05 </div>
+  <div class="note-box">補ったあとは<strong>平均はほぼ同じですが、SD は小さくなります</strong>（同じ値で埋めたぶん、ばらつきが減る）。補完は「便利だが、少しだけ嘘をつく」処理だと覚えておきましょう。欠損が<strong>多い列</strong>は、補うより列ごと落とす方が良いこともあります。</div>
+  <table class="compare-table">
+<tr><th>方法</th><th>長所</th><th>短所</th></tr>
+<tr><td>行を落とす（na.omit）</td><td>簡単。嘘が入らない</td><td>データが減る。欠損に偏りがあると結果も偏る</td></tr><tr><td>中央値で補う</td><td>データが減らない。外れ値に強い</td><td>SD が小さくなる</td></tr><tr><td>平均で補う</td><td>簡単</td><td>外れ値・歪みに弱い</td></tr>
+</table>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の回へ：</strong>データを整えたら、モデルを評価するために<strong>訓練とテストに分けます</strong>。<a href="ml_split.html">分ける：訓練とテスト・層化・データ漏れ</a>へ。</div>
+<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1.2rem 0;color:#134e4a">📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a> — 4トピック × 5段階（L1 見本 → L2 穴埋め → L3 自由記述 → L4/L5 シナリオ）の20問。このシリーズ全6回の内容が範囲です。RStudio で開いて解いてください。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">The mean of a variable is much larger than its median. What does this suggest?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It has no missing values</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It is skewed to the right</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It is already standardized</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It is perfectly symmetric</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">Which value would the 1.5 × IQR rule flag as an outlier?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Any value above the overall mean</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A value equal to the median</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Any value outside Q1 and Q3</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A value above Q3 + 1.5 × IQR</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">A positive, right-skewed variable (such as income) is often transformed with...</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A log transform</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A z-score scaling</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The median value</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A 1.5 IQR cutoff</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">After standardizing a variable (z-score), its mean and SD are...</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Mean 1 and SD 0</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Mean 0 and SD 0</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Mean 0 and SD 1</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Mean 1 and SD 1</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Where should the mean and SD for standardization be calculated?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>On the test data only</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>On all the data together</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>On the training set only</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>On each row separately</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Missing values are filled with the column median. What happens to the SD?</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It gets smaller</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It gets larger</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>It stays the same</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It drops to zero</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 2, 0];
+var FEEDBACKS=["A few large values pull the mean up; the median is not affected.", "The fences are Q1 − 1.5·IQR and Q3 + 1.5·IQR.", "log() compresses large values and makes the distribution more symmetric.", "z = (x − mean) / SD always gives mean 0 and SD 1.", "Using test information leaks it into training; compute on train, then apply to test.", "The filled-in values all equal the median, so the spread shrinks."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">skewness</div><div class="term-en">歪度</div><div class="term-def">分布の左右の非対称さ。右に裾が長いと正。</div></div>
+    <div class="term-item"><div class="term-name">median</div><div class="term-en">中央値</div><div class="term-def">外れ値に強い中心。歪んだデータでは平均より安全。</div></div>
+    <div class="term-item"><div class="term-name">IQR</div><div class="term-en">四分位範囲</div><div class="term-def">Q3 − Q1。真ん中50%の幅。</div></div>
+    <div class="term-item"><div class="term-name">1.5 × IQR rule</div><div class="term-en">外れ値の目安</div><div class="term-def">Q1 − 1.5·IQR より下、Q3 + 1.5·IQR より上。</div></div>
+    <div class="term-item"><div class="term-name">log transform</div><div class="term-en">対数変換</div><div class="term-def">右に歪んだデータを対称に近づける。</div></div>
+    <div class="term-item"><div class="term-name">z-score</div><div class="term-en">標準化</div><div class="term-def">(x − 平均) ÷ SD。平均 0・SD 1 にそろえる。</div></div>
+    <div class="term-item"><div class="term-name">missing value (NA)</div><div class="term-en">欠損値</div><div class="term-def">データが空の所。落とす／補う。</div></div>
+    <div class="term-item"><div class="term-name">imputation</div><div class="term-en">補完</div><div class="term-def">欠損を中央値などで埋めること。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>平均と中央値が大きく違う</strong>ときは、外れ値か歪みのサイン。まず<code>summary()</code>で並べて見る。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：670 ML 統計復習 データを見る・整える：要約・外れ値・標準化・欠損</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="ml_split.html">分ける →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

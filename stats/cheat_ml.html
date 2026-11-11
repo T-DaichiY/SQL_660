@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML のための統計チートシート（DTSC 670 向け）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.cs-wrap{max-width:1000px;margin:0 auto;padding:1.6rem 16px 3rem}
+.cs-lead{font-size:1rem;line-height:1.9}
+.cs-tag{display:inline-block;font-size:.72rem;font-weight:700;padding:.1rem .6rem;border-radius:99px;margin-right:.4rem;vertical-align:middle}
+.t-use{background:#E2EBF7;color:#34598F}.t-read{background:#E2F0EA;color:#2E6B45}.t-no{background:#F7E2E2;color:#8A3434}
+.cs-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:800px){.cs-row{grid-template-columns:1fr}}
+.cs-wrap .unit{opacity:1;transform:none}
+.cs-wrap h2{font-size:1.15rem;margin:0 0 .4rem}
+.cs-wrap .meta{font-size:.82rem;color:#6b7280;margin-bottom:.6rem}
+.cs-wrap pre.code-block{font-size:.92rem;line-height:1.7;margin:.6rem 0}
+.cs-wrap table.compare-table td,.cs-wrap table.compare-table th{font-size:.88rem}
+.cs-warn{background:#FBF1DD;border-left:4px solid #B87830;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.92rem}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 670 ML 📌 チートシート <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV:start-->
+      <div class="nav-row m1"><span class="nav-mod">550 M1 R入門・測定水準</span><span class="navg"><a class="n-main" href="m1_levels.html">📏 測定水準</a></span><span class="navg"><a class="n-main" href="m1_rbasics.html">🧮 Rの基本</a></span><span class="navg"><a class="n-main" href="m1_vectors.html">🔢 ベクトル</a></span><span class="navg"><a class="n-main" href="m1_workflow.html">🗂️ 作業ディレクトリ・パッケージ</a></span><span class="navg"><a class="n-main" href="m1_dataframe.html">🧾 データフレーム・CSV</a></span></div>
+      <div class="nav-row m2"><span class="nav-mod">550 M2 記述統計</span><span class="navg"><a class="n-main" href="m2_center.html">🎯 平均・中央値</a></span><span class="navg"><a class="n-main" href="m2_graphs.html">📊 基本のグラフ</a></span><span class="navg"><a class="n-main" href="m2_spread.html">📦 箱ひげ図・IQR</a></span><span class="navg"><a class="n-main" href="m2_sd_normal.html">🔔 標準偏差・正規分布</a></span><span class="navg"><a class="n-main" href="m2_z.html">⚖️ zスコア</a></span></div>
+      <div class="nav-row m3"><span class="nav-mod">550 M3 確率と分布</span><span class="navg"><a class="n-main" href="m3_prob.html">🎲 確率の基本</a></span><span class="navg"><a class="n-main" href="m3_cond.html">🔗 条件付き確率・独立</a></span><span class="navg"><a class="n-main" href="m3_bayes.html">🧠 頻度論とベイズ</a></span><span class="navg"><a class="n-main" href="m3_discrete.html">🧮 二項・幾何・ポアソン</a></span><span class="navg"><a class="n-main" href="m3_normal.html">🔔 正規分布</a></span><span class="navg"><a class="n-main" href="m3_tchif.html">📐 t・χ²・F</a></span></div>
+      <div class="nav-row m4"><span class="nav-mod">550 M4 推測の基礎（検定・CI）</span><span class="navg"><a class="n-main" href="m3_basics.html">🔬 データ収集・帰無仮説</a><a class="n-easy" href="m3_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_testing.html">⚖️ 片側/両側・α・誤り</a><a class="n-easy" href="m3_testing_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m3_estimation.html">📏 SE・信頼区間・検出力</a><a class="n-easy" href="m3_estimation_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m5"><span class="nav-mod">550 M5 t・ANOVA・χ²</span><span class="navg"><a class="n-main" href="m5_t_intro.html">📐 t① 1標本</a><a class="n-easy" href="m5_t_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_two.html">👥 t② 2標本・対応</a><a class="n-easy" href="m5_t_two_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_t_cond.html">✅ t③ 条件・ブートストラップ</a><a class="n-easy" href="m5_t_cond_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_concept.html">🧮 ANOVA① 考え方</a><a class="n-easy" href="m5_anova_concept_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_calc.html">🔢 ANOVA② 計算とR</a><a class="n-easy" href="m5_anova_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_anova_post.html">🔎 ANOVA③ 事後検定</a><a class="n-easy" href="m5_anova_post_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_gof.html">🎲 χ²① 適合度</a><a class="n-easy" href="m5_chi_gof_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m5_chi_two.html">📋 χ²② 独立性</a><a class="n-easy" href="m5_chi_two_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m6"><span class="nav-mod">550 M6 相関・回帰</span><span class="navg"><a class="n-main" href="m6_corr_basics.html">📈 相関の基本</a><a class="n-easy" href="m6_corr_basics_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_corr_calc.html">🧮 相関の計算と注意</a><a class="n-easy" href="m6_corr_calc_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_intro.html">📉 回帰入門</a><a class="n-easy" href="m6_reg_intro_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_interpret.html">🔍 係数・残差・R²</a><a class="n-easy" href="m6_reg_interpret_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_inference.html">🎯 傾きの推測</a><a class="n-easy" href="m6_reg_inference_easy.html" title="やさしい版">🍎</a></span><span class="navg"><a class="n-main" href="m6_reg_more.html">🧩 カテゴリ・重回帰</a><a class="n-easy" href="m6_reg_more_easy.html" title="やさしい版">🍎</a></span></div>
+      <div class="nav-row m3 sep"><span class="nav-mod">670 ML 統計復習</span><span class="navg"><a class="n-main active" href="cheat_ml.html">📌 チートシート</a></span><span class="navg"><a class="n-main" href="ml_explore.html">🔍 データを見る・整える</a></span><span class="navg"><a class="n-main" href="ml_split.html">✂️ 分ける</a></span><span class="navg"><a class="n-main" href="ml_regression.html">📈 回帰</a></span><span class="navg"><a class="n-main" href="ml_classification.html">🎯 分類</a></span><span class="navg"><a class="n-main" href="ml_overfit.html">🌀 過学習・CV</a></span><span class="navg"><a class="n-main" href="ml_uncertainty.html">🎲 不確かさ</a></span></div>
+      <div class="nav-row m7"><span class="nav-mod">🏋️ 演習</span><span class="navg"><a class="n-main" href="exercises.html">演習ハブ</a></span><span class="navg"><a class="n-main" href="ex_550_m1.html">550 M1</a></span><span class="navg"><a class="n-main" href="ex_550_m2.html">550 M2</a></span><span class="navg"><a class="n-main" href="ex_550_m3_prob.html">550 M3</a></span><span class="navg"><a class="n-main" href="ex_550_m3.html">550 M4</a></span><span class="navg"><a class="n-main" href="ex_550_m5_t.html">550 t</a></span><span class="navg"><a class="n-main" href="ex_550_m5_anova.html">550 ANOVA</a></span><span class="navg"><a class="n-main" href="ex_550_m5_chi.html">550 χ²</a></span><span class="navg"><a class="n-main" href="ex_550_m6.html">550 M6</a></span></div>
+<!--NAV:end-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="cs-wrap">
+<div class="ch-banner"><div class="ch-banner-inner">
+  <div class="ch-tag">Cheat Sheet · Statistics you actually use in ML</div>
+  <h1>📌 ML のための統計チートシート</h1>
+  <p class="cs-lead">DTSC 670（Géron『Hands-On ML』）で、統計が<strong>どの場面で出てくるか</strong>だけをまとめました。手計算や検定の使い分けは要りません。「この数字は何を表すか」「おかしくないか」を判断できれば足ります。</p>
+</div></div>
+
+<div class="cs-warn">⚠️ <strong>これは勉強用です。</strong>DTSC 670 の試験（Honorlock）はノート・LLM・検索がすべて禁止、課題の解答を LLM に作らせるのも禁止です（最終プロジェクトのみ可）。このシートは、理解して自分で書けるようになるための<strong>復習用の地図</strong>として使ってください。</div>
+
+<div class="unit visible">
+<h2>🗺️ 全体マップ：ML の流れ × 使う統計</h2>
+<table class="compare-table">
+<tr><th>段階</th><th>使う統計</th><th>主なコード</th><th>550 で読み直す所</th></tr>
+<tr><td>① データを見る</td><td>平均・中央値・SD・四分位・歪み・相関・外れ値</td><td><code>describe()</code> <code>corr()</code> <code>hist()</code></td><td>M2（中心・ばらつき・箱ひげ図）</td></tr>
+<tr><td>② データを整える</td><td>欠損の補完（中央値）・標準化(z)・対数変換</td><td><code>SimpleImputer</code> <code>StandardScaler</code></td><td>M2（z スコア・歪み）</td></tr>
+<tr><td>③ 分ける</td><td>標本抽出・偏り・層化</td><td><code>train_test_split</code></td><td>M4（データ収集・偏り）</td></tr>
+<tr><td>④ 回帰モデル</td><td>最小二乗・係数・R²・誤差(RMSE/MAE)</td><td><code>LinearRegression</code></td><td><strong>M6（回帰）←最重要</strong></td></tr>
+<tr><td>⑤ 分類モデル</td><td>確率・オッズ・混同行列・Precision/Recall・ROC</td><td><code>LogisticRegression</code> <code>confusion_matrix</code></td><td>M3（確率）・M6（ロジスティック）</td></tr>
+<tr><td>⑥ 木・アンサンブル</td><td>不純度（Gini/エントロピー）・平均でばらつきを減らす</td><td><code>DecisionTree</code> <code>RandomForest</code></td><td>M3（確率）</td></tr>
+<tr><td>⑦ 過学習の確認</td><td>訓練 vs テスト・バイアスとバリアンス・正則化・交差検証</td><td><code>cross_val_score</code> <code>Ridge</code> <code>Lasso</code></td><td>M6（残差・モデル比較）</td></tr>
+<tr><td>⑧ 不確かさ</td><td>信頼区間・「偶然の幅」・相関≠因果</td><td><code>scipy.stats.t.interval</code></td><td>M4（SE・信頼区間）</td></tr>
+<tr><td>⑨ 教師なし</td><td>距離・分散・分散説明率</td><td><code>KMeans</code> <code>PCA</code></td><td>M2（分散）</td></tr>
+</table>
+</div>
+
+<div class="unit visible">
+<h2>① データを見る（pandas の中で最も統計が出る所）</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>データを読み込んだ直後。モデルを作る前に必ず。</div>
+<pre class="code-block">df.describe()                          # count / mean / std / min / 25% / 50% / 75% / max
+df["price"].skew()                     # 0 より大きい → 右に裾が長い（高額が少数）
+df.corr(numeric_only=True)["price"].sort_values()   # 目的変数との相関
+df.isna().sum()                        # 欠損の数
+df.groupby("city")["price"].agg(["mean", "median", "std", "count"])</pre>
+<ul>
+<li><strong>mean と median が大きく違う</strong> → 外れ値か歪み。median を使う方が安全。</li>
+<li><strong>std が mean より大きい</strong> → ばらつきが大きい。標準化やログ変換を考える。</li>
+<li><strong>corr は −1〜1</strong>。0 に近い＝直線関係なし（関係がないとは限らない）。</li>
+</ul>
+<pre class="code-block"># 外れ値（1.5×IQR ルール）
+q1, q3 = df["x"].quantile([.25, .75]); iqr = q3 - q1
+outlier = (df["x"] &lt; q1 - 1.5*iqr) | (df["x"] &gt; q3 + 1.5*iqr)
+df[outlier]</pre>
+</div>
+
+<div class="unit visible">
+<h2>② データを整える</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>欠損・桁の違う列・歪んだ列があるとき。</div>
+<pre class="code-block">from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+imp = SimpleImputer(strategy="median")   # 欠損 → その列の中央値
+scaler = StandardScaler()                # (x − mean) / std ＝ z スコア（平均0・SD1）
+df["income_log"] = np.log1p(df["income"])  # 右に歪んだ列を対称に近づける</pre>
+<ul>
+<li><strong>標準化 = 550 の z スコア</strong>そのものです。距離を使うモデル（KNN・SVM・正則化回帰）で必須。</li>
+<li>木のモデル（決定木・ランダムフォレスト）は標準化が<strong>不要</strong>。</li>
+<li>⚠️ <strong>データ漏れ</strong>：平均や SD は<strong>訓練データだけ</strong>で計算する（<code>scaler.fit(X_train)</code> → <code>transform(X_test)</code>）。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>③ 訓練とテストに分ける</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>モデルを作る前。評価に使うデータを隠しておく。</div>
+<pre class="code-block">from sklearn.model_selection import train_test_split
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)   # 分類なら stratify で比率を保つ</pre>
+<ul>
+<li><strong>なぜ分ける？</strong> 同じデータで評価すると、成績が実力より良く見える（過学習に気づけない）。</li>
+<li><strong>stratify</strong>：クラスの比率（例：陽性 5%）が訓練とテストで同じになる。偏った分け方を避ける＝標本抽出の考え方。</li>
+<li><strong>random_state</strong>：毎回同じ分け方になる（結果を再現するため）。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>④ 回帰（数値を予測）</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>価格・点数・数量など、数値の予測。<span class="cs-tag t-read">550 M6</span></div>
+<pre class="code-block">from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+m = LinearRegression().fit(X_tr, y_tr)
+pred = m.predict(X_te)
+rmse = mean_squared_error(y_te, pred) ** 0.5   # 予測の平均的なズレ（y と同じ単位）
+mae  = mean_absolute_error(y_te, pred)         # 外れ値に強いズレの指標
+r2   = r2_score(y_te, pred)                    # 0〜1：ばらつきのうち説明できた割合
+m.coef_, m.intercept_                          # 係数＝「他を固定して x が1増えたときの y の変化」</pre>
+<ul>
+<li><strong>RMSE と MAE</strong>：どちらも小さいほど良い。RMSE は大きな誤差を重く扱う。</li>
+<li><strong>R² が高くてもテストで悪い</strong> → 過学習。必ず<strong>テストデータ</strong>で見る。</li>
+<li>係数は<strong>標準化していないと大きさを比べられない</strong>（単位が違う）。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>⑤ 分類（クラスを予測）</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>合格/不合格・病気の有無・年収が高いか、など。<span class="cs-tag t-read">550 M3・M6</span></div>
+<pre class="code-block">from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (confusion_matrix, precision_score,
+                             recall_score, f1_score, roc_auc_score)
+
+clf = LogisticRegression(max_iter=1000).fit(X_tr, y_tr)
+proba = clf.predict_proba(X_te)[:, 1]     # 陽性である確率（0〜1）
+pred  = proba &gt;= 0.5                      # しきい値 0.5 でクラスに変換
+
+confusion_matrix(y_te, pred)              # [[TN, FP], [FN, TP]]
+precision_score(y_te, pred)               # 「陽性」と言った中の的中率 = TP / (TP + FP)
+recall_score(y_te, pred)                  # 本当の陽性の見つけた割合   = TP / (TP + FN)
+roc_auc_score(y_te, proba)                # 0.5＝当てずっぽう、1＝完璧</pre>
+<ul>
+<li><strong>正解率（accuracy）だけを信じない</strong>：陽性が 5% のデータなら、全部「陰性」と答えても 95%。</li>
+<li><strong>Precision を上げたい？ Recall を上げたい？</strong>：病気の見逃しは避けたい → Recall 重視。迷惑メール判定で通常メールを消したくない → Precision 重視。</li>
+<li>ロジスティック回帰は<strong>確率を出す回帰</strong>。しきい値を動かすと Precision と Recall がシーソーのように動く。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>⑥ 決定木とアンサンブル</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>非線形な関係や、標準化したくないとき。</div>
+<pre class="code-block">from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+tree = DecisionTreeClassifier(max_depth=4, random_state=42).fit(X_tr, y_tr)
+rf   = RandomForestClassifier(n_estimators=200, random_state=42).fit(X_tr, y_tr)
+rf.feature_importances_                   # どの特徴が分割に効いたか</pre>
+<ul>
+<li><strong>Gini 不純度</strong> = 1 − Σ(各クラスの割合)²。0 に近いほど「そのグループが1クラスにそろっている」。木は不純度が一番下がる分割を選ぶ。</li>
+<li><strong>深すぎる木は過学習</strong>（<code>max_depth</code> で制限）。</li>
+<li><strong>ランダムフォレスト</strong>＝たくさんの木の多数決・平均。1本ごとのブレが平均されて小さくなる（SE = s/√n と同じ発想）。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>⑦ 過学習と交差検証（ML の最重要概念）</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>モデルを比べる／改善するたびに。</div>
+<pre class="code-block">from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import Ridge, Lasso
+
+model.score(X_tr, y_tr), model.score(X_te, y_te)    # 訓練とテストの差を見る
+scores = cross_val_score(model, X_tr, y_tr, cv=5, scoring="neg_root_mean_squared_error")
+-scores.mean(), scores.std()              # 5回の平均とバラつき（平均 ± SD で書く）
+
+Ridge(alpha=1.0)    # 係数を小さく抑える（L2）
+Lasso(alpha=0.1)    # 不要な特徴の係数を 0 にする（L1）</pre>
+<table class="compare-table">
+<tr><th>状態</th><th>訓練の成績</th><th>テストの成績</th><th>対策</th></tr>
+<tr><td>過学習 (high variance)</td><td>とても良い</td><td>悪い</td><td>データを増やす／モデルを単純に／正則化</td></tr>
+<tr><td>学習不足 (high bias)</td><td>悪い</td><td>悪い</td><td>特徴を増やす／複雑なモデルに</td></tr>
+</table>
+</div>
+
+<div class="unit visible">
+<h2>⑧ 不確かさ（結果は「偶然の幅」つきで読む）</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>「モデル A のほうが良い」と言うとき。<span class="cs-tag t-read">550 M4</span></div>
+<pre class="code-block">import numpy as np
+from scipy import stats
+
+sq_err = (pred - y_te) ** 2
+np.sqrt(stats.t.interval(0.95, len(sq_err) - 1,
+        loc=sq_err.mean(), scale=stats.sem(sq_err)))   # RMSE の 95% 信頼区間</pre>
+<ul>
+<li><strong>差が小さければ偶然かもしれない</strong>：交差検証の SD より差が小さいなら、「どちらも同じ」と考える。</li>
+<li><strong>相関 ≠ 因果</strong>：予測できることと、原因であることは別。</li>
+<li>ML では p 値や検定は<strong>あまり使わない</strong>。使うのは、このような「誤差の幅」の感覚。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>⑨ 教師なし学習</h2>
+<div class="meta"><span class="cs-tag t-use">いつ使う</span>正解ラベルがなく、グループ分けや次元削減をするとき。</div>
+<pre class="code-block">from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+
+km  = KMeans(n_clusters=3, n_init="auto", random_state=42).fit(X_scaled)
+km.labels_, km.inertia_                   # inertia = 中心からの距離の二乗和（小さいほど締まる）
+pca = PCA(n_components=0.95).fit(X_scaled)   # 分散の 95% を残す次元数を自動で選ぶ
+pca.explained_variance_ratio_             # 各成分が説明する分散の割合</pre>
+<ul>
+<li><strong>距離を使うので、先に標準化</strong>。しないと桁の大きい列だけで決まる。</li>
+<li><strong>PCA</strong> は「分散が大きい方向」を探す。分散の割合が、そのまま「どれだけ情報を残したか」。</li>
+</ul>
+</div>
+
+<div class="unit visible">
+<h2>🚫 試験・課題の前に、なくてよい知識</h2>
+<ul>
+<li><span class="cs-tag t-no">不要</span>t 検定／ANOVA／カイ二乗の使い分け（550 の M5 の大部分）</li>
+<li><span class="cs-tag t-no">不要</span>統計表（t 表・z 表）の読み方、手計算</li>
+<li><span class="cs-tag t-no">不要</span>p 値の厳密な定義の暗記（「偶然の幅」を感じられれば十分）</li>
+<li><span class="cs-tag t-read">必要</span>この表の ①〜⑨、特に <strong>④回帰・⑤分類の評価・⑦過学習</strong></li>
+</ul>
+<p class="meta">※ DTSC 670 の課題名（Apartments／Census Income／Student Grades／Predictive Health）から回帰と分類が中心と推測していますが、各モジュールの詳細な内容はシラバスに載っていません。講義動画の目次で確認してください。</p>
+</div>
+
+<div class="unit visible">
+<h2>📚 詳しい解説と練習</h2>
+<p class="meta">このシートの各項目は、次の6回の解説ページ（R の実行結果つき）で詳しく学べます。</p>
+<table class="compare-table">
+<tr><th>回</th><th>内容</th><th>対応する段階</th></tr>
+<tr><td><a href="ml_explore.html">① データを見る・整える</a></td><td>要約・歪み・外れ値・標準化・欠損</td><td>①②</td></tr>
+<tr><td><a href="ml_split.html">② 分ける</a></td><td>訓練/テスト・層化・データ漏れ</td><td>③</td></tr>
+<tr><td><a href="ml_regression.html">③ 回帰</a></td><td>係数・R²・RMSE・残差・標準化</td><td>④</td></tr>
+<tr><td><a href="ml_classification.html">④ 分類</a></td><td>ロジスティック・混同行列・ROC</td><td>⑤</td></tr>
+<tr><td><a href="ml_overfit.html">⑤ 過学習と交差検証</a></td><td>次数・CV・正則化</td><td>⑦</td></tr>
+<tr><td><a href="ml_uncertainty.html">⑥ 不確かさ</a></td><td>信頼区間・ブートストラップ・Gini・因果</td><td>⑥⑧</td></tr>
+</table>
+<p>📥 練習：<a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a>（R、20問・4トピック × 5段階）</p>
+</div>
+<footer style="margin-top:2rem"><p>📌 ML のための統計チートシート　<a href="index.html">← 統計レッスン</a></p></footer>
+</div>
+<script src="theme-v2.js"></script><script src="../hub-fab.js"></script>
+</body>
+</html>

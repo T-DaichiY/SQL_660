@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML 統計復習 不確かさ：誤差の幅・ブートストラップ・モデル比較・木・因果</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 670 ML 統計復習 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">ML Prep · Uncertainty — Confidence Intervals for Errors, Bootstrap, Comparing Models, Gini Impurity, Correlation vs Causation</div>
+  <h1>🎲 不確かさ：誤差の幅・ブートストラップ・モデル比較・木・因果</h1>
+  <p>「モデル A の RMSE は 24.9、B は 25.3 だから A の勝ち」と言えるでしょうか。評価の数字には<strong>必ずゆれ</strong>があります。<strong>誤差の信頼区間</strong>、<strong>ブートストラップ</strong>、<strong>交差検証での比較</strong>、決定木の<strong>Gini 不純度</strong>、<strong>相関と因果</strong>を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 670 準備 · 550 M4（SE・信頼区間）の応用</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 誤差の信頼区間</a><a href="#unit2">② ブートストラップ</a><a href="#unit3">③ モデル比較</a><a href="#unit4">④ Gini と平均化</a><a href="#unit5">⑤ 相関 ≠ 因果</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📌 先に <a href="cheat_ml.html">ML のための統計チートシート</a> で全体の地図を見ておくと、この回の位置づけが分かります。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>誤差の信頼区間</h2><div class="unit-sub">RMSE にも「偶然の幅」がある</div></div>
+  </div>
+
+  <p>550 の M4 で、<strong>標本平均には信頼区間がある</strong>と学びました。<strong>テストでの誤差</strong>も同じです。テスト 1 件ごとの二乗誤差の<strong>平均</strong>（= MSE）には、<strong>標準誤差</strong>があり、信頼区間が作れます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">670</span>)</span>
+<span class="cl">n &lt;- <span class="nm">400</span></span>
+<span class="cl">apt &lt;- <span class="kw">data.frame</span>(area  = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">25</span>, <span class="nm">120</span>)),</span>
+<span class="cl">                  rooms = <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">4</span>, n, replace = <span class="kw">TRUE</span>, prob = <span class="kw">c</span>(.<span class="nm">2</span>, .<span class="nm">4</span>, .<span class="nm">3</span>, .<span class="nm">1</span>)),</span>
+<span class="cl">                  age   = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">0</span>, <span class="nm">50</span>)))</span>
+<span class="cl">apt$price &lt;- <span class="kw">round</span>(<span class="nm">40</span> + <span class="nm">2.2</span> * apt$area + <span class="nm">12</span> * apt$rooms - <span class="nm">0.8</span> * apt$age + <span class="kw">rnorm</span>(n, <span class="nm">0</span>, <span class="nm">25</span>), <span class="nm">1</span>)  <span class="cm"># 1000 USD</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(n, size = <span class="nm">0.8</span> * n)</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl">fit &lt;- <span class="kw">lm</span>(price ~ area + rooms + age, data = train)</span>
+<span class="cl">sq_err &lt;- (test$price - <span class="kw">predict</span>(fit, test))^<span class="nm">2</span>         <span class="cm"># squared error for each test row</span></span>
+<span class="cl">mse_ci &lt;- <span class="kw">t.test</span>(sq_err)$conf.int</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(RMSE = <span class="kw">sqrt</span>(<span class="kw">mean</span>(sq_err)), lower = <span class="kw">sqrt</span>(mse_ci[<span class="nm">1</span>]), upper = <span class="kw">sqrt</span>(mse_ci[<span class="nm">2</span>])), <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal"> RMSE lower upper 
+28.53 24.12 32.35 </div>
+  <p>RMSE は約 28.5 ですが、<strong>「約 24〜32 のどこか」</strong>と幅で見るのが正直です。Python では <code>scipy.stats.t.interval</code> が同じ計算をします。テストが 80 件しかないため、これだけの幅が出ます。<strong>テストが少ないほど、幅は広がります</strong>。</p>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>ブートストラップ</h2><div class="unit-sub">テストデータを何度も引き直す</div></div>
+  </div>
+
+  <p>AUC や Precision のように<strong>公式がむずかしい指標</strong>でも、<strong>ブートストラップ</strong>なら信頼区間が作れます。テストデータから、<strong>同じ件数を復元抽出</strong>して指標を計算し、これを何度もくり返して、ばらつきを見ます。</p>
+  <pre class="code-block">
+<span class="cl">d  &lt;- <span class="kw">as.data.frame</span>(Titanic)                       <span class="cm"># R's built-in Titanic table (2,201 people)</span></span>
+<span class="cl">ti &lt;- d[<span class="kw">rep</span>(<span class="kw">seq_len</span>(<span class="kw">nrow</span>(d)), d$Freq), <span class="kw">c</span>(<span class="st">"Class"</span>, <span class="st">"Sex"</span>, <span class="st">"Age"</span>, <span class="st">"Survived"</span>)]</span>
+<span class="cl"><span class="kw">rownames</span>(ti) &lt;- <span class="kw">NULL</span></span>
+<span class="cl">ti$Survived &lt;- <span class="kw">as.integer</span>(ti$Survived == <span class="st">"Yes"</span>)</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx &lt;- <span class="kw">sample</span>(<span class="kw">nrow</span>(ti), size = <span class="nm">0.8</span> * <span class="kw">nrow</span>(ti))</span>
+<span class="cl">tr  &lt;- ti[idx, ]</span>
+<span class="cl">te  &lt;- ti[-idx, ]</span>
+<span class="cl">m   &lt;- <span class="kw">glm</span>(Survived ~ Class + Sex + Age, data = tr, family = binomial)</span>
+<span class="cl">p   &lt;- <span class="kw">predict</span>(m, newdata = te, type = <span class="st">"response"</span>)   <span class="cm"># probability of survival</span></span>
+<span class="cl">pred &lt;- <span class="kw">as.integer</span>(p &gt;= <span class="nm">0.5</span>)</span>
+<span class="cl">auc &lt;- <span class="kw">function</span>(y, s) { r &lt;- <span class="kw">rank</span>(s); n1 &lt;- <span class="kw">sum</span>(y == <span class="nm">1</span>); n0 &lt;- <span class="kw">sum</span>(y == <span class="nm">0</span>); (<span class="kw">sum</span>(r[y == <span class="nm">1</span>]) - n1 * (n1 + <span class="nm">1</span>) / <span class="nm">2</span>) / (n1 * n0) }</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">7</span>)</span>
+<span class="cl">boot &lt;- <span class="kw">replicate</span>(<span class="nm">1000</span>, { i &lt;- <span class="kw">sample</span>(<span class="kw">nrow</span>(te), replace = <span class="kw">TRUE</span>); <span class="kw">auc</span>(te$Survived[i], p[i]) })</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(AUC = <span class="kw">auc</span>(te$Survived, p), <span class="kw">quantile</span>(boot, <span class="kw">c</span>(.<span class="nm">025</span>, .<span class="nm">975</span>))), <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">hist</span>(boot, breaks = <span class="nm">30</span>, col = <span class="st">"lightblue"</span>, main = <span class="st">"1,000 bootstrap AUCs"</span>, xlab = <span class="st">"AUC"</span>)</span>
+</pre>
+<div class="output-reveal">  AUC  2.5% 97.5% 
+0.781 0.729 0.824 </div>
+<figure class="r-fig"><img src="img550/ml_uncertainty_1.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>AUC の点推定は約 0.78 ですが、<strong>95% の範囲は約 0.73〜0.82</strong>。「0.78」より「0.73〜0.82」と報告する方が、現実に近い言い方です。</p>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>モデル比較：差はゆれより大きいか</h2><div class="unit-sub">交差検証の成績を並べる</div></div>
+  </div>
+
+  <p>モデル A（面積だけ）と B（面積・部屋数・築年数）を、<strong>同じ 5 分割</strong>で比べます。同じフォールドでの成績の<strong>差</strong>を見るのがコツです（<strong>対応のある差</strong>）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">670</span>)</span>
+<span class="cl">n &lt;- <span class="nm">400</span></span>
+<span class="cl">apt &lt;- <span class="kw">data.frame</span>(area  = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">25</span>, <span class="nm">120</span>)),</span>
+<span class="cl">                  rooms = <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">4</span>, n, replace = <span class="kw">TRUE</span>, prob = <span class="kw">c</span>(.<span class="nm">2</span>, .<span class="nm">4</span>, .<span class="nm">3</span>, .<span class="nm">1</span>)),</span>
+<span class="cl">                  age   = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">0</span>, <span class="nm">50</span>)))</span>
+<span class="cl">apt$price &lt;- <span class="kw">round</span>(<span class="nm">40</span> + <span class="nm">2.2</span> * apt$area + <span class="nm">12</span> * apt$rooms - <span class="nm">0.8</span> * apt$age + <span class="kw">rnorm</span>(n, <span class="nm">0</span>, <span class="nm">25</span>), <span class="nm">1</span>)  <span class="cm"># 1000 USD</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(n, size = <span class="nm">0.8</span> * n)</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2</span>); folds &lt;- <span class="kw">sample</span>(<span class="kw">rep</span>(<span class="nm">1</span>:<span class="nm">5</span>, length.out = <span class="kw">nrow</span>(train)))</span>
+<span class="cl">cv_fold &lt;- <span class="kw">function</span>(formula) <span class="kw">sapply</span>(<span class="nm">1</span>:<span class="nm">5</span>, <span class="kw">function</span>(k) {</span>
+<span class="cl">  f &lt;- <span class="kw">lm</span>(formula, data = train[folds != k, ])</span>
+<span class="cl">  <span class="kw">sqrt</span>(<span class="kw">mean</span>((train$price[folds == k] - <span class="kw">predict</span>(f, train[folds == k, ]))^<span class="nm">2</span>))</span>
+<span class="cl">})</span>
+<span class="cl">A &lt;- <span class="kw">cv_fold</span>(price ~ area)</span>
+<span class="cl">B &lt;- <span class="kw">cv_fold</span>(price ~ area + rooms + age)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">rbind</span>(A = A, B = B), <span class="nm">1</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(mean_diff = <span class="kw">mean</span>(A - B), sd_diff = <span class="kw">sd</span>(A - B)), <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal">  [,1] [,2] [,3] [,4] [,5]
+A 30.4 30.2 25.1 29.5 27.9
+B 23.9 25.7 21.2 23.5 22.9
+mean_diff   sd_diff 
+     5.18      1.08 </div>
+  <p>A は B より平均で約 <strong>5</strong> 悪く、5 つのフォールドの差のゆれ（SD ≈ 1）の約 5 倍もあります。<strong>B の方が良い</strong>と言えます。では、役に立たない特徴（ただのノイズ）を足した B' はどうでしょうか。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">11</span>); train$noise &lt;- <span class="kw">rnorm</span>(<span class="kw">nrow</span>(train))</span>
+<span class="cl">B2 &lt;- <span class="kw">cv_fold</span>(price ~ area + rooms + age + noise)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(mean_diff = <span class="kw">mean</span>(B - B2), sd_diff = <span class="kw">sd</span>(B - B2)), <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal">mean_diff   sd_diff 
+    -0.24      0.29 </div>
+  <p>差の平均は約 −0.24（B2 の方がむしろ少し悪い）で、<strong>ゆれ（SD ≈ 0.29）と同じくらいかそれ以下</strong>。この差では「B2 が悪い／良い」とは言えません。<strong>差が SD に埋もれるときは、同じ</strong>とみなし、単純な方（B）を選びます。</p>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>決定木の Gini 不純度と、平均化の力</h2><div class="unit-sub">木を作る基準と、ランダムフォレストの理由</div></div>
+  </div>
+
+  <p>決定木は、データを<strong>できるだけ純粋なグループ</strong>に分ける質問を探します。純粋さの目安が <strong>Gini 不純度</strong>：<code>1 − Σ(各クラスの割合²)</code>。1 クラスだけなら 0、半々なら 0.5（2 クラスの最大）です。タイタニックの生存で、性別で分けると不純度がどれだけ下がるか計算します。</p>
+  <pre class="code-block">
+<span class="cl">gini &lt;- <span class="kw">function</span>(y) { p &lt;- <span class="kw">prop.table</span>(<span class="kw">table</span>(y)); <span class="nm">1</span> - <span class="kw">sum</span>(p^<span class="nm">2</span>) }</span>
+<span class="cl">g_all &lt;- <span class="kw">gini</span>(ti$Survived)</span>
+<span class="cl">g_split &lt;- <span class="kw">function</span>(by) <span class="kw">sum</span>(<span class="kw">sapply</span>(<span class="kw">split</span>(ti$Survived, by), <span class="kw">function</span>(y) <span class="kw">length</span>(y) / <span class="kw">nrow</span>(ti) * <span class="kw">gini</span>(y)))</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(root = g_all, by_Sex = <span class="kw">g_split</span>(ti$Sex), by_Class = <span class="kw">g_split</span>(ti$Class), by_Age = <span class="kw">g_split</span>(ti$Age)), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">    root   by_Sex by_Class   by_Age 
+   0.437    0.347    0.400    0.433 </div>
+  <p>性別で分けると、不純度が 0.437 → <strong>0.347</strong> まで最も下がります（クラス 0.400、年齢 0.433 より大きな低下）。木は<strong>一番下がる質問（ここでは性別）を最初に選びます</strong>。</p>
+  <p><strong>ランダムフォレスト</strong>は、データを復元抽出で変えながら木をたくさん作って<strong>平均（多数決）</strong>します。なぜ良くなるのか。<strong>独立なゆれを平均すると、ゆれは小さくなる</strong>からです（標準誤差 = SD ÷ √n と同じ考え方）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">one  &lt;- <span class="kw">rnorm</span>(<span class="nm">5000</span>)                                      <span class="cm"># one noisy predictor</span></span>
+<span class="cl">avg25 &lt;- <span class="kw">replicate</span>(<span class="nm">5000</span>, <span class="kw">mean</span>(<span class="kw">rnorm</span>(<span class="nm">25</span>)))               <span class="cm"># the average of 25 noisy predictors</span></span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(sd_one = <span class="kw">sd</span>(one), sd_avg25 = <span class="kw">sd</span>(avg25), theory = <span class="nm">1</span> / <span class="kw">sqrt</span>(<span class="nm">25</span>)), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">  sd_one sd_avg25   theory 
+   1.027    0.196    0.200 </div>
+  <div class="note-box">25 個を平均すると、ゆれは <strong>1/5（= 1/√25）</strong>になります。1 本の木は不安定でも、多数の木を平均した森は安定する。これがバギングの効果です（実際の木は完全に独立ではないので、効果はこれより小さくなります）。</div>
+
+</div>
+
+<div class="unit" id="unit5">
+  <div class="unit-header">
+    <div class="unit-num">⑤</div>
+    <div><h2>相関 ≠ 因果</h2><div class="unit-sub">予測できることと、原因であることは別</div></div>
+  </div>
+
+  <p>ML は<strong>予測</strong>が得意ですが、<strong>原因</strong>は教えてくれません。2 つの変数が強く相関していても、<strong>第三の変数（交絡因子）</strong>が両方を動かしているだけかもしれません。気温が、アイスの売上と水難事故の両方を増やす例を作ります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">8</span>)</span>
+<span class="cl">temp &lt;- <span class="kw">rnorm</span>(<span class="nm">300</span>, <span class="nm">25</span>, <span class="nm">5</span>)</span>
+<span class="cl">ice  &lt;- <span class="nm">3</span> * temp + <span class="kw">rnorm</span>(<span class="nm">300</span>, <span class="nm">0</span>, <span class="nm">6</span>)</span>
+<span class="cl">swim &lt;- <span class="nm">2</span> * temp + <span class="kw">rnorm</span>(<span class="nm">300</span>, <span class="nm">0</span>, <span class="nm">6</span>)                   <span class="cm"># swimming accidents: depends only on temperature</span></span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(ice, swim), <span class="nm">2</span>)                              <span class="cm"># strong correlation!</span></span>
+<span class="cl">r_ice  &lt;- <span class="kw">resid</span>(<span class="kw">lm</span>(ice ~ temp)); r_swim &lt;- <span class="kw">resid</span>(<span class="kw">lm</span>(swim ~ temp))</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cor</span>(r_ice, r_swim), <span class="nm">2</span>)                          <span class="cm"># after removing temperature</span></span>
+</pre>
+<div class="output-reveal">[1] 0.8
+[1] 0.1</div>
+  <p>アイスと水難事故の相関は約 0.8 と強いのに、<strong>気温の影響を取り除くとほぼ 0（約 0.1）</strong>です。アイスを禁止しても、事故は減りません。</p>
+  <div class="warn-box">⚠️ 特徴量が目的変数を<strong>予測</strong>できることと、その特徴量が目的変数の<strong>原因</strong>であることは別です。ML の係数や特徴量の重要度を、「これを変えれば結果が変わる」と読むのは危険です。因果を知るには、<strong>無作為化実験</strong>（550 の M4）が必要です。</div>
+
+</div>
+
+<div class="teal-box">🎉 <strong>復習はここまで。</strong>次は <a href="cheat_ml.html">ML のための統計チートシート</a>で全体を見直し、練習ノートブック（このページの下からダウンロード）で自分の手を動かしましょう。</div>
+<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1.2rem 0;color:#134e4a">📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a> — 4トピック × 5段階（L1 見本 → L2 穴埋め → L3 自由記述 → L4/L5 シナリオ）の20問。このシリーズ全6回の内容が範囲です。RStudio で開いて解いてください。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">The test RMSE is 28.5 with a 95% CI of 24 to 32. How should it be reported?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Exactly 28.5 on any new data</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Between 0 and 28.5 for sure</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Above 32 for sure</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>About 28, plausibly 24 to 32</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does the bootstrap do?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Splits the data into equal folds</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Resamples with replacement, often</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Removes all outliers from the data</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Adds noise to the test labels</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Model A beats model B by 0.1 RMSE while the SD of the fold differences is 2. What follows?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A is clearly better</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The gap is within the noise</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>B is clearly better</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Both models have zero error</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A node has 50% class 0 and 50% class 1. Its Gini impurity is...</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>0.00</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>1.00</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>0.25</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>0.50</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Averaging 25 independent noisy predictions reduces the SD of the result to about...</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>1/5 of the original</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>1/25 of the original</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The same as before</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Twice the original</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">Ice cream sales and swimming accidents are strongly correlated. The best explanation is...</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Ice cream causes accidents</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Accidents cause ice cream sales</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A shared cause, such as heat</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The correlation must be a mistake</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 1, 1, 3, 0, 2];
+var FEEDBACKS=["An estimate based on a sample test set always carries uncertainty.", "Each resample gives one value of the statistic; together they show its spread.", "A difference much smaller than its variability should not decide the choice.", "1 − (0.5² + 0.5²) = 0.5, the maximum for two classes.", "SD of an average of n independent values is SD / √n; √25 = 5.", "A confounder can drive both variables without a causal link between them."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">standard error</div><div class="term-en">標準誤差</div><div class="term-def">平均の推定のゆれ。SD ÷ √n。</div></div>
+    <div class="term-item"><div class="term-name">confidence interval</div><div class="term-en">信頼区間</div><div class="term-def">推定値の「偶然の幅」。</div></div>
+    <div class="term-item"><div class="term-name">bootstrap</div><div class="term-en">ブートストラップ</div><div class="term-def">データから復元抽出をくり返して、ゆれを調べる。</div></div>
+    <div class="term-item"><div class="term-name">paired difference</div><div class="term-en">対応のある差</div><div class="term-def">同じフォールドでの 2 モデルの成績の差。</div></div>
+    <div class="term-item"><div class="term-name">Gini impurity</div><div class="term-en">Gini 不純度</div><div class="term-def">1 − Σ(割合²)。0 に近いほど純粋。</div></div>
+    <div class="term-item"><div class="term-name">bagging</div><div class="term-en">バギング</div><div class="term-def">データを復元抽出で変えて木を多数作り、平均する。</div></div>
+    <div class="term-item"><div class="term-name">confounder</div><div class="term-en">交絡因子</div><div class="term-def">2 つの変数の両方に影響する第三の変数。</div></div>
+    <div class="term-item"><div class="term-name">spurious correlation</div><div class="term-en">見かけの相関</div><div class="term-def">原因でないのに相関が出ること。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>差が「ゆれ」より小さければ、同じ</strong>と考える。1 回のテストの小数点以下の差では、優劣を決めない。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：670 ML 統計復習 不確かさ：誤差の幅・ブートストラップ・モデル比較・木・因果</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="ml_overfit.html">← 過学習と交差検証</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

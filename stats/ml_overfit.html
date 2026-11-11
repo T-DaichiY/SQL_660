@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML 統計復習 過学習と交差検証：次数・バイアス/バリアンス・正則化</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 670 ML 統計復習 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">ML Prep · Overfitting — Model Complexity, Train vs Test Error, Cross-Validation, Regularization</div>
+  <h1>🌀 過学習と交差検証：次数・バイアス/バリアンス・正則化</h1>
+  <p>ML の最重要テーマ、<strong>過学習</strong>。モデルを複雑にすると、<strong>訓練の誤差は下がり続けるのに、テストの誤差は下がってから上がる</strong>ことを、多項式回帰で確かめます。そして<strong>交差検証</strong>で複雑さを選び、<strong>正則化</strong>の考え方に触れます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 670 準備 · 550 M6（回帰）の応用</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① 複雑さを上げると</a><a href="#unit2">② 訓練 vs テスト</a><a href="#unit3">③ 交差検証</a><a href="#unit4">④ バイアス・バリアンス・正則化</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📌 先に <a href="cheat_ml.html">ML のための統計チートシート</a> で全体の地図を見ておくと、この回の位置づけが分かります。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>モデルを複雑にするとどうなるか</h2><div class="unit-sub">多項式の次数 1 と 10</div></div>
+  </div>
+
+  <p>sin 波に<strong>ノイズ</strong>を加えた架空のデータ（60 点）を、訓練 25 点とテスト 35 点に分けます。<code>lm(y ~ poly(x, d))</code> の<strong>次数 d</strong>が大きいほど、曲線は複雑に曲がれます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">15</span>)</span>
+<span class="cl">x &lt;- <span class="kw">runif</span>(<span class="nm">60</span>, <span class="nm">0</span>, <span class="nm">10</span>); y &lt;- <span class="kw">sin</span>(x) + <span class="kw">rnorm</span>(<span class="nm">60</span>, <span class="nm">0</span>, <span class="nm">0.5</span>)</span>
+<span class="cl">dat &lt;- <span class="kw">data.frame</span>(x, y)</span>
+<span class="cl">train &lt;- dat[<span class="nm">1</span>:<span class="nm">25</span>, ]; test &lt;- dat[<span class="nm">26</span>:<span class="nm">60</span>, ]</span>
+<span class="cl">rmse &lt;- <span class="kw">function</span>(a, b) <span class="kw">sqrt</span>(<span class="kw">mean</span>((a - b)^<span class="nm">2</span>))</span>
+<span class="cl">fit1  &lt;- <span class="kw">lm</span>(y ~ <span class="kw">poly</span>(x, <span class="nm">1</span>),  data = train)</span>
+<span class="cl">fit10 &lt;- <span class="kw">lm</span>(y ~ <span class="kw">poly</span>(x, <span class="nm">10</span>), data = train)</span>
+<span class="cl">xs &lt;- <span class="kw">data.frame</span>(x = <span class="kw">seq</span>(<span class="nm">0</span>, <span class="nm">10</span>, length.out = <span class="nm">300</span>))</span>
+<span class="cl"><span class="kw">plot</span>(train$x, train$y, pch = <span class="nm">16</span>, col = <span class="st">"#4471B8"</span>, xlab = <span class="st">"x"</span>, ylab = <span class="st">"y"</span>, ylim = <span class="kw">c</span>(-<span class="nm">2.5</span>, <span class="nm">3.2</span>))</span>
+<span class="cl"><span class="kw">points</span>(test$x, test$y, pch = <span class="nm">17</span>, col = <span class="st">"#B84848"</span>)</span>
+<span class="cl"><span class="kw">lines</span>(xs$x, <span class="kw">predict</span>(fit1, xs), lwd = <span class="nm">2</span>, col = <span class="st">"gray40"</span>)</span>
+<span class="cl"><span class="kw">lines</span>(xs$x, <span class="kw">predict</span>(fit10, xs), lwd = <span class="nm">2</span>, col = <span class="st">"#3C8A5A"</span>)</span>
+<span class="cl"><span class="kw">legend</span>(<span class="st">"top"</span>, <span class="kw">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>, <span class="st">"degree 1"</span>, <span class="st">"degree 10"</span>), ncol = <span class="nm">4</span>, pch = <span class="kw">c</span>(<span class="nm">16</span>, <span class="nm">17</span>, <span class="kw">NA</span>, <span class="kw">NA</span>), lty = <span class="kw">c</span>(<span class="kw">NA</span>, <span class="kw">NA</span>, <span class="nm">1</span>, <span class="nm">1</span>), col = <span class="kw">c</span>(<span class="st">"#4471B8"</span>, <span class="st">"#B84848"</span>, <span class="st">"gray40"</span>, <span class="st">"#3C8A5A"</span>), bty = <span class="st">"n"</span>)</span>
+</pre>
+<figure class="r-fig"><img src="img550/ml_overfit_0.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p>灰色の<strong>直線（次数 1）</strong>は単純すぎて、波を捉えられません（学習不足）。緑の<strong>次数 10</strong> は訓練の点（青）に沿ってうねりますが、端では不自然に大きく振れています（過学習）。</p>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>訓練の誤差とテストの誤差</h2><div class="unit-sub">テストの誤差は「U 字」になる</div></div>
+  </div>
+
+  <p>次数を 1 から 10 まで変えて、訓練とテストの RMSE を比べます。</p>
+  <pre class="code-block">
+<span class="cl">deg &lt;- <span class="nm">1</span>:<span class="nm">10</span></span>
+<span class="cl">err &lt;- <span class="kw">t</span>(<span class="kw">sapply</span>(deg, <span class="kw">function</span>(d) {</span>
+<span class="cl">  f &lt;- <span class="kw">lm</span>(y ~ <span class="kw">poly</span>(x, d), data = train)</span>
+<span class="cl">  <span class="kw">c</span>(train = <span class="kw">rmse</span>(train$y, <span class="kw">predict</span>(f, train)), test = <span class="kw">rmse</span>(test$y, <span class="kw">predict</span>(f, test)))</span>
+<span class="cl">}))</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">cbind</span>(degree = deg, err), <span class="nm">3</span>)[<span class="kw">c</span>(<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">6</span>, <span class="nm">8</span>, <span class="nm">10</span>), ]</span>
+<span class="cl"><span class="kw">matplot</span>(deg, err, type = <span class="st">"b"</span>, pch = <span class="nm">16</span>, lty = <span class="nm">1</span>, col = <span class="kw">c</span>(<span class="st">"#4471B8"</span>, <span class="st">"#B84848"</span>), xlab = <span class="st">"Polynomial degree"</span>, ylab = <span class="st">"RMSE"</span>)</span>
+<span class="cl"><span class="kw">legend</span>(<span class="st">"topright"</span>, <span class="kw">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>), col = <span class="kw">c</span>(<span class="st">"#4471B8"</span>, <span class="st">"#B84848"</span>), lty = <span class="nm">1</span>, pch = <span class="nm">16</span>, bty = <span class="st">"n"</span>)</span>
+</pre>
+<div class="output-reveal">     degree train  test
+[1,]      1 0.748 1.000
+[2,]      3 0.558 0.821
+[3,]      5 0.437 0.672
+[4,]      6 0.429 0.591
+[5,]      8 0.416 0.718
+[6,]     10 0.384 1.505</div>
+<figure class="r-fig"><img src="img550/ml_overfit_1.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <p><strong>訓練誤差</strong>（青）は次数を上げるほど<strong>下がり続けます</strong>。一方、<strong>テスト誤差</strong>（赤）は<strong>途中まで下がり、あとで上がります</strong>。この U 字の底が、ちょうどよい複雑さです。</p>
+  <table class="compare-table">
+<tr><th>状態</th><th>訓練誤差</th><th>テスト誤差</th><th>対策</th></tr>
+<tr><td>学習不足 (high bias)</td><td>大きい</td><td>大きい</td><td>モデルを複雑に・特徴を増やす</td></tr><tr><td>ちょうどよい</td><td>小さい</td><td>小さい</td><td>—</td></tr><tr><td>過学習 (high variance)</td><td>とても小さい</td><td>大きい</td><td>データを増やす・単純に・正則化</td></tr>
+</table>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>交差検証（k-fold CV）</h2><div class="unit-sub">1回の分け方に頼らない</div></div>
+  </div>
+
+  <p>テストが 35 点しかないと、<strong>偶然のゆれ</strong>が大きく、次数の選び方も不安定です。<strong>交差検証</strong>は、データを k 個（ここでは 5 個）に分け、<strong>1 つをテスト・残りを訓練</strong>にする作業を k 回くり返して、<strong>誤差を平均</strong>します。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">2</span>)</span>
+<span class="cl">folds &lt;- <span class="kw">sample</span>(<span class="kw">rep</span>(<span class="nm">1</span>:<span class="nm">5</span>, length.out = <span class="kw">nrow</span>(train)))      <span class="cm"># fold id for each training row</span></span>
+<span class="cl">cv_rmse &lt;- <span class="kw">function</span>(d) <span class="kw">mean</span>(<span class="kw">sapply</span>(<span class="nm">1</span>:<span class="nm">5</span>, <span class="kw">function</span>(k) {</span>
+<span class="cl">  f &lt;- <span class="kw">lm</span>(y ~ <span class="kw">poly</span>(x, d), data = train[folds != k, ])</span>
+<span class="cl">  <span class="kw">rmse</span>(train$y[folds == k], <span class="kw">predict</span>(f, train[folds == k, ]))</span>
+<span class="cl">}))</span>
+<span class="cl">cv &lt;- <span class="kw">sapply</span>(<span class="nm">1</span>:<span class="nm">8</span>, cv_rmse)</span>
+<span class="cl"><span class="kw">round</span>(cv, <span class="nm">3</span>)</span>
+<span class="cl"><span class="kw">which.min</span>(cv)                                  <span class="cm"># degree with the lowest CV error</span></span>
+</pre>
+<div class="output-reveal">[1] 0.787 0.731 0.645 0.507 0.587 0.627 0.597 0.780
+[1] 4</div>
+  <p>テストデータに触れずに、<strong>訓練データの中だけで</strong>最適な次数を選べました。選んだら、最後にテストデータで<strong>1回だけ</strong>確認します。Python では <code>cross_val_score(model, X, y, cv=5)</code> が、この作業を 1 行でやります。</p>
+  <pre class="code-block">
+<span class="cl">best &lt;- <span class="kw">which.min</span>(cv)</span>
+<span class="cl">final &lt;- <span class="kw">lm</span>(y ~ <span class="kw">poly</span>(x, best), data = train)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(degree = best, test_rmse = <span class="kw">rmse</span>(test$y, <span class="kw">predict</span>(final, test))), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">   degree test_rmse 
+    4.000     0.695 </div>
+  <div class="practice-card" id="p-ml5-u3">
+    <div class="ptitle">💻 ミニ練習：k = 4 の分割</div>
+    <p class="ptask"><code>train</code>（40 行）を <strong>4 つのフォールド</strong>に無作為に分け（<code>set.seed(9)</code>）、<code>table()</code> で各フォールドの行数を表示してください。</p>
+    <textarea class="code-editor" id="p-ml5-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ml5-u3', ['set.seed', 'sample', 'rep', 'table'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml5-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml5-u3-result"></div>
+    <div class="answer-reveal" id="p-ml5-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">9</span>)</span>
+<span class="cl">folds &lt;- <span class="kw">sample</span>(<span class="kw">rep</span>(<span class="nm">1</span>:<span class="nm">4</span>, length.out = <span class="kw">nrow</span>(train)))</span>
+<span class="cl"><span class="kw">table</span>(folds)</span>
+</pre>
+      <p class="answer-note"><code>rep(1:4, length.out = 40)</code> で 1〜4 を 10 回ずつ並べ、<code>sample()</code> でシャッフルする。各フォールドは 10 行。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>バイアスとバリアンス、正則化</h2><div class="unit-sub">複雑さにブレーキをかける</div></div>
+  </div>
+
+  <p>誤差は 2 つの原因に分けて考えられます。<strong>バイアス</strong>は「モデルが単純すぎて、真の形を捉えられない」偏り、<strong>バリアンス</strong>は「訓練データが変わると、モデルが大きく変わる」ゆらぎです。複雑にするとバイアスは下がり、バリアンスは上がります。このバランスを探すのが ML の基本です。</p>
+  <p><strong>正則化</strong>は、モデルを複雑にしすぎないために、<strong>係数が大きくなることにペナルティ</strong>を課します（<strong>Ridge＝L2</strong>、<strong>Lasso＝L1</strong>）。ペナルティの強さ <code>λ</code>（Python では <code>alpha</code>）を上げると、係数が 0 に向かって縮みます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">670</span>)</span>
+<span class="cl">n &lt;- <span class="nm">400</span></span>
+<span class="cl">apt &lt;- <span class="kw">data.frame</span>(area  = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">25</span>, <span class="nm">120</span>)),</span>
+<span class="cl">                  rooms = <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">4</span>, n, replace = <span class="kw">TRUE</span>, prob = <span class="kw">c</span>(.<span class="nm">2</span>, .<span class="nm">4</span>, .<span class="nm">3</span>, .<span class="nm">1</span>)),</span>
+<span class="cl">                  age   = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">0</span>, <span class="nm">50</span>)))</span>
+<span class="cl">apt$price &lt;- <span class="kw">round</span>(<span class="nm">40</span> + <span class="nm">2.2</span> * apt$area + <span class="nm">12</span> * apt$rooms - <span class="nm">0.8</span> * apt$age + <span class="kw">rnorm</span>(n, <span class="nm">0</span>, <span class="nm">25</span>), <span class="nm">1</span>)  <span class="cm"># 1000 USD</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(n, size = <span class="nm">0.8</span> * n)</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl">train_s &lt;- <span class="kw">as.data.frame</span>(<span class="kw">scale</span>(train))</span>
+<span class="cl">lam &lt;- <span class="kw">c</span>(<span class="nm">0</span>, <span class="nm">10</span>, <span class="nm">100</span>, <span class="nm">1000</span>)</span>
+<span class="cl">r &lt;- MASS::<span class="kw">lm.ridge</span>(price ~ area + rooms + age, data = train_s, lambda = lam)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">t</span>(<span class="kw">coef</span>(r)), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">           0     10    100   1000
+       0.000  0.000  0.000  0.000
+area   0.908  0.880  0.688  0.217
+rooms  0.171  0.163  0.115  0.026
+age   -0.193 -0.187 -0.149 -0.049</div>
+  <p>λ を大きくするほど、3 つの係数が<strong>0 に近づいて</strong>います。係数が小さいモデルは、データのゆらぎに強い（バリアンスが低い）一方で、バイアスが増えます。適切な λ は、<strong>交差検証</strong>で選びます。</p>
+  <table class="compare-table">
+<tr><th></th><th>Ridge (L2)</th><th>Lasso (L1)</th></tr>
+<tr><td>ペナルティ</td><td>係数の二乗の和</td><td>係数の絶対値の和</td></tr><tr><td>効果</td><td>全部の係数を小さくする</td><td>不要な特徴の係数を 0 にする（特徴選択）</td></tr><tr><td>Python</td><td><code>Ridge(alpha=...)</code></td><td><code>Lasso(alpha=...)</code></td></tr>
+</table>
+
+</div>
+
+<div class="teal-box">➡️ <strong>最後の回へ：</strong>評価の数字には必ず「ゆれ」があります。<a href="ml_uncertainty.html">不確かさ：誤差の幅・ブートストラップ・モデル比較・木・因果</a>へ。</div>
+<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1.2rem 0;color:#134e4a">📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a> — 4トピック × 5段階（L1 見本 → L2 穴埋め → L3 自由記述 → L4/L5 シナリオ）の20問。このシリーズ全6回の内容が範囲です。RStudio で開いて解いてください。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">As model complexity increases, the training error usually...</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Keeps increasing</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Keeps decreasing</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Stays almost constant</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>First rises, then falls</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">The test error is high while the training error is very low. This is...</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Underfitting</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Stratification</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Standardization</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Overfitting</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">What does 5-fold cross-validation do?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Tests on each fold in turn</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Uses five models at once</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Repeats one split five times</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Adds five new features</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A key benefit of cross-validation over one train/test split is...</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>It needs no training data at all</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>It removes all random variation</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A more stable error estimate</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>It always gives a lower error</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Increasing the regularization strength (alpha or lambda) makes coefficients...</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Grow larger</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Switch signs randomly</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Shrink toward zero</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Stay exactly the same</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">High variance means that the model...</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Changes a lot with the sample</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Is too simple to learn the pattern</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Always predicts the training mean</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Has a perfect score on test data</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[1, 3, 0, 2, 2, 0];
+var FEEDBACKS=["A more flexible model can fit the training data ever more closely.", "The model memorized the training set and does not generalize.", "Each fold is used once for testing; the five errors are averaged.", "Averaging over folds reduces the luck of a single split.", "The penalty on large coefficients forces them to be smaller.", "A high-variance model is sensitive to the particular training sample."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">overfitting</div><div class="term-en">過学習</div><div class="term-def">訓練データに合いすぎ、新データで悪化。</div></div>
+    <div class="term-item"><div class="term-name">underfitting</div><div class="term-en">学習不足</div><div class="term-def">単純すぎて、訓練でも悪い。</div></div>
+    <div class="term-item"><div class="term-name">model complexity</div><div class="term-en">モデルの複雑さ</div><div class="term-def">多項式の次数・木の深さなど。</div></div>
+    <div class="term-item"><div class="term-name">cross-validation (CV)</div><div class="term-en">交差検証</div><div class="term-def">データを k 分割し、順に1つをテストにして平均する。</div></div>
+    <div class="term-item"><div class="term-name">bias</div><div class="term-en">バイアス</div><div class="term-def">モデルが単純すぎる偏り（学習不足側）。</div></div>
+    <div class="term-item"><div class="term-name">variance</div><div class="term-en">バリアンス</div><div class="term-def">データが変わるとモデルが大きく揺れる（過学習側）。</div></div>
+    <div class="term-item"><div class="term-name">regularization</div><div class="term-en">正則化</div><div class="term-def">係数を小さく抑えて、複雑さにペナルティを課す。</div></div>
+    <div class="term-item"><div class="term-name">Ridge / Lasso</div><div class="term-en">リッジ／ラッソ</div><div class="term-def">L2 / L1 の正則化。Lasso は係数を 0 にもする。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>訓練の誤差だけ</strong>見て満足しない。<strong>テスト（または CV）の誤差が最小</strong>になる複雑さを選ぶ。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：670 ML 統計復習 過学習と交差検証：次数・バイアス/バリアンス・正則化</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="ml_classification.html">← 分類</a> · <a href="ml_uncertainty.html">不確かさ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

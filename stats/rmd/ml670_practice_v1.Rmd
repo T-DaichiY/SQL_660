@@ -1,0 +1,590 @@
+---
+title: "670 ML Statistics Review — Explore, Split, Regression, Classification, Overfitting & Uncertainty: R Coding Practice (20 Questions)"
+subtitle: "4 topics × 5 levels: Reference → Fill-in → Free-style → Scenario 1 → Scenario 2"
+output:
+  html_notebook:
+    theme: flatly
+    toc: true
+    toc_float: true
+    number_sections: false
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+------------------------------------------------------------------------
+
+> **How to use this notebook**
+>
+> Each **topic** (Q1–Q5, Q6–Q10, Q11–Q15, Q16–Q20) contains 5 questions
+> that escalate in difficulty:
+>
+> | Level               | What to do                                            |
+> |----------------------------|--------------------------------------------|
+> | **L1 — Reference**  | A complete example is given. Run it, study each line. |
+> | **L2 — Fill-in**    | Replace `___` with correct code.                      |
+> | **L3 — Free style** | Write all code yourself from the goal description.    |
+> | **L4 — Scenario 1** | Real-world setting. Write full analysis.              |
+> | **L5 — Scenario 2** | Complex multi-step scenario + short report.           |
+>
+> No data files are needed: every data set is simulated or built into R (airquality, Titanic).
+>
+> 📖 Matching lessons: https://t-daichiy.github.io/SQL_660/stats/ml_explore.html (670 ML 統計復習, 6 lessons)
+
+------------------------------------------------------------------------
+
+
+# Topic A — Explore & Prepare Data
+
+
+## Q1 · L1 · Reference
+
+**Goal:** Describe the ozone levels in `airquality`: compare mean and median, then measure skewness.
+
+```{r q1-l1, eval=TRUE}
+# === Complete example — read and run ===
+x <- airquality$Ozone
+summary(x)                                  # mean (42.1) is larger than the median (31.5)
+sd(x, na.rm = TRUE)
+skew <- function(x) { x <- x[!is.na(x)]; mean((x - mean(x))^3) / mean((x - mean(x))^2)^1.5 }
+skew_oz <- skew(x)
+round(skew_oz, 2)                           # > 1: strongly right-skewed
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q2 · L2 · Fill-in
+
+**Goal:** Find the upper fence for wind speed in `airquality` and count the days above it.
+
+```{r q2-l2}
+w <- airquality$Wind
+q <- quantile(w, c(___, ___))
+iqr <- unname(diff(q))
+upper <- unname(q[2]) + ___ * iqr
+n_out <- sum(w > ___)
+round(c(upper = upper, n_out = n_out), 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q3 · L3 · Free Style
+
+**Goal:** Show that a log transform reduces the skewness of the ozone levels. Report the skewness before and after (2 decimals).
+
+```{r q3-l3}
+# Write all your code here (define the skew() helper yourself)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q4 · L4 · Scenario 1
+
+**Goal:** Standardize `area` for the apartment data. Compute the mean and SD on the TRAINING rows only, apply them to both train and test, and report the mean and SD of the standardized test column.
+
+```{r q4-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+```
+
+```{r q4-l4}
+# 1. mean and SD of train$area
+# 2. z-scores for the train rows and the test rows (using the train mean/SD)
+# 3. Mean and SD of the standardized TEST column (3 decimals)
+# 4. Why is the test mean not exactly 0? (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q5 · L5 · Scenario 2
+
+**Goal:** In `airquality`, compare two ways of handling missing Ozone: drop the rows, or fill with the median. Report the rows kept, the SD of Ozone, and the correlation between Ozone and Temp for each method. Write 3 sentences on what imputation does to the relationship.
+
+```{r q5-l5}
+# 1. NA count per column
+# 2. Method 1: drop rows with an NA in Ozone (rows kept, SD, cor with Temp)
+# 3. Method 2: median imputation (SD, cor with Temp)
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic B — Split & Regression
+
+
+## Q6 · L1 · Reference
+
+**Goal:** Split the apartment data 80/20 and fit price ~ area + rooms + age on the training rows.
+
+```{r q6-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+```
+
+```{r q6-l1, eval=TRUE}
+# === Complete example — read and run ===
+c(train = nrow(train), test = nrow(test))
+fit <- lm(price ~ area + rooms + age, data = train)
+coefs <- coef(fit)
+round(coefs, 2)                             # +1 m2 of area adds about 2.2 (1000 USD), others fixed
+coef_area <- coefs[["area"]]
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q7 · L2 · Fill-in
+
+**Goal:** Evaluate `fit` on the test rows (not the training rows).
+
+```{r q7-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+fit <- lm(price ~ area + rooms + age, data = train)
+```
+
+```{r q7-l2}
+pred <- predict(fit, newdata = ___)
+res  <- test$price - ___
+rmse_test <- sqrt(mean(___^2))
+mae_test  <- mean(abs(res))
+r2_test   <- 1 - sum(res^2) / sum((test$price - mean(___))^2)
+round(c(RMSE = rmse_test, MAE = mae_test, R2 = r2_test), 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q8 · L3 · Free Style
+
+**Goal:** A baseline always predicts the TRAINING mean price. Compute its test RMSE, compare it with the model's test RMSE, and report the percentage improvement (1 decimal).
+
+```{r q8-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+fit <- lm(price ~ area + rooms + age, data = train)
+```
+
+```{r q8-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q9 · L4 · Scenario 1
+
+**Goal:** Plot the test residuals against the fitted values and find the apartment with the largest absolute residual. Report that residual and the mean of the TRAINING residuals.
+
+```{r q9-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+fit <- lm(price ~ area + rooms + age, data = train)
+```
+
+```{r q9-l4}
+# 1. Residuals on the test set and fitted (predicted) values
+# 2. Residual-vs-fitted plot with a horizontal line at 0
+# 3. The largest absolute test residual and its row in `test`
+# 4. Mean of the training residuals (3 decimals) and why it is ~0 (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q10 · L5 · Scenario 2
+
+**Goal:** Standardize the training data, fit the model, and rank the features by the size of their standardized coefficients. Then compare the test RMSE of an area-only model with the full model. Write 3 sentences on what you learn.
+
+```{r q10-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+```
+
+```{r q10-l5}
+# 1. Standardized training data (scale) and the model fit on it
+# 2. Standardized coefficients, ranked by absolute size
+# 3. Test RMSE: price ~ area only vs price ~ area + rooms + age
+# 4. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic C — Classification & Metrics
+
+
+## Q11 · L1 · Reference
+
+**Goal:** Predict Titanic survival from Class, Sex and Age with `glm()` and read the odds ratios.
+
+```{r q11-data, eval=TRUE}
+d  <- as.data.frame(Titanic)                       # R's built-in Titanic table (2,201 people)
+ti <- d[rep(seq_len(nrow(d)), d$Freq), c("Class", "Sex", "Age", "Survived")]
+rownames(ti) <- NULL
+ti$Survived <- as.integer(ti$Survived == "Yes")
+set.seed(1)
+idx <- sample(nrow(ti), size = 0.8 * nrow(ti))
+tr  <- ti[idx, ]
+te  <- ti[-idx, ]
+```
+
+```{r q11-l1, eval=TRUE}
+# === Complete example — read and run ===
+m <- glm(Survived ~ Class + Sex + Age, data = tr, family = binomial)
+or <- exp(coef(m))                          # odds ratios
+round(or, 2)
+or_female <- or[["SexFemale"]]              # women: odds of survival about 11 times higher
+round(or_female, 2)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q12 · L2 · Fill-in
+
+**Goal:** Turn the predicted probabilities into classes with a 0.5 threshold and build the confusion matrix.
+
+```{r q12-data, eval=TRUE}
+d  <- as.data.frame(Titanic)                       # R's built-in Titanic table (2,201 people)
+ti <- d[rep(seq_len(nrow(d)), d$Freq), c("Class", "Sex", "Age", "Survived")]
+rownames(ti) <- NULL
+ti$Survived <- as.integer(ti$Survived == "Yes")
+set.seed(1)
+idx <- sample(nrow(ti), size = 0.8 * nrow(ti))
+tr  <- ti[idx, ]
+te  <- ti[-idx, ]
+m <- glm(Survived ~ Class + Sex + Age, data = tr, family = binomial)
+```
+
+```{r q12-l2}
+p    <- predict(m, newdata = ___, type = "response")
+pred <- as.integer(p >= ___)
+tab  <- table(Truth = te$Survived, Predicted = ___)
+tab
+accuracy <- sum(diag(tab)) / sum(___)
+round(accuracy, 3)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q13 · L3 · Free Style
+
+**Goal:** From the predictions at threshold 0.5, compute precision, recall and F1 (3 decimals).
+
+```{r q13-data, eval=TRUE}
+d  <- as.data.frame(Titanic)                       # R's built-in Titanic table (2,201 people)
+ti <- d[rep(seq_len(nrow(d)), d$Freq), c("Class", "Sex", "Age", "Survived")]
+rownames(ti) <- NULL
+ti$Survived <- as.integer(ti$Survived == "Yes")
+set.seed(1)
+idx <- sample(nrow(ti), size = 0.8 * nrow(ti))
+tr  <- ti[idx, ]
+te  <- ti[-idx, ]
+m <- glm(Survived ~ Class + Sex + Age, data = tr, family = binomial)
+p <- predict(m, te, type = 'response')
+pred <- as.integer(p >= 0.5)
+```
+
+```{r q13-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q14 · L4 · Scenario 1
+
+**Goal:** A rescue team wants to find at least 60% of the survivors (recall >= 0.6). Compute precision and recall for thresholds 0.3, 0.5 and 0.7, and choose the best threshold for the team.
+
+```{r q14-data, eval=TRUE}
+d  <- as.data.frame(Titanic)                       # R's built-in Titanic table (2,201 people)
+ti <- d[rep(seq_len(nrow(d)), d$Freq), c("Class", "Sex", "Age", "Survived")]
+rownames(ti) <- NULL
+ti$Survived <- as.integer(ti$Survived == "Yes")
+set.seed(1)
+idx <- sample(nrow(ti), size = 0.8 * nrow(ti))
+tr  <- ti[idx, ]
+te  <- ti[-idx, ]
+m <- glm(Survived ~ Class + Sex + Age, data = tr, family = binomial)
+p <- predict(m, te, type = 'response')
+```
+
+```{r q14-l4}
+# 1. A function that returns precision and recall for one threshold
+# 2. Apply it to 0.3, 0.5, 0.7 (3 decimals)
+# 3. Which threshold satisfies recall >= 0.6 with the highest precision? (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q15 · L5 · Scenario 2
+
+**Goal:** Compute the AUC with the rank formula for (a) the full model and (b) a model using only Sex. Draw both ROC curves. Write 3 sentences comparing them.
+
+```{r q15-data, eval=TRUE}
+d  <- as.data.frame(Titanic)                       # R's built-in Titanic table (2,201 people)
+ti <- d[rep(seq_len(nrow(d)), d$Freq), c("Class", "Sex", "Age", "Survived")]
+rownames(ti) <- NULL
+ti$Survived <- as.integer(ti$Survived == "Yes")
+set.seed(1)
+idx <- sample(nrow(ti), size = 0.8 * nrow(ti))
+tr  <- ti[idx, ]
+te  <- ti[-idx, ]
+```
+
+```{r q15-l5}
+# 1. Fit both models on tr; predict probabilities on te
+# 2. An auc(y, score) function using ranks
+# 3. AUC for each model (3 decimals)
+# 4. ROC curves (both models, one plot, diagonal line)
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Topic D — Overfitting, Cross-Validation & Uncertainty
+
+
+## Q16 · L1 · Reference
+
+**Goal:** Fit polynomials of degree 1 and 10 to the noisy sine data and compare train and test RMSE.
+
+```{r q16-data, eval=TRUE}
+set.seed(15)
+x <- runif(60, 0, 10); y <- sin(x) + rnorm(60, 0, 0.5)
+dat <- data.frame(x, y)
+train <- dat[1:25, ]; test <- dat[26:60, ]
+rmse <- function(a, b) sqrt(mean((a - b)^2))
+```
+
+```{r q16-l1, eval=TRUE}
+# === Complete example — read and run ===
+fit1  <- lm(y ~ poly(x, 1),  data = train)
+fit10 <- lm(y ~ poly(x, 10), data = train)
+tab <- rbind(degree1  = c(train = rmse(train$y, predict(fit1, train)),  test = rmse(test$y, predict(fit1, test))),
+             degree10 = c(train = rmse(train$y, predict(fit10, train)), test = rmse(test$y, predict(fit10, test))))
+round(tab, 3)
+test_rmse_10 <- tab["degree10", "test"]
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q17 · L2 · Fill-in
+
+**Goal:** Loop over polynomial degrees 1 to 8, compute train and test RMSE, and find the degree with the lowest test RMSE.
+
+```{r q17-data, eval=TRUE}
+set.seed(15)
+x <- runif(60, 0, 10); y <- sin(x) + rnorm(60, 0, 0.5)
+dat <- data.frame(x, y)
+train <- dat[1:25, ]; test <- dat[26:60, ]
+rmse <- function(a, b) sqrt(mean((a - b)^2))
+```
+
+```{r q17-l2}
+deg <- 1:___
+err <- t(sapply(deg, function(d) {
+  f <- lm(y ~ poly(x, ___), data = train)
+  c(train = rmse(train$y, predict(f, ___)), test = rmse(test$y, predict(f, test)))
+}))
+round(cbind(degree = deg, err), 3)
+best_deg_test <- deg[which.min(err[, "___"])]
+best_deg_test
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q18 · L3 · Free Style
+
+**Goal:** Choose the polynomial degree (1 to 8) by 5-fold cross-validation on the TRAINING data only (`set.seed(2)` before creating the folds). Report the best degree and its CV RMSE (3 decimals).
+
+```{r q18-data, eval=TRUE}
+set.seed(15)
+x <- runif(60, 0, 10); y <- sin(x) + rnorm(60, 0, 0.5)
+dat <- data.frame(x, y)
+train <- dat[1:25, ]; test <- dat[26:60, ]
+rmse <- function(a, b) sqrt(mean((a - b)^2))
+```
+
+```{r q18-l3}
+# Write all your code here
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q19 · L4 · Scenario 1
+
+**Goal:** Standardize the apartment training data and fit ridge regression with lambda = 0, 100 and 1000 (`MASS::lm.ridge`). How does the coefficient of `area` change? Report it for lambda = 100 and lambda = 1000.
+
+```{r q19-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+```
+
+```{r q19-l4}
+# 1. Standardized training data: train_s
+# 2. MASS::lm.ridge(price ~ area + rooms + age, data = train_s, lambda = c(0, 100, 1000))
+# 3. The coefficient matrix (rows = lambda) rounded to 3 decimals
+# 4. The area coefficient at lambda = 100 and 1000
+# 5. What happens as lambda grows? (comment)
+```
+
+
+------------------------------------------------------------------------
+
+
+## Q20 · L5 · Scenario 2
+
+**Goal:** Bootstrap the test rows of the apartment model (1,000 resamples, `set.seed(20)`) to get a 95% interval for the RMSE, and compare it with the t-based interval for the MSE (square-rooted). Write 3 sentences on what the interval tells you.
+
+```{r q20-data, eval=TRUE}
+set.seed(670)
+n <- 400
+apt <- data.frame(area  = round(runif(n, 25, 120)),
+                  rooms = sample(1:4, n, replace = TRUE, prob = c(.2, .4, .3, .1)),
+                  age   = round(runif(n, 0, 50)))
+apt$price <- round(40 + 2.2 * apt$area + 12 * apt$rooms - 0.8 * apt$age + rnorm(n, 0, 25), 1)  # 1000 USD
+set.seed(1)
+idx   <- sample(n, size = 0.8 * n)
+train <- apt[idx, ]
+test  <- apt[-idx, ]
+rmse  <- function(y, p) sqrt(mean((y - p)^2))
+fit <- lm(price ~ area + rooms + age, data = train)
+```
+
+```{r q20-l5}
+# 1. Squared errors on the test set
+# 2. Bootstrap: resample the 80 squared errors 1,000 times, RMSE of each resample
+# 3. 2.5% and 97.5% quantiles (1 decimal)
+# 4. t-based 95% CI for the mean squared error, then sqrt
+# 5. Report (3 sentences as comments):
+```
+
+
+------------------------------------------------------------------------
+
+
+# Quick Reference Card
+
+```{r ref-card, eval=TRUE}
+cat("
+╔══════════════════════════════════════════════════════╗
+║  670 ML STATS REVIEW — QUICK REFERENCE               ║
+║  summary(x)  sd(x)  quantile(x, c(.25,.75))          ║
+║  IQR fence: Q1 - 1.5*IQR , Q3 + 1.5*IQR              ║
+║  z = (x - mean_train) / sd_train     scale(x)        ║
+║  idx <- sample(n, 0.8*n); train <- d[idx,]           ║
+║  lm(y ~ ., train)   predict(fit, newdata = test)     ║
+║  RMSE = sqrt(mean((y - p)^2))  MAE = mean(abs(y - p))║
+║  R2 = 1 - sum(res^2) / sum((y - mean(y))^2)          ║
+║  glm(y ~ ., family = binomial)   exp(coef(m))        ║
+║  precision = TP/(TP+FP)   recall = TP/(TP+FN)        ║
+║  AUC via rank():  (sum(r[y==1]) - n1(n1+1)/2)/(n1*n0)║
+║  k-fold CV: folds <- sample(rep(1:k, length.out = n))║
+║  ridge: MASS::lm.ridge(f, data, lambda = ...)        ║
+║  bootstrap: replicate(B, stat(sample(x, replace=T))) ║
+╚══════════════════════════════════════════════════════╝
+")
+```
+
+
+------------------------------------------------------------------------
+
+*670 ML Statistics Review — Explore, Split, Regression, Classification, Overfitting & Uncertainty: R Coding Practice (20 Questions) — DTSC 550 / t-daichiy*

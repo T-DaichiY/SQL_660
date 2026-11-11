@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML 統計復習 分ける：訓練とテスト・層化・データ漏れ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 670 ML 統計復習 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">ML Prep · Splitting Data — Train/Test, Random Seeds, Stratified Sampling, Data Leakage</div>
+  <h1>✂️ 分ける：訓練とテスト・層化・データ漏れ</h1>
+  <p>モデルの本当の実力は、<strong>見たことのないデータ</strong>でしか分かりません。<strong>訓練とテストに分ける理由</strong>、<code>set.seed()</code>の役割、クラスの比率を保つ<strong>層化</strong>、成績が不自然に良くなる<strong>データ漏れ</strong>を学びます。</p>
+  <p style="font-size:.9rem">📺 講義動画: 670 準備 · 550 M4（標本抽出・偏り）の復習</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① なぜ分けるか</a><a href="#unit2">② 分け方と乱数</a><a href="#unit3">③ 層化</a><a href="#unit4">④ データ漏れ</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📌 先に <a href="cheat_ml.html">ML のための統計チートシート</a> で全体の地図を見ておくと、この回の位置づけが分かります。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>なぜ訓練とテストに分けるのか</h2><div class="unit-sub">訓練データの成績は「甘い」</div></div>
+  </div>
+
+  <p>同じデータで学習して、同じデータで評価すると、<strong>成績が実力より良く見えます</strong>。極端な例が、<strong>答えを丸暗記</strong>するモデルです。ここでは、「特徴が最も近い物件の価格をそのまま答える」（最近傍法の最もかんたんな形、<code>k = 1</code>）モデルで、訓練とテストの成績を比べます。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">670</span>)</span>
+<span class="cl">n &lt;- <span class="nm">400</span></span>
+<span class="cl">apt &lt;- <span class="kw">data.frame</span>(area  = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">25</span>, <span class="nm">120</span>)),</span>
+<span class="cl">                  rooms = <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">4</span>, n, replace = <span class="kw">TRUE</span>, prob = <span class="kw">c</span>(.<span class="nm">2</span>, .<span class="nm">4</span>, .<span class="nm">3</span>, .<span class="nm">1</span>)),</span>
+<span class="cl">                  age   = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">0</span>, <span class="nm">50</span>)))</span>
+<span class="cl">apt$price &lt;- <span class="kw">round</span>(<span class="nm">40</span> + <span class="nm">2.2</span> * apt$area + <span class="nm">12</span> * apt$rooms - <span class="nm">0.8</span> * apt$age + <span class="kw">rnorm</span>(n, <span class="nm">0</span>, <span class="nm">25</span>), <span class="nm">1</span>)  <span class="cm"># 1000 USD</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(n, size = <span class="nm">0.8</span> * n)</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl">rmse &lt;- <span class="kw">function</span>(y, p) <span class="kw">sqrt</span>(<span class="kw">mean</span>((y - p)^<span class="nm">2</span>))</span>
+<span class="cl">Xs  &lt;- <span class="kw">scale</span>(apt[, <span class="kw">c</span>(<span class="st">"area"</span>, <span class="st">"rooms"</span>, <span class="st">"age"</span>)])           <span class="cm"># standardized features</span></span>
+<span class="cl">Xtr &lt;- Xs[idx, ]; Xte &lt;- Xs[-idx, ]</span>
+<span class="cl">nn1 &lt;- <span class="kw">function</span>(Xtr, ytr, Xnew) <span class="kw">apply</span>(Xnew, <span class="nm">1</span>, <span class="kw">function</span>(v) ytr[<span class="kw">which.min</span>(<span class="kw">colSums</span>((<span class="kw">t</span>(Xtr) - v)^<span class="nm">2</span>))])</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(train = <span class="kw">rmse</span>(train$price, <span class="kw">nn1</span>(Xtr, train$price, Xtr)),</span>
+<span class="cl">        test  = <span class="kw">rmse</span>(test$price,  <span class="kw">nn1</span>(Xtr, train$price, Xte))), <span class="nm">1</span>)</span>
+</pre>
+<div class="output-reveal">train  test 
+  5.3  37.9 </div>
+  <p><strong>訓練の誤差はほぼ 0</strong>（自分の答えを丸暗記しているため。約 5）なのに、<strong>テストの誤差は約 38</strong>。しかも、次の回で作る単純な線形回帰（テストの RMSE は約 28.5）よりも悪い成績です。これが<strong>過学習</strong>で、訓練データだけの成績は、新しいデータでの実力を教えてくれません。</p>
+  <div class="note-box">📐 <strong>ルール</strong>：学習に使うのは<strong>訓練データだけ</strong>。テストデータは、モデルを選び終えたあとに<strong>一度だけ</strong>使って、「新しいデータでの実力」を見積もります。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>分け方と乱数</h2><div class="unit-sub">sample() と set.seed()</div></div>
+  </div>
+
+  <p>R では <code>sample()</code> で行番号を無作為に選び、80% を訓練、残りをテストにします（Python の <code>train_test_split</code> と同じ）。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(<span class="kw">nrow</span>(apt), size = <span class="nm">0.8</span> * <span class="kw">nrow</span>(apt))</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl"><span class="kw">c</span>(train = <span class="kw">nrow</span>(train), test = <span class="kw">nrow</span>(test))</span>
+</pre>
+<div class="output-reveal">train  test 
+  320    80 </div>
+  <p><code>set.seed(1)</code> は「<strong>乱数の種</strong>」です（Python では <code>random_state=42</code>）。種を決めると、毎回同じ分け方になり、<strong>結果を再現</strong>できます。種を変えると、分け方が変わり、テストの成績も少し変わります。</p>
+  <pre class="code-block">
+<span class="cl">fit_rmse &lt;- <span class="kw">function</span>(seed) {</span>
+<span class="cl">  <span class="kw">set.seed</span>(seed); i &lt;- <span class="kw">sample</span>(<span class="kw">nrow</span>(apt), <span class="nm">0.8</span> * <span class="kw">nrow</span>(apt))</span>
+<span class="cl">  m &lt;- <span class="kw">lm</span>(price ~ area + rooms + age, data = apt[i, ])</span>
+<span class="cl">  <span class="kw">sqrt</span>(<span class="kw">mean</span>((apt$price[-i] - <span class="kw">predict</span>(m, apt[-i, ]))^<span class="nm">2</span>))</span>
+<span class="cl">}</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">sapply</span>(<span class="nm">1</span>:<span class="nm">6</span>, fit_rmse), <span class="nm">1</span>)</span>
+</pre>
+<div class="output-reveal">[1] 28.5 23.9 24.1 25.0 23.9 25.5</div>
+  <div class="note-box">種を変えると RMSE が <strong>約 24〜28.5</strong> の間で動きます。<strong>「小数第1位の差」で優劣を決めない</strong>こと。1回の分け方の結果には、偶然のゆれが含まれています（交差検証で対処：「過学習と交差検証」の回）。</div>
+  <div class="practice-card" id="p-ml2-u2">
+    <div class="ptitle">💻 ミニ練習：70% / 30% に分ける</div>
+    <p class="ptask"><code>set.seed(7)</code> のあと、<code>apt</code> を <strong>70% 訓練・30% テスト</strong>に分けて、それぞれの行数を表示してください。</p>
+    <textarea class="code-editor" id="p-ml2-u2-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ml2-u2', ['set.seed', 'sample', 'nrow'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml2-u2', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml2-u2-result"></div>
+    <div class="answer-reveal" id="p-ml2-u2-answer" hidden>
+      <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">7</span>)</span>
+<span class="cl">idx &lt;- <span class="kw">sample</span>(<span class="kw">nrow</span>(apt), size = <span class="nm">0.7</span> * <span class="kw">nrow</span>(apt))</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl"><span class="kw">c</span>(train = <span class="kw">nrow</span>(train), test = <span class="kw">nrow</span>(test))</span>
+</pre>
+      <p class="answer-note">400 行の 70% は 280 行、残り 120 行。<code>size</code> に小数が来ても sample() は切り捨てて扱う（0.7 × 400 = 280 ちょうど）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>層化：クラスの比率を保つ</h2><div class="unit-sub">陽性が少ないデータで特に大事</div></div>
+  </div>
+
+  <p>分類では、<strong>クラスの比率</strong>が訓練とテストで同じになるよう分けると安心です。これを<strong>層化抽出</strong>（<code>stratify=y</code>）と呼びます。陽性が少ないデータでは、ふつうの無作為な分け方だと、<strong>テストに陽性が 1 つも入らない</strong>ことがあります。</p>
+  <pre class="code-block">
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="nm">1</span>, <span class="nm">5</span>), <span class="kw">rep</span>(<span class="nm">0</span>, <span class="nm">95</span>))          <span class="cm"># 100 cases, only 5 positives (5%)</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">10</span>)</span>
+<span class="cl"><span class="kw">mean</span>(<span class="kw">replicate</span>(<span class="nm">5000</span>, <span class="kw">sum</span>(y[<span class="kw">sample</span>(<span class="nm">100</span>, <span class="nm">20</span>)]) == <span class="nm">0</span>))   <span class="cm"># share of random 20% test sets with NO positive</span></span>
+</pre>
+<div class="output-reveal">[1] 0.3226</div>
+  <p>約 3 割の分け方で、テストに陽性がゼロになります（陽性がないと Recall が計算できません）。層化では、<strong>クラスごとに</strong>同じ割合で選びます。</p>
+  <pre class="code-block">
+<span class="cl">strat_test &lt;- <span class="kw">function</span>(y, frac = <span class="nm">0.2</span>) <span class="kw">unlist</span>(<span class="kw">lapply</span>(<span class="kw">split</span>(<span class="kw">seq_along</span>(y), y), <span class="kw">function</span>(i) <span class="kw">sample</span>(i, size = <span class="kw">round</span>(frac * <span class="kw">length</span>(i)))))</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">10</span>)</span>
+<span class="cl">i &lt;- <span class="kw">strat_test</span>(y)</span>
+<span class="cl"><span class="kw">table</span>(y[i])                                  <span class="cm"># the test set keeps 1 positive and 19 negatives</span></span>
+</pre>
+<div class="output-reveal"> 0  1 
+19  1 </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>データ漏れ（data leakage）</h2><div class="unit-sub">「良すぎる成績」を疑う</div></div>
+  </div>
+
+  <p><strong>データ漏れ</strong>は、評価の時点では手に入らないはずの情報が、学習に混ざることです。成績が<strong>不自然に良くなる</strong>のが特徴で、本番では全く使えないモデルになります。代表的な例が、<strong>答えから作った列</strong>を特徴にしてしまうことです。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">670</span>)</span>
+<span class="cl">n &lt;- <span class="nm">400</span></span>
+<span class="cl">apt &lt;- <span class="kw">data.frame</span>(area  = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">25</span>, <span class="nm">120</span>)),</span>
+<span class="cl">                  rooms = <span class="kw">sample</span>(<span class="nm">1</span>:<span class="nm">4</span>, n, replace = <span class="kw">TRUE</span>, prob = <span class="kw">c</span>(.<span class="nm">2</span>, .<span class="nm">4</span>, .<span class="nm">3</span>, .<span class="nm">1</span>)),</span>
+<span class="cl">                  age   = <span class="kw">round</span>(<span class="kw">runif</span>(n, <span class="nm">0</span>, <span class="nm">50</span>)))</span>
+<span class="cl">apt$price &lt;- <span class="kw">round</span>(<span class="nm">40</span> + <span class="nm">2.2</span> * apt$area + <span class="nm">12</span> * apt$rooms - <span class="nm">0.8</span> * apt$age + <span class="kw">rnorm</span>(n, <span class="nm">0</span>, <span class="nm">25</span>), <span class="nm">1</span>)  <span class="cm"># 1000 USD</span></span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx   &lt;- <span class="kw">sample</span>(n, size = <span class="nm">0.8</span> * n)</span>
+<span class="cl">train &lt;- apt[idx, ]</span>
+<span class="cl">test  &lt;- apt[-idx, ]</span>
+<span class="cl">apt$price_per_area &lt;- apt$price / apt$area          <span class="cm"># built FROM the answer (price)!</span></span>
+<span class="cl">m &lt;- <span class="kw">lm</span>(price ~ area + price_per_area, data = apt[idx, ])</span>
+<span class="cl">t &lt;- apt[-idx, ]</span>
+<span class="cl">leak &lt;- <span class="nm">1</span> - <span class="kw">sum</span>((t$price - <span class="kw">predict</span>(m, t))^<span class="nm">2</span>) / <span class="kw">sum</span>((t$price - <span class="kw">mean</span>(t$price))^<span class="nm">2</span>)</span>
+<span class="cl">honest &lt;- <span class="kw">lm</span>(price ~ area + rooms + age, data = apt[idx, ])</span>
+<span class="cl">h &lt;- <span class="nm">1</span> - <span class="kw">sum</span>((t$price - <span class="kw">predict</span>(honest, t))^<span class="nm">2</span>) / <span class="kw">sum</span>((t$price - <span class="kw">mean</span>(t$price))^<span class="nm">2</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(R2_with_leak = leak, R2_honest = h), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">R2_with_leak    R2_honest 
+       0.947        0.833 </div>
+  <p>漏れのあるモデルは R² が <strong>0.95</strong>、漏れのない正直なモデルは <strong>0.83</strong> です。<strong>価格から作った「面積あたり価格」</strong>を使えば、価格が分かるのは当然です。新しい物件では、価格は予測したい未知の値なので、この列は存在しません。実力以上に良く見えるだけで、本番では使えません。</p>
+  <table class="compare-table">
+<tr><th>漏れの例</th><th>対策</th></tr>
+<tr><td>答え（目的変数）から作った列を特徴に使う</td><td>特徴は「予測する時点で分かる情報」だけにする</td></tr><tr><td>テストデータの平均や SD で標準化する</td><td>訓練データだけで計算して、テストに適用する</td></tr><tr><td>分ける前に、全データで欠損を補う</td><td>分けてから、訓練データの中央値で補う</td></tr><tr><td>同じ人・物件の行が訓練とテストに両方ある</td><td>個人やグループ単位で分ける</td></tr>
+</table>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の回へ：</strong>分けたデータで、実際にモデルを作ります。<a href="ml_regression.html">回帰：係数・R²・RMSE・残差</a>へ。</div>
+<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1.2rem 0;color:#134e4a">📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a> — 4トピック × 5段階（L1 見本 → L2 穴埋め → L3 自由記述 → L4/L5 シナリオ）の20問。このシリーズ全6回の内容が範囲です。RStudio で開いて解いてください。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">Why is the model evaluated on a separate test set?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>To make the training set larger</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>To remove the need for a model</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>To lower the error on the training data</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>To estimate performance on new data</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">What does set.seed() (random_state in Python) make possible?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Choosing a better split</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Reproducing the same split</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Removing all random variation</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Increasing the test set size</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">When is stratified splitting especially useful?</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>When all columns are numeric</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>When one class is rare</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>When there are no missing values</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>When the data are already sorted</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A model scores R² = 0.999 on test data. What should you check first?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Whether to collect more data</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Whether the seed was too small</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Whether the test set is too big</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Whether a column leaks y</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">Which is an example of data leakage?</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Scaling with the mean of all rows</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Splitting data with a fixed seed</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Dropping rows with missing values</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Printing summary() of the train set</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">A 1-nearest-neighbour model has near-zero training error but large test error. This is...</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Underfitting</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Stratification</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Overfitting</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Standardization</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[3, 1, 1, 3, 0, 2];
+var FEEDBACKS=["Training error is optimistic; the test set shows how the model generalizes.", "The seed fixes the random numbers so the split and results can be repeated.", "Stratifying keeps the class proportions the same in train and test.", "Unusually high scores often come from data leakage.", "The test rows influence the mean, so test information leaks into training.", "The model memorized the training points and fails on new ones."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">training set</div><div class="term-en">訓練データ</div><div class="term-def">モデルを学習させるデータ（通常 70〜80%）。</div></div>
+    <div class="term-item"><div class="term-name">test set</div><div class="term-en">テストデータ</div><div class="term-def">最後に一度だけ評価に使う、隠しておくデータ。</div></div>
+    <div class="term-item"><div class="term-name">generalization</div><div class="term-en">汎化</div><div class="term-def">新しいデータでもうまく予測できること。</div></div>
+    <div class="term-item"><div class="term-name">random seed</div><div class="term-en">乱数の種</div><div class="term-def">同じ分け方を再現する（set.seed / random_state）。</div></div>
+    <div class="term-item"><div class="term-name">stratified sampling</div><div class="term-en">層化抽出</div><div class="term-def">クラスの比率を保って分ける。</div></div>
+    <div class="term-item"><div class="term-name">class imbalance</div><div class="term-en">クラスの偏り</div><div class="term-def">陽性が極端に少ないデータ。</div></div>
+    <div class="term-item"><div class="term-name">data leakage</div><div class="term-en">データ漏れ</div><div class="term-def">評価で使えないはずの情報が学習に混ざること。</div></div>
+    <div class="term-item"><div class="term-name">overfitting</div><div class="term-en">過学習</div><div class="term-def">訓練データに合いすぎて、新しいデータで悪くなる。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>テストデータはモデルを選び終わるまで見ない</strong>。成績が「良すぎる」ときは、まずデータ漏れを疑う。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：670 ML 統計復習 分ける：訓練とテスト・層化・データ漏れ</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="ml_explore.html">← データを見る・整える</a> · <a href="ml_regression.html">回帰 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML 統計復習 分類：ロジスティック回帰・混同行列・Precision/Recall・ROC</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">統計 <span>レッスン</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 670 ML 統計復習 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<!--NAV-->
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">ML Prep · Classification — Probability &amp; Odds, glm(), Confusion Matrix, Precision/Recall, ROC &amp; AUC</div>
+  <h1>🎯 分類：ロジスティック回帰・混同行列・Precision/Recall・ROC</h1>
+  <p>Yes/No を予測する<strong>分類</strong>の評価を、タイタニック号のデータで学びます。<strong>確率とオッズ</strong>、<code>glm()</code>の<strong>ロジスティック回帰</strong>、<strong>混同行列</strong>、<strong>Precision・Recall・F1</strong>、<strong>しきい値と ROC・AUC</strong>。</p>
+  <p style="font-size:.9rem">📺 講義動画: 670 準備 · 550 M3（確率・オッズ）／M6（ロジスティック）の復習</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;">
+    <a href="#unit1">① ロジスティック回帰</a><a href="#unit2">② 混同行列</a><a href="#unit3">③ Precision / Recall</a><a href="#unit4">④ しきい値・ROC・AUC</a><a href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="teal-box">📌 先に <a href="cheat_ml.html">ML のための統計チートシート</a> で全体の地図を見ておくと、この回の位置づけが分かります。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>ロジスティック回帰：確率とオッズ</h2><div class="unit-sub">glm(..., family = binomial)</div></div>
+  </div>
+
+  <p>R に入っている<strong>タイタニック号のデータ</strong>（2,201 人）で、「<strong>生き残ったか（1）／亡くなったか（0）</strong>」を、客室クラス・性別・年齢層から予測します。回帰が数値を出すのに対し、<strong>ロジスティック回帰は「確率」を出します</strong>。</p>
+  <pre class="code-block">
+<span class="cl">d  &lt;- <span class="kw">as.data.frame</span>(Titanic)                       <span class="cm"># R's built-in Titanic table (2,201 people)</span></span>
+<span class="cl">ti &lt;- d[<span class="kw">rep</span>(<span class="kw">seq_len</span>(<span class="kw">nrow</span>(d)), d$Freq), <span class="kw">c</span>(<span class="st">"Class"</span>, <span class="st">"Sex"</span>, <span class="st">"Age"</span>, <span class="st">"Survived"</span>)]</span>
+<span class="cl"><span class="kw">rownames</span>(ti) &lt;- <span class="kw">NULL</span></span>
+<span class="cl">ti$Survived &lt;- <span class="kw">as.integer</span>(ti$Survived == <span class="st">"Yes"</span>)</span>
+<span class="cl"><span class="kw">set.seed</span>(<span class="nm">1</span>)</span>
+<span class="cl">idx &lt;- <span class="kw">sample</span>(<span class="kw">nrow</span>(ti), size = <span class="nm">0.8</span> * <span class="kw">nrow</span>(ti))</span>
+<span class="cl">tr  &lt;- ti[idx, ]</span>
+<span class="cl">te  &lt;- ti[-idx, ]</span>
+<span class="cl">m   &lt;- <span class="kw">glm</span>(Survived ~ Class + Sex + Age, data = tr, family = binomial)</span>
+<span class="cl">p   &lt;- <span class="kw">predict</span>(m, newdata = te, type = <span class="st">"response"</span>)   <span class="cm"># probability of survival</span></span>
+<span class="cl">pred &lt;- <span class="kw">as.integer</span>(p &gt;= <span class="nm">0.5</span>)</span>
+<span class="cl"><span class="kw">mean</span>(ti$Survived)                        <span class="cm"># overall survival rate</span></span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">head</span>(p, <span class="nm">6</span>), <span class="nm">3</span>)                     <span class="cm"># predicted probabilities</span></span>
+</pre>
+<div class="output-reveal">[1] 0.323035
+    2     4     6    10    24    25 
+0.267 0.267 0.267 0.267 0.267 0.267 </div>
+  <p>係数は<strong>対数オッズ</strong>で出るので、<code>exp()</code> で<strong>オッズ比</strong>に直すと読みやすくなります。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">round</span>(<span class="kw">exp</span>(<span class="kw">coef</span>(m)), <span class="nm">2</span>)</span>
+</pre>
+<div class="output-reveal">(Intercept)    Class2nd    Class3rd   ClassCrew   SexFemale    AgeAdult 
+       1.91        0.38        0.19        0.48       11.21        0.33 </div>
+  <p>「Female」のオッズ比は約 11。<strong>女性は男性より、生き残るオッズが約 11 倍</strong>（他の条件が同じとき）という意味です。「Class3rd」は 1 より小さいので、1 等（基準）より生き残りにくいことを示します。</p>
+  <div class="note-box">📐 <strong>確率とオッズ</strong>：確率 p のオッズ = p ÷ (1 − p)。確率 0.5 ↔ オッズ 1、確率 0.75 ↔ オッズ 3。<strong>オッズ比が 1</strong> なら影響なし、1 より大きければ増える、小さければ減る。</div>
+
+</div>
+
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>混同行列</h2><div class="unit-sub">予測と実際を 2×2 に並べる</div></div>
+  </div>
+
+  <p>確率に<strong>しきい値</strong>（既定は 0.5）をかけて、「生存／死亡」の予測に変えます。予測と実際のクロス集計が<strong>混同行列</strong>です。</p>
+  <pre class="code-block">
+<span class="cl"><span class="kw">table</span>(Truth = te$Survived, Predicted = pred)</span>
+</pre>
+<div class="output-reveal">     Predicted
+Truth   0   1
+    0 265  29
+    1  66  81</div>
+  <table class="compare-table">
+<tr><th></th><th>予測：死亡 (0)</th><th>予測：生存 (1)</th></tr>
+<tr><td>実際：死亡 (0)</td><td>TN（正しく陰性）</td><td>FP（誤って陽性）</td></tr><tr><td>実際：生存 (1)</td><td>FN（見逃し）</td><td>TP（正しく陽性）</td></tr>
+</table>
+  <p>行が「実際」、列が「予測」です。<strong>FP</strong> は「生存と予測したが実は死亡」、<strong>FN</strong> は「死亡と予測したが実は生存」。この 4 つの数字から、すべての指標が計算できます。</p>
+  <pre class="code-block">
+<span class="cl">tab &lt;- <span class="kw">table</span>(<span class="kw">factor</span>(te$Survived, levels = <span class="nm">0</span>:<span class="nm">1</span>), <span class="kw">factor</span>(pred, levels = <span class="nm">0</span>:<span class="nm">1</span>))</span>
+<span class="cl">TN &lt;- tab[<span class="nm">1</span>, <span class="nm">1</span>]; FP &lt;- tab[<span class="nm">1</span>, <span class="nm">2</span>]; FN &lt;- tab[<span class="nm">2</span>, <span class="nm">1</span>]; TP &lt;- tab[<span class="nm">2</span>, <span class="nm">2</span>]</span>
+<span class="cl"><span class="kw">c</span>(TN = TN, FP = FP, FN = FN, TP = TP)</span>
+<span class="cl">accuracy &lt;- (TP + TN) / <span class="kw">sum</span>(tab)</span>
+<span class="cl">accuracy</span>
+</pre>
+<div class="output-reveal"> TN  FP  FN  TP 
+265  29  66  81 
+[1] 0.7845805</div>
+
+</div>
+
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>Precision・Recall・F1 と偏ったデータ</h2><div class="unit-sub">正解率だけでは足りない</div></div>
+  </div>
+
+  <p>正解率（accuracy）は、<strong>全体のうち当たった割合</strong>ですが、クラスが偏っていると役に立ちません。Precision と Recall を使います。</p>
+  <pre class="code-block">
+<span class="cl">precision &lt;- TP / (TP + FP)      <span class="cm"># of those I called "survived", how many really survived?</span></span>
+<span class="cl">recall    &lt;- TP / (TP + FN)      <span class="cm"># of those who really survived, how many did I find?</span></span>
+<span class="cl">f1 &lt;- <span class="nm">2</span> * precision * recall / (precision + recall)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">c</span>(accuracy = accuracy, precision = precision, recall = recall, F1 = f1), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal"> accuracy precision    recall        F1 
+    0.785     0.736     0.551     0.630 </div>
+  <p>このデータでは Precision が高く（約 0.74）、Recall は低め（約 0.55）です。「生存」と言うときは慎重ですが、<strong>生存者の半分近くを見逃している</strong>ということです。</p>
+  <p>偏りが大きいデータでは、正解率が<strong>だまし</strong>になります。陽性が 3% しかない稀なイベント（1,000 件中 30 件）を考えます。</p>
+  <pre class="code-block">
+<span class="cl">y &lt;- <span class="kw">c</span>(<span class="kw">rep</span>(<span class="nm">1</span>, <span class="nm">30</span>), <span class="kw">rep</span>(<span class="nm">0</span>, <span class="nm">970</span>))             <span class="cm"># 3% positives</span></span>
+<span class="cl">always_no &lt;- <span class="kw">rep</span>(<span class="nm">0</span>, <span class="nm">1000</span>)                <span class="cm"># a model that never predicts a positive</span></span>
+<span class="cl"><span class="kw">c</span>(accuracy = <span class="kw">mean</span>(always_no == y), recall = <span class="kw">sum</span>(always_no == <span class="nm">1</span> &amp; y == <span class="nm">1</span>) / <span class="kw">sum</span>(y == <span class="nm">1</span>))</span>
+</pre>
+<div class="output-reveal">accuracy   recall 
+    0.97     0.00 </div>
+  <div class="warn-box">⚠️ 「全員、陰性」と答えるだけで<strong>正解率 97%</strong>、でも<strong>Recall は 0</strong>（陽性を 1 つも見つけられない）。不正検知や病気の検査のような<strong>偏ったデータでは、正解率は信用できません</strong>。</div>
+  <table class="compare-table">
+<tr><th>こういうとき</th><th>重視する指標</th></tr>
+<tr><td>見逃しが怖い（病気・不正）</td><td>Recall</td></tr><tr><td>誤って陽性にしたくない（迷惑メール判定）</td><td>Precision</td></tr><tr><td>両方のバランス</td><td>F1</td></tr>
+</table>
+  <div class="practice-card" id="p-ml4-u3">
+    <div class="ptitle">💻 ミニ練習：Precision と Recall を計算</div>
+    <p class="ptask">混同行列が <code>TP = 40, FP = 10, FN = 20, TN = 130</code> のとき、<strong>Precision</strong> と <strong>Recall</strong> を求めてください。</p>
+    <textarea class="code-editor" id="p-ml4-u3-input" rows="5"># ここにRコードを書いてください
+</textarea>
+    <div class="practice-toolbar">
+      <button class="check-btn" onclick="checkPractice('p-ml4-u3', ['TP', 'FP', 'FN'])">✅ 答え合わせ</button>
+      <button class="reveal-btn" onclick="toggleAnswer('p-ml4-u3', this)">💡 答えを見る</button>
+    </div>
+    <div class="check-result" id="p-ml4-u3-result"></div>
+    <div class="answer-reveal" id="p-ml4-u3-answer" hidden>
+      <pre class="code-block">
+<span class="cl">TP &lt;- <span class="nm">40</span>; FP &lt;- <span class="nm">10</span>; FN &lt;- <span class="nm">20</span>; TN &lt;- <span class="nm">130</span></span>
+<span class="cl"><span class="kw">c</span>(precision = TP / (TP + FP), recall = TP / (TP + FN))</span>
+</pre>
+      <p class="answer-note">Precision = 40/50 = 0.8、Recall = 40/60 ≈ 0.667。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>しきい値・ROC・AUC</h2><div class="unit-sub">確率を動かして、全体の性能を見る</div></div>
+  </div>
+
+  <p>しきい値を 0.5 から動かすと、Precision と Recall は<strong>シーソー</strong>のように動きます（片方を上げると、もう片方が下がる）。</p>
+  <pre class="code-block">
+<span class="cl">score &lt;- <span class="kw">function</span>(th) {</span>
+<span class="cl">  pr &lt;- <span class="kw">as.integer</span>(p &gt;= th)</span>
+<span class="cl">  TP &lt;- <span class="kw">sum</span>(pr == <span class="nm">1</span> &amp; te$Survived == <span class="nm">1</span>); FP &lt;- <span class="kw">sum</span>(pr == <span class="nm">1</span> &amp; te$Survived == <span class="nm">0</span>); FN &lt;- <span class="kw">sum</span>(pr == <span class="nm">0</span> &amp; te$Survived == <span class="nm">1</span>)</span>
+<span class="cl">  <span class="kw">c</span>(threshold = th, precision = TP / (TP + FP), recall = TP / (TP + FN))</span>
+<span class="cl">}</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(<span class="kw">c</span>(<span class="nm">0.3</span>, <span class="nm">0.5</span>, <span class="nm">0.7</span>), score)), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">     threshold precision recall
+[1,]       0.3     0.686  0.639
+[2,]       0.5     0.736  0.551
+[3,]       0.7     0.905  0.456</div>
+  <p>しきい値を<strong>下げる</strong>と、陽性と言いやすくなり、Recall が上がって Precision が下がります。<strong>ROC 曲線</strong>は、しきい値を全部動かしたときの「<strong>偽陽性率（横軸）</strong>」と「<strong>真陽性率 = Recall（縦軸）</strong>」の軌跡で、その下の面積が <strong>AUC</strong> です。</p>
+  <pre class="code-block">
+<span class="cl">auc &lt;- <span class="kw">function</span>(y, s) { r &lt;- <span class="kw">rank</span>(s); n1 &lt;- <span class="kw">sum</span>(y == <span class="nm">1</span>); n0 &lt;- <span class="kw">sum</span>(y == <span class="nm">0</span>); (<span class="kw">sum</span>(r[y == <span class="nm">1</span>]) - n1 * (n1 + <span class="nm">1</span>) / <span class="nm">2</span>) / (n1 * n0) }</span>
+<span class="cl">ths &lt;- <span class="kw">sort</span>(<span class="kw">unique</span>(<span class="kw">c</span>(<span class="nm">0</span>, p, <span class="nm">1</span>)), decreasing = <span class="kw">TRUE</span>)</span>
+<span class="cl">roc &lt;- <span class="kw">t</span>(<span class="kw">sapply</span>(ths, <span class="kw">function</span>(th) <span class="kw">c</span>(fpr = <span class="kw">mean</span>(p[te$Survived == <span class="nm">0</span>] &gt;= th), tpr = <span class="kw">mean</span>(p[te$Survived == <span class="nm">1</span>] &gt;= th))))</span>
+<span class="cl"><span class="kw">plot</span>(roc[, <span class="nm">1</span>], roc[, <span class="nm">2</span>], type = <span class="st">"s"</span>, lwd = <span class="nm">2</span>, col = <span class="st">"#4471B8"</span>, xlab = <span class="st">"False positive rate"</span>, ylab = <span class="st">"True positive rate (recall)"</span>, main = <span class="st">"ROC curve"</span>)</span>
+<span class="cl"><span class="kw">abline</span>(<span class="nm">0</span>, <span class="nm">1</span>, lty = <span class="nm">2</span>, col = <span class="st">"gray50"</span>)</span>
+<span class="cl"><span class="kw">round</span>(<span class="kw">auc</span>(te$Survived, p), <span class="nm">3</span>)</span>
+</pre>
+<div class="output-reveal">[1] 0.781</div>
+<figure class="r-fig"><img src="img550/ml_classification_7.png" alt="R の出力グラフ" loading="lazy"></figure>
+  <table class="compare-table">
+<tr><th>AUC</th><th>読み方</th></tr>
+<tr><td>0.5</td><td>当てずっぽう（対角線）</td></tr><tr><td>0.7〜0.8</td><td>まずまず</td></tr><tr><td>0.9 以上</td><td>とても良い</td></tr><tr><td>1.0</td><td>完璧（本当に完璧ならデータ漏れも疑う）</td></tr>
+</table>
+  <p>AUC は「<strong>ランダムに選んだ陽性と陰性のペアで、陽性の方に高い確率をつけられる割合</strong>」です。しきい値に依存しないので、<strong>モデル同士の比較</strong>に向いています。</p>
+
+</div>
+
+<div class="teal-box">➡️ <strong>次の回へ：</strong>評価を信じてよいかは、<strong>過学習</strong>を見て初めて分かります。<a href="ml_overfit.html">過学習と交差検証</a>へ。</div>
+<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1.2rem 0;color:#134e4a">📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a> — 4トピック × 5段階（L1 見本 → L2 穴埋め → L3 自由記述 → L4/L5 シナリオ）の20問。このシリーズ全6回の内容が範囲です。RStudio で開いて解いてください。</div>
+<div class="quiz-section" id="quiz">
+  <div class="quiz-header">
+    <h2>📝 確認クイズ</h2>
+    <div class="quiz-score" id="score">0 / 6</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+  <div class="quiz-lang-note">✏️ Questions are in English — answers are checked instantly.</div>
+
+<div class="quiz-q" id="q1">
+  <div class="q-num">Question 1</div>
+  <div class="q-text">The odds ratio of a variable in logistic regression is 11. What does it mean?</div>
+  <div class="options"><button class="option-btn" data-q="1" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>The odds are 11 times as high</button>
+<button class="option-btn" data-q="1" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>The probability rises by exactly 11%</button>
+<button class="option-btn" data-q="1" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>The variable explains 11% of the variance</button>
+<button class="option-btn" data-q="1" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>The accuracy of the model is 11 percent</button></div>
+  <div class="q-feedback" id="fb1"></div>
+</div>
+<div class="quiz-q" id="q2">
+  <div class="q-num">Question 2</div>
+  <div class="q-text">In a confusion matrix, what is a false negative (FN)?</div>
+  <div class="options"><button class="option-btn" data-q="2" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>A real negative predicted as positive</button>
+<button class="option-btn" data-q="2" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>A real positive predicted as positive</button>
+<button class="option-btn" data-q="2" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>A real positive predicted as negative</button>
+<button class="option-btn" data-q="2" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>A real negative predicted as negative</button></div>
+  <div class="q-feedback" id="fb2"></div>
+</div>
+<div class="quiz-q" id="q3">
+  <div class="q-num">Question 3</div>
+  <div class="q-text">Precision is defined as...</div>
+  <div class="options"><button class="option-btn" data-q="3" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>TP / (TP + FN)</button>
+<button class="option-btn" data-q="3" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>(TP + TN) / all</button>
+<button class="option-btn" data-q="3" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>TP / (TP + FP)</button>
+<button class="option-btn" data-q="3" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>TN / (TN + FP)</button></div>
+  <div class="q-feedback" id="fb3"></div>
+</div>
+<div class="quiz-q" id="q4">
+  <div class="q-num">Question 4</div>
+  <div class="q-text">A disease screening test must not miss sick patients. Which metric matters most?</div>
+  <div class="options"><button class="option-btn" data-q="4" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Recall</button>
+<button class="option-btn" data-q="4" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>Precision</button>
+<button class="option-btn" data-q="4" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Accuracy</button>
+<button class="option-btn" data-q="4" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Log loss</button></div>
+  <div class="q-feedback" id="fb4"></div>
+</div>
+<div class="quiz-q" id="q5">
+  <div class="q-num">Question 5</div>
+  <div class="q-text">A model predicts 'negative' for everyone in data with 3% positives. Its accuracy is about...</div>
+  <div class="options"><button class="option-btn" data-q="5" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>3%, with a recall of 1</button>
+<button class="option-btn" data-q="5" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>50%, with a recall of 0</button>
+<button class="option-btn" data-q="5" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>97%, with a recall of 1</button>
+<button class="option-btn" data-q="5" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>97%, with a recall of 0</button></div>
+  <div class="q-feedback" id="fb5"></div>
+</div>
+<div class="quiz-q" id="q6">
+  <div class="q-num">Question 6</div>
+  <div class="q-text">An AUC of 0.5 means the model is...</div>
+  <div class="options"><button class="option-btn" data-q="6" data-idx="0" onclick="handleQ(this)"><span class="opt-letter">A</span>Perfect</button>
+<button class="option-btn" data-q="6" data-idx="1" onclick="handleQ(this)"><span class="opt-letter">B</span>No better than a coin flip</button>
+<button class="option-btn" data-q="6" data-idx="2" onclick="handleQ(this)"><span class="opt-letter">C</span>Always predicting positive</button>
+<button class="option-btn" data-q="6" data-idx="3" onclick="handleQ(this)"><span class="opt-letter">D</span>Using the wrong threshold</button></div>
+  <div class="q-feedback" id="fb6"></div>
+</div>
+</div>
+<script>
+var ANSWERS=[0, 2, 2, 0, 3, 1];
+var FEEDBACKS=["exp(coefficient) is the factor by which the odds are multiplied.", "FN means a positive case that the model missed.", "Of the cases called positive, how many were truly positive.", "Recall = TP / (TP + FN), so it penalizes missed positives.", "Accuracy is misleading with imbalanced classes.", "The ROC curve lies on the diagonal when the model cannot separate the classes."];
+var score=0,done=0,total=6;
+function handleQ(btn){
+  var q=+btn.dataset.q, idx=+btn.dataset.idx;
+  var btns=document.querySelectorAll('[data-q="'+q+'"]');
+  btns.forEach(function(b){b.disabled=true;});
+  var fb=document.getElementById('fb'+q);
+  fb.classList.add('show');
+  if(idx===ANSWERS[q-1]){
+    btn.classList.add('correct');
+    fb.className='q-feedback show correct-fb';
+    fb.textContent='✅ Correct! '+FEEDBACKS[q-1];
+    score++;
+  }else{
+    btn.classList.add('wrong');
+    btns[ANSWERS[q-1]].classList.add('correct');
+    fb.className='q-feedback show wrong-fb';
+    fb.textContent='❌ '+FEEDBACKS[q-1];
+  }
+  done++;
+  document.getElementById('score').textContent=score+' / '+total;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+}
+</script>
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">logistic regression</div><div class="term-en">ロジスティック回帰</div><div class="term-def">確率(0〜1)を出す分類モデル。</div></div>
+    <div class="term-item"><div class="term-name">odds ratio</div><div class="term-en">オッズ比</div><div class="term-def">係数を exp() したもの。1 より大きいと確率が上がる。</div></div>
+    <div class="term-item"><div class="term-name">confusion matrix</div><div class="term-en">混同行列</div><div class="term-def">予測と実際のクロス集計 (TN, FP, FN, TP)。</div></div>
+    <div class="term-item"><div class="term-name">precision</div><div class="term-en">適合率</div><div class="term-def">「陽性」と言った中の的中率 TP/(TP+FP)。</div></div>
+    <div class="term-item"><div class="term-name">recall</div><div class="term-en">再現率</div><div class="term-def">本当の陽性を見つけた割合 TP/(TP+FN)。</div></div>
+    <div class="term-item"><div class="term-name">F1</div><div class="term-en">F1 値</div><div class="term-def">Precision と Recall の調和平均。</div></div>
+    <div class="term-item"><div class="term-name">threshold</div><div class="term-en">しきい値</div><div class="term-def">確率をクラスに変える境目（既定 0.5）。</div></div>
+    <div class="term-item"><div class="term-name">ROC / AUC</div><div class="term-en">ROC曲線・AUC</div><div class="term-def">しきい値を動かした性能の曲線と、その下の面積。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>正解率だけで判断しない</strong>。陽性が少ないデータでは、全部「陰性」と答えても高得点になる。</p></div>
+</aside>
+</div>
+
+<footer>
+  <p>📊 統計レッスン：670 ML 統計復習 分類：ロジスティック回帰・混同行列・Precision/Recall・ROC</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="ml_regression.html">← 回帰</a> · <a href="ml_overfit.html">過学習と交差検証 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>
