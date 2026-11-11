@@ -20,6 +20,19 @@
 .cs-wrap table.compare-table td,.cs-wrap table.compare-table th{font-size:.88rem}
 .cs-warn{background:#FBF1DD;border-left:4px solid #B87830;border-radius:8px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.92rem}
 </style>
+<style>
+/* Python colouring for the cheat-sheet code (static spans) */
+.code-block.py-hl{color:#e2e8f0;}
+.code-block.py-hl .kw{color:#c4b5fd;font-weight:600;}   /* import / from / as */
+.code-block.py-hl .fn{color:#fde68a;}                   /* function / method call */
+.code-block.py-hl .cls{color:#7dd3fc;}                  /* Class name */
+.code-block.py-hl .at{color:#a5f3fc;}                   /* attribute (.coef_) */
+.code-block.py-hl .pa{color:#fdba74;}                   /* keyword argument name= */
+.code-block.py-hl .st{color:#86efac;}                   /* "string" */
+.code-block.py-hl .nm{color:#fca5a5;}                   /* number */
+.code-block.py-hl .op{color:#f9a8d4;}                   /* operator */
+.code-block.py-hl .cm{color:#9fb0c8;font-style:normal;} /* # comment */
+</style>
 </head>
 <body>
 <header class="site-header">
@@ -49,6 +62,7 @@
   <p class="cs-lead">DTSC 670（Géron『Hands-On ML』）で、統計が<strong>どの場面で出てくるか</strong>だけをまとめました。手計算や検定の使い分けは要りません。「この数字は何を表すか」「おかしくないか」を判断できれば足ります。</p>
 </div></div>
 
+<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1rem 0;color:#134e4a">📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a> — 4トピック × 5段階の20問。RStudio で開いて解いてください。</div>
 <div class="cs-warn">⚠️ <strong>これは勉強用です。</strong>DTSC 670 の試験（Honorlock）はノート・LLM・検索がすべて禁止、課題の解答を LLM に作らせるのも禁止です（最終プロジェクトのみ可）。このシートは、理解して自分で書けるようになるための<strong>復習用の地図</strong>として使ってください。</div>
 
 <div class="unit visible">
@@ -70,32 +84,32 @@
 <div class="unit visible">
 <h2>① データを見る（pandas の中で最も統計が出る所）</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>データを読み込んだ直後。モデルを作る前に必ず。</div>
-<pre class="code-block">df.describe()                          # count / mean / std / min / 25% / 50% / 75% / max
-df["price"].skew()                     # 0 より大きい → 右に裾が長い（高額が少数）
-df.corr(numeric_only=True)["price"].sort_values()   # 目的変数との相関
-df.isna().sum()                        # 欠損の数
-df.groupby("city")["price"].agg(["mean", "median", "std", "count"])</pre>
+<pre class="code-block py-hl">df.<span class="fn">describe</span>()                          <span class="cm"># count / mean / std / min / 25% / 50% / 75% / max</span>
+df[<span class="st">"price"</span>].<span class="fn">skew</span>()                     <span class="cm"># 0 より大きい → 右に裾が長い（高額が少数）</span>
+df.<span class="fn">corr</span>(<span class="pa">numeric_only</span><span class="op">=</span><span class="kw">True</span>)[<span class="st">"price"</span>].<span class="fn">sort_values</span>()   <span class="cm"># 目的変数との相関</span>
+df.<span class="fn">isna</span>().<span class="fn">sum</span>()                        <span class="cm"># 欠損の数</span>
+df.<span class="fn">groupby</span>(<span class="st">"city"</span>)[<span class="st">"price"</span>].<span class="fn">agg</span>([<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"std"</span>, <span class="st">"count"</span>])</pre>
 <ul>
 <li><strong>mean と median が大きく違う</strong> → 外れ値か歪み。median を使う方が安全。</li>
 <li><strong>std が mean より大きい</strong> → ばらつきが大きい。標準化やログ変換を考える。</li>
 <li><strong>corr は −1〜1</strong>。0 に近い＝直線関係なし（関係がないとは限らない）。</li>
 </ul>
-<pre class="code-block"># 外れ値（1.5×IQR ルール）
-q1, q3 = df["x"].quantile([.25, .75]); iqr = q3 - q1
-outlier = (df["x"] &lt; q1 - 1.5*iqr) | (df["x"] &gt; q3 + 1.5*iqr)
+<pre class="code-block py-hl"><span class="cm"># 外れ値（1.5×IQR ルール）</span>
+q1, q3 <span class="op">=</span> df[<span class="st">"x"</span>].<span class="fn">quantile</span>([<span class="nm">.25</span>, <span class="nm">.75</span>]); iqr <span class="op">=</span> q3 <span class="op">-</span> q1
+outlier <span class="op">=</span> (df[<span class="st">"x"</span>] <span class="op">&lt;</span> q1 <span class="op">-</span> <span class="nm">1.5</span><span class="op">*</span>iqr) <span class="op">|</span> (df[<span class="st">"x"</span>] <span class="op">&gt;</span> q3 <span class="op">+</span> <span class="nm">1.5</span><span class="op">*</span>iqr)
 df[outlier]</pre>
 </div>
 
 <div class="unit visible">
 <h2>② データを整える</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>欠損・桁の違う列・歪んだ列があるとき。</div>
-<pre class="code-block">from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-import numpy as np
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.impute <span class="kw">import</span> <span class="cls">SimpleImputer</span>
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> <span class="cls">StandardScaler</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-imp = SimpleImputer(strategy="median")   # 欠損 → その列の中央値
-scaler = StandardScaler()                # (x − mean) / std ＝ z スコア（平均0・SD1）
-df["income_log"] = np.log1p(df["income"])  # 右に歪んだ列を対称に近づける</pre>
+imp <span class="op">=</span> <span class="cls">SimpleImputer</span>(<span class="pa">strategy</span><span class="op">=</span><span class="st">"median"</span>)   <span class="cm"># 欠損 → その列の中央値</span>
+scaler <span class="op">=</span> <span class="cls">StandardScaler</span>()                <span class="cm"># (x − mean) / std ＝ z スコア（平均0・SD1）</span>
+df[<span class="st">"income_log"</span>] <span class="op">=</span> np.<span class="fn">log1p</span>(df[<span class="st">"income"</span>])  <span class="cm"># 右に歪んだ列を対称に近づける</span></pre>
 <ul>
 <li><strong>標準化 = 550 の z スコア</strong>そのものです。距離を使うモデル（KNN・SVM・正則化回帰）で必須。</li>
 <li>木のモデル（決定木・ランダムフォレスト）は標準化が<strong>不要</strong>。</li>
@@ -106,9 +120,9 @@ df["income_log"] = np.log1p(df["income"])  # 右に歪んだ列を対称に近�
 <div class="unit visible">
 <h2>③ 訓練とテストに分ける</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>モデルを作る前。評価に使うデータを隠しておく。</div>
-<pre class="code-block">from sklearn.model_selection import train_test_split
-X_tr, X_te, y_tr, y_te = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y)   # 分類なら stratify で比率を保つ</pre>
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+X_tr, X_te, y_tr, y_te <span class="op">=</span> <span class="fn">train_test_split</span>(
+    X, y, <span class="pa">test_size</span><span class="op">=</span><span class="nm">0.2</span>, <span class="pa">random_state</span><span class="op">=</span><span class="nm">42</span>, <span class="pa">stratify</span><span class="op">=</span>y)   <span class="cm"># 分類なら stratify で比率を保つ</span></pre>
 <ul>
 <li><strong>なぜ分ける？</strong> 同じデータで評価すると、成績が実力より良く見える（過学習に気づけない）。</li>
 <li><strong>stratify</strong>：クラスの比率（例：陽性 5%）が訓練とテストで同じになる。偏った分け方を避ける＝標本抽出の考え方。</li>
@@ -119,15 +133,15 @@ X_tr, X_te, y_tr, y_te = train_test_split(
 <div class="unit visible">
 <h2>④ 回帰（数値を予測）</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>価格・点数・数量など、数値の予測。<span class="cs-tag t-read">550 M6</span></div>
-<pre class="code-block">from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> <span class="cls">LinearRegression</span>
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> mean_squared_error, mean_absolute_error, r2_score
 
-m = LinearRegression().fit(X_tr, y_tr)
-pred = m.predict(X_te)
-rmse = mean_squared_error(y_te, pred) ** 0.5   # 予測の平均的なズレ（y と同じ単位）
-mae  = mean_absolute_error(y_te, pred)         # 外れ値に強いズレの指標
-r2   = r2_score(y_te, pred)                    # 0〜1：ばらつきのうち説明できた割合
-m.coef_, m.intercept_                          # 係数＝「他を固定して x が1増えたときの y の変化」</pre>
+m <span class="op">=</span> <span class="cls">LinearRegression</span>().<span class="fn">fit</span>(X_tr, y_tr)
+pred <span class="op">=</span> m.<span class="fn">predict</span>(X_te)
+rmse <span class="op">=</span> <span class="fn">mean_squared_error</span>(y_te, pred) <span class="op">**</span> <span class="nm">0.5</span>   <span class="cm"># 予測の平均的なズレ（y と同じ単位）</span>
+mae  <span class="op">=</span> <span class="fn">mean_absolute_error</span>(y_te, pred)         <span class="cm"># 外れ値に強いズレの指標</span>
+r2   <span class="op">=</span> <span class="fn">r2_score</span>(y_te, pred)                    <span class="cm"># 0〜1：ばらつきのうち説明できた割合</span>
+m.<span class="at">coef_</span>, m.<span class="at">intercept_</span>                          <span class="cm"># 係数＝「他を固定して x が1増えたときの y の変化」</span></pre>
 <ul>
 <li><strong>RMSE と MAE</strong>：どちらも小さいほど良い。RMSE は大きな誤差を重く扱う。</li>
 <li><strong>R² が高くてもテストで悪い</strong> → 過学習。必ず<strong>テストデータ</strong>で見る。</li>
@@ -138,18 +152,18 @@ m.coef_, m.intercept_                          # 係数＝「他を固定して 
 <div class="unit visible">
 <h2>⑤ 分類（クラスを予測）</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>合格/不合格・病気の有無・年収が高いか、など。<span class="cs-tag t-read">550 M3・M6</span></div>
-<pre class="code-block">from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (confusion_matrix, precision_score,
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> <span class="cls">LogisticRegression</span>
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> (confusion_matrix, precision_score,
                              recall_score, f1_score, roc_auc_score)
 
-clf = LogisticRegression(max_iter=1000).fit(X_tr, y_tr)
-proba = clf.predict_proba(X_te)[:, 1]     # 陽性である確率（0〜1）
-pred  = proba &gt;= 0.5                      # しきい値 0.5 でクラスに変換
+clf <span class="op">=</span> <span class="cls">LogisticRegression</span>(<span class="pa">max_iter</span><span class="op">=</span><span class="nm">1000</span>).<span class="fn">fit</span>(X_tr, y_tr)
+proba <span class="op">=</span> clf.<span class="fn">predict_proba</span>(X_te)[:, <span class="nm">1</span>]     <span class="cm"># 陽性である確率（0〜1）</span>
+pred  <span class="op">=</span> proba <span class="op">&gt;=</span> <span class="nm">0.5</span>                      <span class="cm"># しきい値 0.5 でクラスに変換</span>
 
-confusion_matrix(y_te, pred)              # [[TN, FP], [FN, TP]]
-precision_score(y_te, pred)               # 「陽性」と言った中の的中率 = TP / (TP + FP)
-recall_score(y_te, pred)                  # 本当の陽性の見つけた割合   = TP / (TP + FN)
-roc_auc_score(y_te, proba)                # 0.5＝当てずっぽう、1＝完璧</pre>
+<span class="fn">confusion_matrix</span>(y_te, pred)              <span class="cm"># [[TN, FP], [FN, TP]]</span>
+<span class="fn">precision_score</span>(y_te, pred)               <span class="cm"># 「陽性」と言った中の的中率 = TP / (TP + FP)</span>
+<span class="fn">recall_score</span>(y_te, pred)                  <span class="cm"># 本当の陽性の見つけた割合   = TP / (TP + FN)</span>
+<span class="fn">roc_auc_score</span>(y_te, proba)                <span class="cm"># 0.5＝当てずっぽう、1＝完璧</span></pre>
 <ul>
 <li><strong>正解率（accuracy）だけを信じない</strong>：陽性が 5% のデータなら、全部「陰性」と答えても 95%。</li>
 <li><strong>Precision を上げたい？ Recall を上げたい？</strong>：病気の見逃しは避けたい → Recall 重視。迷惑メール判定で通常メールを消したくない → Precision 重視。</li>
@@ -160,12 +174,12 @@ roc_auc_score(y_te, proba)                # 0.5＝当てずっぽう、1＝完�
 <div class="unit visible">
 <h2>⑥ 決定木とアンサンブル</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>非線形な関係や、標準化したくないとき。</div>
-<pre class="code-block">from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.tree <span class="kw">import</span> <span class="cls">DecisionTreeClassifier</span>
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> <span class="cls">RandomForestClassifier</span>
 
-tree = DecisionTreeClassifier(max_depth=4, random_state=42).fit(X_tr, y_tr)
-rf   = RandomForestClassifier(n_estimators=200, random_state=42).fit(X_tr, y_tr)
-rf.feature_importances_                   # どの特徴が分割に効いたか</pre>
+tree <span class="op">=</span> <span class="cls">DecisionTreeClassifier</span>(<span class="pa">max_depth</span><span class="op">=</span><span class="nm">4</span>, <span class="pa">random_state</span><span class="op">=</span><span class="nm">42</span>).<span class="fn">fit</span>(X_tr, y_tr)
+rf   <span class="op">=</span> <span class="cls">RandomForestClassifier</span>(<span class="pa">n_estimators</span><span class="op">=</span><span class="nm">200</span>, <span class="pa">random_state</span><span class="op">=</span><span class="nm">42</span>).<span class="fn">fit</span>(X_tr, y_tr)
+rf.<span class="at">feature_importances_</span>                   <span class="cm"># どの特徴が分割に効いたか</span></pre>
 <ul>
 <li><strong>Gini 不純度</strong> = 1 − Σ(各クラスの割合)²。0 に近いほど「そのグループが1クラスにそろっている」。木は不純度が一番下がる分割を選ぶ。</li>
 <li><strong>深すぎる木は過学習</strong>（<code>max_depth</code> で制限）。</li>
@@ -176,15 +190,15 @@ rf.feature_importances_                   # どの特徴が分割に効いたか
 <div class="unit visible">
 <h2>⑦ 過学習と交差検証（ML の最重要概念）</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>モデルを比べる／改善するたびに。</div>
-<pre class="code-block">from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import Ridge, Lasso
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> cross_val_score
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> <span class="cls">Ridge</span>, <span class="cls">Lasso</span>
 
-model.score(X_tr, y_tr), model.score(X_te, y_te)    # 訓練とテストの差を見る
-scores = cross_val_score(model, X_tr, y_tr, cv=5, scoring="neg_root_mean_squared_error")
--scores.mean(), scores.std()              # 5回の平均とバラつき（平均 ± SD で書く）
+model.<span class="fn">score</span>(X_tr, y_tr), model.<span class="fn">score</span>(X_te, y_te)    <span class="cm"># 訓練とテストの差を見る</span>
+scores <span class="op">=</span> <span class="fn">cross_val_score</span>(model, X_tr, y_tr, <span class="pa">cv</span><span class="op">=</span><span class="nm">5</span>, <span class="pa">scoring</span><span class="op">=</span><span class="st">"neg_root_mean_squared_error"</span>)
+<span class="op">-</span>scores.<span class="fn">mean</span>(), scores.<span class="fn">std</span>()              <span class="cm"># 5回の平均とバラつき（平均 ± SD で書く）</span>
 
-Ridge(alpha=1.0)    # 係数を小さく抑える（L2）
-Lasso(alpha=0.1)    # 不要な特徴の係数を 0 にする（L1）</pre>
+<span class="cls">Ridge</span>(<span class="pa">alpha</span><span class="op">=</span><span class="nm">1.0</span>)    <span class="cm"># 係数を小さく抑える（L2）</span>
+<span class="cls">Lasso</span>(<span class="pa">alpha</span><span class="op">=</span><span class="nm">0.1</span>)    <span class="cm"># 不要な特徴の係数を 0 にする（L1）</span></pre>
 <table class="compare-table">
 <tr><th>状態</th><th>訓練の成績</th><th>テストの成績</th><th>対策</th></tr>
 <tr><td>過学習 (high variance)</td><td>とても良い</td><td>悪い</td><td>データを増やす／モデルを単純に／正則化</td></tr>
@@ -195,12 +209,12 @@ Lasso(alpha=0.1)    # 不要な特徴の係数を 0 にする（L1）</pre>
 <div class="unit visible">
 <h2>⑧ 不確かさ（結果は「偶然の幅」つきで読む）</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>「モデル A のほうが良い」と言うとき。<span class="cs-tag t-read">550 M4</span></div>
-<pre class="code-block">import numpy as np
-from scipy import stats
+<pre class="code-block py-hl"><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy <span class="kw">import</span> stats
 
-sq_err = (pred - y_te) ** 2
-np.sqrt(stats.t.interval(0.95, len(sq_err) - 1,
-        loc=sq_err.mean(), scale=stats.sem(sq_err)))   # RMSE の 95% 信頼区間</pre>
+sq_err <span class="op">=</span> (pred <span class="op">-</span> y_te) <span class="op">**</span> <span class="nm">2</span>
+np.<span class="fn">sqrt</span>(stats.<span class="at">t</span>.<span class="fn">interval</span>(<span class="nm">0.95</span>, <span class="fn">len</span>(sq_err) <span class="op">-</span> <span class="nm">1</span>,
+        <span class="pa">loc</span><span class="op">=</span>sq_err.<span class="fn">mean</span>(), <span class="pa">scale</span><span class="op">=</span>stats.<span class="fn">sem</span>(sq_err)))   <span class="cm"># RMSE の 95% 信頼区間</span></pre>
 <ul>
 <li><strong>差が小さければ偶然かもしれない</strong>：交差検証の SD より差が小さいなら、「どちらも同じ」と考える。</li>
 <li><strong>相関 ≠ 因果</strong>：予測できることと、原因であることは別。</li>
@@ -211,13 +225,13 @@ np.sqrt(stats.t.interval(0.95, len(sq_err) - 1,
 <div class="unit visible">
 <h2>⑨ 教師なし学習</h2>
 <div class="meta"><span class="cs-tag t-use">いつ使う</span>正解ラベルがなく、グループ分けや次元削減をするとき。</div>
-<pre class="code-block">from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
+<pre class="code-block py-hl"><span class="kw">from</span> sklearn.cluster <span class="kw">import</span> <span class="cls">KMeans</span>
+<span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> PCA
 
-km  = KMeans(n_clusters=3, n_init="auto", random_state=42).fit(X_scaled)
-km.labels_, km.inertia_                   # inertia = 中心からの距離の二乗和（小さいほど締まる）
-pca = PCA(n_components=0.95).fit(X_scaled)   # 分散の 95% を残す次元数を自動で選ぶ
-pca.explained_variance_ratio_             # 各成分が説明する分散の割合</pre>
+km  <span class="op">=</span> <span class="cls">KMeans</span>(<span class="pa">n_clusters</span><span class="op">=</span><span class="nm">3</span>, <span class="pa">n_init</span><span class="op">=</span><span class="st">"auto"</span>, <span class="pa">random_state</span><span class="op">=</span><span class="nm">42</span>).<span class="fn">fit</span>(X_scaled)
+km.<span class="at">labels_</span>, km.<span class="at">inertia_</span>                   <span class="cm"># inertia = 中心からの距離の二乗和（小さいほど締まる）</span>
+pca <span class="op">=</span> <span class="cls">PCA</span>(<span class="pa">n_components</span><span class="op">=</span><span class="nm">0.95</span>).<span class="fn">fit</span>(X_scaled)   <span class="cm"># 分散の 95% を残す次元数を自動で選ぶ</span>
+pca.<span class="at">explained_variance_ratio_</span>             <span class="cm"># 各成分が説明する分散の割合</span></pre>
 <ul>
 <li><strong>距離を使うので、先に標準化</strong>。しないと桁の大きい列だけで決まる。</li>
 <li><strong>PCA</strong> は「分散が大きい方向」を探す。分散の割合が、そのまま「どれだけ情報を残したか」。</li>
@@ -247,7 +261,6 @@ pca.explained_variance_ratio_             # 各成分が説明する分散の割
 <tr><td><a href="ml_overfit.html">⑤ 過学習と交差検証</a></td><td>次数・CV・正則化</td><td>⑦</td></tr>
 <tr><td><a href="ml_uncertainty.html">⑥ 不確かさ</a></td><td>信頼区間・ブートストラップ・Gini・因果</td><td>⑥⑧</td></tr>
 </table>
-<p>📥 練習：<a href="rmd/ml670_practice_v1.Rmd" download>ml670_practice_v1.Rmd</a>（R、20問・4トピック × 5段階）</p>
 </div>
 <footer style="margin-top:2rem"><p>📌 ML のための統計チートシート　<a href="index.html">← 統計レッスン</a></p></footer>
 </div>

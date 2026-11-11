@@ -8,7 +8,7 @@ LESSONS = c_ml1.LESSONS + c_ml2.LESSONS
 NB = "ml670_practice_v1.Rmd"
 
 def nb_box():
-    return ('<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:1.2rem 0;color:#134e4a">'
+    return ('<div class="nb-download" data-nb="1" style="background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a">'
             f'📥 <strong>R 練習ノートブック（670 ML 統計復習）：</strong><a href="rmd/{NB}" download>{NB}</a> — 4トピック × 5段階（L1 見本 → L2 穴埋め → L3 自由記述 → L4/L5 シナリオ）の20問。'
             'このシリーズ全6回の内容が範囲です。RStudio で開いて解いてください。</div>\n')
 
@@ -23,7 +23,7 @@ def main():
         built.append((P, L, body, q))
     names = [L["slug"] for _, L, _, _ in built]
     for P, L, body, q in built:
-        body += "\n" + nb_box() + quiz(L["slug"], q)
+        body = nb_box() + body + "\n" + quiz(L["slug"], q)   # download box at the top
         filled, outs = P.fill(body)
         filled = clean(filled)
         i = names.index(L["slug"])
@@ -34,6 +34,9 @@ def main():
         print(f"{L['slug']}: {len(P.chunks)} chunks, {len(q)} MCQ, outputs with Error: {len(errs)}")
         for o in errs: print("   ERR:", o[:300])
     print("MCQ issues:", lib550.QUIZ_REPORT or "none"); print("letter counts A-D:", lib550.POS_COUNT)
+    # fill the header lesson menu (<!--NAV-->) in the freshly written pages
+    import subprocess, os
+    subprocess.run(["python3", "build_nav.py"], cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))), check=True)
 
 if __name__ == "__main__":
     main()
