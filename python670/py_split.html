@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML Python 実践：訓練/テストに分ける・データ漏れ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}.r-fig .cap{font-size:.85rem;color:#64748b;margin-top:.3rem}
+.code-block .kw{color:#c4b5fd;font-weight:600}.code-block .fn{color:#fde68a}.code-block .cls{color:#7dd3fc}.code-block .at{color:#a5f3fc}.code-block .pa{color:#fdba74}.code-block .st{color:#86efac}.code-block .nm{color:#fca5a5}.code-block .op{color:#f9a8d4}.code-block .cm{color:#9fb0c8;font-style:normal}
+details.qa{background:rgba(255,253,247,.9);border:1px solid #e2e8f0;border-radius:10px;padding:.55rem .9rem;margin:.55rem 0}details.qa summary{cursor:pointer;font-weight:700}.qa-a{margin-top:.5rem}
+.nb-download{background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a}
+.stage-table td:first-child{white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">670 ML <span>Python 実践</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 分割・データ漏れ <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<div class="nav-row m1"><span class="nav-mod">670 ML Python 実践</span><span class="navg"><a class="n-main" href="py_describe.html">📏 平均・中央値・外れ値</a></span><span class="navg"><a class="n-main" href="py_scale.html">⚖️ 標準化</a></span><span class="navg"><a class="n-main" href="py_split.html">✂️ 分割・データ漏れ</a></span><span class="navg"><a class="n-main" href="py_overfit.html">🎢 過学習・交差検証</a></span><span class="navg"><a class="n-main" href="py_regmetrics.html">📈 RMSE・R²</a></span><span class="navg"><a class="n-main" href="py_clfmetrics.html">🎯 混同行列・P/R</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">T3 · 670 ML Python 実践</div>
+  <h1>✂️ 訓練/テストに分ける・データ漏れ</h1>
+  <p>なぜ分けるのか、どこで間違えると<strong>データ漏れ</strong>になるのか。完全なランダムデータで「77%当たる」実験をして、漏れの怖さを体で覚えます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;"><a href="#unit1">① 説明</a><a href="#unit2">② 手計算</a><a href="#unit3">③ 自作</a><a href="#unit4">④ 白紙再現</a></div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="nb-download">📥 <strong>Python 練習ノートブック：</strong><a href="nb/ml670_py_practice.ipynb" download>ml670_py_practice.ipynb</a> — このページは<strong>ノートブックの T3</strong>の解説です。Jupyter で開いて、同じ名前のセクションを解いてください（自動チェック ✅/❌ 付き）。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>説明する：何のため？</h2><div class="unit-sub">3文で言えるようにする</div></div>
+  </div>
+<p>モデルの目的は「<strong>まだ見ていないデータ</strong>を当てる」ことです。訓練で使ったデータを同じ点数で測ると、暗記しただけでも高得点になります。だから評価用のデータを<strong>隠して</strong>とっておきます。</p>
+<div class="teal-box"><strong>データ漏れ（leakage）</strong>：テストデータの情報が、訓練のどこかに混ざること。評価が実力より良く見えますが、新しいデータでは当たりません。</div>
+<details class="qa"><summary>📝 3文のお手本</summary><div class="qa-a">モデルは見たことのないデータで評価しないと、暗記か実力か区別できないので、訓練とテストに分ける。データ漏れはテストの情報が訓練に混ざることで、点数が実力より良く見えてしまう。標準化や特徴量選択は分割のあとで、訓練データだけで fit する。</div></details>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>手で計算する</h2><div class="unit-sub">小さなデータを紙と電卓で</div></div>
+  </div>
+<p>200 件を <code>test_size=0.25</code> で分けると、テストは 200 × 0.25 ＝ <strong>50 件</strong>、訓練は <strong>150 件</strong>。</p>
+<pre class="code-block">
+<span class="cl">n <span class="op">=</span> <span class="nm">200</span></span>
+<span class="cl">n_test <span class="op">=</span> <span class="fn">int</span>(<span class="fn">round</span>(n <span class="op">*</span> <span class="nm">0.25</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'訓練'</span>, n <span class="op">-</span> n_test, <span class="st">'/ テスト'</span>, n_test)</span>
+</pre>
+<div class="output-reveal">訓練 150 / テスト 50</div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で作る</h2><div class="unit-sub">NumPy で書いて、scikit-learn と一致させる</div></div>
+  </div>
+<p><code>my_train_test_split</code> は、乱数で並べ替えた番号の先頭をテスト、残りを訓練にします。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">def</span> <span class="fn">my_train_test_split</span>(X, y, <span class="pa">test_size</span><span class="op">=</span><span class="nm">0.25</span>, <span class="pa">seed</span><span class="op">=</span><span class="nm">0</span>):</span>
+<span class="cl">    n <span class="op">=</span> <span class="fn">len</span>(X)</span>
+<span class="cl">    idx <span class="op">=</span> np.<span class="at">random</span>.<span class="fn">default_rng</span>(seed).<span class="fn">permutation</span>(n)</span>
+<span class="cl">    n_te <span class="op">=</span> <span class="fn">int</span>(<span class="fn">round</span>(n <span class="op">*</span> test_size))</span>
+<span class="cl">    te, tr <span class="op">=</span> idx[:n_te], idx[n_te:]</span>
+<span class="cl">    <span class="kw">return</span> X[tr], X[te], y[tr], y[te]</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">run_once</span>(leak, seed):</span>
+<span class="cl">    <span class="kw">if</span> leak:    <span class="cm"># ✗ 全データを見て特徴量を選んでから分割</span></span>
+<span class="cl">        <span class="cls">Xs</span> <span class="op">=</span> <span class="cls">SelectKBest</span>(f_classif, <span class="pa">k</span><span class="op">=</span><span class="nm">10</span>).<span class="fn">fit_transform</span>(X_noise, y_noise)</span>
+<span class="cl">        a, b, c, d <span class="op">=</span> <span class="fn">train_test_split</span>(<span class="cls">Xs</span>, y_noise, <span class="pa">test_size</span><span class="op">=</span><span class="nm">0.3</span>, <span class="pa">random_state</span><span class="op">=</span>seed)</span>
+<span class="cl">    <span class="kw">else</span>:       <span class="cm"># ○ 分割してから、訓練データだけで特徴量を選ぶ</span></span>
+<span class="cl">        a, b, c, d <span class="op">=</span> <span class="fn">train_test_split</span>(X_noise, y_noise, <span class="pa">test_size</span><span class="op">=</span><span class="nm">0.3</span>, <span class="pa">random_state</span><span class="op">=</span>seed)</span>
+<span class="cl">        sel <span class="op">=</span> <span class="cls">SelectKBest</span>(f_classif, <span class="pa">k</span><span class="op">=</span><span class="nm">10</span>).<span class="fn">fit</span>(a, c)</span>
+<span class="cl">        a, b <span class="op">=</span> sel.<span class="fn">transform</span>(a), sel.<span class="fn">transform</span>(b)</span>
+<span class="cl">    <span class="kw">return</span> <span class="cls">LogisticRegression</span>(<span class="pa">max_iter</span><span class="op">=</span><span class="nm">1000</span>).<span class="fn">fit</span>(a, c).<span class="fn">score</span>(b, d)</span>
+</pre>
+<pre class="code-block">
+<span class="cl">X <span class="op">=</span> np.<span class="fn">arange</span>(<span class="nm">40</span>).<span class="fn">reshape</span>(<span class="op">-</span><span class="nm">1</span>, <span class="nm">1</span>); y <span class="op">=</span> np.<span class="fn">arange</span>(<span class="nm">40</span>)</span>
+<span class="cl">a, b, c, d <span class="op">=</span> <span class="fn">my_train_test_split</span>(X, y, <span class="nm">0.25</span>, <span class="pa">seed</span><span class="op">=</span><span class="nm">0</span>)</span>
+<span class="cl"><span class="fn">print</span>(<span class="fn">len</span>(a), <span class="fn">len</span>(b), <span class="st">'重複なし:'</span>, <span class="fn">len</span>(<span class="fn">set</span>(a.<span class="fn">ravel</span>()) <span class="op">&amp;</span> <span class="fn">set</span>(b.<span class="fn">ravel</span>())) <span class="op">==</span> <span class="nm">0</span>)</span>
+</pre>
+<div class="output-reveal">30 10 重複なし: True</div>
+<h3>データ漏れの実験</h3><p>特徴量 1000 個も答えも<strong>完全なランダム</strong>。本当は 50% しか当てられないはずです。「全データで特徴量を選んでから分割」と「分割してから選ぶ」で正解率を比べます（20 回の平均）。</p>
+<pre class="code-block">
+<span class="cl">leaky <span class="op">=</span> np.<span class="fn">mean</span>([<span class="fn">run_once</span>(<span class="kw">True</span>, s) <span class="kw">for</span> s <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">20</span>)])</span>
+<span class="cl">honest <span class="op">=</span> np.<span class="fn">mean</span>([<span class="fn">run_once</span>(<span class="kw">False</span>, s) <span class="kw">for</span> s <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">20</span>)])</span>
+<span class="cl"><span class="fn">print</span>(f<span class="st">'漏れあり {leaky:.3f} / 漏れなし {honest:.3f}'</span>)</span>
+</pre>
+<div class="output-reveal">漏れあり 0.772 / 漏れなし 0.572</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl">fig, ax <span class="op">=</span> plt.<span class="fn">subplots</span>(<span class="pa">figsize</span><span class="op">=</span>(<span class="nm">5</span>, <span class="nm">3.2</span>))</span>
+<span class="cl">ax.<span class="fn">bar</span>([<span class="st">'leak (select on all data)'</span>, <span class="st">'honest (select on train)'</span>], [leaky, honest], <span class="pa">color</span><span class="op">=</span>[<span class="st">'#B84848'</span>, <span class="st">'#3C8A5A'</span>])</span>
+<span class="cl">ax.<span class="fn">axhline</span>(<span class="nm">0.5</span>, <span class="pa">color</span><span class="op">=</span><span class="st">'gray'</span>, <span class="pa">ls</span><span class="op">=</span><span class="st">'--'</span>); ax.<span class="fn">set_ylim</span>(<span class="nm">0.4</span>, <span class="nm">0.9</span>); ax.<span class="fn">set_ylabel</span>(<span class="st">'test accuracy'</span>)</span>
+<span class="cl">ax.<span class="fn">set_title</span>(<span class="st">'Pure noise: 77% is an illusion'</span>)</span>
+<span class="cl">plt.<span class="fn">xticks</span>(<span class="pa">fontsize</span><span class="op">=</span><span class="nm">8</span>)</span>
+</pre>
+<div class="r-fig"><img src="img/t3_leak.png" alt="ランダムなデータなのに、漏れありだと約77%「当たる」。"><div class="cap">ランダムなデータなのに、漏れありだと約77%「当たる」。</div></div>
+<div class="note-box">答えがランダムなのに 77% 当たるのは、<strong>特徴量を選ぶときにテストの答えも見ていた</strong>から。1000 個もあれば、たまたま答えと合う列が必ずあります。</div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>白紙で再現する・よくある間違い</h2><div class="unit-sub">次の日に、見ずにもう一度</div></div>
+  </div>
+<div class="note-box"><strong>④ 次の日にやること：</strong>ノートブックの「④ 白紙で再現」で、名前の後ろに <code>_2</code> が付いた関数を、③を見ずに書き直します。<strong>10分以内</strong>に ✅ が揃えば合格です。<br><code>my_train_test_split_2</code>・<code>run_once_2</code></div>
+<div class="warn-box">⚠️ <strong>よくある間違い</strong><ul><li>標準化・欠損補完・特徴量選択を<strong>分割の前</strong>に全データでやる</li><li>テストの点数を見ながらモデルやパラメータを何度も選び直す（テストが訓練の一部になる）</li><li>クラスの比率が偏るデータで <code>stratify</code> を付けない</li></ul></div>
+<details class="qa"><summary>❓ 確認：分割のあとに標準化を fit するのは、訓練・テストのどちら？</summary><div class="qa-a">訓練データだけ。テストは同じ平均・SD で transform するだけ。</div></details>
+<details class="qa"><summary>❓ 確認：テストの点数を見て、モデルを選び直してよい？</summary><div class="qa-a">良くない。選び直すたびにテストの情報が混ざる。選ぶのは検証データか交差検証で行い、テストは最後に1回だけ使う。</div></details>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">train/test split</div><div class="term-en">訓練/テスト分割</div><div class="term-def">モデルを作るデータと、評価に隠しておくデータに分ける。</div></div>
+    <div class="term-item"><div class="term-name">data leakage</div><div class="term-en">データ漏れ</div><div class="term-def">テストの情報が訓練に混ざること。評価が甘くなる。</div></div>
+    <div class="term-item"><div class="term-name">random_state / seed</div><div class="term-en">乱数の種</div><div class="term-def">同じ値なら毎回同じ分け方になる（再現性）。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>前処理（標準化・特徴量選択・欠損の補完）は、<strong>必ず分割のあと、訓練データだけ</strong>で fit します。</p></div>
+</aside>
+</div>
+<footer>
+  <p>🧪 670 ML Python 実践：訓練/テストに分ける・データ漏れ</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="py_scale.html">← ⚖️ 標準化</a> · <a href="py_overfit.html">🎢 過学習・交差検証 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

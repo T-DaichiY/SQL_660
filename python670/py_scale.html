@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML Python 実践：標準化（z スコア）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}.r-fig .cap{font-size:.85rem;color:#64748b;margin-top:.3rem}
+.code-block .kw{color:#c4b5fd;font-weight:600}.code-block .fn{color:#fde68a}.code-block .cls{color:#7dd3fc}.code-block .at{color:#a5f3fc}.code-block .pa{color:#fdba74}.code-block .st{color:#86efac}.code-block .nm{color:#fca5a5}.code-block .op{color:#f9a8d4}.code-block .cm{color:#9fb0c8;font-style:normal}
+details.qa{background:rgba(255,253,247,.9);border:1px solid #e2e8f0;border-radius:10px;padding:.55rem .9rem;margin:.55rem 0}details.qa summary{cursor:pointer;font-weight:700}.qa-a{margin-top:.5rem}
+.nb-download{background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a}
+.stage-table td:first-child{white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">670 ML <span>Python 実践</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 標準化 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<div class="nav-row m1"><span class="nav-mod">670 ML Python 実践</span><span class="navg"><a class="n-main" href="py_describe.html">📏 平均・中央値・外れ値</a></span><span class="navg"><a class="n-main" href="py_scale.html">⚖️ 標準化</a></span><span class="navg"><a class="n-main" href="py_split.html">✂️ 分割・データ漏れ</a></span><span class="navg"><a class="n-main" href="py_overfit.html">🎢 過学習・交差検証</a></span><span class="navg"><a class="n-main" href="py_regmetrics.html">📈 RMSE・R²</a></span><span class="navg"><a class="n-main" href="py_clfmetrics.html">🎯 混同行列・P/R</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">T2 · 670 ML Python 実践</div>
+  <h1>⚖️ 標準化（z スコア）</h1>
+  <p>単位の違う列を同じものさしに揃える<strong>標準化</strong>。z スコアを自作して、<code>StandardScaler</code> と pandas の <code>.std()</code> が<strong>なぜ少しずれるか</strong>まで確かめます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;"><a href="#unit1">① 説明</a><a href="#unit2">② 手計算</a><a href="#unit3">③ 自作</a><a href="#unit4">④ 白紙再現</a></div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="nb-download">📥 <strong>Python 練習ノートブック：</strong><a href="nb/ml670_py_practice.ipynb" download>ml670_py_practice.ipynb</a> — このページは<strong>ノートブックの T2</strong>の解説です。Jupyter で開いて、同じ名前のセクションを解いてください（自動チェック ✅/❌ 付き）。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>説明する：何のため？</h2><div class="unit-sub">3文で言えるようにする</div></div>
+  </div>
+<p>身長（cm）と年収（円）のように<strong>単位や大きさが違う列</strong>は、そのまま使うと、数字の大きい列がモデルを支配してしまいます。距離を使うモデル（KNN・SVM・K-Means）や、正則化つきの回帰では特に問題です。標準化は<strong>各列を「平均から何 SD 離れているか」に置き換える</strong>ことです。</p>
+<div class="note-box">木のモデル（決定木・ランダムフォレスト）は大小関係しか見ないので、標準化は<strong>不要</strong>です。</div>
+<details class="qa"><summary>📝 3文のお手本</summary><div class="qa-a">標準化は各列から平均を引いて SD で割り、平均 0・SD 1 に揃える変換。単位の違う列を公平に扱うため、距離や正則化を使うモデルで必要になる。標準化した列の平均は 0、SD は 1 になる。</div></details>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>手で計算する</h2><div class="unit-sub">小さなデータを紙と電卓で</div></div>
+  </div>
+<p>平均 10・SD 2 のとき、x = 14 の z スコアは (14 − 10) ÷ 2 ＝ <strong>2</strong>（平均より 2 SD 上）。x = 7 なら (7 − 10) ÷ 2 ＝ <strong>−1.5</strong>。逆に z = −1 を元の値に戻すと 10 + (−1)×2 ＝ <strong>8</strong>。</p>
+<pre class="code-block">
+<span class="cl">mu, sd <span class="op">=</span> <span class="nm">10</span>, <span class="nm">2</span></span>
+<span class="cl"><span class="fn">print</span>((<span class="nm">14</span> <span class="op">-</span> mu) <span class="op">/</span> sd, (<span class="nm">7</span> <span class="op">-</span> mu) <span class="op">/</span> sd, mu <span class="op">+</span> (<span class="op">-</span><span class="nm">1</span>) <span class="op">*</span> sd)</span>
+</pre>
+<div class="output-reveal">2.0 -1.5 8</div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で作る</h2><div class="unit-sub">NumPy で書いて、scikit-learn と一致させる</div></div>
+  </div>
+<p><code>zscore(x, ddof)</code> と、訓練データだけから平均・SD を求める <code>fit_transform_train_test</code> を自作します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">def</span> <span class="fn">zscore</span>(x, <span class="pa">ddof</span><span class="op">=</span><span class="nm">0</span>):</span>
+<span class="cl">    x <span class="op">=</span> np.<span class="fn">asarray</span>(x, <span class="pa">dtype</span><span class="op">=</span>float)</span>
+<span class="cl">    <span class="kw">return</span> (x <span class="op">-</span> x.<span class="fn">mean</span>()) <span class="op">/</span> x.<span class="fn">std</span>(<span class="pa">ddof</span><span class="op">=</span>ddof)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">fit_transform_train_test</span>(X_tr, X_te):</span>
+<span class="cl">    mu, sd <span class="op">=</span> X_tr.<span class="fn">mean</span>(<span class="pa">axis</span><span class="op">=</span><span class="nm">0</span>), X_tr.<span class="fn">std</span>(<span class="pa">axis</span><span class="op">=</span><span class="nm">0</span>)      <span class="cm"># 平均・SD は訓練データだけから</span></span>
+<span class="cl">    <span class="kw">return</span> (X_tr <span class="op">-</span> mu) <span class="op">/</span> sd, (X_te <span class="op">-</span> mu) <span class="op">/</span> sd</span>
+</pre>
+<pre class="code-block">
+<span class="cl">z <span class="op">=</span> <span class="fn">zscore</span>(col)</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'自作 z の平均・SD:'</span>, <span class="fn">round</span>(z.<span class="fn">mean</span>(), <span class="nm">6</span>), <span class="fn">round</span>(z.<span class="fn">std</span>(), <span class="nm">6</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'StandardScaler と一致:'</span>, np.<span class="fn">allclose</span>(z, <span class="cls">StandardScaler</span>().<span class="fn">fit_transform</span>(col.<span class="fn">reshape</span>(<span class="op">-</span><span class="nm">1</span>, <span class="nm">1</span>)).<span class="fn">ravel</span>()))</span>
+</pre>
+<div class="output-reveal">自作 z の平均・SD: -0.0 1.0
+StandardScaler と一致: True</div>
+<h3>なぜ pandas とずれる？</h3><p>5 個のデータ <code>[1,2,3,4,5]</code> で、2 つの SD を比べます。</p>
+<pre class="code-block">
+<span class="cl">data <span class="op">=</span> np.<span class="fn">array</span>([<span class="nm">1.</span>, <span class="nm">2.</span>, <span class="nm">3.</span>, <span class="nm">4.</span>, <span class="nm">5.</span>])</span>
+<span class="cl">sc_sd <span class="op">=</span> <span class="cls">StandardScaler</span>().<span class="fn">fit</span>(data.<span class="fn">reshape</span>(<span class="op">-</span><span class="nm">1</span>, <span class="nm">1</span>)).<span class="at">scale_</span>[<span class="nm">0</span>]</span>
+<span class="cl">pd_sd <span class="op">=</span> pd.<span class="cls">Series</span>(data).<span class="fn">std</span>()</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'StandardScaler の SD:'</span>, <span class="fn">round</span>(sc_sd, <span class="nm">4</span>), <span class="st">' pandas .std():'</span>, <span class="fn">round</span>(pd_sd, <span class="nm">4</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'比:'</span>, <span class="fn">round</span>(sc_sd <span class="op">/</span> pd_sd, <span class="nm">4</span>), <span class="st">' = sqrt(4/5) ='</span>, <span class="fn">round</span>(np.<span class="fn">sqrt</span>(<span class="nm">4</span> <span class="op">/</span> <span class="nm">5</span>), <span class="nm">4</span>))</span>
+</pre>
+<div class="output-reveal">StandardScaler の SD: 1.4142  pandas .std(): 1.5811
+比: 0.8944  = sqrt(4/5) = 0.8944</div>
+<div class="note-box"><code>StandardScaler</code> は <strong>n</strong> で、pandas の <code>.std()</code> は <strong>n−1</strong> で割ります。比は √((n−1)/n)。n が大きいほど差は小さくなりますが、<strong>小さいデータでは見えるずれ</strong>です。</div>
+<h3>訓練データだけで fit する</h3>
+<pre class="code-block">
+<span class="cl">a, b <span class="op">=</span> <span class="fn">fit_transform_train_test</span>(<span class="cls">Xa</span>, <span class="cls">Xb</span>)</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'訓練の平均（ほぼ 0）:'</span>, np.<span class="fn">abs</span>(a.<span class="fn">mean</span>(<span class="pa">axis</span><span class="op">=</span><span class="nm">0</span>)).<span class="fn">max</span>().<span class="fn">round</span>(<span class="nm">8</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'テストの平均（0 にはならない）:'</span>, np.<span class="fn">abs</span>(b.<span class="fn">mean</span>(<span class="pa">axis</span><span class="op">=</span><span class="nm">0</span>)).<span class="fn">max</span>().<span class="fn">round</span>(<span class="nm">3</span>))</span>
+</pre>
+<div class="output-reveal">訓練の平均（ほぼ 0）: 0.0
+テストの平均（0 にはならない）: 0.194</div>
+<div class="note-box">テストデータの平均が 0 にならないのは<strong>正しい動き</strong>です。テストの情報を使って平均を求めたら、それがデータ漏れになります（→ T3）。</div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>白紙で再現する・よくある間違い</h2><div class="unit-sub">次の日に、見ずにもう一度</div></div>
+  </div>
+<div class="note-box"><strong>④ 次の日にやること：</strong>ノートブックの「④ 白紙で再現」で、名前の後ろに <code>_2</code> が付いた関数を、③を見ずに書き直します。<strong>10分以内</strong>に ✅ が揃えば合格です。<br><code>zscore_2</code>・<code>fit_transform_train_test_2</code></div>
+<div class="warn-box">⚠️ <strong>よくある間違い</strong><ul><li><strong>全データで fit してから分割</strong>する（データ漏れ）。正しくは分割 → 訓練で fit → 訓練とテストを transform</li><li>テストデータを別に <code>fit_transform</code> する（訓練と違うものさしになる）</li><li>木のモデルに標準化をかけて安心する（効果なし。無害だが不要）</li></ul></div>
+<details class="qa"><summary>❓ 確認：標準化した列の平均と SD は？</summary><div class="qa-a">平均 0・SD 1（訓練データについて）。</div></details>
+<details class="qa"><summary>❓ 確認：なぜテストデータは、訓練の平均と SD で変換する？</summary><div class="qa-a">本番では未来のデータの平均は分からない。訓練で決めたものさしで測るのが、本番と同じ条件になるから。</div></details>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">z-score</div><div class="term-en">z スコア</div><div class="term-def">(x − 平均) ÷ SD。平均から何 SD 離れているか。</div></div>
+    <div class="term-item"><div class="term-name">standardization</div><div class="term-en">標準化</div><div class="term-def">平均 0・SD 1 に揃える変換。</div></div>
+    <div class="term-item"><div class="term-name">ddof</div><div class="term-en">自由度の補正</div><div class="term-def">SD を割る数を n − ddof にする。pandas は 1、NumPy・StandardScaler は 0。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>標準化は「平均 0・SD 1 にする」だけ。ただし<strong>平均と SD は訓練データだけから</strong>求める、が試験の定番です。</p></div>
+</aside>
+</div>
+<footer>
+  <p>🧪 670 ML Python 実践：標準化（z スコア）</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="py_describe.html">← 📏 平均・中央値・外れ値</a> · <a href="py_split.html">✂️ 分割・データ漏れ →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

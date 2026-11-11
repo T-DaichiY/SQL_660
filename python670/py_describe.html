@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML Python 実践：平均・中央値・外れ値・歪み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}.r-fig .cap{font-size:.85rem;color:#64748b;margin-top:.3rem}
+.code-block .kw{color:#c4b5fd;font-weight:600}.code-block .fn{color:#fde68a}.code-block .cls{color:#7dd3fc}.code-block .at{color:#a5f3fc}.code-block .pa{color:#fdba74}.code-block .st{color:#86efac}.code-block .nm{color:#fca5a5}.code-block .op{color:#f9a8d4}.code-block .cm{color:#9fb0c8;font-style:normal}
+details.qa{background:rgba(255,253,247,.9);border:1px solid #e2e8f0;border-radius:10px;padding:.55rem .9rem;margin:.55rem 0}details.qa summary{cursor:pointer;font-weight:700}.qa-a{margin-top:.5rem}
+.nb-download{background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a}
+.stage-table td:first-child{white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">670 ML <span>Python 実践</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 平均・中央値・外れ値 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<div class="nav-row m1"><span class="nav-mod">670 ML Python 実践</span><span class="navg"><a class="n-main" href="py_describe.html">📏 平均・中央値・外れ値</a></span><span class="navg"><a class="n-main" href="py_scale.html">⚖️ 標準化</a></span><span class="navg"><a class="n-main" href="py_split.html">✂️ 分割・データ漏れ</a></span><span class="navg"><a class="n-main" href="py_overfit.html">🎢 過学習・交差検証</a></span><span class="navg"><a class="n-main" href="py_regmetrics.html">📈 RMSE・R²</a></span><span class="navg"><a class="n-main" href="py_clfmetrics.html">🎯 混同行列・P/R</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">T1 · 670 ML Python 実践</div>
+  <h1>📏 平均・中央値・外れ値・歪み</h1>
+  <p>データの「顔つき」を知る最初の一歩。平均と中央値の違い、外れ値の見つけ方（1.5×IQR）、歪度を、<strong>自分の関数で</strong>計算します。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;"><a href="#unit1">① 説明</a><a href="#unit2">② 手計算</a><a href="#unit3">③ 自作</a><a href="#unit4">④ 白紙再現</a></div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="nb-download">📥 <strong>Python 練習ノートブック：</strong><a href="nb/ml670_py_practice.ipynb" download>ml670_py_practice.ipynb</a> — このページは<strong>ノートブックの T1</strong>の解説です。Jupyter で開いて、同じ名前のセクションを解いてください（自動チェック ✅/❌ 付き）。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>説明する：何のため？</h2><div class="unit-sub">3文で言えるようにする</div></div>
+  </div>
+<p>モデルを作る前に必ずやるのが<strong>データの要約</strong>です。ここで間違えると、あとの前処理がすべてずれます。</p>
+<table class="compare-table">
+<tr><th></th><th>平均 (mean)</th><th>中央値 (median)</th></tr>
+<tr><td>何か</td><td>全部足して件数で割る</td><td>小さい順に並べた真ん中の値</td></tr><tr><td>外れ値</td><td><strong>引っぱられる</strong></td><td>ほとんど動かない</td></tr><tr><td>使う場面</td><td>対称な分布</td><td>歪んだ分布・外れ値あり</td></tr>
+</table>
+<details class="qa"><summary>📝 3文のお手本（自分で書いてから開く）</summary><div class="qa-a">平均は全部の値の合計を件数で割ったもので、極端に大きい値が1つあるだけで大きく動く。中央値は並べた真ん中なので外れ値に強い。<strong>平均が中央値より大きいときは右に歪んでいる</strong>ので、代表値は中央値を信じる。</div></details>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>手で計算する</h2><div class="unit-sub">小さなデータを紙と電卓で</div></div>
+  </div>
+<p>5 つのデータ <code>[2, 3, 3, 4, 50]</code> で、紙と電卓でやってみます。</p>
+<p><strong>平均</strong> ＝ (2+3+3+4+50) ÷ 5 ＝ <strong>12.4</strong>　／　<strong>中央値</strong> ＝ 真ん中（3番目）＝ <strong>3</strong>。50 が 1 つあるだけで、平均は 12.4 まで跳ね上がります。</p>
+<pre class="code-block">
+<span class="cl">x <span class="op">=</span> [<span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">50</span>]</span>
+<span class="cl"><span class="fn">print</span>(np.<span class="fn">mean</span>(x), np.<span class="fn">median</span>(x))</span>
+</pre>
+<div class="output-reveal">12.4 3.0</div>
+<p><strong>1.5×IQR ルール</strong>：Q1 と Q3 を出し、IQR ＝ Q3 − Q1。<code>Q1 − 1.5×IQR</code> より小さい、または <code>Q3 + 1.5×IQR</code> より大きい値を外れ値とします。ここでは Q1＝3、Q3＝4、IQR＝1 なので上限は 5.5。50 は外れ値です。</p>
+<pre class="code-block">
+<span class="cl">q1, q3 <span class="op">=</span> np.<span class="fn">percentile</span>(x, [<span class="nm">25</span>, <span class="nm">75</span>])</span>
+<span class="cl">iqr <span class="op">=</span> q3 <span class="op">-</span> q1</span>
+<span class="cl"><span class="fn">print</span>(q1, q3, <span class="st">'upper ='</span>, q3 <span class="op">+</span> <span class="nm">1.5</span> <span class="op">*</span> iqr)</span>
+</pre>
+<div class="output-reveal">3.0 4.0 upper = 5.5</div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で作る</h2><div class="unit-sub">NumPy で書いて、scikit-learn と一致させる</div></div>
+  </div>
+<p><code>iqr_outliers(x)</code> と <code>skewness(x)</code> を自作します。歪度は「各値の z スコアの 3 乗の平均」です。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">def</span> <span class="fn">iqr_outliers</span>(x):</span>
+<span class="cl">    x <span class="op">=</span> np.<span class="fn">asarray</span>(x, <span class="pa">dtype</span><span class="op">=</span>float)</span>
+<span class="cl">    q1, q3 <span class="op">=</span> np.<span class="fn">percentile</span>(x, [<span class="nm">25</span>, <span class="nm">75</span>]); iqr <span class="op">=</span> q3 <span class="op">-</span> q1</span>
+<span class="cl">    <span class="kw">return</span> (x <span class="op">&lt;</span> q1 <span class="op">-</span> <span class="nm">1.5</span> <span class="op">*</span> iqr) <span class="op">|</span> (x <span class="op">&gt;</span> q3 <span class="op">+</span> <span class="nm">1.5</span> <span class="op">*</span> iqr)</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">skewness</span>(x):</span>
+<span class="cl">    x <span class="op">=</span> np.<span class="fn">asarray</span>(x, <span class="pa">dtype</span><span class="op">=</span>float)</span>
+<span class="cl">    <span class="kw">return</span> np.<span class="fn">mean</span>(((x <span class="op">-</span> x.<span class="fn">mean</span>()) <span class="op">/</span> x.<span class="fn">std</span>()) <span class="op">**</span> <span class="nm">3</span>)</span>
+</pre>
+<p>pandas と scipy の結果と並べて、一致するかを確かめます（lognormal の右に歪んだ乱数 200 個）。</p>
+<pre class="code-block">
+<span class="cl">s <span class="op">=</span> pd.<span class="cls">Series</span>(d)</span>
+<span class="cl">q1, q3 <span class="op">=</span> s.<span class="fn">quantile</span>(<span class="nm">.25</span>), s.<span class="fn">quantile</span>(<span class="nm">.75</span>)</span>
+<span class="cl">ref <span class="op">=</span> (s <span class="op">&lt;</span> q1 <span class="op">-</span> <span class="nm">1.5</span> <span class="op">*</span> (q3 <span class="op">-</span> q1)) <span class="op">|</span> (s <span class="op">&gt;</span> q3 <span class="op">+</span> <span class="nm">1.5</span> <span class="op">*</span> (q3 <span class="op">-</span> q1))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'外れ値の数  自作:'</span>, <span class="fn">iqr_outliers</span>(d).<span class="fn">sum</span>(), <span class="st">' pandas:'</span>, ref.<span class="fn">sum</span>(), <span class="st">' 一致:'</span>, (<span class="fn">iqr_outliers</span>(d) <span class="op">==</span> ref.<span class="fn">to_numpy</span>()).<span class="fn">all</span>())</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'歪度  自作:'</span>, <span class="fn">round</span>(<span class="fn">skewness</span>(d), <span class="nm">4</span>), <span class="st">' scipy:'</span>, <span class="fn">round</span>(stats.<span class="fn">skew</span>(d), <span class="nm">4</span>), <span class="st">' pandas .skew():'</span>, <span class="fn">round</span>(s.<span class="fn">skew</span>(), <span class="nm">4</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'平均'</span>, <span class="fn">round</span>(d.<span class="fn">mean</span>(), <span class="nm">3</span>), <span class="st">' 中央値'</span>, <span class="fn">round</span>(np.<span class="fn">median</span>(d), <span class="nm">3</span>))</span>
+</pre>
+<div class="output-reveal">外れ値の数  自作: 11  pandas: 11  一致: True
+歪度  自作: 5.0704  scipy: 5.0704  pandas .skew(): 5.1088
+平均 1.438  中央値 1.003</div>
+<div class="note-box"><strong>pandas の <code>.skew()</code> だけ少し違う値</strong>になりました。scipy の既定は n で割る「標本の歪度」、pandas は小標本の偏りを補正した版だからです。こういう<strong>「ずれの理由」を自分で説明できる</strong>ことが、試験でも強みになります。</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl">fig, ax <span class="op">=</span> plt.<span class="fn">subplots</span>(<span class="pa">figsize</span><span class="op">=</span>(<span class="nm">7</span>, <span class="nm">3.4</span>))</span>
+<span class="cl">ax.<span class="fn">hist</span>(d, <span class="pa">bins</span><span class="op">=</span><span class="nm">30</span>, <span class="pa">color</span><span class="op">=</span><span class="st">'#8fb3e8'</span>, <span class="pa">edgecolor</span><span class="op">=</span><span class="st">'white'</span>)</span>
+<span class="cl">ax.<span class="fn">axvline</span>(d.<span class="fn">mean</span>(), <span class="pa">color</span><span class="op">=</span><span class="st">'#B84848'</span>, <span class="pa">lw</span><span class="op">=</span><span class="nm">2</span>, <span class="pa">label</span><span class="op">=</span>f<span class="st">'mean {d.mean():.2f}'</span>)</span>
+<span class="cl">ax.<span class="fn">axvline</span>(np.<span class="fn">median</span>(d), <span class="pa">color</span><span class="op">=</span><span class="st">'#3C8A5A'</span>, <span class="pa">lw</span><span class="op">=</span><span class="nm">2</span>, <span class="pa">label</span><span class="op">=</span>f<span class="st">'median {np.median(d):.2f}'</span>)</span>
+<span class="cl">ax.<span class="fn">legend</span>(); ax.<span class="fn">set_title</span>(<span class="st">'Right-skewed data: mean &gt; median'</span>)</span>
+</pre>
+<div class="r-fig"><img src="img/t1_skew.png" alt="右に歪んだデータ。平均（赤）が中央値（緑）より右にある。"><div class="cap">右に歪んだデータ。平均（赤）が中央値（緑）より右にある。</div></div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>白紙で再現する・よくある間違い</h2><div class="unit-sub">次の日に、見ずにもう一度</div></div>
+  </div>
+<div class="note-box"><strong>④ 次の日にやること：</strong>ノートブックの「④ 白紙で再現」で、名前の後ろに <code>_2</code> が付いた関数を、③を見ずに書き直します。<strong>10分以内</strong>に ✅ が揃えば合格です。<br><code>iqr_outliers_2</code>・<code>skewness_2</code></div>
+<div class="warn-box">⚠️ <strong>よくある間違い</strong><ul><li><code>np.percentile</code> に <code>[0.25, 0.75]</code> と渡す（<code>[25, 75]</code> が正しい。<code>np.quantile</code> なら <code>0.25</code>）</li><li>外れ値を見つけたら自動で消す（まず原因を調べる。入力ミスか、本物の極端な値か）</li><li>歪んだデータの平均を「普通の値」と読む</li></ul></div>
+<details class="qa"><summary>❓ 確認：平均 12.4・中央値 3 のデータで、「代表的な値」としてふさわしいのは？</summary><div class="qa-a">中央値（3）。平均は 50 という 1 つの外れ値に引っぱられている。</div></details>
+<details class="qa"><summary>❓ 確認：歪度がプラスのとき、分布のどちらに裾が長い？</summary><div class="qa-a">右（大きい方）。平均 > 中央値になりやすい。</div></details>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">mean</div><div class="term-en">平均</div><div class="term-def">全部足して件数で割る。外れ値に弱い。</div></div>
+    <div class="term-item"><div class="term-name">median</div><div class="term-en">中央値</div><div class="term-def">小さい順の真ん中。外れ値に強い。</div></div>
+    <div class="term-item"><div class="term-name">IQR</div><div class="term-en">四分位範囲</div><div class="term-def">Q3 − Q1。真ん中50%の幅。</div></div>
+    <div class="term-item"><div class="term-name">skewness</div><div class="term-en">歪度</div><div class="term-def">分布の左右の非対称さ。正なら右に裾が長い。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>歪みのあるデータでは、平均は外れ値に引っぱられます。「平均と中央値がずれていたら、まず歪みを疑う」が合言葉です。</p></div>
+</aside>
+</div>
+<footer>
+  <p>🧪 670 ML Python 実践：平均・中央値・外れ値・歪み</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="py_scale.html">⚖️ 標準化 →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

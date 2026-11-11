@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML Python 実践：回帰の評価：RMSE・MAE・R²</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}.r-fig .cap{font-size:.85rem;color:#64748b;margin-top:.3rem}
+.code-block .kw{color:#c4b5fd;font-weight:600}.code-block .fn{color:#fde68a}.code-block .cls{color:#7dd3fc}.code-block .at{color:#a5f3fc}.code-block .pa{color:#fdba74}.code-block .st{color:#86efac}.code-block .nm{color:#fca5a5}.code-block .op{color:#f9a8d4}.code-block .cm{color:#9fb0c8;font-style:normal}
+details.qa{background:rgba(255,253,247,.9);border:1px solid #e2e8f0;border-radius:10px;padding:.55rem .9rem;margin:.55rem 0}details.qa summary{cursor:pointer;font-weight:700}.qa-a{margin-top:.5rem}
+.nb-download{background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a}
+.stage-table td:first-child{white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">670 ML <span>Python 実践</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 RMSE・R² <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<div class="nav-row m1"><span class="nav-mod">670 ML Python 実践</span><span class="navg"><a class="n-main" href="py_describe.html">📏 平均・中央値・外れ値</a></span><span class="navg"><a class="n-main" href="py_scale.html">⚖️ 標準化</a></span><span class="navg"><a class="n-main" href="py_split.html">✂️ 分割・データ漏れ</a></span><span class="navg"><a class="n-main" href="py_overfit.html">🎢 過学習・交差検証</a></span><span class="navg"><a class="n-main" href="py_regmetrics.html">📈 RMSE・R²</a></span><span class="navg"><a class="n-main" href="py_clfmetrics.html">🎯 混同行列・P/R</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">T5 · 670 ML Python 実践</div>
+  <h1>📈 回帰の評価：RMSE・MAE・R²</h1>
+  <p>数値を予測するモデルの「当たり具合」を表す 3 つの指標を、<strong>式から</strong>自作します。R² がマイナスになる理由も確かめます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;"><a href="#unit1">① 説明</a><a href="#unit2">② 手計算</a><a href="#unit3">③ 自作</a><a href="#unit4">④ 白紙再現</a></div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="nb-download">📥 <strong>Python 練習ノートブック：</strong><a href="nb/ml670_py_practice.ipynb" download>ml670_py_practice.ipynb</a> — このページは<strong>ノートブックの T5</strong>の解説です。Jupyter で開いて、同じ名前のセクションを解いてください（自動チェック ✅/❌ 付き）。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>説明する：何のため？</h2><div class="unit-sub">3文で言えるようにする</div></div>
+  </div>
+<p>回帰モデルは「どれくらい外したか」を<strong>1つの数字</strong>にして比べます。</p>
+<table class="compare-table">
+<tr><th>指標</th><th>意味</th><th>単位</th><th>特徴</th></tr>
+<tr><td>RMSE</td><td>平均的なズレの大きさ</td><td>y と同じ</td><td>大きな外れを重く罰する</td></tr><tr><td>MAE</td><td>ズレの絶対値の平均</td><td>y と同じ</td><td>外れ値に強い</td></tr><tr><td>R²</td><td>ばらつきのうち説明できた割合</td><td>なし（0〜1）</td><td><strong>平均だけ予測すると 0</strong>、それより悪いとマイナス</td></tr>
+</table>
+<details class="qa"><summary>📝 3文のお手本</summary><div class="qa-a">RMSE は誤差を二乗して平均し平方根を取った値で、y と同じ単位の「平均的なズレ」を表す。R² は平均だけを予測する場合と比べてどれだけ誤差が減ったかの割合で、0 なら平均予測と同じ。訓練データだけで R² が高くても過学習かもしれないので、必ずテストデータで見る。</div></details>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>手で計算する</h2><div class="unit-sub">小さなデータを紙と電卓で</div></div>
+  </div>
+<p>実測 <code>[3, 5, 7]</code>・予測 <code>[4, 5, 5]</code> を紙で計算します。誤差（予測 − 実測）は <strong>1, 0, −2</strong>。</p>
+<table class="compare-table">
+<tr><th>指標</th><th>計算</th><th>結果</th></tr>
+<tr><td>MSE</td><td>(1² + 0² + 2²) ÷ 3 ＝ 5/3</td><td>1.667</td></tr><tr><td>RMSE</td><td>√(5/3)</td><td><strong>1.291</strong></td></tr><tr><td>MAE</td><td>(1 + 0 + 2) ÷ 3</td><td><strong>1.0</strong></td></tr><tr><td>R²</td><td>SSE ＝ 5、SST ＝ (3−5)²+(5−5)²+(7−5)² ＝ 8 → 1 − 5/8</td><td><strong>0.375</strong></td></tr>
+</table>
+<pre class="code-block">
+<span class="cl">y <span class="op">=</span> np.<span class="fn">array</span>([<span class="nm">3</span>, <span class="nm">5</span>, <span class="nm">7</span>]); p <span class="op">=</span> np.<span class="fn">array</span>([<span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">5</span>])</span>
+<span class="cl"><span class="fn">print</span>(np.<span class="fn">sqrt</span>(np.<span class="fn">mean</span>((y <span class="op">-</span> p) <span class="op">**</span> <span class="nm">2</span>)), np.<span class="fn">mean</span>(np.<span class="fn">abs</span>(y <span class="op">-</span> p)), <span class="nm">1</span> <span class="op">-</span> np.<span class="fn">sum</span>((y <span class="op">-</span> p) <span class="op">**</span> <span class="nm">2</span>) <span class="op">/</span> np.<span class="fn">sum</span>((y <span class="op">-</span> y.<span class="fn">mean</span>()) <span class="op">**</span> <span class="nm">2</span>))</span>
+</pre>
+<div class="output-reveal">1.2909944487358056 1.0 0.375</div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で作る</h2><div class="unit-sub">NumPy で書いて、scikit-learn と一致させる</div></div>
+  </div>
+<p>3 つの関数を書き、糖尿病データ（442 人）の線形回帰の予測で、sklearn と並べます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">def</span> <span class="fn">rmse</span>(y, p):</span>
+<span class="cl">    y, p <span class="op">=</span> np.<span class="fn">asarray</span>(y, float), np.<span class="fn">asarray</span>(p, float)</span>
+<span class="cl">    <span class="kw">return</span> <span class="fn">float</span>(np.<span class="fn">sqrt</span>(np.<span class="fn">mean</span>((y <span class="op">-</span> p) <span class="op">**</span> <span class="nm">2</span>)))</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">mae</span>(y, p):</span>
+<span class="cl">    y, p <span class="op">=</span> np.<span class="fn">asarray</span>(y, float), np.<span class="fn">asarray</span>(p, float)</span>
+<span class="cl">    <span class="kw">return</span> <span class="fn">float</span>(np.<span class="fn">mean</span>(np.<span class="fn">abs</span>(y <span class="op">-</span> p)))</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">r2</span>(y, p):</span>
+<span class="cl">    y, p <span class="op">=</span> np.<span class="fn">asarray</span>(y, float), np.<span class="fn">asarray</span>(p, float)</span>
+<span class="cl">    <span class="kw">return</span> <span class="fn">float</span>(<span class="nm">1</span> <span class="op">-</span> np.<span class="fn">sum</span>((y <span class="op">-</span> p) <span class="op">**</span> <span class="nm">2</span>) <span class="op">/</span> np.<span class="fn">sum</span>((y <span class="op">-</span> y.<span class="fn">mean</span>()) <span class="op">**</span> <span class="nm">2</span>))</span>
+</pre>
+<pre class="code-block">
+<span class="cl"><span class="fn">print</span>(<span class="st">'RMSE 自作:'</span>, <span class="fn">round</span>(<span class="fn">rmse</span>(yr_te, pred), <span class="nm">4</span>), <span class="st">' sklearn:'</span>, <span class="fn">round</span>(<span class="fn">mean_squared_error</span>(yr_te, pred) <span class="op">**</span> <span class="nm">0.5</span>, <span class="nm">4</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'MAE  自作:'</span>, <span class="fn">round</span>(<span class="fn">mae</span>(yr_te, pred), <span class="nm">4</span>), <span class="st">' sklearn:'</span>, <span class="fn">round</span>(<span class="fn">mean_absolute_error</span>(yr_te, pred), <span class="nm">4</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'R2   自作:'</span>, <span class="fn">round</span>(<span class="fn">r2</span>(yr_te, pred), <span class="nm">4</span>), <span class="st">' sklearn:'</span>, <span class="fn">round</span>(<span class="fn">r2_score</span>(yr_te, pred), <span class="nm">4</span>))</span>
+</pre>
+<div class="output-reveal">RMSE 自作: 56.3929  sklearn: 56.3929
+MAE  自作: 45.1206  sklearn: 45.1206
+R2   自作: 0.3594  sklearn: 0.3594</div>
+<h3>R² の意味を確かめる</h3>
+<pre class="code-block">
+<span class="cl">baseline <span class="op">=</span> np.<span class="fn">full</span>(<span class="fn">len</span>(yr_te), np.<span class="fn">mean</span>(yr_te))      <span class="cm"># 平均だけを予測</span></span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'平均だけを予測したときの R²:'</span>, <span class="fn">round</span>(<span class="fn">r2</span>(yr_te, baseline), <span class="nm">6</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'平均より悪い予測の R²:'</span>, <span class="fn">r2</span>([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>], [<span class="nm">3</span>, <span class="nm">2</span>, <span class="nm">1</span>]))</span>
+</pre>
+<div class="output-reveal">平均だけを予測したときの R²: 0.0
+平均より悪い予測の R²: -3.0</div>
+<div class="note-box">RMSE ≈ 56 は「予測は平均して約 56 ズレる」という意味です（y の単位は糖尿病の進行指標）。R² ≈ 0.36 は、ばらつきの約 36% を説明できたという意味。<strong>R² は平均より悪い予測ならマイナス</strong>になります。</div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>白紙で再現する・よくある間違い</h2><div class="unit-sub">次の日に、見ずにもう一度</div></div>
+  </div>
+<div class="note-box"><strong>④ 次の日にやること：</strong>ノートブックの「④ 白紙で再現」で、名前の後ろに <code>_2</code> が付いた関数を、③を見ずに書き直します。<strong>10分以内</strong>に ✅ が揃えば合格です。<br><code>rmse_2</code>・<code>mae_2</code>・<code>r2_2</code></div>
+<div class="warn-box">⚠️ <strong>よくある間違い</strong><ul><li>RMSE を「％」だと思う（y と同じ単位）</li><li><strong>訓練データの R²</strong> だけ見て満足する（テストで見る）</li><li>R² は常に 0〜1 だと思う（テストではマイナスになる）</li><li>RMSE と MAE を単位の違う y で比べる</li></ul></div>
+<details class="qa"><summary>❓ 確認：RMSE が MAE よりずっと大きいとき、何が起きている？</summary><div class="qa-a">少数の大きな誤差がある。RMSE は誤差を二乗するので、大きな外れに強く反応する。</div></details>
+<details class="qa"><summary>❓ 確認：R² = 0 は、どんなモデル？</summary><div class="qa-a">平均だけを予測するモデルと同じ当たり具合（何も説明できていない）。</div></details>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">RMSE</div><div class="term-en">二乗平均平方根誤差</div><div class="term-def">誤差を二乗して平均し、平方根を取る。y と同じ単位。大きな誤差を重く見る。</div></div>
+    <div class="term-item"><div class="term-name">MAE</div><div class="term-en">平均絶対誤差</div><div class="term-def">誤差の絶対値の平均。外れ値に強い。</div></div>
+    <div class="term-item"><div class="term-name">R²</div><div class="term-en">決定係数</div><div class="term-def">1 − (誤差の二乗和) ÷ (平均からの差の二乗和)。1 に近いほど良い。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>RMSE は<strong>y と同じ単位</strong>の「平均的なズレ」。R² は「平均だけを予測するより、どれだけ良いか」。</p></div>
+</aside>
+</div>
+<footer>
+  <p>🧪 670 ML Python 実践：回帰の評価：RMSE・MAE・R²</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="py_overfit.html">← 🎢 過学習・交差検証</a> · <a href="py_clfmetrics.html">🎯 混同行列・P/R →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

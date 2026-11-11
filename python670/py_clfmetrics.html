@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML Python 実践：分類の評価：混同行列・precision・recall</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}.r-fig .cap{font-size:.85rem;color:#64748b;margin-top:.3rem}
+.code-block .kw{color:#c4b5fd;font-weight:600}.code-block .fn{color:#fde68a}.code-block .cls{color:#7dd3fc}.code-block .at{color:#a5f3fc}.code-block .pa{color:#fdba74}.code-block .st{color:#86efac}.code-block .nm{color:#fca5a5}.code-block .op{color:#f9a8d4}.code-block .cm{color:#9fb0c8;font-style:normal}
+details.qa{background:rgba(255,253,247,.9);border:1px solid #e2e8f0;border-radius:10px;padding:.55rem .9rem;margin:.55rem 0}details.qa summary{cursor:pointer;font-weight:700}.qa-a{margin-top:.5rem}
+.nb-download{background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a}
+.stage-table td:first-child{white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">670 ML <span>Python 実践</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 混同行列・P/R <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<div class="nav-row m1"><span class="nav-mod">670 ML Python 実践</span><span class="navg"><a class="n-main" href="py_describe.html">📏 平均・中央値・外れ値</a></span><span class="navg"><a class="n-main" href="py_scale.html">⚖️ 標準化</a></span><span class="navg"><a class="n-main" href="py_split.html">✂️ 分割・データ漏れ</a></span><span class="navg"><a class="n-main" href="py_overfit.html">🎢 過学習・交差検証</a></span><span class="navg"><a class="n-main" href="py_regmetrics.html">📈 RMSE・R²</a></span><span class="navg"><a class="n-main" href="py_clfmetrics.html">🎯 混同行列・P/R</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">T6 · 670 ML Python 実践</div>
+  <h1>🎯 分類の評価：混同行列・precision・recall</h1>
+  <p>「当たった／外した」を 4 つに分けて数える<strong>混同行列</strong>から、precision と recall を自作します。しきい値を動かすと、2 つがシーソーのように動く様子も見ます。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;"><a href="#unit1">① 説明</a><a href="#unit2">② 手計算</a><a href="#unit3">③ 自作</a><a href="#unit4">④ 白紙再現</a></div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="nb-download">📥 <strong>Python 練習ノートブック：</strong><a href="nb/ml670_py_practice.ipynb" download>ml670_py_practice.ipynb</a> — このページは<strong>ノートブックの T6</strong>の解説です。Jupyter で開いて、同じ名前のセクションを解いてください（自動チェック ✅/❌ 付き）。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>説明する：何のため？</h2><div class="unit-sub">3文で言えるようにする</div></div>
+  </div>
+<p>分類モデルの評価は「正解率」だけでは足りません。たとえば陽性が 3% しかないデータで<strong>「全部陰性」と答える</strong>と、正解率は 97% です。でも陽性は 1 件も見つけていません。</p>
+<table class="compare-table">
+<tr><th></th><th>予測：陽性</th><th>予測：陰性</th></tr>
+<tr><td><strong>実際：陽性</strong></td><td>TP（正しく陽性）</td><td>FN（見逃し）</td></tr><tr><td><strong>実際：陰性</strong></td><td>FP（誤報）</td><td>TN（正しく陰性）</td></tr>
+</table>
+<p><strong>precision</strong> ＝ TP ÷ (TP+FP)、<strong>recall</strong> ＝ TP ÷ (TP+FN)。病気の見逃しを避けたいなら recall、迷惑メール判定で普通のメールを消したくないなら precision を重視します。</p>
+<details class="qa"><summary>📝 3文のお手本</summary><div class="qa-a">precision は陽性と予測した中の的中率で、recall は本当の陽性のうち見つけられた割合。病気の見逃しを避けたいときは recall を重視する。陽性が少ないデータでは、全部陰性と答えても正解率が高くなるので、正解率だけでは判断できない。</div></details>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>手で計算する</h2><div class="unit-sub">小さなデータを紙と電卓で</div></div>
+  </div>
+<p>TP = 8、FP = 2、FN = 4、TN = 86（合計 100 件）で計算します。</p>
+<table class="compare-table">
+<tr><th>指標</th><th>計算</th><th>結果</th></tr>
+<tr><td>precision</td><td>8 ÷ (8+2)</td><td><strong>0.8</strong></td></tr><tr><td>recall</td><td>8 ÷ (8+4)</td><td><strong>0.667</strong></td></tr><tr><td>accuracy</td><td>(8+86) ÷ 100</td><td><strong>0.94</strong></td></tr><tr><td>F1</td><td>2×0.8×0.667 ÷ (0.8+0.667)</td><td><strong>0.727</strong></td></tr>
+</table>
+<pre class="code-block">
+<span class="cl">TP, FP, FN, TN <span class="op">=</span> <span class="nm">8</span>, <span class="nm">2</span>, <span class="nm">4</span>, <span class="nm">86</span></span>
+<span class="cl">prec, rec <span class="op">=</span> TP <span class="op">/</span> (TP <span class="op">+</span> FP), TP <span class="op">/</span> (TP <span class="op">+</span> FN)</span>
+<span class="cl"><span class="fn">print</span>(prec, <span class="fn">round</span>(rec, <span class="nm">3</span>), (TP <span class="op">+</span> TN) <span class="op">/</span> <span class="nm">100</span>, <span class="fn">round</span>(<span class="nm">2</span> <span class="op">*</span> prec <span class="op">*</span> rec <span class="op">/</span> (prec <span class="op">+</span> rec), <span class="nm">3</span>))</span>
+</pre>
+<div class="output-reveal">0.8 0.667 0.94 0.727</div>
+<p><strong>不均衡データの罠：</strong>1000 件のうち陽性 30 件で、全部陰性と答えると…</p>
+<pre class="code-block">
+<span class="cl"><span class="fn">print</span>(<span class="st">'正解率'</span>, <span class="nm">970</span> <span class="op">/</span> <span class="nm">1000</span>, <span class="st">' recall'</span>, <span class="nm">0</span> <span class="op">/</span> <span class="nm">30</span>)</span>
+</pre>
+<div class="output-reveal">正解率 0.97  recall 0.0</div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で作る</h2><div class="unit-sub">NumPy で書いて、scikit-learn と一致させる</div></div>
+  </div>
+<p><code>confusion</code> で 4 つを数え、<code>precision</code>・<code>recall</code>・<code>sweep</code>（しきい値ごとの値）を作ります。乳がんデータ（1 = 良性 を陽性とする）のロジスティック回帰で確かめます。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">def</span> <span class="fn">confusion</span>(y_true, y_pred):</span>
+<span class="cl">    y_true, y_pred <span class="op">=</span> np.<span class="fn">asarray</span>(y_true), np.<span class="fn">asarray</span>(y_pred)</span>
+<span class="cl">    tp <span class="op">=</span> <span class="fn">int</span>(np.<span class="fn">sum</span>((y_true <span class="op">==</span> <span class="nm">1</span>) <span class="op">&amp;</span> (y_pred <span class="op">==</span> <span class="nm">1</span>)))</span>
+<span class="cl">    fp <span class="op">=</span> <span class="fn">int</span>(np.<span class="fn">sum</span>((y_true <span class="op">==</span> <span class="nm">0</span>) <span class="op">&amp;</span> (y_pred <span class="op">==</span> <span class="nm">1</span>)))</span>
+<span class="cl">    fn <span class="op">=</span> <span class="fn">int</span>(np.<span class="fn">sum</span>((y_true <span class="op">==</span> <span class="nm">1</span>) <span class="op">&amp;</span> (y_pred <span class="op">==</span> <span class="nm">0</span>)))</span>
+<span class="cl">    tn <span class="op">=</span> <span class="fn">int</span>(np.<span class="fn">sum</span>((y_true <span class="op">==</span> <span class="nm">0</span>) <span class="op">&amp;</span> (y_pred <span class="op">==</span> <span class="nm">0</span>)))</span>
+<span class="cl">    <span class="kw">return</span> tn, fp, fn, tp</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">precision</span>(y_true, y_pred):</span>
+<span class="cl">    tn, fp, fn, tp <span class="op">=</span> <span class="fn">confusion</span>(y_true, y_pred)</span>
+<span class="cl">    <span class="kw">return</span> tp <span class="op">/</span> (tp <span class="op">+</span> fp) <span class="kw">if</span> tp <span class="op">+</span> fp <span class="kw">else</span> <span class="nm">0.0</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">recall</span>(y_true, y_pred):</span>
+<span class="cl">    tn, fp, fn, tp <span class="op">=</span> <span class="fn">confusion</span>(y_true, y_pred)</span>
+<span class="cl">    <span class="kw">return</span> tp <span class="op">/</span> (tp <span class="op">+</span> fn) <span class="kw">if</span> tp <span class="op">+</span> fn <span class="kw">else</span> <span class="nm">0.0</span></span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">sweep</span>(y_true, proba, thresholds):</span>
+<span class="cl">    out <span class="op">=</span> []</span>
+<span class="cl">    <span class="kw">for</span> t <span class="kw">in</span> thresholds:</span>
+<span class="cl">        pred <span class="op">=</span> (np.<span class="fn">asarray</span>(proba) <span class="op">&gt;=</span> t).<span class="fn">astype</span>(int)</span>
+<span class="cl">        out.<span class="fn">append</span>((t, <span class="fn">precision</span>(y_true, pred), <span class="fn">recall</span>(y_true, pred)))</span>
+<span class="cl">    <span class="kw">return</span> out</span>
+</pre>
+<pre class="code-block">
+<span class="cl">pred <span class="op">=</span> (proba <span class="op">&gt;=</span> <span class="nm">0.5</span>).<span class="fn">astype</span>(int)</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'自作 :'</span>, <span class="fn">confusion</span>(yc_te, pred), <span class="st">' (TN, FP, FN, TP)'</span>)</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'sklearn:'</span>, <span class="fn">tuple</span>(<span class="fn">confusion_matrix</span>(yc_te, pred).<span class="fn">ravel</span>()))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'precision 自作:'</span>, <span class="fn">round</span>(<span class="fn">precision</span>(yc_te, pred), <span class="nm">4</span>), <span class="st">' sklearn:'</span>, <span class="fn">round</span>(<span class="fn">precision_score</span>(yc_te, pred), <span class="nm">4</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'recall    自作:'</span>, <span class="fn">round</span>(<span class="fn">recall</span>(yc_te, pred), <span class="nm">4</span>), <span class="st">' sklearn:'</span>, <span class="fn">round</span>(<span class="fn">recall_score</span>(yc_te, pred), <span class="nm">4</span>))</span>
+</pre>
+<div class="output-reveal">自作 : (59, 5, 2, 105)  (TN, FP, FN, TP)
+sklearn: (np.int64(59), np.int64(5), np.int64(2), np.int64(105))
+precision 自作: 0.9545  sklearn: 0.9545
+recall    自作: 0.9813  sklearn: 0.9813</div>
+<h3>しきい値を動かす</h3>
+<pre class="code-block">
+<span class="cl"><span class="kw">for</span> t, p, r <span class="kw">in</span> <span class="fn">sweep</span>(yc_te, proba, [<span class="nm">0.1</span>, <span class="nm">0.3</span>, <span class="nm">0.5</span>, <span class="nm">0.7</span>, <span class="nm">0.9</span>]):</span>
+<span class="cl">    <span class="fn">print</span>(f<span class="st">'threshold {t}:  precision {p:.3f}  recall {r:.3f}'</span>)</span>
+</pre>
+<div class="output-reveal">threshold 0.1:  precision 0.915  recall 1.000
+threshold 0.3:  precision 0.930  recall 1.000
+threshold 0.5:  precision 0.955  recall 0.981
+threshold 0.7:  precision 0.972  recall 0.972
+threshold 0.9:  precision 0.972  recall 0.963</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl">th <span class="op">=</span> np.<span class="fn">linspace</span>(<span class="nm">0.02</span>, <span class="nm">0.98</span>, <span class="nm">49</span>)</span>
+<span class="cl">res <span class="op">=</span> <span class="fn">sweep</span>(yc_te, proba, th)</span>
+<span class="cl">fig, ax <span class="op">=</span> plt.<span class="fn">subplots</span>(<span class="pa">figsize</span><span class="op">=</span>(<span class="nm">7</span>, <span class="nm">3.4</span>))</span>
+<span class="cl">ax.<span class="fn">plot</span>(th, [p <span class="kw">for</span> _, p, _ <span class="kw">in</span> res], <span class="pa">color</span><span class="op">=</span><span class="st">'#4471B8'</span>, <span class="pa">label</span><span class="op">=</span><span class="st">'precision'</span>)</span>
+<span class="cl">ax.<span class="fn">plot</span>(th, [r <span class="kw">for</span> _, _, r <span class="kw">in</span> res], <span class="pa">color</span><span class="op">=</span><span class="st">'#B84848'</span>, <span class="pa">label</span><span class="op">=</span><span class="st">'recall'</span>)</span>
+<span class="cl">ax.<span class="fn">set_xlabel</span>(<span class="st">'threshold'</span>); ax.<span class="fn">set_ylim</span>(<span class="nm">0.8</span>, <span class="nm">1.02</span>); ax.<span class="fn">legend</span>(); ax.<span class="fn">set_title</span>(<span class="st">'Raise the threshold: precision up, recall down'</span>)</span>
+</pre>
+<div class="r-fig"><img src="img/t6_threshold.png" alt="しきい値を上げると precision は上がり、recall は下がる（シーソー）。"><div class="cap">しきい値を上げると precision は上がり、recall は下がる（シーソー）。</div></div>
+<div class="note-box">しきい値を<strong>下げる</strong>と、少しでも怪しいものを陽性と言うので recall が上がり（見逃しが減る）、代わりに precision が下がります（誤報が増える）。</div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>白紙で再現する・よくある間違い</h2><div class="unit-sub">次の日に、見ずにもう一度</div></div>
+  </div>
+<div class="note-box"><strong>④ 次の日にやること：</strong>ノートブックの「④ 白紙で再現」で、名前の後ろに <code>_2</code> が付いた関数を、③を見ずに書き直します。<strong>10分以内</strong>に ✅ が揃えば合格です。<br><code>confusion_2</code>・<code>precision_2</code>・<code>recall_2</code>・<code>sweep_2</code></div>
+<div class="warn-box">⚠️ <strong>よくある間違い</strong><ul><li>正解率（accuracy）だけで「良いモデル」と判断する（不均衡データで騙される）</li><li><code>confusion_matrix</code> の並び順（<code>[[TN, FP], [FN, TP]]</code>）を取り違える</li><li>precision と recall の分母を入れ替える</li><li>しきい値を 0.5 から動かせると知らない</li></ul></div>
+<details class="qa"><summary>❓ 確認：がんの検査で、見逃したくない。しきい値は上げる？下げる？</summary><div class="qa-a">下げる。recall が上がり見逃しが減る。誤報（precision の低下）は受け入れる。</div></details>
+<details class="qa"><summary>❓ 確認：TP=8・FP=2・FN=4 のとき、precision と recall は？</summary><div class="qa-a">precision = 8/10 = 0.8、recall = 8/12 ≈ 0.667。</div></details>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">confusion matrix</div><div class="term-en">混同行列</div><div class="term-def">TP・FP・FN・TN の 4 つの数。</div></div>
+    <div class="term-item"><div class="term-name">precision</div><div class="term-en">適合率</div><div class="term-def">TP ÷ (TP + FP)。陽性と予測した中の的中率。</div></div>
+    <div class="term-item"><div class="term-name">recall</div><div class="term-en">再現率</div><div class="term-def">TP ÷ (TP + FN)。本当の陽性を見つけた割合。</div></div>
+    <div class="term-item"><div class="term-name">threshold</div><div class="term-en">しきい値</div><div class="term-def">確率がいくつ以上を陽性とするか。既定は 0.5。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p><strong>precision</strong>＝「陽性と言った中の的中率」、<strong>recall</strong>＝「本当の陽性を見つけた割合」。見逃しが怖いなら recall、誤報が怖いなら precision。</p></div>
+</aside>
+</div>
+<footer>
+  <p>🧪 670 ML Python 実践：分類の評価：混同行列・precision・recall</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="py_regmetrics.html">← 📈 RMSE・R²</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

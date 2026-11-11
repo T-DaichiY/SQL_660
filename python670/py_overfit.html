@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>670 ML Python 実践：過学習・交差検証</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="theme-v2.css">
+<style>
+.r-fig{margin:.6rem 0 1.2rem;text-align:center}.r-fig img{max-width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px;background:#fff}.r-fig .cap{font-size:.85rem;color:#64748b;margin-top:.3rem}
+.code-block .kw{color:#c4b5fd;font-weight:600}.code-block .fn{color:#fde68a}.code-block .cls{color:#7dd3fc}.code-block .at{color:#a5f3fc}.code-block .pa{color:#fdba74}.code-block .st{color:#86efac}.code-block .nm{color:#fca5a5}.code-block .op{color:#f9a8d4}.code-block .cm{color:#9fb0c8;font-style:normal}
+details.qa{background:rgba(255,253,247,.9);border:1px solid #e2e8f0;border-radius:10px;padding:.55rem .9rem;margin:.55rem 0}details.qa summary{cursor:pointer;font-weight:700}.qa-a{margin-top:.5rem}
+.nb-download{background:#ccfbf1;border-left:4px solid #0d9488;padding:.8rem 1rem;border-radius:8px;margin:0 0 1.2rem;color:#134e4a}
+.stage-table td:first-child{white-space:nowrap;font-weight:700}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">670 ML <span>Python 実践</span></div>
+  <nav class="header-nav">
+    <a href="index.html">🏠 概要</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navGroups" title="レッスン一覧を開く／閉じる">📚 過学習・交差検証 <span class="nav-caret">▾</span></button>
+    <div class="nav-groups" id="navGroups">
+<div class="nav-row m1"><span class="nav-mod">670 ML Python 実践</span><span class="navg"><a class="n-main" href="py_describe.html">📏 平均・中央値・外れ値</a></span><span class="navg"><a class="n-main" href="py_scale.html">⚖️ 標準化</a></span><span class="navg"><a class="n-main" href="py_split.html">✂️ 分割・データ漏れ</a></span><span class="navg"><a class="n-main" href="py_overfit.html">🎢 過学習・交差検証</a></span><span class="navg"><a class="n-main" href="py_regmetrics.html">📈 RMSE・R²</a></span><span class="navg"><a class="n-main" href="py_clfmetrics.html">🎯 混同行列・P/R</a></span></div>
+    </div>
+    <script src="nav.js"></script>
+  </nav>
+</header>
+<div class="ch-banner">
+<div class="ch-banner-inner">
+  <div class="ch-tag">T4 · 670 ML Python 実践</div>
+  <h1>🎢 過学習・交差検証</h1>
+  <p>モデルを複雑にすると、訓練の点数は上がり続けるのに、テストの点数は途中から下がります。決定木の深さで<strong>U字</strong>を描き、交差検証を for ループで自作します。</p>
+  <div class="ch-banner unit-nav" style="background:none;padding:0;"><a href="#unit1">① 説明</a><a href="#unit2">② 手計算</a><a href="#unit3">③ 自作</a><a href="#unit4">④ 白紙再現</a></div>
+</div>
+</div>
+<div class="page-layout">
+<main>
+<div class="nb-download">📥 <strong>Python 練習ノートブック：</strong><a href="nb/ml670_py_practice.ipynb" download>ml670_py_practice.ipynb</a> — このページは<strong>ノートブックの T4</strong>の解説です。Jupyter で開いて、同じ名前のセクションを解いてください（自動チェック ✅/❌ 付き）。</div>
+<div class="unit" id="unit1">
+  <div class="unit-header">
+    <div class="unit-num">①</div>
+    <div><h2>説明する：何のため？</h2><div class="unit-sub">3文で言えるようにする</div></div>
+  </div>
+<p>複雑なモデルは、訓練データの<strong>ノイズまで覚えて</strong>しまいます。訓練の点数は上がるのに、新しいデータでは当たらない。これが過学習です。</p>
+<table class="compare-table">
+<tr><th>状態</th><th>訓練の点数</th><th>テストの点数</th><th>対策</th></tr>
+<tr><td>過学習</td><td>とても高い</td><td>低い</td><td>単純なモデルに／データを増やす／正則化</td></tr><tr><td>学習不足</td><td>低い</td><td>低い</td><td>複雑なモデルに／特徴量を足す</td></tr>
+</table>
+<p><strong>交差検証</strong>は、データを K 個に分け、1 つずつテストにして K 回評価し、平均する方法です。1 回の分割の「運」に左右されにくくなります。</p>
+<details class="qa"><summary>📝 3文のお手本</summary><div class="qa-a">過学習は訓練データを暗記して新しいデータで当たらなくなることで、訓練の点数だけ高いのが目印。モデルを複雑にすると訓練の点数は上がり続けるが、テストの点数は途中から下がる。交差検証はデータを K 分割して順番にテストに使い、点数の平均で運に左右されず比べる方法。</div></details>
+</div>
+<div class="unit" id="unit2">
+  <div class="unit-header">
+    <div class="unit-num">②</div>
+    <div><h2>手で計算する</h2><div class="unit-sub">小さなデータを紙と電卓で</div></div>
+  </div>
+<p>10 件を k = 5 に分けると、1 つのテスト部分は 10 ÷ 5 ＝ <strong>2 件</strong>。11 件を 5 分割すると余りが 1 件出るので、先頭の分割に足して <strong>[3, 2, 2, 2, 2]</strong>（<code>KFold</code> と同じ規則）。</p>
+<pre class="code-block">
+<span class="cl"><span class="fn">print</span>([<span class="fn">len</span>(t) <span class="kw">for</span> _, t <span class="kw">in</span> <span class="cls">KFold</span>(<span class="nm">5</span>).<span class="fn">split</span>(np.<span class="fn">arange</span>(<span class="nm">10</span>))])</span>
+<span class="cl"><span class="fn">print</span>([<span class="fn">len</span>(t) <span class="kw">for</span> _, t <span class="kw">in</span> <span class="cls">KFold</span>(<span class="nm">5</span>).<span class="fn">split</span>(np.<span class="fn">arange</span>(<span class="nm">11</span>))])</span>
+</pre>
+<div class="output-reveal">[2, 2, 2, 2, 2]
+[3, 2, 2, 2, 2]</div>
+</div>
+<div class="unit" id="unit3">
+  <div class="unit-header">
+    <div class="unit-num">③</div>
+    <div><h2>自分で作る</h2><div class="unit-sub">NumPy で書いて、scikit-learn と一致させる</div></div>
+  </div>
+<p><code>kfold_indices</code>（分け方）・<code>my_cv_score</code>（交差検証）・<code>depth_curve</code>（深さごとの点数）を自作します。</p>
+<pre class="code-block">
+<span class="cl"><span class="kw">def</span> <span class="fn">kfold_indices</span>(n, k):</span>
+<span class="cl">    sizes <span class="op">=</span> [n <span class="op">/</span><span class="op">/</span> k <span class="op">+</span> (<span class="nm">1</span> <span class="kw">if</span> i <span class="op">&lt;</span> n % k <span class="kw">else</span> <span class="nm">0</span>) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(k)]</span>
+<span class="cl">    folds, start <span class="op">=</span> [], <span class="nm">0</span></span>
+<span class="cl">    <span class="kw">for</span> s <span class="kw">in</span> sizes:</span>
+<span class="cl">        te <span class="op">=</span> np.<span class="fn">arange</span>(start, start <span class="op">+</span> s)</span>
+<span class="cl">        tr <span class="op">=</span> np.<span class="fn">concatenate</span>([np.<span class="fn">arange</span>(<span class="nm">0</span>, start), np.<span class="fn">arange</span>(start <span class="op">+</span> s, n)])</span>
+<span class="cl">        folds.<span class="fn">append</span>((tr, te)); start <span class="op">+</span><span class="op">=</span> s</span>
+<span class="cl">    <span class="kw">return</span> folds</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">my_cv_score</span>(model, X, y, <span class="pa">k</span><span class="op">=</span><span class="nm">5</span>):</span>
+<span class="cl">    scores <span class="op">=</span> []</span>
+<span class="cl">    <span class="kw">for</span> tr, te <span class="kw">in</span> <span class="fn">kfold_indices</span>(<span class="fn">len</span>(X), k):</span>
+<span class="cl">        m <span class="op">=</span> <span class="fn">clone</span>(model).<span class="fn">fit</span>(X[tr], y[tr])</span>
+<span class="cl">        scores.<span class="fn">append</span>(m.<span class="fn">score</span>(X[te], y[te]))</span>
+<span class="cl">    <span class="kw">return</span> <span class="fn">float</span>(np.<span class="fn">mean</span>(scores))</span>
+<span class="cl"></span>
+<span class="cl"><span class="kw">def</span> <span class="fn">depth_curve</span>(X_tr, y_tr, X_te, y_te, depths):</span>
+<span class="cl">    train, test <span class="op">=</span> [], []</span>
+<span class="cl">    <span class="kw">for</span> d <span class="kw">in</span> depths:</span>
+<span class="cl">        m <span class="op">=</span> <span class="cls">DecisionTreeRegressor</span>(<span class="pa">max_depth</span><span class="op">=</span>d, <span class="pa">random_state</span><span class="op">=</span><span class="nm">0</span>).<span class="fn">fit</span>(X_tr, y_tr)</span>
+<span class="cl">        train.<span class="fn">append</span>(m.<span class="fn">score</span>(X_tr, y_tr)); test.<span class="fn">append</span>(m.<span class="fn">score</span>(X_te, y_te))</span>
+<span class="cl">    <span class="kw">return</span> train, test</span>
+</pre>
+<pre class="code-block">
+<span class="cl"><span class="fn">print</span>([<span class="fn">len</span>(t) <span class="kw">for</span> _, t <span class="kw">in</span> <span class="fn">kfold_indices</span>(<span class="nm">11</span>, <span class="nm">5</span>)])</span>
+<span class="cl">m <span class="op">=</span> <span class="cls">LinearRegression</span>()</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'自作 CV:'</span>, <span class="fn">round</span>(<span class="fn">my_cv_score</span>(m, <span class="cls">Xr</span>, yr, <span class="nm">5</span>), <span class="nm">6</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'sklearn  :'</span>, <span class="fn">round</span>(<span class="fn">cross_val_score</span>(m, <span class="cls">Xr</span>, yr, <span class="pa">cv</span><span class="op">=</span><span class="cls">KFold</span>(<span class="nm">5</span>)).<span class="fn">mean</span>(), <span class="nm">6</span>))</span>
+</pre>
+<div class="output-reveal">[3, 2, 2, 2, 2]
+自作 CV: 0.482316
+sklearn  : 0.482316</div>
+<h3>決定木の深さで U 字を描く</h3><p>sin 曲線にノイズを足したデータ（訓練 60 件・テスト 40 件）を、深さ 1〜15 の木で学習します。</p>
+<pre class="code-block">
+<span class="cl">train_s, test_s <span class="op">=</span> <span class="fn">depth_curve</span>(Xs_tr, ys_tr, Xs_te, ys_te, <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">16</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'深さ15 の訓練 R²:'</span>, <span class="fn">round</span>(train_s[<span class="op">-</span><span class="nm">1</span>], <span class="nm">3</span>), <span class="st">'/ テスト R²:'</span>, <span class="fn">round</span>(test_s[<span class="op">-</span><span class="nm">1</span>], <span class="nm">3</span>))</span>
+<span class="cl"><span class="fn">print</span>(<span class="st">'テストが最良の深さ:'</span>, <span class="nm">1</span> <span class="op">+</span> <span class="fn">int</span>(np.<span class="fn">argmax</span>(test_s)), <span class="st">'（R² ='</span>, <span class="fn">round</span>(<span class="fn">max</span>(test_s), <span class="nm">3</span>), <span class="st">'）'</span>)</span>
+</pre>
+<div class="output-reveal">深さ15 の訓練 R²: 1.0 / テスト R²: 0.686
+テストが最良の深さ: 3 （R² = 0.8 ）</div>
+<pre class="code-block">
+<span class="cl"><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt</span>
+<span class="cl">fig, ax <span class="op">=</span> plt.<span class="fn">subplots</span>(<span class="pa">figsize</span><span class="op">=</span>(<span class="nm">7</span>, <span class="nm">3.4</span>))</span>
+<span class="cl">d <span class="op">=</span> <span class="fn">list</span>(<span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">16</span>))</span>
+<span class="cl">ax.<span class="fn">plot</span>(d, train_s, <span class="st">'o-'</span>, <span class="pa">color</span><span class="op">=</span><span class="st">'#4471B8'</span>, <span class="pa">label</span><span class="op">=</span><span class="st">'train'</span>)</span>
+<span class="cl">ax.<span class="fn">plot</span>(d, test_s, <span class="st">'s-'</span>, <span class="pa">color</span><span class="op">=</span><span class="st">'#B84848'</span>, <span class="pa">label</span><span class="op">=</span><span class="st">'test'</span>)</span>
+<span class="cl">ax.<span class="fn">axvline</span>(<span class="nm">1</span> <span class="op">+</span> <span class="fn">int</span>(np.<span class="fn">argmax</span>(test_s)), <span class="pa">color</span><span class="op">=</span><span class="st">'gray'</span>, <span class="pa">ls</span><span class="op">=</span><span class="st">'--'</span>)</span>
+<span class="cl">ax.<span class="fn">set_xlabel</span>(<span class="st">'max_depth'</span>); ax.<span class="fn">set_ylabel</span>(<span class="st">'R2'</span>); ax.<span class="fn">legend</span>(); ax.<span class="fn">set_title</span>(<span class="st">'Train keeps rising, test peaks then falls'</span>)</span>
+</pre>
+<div class="r-fig"><img src="img/t4_depth.png" alt="訓練（青）は深さとともに 1 に近づくが、テスト（赤）は深さ 3 付近で最良になり、その後下がる。"><div class="cap">訓練（青）は深さとともに 1 に近づくが、テスト（赤）は深さ 3 付近で最良になり、その後下がる。</div></div>
+<div class="note-box">訓練の R² が <strong>ほぼ 1.0</strong>（暗記）なのに、テストは 0.69 まで下がりました。深さ 3 前後が「ちょうどよい複雑さ」です。</div>
+</div>
+<div class="unit" id="unit4">
+  <div class="unit-header">
+    <div class="unit-num">④</div>
+    <div><h2>白紙で再現する・よくある間違い</h2><div class="unit-sub">次の日に、見ずにもう一度</div></div>
+  </div>
+<div class="note-box"><strong>④ 次の日にやること：</strong>ノートブックの「④ 白紙で再現」で、名前の後ろに <code>_2</code> が付いた関数を、③を見ずに書き直します。<strong>10分以内</strong>に ✅ が揃えば合格です。<br><code>kfold_indices_2</code>・<code>my_cv_score_2</code>・<code>depth_curve_2</code></div>
+<div class="warn-box">⚠️ <strong>よくある間違い</strong><ul><li>訓練の点数だけ見て「良いモデル」と判断する</li><li>テストの点数を見ながら深さを選ぶ（テストが訓練の一部になる）。選ぶのは交差検証、テストは最後の 1 回</li><li>交差検証の各分割ごとに、前処理（標準化など）を全データで fit しておく（漏れ。→ T3）</li></ul></div>
+<details class="qa"><summary>❓ 確認：5 分割交差検証では、モデルを何回学習する？</summary><div class="qa-a">5 回（各分割で 1 回ずつ）。点数は 5 個の平均で報告し、バラつき（SD）も一緒に見る。</div></details>
+<details class="qa"><summary>❓ 確認：訓練 R² = 0.99・テスト R² = 0.60 のとき、何を疑う？</summary><div class="qa-a">過学習。モデルを単純にする、データを増やす、正則化（Ridge・Lasso）を使う。</div></details>
+</div>
+
+</main>
+<aside class="sidebar">
+  <div class="glossary">
+    <h3>📖 用語集</h3>
+    <div class="term-item"><div class="term-name">overfitting</div><div class="term-en">過学習</div><div class="term-def">訓練データを暗記して、新しいデータで当たらなくなること。</div></div>
+    <div class="term-item"><div class="term-name">cross-validation</div><div class="term-en">交差検証</div><div class="term-def">データを K 分割し、順番に1つをテストにして平均する。</div></div>
+    <div class="term-item"><div class="term-name">hyperparameter</div><div class="term-en">ハイパーパラメータ</div><div class="term-def">学習の前に人が決める設定（木の深さなど）。</div></div>
+  </div>
+  <div class="tip-box"><h4>💡 学習のヒント</h4><p>「訓練の点数が高いこと」は自慢になりません。<strong>テスト（または交差検証）の点数</strong>で判断します。</p></div>
+</aside>
+</div>
+<footer>
+  <p>🧪 670 ML Python 実践：過学習・交差検証</p>
+  <p style="margin-top:.5rem;"><a href="index.html">← 概要</a> · <a href="py_split.html">← ✂️ 分割・データ漏れ</a> · <a href="py_regmetrics.html">📈 RMSE・R² →</a></p>
+</footer>
+<script>
+var units=document.querySelectorAll('.unit');
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+units.forEach(function(u){obs.observe(u);});
+</script>
+<script src="practice.js"></script>
+<script src="code-summary.js"></script>
+<script src="typewriter.js"></script>
+<script src="theme-v2.js"></script><script src="code-editor.js"></script>
+<script src="../hub-fab.js"></script>
+</body></html>

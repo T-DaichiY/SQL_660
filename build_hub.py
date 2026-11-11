@@ -8,6 +8,7 @@ COURSES = [
     dict(id='py', name='Python（520）', icon='🐍', index='python520/index.html', prefix='python520/'),
     dict(id='r650', name='R データ分析（650）', icon='📈', index='r650/index.html', prefix='r650/'),
     dict(id='ml670', name='ML 統計復習（670）', icon='🤖', index='stats/cheat_ml.html', prefix='stats/', parse=False),
+    dict(id='py670', name='ML Python 実践（670）', icon='🧪', index='python670/index.html', prefix='python670/'),
     dict(id='py580', name='データ操作（580）', icon='🐼', index='python580/index.html', prefix='python580/'),
 ]
 def clean(s):
